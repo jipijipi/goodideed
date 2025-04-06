@@ -8,11 +8,11 @@ class StakeDisplay extends ConsumerStatefulWidget {
   final VoidCallback? onAnimationComplete;
 
   const StakeDisplay({
-    Key? key,
+    super.key,
     required this.stakeAmount,
     this.showFailureAnimation = false,
     this.onAnimationComplete,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<StakeDisplay> createState() => _StakeDisplayState();

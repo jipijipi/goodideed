@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/providers/providers.dart';
-import 'package:tristopher_app/services/user_service.dart';
 
 class AccountScreen extends ConsumerStatefulWidget {
-  const AccountScreen({Key? key}) : super(key: key);
+  const AccountScreen({super.key});
 
   @override
   ConsumerState<AccountScreen> createState() => _AccountScreenState();
@@ -33,7 +32,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   Future<void> _loadUserData() async {
     final userAsync = ref.read(userProvider);
     
-    await userAsync.when(
+    userAsync.when(
       data: (user) {
         if (user != null) {
           // Populate form fields with existing data

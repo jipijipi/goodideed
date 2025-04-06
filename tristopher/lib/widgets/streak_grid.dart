@@ -9,12 +9,12 @@ class StreakGrid extends StatelessWidget {
   final DateTime? startDate;
 
   const StreakGrid({
-    Key? key,
+    super.key,
     required this.currentStreak,
     required this.completionHistory,
     this.is66DayChallenge = false,
     this.startDate,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

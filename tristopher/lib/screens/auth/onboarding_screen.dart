@@ -8,7 +8,7 @@ import 'package:tristopher_app/services/story_service.dart';
 import 'package:tristopher_app/widgets/chat_bubble.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+  const OnboardingScreen({super.key});
 
   @override
   ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();

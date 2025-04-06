@@ -4,10 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/models/user_model.dart';
 import 'package:tristopher_app/providers/providers.dart';
-import 'package:tristopher_app/services/user_service.dart';
 
 class GoalScreen extends ConsumerStatefulWidget {
-  const GoalScreen({Key? key}) : super(key: key);
+  const GoalScreen({super.key});
 
   @override
   ConsumerState<GoalScreen> createState() => _GoalScreenState();
@@ -38,7 +37,7 @@ class _GoalScreenState extends ConsumerState<GoalScreen> {
   Future<void> _loadUserData() async {
     final userAsync = ref.read(userProvider);
     
-    await userAsync.when(
+    userAsync.when(
       data: (user) {
         if (user != null) {
           // Populate form fields with existing data

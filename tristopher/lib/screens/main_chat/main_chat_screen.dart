@@ -8,10 +8,9 @@ import 'package:tristopher_app/services/story_service.dart';
 import 'package:tristopher_app/services/user_service.dart';
 import 'package:tristopher_app/widgets/chat_bubble.dart';
 import 'package:tristopher_app/widgets/stake_display.dart';
-import 'package:tristopher_app/widgets/streak_grid.dart';
 
 class MainChatScreen extends ConsumerStatefulWidget {
-  const MainChatScreen({Key? key}) : super(key: key);
+  const MainChatScreen({super.key});
 
   @override
   ConsumerState<MainChatScreen> createState() => _MainChatScreenState();

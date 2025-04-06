@@ -6,9 +6,9 @@ class ChatBubble extends StatefulWidget {
   final MessageModel message;
 
   const ChatBubble({
-    Key? key,
+    super.key,
     required this.message,
-  }) : super(key: key);
+  });
 
   @override
   State<ChatBubble> createState() => _ChatBubbleState();

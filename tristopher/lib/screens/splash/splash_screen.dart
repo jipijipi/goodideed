@@ -4,7 +4,7 @@ import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/providers/providers.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   ConsumerState<SplashScreen> createState() => _SplashScreenState();

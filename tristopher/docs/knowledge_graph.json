@@ -1,0 +1,92 @@
+{
+  "entities": [
+    {
+      "type": "entity",
+      "name": "TristopherApp",
+      "entityType": "Application",
+      "observations": [
+        "Flutter application based on directory structure",
+        "Has standard Flutter project organization with lib, android, ios, web, and other platform directories",
+        "Project name appears to be 'tristopher_app'",
+        "Default Flutter counter app template",
+        "Uses MaterialApp with deep purple seed color",
+        "Has a stateful home page with a counter",
+        "SDK version: ^3.7.2",
+        "Flutter dependencies include cupertino_icons: ^1.0.8",
+        "Dev dependencies include flutter_lints: ^5.0.0"
+      ]
+    },
+    {
+      "type": "entity",
+      "name": "main.dart",
+      "entityType": "File",
+      "observations": [
+        "Entry point for the Flutter application",
+        "Contains MyApp stateless widget and MyHomePage stateful widget",
+        "Implements a basic counter functionality"
+      ]
+    },
+    {
+      "type": "entity",
+      "name": "pubspec.yaml",
+      "entityType": "File",
+      "observations": [
+        "Defines app metadata and dependencies",
+        "Version: 1.0.0+1",
+        "Uses material design"
+      ]
+    },
+    {
+      "type": "entity",
+      "name": "MyApp",
+      "entityType": "Widget",
+      "observations": [
+        "Root StatelessWidget",
+        "Sets up MaterialApp with theme",
+        "Uses ColorScheme.fromSeed with Colors.deepPurple"
+      ]
+    },
+    {
+      "type": "entity",
+      "name": "MyHomePage",
+      "entityType": "Widget",
+      "observations": [
+        "StatefulWidget with counter logic",
+        "Has a counter variable and increment method",
+        "Displays counter value and provides increment button"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "type": "relation",
+      "from": "TristopherApp",
+      "relationType": "contains",
+      "to": "main.dart"
+    },
+    {
+      "type": "relation",
+      "from": "TristopherApp",
+      "relationType": "defined_by",
+      "to": "pubspec.yaml"
+    },
+    {
+      "type": "relation",
+      "from": "main.dart",
+      "relationType": "defines",
+      "to": "MyApp"
+    },
+    {
+      "type": "relation",
+      "from": "main.dart",
+      "relationType": "defines",
+      "to": "MyHomePage"
+    },
+    {
+      "type": "relation",
+      "from": "MyApp",
+      "relationType": "renders",
+      "to": "MyHomePage"
+    }
+  ]
+}

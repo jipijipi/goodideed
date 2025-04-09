@@ -1,3 +1,59 @@
+/// A widget that represents a chat bubble in a chat interface. The chat bubble
+/// can display different types of messages such as text, options, input fields,
+/// achievements, and streaks. It also includes animations for fade and slide
+/// transitions when the widget is built.
+///
+/// The appearance and behavior of the chat bubble depend on the type of message
+/// and the sender of the message.
+///
+/// This widget is stateful and uses an [AnimationController] to handle the
+/// animations.
+///
+/// ### Parameters:
+/// - [message]: The [MessageModel] object that contains the content and metadata
+///   of the message to be displayed.
+///
+/// ### Message Types:
+/// - [MessageType.text]: Displays a simple text message.
+/// - [MessageType.options]: Displays a text message followed by a list of
+///   selectable options.
+/// - [MessageType.input]: Displays a text message followed by an input field
+///   where the user can type a response.
+/// - [MessageType.achievement]: Displays a styled message indicating an
+///   achievement.
+/// - [MessageType.streak]: Displays a styled message indicating a streak.
+///
+/// ### Animations:
+/// - Fade transition: The chat bubble fades in when it appears.
+/// - Slide transition: The chat bubble slides in from a slight offset.
+///
+/// ### Methods:
+/// - [_buildMessageContent]: Determines the widget to display based on the
+///   message type.
+/// - [_buildTextMessage]: Builds a text message bubble.
+/// - [_buildOptionsMessage]: Builds a message bubble with selectable options.
+/// - [_buildOptionButton]: Builds a button for each option in an options message.
+/// - [_buildInputMessage]: Builds a message bubble with an input field.
+/// - [_buildAchievementMessage]: Builds a styled message for achievements.
+/// - [_buildStreakMessage]: Builds a styled message for streaks.
+/// - [_buildAvatarIcon]: Builds a default avatar icon for non-user messages.
+/// - [_buildUserAvatar]: Builds a default avatar icon for user messages.
+///
+/// ### Lifecycle:
+/// - [initState]: Initializes the animation controller and starts the animation.
+/// - [dispose]: Disposes of the animation controller and input controller to
+///   free up resources.
+///
+/// ### Example Usage:
+/// ```dart
+/// ChatBubble(
+///   message: MessageModel(
+///     sender: MessageSender.user,
+///     type: MessageType.text,
+///     content: "Hello, how are you?",
+///   ),
+/// )
+/// ```
 import 'package:flutter/material.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/models/message_model.dart';
@@ -81,18 +137,18 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
 
     if (isSystem) {
       return Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          child: Text(
-            widget.message.content,
-            style: AppTextStyles.userText(),
-            textAlign: TextAlign.center,
-          ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16.0),
         ),
+        child: Text(
+        widget.message.content,
+        style: AppTextStyles.userText(),
+        textAlign: TextAlign.center,
+        ),
+      ),
       );
     }
 
@@ -100,23 +156,22 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!isUser) _buildAvatarIcon(),
         Flexible(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-            margin: EdgeInsets.only(
-              left: isUser ? 48.0 : 8.0,
-              right: isUser ? 8.0 : 48.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+            margin: EdgeInsets.symmetric(horizontal: 8.0),
+            
             decoration: BoxDecoration(
               color: isUser 
-                ? Colors.white 
-                : Colors.black.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(16.0),
-              border: Border.all(
-                color: Colors.black.withOpacity(0.1),
-                width: 1.0,
-              ),
+                ? Colors.yellow.withOpacity(0.3)  // Highlighter effect
+                : Colors.transparent,             // Transparent background for non-user
+              borderRadius: BorderRadius.circular(0.0),
+              border: isUser
+                ? Border.all(
+                    color: Colors.yellow.withOpacity(0.5),
+                    width: 2.0,
+                  )
+                : null,  // No border for non-user messages
             ),
             child: Text(
               widget.message.content,
@@ -126,7 +181,6 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
             ),
           ),
         ),
-        if (isUser) _buildUserAvatar(),
       ],
     );
   }
@@ -148,13 +202,16 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       child: ElevatedButton(
         onPressed: () => option.onTap(),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.white.withOpacity(0.4),  // Highlighter effect
           foregroundColor: AppColors.primaryText,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            side: BorderSide(color: Colors.black.withOpacity(0.2)),
+            borderRadius: BorderRadius.circular(0.0),  // Square corners like user bubbles
+            side: BorderSide(
+              color: Colors.yellow.withOpacity(0.0),
+              width: 2.0,
+            ),
           ),
           textStyle: AppTextStyles.userText(),
         ),
@@ -272,7 +329,7 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
           color: Colors.black.withOpacity(0.1),
@@ -297,7 +354,7 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
     );
   }
 
-  Widget _buildAvatarIcon() {
+  /* Widget _buildAvatarIcon() {
     return Container(
       width: 32.0,
       height: 32.0,
@@ -333,5 +390,5 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
         ),
       ),
     );
-  }
+  }*/
 }

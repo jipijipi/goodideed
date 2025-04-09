@@ -332,7 +332,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
                   left: 0,
                   right: 0,
                   // Make the image tall enough to scroll
-                  height: MediaQuery.of(context).size.height * 3,
+                  height: MediaQuery.of(context).size.height * 1.2,
                   child: child!,
                 );
               },

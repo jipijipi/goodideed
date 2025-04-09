@@ -22,7 +22,7 @@ class AppRoutes {
 // Text Styles
 class AppTextStyles {
   // Special Elite font for Tristopher's messages (typewriter feel)
-  static TextStyle tristopherText({double size = 16, FontWeight weight = FontWeight.normal}) {
+  static TextStyle tristopherText({double size = 18, FontWeight weight = FontWeight.normal}) {
     return GoogleFonts.specialElite(
       fontSize: size,
       fontWeight: weight,

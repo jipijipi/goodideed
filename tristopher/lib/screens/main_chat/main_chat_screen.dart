@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
@@ -326,20 +327,26 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
             AnimatedBuilder(
               animation: _scrollController,
               builder: (context, child) {
-                // Use a more noticeable parallax multiplier
+                // Calculate a dynamic height that extends as the content grows
+                double contentHeight = max(
+                  _scrollController.hasClients ? 
+                    _scrollController.position.maxScrollExtent + MediaQuery.of(context).size.height : 
+                    MediaQuery.of(context).size.height * 3,
+                  MediaQuery.of(context).size.height * 3 // Minimum height
+                );
+                
                 return Positioned(
                   top: -_scrollOffset * 0.8, // Increased from 0.5 to 0.8 for more obvious effect
                   left: 0,
                   right: 0,
-                  // Make the image tall enough to scroll
-                  height: MediaQuery.of(context).size.height * 1.2,
+                  height: contentHeight,
                   child: child!,
                 );
               },
               child: Image.asset(
                 'assets/images/paper_texture.png',
                 fit: BoxFit.cover,
-                repeat: ImageRepeat.repeatY,
+                repeat: ImageRepeat.repeat, // Change to repeat both horizontally and vertically
                 color: Colors.white.withOpacity(0.7), // Slightly more visible
                 colorBlendMode: BlendMode.dstATop,
               ),

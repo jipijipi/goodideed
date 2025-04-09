@@ -20,11 +20,20 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final StoryService _storyService = StoryService();
   late UserService _userService;
+  double _scrollOffset = 0.0;
   
   @override
   void initState() {
     super.initState();
     _userService = ref.read(userServiceProvider);
+    
+    // Listen to scroll changes for the parallax effect
+    _scrollController.addListener(() {
+      setState(() {
+        _scrollOffset = _scrollController.offset;
+        print('Scroll offset updated: $_scrollOffset');
+      });
+    });
     
     // Initialize chat on first load
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,6 +58,11 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
         );
       }
     });
+  }
+  
+  // Debug function to log scroll position
+  void _logScrollPosition() {
+    print('Scroll position: $_scrollOffset');
   }
 
   // Initialize the chat based on user state
@@ -305,31 +319,61 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          image: DecorationImage(
-            image: const AssetImage('assets/images/paper_texture.png'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.8),
-              BlendMode.dstATop,
-            ),
-          ),
-        ),
-        child: Column(
+        color: AppColors.backgroundColor,
+        child: Stack(
           children: [
-            Expanded(
-              child: messages.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(8.0),
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        final message = messages[index];
-                        return ChatBubble(message: message);
-                      },
-                    ),
+            // Background texture that moves with scroll
+            AnimatedBuilder(
+              animation: _scrollController,
+              builder: (context, child) {
+                // Use a more noticeable parallax multiplier
+                return Positioned(
+                  top: -_scrollOffset * 0.8, // Increased from 0.5 to 0.8 for more obvious effect
+                  left: 0,
+                  right: 0,
+                  // Make the image tall enough to scroll
+                  height: MediaQuery.of(context).size.height * 3,
+                  child: child!,
+                );
+              },
+              child: Image.asset(
+                'assets/images/paper_texture.png',
+                fit: BoxFit.cover,
+                repeat: ImageRepeat.repeatY,
+                color: Colors.white.withOpacity(0.7), // Slightly more visible
+                colorBlendMode: BlendMode.dstATop,
+              ),
+            ),
+            
+            // Content on top of the scrolling background
+            Column(
+              children: [
+                Expanded(
+                  child: messages.isEmpty
+                      ? const Center(child: CircularProgressIndicator())
+                      : NotificationListener<ScrollNotification>(
+                          onNotification: (scrollNotification) {
+                            if (scrollNotification is ScrollUpdateNotification) {
+                              setState(() {
+                                _scrollOffset = _scrollController.offset;
+                              });
+                              _logScrollPosition();
+                            }
+                            return true;
+                          },
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.all(8.0),
+                            itemCount: messages.length,
+                            physics: const AlwaysScrollableScrollPhysics(), // Ensure scrolling works even with few items
+                            itemBuilder: (context, index) {
+                              final message = messages[index];
+                              return ChatBubble(message: message);
+                            },
+                          ),
+                        ),
+                ),
+              ],
             ),
           ],
         ),

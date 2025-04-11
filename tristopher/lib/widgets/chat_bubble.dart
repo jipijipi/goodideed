@@ -54,6 +54,7 @@
 ///   ),
 /// )
 /// ```
+library;
 import 'package:flutter/material.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/models/message_model.dart';

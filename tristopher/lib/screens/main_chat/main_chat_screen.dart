@@ -299,7 +299,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [
+/*         actions: [
           userAsync.when(
             data: (user) {
               final showAnimation = ref.watch(showStakeFailureAnimationProvider);
@@ -317,7 +317,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
             loading: () => const SizedBox(width: 100),
             error: (_, __) => const SizedBox(width: 100),
           ),
-        ],
+        ], */
       ),
       body: Container(
         color: AppColors.backgroundColor,

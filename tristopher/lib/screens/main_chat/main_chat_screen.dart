@@ -8,7 +8,7 @@ import 'package:tristopher_app/providers/providers.dart';
 import 'package:tristopher_app/services/story_service.dart';
 import 'package:tristopher_app/services/user_service.dart';
 import 'package:tristopher_app/widgets/chat_bubble.dart';
-import 'package:tristopher_app/widgets/stake_display.dart';
+//import 'package:tristopher_app/widgets/stake_display.dart';
 
 class MainChatScreen extends ConsumerStatefulWidget {
   const MainChatScreen({super.key});
@@ -21,35 +21,35 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final StoryService _storyService = StoryService();
   late UserService _userService;
-  double _scrollOffset = 0.0;
-  
+  double _scrollOffset = 0.0; // Re-add for synchronized scrolling
   @override
   void initState() {
     super.initState();
     _userService = ref.read(userServiceProvider);
     
-    // Listen to scroll changes for the parallax effect and scroll position tracking
+    // Listen to scroll changes for tracking scroll position and auto-scroll behavior
     _scrollController.addListener(() {
       setState(() {
         _scrollOffset = _scrollController.offset;
+      });
+      
+      if (_scrollController.hasClients) {
+        // Check if we're near the bottom (within 20 pixels)
+        final isAtBottom = _scrollController.position.maxScrollExtent - _scrollController.offset <= 20;
         
-        // Track if user has manually scrolled up
-        if (_scrollController.hasClients) {
-          // Check if we're near the bottom (within 20 pixels)
-          final isAtBottom = _scrollController.position.maxScrollExtent - _scrollController.offset <= 20;
-          
-          // If user has scrolled and now we're at the bottom, reset the user scrolled flag
-          if (isAtBottom && _userHasScrolled) {
+        // If user scrolled and now we're at the bottom, reset the user scrolled flag
+        if (isAtBottom && _userHasScrolled) {
+          setState(() {
             _userHasScrolled = false;
             _autoScrollEnabled = true;
-          } else if (!isAtBottom && !_userHasScrolled) {
-            // User has scrolled away from the bottom
+          });
+        } else if (!isAtBottom && !_userHasScrolled) {
+          // User has scrolled away from the bottom
+          setState(() {
             _userHasScrolled = true;
-          }
+          });
         }
-        
-        print('Scroll offset updated: $_scrollOffset, userScrolled: $_userHasScrolled');
-      });
+      }
     });
     
     // Initialize chat on first load
@@ -85,10 +85,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
     });
   }
   
-  // Debug function to log scroll position
-  void _logScrollPosition() {
-    print('Scroll position: $_scrollOffset');
-  }
+  // Auto-scroll functionality is retained without parallax
 
   // Initialize the chat based on user state
   Future<void> _initializeChat() async {
@@ -356,33 +353,26 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
         color: AppColors.backgroundColor,
         child: Stack(
           children: [
-            // Background texture that moves with scroll
+            // Background texture that scrolls with content
             AnimatedBuilder(
               animation: _scrollController,
               builder: (context, child) {
-                // Calculate a dynamic height that extends as the content grows
-                double contentHeight = max(
-                  _scrollController.hasClients ? 
-                    _scrollController.position.maxScrollExtent + MediaQuery.of(context).size.height : 
-                    MediaQuery.of(context).size.height * 3,
-                  MediaQuery.of(context).size.height * 3 // Minimum height
-                );
-                
-                return Positioned(
-                  top: -_scrollOffset * 0.8, // Increased from 0.5 to 0.8 for more obvious effect
-                  left: 0,
-                  right: 0,
-                  height: contentHeight,
-                  child: child!,
+                return Container(
+                  // Set a large fixed height to ensure it covers the entire scrollable area
+                  height: 10000, // Large enough to cover any reasonable scroll area
+                  decoration: BoxDecoration(
+                    // Using a repeating image as a pattern in the decoration
+                    image: DecorationImage(
+                      image: const AssetImage('assets/images/paper_texture.png'),
+                      repeat: ImageRepeat.repeat,
+                      fit: BoxFit.none,
+                      // Position the background based on scroll offset - exact 1:1 ratio
+                      alignment: Alignment(0, (_scrollOffset / 1000.0) % 1.0),
+                      opacity: 0.7,
+                    ),
+                  ),
                 );
               },
-              child: Image.asset(
-                'assets/images/paper_texture.png',
-                fit: BoxFit.cover,
-                repeat: ImageRepeat.repeat, // Change to repeat both horizontally and vertically
-                color: Colors.white.withOpacity(0.7), // Slightly more visible
-                colorBlendMode: BlendMode.dstATop,
-              ),
             ),
             
             // Content on top of the scrolling background
@@ -396,17 +386,18 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
                             if (scrollNotification is ScrollUpdateNotification) {
                               setState(() {
                                 _scrollOffset = _scrollController.offset;
-                                
-                                // If it's a user-initiated scroll (not programmatic)
-                                if (scrollNotification.dragDetails != null) {
-                                  // Check if scrolling up
-                                  if (scrollNotification.metrics.maxScrollExtent - _scrollController.offset > 20) {
+                              });
+                              
+                              // If it's a user-initiated scroll (not programmatic)
+                              if (scrollNotification.dragDetails != null) {
+                                // Check if scrolling up
+                                if (scrollNotification.metrics.maxScrollExtent - _scrollController.offset > 20) {
+                                  setState(() {
                                     _userHasScrolled = true;
                                     _autoScrollEnabled = false;
-                                  }
+                                  });
                                 }
-                              });
-                              _logScrollPosition();
+                              }
                             } else if (scrollNotification is ScrollEndNotification) {
                               // If user scrolled to bottom, re-enable auto-scroll
                               if (_scrollController.position.maxScrollExtent - _scrollController.offset <= 20) {

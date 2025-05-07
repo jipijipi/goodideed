@@ -8,6 +8,7 @@ import 'package:tristopher_app/providers/providers.dart';
 import 'package:tristopher_app/services/story_service.dart';
 import 'package:tristopher_app/services/user_service.dart';
 import 'package:tristopher_app/widgets/chat_bubble.dart';
+import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 //import 'package:tristopher_app/widgets/stake_display.dart';
 
 class MainChatScreen extends ConsumerStatefulWidget {
@@ -321,7 +322,8 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
       }
     });
     
-    return Scaffold(
+    return PaperBackgroundScaffold(
+      scrollController: _scrollController,
       appBar: AppBar(
         title: Text(
           'Tristopher',
@@ -349,82 +351,52 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
           ),
         ], */
       ),
-      body: Container(
-        color: AppColors.backgroundColor,
-        child: Stack(
-          children: [
-            // Background texture that scrolls with content
-            AnimatedBuilder(
-              animation: _scrollController,
-              builder: (context, child) {
-                return Container(
-                  // Set a large fixed height to ensure it covers the entire scrollable area
-                  height: 10000, // Large enough to cover any reasonable scroll area
-                  decoration: BoxDecoration(
-                    // Using a repeating image as a pattern in the decoration
-                    image: DecorationImage(
-                      image: const AssetImage('assets/images/paper_texture.png'),
-                      repeat: ImageRepeat.repeat,
-                      fit: BoxFit.none,
-                      // Position the background based on scroll offset - exact 1:1 ratio
-                      alignment: Alignment(0, (_scrollOffset / 1000.0) % 1.0),
-                      opacity: 0.7,
+      body: Column(
+        children: [
+          Expanded(
+            child: messages.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : NotificationListener<ScrollNotification>(
+                    onNotification: (scrollNotification) {
+                      if (scrollNotification is ScrollUpdateNotification) {
+                        setState(() {
+                          _scrollOffset = _scrollController.offset;
+                        });
+                        
+                        // If it's a user-initiated scroll (not programmatic)
+                        if (scrollNotification.dragDetails != null) {
+                          // Check if scrolling up
+                          if (scrollNotification.metrics.maxScrollExtent - _scrollController.offset > 20) {
+                            setState(() {
+                              _userHasScrolled = true;
+                              _autoScrollEnabled = false;
+                            });
+                          }
+                        }
+                      } else if (scrollNotification is ScrollEndNotification) {
+                        // If user scrolled to bottom, re-enable auto-scroll
+                        if (_scrollController.position.maxScrollExtent - _scrollController.offset <= 20) {
+                          setState(() {
+                            _userHasScrolled = false;
+                            _autoScrollEnabled = true;
+                          });
+                        }
+                      }
+                      return true;
+                    },
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(8.0),
+                      itemCount: messages.length,
+                      physics: const AlwaysScrollableScrollPhysics(), // Ensure scrolling works even with few items
+                      itemBuilder: (context, index) {
+                        final message = messages[index];
+                        return ChatBubble(message: message);
+                      },
                     ),
                   ),
-                );
-              },
-            ),
-            
-            // Content on top of the scrolling background
-            Column(
-              children: [
-                Expanded(
-                  child: messages.isEmpty
-                      ? const Center(child: CircularProgressIndicator())
-                      : NotificationListener<ScrollNotification>(
-                          onNotification: (scrollNotification) {
-                            if (scrollNotification is ScrollUpdateNotification) {
-                              setState(() {
-                                _scrollOffset = _scrollController.offset;
-                              });
-                              
-                              // If it's a user-initiated scroll (not programmatic)
-                              if (scrollNotification.dragDetails != null) {
-                                // Check if scrolling up
-                                if (scrollNotification.metrics.maxScrollExtent - _scrollController.offset > 20) {
-                                  setState(() {
-                                    _userHasScrolled = true;
-                                    _autoScrollEnabled = false;
-                                  });
-                                }
-                              }
-                            } else if (scrollNotification is ScrollEndNotification) {
-                              // If user scrolled to bottom, re-enable auto-scroll
-                              if (_scrollController.position.maxScrollExtent - _scrollController.offset <= 20) {
-                                setState(() {
-                                  _userHasScrolled = false;
-                                  _autoScrollEnabled = true;
-                                });
-                              }
-                            }
-                            return true;
-                          },
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            padding: const EdgeInsets.all(8.0),
-                            itemCount: messages.length,
-                            physics: const AlwaysScrollableScrollPhysics(), // Ensure scrolling works even with few items
-                            itemBuilder: (context, index) {
-                              final message = messages[index];
-                              return ChatBubble(message: message);
-                            },
-                          ),
-                        ),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,

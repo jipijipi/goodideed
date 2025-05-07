@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/providers/providers.dart';
+import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -35,58 +36,45 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          image: DecorationImage(
-            image: const AssetImage('assets/images/paper_texture.png'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.8),
-              BlendMode.dstATop,
+    return PaperBackgroundScaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/tristopher_logo.png',
+              width: 150,
+              height: 150,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback if image fails to load
+                return Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Center(
+                    child: Icon(
+                      Icons.android_outlined,
+                      size: 80,
+                      color: AppColors.accentColor,
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/tristopher_logo.png',
-                width: 150,
-                height: 150,
-                errorBuilder: (context, error, stackTrace) {
-                  // Fallback if image fails to load
-                  return Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.android_outlined,
-                        size: 80,
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Tristopher',
-                style: AppTextStyles.header(size: 36),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Your pessimistic habit coach',
-                style: AppTextStyles.userText(),
-              ),
-            ],
-          ),
+            const SizedBox(height: 24),
+            Text(
+              'Tristopher',
+              style: AppTextStyles.header(size: 36),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Your pessimistic habit coach',
+              style: AppTextStyles.userText(),
+            ),
+          ],
         ),
       ),
     );

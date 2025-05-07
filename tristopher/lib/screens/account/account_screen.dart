@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/providers/providers.dart';
+import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 
 class AccountScreen extends ConsumerStatefulWidget {
   const AccountScreen({super.key});
@@ -198,7 +199,7 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
   Widget build(BuildContext context) {
     final userAsync = ref.watch(userProvider);
     
-    return Scaffold(
+    return PaperBackgroundScaffold(
       appBar: AppBar(
         title: Text(
           'Account & Settings',
@@ -207,29 +208,16 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          image: DecorationImage(
-            image: const AssetImage('assets/images/paper_texture.png'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.8),
-              BlendMode.dstATop,
-            ),
-          ),
-        ),
-        child: userAsync.when(
-          data: (user) {
-            if (user == null) {
-              return const Center(child: Text('User not found'));
-            }
-            return _buildSettings(user);
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(
-            child: Text('Error: ${error.toString()}'),
-          ),
+      body: userAsync.when(
+        data: (user) {
+          if (user == null) {
+            return const Center(child: Text('User not found'));
+          }
+          return _buildSettings(user);
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Text('Error: ${error.toString()}'),
         ),
       ),
     );

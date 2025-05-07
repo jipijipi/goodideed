@@ -6,6 +6,7 @@ import 'package:tristopher_app/providers/providers.dart';
 import 'package:tristopher_app/services/onboarding_service.dart';
 import 'package:tristopher_app/services/story_service.dart';
 import 'package:tristopher_app/widgets/chat_bubble.dart';
+import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -391,7 +392,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget build(BuildContext context) {
     final messages = ref.watch(chatMessagesProvider);
     
-    return Scaffold(
+    return PaperBackgroundScaffold(
+      scrollController: _scrollController,
       appBar: AppBar(
         title: Text(
           'Getting Started',
@@ -400,35 +402,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor,
-          image: DecorationImage(
-            image: const AssetImage('assets/images/paper_texture.png'),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.8),
-              BlendMode.dstATop,
-            ),
+      body: Column(
+        children: [
+          Expanded(
+            child: messages.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final message = messages[index];
+                      return ChatBubble(message: message);
+                    },
+                  ),
           ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: messages.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(8.0),
-                      itemCount: messages.length,
-                      itemBuilder: (context, index) {
-                        final message = messages[index];
-                        return ChatBubble(message: message);
-                      },
-                    ),
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }

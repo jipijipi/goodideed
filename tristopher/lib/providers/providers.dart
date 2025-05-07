@@ -38,11 +38,15 @@ final chatMessagesProvider = StateNotifierProvider<ChatMessagesNotifier, List<Me
   return ChatMessagesNotifier();
 });
 
+
+
 class ChatMessagesNotifier extends StateNotifier<List<MessageModel>> {
   ChatMessagesNotifier() : super([]);
   
   void addMessage(MessageModel message) {
     state = [...state, message];
+    
+    // We'll handle the scroll notification in the UI
   }
   
   void addTristopherMessage(String content) {

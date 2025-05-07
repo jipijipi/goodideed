@@ -28,11 +28,27 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
     super.initState();
     _userService = ref.read(userServiceProvider);
     
-    // Listen to scroll changes for the parallax effect
+    // Listen to scroll changes for the parallax effect and scroll position tracking
     _scrollController.addListener(() {
       setState(() {
         _scrollOffset = _scrollController.offset;
-        print('Scroll offset updated: $_scrollOffset');
+        
+        // Track if user has manually scrolled up
+        if (_scrollController.hasClients) {
+          // Check if we're near the bottom (within 20 pixels)
+          final isAtBottom = _scrollController.position.maxScrollExtent - _scrollController.offset <= 20;
+          
+          // If user has scrolled and now we're at the bottom, reset the user scrolled flag
+          if (isAtBottom && _userHasScrolled) {
+            _userHasScrolled = false;
+            _autoScrollEnabled = true;
+          } else if (!isAtBottom && !_userHasScrolled) {
+            // User has scrolled away from the bottom
+            _userHasScrolled = true;
+          }
+        }
+        
+        print('Scroll offset updated: $_scrollOffset, userScrolled: $_userHasScrolled');
       });
     });
     
@@ -48,15 +64,23 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
     super.dispose();
   }
 
+  // Variables to track user scroll behavior
+  bool _userHasScrolled = false;
+  bool _autoScrollEnabled = true;
+
   // Scroll to bottom of chat when new message is added
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+        // Only auto-scroll if the user hasn't manually scrolled up
+        // or if they're already near the bottom
+        if (_autoScrollEnabled) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+        }
       }
     });
   }
@@ -288,8 +312,17 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch the messages to detect changes
     final messages = ref.watch(chatMessagesProvider);
     final userAsync = ref.watch(userProvider);
+    
+    // Listen for changes in the messages list
+    ref.listen(chatMessagesProvider, (previous, current) {
+      // If messages were added (list got longer), scroll to bottom if auto-scroll is enabled
+      if (previous != null && current != null && previous.length < current.length && _autoScrollEnabled) {
+        _scrollToBottom();
+      }
+    });
     
     return Scaffold(
       appBar: AppBar(
@@ -363,8 +396,25 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
                             if (scrollNotification is ScrollUpdateNotification) {
                               setState(() {
                                 _scrollOffset = _scrollController.offset;
+                                
+                                // If it's a user-initiated scroll (not programmatic)
+                                if (scrollNotification.dragDetails != null) {
+                                  // Check if scrolling up
+                                  if (scrollNotification.metrics.maxScrollExtent - _scrollController.offset > 20) {
+                                    _userHasScrolled = true;
+                                    _autoScrollEnabled = false;
+                                  }
+                                }
                               });
                               _logScrollPosition();
+                            } else if (scrollNotification is ScrollEndNotification) {
+                              // If user scrolled to bottom, re-enable auto-scroll
+                              if (_scrollController.position.maxScrollExtent - _scrollController.offset <= 20) {
+                                setState(() {
+                                  _userHasScrolled = false;
+                                  _autoScrollEnabled = true;
+                                });
+                              }
                             }
                             return true;
                           },

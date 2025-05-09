@@ -30,7 +30,7 @@ class TristopherApp extends StatelessWidget {
           seedColor: AppColors.accentColor,
           primary: AppColors.accentColor,
         ),
-        scaffoldBackgroundColor: AppColors.backgroundColor,
+        scaffoldBackgroundColor: const Color.fromARGB(255, 252, 252, 246),
         textTheme: GoogleFonts.cutiveTextTheme(
           Theme.of(context).textTheme,
         ),

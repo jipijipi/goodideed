@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppColors {
   static const Color primaryText = Colors.black;
   static const Color accentColor = Color(0xFFFBBC05);
-  static const Color backgroundColor = Color(0xFFF5F5DC); // Light Beige
+  static const Color backgroundColor = Color.fromARGB(255, 246, 240, 244); // Light Beige
 }
 
 // App Routes

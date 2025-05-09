@@ -31,11 +31,11 @@ class AppTextStyles {
   }
 
   // Cutive font for user's messages and UI text
-  static TextStyle userText({double size = 16, FontWeight weight = FontWeight.normal}) {
+  static TextStyle userText({double size = 16, FontWeight weight = FontWeight.normal, double alpha = 0.8}) {
     return GoogleFonts.cutive(
       fontSize: size,
       fontWeight: weight,
-      color: AppColors.primaryText,
+      color: AppColors.primaryText.withAlpha((alpha * 255).toInt()),
     );
   }
 

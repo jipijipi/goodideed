@@ -108,7 +108,7 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
           end: Offset.zero,
         ).animate(_animation),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
           child: _buildMessageContent(),
         ),
       ),
@@ -159,17 +159,17 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       children: [
         Flexible(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14.0),
             margin: EdgeInsets.symmetric(horizontal: 8.0),
             
             decoration: BoxDecoration(
               color: isUser 
-                ? Colors.yellow.withOpacity(0.3)  // Highlighter effect
+                ? AppColors.accentColor.withAlpha((0.15 * 255).toInt())  // Highlighter effect
                 : Colors.transparent,             // Transparent background for non-user
               borderRadius: BorderRadius.circular(0.0),
               border: isUser
                 ? Border.all(
-                    color: Colors.yellow.withOpacity(0.5),
+                    color: AppColors.accentColor.withAlpha((0.0 * 255).toInt()),
                     width: 2.0,
                   )
                 : null,  // No border for non-user messages
@@ -203,14 +203,14 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       child: ElevatedButton(
         onPressed: () => option.onTap(),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withOpacity(0.4),  // Highlighter effect
+          backgroundColor: Colors.white.withAlpha((0.4 * 255).toInt()),  // Highlighter effect
           foregroundColor: AppColors.primaryText,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0.0),  // Square corners like user bubbles
             side: BorderSide(
-              color: Colors.yellow.withOpacity(0.0),
+              color: Colors.yellow.withAlpha((0.0 * 255).toInt()),
               width: 2.0,
             ),
           ),
@@ -232,53 +232,64 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
         const SizedBox(height: 8.0),
         Padding(
           padding: const EdgeInsets.only(left: 32.0, right: 8.0),
-          child: Row(
+          child: Column(
             children: [
-              Expanded(
-                child: TextField(
-                  controller: _inputController,
-                  decoration: InputDecoration(
-                    hintText: widget.message.inputHint ?? 'Type your answer...',
-                    hintStyle: AppTextStyles.userText().copyWith(
-                      color: Colors.black.withOpacity(0.5),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: BorderSide(
-                        color: Colors.black.withOpacity(0.2),
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: const BorderSide(
-                        color: AppColors.accentColor,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
+              TextField(
+                controller: _inputController,
+                decoration: InputDecoration(
+                  hintText: widget.message.inputHint ?? 'Type your answer...',
+                  hintStyle: AppTextStyles.userText().copyWith(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white.withAlpha((0.1 * 255).toInt()),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                    borderSide: BorderSide(
+                      color: Colors.black.withOpacity(0.2),
                     ),
                   ),
-                  style: AppTextStyles.userText(),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                    borderSide: BorderSide(
+                      color: Colors.black.withOpacity(0.2),
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                    borderSide: BorderSide(
+                      color: AppColors.accentColor.withOpacity(0.3), // Added transparency
+                      width: 2.0,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
                 ),
+                style: AppTextStyles.userText(),
               ),
-              IconButton(
-                icon: const Icon(Icons.send),
-                color: AppColors.accentColor,
-                onPressed: () {
-                  if (_inputController.text.isNotEmpty) {
-                    widget.message.onInputSubmit!(_inputController.text);
-                    _inputController.clear();
-                  }
-                },
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.accentColor.withOpacity(0.3),
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(0.0),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.send),
+                    color: AppColors.accentColor.withOpacity(1.0),
+                    onPressed: () {
+                      if (_inputController.text.isNotEmpty) {
+                        widget.message.onInputSubmit!(_inputController.text);
+                        _inputController.clear();
+                      }
+                    },
+                  ),
+                ),
               ),
             ],
           ),

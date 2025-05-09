@@ -317,7 +317,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
     // Listen for changes in the messages list
     ref.listen(chatMessagesProvider, (previous, current) {
       // If messages were added (list got longer), scroll to bottom if auto-scroll is enabled
-      if (previous != null && current != null && previous.length < current.length && _autoScrollEnabled) {
+      if (previous != null && previous.length < current.length && _autoScrollEnabled) {
         _scrollToBottom();
       }
     });

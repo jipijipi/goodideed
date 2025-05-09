@@ -9,12 +9,12 @@ class PaperBackgroundScaffold extends StatefulWidget {
   final ScrollController? scrollController;
 
   const PaperBackgroundScaffold({
-    Key? key,
+    super.key,
     this.appBar,
     required this.body,
     this.bottomNavigationBar,
     this.scrollController,
-  }) : super(key: key);
+  });
 
   @override
   State<PaperBackgroundScaffold> createState() => _PaperBackgroundScaffoldState();

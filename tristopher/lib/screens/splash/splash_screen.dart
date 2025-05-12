@@ -71,7 +71,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Your pessimistic habit coach',
+              '',
               style: AppTextStyles.userText(),
             ),
           ],

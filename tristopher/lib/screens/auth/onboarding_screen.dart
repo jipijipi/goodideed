@@ -395,8 +395,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return PaperBackgroundScaffold(
       scrollController: _scrollController,
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
-          'Getting Started',
+          '•‿•',
           style: AppTextStyles.header(size: 20),
         ),
         backgroundColor: Colors.transparent,

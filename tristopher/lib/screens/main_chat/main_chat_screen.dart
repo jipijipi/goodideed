@@ -319,8 +319,9 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
     return PaperBackgroundScaffold(
       scrollController: _scrollController,
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
-          'Tristopher',
+          '•‿•',
           style: AppTextStyles.header(size: 20),
         ),
         backgroundColor: Colors.transparent,

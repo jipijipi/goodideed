@@ -7,6 +7,7 @@ class PaperBackgroundScaffold extends StatelessWidget {
   final Widget body;
   final Widget? bottomNavigationBar;
   final ScrollController? scrollController;
+  final Widget? drawer; // Add drawer parameter
 
   const PaperBackgroundScaffold({
     super.key,
@@ -14,6 +15,7 @@ class PaperBackgroundScaffold extends StatelessWidget {
     required this.body,
     this.bottomNavigationBar,
     this.scrollController,
+    this.drawer, // Add to constructor
   });
 
   @override
@@ -27,6 +29,7 @@ class PaperBackgroundScaffold extends StatelessWidget {
         child: body,
       ),
       bottomNavigationBar: bottomNavigationBar,
+      drawer: drawer, // Pass drawer to Scaffold
     );
   }
 }

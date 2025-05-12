@@ -96,12 +96,11 @@ class TristopherApp extends StatelessWidget {
             vertical: 12.0,
           ),
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Colors.white,
-          selectedItemColor: AppColors.accentColor,
-          unselectedItemColor: Colors.black.withOpacity(0.5),
-          type: BottomNavigationBarType.fixed,
-          elevation: 8,
+        // Drawer theme settings
+        drawerTheme: DrawerThemeData(
+          backgroundColor: AppColors.backgroundColor,
+          scrimColor: Colors.black.withOpacity(0.5),
+          elevation: 4,
         ),
       ),
       initialRoute: AppRoutes.splash,

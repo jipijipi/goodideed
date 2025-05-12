@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/providers/providers.dart';
+import 'package:tristopher_app/widgets/common/drawer/app_drawer.dart';
 import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 
 class AccountScreen extends ConsumerStatefulWidget {
@@ -207,7 +208,16 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        // Add hamburger menu icon
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
       ),
+      // Add drawer menu
+      drawer: const AppDrawer(),
       body: userAsync.when(
         data: (user) {
           if (user == null) {

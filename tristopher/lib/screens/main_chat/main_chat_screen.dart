@@ -7,6 +7,7 @@ import 'package:tristopher_app/providers/providers.dart';
 import 'package:tristopher_app/services/story_service.dart';
 import 'package:tristopher_app/services/user_service.dart';
 import 'package:tristopher_app/widgets/chat_bubble.dart';
+import 'package:tristopher_app/widgets/common/drawer/app_drawer.dart';
 import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 //import 'package:tristopher_app/widgets/stake_display.dart';
 
@@ -326,6 +327,13 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        // Add hamburger menu icon
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
 /*         actions: [
           userAsync.when(
             data: (user) {
@@ -387,30 +395,9 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.of(context).pushNamed(AppRoutes.goalStake);
-          } else if (index == 2) {
-            Navigator.of(context).pushNamed(AppRoutes.account);
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.flag_outlined),
-            label: 'Goal',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            label: 'Account',
-          ),
-        ],
-      ),
+      // Replace bottom navigation bar with drawer menu
+      drawer: const AppDrawer(),
+      // No bottom navigation bar
     );
   }
 }

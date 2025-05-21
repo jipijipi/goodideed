@@ -7,8 +7,14 @@ import 'package:tristopher_app/screens/auth/onboarding_screen.dart';
 import 'package:tristopher_app/screens/goal_stake/goal_screen.dart';
 import 'package:tristopher_app/screens/main_chat/main_chat_screen.dart';
 import 'package:tristopher_app/screens/splash/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     const ProviderScope(
       child: TristopherApp(),

@@ -79,6 +79,8 @@ flutter:
     - assets/images/paper_texture.png
     - assets/images/paper_texture.jpg
     - assets/images/tristopher_logo.png
+    - firebase/dev/
+    - firebase/prod/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

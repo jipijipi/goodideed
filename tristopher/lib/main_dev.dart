@@ -9,16 +9,16 @@ import 'package:tristopher_app/screens/main_chat/main_chat_screen.dart';
 import 'package:tristopher_app/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tristopher_app/config/environment.dart';
-import 'firebase_options.dart';
+import 'firebase_options_dev.dart' as firebase_dev;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Set production environment by default
-  EnvironmentConfig.setEnvironment(Environment.production);
+  // Set development environment
+  EnvironmentConfig.setEnvironment(Environment.dev);
   
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: firebase_dev.DefaultFirebaseOptions.currentPlatform,
   );
   
   runApp(
@@ -35,7 +35,7 @@ class TristopherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: EnvironmentConfig.appName,
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: EnvironmentConfig.isDev,
       theme: ThemeData(
         // Use a custom theme with the specified colors and fonts
         colorScheme: ColorScheme.fromSeed(

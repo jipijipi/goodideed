@@ -4,6 +4,49 @@
 
 **Meet Tristopher, your brutally honest companion that helps you stick to your goals by putting your money where your hate is. This habit-forming app turns your procrastination into real-world consequences - miss your daily target and watch your cash flow to organizations you'd never willingly support. Unprecedented motivation for lasting change.**
 
+## Quick Start for Developers
+
+```bash
+# Setup the project
+make setup
+
+# Run in development mode
+make dev
+
+# Run in staging mode
+make staging
+
+# Run in production mode
+make prod
+```
+
+**📖 For detailed environment setup, see [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md)**
+
+## Available Commands
+
+```bash
+make help          # Show all available commands
+make dev           # Run development environment
+make staging       # Run staging environment
+make prod          # Run production environment
+make build-dev     # Build development version
+make build-staging # Build staging version
+make build-prod    # Build production version
+make test          # Run tests
+make clean         # Clean build files
+```
+
+## Environment Overview
+
+Tristopher is configured with three environments:
+- **Development** - Local development with test payments ($0.01 stakes)
+- **Staging** - Pre-production testing with realistic test payments ($0.10 stakes)
+- **Production** - Live app with real payments ($1.00+ stakes)
+
+Each environment has separate Firebase projects, API endpoints, and feature flags.
+
+---
+
 ## Executive Summary
 
 Tristopher is a revolutionary habit formation app that transforms procrastination into real-world consequences. Unlike traditional habit trackers that rely on positive reinforcement, Tristopher leverages the power of loss aversion and negative reinforcement through its unique "anti-charity" system. Users put their money at stake, and if they fail to complete their habits, that money goes to organizations they actively oppose. Paired with a distinctive pessimistic robot personality that employs reverse psychology, Tristopher creates unprecedented motivation for lasting behavioral change.
@@ -83,6 +126,29 @@ Tristopher features multiple revenue streams:
    * Program 66: Advanced tracking, higher stakes, customizable robot personality
 
 ## Flutter Development
+
+This project is built with Flutter and uses Riverpod for state management.
+
+### Prerequisites
+- Flutter SDK (latest stable version)
+- Firebase CLI
+- Android Studio / Xcode for respective platforms
+
+### Project Structure
+- `lib/main.dart` - Production entry point
+- `lib/main_dev.dart` - Development entry point  
+- `lib/main_staging.dart` - Staging entry point
+- `lib/config/environment.dart` - Environment configuration
+- `config/` - Environment variable files
+- `scripts/` - Build and run scripts
+
+### Key Features Implementation
+- **Anti-Charity System**: Core wagering functionality with environment-specific payment handling
+- **Tristopher Robot**: Configurable personality levels (1-5) with brutal honesty mode
+- **Firebase Integration**: Separate projects per environment for data isolation
+- **Payment Processing**: Test payments in dev/staging, real payments in production
+
+For detailed development instructions, see [ENVIRONMENT_SETUP.md](ENVIRONMENT_SETUP.md).
 
 This project is built with Flutter. If you're working on this codebase:
 

@@ -9,16 +9,16 @@ import 'package:tristopher_app/screens/main_chat/main_chat_screen.dart';
 import 'package:tristopher_app/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tristopher_app/config/environment.dart';
-import 'firebase_options.dart';
+import 'firebase_options_staging.dart' as firebase_staging;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Set production environment by default
-  EnvironmentConfig.setEnvironment(Environment.production);
+  // Set staging environment
+  EnvironmentConfig.setEnvironment(Environment.staging);
   
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: firebase_staging.DefaultFirebaseOptions.currentPlatform,
   );
   
   runApp(
@@ -35,7 +35,7 @@ class TristopherApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: EnvironmentConfig.appName,
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: EnvironmentConfig.isStaging,
       theme: ThemeData(
         // Use a custom theme with the specified colors and fonts
         colorScheme: ColorScheme.fromSeed(
@@ -111,7 +111,6 @@ class TristopherApp extends StatelessWidget {
         // Drawer theme settings
         drawerTheme: DrawerThemeData(
           backgroundColor: AppColors.backgroundColor,
-          scrimColor: Colors.black.withOpacity(0.5),
           elevation: 4,
         ),
       ),
@@ -122,6 +121,36 @@ class TristopherApp extends StatelessWidget {
         AppRoutes.mainChat: (context) => const MainChatScreen(),
         AppRoutes.goalStake: (context) => const GoalScreen(),
         AppRoutes.account: (context) => const AccountScreen(),
+      },
+      // Add staging banner
+      builder: (context, child) {
+        return Stack(
+          children: [
+            child!,
+            if (EnvironmentConfig.isStaging)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: const BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'STAGING',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
       },
     );
   }

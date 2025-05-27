@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDESiRUNu_rwCC_7SjTT16Zg4oGVnpwq-k',
-    appId: '1:209876998720:android:e9a4887e3a3bc286e61da5',
-    messagingSenderId: '209876998720',
+    apiKey: 'AIzaSyCBSpPEnj0Ob0CfPKOAE6tHsxYFR_rGK_0',
+    appId: '1:13897855508:android:ad112393ad8567dd6a6d01',
+    messagingSenderId: '13897855508',
     projectId: 'tristopher-dev',
     storageBucket: 'tristopher-dev.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA40uL_qfeoGRK81Wdvh6nc0Nfv94EMQBc',
-    appId: '1:209876998720:ios:0ea3d446d0e5ca59e61da5',
-    messagingSenderId: '209876998720',
+    apiKey: 'AIzaSyAjby70dp-17J-O92Wj4knp9fo3fwy92yU',
+    appId: '1:13897855508:ios:52324cd1f96ba8d76a6d01',
+    messagingSenderId: '13897855508',
     projectId: 'tristopher-dev',
     storageBucket: 'tristopher-dev.firebasestorage.app',
     iosBundleId: 'com.example.tristopherApp.dev',
   );
+
 }

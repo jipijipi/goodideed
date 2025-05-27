@@ -24,14 +24,17 @@ clean: ## Clean build files and get dependencies
 
 dev: ## Run app in development environment
 	@echo "🚀 Running Tristopher in development mode..."
+	@chmod +x scripts/run.sh 2>/dev/null || true
 	@./scripts/run.sh dev
 
 staging: ## Run app in staging environment
 	@echo "🚀 Running Tristopher in staging mode..."
+	@chmod +x scripts/run.sh 2>/dev/null || true
 	@./scripts/run.sh staging
 
 prod: ## Run app in production environment
 	@echo "🚀 Running Tristopher in production mode..."
+	@chmod +x scripts/run.sh 2>/dev/null || true
 	@./scripts/run.sh prod
 
 build-dev: ## Build app for development
@@ -87,5 +90,11 @@ devices: ## List available devices
 doctor: ## Run flutter doctor
 	@flutter doctor
 
+setup-firebase: ## Set up Firebase for all environments
+	@echo "🔥 Setting up Firebase for all environments..."
+	@chmod +x scripts/setup-firebase.sh
+	@./scripts/setup-firebase.sh
+
 verify: ## Verify environment setup
+	@chmod +x scripts/verify-setup.sh 2>/dev/null || true
 	@./scripts/verify-setup.sh

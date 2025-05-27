@@ -17,19 +17,7 @@ class EnvironmentConfig {
   static bool get isStaging => _currentEnvironment == Environment.staging;
   static bool get isProduction => _currentEnvironment == Environment.production;
   
-  // API URLs
-  static String get apiBaseUrl {
-    switch (_currentEnvironment) {
-      case Environment.dev:
-        return 'https://api-dev.tristopher.app';
-      case Environment.staging:
-        return 'https://api-staging.tristopher.app';
-      case Environment.production:
-        return 'https://api.tristopher.app';
-    }
-  }
-  
-  // Firebase project IDs
+  // Firebase project IDs (main backend)
   static String get firebaseProjectId {
     switch (_currentEnvironment) {
       case Environment.dev:
@@ -38,6 +26,30 @@ class EnvironmentConfig {
         return 'tristopher-staging';
       case Environment.production:
         return 'tristopher-72b78';
+    }
+  }
+  
+  // Third-party API URLs (only when needed)
+  static String get stripeApiUrl {
+    switch (_currentEnvironment) {
+      case Environment.dev:
+        return 'https://api.stripe.com/v1'; // Stripe test mode
+      case Environment.staging:
+        return 'https://api.stripe.com/v1'; // Stripe test mode
+      case Environment.production:
+        return 'https://api.stripe.com/v1'; // Stripe live mode
+    }
+  }
+  
+  // Charity API endpoints (for anti-charity donations)
+  static String get charityApiUrl {
+    switch (_currentEnvironment) {
+      case Environment.dev:
+        return 'MOCK'; // Mock charity donations in dev
+      case Environment.staging:
+        return 'https://api.justgiving.com'; // Test charity API
+      case Environment.production:
+        return 'https://api.justgiving.com'; // Live charity API
     }
   }
   

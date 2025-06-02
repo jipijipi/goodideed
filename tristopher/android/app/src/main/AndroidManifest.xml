@@ -2,7 +2,7 @@
     <application
         android:label="tristopher_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         
         <!-- Disable automatic Firebase initialization -->
         <meta-data

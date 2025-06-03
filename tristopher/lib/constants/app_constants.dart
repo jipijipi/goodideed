@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // App Theme Colors
 class AppColors {
-  static const Color primaryText = Colors.black;
+  static const Color primaryText = Color.fromARGB(255, 42, 21, 1);
   static const Color accentColor = Color(0xFFFBBC05);
   static const Color backgroundColor = Color.fromARGB(255, 246, 240, 244); // Light Beige
 }
@@ -32,7 +32,7 @@ class AppTextStyles {
 
   // Cutive font for user's messages and UI text
   static TextStyle userText({
-    double size = 18,
+    double size = 16,
     FontWeight weight = FontWeight.normal,
     double alpha = 0.8,
     bool italic = true,

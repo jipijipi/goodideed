@@ -22,7 +22,7 @@ class AppRoutes {
 // Text Styles
 class AppTextStyles {
   // Special Elite font for Tristopher's messages (typewriter feel)
-  static TextStyle tristopherText({double size = 18, FontWeight weight = FontWeight.normal}) {
+  static TextStyle tristopherText({double size = 20, FontWeight weight = FontWeight.normal}) {
     return GoogleFonts.specialElite(
       fontSize: size,
       fontWeight: weight,
@@ -31,10 +31,16 @@ class AppTextStyles {
   }
 
   // Cutive font for user's messages and UI text
-  static TextStyle userText({double size = 16, FontWeight weight = FontWeight.normal, double alpha = 0.8}) {
+  static TextStyle userText({
+    double size = 18,
+    FontWeight weight = FontWeight.normal,
+    double alpha = 0.8,
+    bool italic = true,
+  }) {
     return GoogleFonts.cutive(
       fontSize: size,
       fontWeight: weight,
+      fontStyle: italic ? FontStyle.italic : FontStyle.normal,
       color: AppColors.primaryText.withAlpha((alpha * 255).toInt()),
     );
   }

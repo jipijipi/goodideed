@@ -55,6 +55,7 @@
 /// )
 /// ```
 library;
+
 import 'package:flutter/material.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/models/message_model.dart';
@@ -62,16 +63,14 @@ import 'package:tristopher_app/models/message_model.dart';
 class ChatBubble extends StatefulWidget {
   final MessageModel message;
 
-  const ChatBubble({
-    super.key,
-    required this.message,
-  });
+  const ChatBubble({super.key, required this.message});
 
   @override
   State<ChatBubble> createState() => _ChatBubbleState();
 }
 
-class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateMixin {
+class _ChatBubbleState extends State<ChatBubble>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
   final TextEditingController _inputController = TextEditingController();
@@ -138,47 +137,56 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
 
     if (isSystem) {
       return Center(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        decoration: BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Text(
+            widget.message.content,
+            style: AppTextStyles.userText(),
+            textAlign: TextAlign.center,
+          ),
         ),
-        child: Text(
-        widget.message.content,
-        style: AppTextStyles.userText(),
-        textAlign: TextAlign.center,
-        ),
-      ),
       );
     }
 
     return Row(
-      mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+      mainAxisAlignment:
+          isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Flexible(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 14.0),
-            margin: EdgeInsets.symmetric(horizontal: 8.0),
-            
+            padding: const EdgeInsets.only(
+              left: 12.0,
+              right: 12.0,
+              top: 16.0, // 14.0 + 2.0 = 16.0 for 2px extra top padding
+              bottom: 14.0,
+            ),
+            margin: const EdgeInsets.symmetric(horizontal: 8.0),
             decoration: BoxDecoration(
-              color: isUser 
-                ? AppColors.accentColor.withAlpha((0.15 * 255).toInt())  // Highlighter effect
-                : Colors.transparent,             // Transparent background for non-user
+              color: isUser
+            ? AppColors.accentColor.withAlpha(
+                (0.15 * 255).toInt(),
+              ) // Highlighter effect
+            : Colors.transparent, // Transparent background for non-user
               borderRadius: BorderRadius.circular(0.0),
               border: isUser
-                ? Border.all(
-                    color: AppColors.accentColor.withAlpha((0.0 * 255).toInt()),
-                    width: 2.0,
-                  )
-                : null,  // No border for non-user messages
+            ? Border.all(
+                color: AppColors.accentColor.withAlpha(
+            (0.0 * 255).toInt(),
+                ),
+                width: 2.0,
+              )
+            : null, // No border for non-user messages
             ),
             child: Text(
               widget.message.content,
-              style: isUser 
-                ? AppTextStyles.userText() 
-                : AppTextStyles.tristopherText(),
+              style: isUser
+            ? AppTextStyles.userText()
+            : AppTextStyles.tristopherText(),
             ),
           ),
         ),
@@ -203,12 +211,16 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       child: ElevatedButton(
         onPressed: () => option.onTap(),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withAlpha((0.4 * 255).toInt()),  // Highlighter effect
+          backgroundColor: Colors.white.withAlpha(
+            (0.4 * 255).toInt(),
+          ), // Highlighter effect
           foregroundColor: AppColors.primaryText,
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),  // Square corners like user bubbles
+            borderRadius: BorderRadius.circular(
+              0.0,
+            ), // Square corners like user bubbles
             side: BorderSide(
               color: Colors.yellow.withAlpha((0.0 * 255).toInt()),
               width: 2.0,
@@ -216,10 +228,7 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
           ),
           textStyle: AppTextStyles.userText(),
         ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(option.text),
-        ),
+        child: Align(alignment: Alignment.centerLeft, child: Text(option.text)),
       ),
     );
   }
@@ -239,27 +248,33 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
                 decoration: InputDecoration(
                   hintText: widget.message.inputHint ?? 'Type your answer...',
                   hintStyle: AppTextStyles.userText().copyWith(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withAlpha((0.5 * 255).toInt()),
                   ),
                   filled: true,
-                  fillColor: Colors.white.withAlpha((0.1 * 255).toInt()),
+                  fillColor: Colors.white.withAlpha((0.25 * 255).toInt()),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(0.0),
                     borderSide: BorderSide(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withAlpha((0.0 * 255).toInt()),
+                      width: 0.0,
+
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(0.0),
                     borderSide: BorderSide(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withAlpha((0.0 * 255).toInt()),
+                      width: 0.0,
+
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(0.0),
                     borderSide: BorderSide(
-                      color: AppColors.accentColor.withOpacity(0.3), // Added transparency
-                      width: 2.0,
+                      color: AppColors.accentColor.withAlpha(
+                        (0.3 * 255).toInt(),
+                      ),
+                      width: 0.0,
                     ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
@@ -273,15 +288,22 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
                 alignment: Alignment.centerRight,
                 child: Container(
                   decoration: BoxDecoration(
+                    color: AppColors.accentColor.withAlpha(
+                      (0.15 * 255).toInt(),
+                    ),
                     border: Border.all(
-                      color: AppColors.accentColor.withOpacity(0.3),
-                      width: 2.0,
+                      color: AppColors.accentColor.withAlpha(
+                        (0.15 * 255).toInt(),
+                      ),
+                      width: 0.0,
                     ),
                     borderRadius: BorderRadius.circular(0.0),
                   ),
                   child: IconButton(
                     icon: const Icon(Icons.send),
-                    color: AppColors.accentColor.withOpacity(1.0),
+                    color: AppColors.accentColor.withAlpha(
+                      (0.95 * 255).toInt(),
+                    ),
                     onPressed: () {
                       if (_inputController.text.isNotEmpty) {
                         widget.message.onInputSubmit!(_inputController.text);
@@ -305,10 +327,7 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: AppColors.accentColor.withOpacity(0.1),
-        border: Border.all(
-          color: AppColors.accentColor,
-          width: 2.0,
-        ),
+        border: Border.all(color: AppColors.accentColor, width: 2.0),
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
@@ -343,10 +362,7 @@ class _ChatBubbleState extends State<ChatBubble> with SingleTickerProviderStateM
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(
-          color: Colors.black.withOpacity(0.1),
-          width: 1.0,
-        ),
+        border: Border.all(color: Colors.black.withOpacity(0.1), width: 1.0),
       ),
       child: Column(
         children: [

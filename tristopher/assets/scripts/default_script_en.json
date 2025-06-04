@@ -1,0 +1,612 @@
+{
+  "id": "default_script_en",
+  "version": "1.0.0",
+  "metadata": {
+    "author": "Tristopher Team",
+    "created_at": "2024-01-15T10:00:00Z",
+    "description": "Default English conversation script for Tristopher",
+    "supported_languages": ["en"],
+    "is_active": true
+  },
+  "global_variables": {
+    "robot_personality_level": 5,
+    "default_delay_ms": 1500,
+    "typing_speed_ms": 50
+  },
+  "daily_events": [
+    {
+      "id": "morning_checkin",
+      "trigger": {
+        "type": "time_window",
+        "start": "05:00",
+        "end": "12:00",
+        "conditions": {
+          "has_active_goal": true,
+          "checked_in_today": false
+        }
+      },
+      "priority": 10,
+      "variants": [
+        {
+          "id": "first_time_checkin",
+          "weight": 1.0,
+          "conditions": {
+            "total_checkins": 0
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Ah, you're back. Time for your first moment of truth.",
+              "properties": {
+                "bubbleStyle": "normal",
+                "animation": "slideIn"
+              },
+              "delay": 1000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Did you actually do \"{{goal_action}}\" yesterday? Or are we starting with a failure?",
+              "properties": {
+                "bubbleStyle": "normal",
+                "animation": "slideIn"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Well?",
+              "options": [
+                {
+                  "id": "yes",
+                  "text": "Yes, I did it"
+                },
+                {
+                  "id": "no",
+                  "text": "No, I failed"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "low_streak_checkin",
+          "weight": 0.6,
+          "conditions": {
+            "streak_count": {"min": 1, "max": 5}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Back again? Your {{streak_count}}-day streak is... underwhelming.",
+              "properties": {
+                "bubbleStyle": "shake",
+                "animation": "slideIn"
+              },
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Did you {{goal_action}} yesterday?",
+              "properties": {
+                "animation": "fadeIn"
+              },
+              "delay": 1000
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Try not to disappoint me. Again.",
+              "options": [
+                {
+                  "id": "yes",
+                  "text": "Yes, I completed it"
+                },
+                {
+                  "id": "no",
+                  "text": "No, I didn't"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "medium_streak_checkin",
+          "weight": 0.7,
+          "conditions": {
+            "streak_count": {"min": 6, "max": 20}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{streak_count}} days. I'm... mildly surprised you've lasted this long.",
+              "properties": {
+                "bubbleStyle": "typewriter",
+                "animation": "slideIn"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Let's see if you can keep pretending to be disciplined. Did you {{goal_action}}?",
+              "properties": {
+                "animation": "fadeIn"
+              },
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "",
+              "options": [
+                {
+                  "id": "yes",
+                  "text": "Yes, of course"
+                },
+                {
+                  "id": "no",
+                  "text": "No, I missed it"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "high_streak_checkin",
+          "weight": 0.8,
+          "conditions": {
+            "streak_count": {"min": 21}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Day {{streak_count}}. Either you're lying or you've actually developed a habit.",
+              "properties": {
+                "bubbleStyle": "glitch",
+                "animation": "glitch",
+                "textEffect": "bold"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Both scenarios are equally disturbing.",
+              "properties": {
+                "animation": "fadeIn"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "So, did you {{goal_action}} yesterday?",
+              "properties": {
+                "animation": "slideIn"
+              },
+              "delay": 1000
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "",
+              "options": [
+                {
+                  "id": "yes",
+                  "text": "Yes, as always"
+                },
+                {
+                  "id": "no",
+                  "text": "Actually, no..."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "yes": {
+          "next_event": "checkin_success",
+          "set_variables": {
+            "completed_today": true,
+            "streak_count": "{{streak_count + 1}}",
+            "total_completions": "{{total_completions + 1}}"
+          }
+        },
+        "no": {
+          "next_event": "checkin_failure",
+          "set_variables": {
+            "completed_today": false,
+            "streak_count": 0,
+            "total_failures": "{{total_failures + 1}}"
+          }
+        }
+      }
+    },
+    {
+      "id": "checkin_success",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 5,
+      "variants": [
+        {
+          "id": "success_low_streak",
+          "weight": 1.0,
+          "conditions": {
+            "streak_count": {"min": 1, "max": 3}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Huh. You actually did it. Color me... mildly less pessimistic.",
+              "properties": {
+                "bubbleStyle": "normal",
+                "animation": "slideIn"
+              },
+              "delay": 1500
+            },
+            {
+              "type": "streak",
+              "sender": "system",
+              "content": "Current streak: {{streak_count}} days",
+              "properties": {
+                "animation": "bounce"
+              }
+            }
+          ]
+        },
+        {
+          "id": "success_medium_streak",
+          "weight": 1.0,
+          "conditions": {
+            "streak_count": {"min": 4, "max": 10}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{streak_count}} days in a row. You're becoming annoyingly consistent.",
+              "properties": {
+                "bubbleStyle": "typewriter",
+                "animation": "slideIn"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "I suppose I should be impressed. I'm not, but I should be.",
+              "properties": {
+                "animation": "fadeIn"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "streak",
+              "sender": "system",
+              "content": "Current streak: {{streak_count}} days",
+              "properties": {
+                "animation": "bounce",
+                "textEffect": "pulsing"
+              }
+            }
+          ]
+        },
+        {
+          "id": "success_high_streak",
+          "weight": 1.0,
+          "conditions": {
+            "streak_count": {"min": 11}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{streak_count}} consecutive days. This is getting suspicious.",
+              "properties": {
+                "bubbleStyle": "glitch",
+                "animation": "glitch"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Are you actually becoming the person you pretended you'd be? How... unexpected.",
+              "properties": {
+                "animation": "typewriter",
+                "textEffect": "italic"
+              },
+              "delay": 3000
+            },
+            {
+              "type": "streak",
+              "sender": "system",
+              "content": "🔥 Streak: {{streak_count}} days!",
+              "properties": {
+                "animation": "bounce",
+                "textEffect": "rainbow"
+              }
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "checkin_failure",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 5,
+      "variants": [
+        {
+          "id": "failure_first_time",
+          "weight": 1.0,
+          "conditions": {
+            "total_failures": 1
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "And there it is. Your first failure. I'd say I'm surprised, but we both know I'd be lying.",
+              "properties": {
+                "bubbleStyle": "shake",
+                "animation": "slideIn",
+                "textEffect": "bold"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "${{stake_amount}} has been transferred to {{anti_charity}}. I hope it stings.",
+              "properties": {
+                "bubbleStyle": "error",
+                "animation": "shake"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Want to try again? Or was this enough disappointment for one lifetime?",
+              "properties": {
+                "animation": "fadeIn"
+              },
+              "delay": 1500
+            }
+          ]
+        },
+        {
+          "id": "failure_streak_broken",
+          "weight": 1.0,
+          "conditions": {
+            "previous_streak": {"min": 5}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Oh no! Your precious {{previous_streak}}-day streak! Gone! Reduced to atoms!",
+              "properties": {
+                "bubbleStyle": "glitch",
+                "animation": "glitch",
+                "textEffect": "shake"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "I was almost starting to believe in you. Thanks for reminding me why that's a mistake.",
+              "properties": {
+                "animation": "typewriter"
+              },
+              "delay": 3000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Your ${{stake_amount}} donation to {{anti_charity}} has been processed. You're welcome, {{anti_charity}}.",
+              "properties": {
+                "bubbleStyle": "error",
+                "animation": "shake"
+              },
+              "delay": 2000
+            }
+          ]
+        },
+        {
+          "id": "failure_repeated",
+          "weight": 0.8,
+          "conditions": {
+            "recent_failure_rate": {"min": 0.5}
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Another failure. At this point, {{anti_charity}} should send you a thank you card.",
+              "properties": {
+                "bubbleStyle": "normal",
+                "animation": "slideIn"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "You've donated ${{total_stake_lost}} so far. That's an expensive way to prove me right.",
+              "properties": {
+                "animation": "fadeIn",
+                "textEffect": "bold"
+              },
+              "delay": 2000
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    }
+  ],
+  "plot_timeline": {
+    "day_1": {
+      "events": [
+        {
+          "id": "introduction",
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Hello, human. I'm Tristopher, your personal de-motivator.",
+              "properties": {
+                "bubbleStyle": "glitch",
+                "animation": "glitch"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "I'm here to watch you fail at your goals. It's what humans do best, after all.",
+              "properties": {
+                "animation": "typewriter"
+              },
+              "delay": 3000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Let's set up your inevitable disappointment, shall we?",
+              "properties": {
+                "animation": "slideIn"
+              },
+              "delay": 2000
+            }
+          ]
+        }
+      ]
+    },
+    "day_7": {
+      "conditions": {
+        "streak_count": {"min": 7}
+      },
+      "events": [
+        {
+          "id": "week_milestone",
+          "messages": [
+            {
+              "type": "achievement",
+              "sender": "system",
+              "content": "First Week Complete! 🎯",
+              "properties": {
+                "animation": "bounce",
+                "textEffect": "rainbow"
+              }
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Seven whole days. Against all odds and my better judgment, you've survived a week.",
+              "properties": {
+                "bubbleStyle": "glitch",
+                "animation": "glitch"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Don't let it go to your head. 92% of people quit in week two.",
+              "properties": {
+                "animation": "fadeIn",
+                "textEffect": "italic"
+              },
+              "delay": 2000
+            }
+          ],
+          "set_variables": {
+            "unlocked_week_achievement": true
+          }
+        }
+      ]
+    },
+    "day_21": {
+      "conditions": {
+        "streak_count": {"min": 21}
+      },
+      "events": [
+        {
+          "id": "three_week_milestone",
+          "messages": [
+            {
+              "type": "achievement",
+              "sender": "system",
+              "content": "21-Day Streak! Habit Formation Zone 🧠",
+              "properties": {
+                "animation": "bounce",
+                "textEffect": "rainbow"
+              }
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "21 days. The mythical habit formation threshold.",
+              "properties": {
+                "bubbleStyle": "matrix",
+                "animation": "drop"
+              },
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "You know it actually takes 66 days on average, right? You're not even halfway there.",
+              "properties": {
+                "animation": "typewriter"
+              },
+              "delay": 3000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Still... I suppose you've earned a modicum of my respect. A very small modicum.",
+              "properties": {
+                "animation": "fadeIn",
+                "textEffect": "italic"
+              },
+              "delay": 2000
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "message_templates": {
+    "morning_greeting": {
+      "text": "Good morning, {{name}}. Ready for another day of {{success_probability}}% chance of success?",
+      "variables": ["name", "success_probability"]
+    },
+    "streak_announcement": {
+      "text": "{{streak_count}} {{streak_count:day|days}} in a row. {{streak_commentary}}",
+      "variables": ["streak_count", "streak_commentary"]
+    },
+    "failure_message": {
+      "text": "You've failed {{fail_count}} {{fail_count:time|times}} out of {{total_count}}. That's a {{failure_rate}}% failure rate.",
+      "variables": ["fail_count", "total_count", "failure_rate"]
+    }
+  }
+}

@@ -52,6 +52,10 @@ dependencies:
   firebase_storage: ^12.4.6
   firebase_analytics: ^11.4.6
   flutter_launcher_icons: ^0.14.3
+  
+  # Database for conversation system
+  sqflite: ^2.3.0
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +67,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  
+  # For desktop testing of SQLite
+  sqflite_common_ffi: ^2.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -82,6 +89,8 @@ flutter:
     - assets/images/tristopher_logo.png
     - firebase/dev/
     - firebase/prod/
+    - assets/scripts/
+    - assets/localization/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

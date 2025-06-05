@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-import '../enhanced_message_model.dart';
-import '../script_model.dart';
-import './script_manager.dart';
+import 'enhanced_message_model.dart';
+import 'script_model.dart';
+import 'script_manager.dart';
 import '../../utils/database/conversation_database.dart';
 
 /// The ConversationEngine is the maestro of our conversation system.
@@ -19,7 +19,7 @@ import '../../utils/database/conversation_database.dart';
 /// 4. **State Management**: Track and update conversation progress
 /// 5. **Branching Logic**: Handle user choices and their consequences
 /// 
-/// The engine uses a streaming approach (Stream<EnhancedMessage>) because conversations
+/// The engine uses a streaming approach (Stream<EnhancedMessageModel>) because conversations
 /// unfold over time. This allows for natural pacing with delays between messages,
 /// creating a more engaging and less overwhelming experience.
 class ConversationEngine {
@@ -60,7 +60,7 @@ class ConversationEngine {
   /// The method returns a Stream because conversations unfold over time.
   /// Each message appears with appropriate delays, creating a natural flow
   /// rather than dumping all messages at once.
-  Stream<EnhancedMessage> processDaily() async* {
+  Stream<EnhancedMessageModel> processDaily() async* {
     try {
       // Ensure we're initialized
       if (_currentScript == null) {
@@ -83,7 +83,7 @@ class ConversationEngine {
     } catch (e) {
       print('❌ ConversationEngine: Error in processDaily: $e');
       // Generate an error message that maintains character
-      yield EnhancedMessage.tristopherText(
+      yield EnhancedMessageModel.tristopherText(
         "Something's wrong with my circuits. How typical. Try again later.",
         style: BubbleStyle.error,
       );
@@ -95,7 +95,7 @@ class ConversationEngine {
   /// Plot events are like chapters in a book - they advance the main narrative
   /// and are tied to specific days in the user's journey. Day 1 might introduce
   /// Tristopher, Day 7 might unlock new features, etc.
-  Stream<EnhancedMessage> _processPlotEvents() async* {
+  Stream<EnhancedMessageModel> _processPlotEvents() async* {
     final dayKey = 'day_${_userState.dayInJourney}';
     final plotDay = _currentScript!.plotTimeline[dayKey];
     
@@ -119,7 +119,7 @@ class ConversationEngine {
   }
 
   /// Process a single plot event.
-  Stream<EnhancedMessage> _processPlotEvent(PlotEvent event) async* {
+  Stream<EnhancedMessageModel> _processPlotEvent(PlotEvent event) async* {
     print('🎬 Processing plot event: ${event.id}');
     
     // Check event-specific conditions
@@ -157,7 +157,7 @@ class ConversationEngine {
   /// streak celebrations are all daily events.
   /// 
   /// The engine evaluates all daily events and processes them in priority order.
-  Stream<EnhancedMessage> _processDailyEvents() async* {
+  Stream<EnhancedMessageModel> _processDailyEvents() async* {
     final triggeredEvents = <DailyEvent>[];
     
     // Evaluate which events should trigger
@@ -223,7 +223,7 @@ class ConversationEngine {
   /// Process a single daily event.
   /// 
   /// This involves selecting the most appropriate variant and generating messages.
-  Stream<EnhancedMessage> _processDailyEvent(DailyEvent event) async* {
+  Stream<EnhancedMessageModel> _processDailyEvent(DailyEvent event) async* {
     print('🎯 Processing daily event: ${event.id}');
     
     // Select the best variant based on conditions and weights
@@ -357,7 +357,7 @@ class ConversationEngine {
   /// 
   /// This is where the magic happens - we transform abstract script instructions
   /// into concrete messages with all their visual properties, animations, and content.
-  Future<EnhancedMessage> _convertScriptMessage(ScriptMessage scriptMessage) async {
+  Future<EnhancedMessageModel> _convertScriptMessage(ScriptMessage scriptMessage) async {
     // Get localized content
     String? content;
     if (scriptMessage.contentKey != null) {
@@ -374,7 +374,7 @@ class ConversationEngine {
     // Parse visual properties
     final properties = scriptMessage.properties ?? {};
     
-    return EnhancedMessage(
+    return EnhancedMessageModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: _parseMessageType(scriptMessage.type),
       content: content,
@@ -463,7 +463,7 @@ class ConversationEngine {
   /// 
   /// This creates a permanent record that users can review later and enables
   /// features like conversation search and analytics.
-  Future<void> _saveMessageToHistory(EnhancedMessage message) async {
+  Future<void> _saveMessageToHistory(EnhancedMessageModel message) async {
     await _database.saveMessage(
       id: message.id,
       sender: message.sender.toString().split('.').last,

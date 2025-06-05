@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import '../script_model.dart';
+import 'script_model.dart';
 import '../../utils/database/conversation_database.dart';
 
 /// ScriptManager is the intelligent librarian of our conversation system.

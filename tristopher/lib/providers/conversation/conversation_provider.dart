@@ -24,7 +24,7 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   final ConversationDatabase _database;
   
   // Stream subscription for engine messages
-  StreamSubscription<EnhancedMessage>? _messageSubscription;
+  StreamSubscription<EnhancedMessageModel>? _messageSubscription;
   
   // Queue for pending user responses
   final List<PendingResponse> _responseQueue = [];
@@ -142,7 +142,7 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   /// Handle a message from the conversation engine.
   /// 
   /// This is where messages from the engine are added to the UI state.
-  void _handleEngineMessage(EnhancedMessage message) {
+  void _handleEngineMessage(EnhancedMessageModel message) {
     // Add message to state
     state = state.copyWith(
       messages: [...state.messages, message],
@@ -284,7 +284,7 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   }
 
   /// Save a message to the database.
-  Future<void> _saveMessage(EnhancedMessage message) async {
+  Future<void> _saveMessage(EnhancedMessageModel message) async {
     try {
       await _database.saveMessage(
         id: message.id,
@@ -337,7 +337,7 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
 /// This is what the UI components react to - any change here triggers a rebuild
 /// of relevant widgets.
 class ConversationState {
-  final List<EnhancedMessage> messages;
+  final List<EnhancedMessageModel> messages;
   final bool isLoading;
   final bool isProcessing;
   final bool awaitingResponse;
@@ -356,7 +356,7 @@ class ConversationState {
   });
 
   ConversationState copyWith({
-    List<EnhancedMessage>? messages,
+    List<EnhancedMessageModel>? messages,
     bool? isLoading,
     bool? isProcessing,
     bool? awaitingResponse,
@@ -404,7 +404,7 @@ final conversationProvider = StateNotifierProvider<ConversationNotifier, Convers
 /// Convenience providers for specific aspects of the conversation state.
 
 /// Provider for just the messages list
-final conversationMessagesProvider = Provider<List<EnhancedMessage>>((ref) {
+final conversationMessagesProvider = Provider<List<EnhancedMessageModel>>((ref) {
   return ref.watch(conversationProvider).messages;
 });
 

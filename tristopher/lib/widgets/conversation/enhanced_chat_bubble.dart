@@ -16,7 +16,7 @@ import '../../constants/app_constants.dart';
 /// The widget adapts its appearance based on the message properties,
 /// creating a dynamic and engaging conversation experience.
 class EnhancedChatBubble extends StatefulWidget {
-  final EnhancedMessage message;
+  final EnhancedMessageModel message;
   final Function(MessageOption)? onOptionSelected;
   final Function(String)? onInputSubmitted;
 
@@ -373,8 +373,8 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
               ? () => widget.onOptionSelected?.call(option)
               : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primaryLight,
-            foregroundColor: AppColors.textPrimary,
+            backgroundColor: AppColors.backgroundColor,
+            foregroundColor: AppColors.primaryText,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
@@ -478,10 +478,10 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
       margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.accent.withOpacity(0.1),
+        color: AppColors.accentColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.accent,
+          color: AppColors.accentColor,
           width: 2,
         ),
       ),
@@ -490,14 +490,15 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
         children: [
           const Icon(
             Icons.local_fire_department,
-            color: AppColors.accent,
+            color: AppColors.accentColor,
             size: 24,
           ),
           const SizedBox(width: 8),
           Text(
             widget.message.content ?? '',
-            style: AppTextStyles.body(weight: FontWeight.bold).copyWith(
-              color: AppColors.accent,
+            style: AppTextStyles.body().copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.accentColor,
             ),
           ),
         ],
@@ -518,9 +519,9 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
     if (widget.message.bubbleStyle == BubbleStyle.error) {
       backgroundColor = Colors.red.shade100;
     } else if (isUser) {
-      backgroundColor = AppColors.primaryLight;
+      backgroundColor = AppColors.accentColor;
     } else {
-      backgroundColor = AppColors.surface;
+      backgroundColor = AppColors.backgroundColor;
     }
     
     return BoxDecoration(
@@ -532,7 +533,7 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
         bottomRight: Radius.circular(isUser ? 4 : 16),
       ),
       border: widget.message.bubbleStyle == BubbleStyle.glitch
-          ? Border.all(color: AppColors.accent, width: 1)
+          ? Border.all(color: AppColors.accentColor, width: 1)
           : null,
       boxShadow: [
         BoxShadow(
@@ -550,10 +551,10 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
     
     // Apply sender-specific styles
     if (widget.message.sender == MessageSender.user) {
-      baseStyle = baseStyle.copyWith(color: AppColors.textPrimary);
+      baseStyle = baseStyle.copyWith(color: AppColors.primaryText);
     } else if (widget.message.sender == MessageSender.system) {
       baseStyle = baseStyle.copyWith(
-        color: AppColors.textSecondary,
+        color: AppColors.primaryText,
         fontSize: 14,
       );
     }
@@ -660,7 +661,7 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
     return Container(
       width: 2,
       height: 16,
-      color: AppColors.textPrimary,
+      color: AppColors.primaryText,
       child: AnimatedOpacity(
         opacity: _isTyping ? 1.0 : 0.0,
         duration: const Duration(milliseconds: 500),

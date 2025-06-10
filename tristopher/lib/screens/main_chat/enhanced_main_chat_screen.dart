@@ -6,6 +6,7 @@ import 'package:tristopher_app/providers/conversation/conversation_provider.dart
 import 'package:tristopher_app/widgets/conversation/enhanced_chat_bubble.dart';
 import 'package:tristopher_app/widgets/common/drawer/app_drawer.dart';
 import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
+import 'package:tristopher_app/utils/database/conversation_database.dart';
 
 /// Enhanced Main Chat Screen with the new conversation system.
 /// 
@@ -140,7 +141,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
             const SizedBox(height: 16),
             Text(
               'Initializing Tristopher...',
-              style: AppTextStyles.body(color: AppColors.textSecondary),
+              style: AppTextStyles.body(),
             ),
           ],
         ),
@@ -153,7 +154,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
           padding: const EdgeInsets.all(20),
           child: Text(
             'No messages yet. Tristopher is preparing his first insult...',
-            style: AppTextStyles.body(color: AppColors.textSecondary),
+            style: AppTextStyles.body(),
             textAlign: TextAlign.center,
           ),
         ),
@@ -191,10 +192,10 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.backgroundColor,
         border: Border(
           top: BorderSide(
-            color: AppColors.primaryLight.withOpacity(0.2),
+            color: AppColors.backgroundColor.withOpacity(0.2),
           ),
         ),
       ),
@@ -207,26 +208,20 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
               child: CircularProgressIndicator(
                 strokeWidth: 2,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  AppColors.accent,
+                  AppColors.accentColor,
                 ),
               ),
             ),
             const SizedBox(width: 8),
             Text(
               'Tristopher is thinking...',
-              style: AppTextStyles.body(
-                size: 14,
-                color: AppColors.textSecondary,
-              ).copyWith(fontStyle: FontStyle.italic),
+              style: AppTextStyles.body().copyWith(fontStyle: FontStyle.italic),
             ),
           ],
           if (state.awaitingResponse && !state.isProcessing)
             Text(
               'Waiting for your response...',
-              style: AppTextStyles.body(
-                size: 14,
-                color: AppColors.accent,
-              ),
+              style: AppTextStyles.body(),
             ),
         ],
       ),

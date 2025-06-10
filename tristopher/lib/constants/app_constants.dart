@@ -62,6 +62,14 @@ class AppTextStyles {
       color: AppColors.primaryText,
     );
   }
+  // Body text
+  static TextStyle body() {
+    return GoogleFonts.cutive(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: AppColors.primaryText,
+    );
+  }
 }
 
 // Anti-Charity Options

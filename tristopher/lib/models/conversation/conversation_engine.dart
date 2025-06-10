@@ -238,23 +238,33 @@ class ConversationEngine {
       final message = await _convertScriptMessage(scriptMessage);
       
       // If this message has options, set up response handling
-      if (message.options != null) {
-        // Enhance options with response handling
-        message.options!.forEach((option) {
+      if (message.options != null && scriptMessage.options != null) {
+        // Create new options list with enhanced response handling
+        final enhancedOptions = <MessageOption>[];
+        for (int i = 0; i < message.options!.length; i++) {
+          final option = message.options![i];
           final response = event.responses[option.id];
           if (response != null) {
-            // Wrap the original onTap to include response handling
+            // Create new option with wrapped onTap
             final originalOnTap = option.onTap;
-            option.onTap = () async {
-              // Execute original action
-              if (originalOnTap != null) {
-                originalOnTap();
-              }
-              // Handle response
-              await _handleEventResponse(response);
-            };
+            final enhancedOption = MessageOption(
+              id: option.id,
+              text: option.text,
+              onTap: () async {
+                // Execute original action
+                if (originalOnTap != null) {
+                  originalOnTap();
+                }
+                // Handle response
+                await _handleEventResponse(response);
+              },
+            );
+            enhancedOptions.add(enhancedOption);
+          } else {
+            enhancedOptions.add(option);
           }
-        });
+        }
+        //message = message.copyWith(options: enhancedOptions);
       }
       
       yield message;

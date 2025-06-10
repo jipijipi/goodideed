@@ -44,7 +44,7 @@ class ConversationTestUtils {
   }
 
   /// Create test messages for UI testing.
-  static List<EnhancedMessage> createTestMessages() {
+  static List<EnhancedMessageModel> createTestMessages() {
     return [
       EnhancedMessageModel.tristopherText(
         "Oh, you're back. Ready for another day of disappointment?",
@@ -408,4 +408,4 @@ class PerformanceStats {
 }
 
 // Add Random import
-import 'dart:math';
+//import 'dart:math';

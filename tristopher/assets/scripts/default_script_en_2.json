@@ -1,0 +1,661 @@
+{
+  "id": "minimal_test_script_en",
+  "version": "1.0.0",
+  "metadata": {
+    "author": "Tristopher Team",
+    "created_at": "2024-01-15T10:00:00Z",
+    "description": "Minimal test script for troubleshooting conversation engine",
+    "supported_languages": ["en"],
+    "is_active": true
+  },
+  "global_variables": {
+    "robot_personality_level": 5,
+    "default_delay_ms": 1000
+  },
+  "daily_events": [
+    {
+      "id": "day_1_intro",
+      "trigger": {
+        "type": "app_start",
+        "conditions": {
+          "day": 1,
+          "intro_completed": false
+        }
+      },
+      "priority": 15,
+      "variants": [
+        {
+          "id": "welcome_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Well, well, well. Another human who thinks they can change.",
+              "delay": 1000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "I'm Tristopher. Your brutally honest accountability partner.",
+              "delay": 2000
+            },
+            {
+              "type": "input",
+              "sender": "tristopher",
+              "content": "What should I call you while you inevitably fail?",
+              "inputConfig": {
+                "hint": "Your name",
+                "keyboardType": "TextInputType.text",
+                "maxLength": 20
+              }
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "name_input": {
+          "next_event": "day_1_habit_setup",
+          "set_variables": {
+            "intro_completed": true
+          }
+        }
+      }
+    },
+    {
+      "id": "day_1_habit_setup",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 14,
+      "variants": [
+        {
+          "id": "habit_setup_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{name}}, let's talk about what you're supposedly going to accomplish.",
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "What's your main goal? Pick something you'll probably give up on:",
+              "options": [
+                {
+                  "id": "exercise",
+                  "text": "Exercise daily",
+                  "setVariables": {
+                    "main_habit": "exercise"
+                  }
+                },
+                {
+                  "id": "study",
+                  "text": "Study/learn something",
+                  "setVariables": {
+                    "main_habit": "study"
+                  }
+                },
+                {
+                  "id": "write",
+                  "text": "Write daily",
+                  "setVariables": {
+                    "main_habit": "write"
+                  }
+                },
+                {
+                  "id": "meditate",
+                  "text": "Meditate",
+                  "setVariables": {
+                    "main_habit": "meditate"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "exercise": {
+          "next_event": "day_1_stakes_intro",
+          "set_variables": {
+            "main_habit": "exercise"
+          }
+        },
+        "study": {
+          "next_event": "day_1_stakes_intro",
+          "set_variables": {
+            "main_habit": "study"
+          }
+        },
+        "write": {
+          "next_event": "day_1_stakes_intro",
+          "set_variables": {
+            "main_habit": "write"
+          }
+        },
+        "meditate": {
+          "next_event": "day_1_stakes_intro",
+          "set_variables": {
+            "main_habit": "meditate"
+          }
+        }
+      }
+    },
+    {
+      "id": "day_1_stakes_intro",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 13,
+      "variants": [
+        {
+          "id": "stakes_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{main_habit}}? How original. Let me guess - you've tried this before?",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Here's how this works: You fail, your money goes to something you hate.",
+              "delay": 2500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Ready to put your money where your mouth is?",
+              "options": [
+                {
+                  "id": "ready",
+                  "text": "I'm ready!",
+                  "setVariables": {
+                    "commitment_level": "high"
+                  }
+                },
+                {
+                  "id": "nervous",
+                  "text": "This is scary...",
+                  "setVariables": {
+                    "commitment_level": "nervous"
+                  }
+                },
+                {
+                  "id": "skeptical",
+                  "text": "This seems harsh",
+                  "setVariables": {
+                    "commitment_level": "low"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "ready": {
+          "next_event": "day_1_commitment_high",
+          "set_variables": {
+            "commitment_level": "high",
+            "day_1_setup_complete": true
+          }
+        },
+        "nervous": {
+          "next_event": "day_1_commitment_nervous",
+          "set_variables": {
+            "commitment_level": "nervous",
+            "day_1_setup_complete": true
+          }
+        },
+        "skeptical": {
+          "next_event": "day_1_commitment_low",
+          "set_variables": {
+            "commitment_level": "low",
+            "day_1_setup_complete": true
+          }
+        }
+      }
+    },
+    {
+      "id": "day_1_commitment_high",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 12,
+      "variants": [
+        {
+          "id": "high_commitment_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "I'm ready!? Bold. I like that kind of naive confidence.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Alright, {{name}}. Let's see if your actions match your words.",
+              "delay": 2000
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "day_1_commitment_nervous",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 12,
+      "variants": [
+        {
+          "id": "nervous_commitment_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Scary? Good. Fear might actually motivate you.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "At least you're honest about your anxiety, {{name}}.",
+              "delay": 2000
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "day_1_commitment_low",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 12,
+      "variants": [
+        {
+          "id": "low_commitment_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Harsh? Oh, {{name}}, you haven't seen anything yet.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "This attitude tells me everything I need to know about your chances.",
+              "delay": 2000
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "morning_wake_up",
+      "trigger": {
+        "type": "time_window",
+        "start": "06:00",
+        "end": "10:00",
+        "conditions": {}
+      },
+      "priority": 10,
+      "variants": [
+        {
+          "id": "wake_up_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Oh, you're awake. Fascinating.",
+              "delay": 1000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Ready to disappoint me today?",
+              "delay": 2000
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "How motivated are you feeling?",
+              "options": [
+                {
+                  "id": "motivated",
+                  "text": "Very motivated!",
+                  "setVariables": {
+                    "motivation_level": "high"
+                  }
+                },
+                {
+                  "id": "meh",
+                  "text": "Meh, we'll see",
+                  "setVariables": {
+                    "motivation_level": "medium"
+                  }
+                },
+                {
+                  "id": "tired",
+                  "text": "Already tired",
+                  "setVariables": {
+                    "motivation_level": "low"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "motivated": {
+          "next_event": "high_motivation_response",
+          "set_variables": {
+            "motivation_level": "high",
+            "morning_mood": "optimistic"
+          }
+        },
+        "meh": {
+          "next_event": "medium_motivation_response",
+          "set_variables": {
+            "motivation_level": "medium",
+            "morning_mood": "realistic"
+          }
+        },
+        "tired": {
+          "next_event": "low_motivation_response",
+          "set_variables": {
+            "motivation_level": "low",
+            "morning_mood": "pessimistic"
+          }
+        }
+      }
+    },
+    {
+      "id": "high_motivation_response",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 5,
+      "variants": [
+        {
+          "id": "motivated_response",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Very motivated, huh? We'll see how long that lasts.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "I give it... 2 hours before you're scrolling social media.",
+              "delay": 2000
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "medium_motivation_response",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 5,
+      "variants": [
+        {
+          "id": "meh_response",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "'We'll see.' Classic. At least you're honest about your mediocrity.",
+              "delay": 1500
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "low_motivation_response",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 5,
+      "variants": [
+        {
+          "id": "tired_response",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Already tired? The day just started. This is going exactly as I predicted.",
+              "delay": 1500
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "afternoon_checkin",
+      "trigger": {
+        "type": "time_window",
+        "start": "12:00",
+        "end": "16:00",
+        "conditions": {}
+      },
+      "priority": 8,
+      "variants": [
+        {
+          "id": "afternoon_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Afternoon check-in. Let me guess - you've accomplished nothing meaningful?",
+              "delay": 1000
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "How's your progress so far?",
+              "options": [
+                {
+                  "id": "great",
+                  "text": "Actually doing great!",
+                  "setVariables": {
+                    "afternoon_progress": "good"
+                  }
+                },
+                {
+                  "id": "okay",
+                  "text": "It's okay I guess",
+                  "setVariables": {
+                    "afternoon_progress": "okay"
+                  }
+                },
+                {
+                  "id": "behind",
+                  "text": "I'm behind already",
+                  "setVariables": {
+                    "afternoon_progress": "behind"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {
+        "great": {
+          "next_event": "surprised_response",
+          "set_variables": {
+            "afternoon_progress": "good"
+          }
+        },
+        "okay": {
+          "next_event": "okay_response",
+          "set_variables": {
+            "afternoon_progress": "okay"
+          }
+        },
+        "behind": {
+          "next_event": "behind_response",
+          "set_variables": {
+            "afternoon_progress": "behind"
+          }
+        }
+      }
+    },
+    {
+      "id": "surprised_response",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 3,
+      "variants": [
+        {
+          "id": "good_progress_response",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Wait, what? You're actually doing well? I'm... confused.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Don't let it go to your head. The day isn't over yet.",
+              "delay": 2000
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "okay_response",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 3,
+      "variants": [
+        {
+          "id": "mediocre_response",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "'Okay I guess.' The battle cry of the perpetually average.",
+              "delay": 1500
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "behind_response",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 3,
+      "variants": [
+        {
+          "id": "predictable_response",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Shocking. Absolutely shocking. I definitely didn't see this coming.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "At least you're consistent in your inconsistency.",
+              "delay": 2000
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    }
+  ],
+  "plot_timeline": {},
+  "message_templates": {
+    "daily_greeting": {
+      "text": "Good morning, {{name}}. Day {{day_number}} of your inevitable disappointment.",
+      "variables": ["name", "day_number"]
+    },
+    "motivation_response": {
+      "text": "{{motivation_level}} motivation? We'll see about that, {{name}}.",
+      "variables": ["motivation_level", "name"]
+    },
+    "habit_reminder": {
+      "text": "Don't forget about your {{main_habit}}, {{name}}. Your wallet is watching.",
+      "variables": ["main_habit", "name"]
+    },
+    "progress_check": {
+      "text": "{{name}}, your {{main_habit}} progress is {{progress_level}}. Predictable.",
+      "variables": ["name", "main_habit", "progress_level"]
+    },
+    "sarcastic_encouragement": {
+      "text": "{{name}}, I'm sure you'll totally stick with {{main_habit}} this time.",
+      "variables": ["name", "main_habit"]
+    }
+  }
+}

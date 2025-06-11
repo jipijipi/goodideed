@@ -252,6 +252,7 @@ class ScriptMessage {
   final Map<String, dynamic>? properties; // Visual properties
   final int? delayMs;
   final List<Map<String, dynamic>>? options;
+  final Map<String, dynamic>? inputConfig; // For input messages
   
   ScriptMessage({
     required this.type,
@@ -261,6 +262,7 @@ class ScriptMessage {
     this.properties,
     this.delayMs,
     this.options,
+    this.inputConfig,
   });
 
   factory ScriptMessage.fromJson(Map<String, dynamic> json) {
@@ -274,6 +276,7 @@ class ScriptMessage {
       options: json['options'] != null 
           ? List<Map<String, dynamic>>.from(json['options'])
           : null,
+      inputConfig: json['inputConfig'],
     );
   }
 
@@ -286,6 +289,7 @@ class ScriptMessage {
       if (properties != null) 'properties': properties,
       if (delayMs != null) 'delay': delayMs,
       if (options != null) 'options': options,
+      if (inputConfig != null) 'inputConfig': inputConfig,
     };
   }
 }

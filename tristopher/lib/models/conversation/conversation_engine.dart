@@ -5,23 +5,18 @@ import 'script_model.dart';
 import 'script_manager.dart';
 import '../../utils/database/conversation_database.dart';
 
-/// The ConversationEngine is the maestro of our conversation system.
+// Extension to add firstOrNull method
+extension IterableExtension<T> on Iterable<T> {
+  T? get firstOrNull => isEmpty ? null : first;
+}
+
+/// Enhanced ConversationEngine with proper response waiting.
 /// 
-/// Like a conductor directing an orchestra, it coordinates all the different
-/// components to create a harmonious conversation experience. It reads the script
-/// (the sheet music), evaluates the current state (which instruments should play),
-/// and produces messages (the actual music) that the user experiences.
-/// 
-/// Key responsibilities:
-/// 1. **Event Processing**: Determine which events should trigger based on time and conditions
-/// 2. **Variant Selection**: Choose the most appropriate variant based on user state
-/// 3. **Message Generation**: Transform script messages into actual UI messages
-/// 4. **State Management**: Track and update conversation progress
-/// 5. **Branching Logic**: Handle user choices and their consequences
-/// 
-/// The engine uses a streaming approach (Stream<EnhancedMessageModel>) because conversations
-/// unfold over time. This allows for natural pacing with delays between messages,
-/// creating a more engaging and less overwhelming experience.
+/// This version of the engine properly handles interactive conversations by:
+/// 1. Stopping message flow after interactive messages (options/input)
+/// 2. Waiting for user responses before continuing
+/// 3. Processing responses and triggering follow-up events
+/// 4. Maintaining conversation state across interactions
 class ConversationEngine {
   final ScriptManager _scriptManager;
   final ConversationDatabase _database;
@@ -35,6 +30,12 @@ class ConversationEngine {
   
   // Random number generator for variant selection
   final Random _random = Random();
+  
+  // Conversation flow control
+  StreamController<EnhancedMessageModel>? _messageController;
+  String? _awaitingResponseForMessageId;
+  List<ScriptMessage> _pendingMessages = [];
+  String? _currentEventId;
 
   ConversationEngine({
     required String language,
@@ -43,59 +44,54 @@ class ConversationEngine {
        _language = language;
 
   /// Initialize the engine with user state.
-  /// 
-  /// This is like setting up the stage before a performance - we need to know
-  /// where we left off, what props are in place, and what scene we're in.
   Future<void> initialize() async {
     _userState = await _loadUserState();
     _currentScript = await _scriptManager.loadScript(language: _language);
   }
 
-  /// Process daily conversation flow.
+  /// Start a new conversation session.
   /// 
-  /// This is the main entry point that generates the conversation for the day.
-  /// It's like running through today's script, considering both scheduled plot
-  /// events and dynamic daily events that might trigger.
-  /// 
-  /// The method returns a Stream because conversations unfold over time.
-  /// Each message appears with appropriate delays, creating a natural flow
-  /// rather than dumping all messages at once.
-  Stream<EnhancedMessageModel> processDaily() async* {
+  /// This creates a new message stream and begins processing events.
+  Stream<EnhancedMessageModel> startConversation() {
+    _messageController = StreamController<EnhancedMessageModel>.broadcast();
+    
+    // Start processing asynchronously
+    _processConversation();
+    
+    return _messageController!.stream;
+  }
+
+  /// Process the conversation flow.
+  Future<void> _processConversation() async {
     try {
-      // Ensure we're initialized
       if (_currentScript == null) {
         await initialize();
       }
       
-      print('🎭 ConversationEngine: Starting daily processing for day ${_userState.dayInJourney}');
+      print('🎭 ConversationEngine: Starting conversation for day ${_userState.dayInJourney}');
       
-      // Step 1: Process plot events for the current day
-      // These are the "main story" events tied to specific days
-      yield* _processPlotEvents();
+      // Process plot events first
+      await _processPlotEvents();
       
-      // Step 2: Process triggered daily events
-      // These are recurring events like check-ins that happen based on conditions
-      yield* _processDailyEvents();
+      // Then process daily events if no response is pending
+      if (_awaitingResponseForMessageId == null) {
+        await _processDailyEvents();
+      }
       
-      // Step 3: Save updated state
+      // Save state
       await _saveUserState();
       
     } catch (e) {
-      print('❌ ConversationEngine: Error in processDaily: $e');
-      // Generate an error message that maintains character
-      yield EnhancedMessageModel.tristopherText(
+      print('❌ ConversationEngine: Error in conversation: $e');
+      _addMessage(EnhancedMessageModel.tristopherText(
         "Something's wrong with my circuits. How typical. Try again later.",
         style: BubbleStyle.error,
-      );
+      ));
     }
   }
 
   /// Process plot events for the current day.
-  /// 
-  /// Plot events are like chapters in a book - they advance the main narrative
-  /// and are tied to specific days in the user's journey. Day 1 might introduce
-  /// Tristopher, Day 7 might unlock new features, etc.
-  Stream<EnhancedMessageModel> _processPlotEvents() async* {
+  Future<void> _processPlotEvents() async {
     final dayKey = 'day_${_userState.dayInJourney}';
     final plotDay = _currentScript!.plotTimeline[dayKey];
     
@@ -104,44 +100,58 @@ class ConversationEngine {
       return;
     }
     
-    // Check if this day's conditions are met
-    if (plotDay.conditions != null) {
-      if (!_evaluateConditions(plotDay.conditions!)) {
-        print('🚫 Plot day conditions not met');
-        return;
-      }
+    if (plotDay.conditions != null && !_evaluateConditions(plotDay.conditions!)) {
+      print('🚫 Plot day conditions not met');
+      return;
     }
     
-    // Process each event in sequence
+    // Process each event
     for (final event in plotDay.events) {
-      yield* _processPlotEvent(event);
+      await _processPlotEvent(event);
+      
+      // Stop if waiting for response
+      if (_awaitingResponseForMessageId != null) {
+        return;
+      }
     }
   }
 
   /// Process a single plot event.
-  Stream<EnhancedMessageModel> _processPlotEvent(PlotEvent event) async* {
+  Future<void> _processPlotEvent(PlotEvent event) async {
     print('🎬 Processing plot event: ${event.id}');
     
-    // Check event-specific conditions
-    if (event.conditions != null) {
-      if (!_evaluateConditions(event.conditions!)) {
-        print('🚫 Event conditions not met');
-        return;
-      }
+    if (event.conditions != null && !_evaluateConditions(event.conditions!)) {
+      print('🚫 Event conditions not met');
+      return;
     }
     
-    // Process each message in the event
-    for (final scriptMessage in event.messages) {
+    _currentEventId = event.id;
+    
+    // Process messages until we hit an interactive one
+    for (int i = 0; i < event.messages.length; i++) {
+      final scriptMessage = event.messages[i];
       final message = await _convertScriptMessage(scriptMessage);
-      yield message;
       
-      // Apply delay if specified
+      // Add delay before message if specified
       if (message.delayMs != null && message.delayMs! > 0) {
         await Future.delayed(Duration(milliseconds: message.delayMs!));
       }
       
-      // Save message to history
+      _addMessage(message);
       await _saveMessageToHistory(message);
+      
+      // Check if this message requires user interaction
+      if (_requiresUserResponse(message)) {
+        _awaitingResponseForMessageId = message.id;
+        
+        // Store remaining messages for after response
+        if (i + 1 < event.messages.length) {
+          _pendingMessages = event.messages.sublist(i + 1);
+        }
+        
+        print('⏸️ Waiting for user response to message: ${message.id}');
+        return; // Stop processing here
+      }
     }
     
     // Update variables if specified
@@ -150,40 +160,252 @@ class ConversationEngine {
     }
   }
 
-  /// Process daily events that might trigger.
-  /// 
-  /// Daily events are like routines - they can happen any day when their
-  /// conditions are met. Morning check-ins, achievement notifications, and
-  /// streak celebrations are all daily events.
-  /// 
-  /// The engine evaluates all daily events and processes them in priority order.
-  Stream<EnhancedMessageModel> _processDailyEvents() async* {
+  /// Process daily events.
+  Future<void> _processDailyEvents() async {
     final triggeredEvents = <DailyEvent>[];
     
-    // Evaluate which events should trigger
     for (final event in _currentScript!.dailyEvents) {
       if (_shouldTriggerEvent(event)) {
         triggeredEvents.add(event);
       }
     }
     
-    // Sort by priority (higher priority first)
     triggeredEvents.sort((a, b) => b.priority.compareTo(a.priority));
     
-    // Process each triggered event
     for (final event in triggeredEvents) {
-      yield* _processDailyEvent(event);
+      await _processDailyEvent(event);
+      
+      // Stop if waiting for response
+      if (_awaitingResponseForMessageId != null) {
+        return;
+      }
     }
   }
 
+  /// Process a single daily event.
+  Future<void> _processDailyEvent(DailyEvent event) async {
+    print('🎯 Processing daily event: ${event.id}');
+    
+    final variant = _selectVariant(event.variants);
+    if (variant == null) {
+      print('⚠️ No suitable variant found for event ${event.id}');
+      return;
+    }
+    
+    _currentEventId = event.id;
+    
+    // Process messages until we hit an interactive one
+    for (int i = 0; i < variant.messages.length; i++) {
+      final scriptMessage = variant.messages[i];
+      final message = await _convertScriptMessage(scriptMessage);
+      
+      // Enhance options with response callbacks if this is a daily event
+      if (message.options != null) {
+        final enhancedOptions = <MessageOption>[];
+        for (final option in message.options!) {
+          final response = event.responses[option.id];
+          enhancedOptions.add(MessageOption(
+            id: option.id,
+            text: option.text,
+            onTap: option.onTap,
+            nextEventId: response?.nextEventId ?? option.nextEventId,
+            setVariables: response?.setVariables ?? option.setVariables,
+            enabled: option.enabled,
+            disabledReason: option.disabledReason,
+          ));
+        }
+        
+        // Create new message with enhanced options
+        final enhancedMessage = EnhancedMessageModel(
+          id: message.id,
+          type: message.type,
+          content: message.content,
+          sender: message.sender,
+          timestamp: message.timestamp,
+          bubbleStyle: message.bubbleStyle,
+          animation: message.animation,
+          delayMs: message.delayMs,
+          textEffect: message.textEffect,
+          options: enhancedOptions,
+          inputConfig: message.inputConfig,
+          metadata: message.metadata,
+          nextEventId: message.nextEventId,
+          setVariables: message.setVariables,
+          contentKey: message.contentKey,
+          templateVariables: message.templateVariables,
+        );
+        
+        _addMessage(enhancedMessage);
+      } else {
+        // Add delay before message if specified
+        if (message.delayMs != null && message.delayMs! > 0) {
+          await Future.delayed(Duration(milliseconds: message.delayMs!));
+        }
+        
+        _addMessage(message);
+      }
+      
+      await _saveMessageToHistory(message);
+      
+      // Check if this message requires user interaction
+      if (_requiresUserResponse(message)) {
+        _awaitingResponseForMessageId = message.id;
+        
+        // Store remaining messages for after response
+        if (i + 1 < variant.messages.length) {
+          _pendingMessages = variant.messages.sublist(i + 1);
+        }
+        
+        print('⏸️ Waiting for user response to message: ${message.id}');
+        return; // Stop processing here
+      }
+    }
+    
+    // Update variables from variant
+    if (variant.setVariables != null) {
+      _updateVariables(variant.setVariables!);
+    }
+  }
+
+  /// Handle user option selection.
+  Future<void> selectOption(String messageId, String optionId) async {
+    if (_awaitingResponseForMessageId != messageId) {
+      print('⚠️ Not awaiting response for this message: $messageId');
+      return;
+    }
+    
+    print('✅ User selected option: $optionId for message: $messageId');
+    
+    // Clear awaiting state
+    _awaitingResponseForMessageId = null;
+    
+    // Find the message and option
+    final message = await _findMessage(messageId);
+    final option = message?.options?.firstWhere((o) => o.id == optionId);
+    
+    if (option == null) {
+      print('❌ Option not found: $optionId');
+      return;
+    }
+    
+    // Update variables from option
+    if (option.setVariables != null) {
+      _updateVariables(option.setVariables!);
+    }
+    
+    // Handle next event or continue with pending messages
+    if (option.nextEventId != null) {
+      await _processEventById(option.nextEventId!);
+    } else {
+      await _continuePendingMessages();
+    }
+  }
+
+  /// Handle user text input submission.
+  Future<void> submitInput(String messageId, String input) async {
+    if (_awaitingResponseForMessageId != messageId) {
+      print('⚠️ Not awaiting response for this message: $messageId');
+      return;
+    }
+    
+    print('✅ User submitted input: $input for message: $messageId');
+    
+    // Clear awaiting state
+    _awaitingResponseForMessageId = null;
+    
+    // Save input to variables (you might want to customize this)
+    _updateVariables({'last_input': input});
+    
+    // Continue with pending messages
+    await _continuePendingMessages();
+  }
+
+  /// Continue processing pending messages after user response.
+  Future<void> _continuePendingMessages() async {
+    if (_pendingMessages.isEmpty) {
+      print('✅ No pending messages, conversation flow complete');
+      return;
+    }
+    
+    print('▶️ Continuing with ${_pendingMessages.length} pending messages');
+    
+    // Process remaining messages
+    for (int i = 0; i < _pendingMessages.length; i++) {
+      final scriptMessage = _pendingMessages[i];
+      final message = await _convertScriptMessage(scriptMessage);
+      
+      // Add delay before message if specified
+      if (message.delayMs != null && message.delayMs! > 0) {
+        await Future.delayed(Duration(milliseconds: message.delayMs!));
+      }
+      
+      _addMessage(message);
+      await _saveMessageToHistory(message);
+      
+      // Check if this message requires user interaction
+      if (_requiresUserResponse(message)) {
+        _awaitingResponseForMessageId = message.id;
+        
+        // Store remaining messages
+        if (i + 1 < _pendingMessages.length) {
+          _pendingMessages = _pendingMessages.sublist(i + 1);
+        } else {
+          _pendingMessages = [];
+        }
+        
+        print('⏸️ Waiting for user response to message: ${message.id}');
+        return; // Stop processing here
+      }
+    }
+    
+    // Clear pending messages
+    _pendingMessages = [];
+    
+    // Continue with daily events if we haven't processed them yet
+    if (_currentEventId == null || !_currentEventId!.startsWith('daily_')) {
+      await _processDailyEvents();
+    }
+  }
+
+  /// Process a specific event by ID.
+  Future<void> _processEventById(String eventId) async {
+    print('🎯 Processing event by ID: $eventId');
+    
+    // Look for the event in daily events
+    final dailyEvent = _currentScript!.dailyEvents
+        .where((e) => e.id == eventId)
+        .firstOrNull;
+        
+    if (dailyEvent != null) {
+      await _processDailyEvent(dailyEvent);
+      return;
+    }
+    
+    // Could also check plot events here if needed
+    print('⚠️ Event not found: $eventId');
+  }
+
+  /// Check if a message requires user response.
+  bool _requiresUserResponse(EnhancedMessageModel message) {
+    return message.type == MessageType.options || 
+           message.type == MessageType.input ||
+           (message.options != null && message.options!.isNotEmpty);
+  }
+
+  /// Add a message to the stream.
+  void _addMessage(EnhancedMessageModel message) {
+    _messageController?.add(message);
+  }
+
+  /// Find a message by ID (simplified - in real implementation would search database).
+  Future<EnhancedMessageModel?> _findMessage(String messageId) async {
+    // In a real implementation, this would search the message history
+    // For now, return null as we don't store message references
+    return null;
+  }
+
   /// Check if a daily event should trigger.
-  /// 
-  /// This is like checking if all the conditions for a scene are met:
-  /// - Is it the right time? (time window)
-  /// - Are the prerequisites satisfied? (conditions)
-  /// - Has it already happened today? (frequency limits)
   bool _shouldTriggerEvent(DailyEvent event) {
-    // Check trigger type
     switch (event.trigger.type) {
       case 'time_window':
         if (!_isInTimeWindow(event.trigger)) {
@@ -198,14 +420,13 @@ class ConversationEngine {
         break;
     }
     
-    // Check general conditions
     return _evaluateConditions(event.trigger.conditions);
   }
 
   /// Check if current time is within the event's time window.
   bool _isInTimeWindow(EventTrigger trigger) {
     if (trigger.startTime == null || trigger.endTime == null) {
-      return true; // No time restriction
+      return true;
     }
     
     final now = DateTime.now();
@@ -220,80 +441,8 @@ class ConversationEngine {
     return now.isAfter(startTime) && now.isBefore(endTime);
   }
 
-  /// Process a single daily event.
-  /// 
-  /// This involves selecting the most appropriate variant and generating messages.
-  Stream<EnhancedMessageModel> _processDailyEvent(DailyEvent event) async* {
-    print('🎯 Processing daily event: ${event.id}');
-    
-    // Select the best variant based on conditions and weights
-    final variant = _selectVariant(event.variants);
-    if (variant == null) {
-      print('⚠️ No suitable variant found for event ${event.id}');
-      return;
-    }
-    
-    // Process the variant's messages
-    for (final scriptMessage in variant.messages) {
-      final message = await _convertScriptMessage(scriptMessage);
-      
-      // If this message has options, set up response handling
-      if (message.options != null && scriptMessage.options != null) {
-        // Create new options list with enhanced response handling
-        final enhancedOptions = <MessageOption>[];
-        for (int i = 0; i < message.options!.length; i++) {
-          final option = message.options![i];
-          final response = event.responses[option.id];
-          if (response != null) {
-            // Create new option with wrapped onTap
-            final originalOnTap = option.onTap;
-            final enhancedOption = MessageOption(
-              id: option.id,
-              text: option.text,
-              onTap: () async {
-                // Execute original action
-                if (originalOnTap != null) {
-                  originalOnTap();
-                }
-                // Handle response
-                await _handleEventResponse(response);
-              },
-            );
-            enhancedOptions.add(enhancedOption);
-          } else {
-            enhancedOptions.add(option);
-          }
-        }
-        //message = message.copyWith(options: enhancedOptions);
-      }
-      
-      yield message;
-      
-      // Apply delay
-      if (message.delayMs != null && message.delayMs! > 0) {
-        await Future.delayed(Duration(milliseconds: message.delayMs!));
-      }
-      
-      // Save to history
-      await _saveMessageToHistory(message);
-    }
-    
-    // Update variables from variant
-    if (variant.setVariables != null) {
-      _updateVariables(variant.setVariables!);
-    }
-  }
-
   /// Select the most appropriate variant based on conditions and weights.
-  /// 
-  /// This is like casting for a play - we need to find the variant that:
-  /// 1. Meets all the required conditions (actor must fit the role)
-  /// 2. Has the highest probability of being selected (weighted random selection)
-  /// 
-  /// The weight system allows for variety - even if multiple variants are valid,
-  /// we don't always pick the same one, keeping conversations fresh.
   EventVariant? _selectVariant(List<EventVariant> variants) {
-    // Filter variants whose conditions are met
     final validVariants = variants.where((variant) {
       return _evaluateConditions(variant.conditions);
     }).toList();
@@ -302,7 +451,6 @@ class ConversationEngine {
       return null;
     }
     
-    // If only one valid variant, return it
     if (validVariants.length == 1) {
       return validVariants.first;
     }
@@ -319,30 +467,17 @@ class ConversationEngine {
       }
     }
     
-    // Fallback to first variant (shouldn't reach here)
     return validVariants.first;
   }
 
   /// Evaluate conditions against current user state.
-  /// 
-  /// Conditions are like IF statements in the script. They check things like:
-  /// - Is the user's streak greater than 5?
-  /// - Have they failed in the last 3 days?
-  /// - Is their stake amount above $10?
-  /// 
-  /// This system is flexible - conditions are just key-value pairs that can
-  /// check any aspect of the user's state.
   bool _evaluateConditions(Map<String, dynamic> conditions) {
     for (final entry in conditions.entries) {
       final key = entry.key;
       final expected = entry.value;
-      
-      // Get actual value from user state
       final actual = _userState.variables[key];
       
-      // Handle different condition types
       if (expected is Map) {
-        // Range conditions: {"min": 0, "max": 5}
         if (expected.containsKey('min') || expected.containsKey('max')) {
           final value = actual is num ? actual : 0;
           if (expected.containsKey('min') && value < expected['min']) {
@@ -353,22 +488,17 @@ class ConversationEngine {
           }
         }
       } else {
-        // Simple equality check
         if (actual != expected) {
           return false;
         }
       }
     }
     
-    return true; // All conditions passed
+    return true;
   }
 
   /// Convert a script message into an enhanced message for display.
-  /// 
-  /// This is where the magic happens - we transform abstract script instructions
-  /// into concrete messages with all their visual properties, animations, and content.
   Future<EnhancedMessageModel> _convertScriptMessage(ScriptMessage scriptMessage) async {
-    // Get localized content
     String? content;
     if (scriptMessage.contentKey != null) {
       content = await _getLocalizedContent(scriptMessage.contentKey!);
@@ -376,12 +506,10 @@ class ConversationEngine {
       content = scriptMessage.content;
     }
     
-    // Apply template variables if needed
     if (content != null && content.contains('{{')) {
       content = _applyTemplateVariables(content);
     }
     
-    // Parse visual properties
     final properties = scriptMessage.properties ?? {};
     
     return EnhancedMessageModel(
@@ -397,29 +525,21 @@ class ConversationEngine {
       options: scriptMessage.options != null
           ? scriptMessage.options!.map((o) => MessageOption.fromJson(o)).toList()
           : null,
+      inputConfig: scriptMessage.inputConfig != null
+          ? InputConfig.fromJson(scriptMessage.inputConfig!)
+          : null,
       metadata: properties['metadata'],
     );
   }
 
   /// Get localized content for a message key.
-  /// 
-  /// This supports multi-language conversations by looking up the appropriate
-  /// translation for the current language.
   Future<String> _getLocalizedContent(String key) async {
-    // In a full implementation, this would look up from localization files
-    // For now, we'll return the key as placeholder
     return key;
   }
 
   /// Apply template variables to content.
-  /// 
-  /// This personalizes messages by replacing placeholders with actual values.
-  /// "Hello {{name}}" becomes "Hello John"
-  /// "You have a {{streak_count}} day streak!" becomes "You have a 7 day streak!"
   String _applyTemplateVariables(String content) {
     String result = content;
-    
-    // Find all variables in the format {{variable_name}}
     final variablePattern = RegExp(r'\{\{(\w+)\}\}');
     final matches = variablePattern.allMatches(content);
     
@@ -432,36 +552,7 @@ class ConversationEngine {
     return result;
   }
 
-  /// Handle event response (user choice consequences).
-  /// 
-  /// When a user makes a choice, this method processes the consequences:
-  /// - Trigger follow-up events
-  /// - Update variables
-  /// - Unlock achievements
-  Future<void> _handleEventResponse(EventResponse response) async {
-    // Update variables
-    if (response.setVariables != null) {
-      _updateVariables(response.setVariables!);
-    }
-    
-    // Trigger next event if specified
-    if (response.nextEventId != null) {
-      // This would queue the next event for processing
-      print('📍 Queueing next event: ${response.nextEventId}');
-    }
-    
-    // Check for achievements
-    if (response.achievementId != null) {
-      // This would trigger achievement processing
-      print('🏆 Achievement unlocked: ${response.achievementId}');
-    }
-  }
-
   /// Update user state variables.
-  /// 
-  /// Variables track everything about the user's journey - their choices,
-  /// progress, preferences, and history. This method safely updates these
-  /// variables and ensures persistence.
   void _updateVariables(Map<String, dynamic> updates) {
     updates.forEach((key, value) {
       _userState.variables[key] = value;
@@ -470,9 +561,6 @@ class ConversationEngine {
   }
 
   /// Save message to conversation history.
-  /// 
-  /// This creates a permanent record that users can review later and enables
-  /// features like conversation search and analytics.
   Future<void> _saveMessageToHistory(EnhancedMessageModel message) async {
     await _database.saveMessage(
       id: message.id,
@@ -490,7 +578,6 @@ class ConversationEngine {
       return UserConversationState.fromJson(savedState);
     }
     
-    // Create new state for first-time users
     return UserConversationState(
       scriptVersion: _currentScript?.version ?? '1.0.0',
       dayInJourney: 1,
@@ -511,6 +598,17 @@ class ConversationEngine {
       'conversation_state',
       _userState.toJson(),
     );
+  }
+
+  /// Check if currently waiting for user response.
+  bool get isAwaitingResponse => _awaitingResponseForMessageId != null;
+  
+  /// Get the message ID we're waiting for response to.
+  String? get awaitingResponseForMessageId => _awaitingResponseForMessageId;
+
+  /// Dispose of resources.
+  void dispose() {
+    _messageController?.close();
   }
 
   // Parsing helper methods
@@ -554,9 +652,6 @@ class ConversationEngine {
 }
 
 /// UserConversationState tracks the user's progress through the conversation system.
-/// 
-/// This is like a bookmark that remembers not just what page you're on, but also
-/// all the choices you've made, paths you've taken, and achievements you've unlocked.
 class UserConversationState {
   final String scriptVersion;
   final int dayInJourney;

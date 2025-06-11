@@ -9,15 +9,15 @@ import '../../utils/database/conversation_database.dart';
 
 /// ConversationProvider is the bridge between our conversation system and the UI.
 /// 
-/// This provider manages the entire conversation lifecycle and provides a clean
-/// interface for the UI to interact with. It handles:
+/// This updated provider works with the enhanced conversation engine that properly
+/// handles response waiting. It coordinates between:
 /// - Message flow from the engine to the UI
-/// - User interactions and responses
+/// - User interactions and responses  
 /// - State persistence
 /// - Error handling and recovery
 /// 
-/// Think of this as the stage manager in a theater - coordinating between the
-/// script (ConversationEngine), the actors (UI components), and the audience (user).
+/// Key improvement: The system now properly pauses after interactive messages
+/// and waits for user responses before continuing the conversation flow.
 class ConversationNotifier extends StateNotifier<ConversationState> {
   final ConversationEngine _engine;
   final LocalizationManager _localization;
@@ -25,9 +25,6 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   
   // Stream subscription for engine messages
   StreamSubscription<EnhancedMessageModel>? _messageSubscription;
-  
-  // Queue for pending user responses
-  final List<PendingResponse> _responseQueue = [];
 
   ConversationNotifier({
     required String language,
@@ -39,12 +36,6 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   }
 
   /// Initialize the conversation system.
-  /// 
-  /// This sets up everything needed for conversations to work:
-  /// - Database tables
-  /// - Language settings
-  /// - Engine initialization
-  /// - Message history loading
   Future<void> _initialize() async {
     try {
       state = state.copyWith(isLoading: true);
@@ -70,9 +61,6 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   }
 
   /// Load existing conversation history.
-  /// 
-  /// This provides continuity - users can see their previous conversations
-  /// when they return to the app.
   Future<void> _loadConversationHistory() async {
     try {
       // Load today's messages from database
@@ -100,8 +88,6 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   }
 
   /// Check if daily conversation flow should start.
-  /// 
-  /// This determines whether to show new messages or wait for user action.
   Future<void> _checkAndStartDailyFlow() async {
     // Check if user has already interacted today
     final lastMessage = state.messages.isNotEmpty ? state.messages.last : null;
@@ -117,6 +103,7 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   /// Start the daily conversation flow.
   /// 
   /// This triggers the engine to process today's events and messages.
+  /// The engine will now properly pause at interactive messages.
   Future<void> startDailyConversation() async {
     try {
       state = state.copyWith(isProcessing: true);
@@ -124,8 +111,8 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
       // Cancel any existing subscription
       await _messageSubscription?.cancel();
       
-      // Subscribe to engine messages
-      _messageSubscription = _engine.processDaily().listen(
+      // Subscribe to engine messages using new startConversation method
+      _messageSubscription = _engine.startConversation().listen(
         (message) => _handleEngineMessage(message),
         onError: (error) => _handleEngineError(error),
         onDone: () => _handleEngineComplete(),
@@ -154,6 +141,13 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
       state = state.copyWith(
         awaitingResponse: true,
         currentInteractionId: message.id,
+        isProcessing: false, // Stop processing indicator when waiting for user
+      );
+    } else {
+      // Clear awaiting response if this is not an interactive message
+      state = state.copyWith(
+        awaitingResponse: false,
+        currentInteractionId: null,
       );
     }
   }
@@ -169,7 +163,10 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
 
   /// Handle engine completion.
   void _handleEngineComplete() {
-    state = state.copyWith(isProcessing: false);
+    state = state.copyWith(
+      isProcessing: false,
+      awaitingResponse: false,
+    );
     print('✅ ConversationNotifier: Engine processing complete');
   }
 
@@ -194,14 +191,12 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
     
     // Save to database
     await _saveMessage(userMessage);
-    
-    // Process any pending responses
-    await _processPendingResponses();
   }
 
   /// Select an option from a multiple choice message.
   /// 
   /// This handles when the user clicks one of the provided options.
+  /// The engine will process the response and continue the conversation.
   Future<void> selectOption(String messageId, MessageOption option) async {
     // Create user message showing their choice
     final userMessage = EnhancedMessageModel(
@@ -212,10 +207,11 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
       timestamp: DateTime.now(),
     );
     
-    // Add to state
+    // Add to state immediately for UI feedback
     state = state.copyWith(
       messages: [...state.messages, userMessage],
       awaitingResponse: false,
+      isProcessing: true, // Show processing while engine handles response
     );
     
     // Save to database
@@ -226,25 +222,15 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
       option.onTap!();
     }
     
-    // Queue any follow-up actions
-    if (option.nextEventId != null || option.setVariables != null) {
-      _responseQueue.add(PendingResponse(
-        messageId: messageId,
-        optionId: option.id,
-        nextEventId: option.nextEventId,
-        setVariables: option.setVariables,
-      ));
-      await _processPendingResponses();
-    }
+    // Notify engine of user's choice - this will trigger follow-up messages
+    await _engine.selectOption(messageId, option.id);
   }
 
   /// Submit input from an input field message.
   /// 
   /// This handles when the user submits text in response to an input request.
+  /// The engine will process the input and continue the conversation.
   Future<void> submitInput(String messageId, String input) async {
-    // Find the original message
-    final originalMessage = state.messages.firstWhere((m) => m.id == messageId);
-    
     // Create user message with their input
     final userMessage = EnhancedMessageModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -254,33 +240,18 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
       timestamp: DateTime.now(),
     );
     
-    // Add to state
+    // Add to state immediately for UI feedback
     state = state.copyWith(
       messages: [...state.messages, userMessage],
       awaitingResponse: false,
+      isProcessing: true, // Show processing while engine handles input
     );
     
     // Save to database
     await _saveMessage(userMessage);
     
-    // Execute input callback if it exists
-    if (originalMessage.inputConfig != null) {
-      // This would trigger any associated actions
-      print('📝 Input submitted: $input');
-    }
-  }
-
-  /// Process any pending responses.
-  /// 
-  /// This handles queued actions from user interactions.
-  Future<void> _processPendingResponses() async {
-    while (_responseQueue.isNotEmpty) {
-      final response = _responseQueue.removeAt(0);
-      
-      // Process the response
-      // In a full implementation, this would trigger new events in the engine
-      print('⚙️ Processing pending response: ${response.optionId}');
-    }
+    // Notify engine of user's input - this will trigger follow-up messages
+    await _engine.submitInput(messageId, input);
   }
 
   /// Save a message to the database.
@@ -313,6 +284,12 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
     // Database cleanup would be implemented here
   }
 
+  /// Check if engine is currently waiting for a response.
+  bool get isEngineAwaitingResponse => _engine.isAwaitingResponse;
+  
+  /// Get the message ID the engine is waiting for a response to.
+  String? get awaitingResponseForMessageId => _engine.awaitingResponseForMessageId;
+
   /// Check if two dates are the same day.
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
@@ -328,6 +305,7 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   @override
   void dispose() {
     _messageSubscription?.cancel();
+    _engine.dispose();
     super.dispose();
   }
 }
@@ -374,21 +352,6 @@ class ConversationState {
       error: error ?? this.error,
     );
   }
-}
-
-/// PendingResponse represents a queued action from a user interaction.
-class PendingResponse {
-  final String messageId;
-  final String optionId;
-  final String? nextEventId;
-  final Map<String, dynamic>? setVariables;
-
-  PendingResponse({
-    required this.messageId,
-    required this.optionId,
-    this.nextEventId,
-    this.setVariables,
-  });
 }
 
 /// Provider definition for the conversation system.

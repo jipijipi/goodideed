@@ -36,6 +36,9 @@ class ConversationEngine {
   String? _awaitingResponseForMessageId;
   List<ScriptMessage> _pendingMessages = [];
   String? _currentEventId;
+  
+  // Message tracking for response handling
+  final Map<String, EnhancedMessageModel> _messageHistory = {};
 
   ConversationEngine({
     required String language,
@@ -282,7 +285,7 @@ class ConversationEngine {
     // Find the message and option
     final message = await _findMessage(messageId);
     final option = message?.options?.firstWhere((o) => o.id == optionId);
-    
+      print(message);
     if (option == null) {
       print('❌ Option not found: $optionId');
       return;
@@ -394,13 +397,22 @@ class ConversationEngine {
 
   /// Add a message to the stream.
   void _addMessage(EnhancedMessageModel message) {
+    // Store message in history for response tracking
+    _messageHistory[message.id] = message;
     _messageController?.add(message);
   }
 
-  /// Find a message by ID (simplified - in real implementation would search database).
+  /// Find a message by ID from the in-memory history.
   Future<EnhancedMessageModel?> _findMessage(String messageId) async {
-    // In a real implementation, this would search the message history
-    // For now, return null as we don't store message references
+    // Check in-memory history first
+    final message = _messageHistory[messageId];
+    if (message != null) {
+      return message;
+    }
+    
+    // In a real implementation, this would also search the database
+    // For now, just log and return null
+    print('⚠️ Message not found in history: $messageId');
     return null;
   }
 
@@ -609,6 +621,7 @@ class ConversationEngine {
   /// Dispose of resources.
   void dispose() {
     _messageController?.close();
+    _messageHistory.clear();
   }
 
   // Parsing helper methods

@@ -48,22 +48,28 @@
                 {
                   "id": "good",
                   "text": "I'm feeling good!",
+                  "nextEventId": "response_good",
                   "setVariables": {
-                    "mood": "good"
+                    "mood": "good",
+                    "first_interaction": true
                   }
                 },
                 {
                   "id": "bad",
                   "text": "Not so great",
+                  "nextEventId": "response_bad",
                   "setVariables": {
-                    "mood": "bad"
+                    "mood": "bad",
+                    "first_interaction": true
                   }
                 },
                 {
                   "id": "neutral",
                   "text": "Just okay",
+                  "nextEventId": "response_neutral",
                   "setVariables": {
-                    "mood": "neutral"
+                    "mood": "neutral",
+                    "first_interaction": true
                   }
                 }
               ]
@@ -71,29 +77,7 @@
           ]
         }
       ],
-      "responses": {
-        "good": {
-          "next_event": "response_good",
-          "set_variables": {
-            "mood": "good",
-            "first_interaction": true
-          }
-        },
-        "bad": {
-          "next_event": "response_bad",
-          "set_variables": {
-            "mood": "bad",
-            "first_interaction": true
-          }
-        },
-        "neutral": {
-          "next_event": "response_neutral",
-          "set_variables": {
-            "mood": "neutral",
-            "first_interaction": true
-          }
-        }
-      }
+      "responses": {}
     },
     {
       "id": "response_good",
@@ -122,6 +106,7 @@
                 {
                   "id": "exercise",
                   "text": "Exercise daily",
+                  "nextEventId": "habit_selected",
                   "setVariables": {
                     "main_habit": "exercise"
                   }
@@ -129,6 +114,7 @@
                 {
                   "id": "study",
                   "text": "Study something",
+                  "nextEventId": "habit_selected",
                   "setVariables": {
                     "main_habit": "study"
                   }
@@ -138,20 +124,7 @@
           ]
         }
       ],
-      "responses": {
-        "exercise": {
-          "next_event": "habit_selected",
-          "set_variables": {
-            "main_habit": "exercise"
-          }
-        },
-        "study": {
-          "next_event": "habit_selected",
-          "set_variables": {
-            "main_habit": "study"
-          }
-        }
-      }
+      "responses": {}
     },
     {
       "id": "response_bad",

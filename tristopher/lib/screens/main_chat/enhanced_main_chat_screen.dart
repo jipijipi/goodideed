@@ -62,65 +62,83 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
     
     return PaperBackgroundScaffold(
       scrollController: _scrollController,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          '•‿•', // Tristopher's face
-          style: AppTextStyles.header(size: 20),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
-        actions: [
-          // Debug button (remove in production)
-          if (const bool.fromEnvironment('dart.vm.product') == false)
-            IconButton(
-              icon: const Icon(Icons.bug_report),
-              onPressed: () => _showDebugPanel(context),
-            ),
-        ],
-      ),
-      body: Column(
+      body: Stack(
         children: [
-          // Error banner
-          if (conversationState.error != null)
-            Container(
-              width: double.infinity,
-              color: Colors.red.shade100,
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Icon(Icons.error_outline, color: Colors.red.shade700),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      conversationState.error!,
-                      style: TextStyle(color: Colors.red.shade700),
-                    ),
+          // Main content
+          Column(
+            children: [
+              // Error banner
+              if (conversationState.error != null)
+                Container(
+                  width: double.infinity,
+                  color: Colors.red.shade100,
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red.shade700),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          conversationState.error!,
+                          style: TextStyle(color: Colors.red.shade700),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          // Clear error
+                          ref.read(conversationProvider.notifier).clearError();
+                        },
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      // Clear error
-                      ref.read(conversationProvider.notifier).clearError();
-                    },
-                  ),
-                ],
+                ),
+                
+              // Main message area
+              Expanded(
+                child: _buildMessageList(conversationState, conversationNotifier),
               ),
-            ),
-            
-          // Main message area
-          Expanded(
-            child: _buildMessageList(conversationState, conversationNotifier),
+              
+              // Bottom status area
+              //_buildBottomStatus(conversationState),
+            ],
           ),
           
-          // Bottom status area
-          //_buildBottomStatus(conversationState),
+          // Floating action buttons positioned on the right side
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 16,
+            right: 16,
+            child: Column(
+              children: [
+                // Menu button
+                FloatingActionButton(
+                  heroTag: "menu_fab",
+                  mini: true,
+                  backgroundColor: Colors.white.withOpacity(0.9),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  child: const Icon(
+                    Icons.menu,
+                    color: Colors.black87,
+                  ),
+                ),
+                
+                const SizedBox(height: 8),
+                
+                // Debug button (remove in production)
+                if (const bool.fromEnvironment('dart.vm.product') == false)
+                  FloatingActionButton(
+                    heroTag: "debug_fab",
+                    mini: true,
+                    backgroundColor: Colors.white.withOpacity(0.9),
+                    onPressed: () => _showDebugPanel(context),
+                    child: const Icon(
+                      Icons.bug_report,
+                      color: Colors.black87,
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
       drawer: const AppDrawer(),

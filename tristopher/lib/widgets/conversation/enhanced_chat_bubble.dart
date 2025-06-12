@@ -373,16 +373,16 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
               ? () => widget.onOptionSelected?.call(option)
               : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.backgroundColor,
-            foregroundColor: AppColors.primaryText,
+            backgroundColor: AppColors.accentColor.withAlpha((0.15 * 255).toInt()),
+            //foregroundColor: AppColors.primaryText,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(0),
             ),
           ),
           child: Text(
             option.text,
-            style: AppTextStyles.body(),
+            style: AppTextStyles.userText(alpha: 1,italic: false),
           ),
         ),
       ),
@@ -403,12 +403,13 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
             keyboardType: widget.message.inputConfig?.keyboardType,
             maxLength: widget.message.inputConfig?.maxLength,
             decoration: InputDecoration(
+              filled: false,
               hintText: widget.message.inputConfig?.hint,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(0),
               ),
               suffixIcon: IconButton(
-                icon: const Icon(Icons.send),
+                icon: const Icon(Icons.arrow_forward),
                 onPressed: () {
                   if (_inputController.text.isNotEmpty) {
                     widget.onInputSubmitted?.call(_inputController.text);
@@ -519,29 +520,30 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
     if (widget.message.bubbleStyle == BubbleStyle.error) {
       backgroundColor = Colors.red.shade100;
     } else if (isUser) {
-      backgroundColor = AppColors.accentColor;
+      backgroundColor = AppColors.accentColor.withAlpha(
+                (0.15 * 255).toInt());
     } else {
-      backgroundColor = AppColors.backgroundColor;
+      backgroundColor = const Color.fromARGB(0, 255, 255, 255);
     }
     
     return BoxDecoration(
       color: backgroundColor,
-      borderRadius: BorderRadius.only(
+      /* borderRadius: BorderRadius.only(
         topLeft: const Radius.circular(16),
         topRight: const Radius.circular(16),
         bottomLeft: Radius.circular(isUser ? 16 : 4),
         bottomRight: Radius.circular(isUser ? 4 : 16),
-      ),
+      ), */
       border: widget.message.bubbleStyle == BubbleStyle.glitch
           ? Border.all(color: AppColors.accentColor, width: 1)
           : null,
-      boxShadow: [
+      /* boxShadow: [
         BoxShadow(
           color: Colors.black.withOpacity(0.1),
           blurRadius: 4,
           offset: const Offset(0, 2),
         ),
-      ],
+      ], */
     );
   }
 
@@ -551,12 +553,11 @@ class _EnhancedChatBubbleState extends State<EnhancedChatBubble>
     
     // Apply sender-specific styles
     if (widget.message.sender == MessageSender.user) {
-      baseStyle = baseStyle.copyWith(color: AppColors.primaryText);
+      baseStyle = AppTextStyles.userText();
     } else if (widget.message.sender == MessageSender.system) {
-      baseStyle = baseStyle.copyWith(
-        color: AppColors.primaryText,
-        fontSize: 14,
-      );
+      baseStyle = AppTextStyles.tristopherText();
+    } else if (widget.message.sender == MessageSender.tristopher) {
+      baseStyle = AppTextStyles.tristopherText();
     }
     
     // Apply text effects

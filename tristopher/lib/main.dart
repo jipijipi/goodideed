@@ -5,7 +5,7 @@ import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/screens/account/account_screen.dart';
 import 'package:tristopher_app/screens/auth/onboarding_screen.dart';
 import 'package:tristopher_app/screens/goal_stake/goal_screen.dart';
-import 'package:tristopher_app/screens/main_chat/main_chat_screen.dart';
+import 'package:tristopher_app/screens/main_chat/enhanced_main_chat_screen.dart';
 import 'package:tristopher_app/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:tristopher_app/config/environment.dart';

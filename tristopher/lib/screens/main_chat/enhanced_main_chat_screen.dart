@@ -111,15 +111,21 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
             child: Column(
               children: [
                 // Menu button
-                FloatingActionButton(
-                  heroTag: "menu_fab",
-                  mini: true,
-                  backgroundColor: Colors.white.withOpacity(0.9),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  child: const Icon(
-                    Icons.menu,
-                    color: Colors.black87,
-                  ),
+                Builder(
+                  builder: (BuildContext context) {
+                    return FloatingActionButton(
+                      heroTag: "menu_fab",
+                      mini: true,
+                      backgroundColor: Colors.white.withOpacity(0.9),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                      child: const Icon(
+                        Icons.menu,
+                        color: Colors.black87,
+                      ),
+                    );
+                  },
                 ),
                 
                 const SizedBox(height: 8),

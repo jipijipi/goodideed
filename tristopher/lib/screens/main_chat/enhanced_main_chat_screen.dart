@@ -120,7 +120,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
           ),
           
           // Bottom status area
-          _buildBottomStatus(conversationState),
+          //_buildBottomStatus(conversationState),
         ],
       ),
       drawer: const AppDrawer(),
@@ -184,7 +184,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
   }
 
   /// Build the bottom status area.
-  Widget _buildBottomStatus(ConversationState state) {
+  /* Widget _buildBottomStatus(ConversationState state) {
     if (!state.isProcessing && !state.awaitingResponse) {
       return const SizedBox.shrink();
     }
@@ -226,7 +226,7 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
         ],
       ),
     );
-  }
+  } */
 
   /// Show debug panel for testing (development only).
   void _showDebugPanel(BuildContext context) {

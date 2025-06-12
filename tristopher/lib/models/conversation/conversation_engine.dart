@@ -316,11 +316,17 @@ class ConversationEngine {
     // Clear awaiting state
     _awaitingResponseForMessageId = null;
     
-    // Save input to variables (you might want to customize this)
+    // Save input to variables
     _updateVariables({'last_input': input});
     
-    // Continue with pending messages
-    await _continuePendingMessages();
+    // Check if the input message has a nextEventId
+    final message = await _findMessage(messageId);
+    if (message?.nextEventId != null) {
+      await _processEventById(message!.nextEventId!);
+    } else {
+      // Continue with pending messages if no specific next event
+      await _continuePendingMessages();
+    }
   }
 
   /// Continue processing pending messages after user response.
@@ -541,6 +547,7 @@ class ConversationEngine {
           ? InputConfig.fromJson(scriptMessage.inputConfig!)
           : null,
       metadata: properties['metadata'],
+      nextEventId: scriptMessage.nextEventId, // Add this line
     );
   }
 

@@ -202,7 +202,48 @@
             {
               "type": "text",
               "sender": "tristopher",
-              "content": "Here's how this works: You fail, your money goes to something you hate.",
+              "content": "Before we continue with this inevitable disappointment...",
+              "delay": 2000
+            },
+            {
+              "type": "input",
+              "sender": "tristopher",
+              "content": "What should I call you while you fail at {{main_habit}}?",
+              "inputConfig": {
+                "hint": "Enter your name",
+                "keyboardType": "TextInputType.text",
+                "maxLength": 20
+              },
+              "nextEventId": "name_provided"
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+    {
+      "id": "name_provided",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 17,
+      "variants": [
+        {
+          "id": "name_variant",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{last_input}}... I'll try to remember that when you inevitably give up.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Here's how this works, {{last_input}}: You fail at {{main_habit}}, your money goes to something you hate.",
               "delay": 2500
             },
             {
@@ -220,12 +261,20 @@
   "plot_timeline": {},
   "message_templates": {
     "daily_greeting": {
-      "text": "Good morning, {{name}}. Day {{day_number}} of your inevitable disappointment.",
-      "variables": ["name", "day_number"]
+      "text": "Good morning, {{last_input}}. Day {{day_number}} of your inevitable disappointment.",
+      "variables": ["last_input", "day_number"]
     },
     "habit_reminder": {
-      "text": "Don't forget about your {{main_habit}}, {{name}}. Your wallet is watching.",
-      "variables": ["main_habit", "name"]
+      "text": "Don't forget about your {{main_habit}}, {{last_input}}. Your wallet is watching.",
+      "variables": ["main_habit", "last_input"]
+    },
+    "personal_mockery": {
+      "text": "{{last_input}}, your {{main_habit}} progress is... predictably disappointing.",
+      "variables": ["last_input", "main_habit"]
+    },
+    "name_confirmation": {
+      "text": "So {{last_input}} wants to {{main_habit}}. How... optimistic.",
+      "variables": ["last_input", "main_habit"]
     }
   }
 }

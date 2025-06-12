@@ -253,6 +253,7 @@ class ScriptMessage {
   final int? delayMs;
   final List<Map<String, dynamic>>? options;
   final Map<String, dynamic>? inputConfig; // For input messages
+  final String? nextEventId; // For triggering next event after input
   
   ScriptMessage({
     required this.type,
@@ -263,6 +264,7 @@ class ScriptMessage {
     this.delayMs,
     this.options,
     this.inputConfig,
+    this.nextEventId,
   });
 
   factory ScriptMessage.fromJson(Map<String, dynamic> json) {
@@ -277,6 +279,7 @@ class ScriptMessage {
           ? List<Map<String, dynamic>>.from(json['options'])
           : null,
       inputConfig: json['inputConfig'],
+      nextEventId: json['nextEventId'],
     );
   }
 
@@ -290,6 +293,7 @@ class ScriptMessage {
       if (delayMs != null) 'delay': delayMs,
       if (options != null) 'options': options,
       if (inputConfig != null) 'inputConfig': inputConfig,
+      if (nextEventId != null) 'nextEventId': nextEventId,
     };
   }
 }

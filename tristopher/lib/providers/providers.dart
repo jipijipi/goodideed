@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/models/user_model.dart';
-import 'package:tristopher_app/models/message_model.dart';
+import 'package:tristopher_app/models/toRemove_message_model.dart';
 import 'package:tristopher_app/services/user_service.dart';
 import 'package:tristopher_app/services/onboarding_service.dart';
 

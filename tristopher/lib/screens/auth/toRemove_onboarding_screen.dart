@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/models/message_model.dart';
 import 'package:tristopher_app/providers/providers.dart';
-import 'package:tristopher_app/services/onboarding_service.dart';
-import 'package:tristopher_app/services/story_service.dart';
-import 'package:tristopher_app/widgets/chat_bubble.dart';
+import 'package:tristopher_app/services/toRemove_onboarding_service.dart';
+import 'package:tristopher_app/services/toRemove_story_service.dart';
+import 'package:tristopher_app/widgets/toRemove_chat_bubble.dart';
 import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {

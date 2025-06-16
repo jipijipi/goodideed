@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
-import 'package:tristopher_app/providers/providers.dart';
+//import 'package:tristopher_app/providers/providers.dart';
 import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -24,14 +24,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     
     if (!mounted) return;
     
-    // Check if onboarding is needed
-    final needsOnboarding = await ref.read(needsOnboardingProvider.future);
+    Navigator.of(context).pushReplacementNamed(AppRoutes.mainChat);
     
-    if (needsOnboarding) {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.onboarding);
-    } else {
-      Navigator.of(context).pushReplacementNamed(AppRoutes.mainChat);
-    }
   }
 
   @override
@@ -51,7 +45,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                   width: 150,
                   height: 150,
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withAlpha((0.2 * 255).toInt()),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Center(

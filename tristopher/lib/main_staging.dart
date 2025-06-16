@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
 import 'package:tristopher_app/screens/account/account_screen.dart';
-import 'package:tristopher_app/screens/auth/onboarding_screen.dart';
+//import 'package:tristopher_app/screens/auth/onboarding_screen.dart';
 import 'package:tristopher_app/screens/goal_stake/goal_screen.dart';
 import 'package:tristopher_app/screens/main_chat/enhanced_main_chat_screen.dart';
 import 'package:tristopher_app/screens/splash/splash_screen.dart';
@@ -98,13 +98,13 @@ class TristopherApp extends StatelessWidget {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
             borderSide: BorderSide(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withAlpha((0.2 * 255).toInt()),
             ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8.0),
             borderSide: BorderSide(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withAlpha((0.2 * 255).toInt()),
             ),
           ),
           focusedBorder: OutlineInputBorder(
@@ -127,7 +127,7 @@ class TristopherApp extends StatelessWidget {
       initialRoute: AppRoutes.splash,
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
-        AppRoutes.onboarding: (context) => const OnboardingScreen(),
+        //AppRoutes.onboarding: (context) => const OnboardingScreen(),
         AppRoutes.mainChat: (context) => const MainChatScreen(),
         AppRoutes.goalStake: (context) => const GoalScreen(),
         AppRoutes.account: (context) => const AccountScreen(),

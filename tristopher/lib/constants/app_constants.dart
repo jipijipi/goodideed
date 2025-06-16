@@ -13,7 +13,7 @@ class AppColors {
 // App Routes
 class AppRoutes {
   static const String splash = '/';
-  static const String onboarding = '/onboarding';
+  //static const String onboarding = '/onboarding';
   static const String mainChat = '/main';
   static const String goalStake = '/goal';
   static const String account = '/account';

@@ -21,7 +21,6 @@
     "user_name": "",
     "current_task": "",
     "daily_deadline": "",
-    "active_days": [],
     "notification_intensity": "medium",
     "wager_target": ""
   },
@@ -29,82 +28,19 @@
     {
       "id": "check_in",
       "trigger": {
-        "type": "app_start",
+        "type": "time_window",
+        "start": "00:00",
+        "end": "23:59",
         "conditions": {}
       },
       "priority": 100,
       "variants": [
         {
-          "id": "main_entry",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "conditional_flow",
-              "sender": "system",
-              "content": "Starting check-in flow",
-              "nextEventId": "welcoming_sequence"
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "welcoming_sequence",
-      "trigger": {
-        "type": "conditional",
-        "conditions": {}
-      },
-      "priority": 99,
-      "variants": [
-        {
-          "id": "check_onboarded",
+          "id": "not_onboarded",
           "weight": 1.0,
           "conditions": {
             "is_onboarded": false
           },
-          "messages": [
-            {
-              "type": "flow_redirect",
-              "nextEventId": "onboarding_sequence"
-            }
-          ]
-        },
-        {
-          "id": "welcome_back",
-          "weight": 1.0,
-          "conditions": {
-            "is_onboarded": true
-          },
-          "messages": [
-            {
-              "type": "text",
-              "sender": "tristopher",
-              "content": "Well, well, {{user_name}}. Back for more punishment, I see.",
-              "delay": 1500
-            },
-            {
-              "type": "flow_redirect",
-              "nextEventId": "task_checking_sequence"
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "onboarding_sequence",
-      "trigger": {
-        "type": "conditional",
-        "conditions": {}
-      },
-      "priority": 98,
-      "variants": [
-        {
-          "id": "ask_name",
-          "weight": 1.0,
-          "conditions": {},
           "messages": [
             {
               "type": "text",
@@ -121,23 +57,138 @@
                 "keyboardType": "TextInputType.text",
                 "maxLength": 20
               },
-              "nextEventId": "concept_explanation",
-              "setVariables": {
-                "user_name": "{{last_input}}"
-              }
+              "nextEventId": "onboarding_explanation"
+            }
+          ]
+        },
+        {
+          "id": "onboarded_no_task",
+          "weight": 1.0,
+          "conditions": {
+            "is_onboarded": true,
+            "has_task_set": false
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Well, well, {{user_name}}. Back for more punishment, I see.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "You still don't have a task set. Let's fix that pathetic situation.",
+              "delay": 1500
+            },
+            {
+              "type": "input",
+              "sender": "tristopher",
+              "content": "What's your daily task going to be? Be specific, {{user_name}}.",
+              "inputConfig": {
+                "hint": "e.g., Exercise for 30 minutes",
+                "keyboardType": "TextInputType.text",
+                "maxLength": 100
+              },
+              "nextEventId": "task_time_setting"
+            }
+          ]
+        },
+        {
+          "id": "onboarded_with_task_overdue",
+          "weight": 1.0,
+          "conditions": {
+            "is_onboarded": true,
+            "has_task_set": true,
+            "is_overdue": true
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{user_name}}, your task was due. Time for excuses.",
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "What's your pathetic status update?",
+              "options": [
+                {
+                  "id": "completed",
+                  "text": "I completed it!",
+                  "nextEventId": "success_response",
+                  "setVariables": {}
+                },
+                {
+                  "id": "failed",
+                  "text": "I failed...",
+                  "nextEventId": "failure_response",
+                  "setVariables": {}
+                },
+                {
+                  "id": "in_progress",
+                  "text": "Still working on it",
+                  "nextEventId": "in_progress_overdue",
+                  "setVariables": {}
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "onboarded_with_task_current",
+          "weight": 1.0,
+          "conditions": {
+            "is_onboarded": true,
+            "has_task_set": true,
+            "is_overdue": false
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{user_name}}, checking in on your inevitable failure.",
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "How's your task going? Try not to lie.",
+              "options": [
+                {
+                  "id": "completed_early",
+                  "text": "Already completed!",
+                  "nextEventId": "disbelief_response",
+                  "setVariables": {}
+                },
+                {
+                  "id": "in_progress_current",
+                  "text": "Working on it",
+                  "nextEventId": "encouragement_response",
+                  "setVariables": {}
+                },
+                {
+                  "id": "not_started",
+                  "text": "Haven't started yet",
+                  "nextEventId": "snark_response",
+                  "setVariables": {}
+                }
+              ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "concept_explanation",
+      "id": "onboarding_explanation",
       "trigger": {
         "type": "user_action",
         "conditions": {}
       },
-      "priority": 97,
+      "priority": 99,
       "variants": [
         {
           "id": "explain_concept",
@@ -147,7 +198,7 @@
             {
               "type": "text",
               "sender": "tristopher",
-              "content": "{{user_name}}, let me explain how this works since you clearly need help.",
+              "content": "{{last_input}}, let me explain how this works since you clearly need help.",
               "delay": 1500
             },
             {
@@ -163,203 +214,332 @@
               "delay": 2000
             },
             {
-              "type": "flow_redirect",
-              "nextEventId": "set_onboarded",
+              "type": "input",
+              "sender": "tristopher",
+              "content": "Now, what's your daily task going to be? Be specific.",
+              "inputConfig": {
+                "hint": "e.g., Exercise for 30 minutes",
+                "keyboardType": "TextInputType.text",
+                "maxLength": 100
+              },
+              "nextEventId": "task_time_setting",
               "setVariables": {
+                "user_name": "{{last_input}}",
                 "is_onboarded": true
               }
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "set_onboarded",
+      "id": "task_time_setting",
       "trigger": {
-        "type": "system",
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 98,
+      "variants": [
+        {
+          "id": "set_task_and_time",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{last_input}}? How predictable. Let me guess - you've tried this before?",
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "When should this be done by each day?",
+              "options": [
+                {
+                  "id": "morning",
+                  "text": "Morning (9 AM)",
+                  "nextEventId": "frequency_setting",
+                  "setVariables": {
+                    "current_task": "{{last_input}}",
+                    "daily_deadline": "09:00",
+                    "has_task_set": true
+                  }
+                },
+                {
+                  "id": "afternoon",
+                  "text": "Afternoon (2 PM)",
+                  "nextEventId": "frequency_setting",
+                  "setVariables": {
+                    "current_task": "{{last_input}}",
+                    "daily_deadline": "14:00",
+                    "has_task_set": true
+                  }
+                },
+                {
+                  "id": "evening",
+                  "text": "Evening (6 PM)",
+                  "nextEventId": "frequency_setting",
+                  "setVariables": {
+                    "current_task": "{{last_input}}",
+                    "daily_deadline": "18:00",
+                    "has_task_set": true
+                  }
+                },
+                {
+                  "id": "night",
+                  "text": "Night (9 PM)",
+                  "nextEventId": "frequency_setting",
+                  "setVariables": {
+                    "current_task": "{{last_input}}",
+                    "daily_deadline": "21:00",
+                    "has_task_set": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+
+    {
+      "id": "frequency_setting",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 97,
+      "variants": [
+        {
+          "id": "set_frequency",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Which days will you inevitably fail at this?",
+              "options": [
+                {
+                  "id": "weekdays",
+                  "text": "Weekdays only",
+                  "nextEventId": "notification_setting",
+                  "setVariables": {}
+                },
+                {
+                  "id": "everyday",
+                  "text": "Every day",
+                  "nextEventId": "notification_setting",
+                  "setVariables": {}
+                },
+                {
+                  "id": "weekends",
+                  "text": "Weekends only",
+                  "nextEventId": "notification_setting",
+                  "setVariables": {}
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+
+    {
+      "id": "notification_setting",
+      "trigger": {
+        "type": "user_action",
         "conditions": {}
       },
       "priority": 96,
       "variants": [
         {
-          "id": "onboarding_complete",
+          "id": "set_notifications",
           "weight": 1.0,
           "conditions": {},
           "messages": [
             {
-              "type": "flow_redirect",
-              "nextEventId": "task_setting_sequence"
+              "type": "options",
+              "sender": "tristopher",
+              "content": "How often should I remind you of your impending failure?",
+              "options": [
+                {
+                  "id": "gentle",
+                  "text": "Be gentle with me",
+                  "nextEventId": "wager_readiness",
+                  "setVariables": {
+                    "notification_intensity": "low"
+                  }
+                },
+                {
+                  "id": "normal",
+                  "text": "Normal reminders",
+                  "nextEventId": "wager_readiness",
+                  "setVariables": {
+                    "notification_intensity": "medium"
+                  }
+                },
+                {
+                  "id": "aggressive",
+                  "text": "Be relentless",
+                  "nextEventId": "wager_readiness",
+                  "setVariables": {
+                    "notification_intensity": "high"
+                  }
+                }
+              ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "task_checking_sequence",
+      "id": "wager_readiness",
       "trigger": {
-        "type": "conditional",
+        "type": "user_action",
         "conditions": {}
       },
       "priority": 95,
       "variants": [
         {
-          "id": "no_task_set",
+          "id": "ask_wager_readiness",
           "weight": 1.0,
-          "conditions": {
-            "has_task_set": false
-          },
+          "conditions": {},
           "messages": [
             {
-              "type": "flow_redirect",
-              "nextEventId": "task_setting_sequence"
-            }
-          ]
-        },
-        {
-          "id": "check_overdue",
-          "weight": 1.0,
-          "conditions": {
-            "has_task_set": true
-          },
-          "messages": [
-            {
-              "type": "conditional_flow",
-              "nextEventId": "overdue_check"
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Ready to put your money where your mouth is?",
+              "options": [
+                {
+                  "id": "yes_wager",
+                  "text": "Yes, let's set a wager",
+                  "nextEventId": "wager_amount_setting",
+                  "setVariables": {}
+                },
+                {
+                  "id": "no_wager",
+                  "text": "Not ready for wagers yet",
+                  "nextEventId": "sendoff_message",
+                  "setVariables": {}
+                }
+              ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "overdue_check",
+      "id": "wager_amount_setting",
       "trigger": {
-        "type": "conditional",
+        "type": "user_action",
         "conditions": {}
       },
       "priority": 94,
       "variants": [
         {
-          "id": "task_overdue",
+          "id": "set_wager_amount",
           "weight": 1.0,
-          "conditions": {
-            "is_overdue": true
-          },
+          "conditions": {},
           "messages": [
             {
               "type": "options",
               "sender": "tristopher",
-              "content": "Your task was due. What's your pathetic excuse this time?",
+              "content": "How much are you willing to lose when you fail?",
               "options": [
                 {
-                  "id": "completed",
-                  "text": "I completed it!",
-                  "nextEventId": "success_sequence"
+                  "id": "small",
+                  "text": "$5 - Testing the waters",
+                  "nextEventId": "wager_target_setting",
+                  "setVariables": {
+                    "wager_amount": 5
+                  }
                 },
                 {
-                  "id": "failed",
-                  "text": "I failed...",
-                  "nextEventId": "failure_sequence"
+                  "id": "medium",
+                  "text": "$20 - Getting serious",
+                  "nextEventId": "wager_target_setting",
+                  "setVariables": {
+                    "wager_amount": 20
+                  }
                 },
                 {
-                  "id": "in_progress",
-                  "text": "Still working on it",
-                  "nextEventId": "check_on_notice_overdue"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "task_not_overdue",
-          "weight": 1.0,
-          "conditions": {
-            "is_overdue": false
-          },
-          "messages": [
-            {
-              "type": "options",
-              "sender": "tristopher",
-              "content": "How's your task going, {{user_name}}? Try not to lie.",
-              "options": [
-                {
-                  "id": "completed_early",
-                  "text": "Already completed!",
-                  "nextEventId": "disbelief_response"
-                },
-                {
-                  "id": "in_progress_current",
-                  "text": "Working on it",
-                  "nextEventId": "encouragement"
-                },
-                {
-                  "id": "not_started",
-                  "text": "Haven't started yet",
-                  "nextEventId": "snark_response"
+                  "id": "large",
+                  "text": "$50 - High stakes",
+                  "nextEventId": "wager_target_setting",
+                  "setVariables": {
+                    "wager_amount": 50
+                  }
                 }
               ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "check_on_notice_overdue",
+      "id": "wager_target_setting",
       "trigger": {
-        "type": "conditional",
+        "type": "user_action",
         "conditions": {}
       },
       "priority": 93,
       "variants": [
         {
-          "id": "already_on_notice",
+          "id": "set_wager_target",
           "weight": 1.0,
-          "conditions": {
-            "is_on_notice": true
-          },
+          "conditions": {},
           "messages": [
             {
-              "type": "flow_redirect",
-              "nextEventId": "failure_sequence"
-            }
-          ]
-        },
-        {
-          "id": "put_on_notice",
-          "weight": 1.0,
-          "conditions": {
-            "is_on_notice": false
-          },
-          "messages": [
-            {
-              "type": "text",
+              "type": "options",
               "sender": "tristopher",
-              "content": "Fine. You're officially ON NOTICE. This is your last chance, {{user_name}}.",
-              "delay": 2000
-            },
-            {
-              "type": "text",
-              "sender": "tristopher",
-              "content": "Fail again and your wallet will feel the consequences.",
-              "delay": 1500
-            },
-            {
-              "type": "flow_redirect",
-              "nextEventId": "sendoff_sequence",
-              "setVariables": {
-                "is_on_notice": true
-              }
+              "content": "Where should your failure money go? Pick something you'd hate to support:",
+              "options": [
+                {
+                  "id": "political_opposite",
+                  "text": "Political party I oppose",
+                  "nextEventId": "wager_confirmation",
+                  "setVariables": {
+                    "wager_target": "a political organization you oppose"
+                  }
+                },
+                {
+                  "id": "corporate_enemy",
+                  "text": "Company I dislike",
+                  "nextEventId": "wager_confirmation", 
+                  "setVariables": {
+                    "wager_target": "a company you dislike"
+                  }
+                },
+                {
+                  "id": "rival_sports",
+                  "text": "Rival sports team",
+                  "nextEventId": "wager_confirmation",
+                  "setVariables": {
+                    "wager_target": "your rival sports team"
+                  }
+                }
+              ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "disbelief_response",
+      "id": "wager_confirmation",
       "trigger": {
         "type": "user_action",
         "conditions": {}
@@ -367,27 +547,45 @@
       "priority": 92,
       "variants": [
         {
-          "id": "disbelief",
+          "id": "confirm_wager",
           "weight": 1.0,
           "conditions": {},
           "messages": [
             {
               "type": "text",
               "sender": "tristopher",
-              "content": "Already? Color me shocked. You actually did something productive.",
+              "content": "Perfect. ${{wager_amount}} to {{wager_target}} when you fail at {{current_task}}.",
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "This should be... entertaining.",
               "delay": 1500
             },
             {
-              "type": "flow_redirect",
-              "nextEventId": "success_sequence"
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Remember: {{current_task}} by {{daily_deadline}}. Your wallet is watching.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Try not to disappoint me. Actually, please do - it's more fun for me.",
+              "delay": 2000,
+              "setVariables": {
+                "has_visited_today": true
+              }
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "encouragement",
+      "id": "success_response",
       "trigger": {
         "type": "user_action",
         "conditions": {}
@@ -395,63 +593,7 @@
       "priority": 91,
       "variants": [
         {
-          "id": "encourage",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "text",
-              "sender": "tristopher",
-              "content": "Working on it? How refreshingly... average. Don't stop now, {{user_name}}.",
-              "delay": 1500
-            },
-            {
-              "type": "flow_redirect",
-              "nextEventId": "sendoff_sequence"
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "snark_response",
-      "trigger": {
-        "type": "user_action",
-        "conditions": {}
-      },
-      "priority": 90,
-      "variants": [
-        {
-          "id": "snark",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "text",
-              "sender": "tristopher",
-              "content": "Haven't started? What a surprise. Your procrastination skills are truly impressive, {{user_name}}.",
-              "delay": 2000
-            },
-            {
-              "type": "flow_redirect",
-              "nextEventId": "sendoff_sequence"
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "success_sequence",
-      "trigger": {
-        "type": "user_action",
-        "conditions": {}
-      },
-      "priority": 89,
-      "variants": [
-        {
-          "id": "congratulations",
+          "id": "congratulate_success",
           "weight": 1.0,
           "conditions": {},
           "messages": [
@@ -465,11 +607,7 @@
               "type": "text",
               "sender": "tristopher",
               "content": "Your streak is now {{current_streak}}. Don't let it go to your head.",
-              "delay": 1500,
-              "setVariables": {
-                "current_streak": "{{current_streak + 1}}",
-                "is_on_notice": false
-              }
+              "delay": 1500
             },
             {
               "type": "options",
@@ -479,30 +617,40 @@
                 {
                   "id": "keep_task",
                   "text": "Keep the same task",
-                  "nextEventId": "sendoff_sequence"
+                  "nextEventId": "sendoff_message",
+                  "setVariables": {
+                    "current_streak": "{{current_streak + 1}}",
+                    "is_on_notice": false
+                  }
                 },
                 {
                   "id": "change_task",
                   "text": "Set a new task",
-                  "nextEventId": "task_setting_sequence"
+                  "nextEventId": "task_time_setting",
+                  "setVariables": {
+                    "current_streak": "{{current_streak + 1}}",
+                    "is_on_notice": false,
+                    "has_task_set": false
+                  }
                 }
               ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "failure_sequence",
+      "id": "failure_response",
       "trigger": {
         "type": "user_action",
         "conditions": {}
       },
-      "priority": 88,
+      "priority": 90,
       "variants": [
         {
-          "id": "check_excuse",
+          "id": "handle_failure",
           "weight": 1.0,
           "conditions": {},
           "messages": [
@@ -514,18 +662,21 @@
                 {
                   "id": "valid_excuse",
                   "text": "I have a good reason",
-                  "nextEventId": "excuse_handling"
+                  "nextEventId": "excuse_handling",
+                  "setVariables": {}
                 },
                 {
                   "id": "no_excuse",
                   "text": "No excuse, I failed",
-                  "nextEventId": "lose_wager"
+                  "nextEventId": "wager_loss",
+                  "setVariables": {}
                 }
               ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
@@ -534,10 +685,10 @@
         "type": "user_action",
         "conditions": {}
       },
-      "priority": 87,
+      "priority": 89,
       "variants": [
         {
-          "id": "check_if_on_notice",
+          "id": "excuse_not_on_notice",
           "weight": 1.0,
           "conditions": {
             "is_on_notice": false
@@ -550,16 +701,25 @@
               "delay": 2000
             },
             {
-              "type": "flow_redirect",
-              "nextEventId": "sendoff_sequence",
+              "type": "text",
+              "sender": "tristopher",
+              "content": "One more failure and your wallet pays the price.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Remember: {{current_task}} by {{daily_deadline}}. Last chance.",
+              "delay": 1500,
               "setVariables": {
-                "is_on_notice": true
+                "is_on_notice": true,
+                "has_visited_today": true
               }
             }
           ]
         },
         {
-          "id": "already_on_notice_excuse",
+          "id": "excuse_already_on_notice",
           "weight": 1.0,
           "conditions": {
             "is_on_notice": true
@@ -572,24 +732,59 @@
               "delay": 2000
             },
             {
-              "type": "flow_redirect",
-              "nextEventId": "lose_wager"
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Congratulations, {{user_name}}. Your ${{wager_amount}} is now going to {{wager_target}}.",
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Hope it was worth it. Your streak is reset to 0.",
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Ready to try again with the same task, or do you want to switch to something easier?",
+              "options": [
+                {
+                  "id": "keep_failed_task",
+                  "text": "Keep the same task",
+                  "nextEventId": "sendoff_message",
+                  "setVariables": {
+                    "current_streak": 0,
+                    "is_on_notice": false
+                  }
+                },
+                {
+                  "id": "change_failed_task",
+                  "text": "Set a new task",
+                  "nextEventId": "task_time_setting",
+                  "setVariables": {
+                    "current_streak": 0,
+                    "is_on_notice": false,
+                    "has_task_set": false
+                  }
+                }
+              ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "lose_wager",
+      "id": "wager_loss",
       "trigger": {
-        "type": "system",
+        "type": "user_action",
         "conditions": {}
       },
-      "priority": 86,
+      "priority": 88,
       "variants": [
         {
-          "id": "wager_lost",
+          "id": "lose_wager",
           "weight": 1.0,
           "conditions": {},
           "messages": [
@@ -613,7 +808,7 @@
                 {
                   "id": "keep_failed_task",
                   "text": "Keep the same task",
-                  "nextEventId": "sendoff_sequence",
+                  "nextEventId": "sendoff_message",
                   "setVariables": {
                     "current_streak": 0,
                     "is_on_notice": false
@@ -622,54 +817,210 @@
                 {
                   "id": "change_failed_task",
                   "text": "Set a new task",
-                  "nextEventId": "task_setting_sequence",
+                  "nextEventId": "task_time_setting",
                   "setVariables": {
                     "current_streak": 0,
-                    "is_on_notice": false
+                    "is_on_notice": false,
+                    "has_task_set": false
                   }
                 }
               ]
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "task_setting_sequence",
+      "id": "in_progress_overdue",
       "trigger": {
-        "type": "conditional",
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 87,
+      "variants": [
+        {
+          "id": "overdue_not_on_notice",
+          "weight": 1.0,
+          "conditions": {
+            "is_on_notice": false
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Still working on it? Time's up, {{user_name}}. You're officially ON NOTICE.",
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Fail again and your wallet will feel the consequences.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Better finish that task before I see you next.",
+              "delay": 1500,
+              "setVariables": {
+                "is_on_notice": true,
+                "has_visited_today": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "overdue_already_on_notice",
+          "weight": 1.0,
+          "conditions": {
+            "is_on_notice": true
+          },
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Still working on it? You were already on notice. That's a failure in my book.",
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Congratulations, {{user_name}}. Your ${{wager_amount}} is now going to {{wager_target}}.",
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Hope those extra hours were worth it. Your streak is reset to 0.",
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Ready to try again, or should we find you an easier task?",
+              "options": [
+                {
+                  "id": "keep_failed_task",
+                  "text": "Keep the same task",
+                  "nextEventId": "sendoff_message",
+                  "setVariables": {
+                    "current_streak": 0,
+                    "is_on_notice": false
+                  }
+                },
+                {
+                  "id": "change_failed_task",
+                  "text": "Set a new task",
+                  "nextEventId": "task_time_setting",
+                  "setVariables": {
+                    "current_streak": 0,
+                    "is_on_notice": false,
+                    "has_task_set": false
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+
+    {
+      "id": "disbelief_response",
+      "trigger": {
+        "type": "user_action",
+        "conditions": {}
+      },
+      "priority": 86,
+      "variants": [
+        {
+          "id": "disbelief",
+          "weight": 1.0,
+          "conditions": {},
+          "messages": [
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Already? Color me shocked. You actually did something productive.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Your streak is now {{current_streak}}. Don't get cocky.",
+              "delay": 1500
+            },
+            {
+              "type": "options",
+              "sender": "tristopher",
+              "content": "Want to keep riding this wave or change things up?",
+              "options": [
+                {
+                  "id": "keep_task",
+                  "text": "Keep the same task",
+                  "nextEventId": "sendoff_message",
+                  "setVariables": {
+                    "current_streak": "{{current_streak + 1}}",
+                    "is_on_notice": false
+                  }
+                },
+                {
+                  "id": "change_task",
+                  "text": "Set a new task",
+                  "nextEventId": "task_time_setting",
+                  "setVariables": {
+                    "current_streak": "{{current_streak + 1}}",
+                    "is_on_notice": false,
+                    "has_task_set": false
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "responses": {}
+    },
+
+    {
+      "id": "encouragement_response",
+      "trigger": {
+        "type": "user_action",
         "conditions": {}
       },
       "priority": 85,
       "variants": [
         {
-          "id": "input_task",
+          "id": "encourage",
           "weight": 1.0,
           "conditions": {},
           "messages": [
             {
-              "type": "input",
+              "type": "text",
               "sender": "tristopher",
-              "content": "What's your daily task going to be? Be specific, {{user_name}}.",
-              "inputConfig": {
-                "hint": "e.g., Exercise for 30 minutes",
-                "keyboardType": "TextInputType.text",
-                "maxLength": 100
-              },
-              "nextEventId": "task_time_input",
+              "content": "Working on it? How refreshingly... average. Don't stop now, {{user_name}}.",
+              "delay": 1500
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "Remember: {{current_task}} by {{daily_deadline}}. Time's ticking.",
+              "delay": 1500,
               "setVariables": {
-                "current_task": "{{last_input}}",
-                "has_task_set": true
+                "has_visited_today": true
               }
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "task_time_input",
+      "id": "snark_response",
       "trigger": {
         "type": "user_action",
         "conditions": {}
@@ -677,56 +1028,33 @@
       "priority": 84,
       "variants": [
         {
-          "id": "time_input",
+          "id": "snark",
           "weight": 1.0,
           "conditions": {},
           "messages": [
             {
-              "type": "options",
+              "type": "text",
               "sender": "tristopher",
-              "content": "When should this be done by each day?",
-              "options": [
-                {
-                  "id": "morning",
-                  "text": "Morning (9 AM)",
-                  "nextEventId": "frequency_input",
-                  "setVariables": {
-                    "daily_deadline": "09:00"
-                  }
-                },
-                {
-                  "id": "afternoon",
-                  "text": "Afternoon (2 PM)",
-                  "nextEventId": "frequency_input",
-                  "setVariables": {
-                    "daily_deadline": "14:00"
-                  }
-                },
-                {
-                  "id": "evening",
-                  "text": "Evening (6 PM)",
-                  "nextEventId": "frequency_input",
-                  "setVariables": {
-                    "daily_deadline": "18:00"
-                  }
-                },
-                {
-                  "id": "night",
-                  "text": "Night (9 PM)",
-                  "nextEventId": "frequency_input",
-                  "setVariables": {
-                    "daily_deadline": "21:00"
-                  }
-                }
-              ]
+              "content": "Haven't started? What a surprise. Your procrastination skills are truly impressive, {{user_name}}.",
+              "delay": 2000
+            },
+            {
+              "type": "text",
+              "sender": "tristopher",
+              "content": "{{current_task}} by {{daily_deadline}}. Better get moving before your wallet gets lighter.",
+              "delay": 1500,
+              "setVariables": {
+                "has_visited_today": true
+              }
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     },
 
     {
-      "id": "frequency_input",
+      "id": "sendoff_message",
       "trigger": {
         "type": "user_action",
         "conditions": {}
@@ -734,272 +1062,7 @@
       "priority": 83,
       "variants": [
         {
-          "id": "active_days",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "options",
-              "sender": "tristopher",
-              "content": "Which days will you inevitably fail at this?",
-              "options": [
-                {
-                  "id": "weekdays",
-                  "text": "Weekdays only",
-                  "nextEventId": "notification_intensity_input",
-                  "setVariables": {
-                    "active_days": ["monday", "tuesday", "wednesday", "thursday", "friday"]
-                  }
-                },
-                {
-                  "id": "everyday",
-                  "text": "Every day",
-                  "nextEventId": "notification_intensity_input",
-                  "setVariables": {
-                    "active_days": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-                  }
-                },
-                {
-                  "id": "weekends",
-                  "text": "Weekends only",
-                  "nextEventId": "notification_intensity_input",
-                  "setVariables": {
-                    "active_days": ["saturday", "sunday"]
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "notification_intensity_input",
-      "trigger": {
-        "type": "user_action",
-        "conditions": {}
-      },
-      "priority": 82,
-      "variants": [
-        {
-          "id": "notification_intensity",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "options",
-              "sender": "tristopher",
-              "content": "How often should I remind you of your impending failure?",
-              "options": [
-                {
-                  "id": "gentle",
-                  "text": "Be gentle with me",
-                  "nextEventId": "wager_check",
-                  "setVariables": {
-                    "notification_intensity": "low"
-                  }
-                },
-                {
-                  "id": "normal",
-                  "text": "Normal reminders",
-                  "nextEventId": "wager_check",
-                  "setVariables": {
-                    "notification_intensity": "medium"
-                  }
-                },
-                {
-                  "id": "aggressive",
-                  "text": "Be relentless",
-                  "nextEventId": "wager_check",
-                  "setVariables": {
-                    "notification_intensity": "high"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "wager_check",
-      "trigger": {
-        "type": "user_action",
-        "conditions": {}
-      },
-      "priority": 81,
-      "variants": [
-        {
-          "id": "ready_for_wager",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "options",
-              "sender": "tristopher",
-              "content": "Ready to put your money where your mouth is?",
-              "options": [
-                {
-                  "id": "yes_wager",
-                  "text": "Yes, let's set a wager",
-                  "nextEventId": "wager_sequence"
-                },
-                {
-                  "id": "no_wager",
-                  "text": "Not ready for wagers yet",
-                  "nextEventId": "sendoff_sequence"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "wager_sequence",
-      "trigger": {
-        "type": "user_action",
-        "conditions": {}
-      },
-      "priority": 80,
-      "variants": [
-        {
-          "id": "wager_amount",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "options",
-              "sender": "tristopher",
-              "content": "How much are you willing to lose when you fail?",
-              "options": [
-                {
-                  "id": "small",
-                  "text": "$5 - Testing the waters",
-                  "nextEventId": "target_choice",
-                  "setVariables": {
-                    "wager_amount": 5
-                  }
-                },
-                {
-                  "id": "medium",
-                  "text": "$20 - Getting serious",
-                  "nextEventId": "target_choice",
-                  "setVariables": {
-                    "wager_amount": 20
-                  }
-                },
-                {
-                  "id": "large",
-                  "text": "$50 - High stakes",
-                  "nextEventId": "target_choice",
-                  "setVariables": {
-                    "wager_amount": 50
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "target_choice",
-      "trigger": {
-        "type": "user_action",
-        "conditions": {}
-      },
-      "priority": 79,
-      "variants": [
-        {
-          "id": "anti_charity",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "options",
-              "sender": "tristopher",
-              "content": "Where should your failure money go? Pick something you'd hate to support:",
-              "options": [
-                {
-                  "id": "political_opposite",
-                  "text": "Political party I oppose",
-                  "nextEventId": "wager_confirmed",
-                  "setVariables": {
-                    "wager_target": "a political organization you oppose"
-                  }
-                },
-                {
-                  "id": "corporate_enemy",
-                  "text": "Company I dislike",
-                  "nextEventId": "wager_confirmed", 
-                  "setVariables": {
-                    "wager_target": "a company you dislike"
-                  }
-                },
-                {
-                  "id": "rival_sports",
-                  "text": "Rival sports team",
-                  "nextEventId": "wager_confirmed",
-                  "setVariables": {
-                    "wager_target": "your rival sports team"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "wager_confirmed",
-      "trigger": {
-        "type": "user_action",
-        "conditions": {}
-      },
-      "priority": 78,
-      "variants": [
-        {
-          "id": "wager_set",
-          "weight": 1.0,
-          "conditions": {},
-          "messages": [
-            {
-              "type": "text",
-              "sender": "tristopher",
-              "content": "Perfect. ${{wager_amount}} to {{wager_target}} when you fail at {{current_task}}.",
-              "delay": 2000
-            },
-            {
-              "type": "text",
-              "sender": "tristopher",
-              "content": "This should be... entertaining.",
-              "delay": 1500
-            },
-            {
-              "type": "flow_redirect",
-              "nextEventId": "sendoff_sequence"
-            }
-          ]
-        }
-      ]
-    },
-
-    {
-      "id": "sendoff_sequence",
-      "trigger": {
-        "type": "conditional",
-        "conditions": {}
-      },
-      "priority": 77,
-      "variants": [
-        {
-          "id": "check_visited_today",
+          "id": "first_visit_today",
           "weight": 1.0,
           "conditions": {
             "has_visited_today": false
@@ -1023,7 +1086,7 @@
           ]
         },
         {
-          "id": "already_visited",
+          "id": "return_visit",
           "weight": 1.0,
           "conditions": {
             "has_visited_today": true
@@ -1037,7 +1100,8 @@
             }
           ]
         }
-      ]
+      ],
+      "responses": {}
     }
   ],
   "plot_timeline": {},
@@ -1055,8 +1119,8 @@
       "variables": ["wager_amount", "wager_target"]
     },
     "streak_status": {
-      "text": "Current streak: {{current_streak}} days. {{#if is_on_notice}}You're ON NOTICE.{{/if}}",
-      "variables": ["current_streak", "is_on_notice"]
+      "text": "Current streak: {{current_streak}} days.",
+      "variables": ["current_streak"]
     }
   }
 }

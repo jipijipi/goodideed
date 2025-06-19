@@ -362,8 +362,15 @@ class ScriptManager {
   Future<void> clearCache() async {
     _memoryCache = null;
     _memoryCacheVersion = null;
-    // Database cleanup would be implemented here
-    print('📚 ScriptManager: Cache cleared');
+    
+    // Clear database cache
+    try {
+      await _database.clearScripts();
+      await _database.clearCacheMetadata();
+      print('📚 ScriptManager: All caches cleared successfully');
+    } catch (e) {
+      print('⚠️ ScriptManager: Error clearing database cache: $e');
+    }
   }
 
   /// Get script statistics for monitoring.

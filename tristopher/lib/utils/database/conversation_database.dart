@@ -312,4 +312,36 @@ class ConversationDatabase {
       whereArgs: messageIds,
     );
   }
+
+  /// Clear all user state data.
+  Future<void> clearUserState() async {
+    final db = await database;
+    await db.delete('user_state');
+  }
+
+  /// Clear all messages.
+  Future<void> clearMessages() async {
+    final db = await database;
+    await db.delete('messages');
+  }
+
+  /// Clear all cached scripts.
+  Future<void> clearScripts() async {
+    final db = await database;
+    await db.delete('scripts');
+  }
+
+  /// Clear all cache metadata.
+  Future<void> clearCacheMetadata() async {
+    final db = await database;
+    await db.delete('cache_metadata');
+  }
+
+  /// Reset the entire database (nuclear option).
+  Future<void> resetDatabase() async {
+    await clearUserState();
+    await clearMessages();
+    await clearScripts();
+    await clearCacheMetadata();
+  }
 }

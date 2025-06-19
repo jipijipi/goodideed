@@ -382,6 +382,13 @@ class ConversationDebugPanel extends ConsumerWidget {
                             Navigator.of(context).pop();
                           },
                         ),
+                        _buildActionButton(
+                          'Reset All Data',
+                          Icons.delete_forever,
+                          () {
+                            _showResetConfirmation(context, ref);
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -512,6 +519,80 @@ class ConversationDebugPanel extends ConsumerWidget {
     final currentMessages = ref.read(conversationProvider).messages;
     ref.read(conversationProvider.notifier).state = ref.read(conversationProvider).copyWith(
       messages: [...currentMessages, ...messages],
+    );
+  }
+
+  /// Show confirmation dialog for resetting all data.
+  void _showResetConfirmation(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset All Data'),
+        content: const Text(
+          'This will permanently delete:\n'
+          '\u2022 All conversation history\n'
+          '\u2022 User preferences and state\n'
+          '\u2022 Cached scripts\n'
+          '\u2022 All local data\n\n'
+          'This action cannot be undone. Are you sure?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.of(context).pop(); // Close dialog
+              Navigator.of(context).pop(); // Close debug panel
+              
+              // Show loading indicator
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Row(
+                    children: [
+                      SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 12),
+                      Text('Resetting all data...'),
+                    ],
+                  ),
+                  duration: Duration(seconds: 3),
+                ),
+              );
+              
+              // Perform reset
+              try {
+                await ref.read(conversationProvider.notifier).resetAllData();
+                
+                // Show success message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('✅ All data reset successfully!'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              } catch (e) {
+                // Show error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('❌ Failed to reset data: $e'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Reset All Data'),
+          ),
+        ],
+      ),
     );
   }
 }

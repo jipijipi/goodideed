@@ -284,6 +284,45 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
     // Database cleanup would be implemented here
   }
 
+  /// Reset all user data and start fresh.
+  Future<void> resetAllData() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      
+      // Cancel any existing message subscription
+      await _messageSubscription?.cancel();
+      
+      // Clear in-memory state
+      state = state.copyWith(
+        messages: [],
+        isProcessing: false,
+        awaitingResponse: false,
+        currentInteractionId: null,
+        error: null,
+      );
+      
+      // Clear script cache
+      final scriptManager = ScriptManager();
+      await scriptManager.clearCache();
+      
+      // Clear database data
+      await _database.clearUserState();
+      await _database.clearMessages();
+      await _database.clearScripts();
+      
+      // Reinitialize everything
+      await _initialize();
+      
+      print('✅ ConversationNotifier: All data reset successfully');
+    } catch (e) {
+      print('❌ ConversationNotifier: Error resetting data: $e');
+      state = state.copyWith(
+        isLoading: false,
+        error: 'Failed to reset data',
+      );
+    }
+  }
+
   /// Check if engine is currently waiting for a response.
   bool get isEngineAwaitingResponse => _engine.isAwaitingResponse;
   

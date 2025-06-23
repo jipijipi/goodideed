@@ -713,6 +713,12 @@ class ConversationEngine {
   
   /// Get the message ID we're waiting for response to.
   String? get awaitingResponseForMessageId => _awaitingResponseForMessageId;
+  
+  /// Get current user conversation variables for debugging.
+  Map<String, dynamic> get userVariables => Map<String, dynamic>.from(_userState.variables);
+  
+  /// Get current user state for debugging.
+  UserConversationState get userState => _userState;
 
   /// Dispose of resources.
   void dispose() {

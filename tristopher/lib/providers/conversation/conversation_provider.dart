@@ -377,6 +377,12 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   
   /// Get the message ID the engine is waiting for a response to.
   String? get awaitingResponseForMessageId => _engine.awaitingResponseForMessageId;
+  
+  /// Get current user variables for debugging.
+  Map<String, dynamic> get userVariables => _engine.userVariables;
+  
+  /// Get current user state for debugging.
+  UserConversationState get userState => _engine.userState;
 
   /// Check if two dates are the same day.
   bool _isSameDay(DateTime date1, DateTime date2) {
@@ -472,4 +478,22 @@ final isProcessingProvider = Provider<bool>((ref) {
 /// Provider for current error state
 final conversationErrorProvider = Provider<String?>((ref) {
   return ref.watch(conversationProvider).error;
+});
+
+/// Provider for user variables (for debugging)
+final userVariablesProvider = Provider<Map<String, dynamic>>((ref) {
+  try {
+    return ref.watch(conversationProvider.notifier).userVariables;
+  } catch (e) {
+    return {};
+  }
+});
+
+/// Provider for user state (for debugging)
+final userStateProvider = Provider<UserConversationState?>((ref) {
+  try {
+    return ref.watch(conversationProvider.notifier).userState;
+  } catch (e) {
+    return null;
+  }
 });

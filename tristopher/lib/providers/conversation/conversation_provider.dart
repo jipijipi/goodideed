@@ -9,15 +9,39 @@ import '../../utils/database/conversation_database.dart';
 
 /// ConversationProvider is the bridge between our conversation system and the UI.
 /// 
-/// This updated provider works with the enhanced conversation engine that properly
-/// handles response waiting. It coordinates between:
-/// - Message flow from the engine to the UI
-/// - User interactions and responses  
-/// - State persistence
-/// - Error handling and recovery
-/// 
-/// Key improvement: The system now properly pauses after interactive messages
-/// and waits for user responses before continuing the conversation flow.
+/// DAILY CONVERSATION STATE MANAGEMENT:
+/// This provider orchestrates the complex state management required for
+/// Tristopher's daily conversations, handling 10 key steps:
+///
+/// STEP 10: CONVERSATION LIFECYCLE MANAGEMENT
+/// - Initialize conversation engine with user's language preference
+/// - Load user state (streak, task, wager info) from database
+/// - Determine which conversation variant to trigger based on user status
+///
+/// STEP 11: MESSAGE FLOW COORDINATION
+/// - Receive message stream from conversation engine
+/// - Update UI state as messages arrive from Tristopher
+/// - Handle delays between messages for natural conversation pacing
+///
+/// STEP 12: INTERACTIVE RESPONSE COORDINATION
+/// - Pause conversation flow when interactive messages appear
+/// - Wait for user responses (option selection or text input)
+/// - Resume conversation flow after user interaction
+///
+/// STEP 13: USER CHOICE PROCESSING
+/// - Process option selections (success/failure/excuse responses)
+/// - Handle text inputs (name, task description, etc.)
+/// - Update user variables based on choices
+///
+/// STEP 14: CONSEQUENCE EXECUTION
+/// - Trigger wager loss when user fails tasks
+/// - Update streak counters for successes/failures
+/// - Execute "on notice" system for excuse handling
+///
+/// STEP 15: STATE PERSISTENCE
+/// - Save all conversation messages to database
+/// - Persist updated user state for next day's conversation
+/// - Cache conversation history for UI display
 class ConversationNotifier extends StateNotifier<ConversationState> {
   final ConversationEngine _engine;
   final LocalizationManager _localization;
@@ -36,18 +60,24 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
   }
 
   /// Initialize the conversation system.
+  /// 
+  /// STEP 16: SYSTEM INITIALIZATION & USER STATE ASSESSMENT
+  /// This critical step determines which conversation path the user will experience
+  /// based on their current status (new user, returning user, overdue task, etc.)
   Future<void> _initialize() async {
     try {
       state = state.copyWith(isLoading: true);
       
-      // Initialize components
+      // Initialize conversation engine with user's historical data
       await _engine.initialize();
       await _localization.setLanguage(state.language);
       
-      // Load conversation history
+      // Load today's conversation history (if user already interacted)
       await _loadConversationHistory();
       
-      // Start daily conversation flow if needed
+      // STEP 17: DAILY FLOW DECISION POINT
+      // Determine if we need to start a new daily conversation
+      // or if user has already completed today's interaction
       await _checkAndStartDailyFlow();
       
       state = state.copyWith(isLoading: false);
@@ -128,23 +158,27 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
 
   /// Handle a message from the conversation engine.
   /// 
-  /// This is where messages from the engine are added to the UI state.
+  /// STEP 18: MESSAGE DELIVERY & INTERACTION DETECTION
+  /// As Tristopher's messages arrive, we update the UI and detect
+  /// when the conversation requires user input to continue.
   void _handleEngineMessage(EnhancedMessageModel message) {
-    // Add message to state
+    // Add Tristopher's message to the conversation display
     state = state.copyWith(
       messages: [...state.messages, message],
       error: null,
     );
     
-    // If this message expects a response, update the state
+    // STEP 19: CONVERSATION FLOW CONTROL
+    // Check if this message requires user interaction (options or text input)
     if (message.options != null || message.inputConfig != null) {
+      // Pause conversation flow - wait for user response
       state = state.copyWith(
         awaitingResponse: true,
         currentInteractionId: message.id,
-        isProcessing: false, // Stop processing indicator when waiting for user
+        isProcessing: false, // Stop "Tristopher is thinking..." indicator
       );
     } else {
-      // Clear awaiting response if this is not an interactive message
+      // Continue conversation flow for non-interactive messages
       state = state.copyWith(
         awaitingResponse: false,
         currentInteractionId: null,
@@ -195,10 +229,13 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
 
   /// Select an option from a multiple choice message.
   /// 
-  /// This handles when the user clicks one of the provided options.
-  /// The engine will process the response and continue the conversation.
+  /// STEP 20: CRITICAL DECISION PROCESSING
+  /// This handles the most important moments in the daily conversation:
+  /// - "I completed it!" vs "I failed..." (determines streak/wager consequences)
+  /// - Excuse vs no excuse (triggers "on notice" system)
+  /// - Task continuation vs change (affects next day's conversation)
   Future<void> selectOption(String messageId, MessageOption option) async {
-    // Create user message showing their choice
+    // Show user's choice in the conversation immediately
     final userMessage = EnhancedMessageModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: MessageType.text,
@@ -207,31 +244,39 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
       timestamp: DateTime.now(),
     );
     
-    // Add to state immediately for UI feedback
+    // Update UI state to show user response and indicate Tristopher is processing
     state = state.copyWith(
       messages: [...state.messages, userMessage],
       awaitingResponse: false,
-      isProcessing: true, // Show processing while engine handles response
+      isProcessing: true, // Show "Tristopher is thinking..." while consequences execute
     );
     
-    // Save to database
+    // Persist user choice for streak/failure tracking
     await _saveMessage(userMessage);
     
-    // Execute option callback if it exists
+    // Execute any immediate consequences (UI updates, navigation, etc.)
     if (option.onTap != null) {
       option.onTap!();
     }
     
-    // Notify engine of user's choice - this will trigger follow-up messages
+    // STEP 21: CONSEQUENCE CHAIN TRIGGER
+    // Send user's choice to engine which will:
+    // - Update user variables (streak, wager status, etc.)
+    // - Execute financial consequences (wager losses)
+    // - Determine and deliver Tristopher's response messages
     await _engine.selectOption(messageId, option.id);
   }
 
   /// Submit input from an input field message.
   /// 
-  /// This handles when the user submits text in response to an input request.
-  /// The engine will process the input and continue the conversation.
+  /// STEP 22: PERSONALIZATION DATA CAPTURE
+  /// This handles when users provide personal information that shapes
+  /// their unique experience with Tristopher:
+  /// - Name (used in all future conversations: "Well, well, {{user_name}}")
+  /// - Task description ("{{current_task}} by {{daily_deadline}}")
+  /// - Custom responses that affect conversation flow
   Future<void> submitInput(String messageId, String input) async {
-    // Create user message with their input
+    // Display user's input in the conversation
     final userMessage = EnhancedMessageModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: MessageType.text,
@@ -240,17 +285,21 @@ class ConversationNotifier extends StateNotifier<ConversationState> {
       timestamp: DateTime.now(),
     );
     
-    // Add to state immediately for UI feedback
+    // Update conversation state and show processing indicator
     state = state.copyWith(
       messages: [...state.messages, userMessage],
       awaitingResponse: false,
-      isProcessing: true, // Show processing while engine handles input
+      isProcessing: true, // Show processing while engine handles the personalization
     );
     
-    // Save to database
+    // Store user input for future conversation personalization
     await _saveMessage(userMessage);
     
-    // Notify engine of user's input - this will trigger follow-up messages
+    // STEP 23: PERSONALIZATION PROCESSING
+    // Send input to engine which will:
+    // - Store data in user variables (user_name, current_task, etc.)
+    // - Use the data to personalize Tristopher's responses
+    // - Continue to next phase of conversation setup
     await _engine.submitInput(messageId, input);
   }
 

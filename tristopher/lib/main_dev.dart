@@ -18,6 +18,7 @@ void main() async {
   EnvironmentConfig.setEnvironment(Environment.dev);
   
   // Initialize Firebase - ignore duplicate app errors
+  // Firebase is used to store user data, conversation history, and handle wager transactions
   try {
     await Firebase.initializeApp(
       options: firebase_dev.DefaultFirebaseOptions.currentPlatform,
@@ -31,6 +32,7 @@ void main() async {
     }
   }
   
+  // Start the app with Riverpod state management for conversation flow
   runApp(
     const ProviderScope(
       child: TristopherApp(),
@@ -125,10 +127,44 @@ class TristopherApp extends StatelessWidget {
           elevation: 4,
         ),
       ),
+      // DAILY CONVERSATION FLOW OVERVIEW:
+      // The main conversation happens in MainChatScreen, following these key steps:
+      //
+      // STEP 1: App Launch & Initialization
+      // - Start at splash screen, then navigate to main chat
+      // - ConversationEngine loads user state and current day's script
+      //
+      // STEP 2: User Status Assessment (in conversation_engine.dart)
+      // - Check if user is onboarded (has_name, knows_concept)
+      // - Check if daily task is set (has_task_set)
+      // - Check if task deadline has passed (is_overdue)
+      //
+      // STEP 3A: First-time User Onboarding Flow
+      // - Collect user name
+      // - Explain anti-charity concept
+      // - Set daily task and deadline
+      // - Configure notification preferences
+      // - Set wager amount and target organization
+      //
+      // STEP 3B: Returning User - Task Status Check
+      // - If task overdue: Ask for completion status (completed/failed/still working)
+      // - If task current: Check progress (completed early/in progress/not started)
+      //
+      // STEP 4: Response Processing & Consequences
+      // - Success: Increment streak, congratulate, continue or change task
+      // - Failure: Handle excuse system (first excuse = "on notice", second = wager loss)
+      // - Wager Loss: Transfer money to anti-charity, reset streak
+      //
+      // STEP 5: Next Steps & Sendoff
+      // - Set expectations for next check-in
+      // - Remind of consequences
+      // - Store updated state in database
+      
       initialRoute: AppRoutes.splash,
       routes: {
         AppRoutes.splash: (context) => const SplashScreen(),
         //AppRoutes.onboarding: (context) => const OnboardingScreen(),
+        // MAIN CHAT: Where the daily conversation magic happens
         AppRoutes.mainChat: (context) => const MainChatScreen(),
         AppRoutes.goalStake: (context) => const GoalScreen(),
         AppRoutes.account: (context) => const AccountScreen(),

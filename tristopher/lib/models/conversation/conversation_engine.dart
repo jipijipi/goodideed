@@ -12,11 +12,35 @@ extension IterableExtension<T> on Iterable<T> {
 
 /// Enhanced ConversationEngine with proper response waiting.
 /// 
-/// This version of the engine properly handles interactive conversations by:
-/// 1. Stopping message flow after interactive messages (options/input)
-/// 2. Waiting for user responses before continuing
-/// 3. Processing responses and triggering follow-up events
-/// 4. Maintaining conversation state across interactions
+/// DAILY CONVERSATION DECISION ENGINE:
+/// This is the "brain" of Tristopher that orchestrates the entire daily conversation
+/// experience through sophisticated decision-making and consequence logic:
+///
+/// STEP 24: USER STATE EVALUATION
+/// - Analyzes user's current status (onboarded, task set, overdue, etc.)
+/// - Selects appropriate conversation variant from script based on conditions
+/// - Determines Tristopher's "mood" and response style
+///
+/// STEP 25: CONVERSATION SCRIPT PROCESSING
+/// - Loads daily events from JSON script (default_script_en.json)
+/// - Processes conditional logic to determine conversation path
+/// - Handles message templating with user variables ({{user_name}}, {{current_task}})
+///
+/// STEP 26: INTERACTIVE MESSAGE FLOW CONTROL
+/// - Streams messages to UI with proper timing and delays
+/// - Pauses at option/input messages for user response
+/// - Resumes flow after user interaction with appropriate follow-up
+///
+/// STEP 27: RESPONSE PROCESSING & VARIABLE UPDATES
+/// - Processes user choices and updates state variables
+/// - Executes conditional logic based on responses
+/// - Triggers appropriate consequence chains
+///
+/// STEP 28: CONSEQUENCE EXECUTION
+/// - Handles streak increments for successes
+/// - Processes wager losses for failures
+/// - Manages "on notice" system for excuse handling
+/// - Updates user state for next day's conversation
 class ConversationEngine {
   final ScriptManager _scriptManager;
   final ConversationDatabase _database;
@@ -65,6 +89,10 @@ class ConversationEngine {
   }
 
   /// Process the conversation flow.
+  /// 
+  /// STEP 29: CONVERSATION ORCHESTRATION
+  /// This is where the magic happens - determining what Tristopher says based on
+  /// the user's current situation and previous interactions.
   Future<void> _processConversation() async {
     try {
       if (_currentScript == null) {
@@ -73,19 +101,24 @@ class ConversationEngine {
       
       print('🎭 ConversationEngine: Starting conversation for day ${_userState.dayInJourney}');
       
-      // Process plot events first
+      // STEP 30: PLOT EVENT PROCESSING (Future Feature)
+      // Process any special story events or milestones
       await _processPlotEvents();
       
-      // Then process daily events if no response is pending
+      // STEP 31: DAILY EVENT PROCESSING
+      // This is where the core daily conversation logic happens
+      // Only proceed if we're not waiting for a user response
       if (_awaitingResponseForMessageId == null) {
         await _processDailyEvents();
       }
       
-      // Save state
+      // STEP 32: STATE PERSISTENCE
+      // Save all changes to user state for tomorrow's conversation
       await _saveUserState();
       
     } catch (e) {
       print('❌ ConversationEngine: Error in conversation: $e');
+      // Even errors get Tristopher's sarcastic treatment
       _addMessage(EnhancedMessageModel.tristopherText(
         "Something's wrong with my circuits. How typical. Try again later.",
         style: BubbleStyle.error,
@@ -164,21 +197,32 @@ class ConversationEngine {
   }
 
   /// Process daily events.
+  /// 
+  /// STEP 33: DAILY CONVERSATION VARIANT SELECTION
+  /// This determines which conversation path the user experiences today
+  /// based on their current status and history.
   Future<void> _processDailyEvents() async {
     final triggeredEvents = <DailyEvent>[];
     
+    // STEP 34: EVENT FILTERING
+    // Check all possible daily events to see which ones apply
     for (final event in _currentScript!.dailyEvents) {
       if (_shouldTriggerEvent(event)) {
         triggeredEvents.add(event);
       }
     }
     
+    // Sort by priority (highest first) to ensure correct conversation order
     triggeredEvents.sort((a, b) => b.priority.compareTo(a.priority));
     
+    // STEP 35: EVENT EXECUTION
+    // Process each triggered event until we hit an interactive message
     for (final event in triggeredEvents) {
       await _processDailyEvent(event);
       
-      // Stop if waiting for response
+      // STEP 36: FLOW CONTROL
+      // Stop processing if we're now waiting for user response
+      // (This ensures conversation pauses at the right moments)
       if (_awaitingResponseForMessageId != null) {
         return;
       }
@@ -186,9 +230,16 @@ class ConversationEngine {
   }
 
   /// Process a single daily event.
+  /// 
+  /// STEP 37: CONVERSATION VARIANT EXECUTION
+  /// Each daily event can have multiple variants (different conversation paths)
+  /// based on user conditions. This selects and executes the appropriate one.
   Future<void> _processDailyEvent(DailyEvent event) async {
     print('🎯 Processing daily event: ${event.id}');
     
+    // STEP 38: VARIANT SELECTION
+    // Choose the right conversation variant based on user's current state
+    // (e.g., "not_onboarded" vs "onboarded_with_task_overdue")
     final variant = _selectVariant(event.variants);
     if (variant == null) {
       print('⚠️ No suitable variant found for event ${event.id}');
@@ -197,16 +248,19 @@ class ConversationEngine {
     
     _currentEventId = event.id;
     
-    // Process messages until we hit an interactive one
+    // STEP 39: MESSAGE SEQUENCE PROCESSING
+    // Process each message in the variant until we hit an interactive one
     for (int i = 0; i < variant.messages.length; i++) {
       final scriptMessage = variant.messages[i];
       final message = await _convertScriptMessage(scriptMessage);
       
-      // Enhance options with response callbacks if this is a daily event
+      // STEP 40: OPTION ENHANCEMENT FOR CONSEQUENCE HANDLING
+      // If this is an options message, enhance it with response callbacks
       if (message.options != null) {
         final enhancedOptions = <MessageOption>[];
         for (final option in message.options!) {
           final response = event.responses[option.id];
+          // Link each option to its consequences (next events, variable updates)
           enhancedOptions.add(MessageOption(
             id: option.id,
             text: option.text,
@@ -218,7 +272,7 @@ class ConversationEngine {
           ));
         }
         
-        // Create new message with enhanced options
+        // Create enhanced message with consequence-linked options
         final enhancedMessage = EnhancedMessageModel(
           id: message.id,
           type: message.type,
@@ -240,7 +294,8 @@ class ConversationEngine {
         
         _addMessage(enhancedMessage);
       } else {
-        // Add delay before message if specified
+        // STEP 41: NATURAL CONVERSATION PACING
+        // Add realistic delays between messages for natural conversation flow
         if (message.delayMs != null && message.delayMs! > 0) {
           await Future.delayed(Duration(milliseconds: message.delayMs!));
         }
@@ -248,29 +303,38 @@ class ConversationEngine {
         _addMessage(message);
       }
       
+      // Persist message for conversation history
       await _saveMessageToHistory(message);
       
+      // STEP 42: INTERACTION CHECKPOINT
       // Check if this message requires user interaction
       if (_requiresUserResponse(message)) {
         _awaitingResponseForMessageId = message.id;
         
-        // Store remaining messages for after response
+        // Store remaining messages to continue after user responds
         if (i + 1 < variant.messages.length) {
           _pendingMessages = variant.messages.sublist(i + 1);
         }
         
         print('⏸️ Waiting for user response to message: ${message.id}');
-        return; // Stop processing here
+        return; // Pause conversation flow here
       }
     }
     
-    // Update variables from variant
+    // STEP 43: VARIANT COMPLETION
+    // Update user variables based on this variant's completion
     if (variant.setVariables != null) {
       _updateVariables(variant.setVariables!);
     }
   }
 
   /// Handle user option selection.
+  /// 
+  /// STEP 44: CRITICAL CHOICE PROCESSING
+  /// This is where user choices trigger the most important consequences:
+  /// - Success responses increment streaks and provide encouragement
+  /// - Failure responses trigger wager losses and streak resets
+  /// - Excuse responses activate the "on notice" system
   Future<void> selectOption(String messageId, String optionId) async {
     if (_awaitingResponseForMessageId != messageId) {
       print('⚠️ Not awaiting response for this message: $messageId');
@@ -279,10 +343,11 @@ class ConversationEngine {
     
     print('✅ User selected option: $optionId for message: $messageId');
     
-    // Clear awaiting state
+    // Resume conversation flow
     _awaitingResponseForMessageId = null;
     
-    // Find the message and option
+    // STEP 45: OPTION VALIDATION & RETRIEVAL
+    // Find the selected option and its associated consequences
     final message = await _findMessage(messageId);
     final option = message?.options?.firstWhere((o) => o.id == optionId);
       print(message);
@@ -291,15 +356,19 @@ class ConversationEngine {
       return;
     }
     
-    // Update variables from option
+    // STEP 46: IMMEDIATE VARIABLE UPDATES
+    // Update user state based on their choice (streak, wager status, etc.)
     if (option.setVariables != null) {
       _updateVariables(option.setVariables!);
     }
     
-    // Handle next event or continue with pending messages
+    // STEP 47: CONSEQUENCE CHAIN EXECUTION
+    // Either trigger a specific follow-up event or continue current flow
     if (option.nextEventId != null) {
+      // Trigger specific consequence event (e.g., "success_response", "wager_loss")
       await _processEventById(option.nextEventId!);
     } else {
+      // Continue with remaining messages in current sequence
       await _continuePendingMessages();
     }
   }
@@ -423,21 +492,30 @@ class ConversationEngine {
   }
 
   /// Check if a daily event should trigger.
+  /// 
+  /// STEP 48: EVENT TRIGGER EVALUATION
+  /// This determines which conversation variants are available based on:
+  /// - Time of day (morning check-in vs evening reminder)
+  /// - User state (onboarded, has task, overdue status)
+  /// - Previous interactions (already visited today, on notice status)
   bool _shouldTriggerEvent(DailyEvent event) {
     switch (event.trigger.type) {
       case 'time_window':
+        // Check if current time falls within event's active window
         if (!_isInTimeWindow(event.trigger)) {
           return false;
         }
         break;
       case 'user_action':
-        // Would check for specific user actions
+        // Future: Check for specific user actions that trigger events
         break;
       case 'achievement':
-        // Would check for achievement conditions
+        // Future: Check for achievement milestones that trigger special conversations
         break;
     }
     
+    // STEP 49: CONDITION EVALUATION
+    // Final check: does user's current state match event requirements?
     return _evaluateConditions(event.trigger.conditions);
   }
 
@@ -489,12 +567,21 @@ class ConversationEngine {
   }
 
   /// Evaluate conditions against current user state.
+  /// 
+  /// STEP 50: CONVERSATION LOGIC ENGINE
+  /// This is the core decision-making logic that determines which conversation
+  /// variant the user experiences based on their current state and history.
+  /// Examples:
+  /// - {"is_onboarded": false} → triggers first-time user onboarding flow
+  /// - {"has_task_set": true, "is_overdue": true} → triggers overdue task check
+  /// - {"is_on_notice": true} → triggers stricter failure consequences
   bool _evaluateConditions(Map<String, dynamic> conditions) {
     for (final entry in conditions.entries) {
       final key = entry.key;
       final expected = entry.value;
       final actual = _userState.variables[key];
       
+      // Handle range conditions (e.g., streak count requirements)
       if (expected is Map) {
         if (expected.containsKey('min') || expected.containsKey('max')) {
           final value = actual is num ? actual : 0;
@@ -506,12 +593,14 @@ class ConversationEngine {
           }
         }
       } else {
+        // Handle exact value conditions (e.g., is_onboarded: true)
         if (actual != expected) {
           return false;
         }
       }
     }
     
+    // All conditions met - this conversation variant is valid
     return true;
   }
 

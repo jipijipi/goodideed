@@ -10,8 +10,34 @@ import 'package:tristopher_app/utils/database/conversation_database.dart';
 
 /// Enhanced Main Chat Screen with the new conversation system.
 /// 
-/// This implementation seamlessly integrates the new conversation engine
-/// while maintaining the existing app structure and design patterns.
+/// DAILY CONVERSATION UI FLOW:
+/// This screen orchestrates the entire daily interaction with Tristopher through
+/// a series of numbered steps that create the "brutally honest companion" experience:
+///
+/// STEP 1: CONVERSATION INITIALIZATION
+/// - Screen loads and triggers ConversationProvider initialization
+/// - Provider checks user state (onboarded, task set, deadline status)
+/// - Conversation engine selects appropriate daily event variant
+///
+/// STEP 2: MESSAGE STREAM HANDLING
+/// - Engine streams messages based on user's current state
+/// - Messages displayed as chat bubbles with Tristopher's pessimistic personality
+/// - Auto-scroll keeps conversation flowing smoothly
+///
+/// STEP 3: INTERACTIVE MESSAGE PROCESSING
+/// - Options messages: User selects from pre-defined choices (e.g., task status)
+/// - Input messages: User provides free text (e.g., name, task description)
+/// - Conversation pauses and waits for user response at each interactive message
+///
+/// STEP 4: RESPONSE HANDLING & FLOW CONTINUATION
+/// - User selections trigger option callbacks and variable updates
+/// - Engine processes response and continues with follow-up messages
+/// - Flow branches based on user choices (success/failure/excuse paths)
+///
+/// STEP 5: STATE PERSISTENCE & CONSEQUENCE EXECUTION
+/// - All responses saved to database for streak tracking
+/// - Wager consequences executed for failures
+/// - Updated user state determines next day's conversation variant
 class MainChatScreen extends ConsumerStatefulWidget {
   const MainChatScreen({super.key});
 
@@ -37,11 +63,16 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
   }
 
   /// Set up automatic scrolling when new messages arrive.
+  /// 
+  /// STEP 6: MESSAGE FLOW VISUALIZATION
+  /// This ensures users see Tristopher's responses appear naturally,
+  /// maintaining the illusion of a real conversation with the pessimistic robot.
   void _setupAutoScroll() {
-    // Listen for changes in messages
+    // Listen for changes in messages from the conversation engine
     ref.listenManual(conversationMessagesProvider, (previous, next) {
       if (previous != null && previous.length < next.length) {
-        // New message added, scroll to bottom
+        // New message added from Tristopher, scroll to bottom to show it
+        // This creates the natural chat experience as new messages appear
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (_scrollController.hasClients) {
             _scrollController.animateTo(
@@ -94,10 +125,11 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
                   ),
                 ),
                 
-              // Main message area
+              // STEP 7: MAIN CONVERSATION DISPLAY AREA
+              // This is where the entire daily conversation unfolds
               Expanded(
                 child: _buildMessageList(conversationState, conversationNotifier),
-              ),
+        ),
               
               // Bottom status area
               //_buildBottomStatus(conversationState),
@@ -152,6 +184,11 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
   }
 
   /// Build the main message list.
+  /// 
+  /// STEP 8: MESSAGE RENDERING & INTERACTION HANDLING
+  /// Each message in the conversation is rendered as a chat bubble.
+  /// Interactive messages (options/input) pause the conversation flow
+  /// until user responds, then trigger the next phase of the conversation.
   Widget _buildMessageList(
     ConversationState state,
     ConversationNotifier notifier,
@@ -191,15 +228,20 @@ class _MainChatScreenState extends ConsumerState<MainChatScreen> {
       itemCount: state.messages.length,
       itemBuilder: (context, index) {
         final message = state.messages[index];
+        // STEP 9: USER INTERACTION POINTS
+        // These callbacks handle the critical moments where user responses
+        // determine the conversation flow and consequences
         return EnhancedChatBubble(
           key: ValueKey(message.id),
           message: message,
           onOptionSelected: (option) {
-            // Handle option selection
+            // STEP 9A: Option Selection (e.g., "I completed it!", "I failed...")
+            // This triggers consequence logic in the conversation engine
             notifier.selectOption(message.id, option);
           },
           onInputSubmitted: (input) {
-            // Handle input submission
+            // STEP 9B: Text Input Submission (e.g., user name, task description)
+            // This captures user data that personalizes the experience
             notifier.submitInput(message.id, input);
           },
         );

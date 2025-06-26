@@ -98,3 +98,18 @@ setup-firebase: ## Set up Firebase for all environments
 verify: ## Verify environment setup
 	@chmod +x scripts/verify-setup.sh 2>/dev/null || true
 	@./scripts/verify-setup.sh
+
+update-kg: ## Update knowledge graph documentation
+	@echo "🧠 Updating knowledge graph..."
+	@chmod +x scripts/update-knowledge-graph.sh 2>/dev/null || true
+	@./scripts/update-knowledge-graph.sh
+
+view-kg: ## View knowledge graph documentation
+	@echo "📖 Opening knowledge graph documentation..."
+	@if command -v open >/dev/null 2>&1; then \
+		open docs/KNOWLEDGE_GRAPH.md; \
+	elif command -v xdg-open >/dev/null 2>&1; then \
+		xdg-open docs/KNOWLEDGE_GRAPH.md; \
+	else \
+		echo "📄 View the knowledge graph at: docs/KNOWLEDGE_GRAPH.md"; \
+	fi

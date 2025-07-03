@@ -1,0 +1,28 @@
+{
+  "messages": [
+    {
+      "id": 1,
+      "text": "Hello! Welcome to the app!",
+      "timestamp": "10:00",
+      "delay": 1000
+    },
+    {
+      "id": 2,
+      "text": "I'm here to help you get started.",
+      "timestamp": "10:01",
+      "delay": 2000
+    },
+    {
+      "id": 3,
+      "text": "Feel free to explore the features!",
+      "timestamp": "10:02",
+      "delay": 3000
+    },
+    {
+      "id": 4,
+      "text": "Let me know if you have any questions.",
+      "timestamp": "10:03",
+      "delay": 4000
+    }
+  ]
+}

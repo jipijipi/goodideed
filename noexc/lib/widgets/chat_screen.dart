@@ -84,29 +84,16 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           const SizedBox(width: 12.0),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: Text(
-                    message.text,
-                    style: const TextStyle(fontSize: 16.0),
-                  ),
-                ),
-                const SizedBox(height: 4.0),
-                Text(
-                  message.timestamp,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
+            child: Container(
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Text(
+                message.text,
+                style: const TextStyle(fontSize: 16.0),
+              ),
             ),
           ),
         ],

@@ -11,8 +11,5 @@ void main() {
     // Verify that the chat screen loads
     expect(find.text('Chat'), findsOneWidget);
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    
-    // Clean up any pending timers
-    await tester.pumpAndSettle();
   });
 }

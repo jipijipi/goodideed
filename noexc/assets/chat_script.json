@@ -3,22 +3,50 @@
     {
       "id": 1,
       "text": "Hello! Welcome to the app!",
-      "delay": 1000
+      "delay": 1000,
+      "sender": "bot"
     },
     {
       "id": 2,
-      "text": "I'm here to help you get started.",
-      "delay": 2000
+      "text": "Hi there! Thanks for the welcome.",
+      "delay": 2000,
+      "sender": "user"
     },
     {
       "id": 3,
-      "text": "Feel free to explore the features!",
-      "delay": 3000
+      "text": "I'm here to help you get started. What would you like to know?",
+      "delay": 1500,
+      "sender": "bot"
     },
     {
       "id": 4,
-      "text": "Let me know if you have any questions.",
-      "delay": 4000
+      "text": "I'm interested in learning about the main features.",
+      "delay": 2500,
+      "sender": "user"
+    },
+    {
+      "id": 5,
+      "text": "Great! The app has several key features including chat, notifications, and user management.",
+      "delay": 2000,
+      "sender": "bot"
+    },
+    {
+      "id": 6,
+      "text": "That sounds useful! How do I get started?",
+      "delay": 1800,
+      "sender": "user"
+    },
+    {
+      "id": 7,
+      "text": "Feel free to explore the features! I'll guide you through each section.",
+      "delay": 2200,
+      "sender": "bot"
+    },
+    {
+      "id": 8,
+      "text": "Perfect! I'm ready to learn more.",
+      "delay": 1500,
+      "sender": "user"
     }
   ]
 }

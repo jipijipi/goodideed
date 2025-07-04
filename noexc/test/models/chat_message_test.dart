@@ -4,6 +4,50 @@ import 'package:noexc/models/choice.dart';
 
 void main() {
   group('ChatMessage', () {
+    test('should use default delay when delay is not provided in JSON', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'Hello World',
+        // No delay field provided
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.delay, ChatMessage.defaultDelay);
+      expect(message.delay, 1500); // Verify the default value
+    });
+
+    test('should use provided delay when specified in JSON', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'Hello World',
+        'delay': 2000,
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.delay, 2000);
+    });
+
+    test('should use default delay when creating ChatMessage without delay parameter', () {
+      // Act
+      final message = ChatMessage(
+        id: 1,
+        text: 'Hello World',
+        // No delay parameter provided
+      );
+
+      // Assert
+      expect(message.delay, ChatMessage.defaultDelay);
+      expect(message.delay, 1500);
+    });
+
     test('should create ChatMessage from JSON with sender', () {
       // Arrange
       final json = {

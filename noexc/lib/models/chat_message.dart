@@ -11,10 +11,12 @@ class ChatMessage {
   final int? nextMessageId;
   final String? storeKey;
 
+  static const int defaultDelay = 1000; // Default delay in milliseconds
+
   ChatMessage({
     required this.id,
     required this.text,
-    required this.delay,
+    this.delay = defaultDelay,
     this.sender = 'bot',
     this.isChoice = false,
     this.isTextInput = false,
@@ -34,7 +36,7 @@ class ChatMessage {
     return ChatMessage(
       id: json['id'] as int,
       text: json['text'] as String,
-      delay: json['delay'] as int,
+      delay: json['delay'] as int? ?? defaultDelay,
       sender: json['sender'] as String? ?? 'bot',
       isChoice: json['isChoice'] as bool? ?? false,
       isTextInput: json['isTextInput'] as bool? ?? false,

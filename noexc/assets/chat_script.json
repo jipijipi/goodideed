@@ -9,13 +9,12 @@
     {
       "id": 2,
       "text": "What would you like to learn about?",
-      "delay": 1500,
       "sender": "bot"
     },
     {
       "id": 3,
       "text": "CHOICES",
-      "delay": 1000,
+      "delay": 1500,
       "sender": "user",
       "isChoice": true,
       "storeKey": "user.preference",

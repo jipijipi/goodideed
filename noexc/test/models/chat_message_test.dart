@@ -45,7 +45,7 @@ void main() {
 
       // Assert
       expect(message.delay, ChatMessage.defaultDelay);
-      expect(message.delay, 1500);
+      expect(message.delay, 1000);
     });
 
     test('should create ChatMessage from JSON with sender', () {

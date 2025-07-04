@@ -3,13 +3,11 @@
     {
       "id": 1,
       "text": "Hello! Welcome to the app!",
-      "delay": 1000,
       "sender": "bot"
     },
     {
       "id": 2,
-      "text": "What would you like to learn about?",
-      "sender": "bot"
+      "text": "What would you like to learn about today?"
     },
     {
       "id": 3,
@@ -27,21 +25,17 @@
     {
       "id": 10,
       "text": "Great! Our app has chat, notifications, and user management.",
-      "delay": 1500,
-      "sender": "bot",
       "nextMessageId": 11
     },
     {
       "id": 11,
       "text": "Which feature interests you most?",
-      "delay": 1000,
       "sender": "bot",
       "nextMessageId": 12
     },
     {
       "id": 12,
       "text": "CHOICES",
-      "delay": 1000,
       "sender": "user",
       "isChoice": true,
       "choices": [
@@ -59,14 +53,12 @@
     {
       "id": 21,
       "text": "First, you'll need to create an account. It's quick and easy!",
-      "delay": 2000,
       "sender": "bot",
       "nextMessageId": 22
     },
     {
       "id": 22,
       "text": "Then you can customize your profile and start exploring.",
-      "delay": 1500,
       "sender": "bot",
       "nextMessageId": 23
     },
@@ -98,13 +90,11 @@
     {
       "id": 24,
       "text": "Nice to meet you {user.name|Bobble buble}! How would you like to get started {user.status| todayy}?",
-      "delay": 1500,
       "sender": "bot"
     },
     {
       "id": 30,
       "text": "I'm here to help! What issue are you experiencing?",
-      "delay": 1500,
       "sender": "bot",
       "nextMessageId": 31
     },

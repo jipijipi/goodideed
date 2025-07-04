@@ -131,5 +131,98 @@ void main() {
       // Assert
       expect(result, equals('Hello {user.name and {incomplete'));
     });
+
+    test('should use fallback value when provided and stored value does not exist', () async {
+      // Arrange
+      const text = 'Hello, {user.name|Guest}!';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello, Guest!'));
+    });
+
+    test('should use stored value instead of fallback when stored value exists', () async {
+      // Arrange
+      await userDataService.storeValue('user.name', 'John Doe');
+      const text = 'Hello, {user.name|Guest}!';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello, John Doe!'));
+    });
+
+    test('should handle multiple templates with different fallback scenarios', () async {
+      // Arrange
+      await userDataService.storeValue('user.name', 'Alice');
+      // user.age is not stored, so should use fallback
+      const text = 'Hello, {user.name|Guest}! You are {user.age|unknown} years old.';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello, Alice! You are unknown years old.'));
+    });
+
+    test('should handle empty fallback value', () async {
+      // Arrange
+      const text = 'Hello, {user.name|}!';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello, !'));
+    });
+
+    test('should handle fallback with special characters', () async {
+      // Arrange
+      const text = 'Status: {user.status|Not Available - Please Try Later}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Status: Not Available - Please Try Later'));
+    });
+
+    test('should handle nested fallback syntax gracefully', () async {
+      // Arrange
+      const text = 'Hello, {user.name|{default.name|Guest}}!';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello, {default.name|Guest}!'));
+    });
+
+    test('should handle template without fallback alongside template with fallback', () async {
+      // Arrange
+      await userDataService.storeValue('user.name', 'Bob');
+      const text = 'Hello, {user.name|Guest}! Your email is {user.email}.';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello, Bob! Your email is {user.email}.'));
+    });
+
+    test('should handle pipe character in stored value', () async {
+      // Arrange
+      await userDataService.storeValue('user.name', 'John|Doe');
+      const text = 'Hello, {user.name|Guest}!';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello, John|Doe!'));
+    });
   });
 }

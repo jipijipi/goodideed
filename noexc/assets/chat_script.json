@@ -81,7 +81,7 @@
     },
     {
       "id": 24,
-      "text": "Nice to meet you {user.name}! How would you like to get started?",
+      "text": "Nice to meet you {user.name|Bobble buble}! How would you like to get started {user.status| todayy}?",
       "delay": 1500,
       "sender": "bot"
     },

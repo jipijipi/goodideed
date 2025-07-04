@@ -178,5 +178,51 @@ void main() {
       expect(processedMessage.storeKey, equals(originalMessage.storeKey));
       expect(processedMessage.nextMessageId, equals(originalMessage.nextMessageId));
     });
+
+    test('should process templates with fallback values', () async {
+      // Arrange
+      await userDataService.storeValue('user.name', 'Alice');
+      // user.status is not stored, should use fallback
+      final message = ChatMessage(
+        id: 1,
+        text: 'Hello, {user.name|Guest}! Your status is {user.status|Active}.',
+        delay: 1000,
+        sender: 'bot',
+      );
+
+      // Act
+      final processedMessage = await chatService.processMessageTemplate(message);
+
+      // Assert
+      expect(processedMessage.text, equals('Hello, Alice! Your status is Active.'));
+    });
+
+    test('should process message list with fallback values', () async {
+      // Arrange
+      await userDataService.storeValue('user.name', 'Bob');
+      
+      final messages = [
+        ChatMessage(
+          id: 1,
+          text: 'Welcome back, {user.name|Guest}!',
+          delay: 1000,
+          sender: 'bot',
+        ),
+        ChatMessage(
+          id: 2,
+          text: 'Your theme is {user.theme|default}.',
+          delay: 1500,
+          sender: 'bot',
+        ),
+      ];
+
+      // Act
+      final processedMessages = await chatService.processMessageTemplates(messages);
+
+      // Assert
+      expect(processedMessages.length, equals(2));
+      expect(processedMessages[0].text, equals('Welcome back, Bob!'));
+      expect(processedMessages[1].text, equals('Your theme is default.'));
+    });
   });
 }

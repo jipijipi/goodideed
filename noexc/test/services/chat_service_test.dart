@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/models/chat_message.dart';
+import 'package:noexc/models/choice.dart';
 
 void main() {
   group('ChatService', () {
@@ -27,15 +28,10 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      expect(messages.length, 8);
+      expect(messages.length, 19); // Updated for new JSON structure
       expect(messages[0].id, 1);
       expect(messages[1].id, 2);
       expect(messages[2].id, 3);
-      expect(messages[3].id, 4);
-      expect(messages[4].id, 5);
-      expect(messages[5].id, 6);
-      expect(messages[6].id, 7);
-      expect(messages[7].id, 8);
     });
 
     test('should load messages with correct senders', () async {
@@ -43,28 +39,74 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      expect(messages[0].sender, 'bot');
-      expect(messages[1].sender, 'user');
-      expect(messages[2].sender, 'bot');
-      expect(messages[3].sender, 'user');
-      expect(messages[4].sender, 'bot');
-      expect(messages[5].sender, 'user');
-      expect(messages[6].sender, 'bot');
-      expect(messages[7].sender, 'user');
+      expect(messages[0].sender, 'bot');   // "Hello! Welcome to the app!"
+      expect(messages[1].sender, 'bot');   // "What would you like to learn about?"
+      expect(messages[2].sender, 'user');  // Choice message
     });
 
-    test('should alternate between bot and user messages', () async {
+    test('should load choice messages correctly', () async {
       // Act
       final messages = await chatService.loadChatScript();
 
       // Assert
-      for (int i = 0; i < messages.length; i++) {
-        if (i % 2 == 0) {
-          expect(messages[i].isFromBot, true, reason: 'Message at index $i should be from bot');
-        } else {
-          expect(messages[i].isFromUser, true, reason: 'Message at index $i should be from user');
-        }
-      }
+      final choiceMessage = messages.firstWhere((msg) => msg.isChoice);
+      expect(choiceMessage.isChoice, true);
+      expect(choiceMessage.choices, isNotNull);
+      expect(choiceMessage.choices!.length, 3);
+      expect(choiceMessage.choices![0].text, 'App features');
+      expect(choiceMessage.choices![0].nextMessageId, 10);
+    });
+
+    test('should build message map for quick lookup', () async {
+      // Act
+      await chatService.loadChatScript();
+
+      // Assert
+      expect(chatService.hasMessage(1), true);
+      expect(chatService.hasMessage(2), true);
+      expect(chatService.hasMessage(999), false);
+    });
+
+    test('should get message by id', () async {
+      // Act
+      await chatService.loadChatScript();
+
+      // Assert
+      final message = chatService.getMessageById(1);
+      expect(message, isNotNull);
+      expect(message!.id, 1);
+      expect(message.text, 'Hello! Welcome to the app!');
+    });
+
+    test('should return null for non-existent message id', () async {
+      // Act
+      await chatService.loadChatScript();
+
+      // Assert
+      final message = chatService.getMessageById(999);
+      expect(message, isNull);
+    });
+
+    test('should get initial messages until first choice', () async {
+      // Arrange - This will use the current JSON which doesn't have choices yet
+      // Act
+      final initialMessages = await chatService.getInitialMessages();
+
+      // Assert
+      expect(initialMessages, isNotNull);
+      expect(initialMessages.isNotEmpty, true);
+    });
+
+    test('should get messages after choice selection', () async {
+      // Arrange
+      await chatService.loadChatScript();
+
+      // Act
+      final messages = chatService.getMessagesAfterChoice(3);
+
+      // Assert
+      expect(messages, isNotNull);
+      expect(messages, isA<List<ChatMessage>>());
     });
   });
 }

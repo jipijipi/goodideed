@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/models/chat_message.dart';
+import 'package:noexc/models/choice.dart';
 
 void main() {
   group('ChatMessage', () {
@@ -85,6 +86,107 @@ void main() {
       // Act & Assert
       expect(userMessage.isFromBot, false);
       expect(userMessage.isFromUser, true);
+    });
+
+    test('should create choice message from JSON', () {
+      // Arrange
+      final json = {
+        'id': 2,
+        'text': 'CHOICES',
+        'delay': 1500,
+        'sender': 'user',
+        'isChoice': true,
+        'choices': [
+          {'text': 'Red', 'nextMessageId': 10},
+          {'text': 'Blue', 'nextMessageId': 20},
+        ],
+        'nextMessageId': 30,
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.id, 2);
+      expect(message.text, 'CHOICES');
+      expect(message.isChoice, true);
+      expect(message.choices, isNotNull);
+      expect(message.choices!.length, 2);
+      expect(message.choices![0].text, 'Red');
+      expect(message.choices![0].nextMessageId, 10);
+      expect(message.choices![1].text, 'Blue');
+      expect(message.choices![1].nextMessageId, 20);
+      expect(message.nextMessageId, 30);
+    });
+
+    test('should create regular message without choices', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'Hello World',
+        'delay': 1000,
+        'sender': 'bot',
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.isChoice, false);
+      expect(message.choices, isNull);
+      expect(message.nextMessageId, isNull);
+    });
+
+    test('should convert choice message to JSON', () {
+      // Arrange
+      final choices = [
+        Choice(text: 'Option A', nextMessageId: 10),
+        Choice(text: 'Option B', nextMessageId: 20),
+      ];
+      final message = ChatMessage(
+        id: 2,
+        text: 'CHOICES',
+        delay: 1500,
+        sender: 'user',
+        isChoice: true,
+        choices: choices,
+        nextMessageId: 30,
+      );
+
+      // Act
+      final json = message.toJson();
+
+      // Assert
+      expect(json['id'], 2);
+      expect(json['isChoice'], true);
+      expect(json['choices'], isNotNull);
+      expect(json['choices'].length, 2);
+      expect(json['choices'][0]['text'], 'Option A');
+      expect(json['choices'][0]['nextMessageId'], 10);
+      expect(json['nextMessageId'], 30);
+    });
+
+    test('should identify choice messages correctly', () {
+      // Arrange
+      final choiceMessage = ChatMessage(
+        id: 2,
+        text: 'CHOICES',
+        delay: 1500,
+        sender: 'user',
+        isChoice: true,
+        choices: [Choice(text: 'Yes', nextMessageId: 10)],
+      );
+
+      final regularMessage = ChatMessage(
+        id: 1,
+        text: 'Hello',
+        delay: 1000,
+        sender: 'bot',
+      );
+
+      // Act & Assert
+      expect(choiceMessage.isChoice, true);
+      expect(regularMessage.isChoice, false);
     });
   });
 }

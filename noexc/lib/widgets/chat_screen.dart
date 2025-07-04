@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/chat_message.dart';
+import '../models/choice.dart';
 import '../services/chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -24,9 +25,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _loadAndDisplayMessages() async {
     try {
-      _messages = await _chatService.loadChatScript();
+      await _chatService.loadChatScript();
       if (!_disposed) {
-        _simulateChat();
+        _simulateInitialChat();
       }
     } catch (e) {
       if (!_disposed) {
@@ -37,23 +38,31 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _simulateChat() async {
+  void _simulateInitialChat() async {
     if (!_disposed) {
       setState(() {
         _isLoading = false;
       });
     }
 
-    for (int i = 0; i < _messages.length; i++) {
+    final initialMessages = await _chatService.getInitialMessages();
+    await _displayMessages(initialMessages);
+  }
+
+  Future<void> _displayMessages(List<ChatMessage> messages) async {
+    for (ChatMessage message in messages) {
       if (_disposed) break;
       
-      await Future.delayed(Duration(milliseconds: _messages[i].delay));
+      await Future.delayed(Duration(milliseconds: message.delay));
       
       if (!_disposed && mounted) {
         setState(() {
-          _displayedMessages.add(_messages[i]);
+          _displayedMessages.add(message);
         });
       }
+      
+      // Stop at choice messages to wait for user interaction
+      if (message.isChoice) break;
     }
   }
 
@@ -84,6 +93,13 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildMessageBubble(ChatMessage message) {
+    if (message.isChoice && message.choices != null) {
+      return _buildChoiceBubbles(message);
+    }
+    return _buildRegularBubble(message);
+  }
+
+  Widget _buildRegularBubble(ChatMessage message) {
     final isBot = message.isFromBot;
     
     return Padding(
@@ -130,5 +146,73 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildChoiceBubbles(ChatMessage message) {
+    return Column(
+      children: message.choices!.map((choice) => 
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Flexible(
+                child: GestureDetector(
+                  onTap: () => _onChoiceSelected(choice, message),
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.7,
+                    ),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(12.0),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.primary,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: Text(
+                      choice.text,
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12.0),
+              CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                child: const Icon(Icons.person, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+      ).toList(),
+    );
+  }
+
+  void _onChoiceSelected(Choice choice, ChatMessage choiceMessage) async {
+    // Replace choice bubbles with selected text as regular user message
+    setState(() {
+      int choiceIndex = _displayedMessages.indexOf(choiceMessage);
+      _displayedMessages[choiceIndex] = ChatMessage(
+        id: choiceMessage.id,
+        text: choice.text,
+        delay: 0,
+        sender: 'user',
+        isChoice: false,
+      );
+    });
+
+    // Continue with branched conversation
+    await _continueWithChoice(choice.nextMessageId);
+  }
+
+  Future<void> _continueWithChoice(int nextMessageId) async {
+    final nextMessages = _chatService.getMessagesAfterChoice(nextMessageId);
+    await _displayMessages(nextMessages);
   }
 }

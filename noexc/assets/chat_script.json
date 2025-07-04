@@ -8,45 +8,136 @@
     },
     {
       "id": 2,
-      "text": "Hi there! Thanks for the welcome.",
-      "delay": 2000,
-      "sender": "user"
+      "text": "What would you like to learn about?",
+      "delay": 1500,
+      "sender": "bot"
     },
     {
       "id": 3,
-      "text": "I'm here to help you get started. What would you like to know?",
+      "text": "CHOICES",
+      "delay": 1000,
+      "sender": "user",
+      "isChoice": true,
+      "choices": [
+        {"text": "App features", "nextMessageId": 10},
+        {"text": "Getting started", "nextMessageId": 20},
+        {"text": "Troubleshooting", "nextMessageId": 30}
+      ]
+    },
+    {
+      "id": 10,
+      "text": "Great! Our app has chat, notifications, and user management.",
       "delay": 1500,
-      "sender": "bot"
+      "sender": "bot",
+      "nextMessageId": 11
     },
     {
-      "id": 4,
-      "text": "I'm interested in learning about the main features.",
-      "delay": 2500,
-      "sender": "user"
+      "id": 11,
+      "text": "Which feature interests you most?",
+      "delay": 1000,
+      "sender": "bot",
+      "nextMessageId": 12
     },
     {
-      "id": 5,
-      "text": "Great! The app has several key features including chat, notifications, and user management.",
+      "id": 12,
+      "text": "CHOICES",
+      "delay": 1000,
+      "sender": "user",
+      "isChoice": true,
+      "choices": [
+        {"text": "Chat system", "nextMessageId": 40},
+        {"text": "Notifications", "nextMessageId": 50}
+      ]
+    },
+    {
+      "id": 20,
+      "text": "Perfect! Let's get you set up step by step.",
+      "delay": 1500,
+      "sender": "bot",
+      "nextMessageId": 21
+    },
+    {
+      "id": 21,
+      "text": "First, you'll need to create an account. It's quick and easy!",
       "delay": 2000,
-      "sender": "bot"
+      "sender": "bot",
+      "nextMessageId": 22
     },
     {
-      "id": 6,
-      "text": "That sounds useful! How do I get started?",
-      "delay": 1800,
-      "sender": "user"
-    },
-    {
-      "id": 7,
-      "text": "Feel free to explore the features! I'll guide you through each section.",
-      "delay": 2200,
-      "sender": "bot"
-    },
-    {
-      "id": 8,
-      "text": "Perfect! I'm ready to learn more.",
+      "id": 22,
+      "text": "Then you can customize your profile and start exploring.",
       "delay": 1500,
-      "sender": "user"
+      "sender": "bot"
+    },
+    {
+      "id": 30,
+      "text": "I'm here to help! What issue are you experiencing?",
+      "delay": 1500,
+      "sender": "bot",
+      "nextMessageId": 31
+    },
+    {
+      "id": 31,
+      "text": "CHOICES",
+      "delay": 1000,
+      "sender": "user",
+      "isChoice": true,
+      "choices": [
+        {"text": "App won't start", "nextMessageId": 60},
+        {"text": "Login problems", "nextMessageId": 70}
+      ]
+    },
+    {
+      "id": 40,
+      "text": "The chat system supports real-time messaging, file sharing, and group conversations!",
+      "delay": 2000,
+      "sender": "bot",
+      "nextMessageId": 41
+    },
+    {
+      "id": 41,
+      "text": "You can also customize your chat experience with themes and notifications.",
+      "delay": 1500,
+      "sender": "bot"
+    },
+    {
+      "id": 50,
+      "text": "Our notification system keeps you updated on important events and messages.",
+      "delay": 2000,
+      "sender": "bot",
+      "nextMessageId": 51
+    },
+    {
+      "id": 51,
+      "text": "You can customize which notifications you receive and how you're alerted.",
+      "delay": 1500,
+      "sender": "bot"
+    },
+    {
+      "id": 60,
+      "text": "Let's troubleshoot the startup issue. First, try restarting your device.",
+      "delay": 2000,
+      "sender": "bot",
+      "nextMessageId": 61
+    },
+    {
+      "id": 61,
+      "text": "If that doesn't work, check if you have the latest version installed.",
+      "delay": 1500,
+      "sender": "bot"
+    },
+    {
+      "id": 70,
+      "text": "For login issues, first verify your username and password are correct.",
+      "delay": 2000,
+      "sender": "bot",
+      "nextMessageId": 71
+    },
+    {
+      "id": 71,
+      "text": "You can also try resetting your password if needed.",
+      "delay": 1500,
+      "sender": "bot"
     }
   ]
 }

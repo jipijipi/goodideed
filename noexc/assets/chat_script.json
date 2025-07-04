@@ -2,7 +2,7 @@
   "messages": [
     {
       "id": 1,
-      "text": "Hello {user.name}! Welcome to the app!",
+      "text": "Hello {user.name|}! Welcome to the app!",
       "delay": 1000,
       "sender": "bot"
     },

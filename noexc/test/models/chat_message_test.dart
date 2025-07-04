@@ -268,5 +268,83 @@ void main() {
       expect(textInputMessage.isTextInput, true);
       expect(regularMessage.isTextInput, false);
     });
+
+    test('should create ChatMessage with storeKey from JSON', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'What is your name?',
+        'delay': 1000,
+        'sender': 'bot',
+        'isTextInput': true,
+        'storeKey': 'user.name',
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.id, equals(1));
+      expect(message.text, equals('What is your name?'));
+      expect(message.storeKey, equals('user.name'));
+      expect(message.isTextInput, isTrue);
+    });
+
+    test('should create ChatMessage without storeKey from JSON', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'Hello!',
+        'delay': 1000,
+        'sender': 'bot',
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.id, equals(1));
+      expect(message.text, equals('Hello!'));
+      expect(message.storeKey, isNull);
+    });
+
+    test('should convert ChatMessage with storeKey to JSON', () {
+      // Arrange
+      final message = ChatMessage(
+        id: 1,
+        text: 'What is your name?',
+        delay: 1000,
+        sender: 'bot',
+        isTextInput: true,
+        storeKey: 'user.name',
+      );
+
+      // Act
+      final json = message.toJson();
+
+      // Assert
+      expect(json['id'], equals(1));
+      expect(json['text'], equals('What is your name?'));
+      expect(json['storeKey'], equals('user.name'));
+      expect(json['isTextInput'], isTrue);
+    });
+
+    test('should not include storeKey in JSON if null', () {
+      // Arrange
+      final message = ChatMessage(
+        id: 1,
+        text: 'Hello!',
+        delay: 1000,
+        sender: 'bot',
+      );
+
+      // Act
+      final json = message.toJson();
+
+      // Assert
+      expect(json['id'], equals(1));
+      expect(json['text'], equals('Hello!'));
+      expect(json.containsKey('storeKey'), isFalse);
+    });
   });
 }

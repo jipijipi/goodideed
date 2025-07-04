@@ -9,6 +9,7 @@ class ChatMessage {
   final bool isTextInput;
   final List<Choice>? choices;
   final int? nextMessageId;
+  final String? storeKey;
 
   ChatMessage({
     required this.id,
@@ -19,6 +20,7 @@ class ChatMessage {
     this.isTextInput = false,
     this.choices,
     this.nextMessageId,
+    this.storeKey,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class ChatMessage {
       isTextInput: json['isTextInput'] as bool? ?? false,
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
+      storeKey: json['storeKey'] as String?,
     );
   }
 
@@ -63,6 +66,10 @@ class ChatMessage {
 
     if (nextMessageId != null) {
       json['nextMessageId'] = nextMessageId!;
+    }
+
+    if (storeKey != null) {
+      json['storeKey'] = storeKey!;
     }
 
     return json;

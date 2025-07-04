@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/chat_message.dart';
 import '../models/choice.dart';
 import '../services/chat_service.dart';
+import '../services/user_data_service.dart';
+import '../services/text_templating_service.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -11,7 +13,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final ChatService _chatService = ChatService();
+  late final UserDataService _userDataService;
+  late final TextTemplatingService _templatingService;
+  late final ChatService _chatService;
   List<ChatMessage> _messages = [];
   List<ChatMessage> _displayedMessages = [];
   bool _isLoading = true;
@@ -22,7 +26,17 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    _initializeServices();
     _loadAndDisplayMessages();
+  }
+
+  void _initializeServices() {
+    _userDataService = UserDataService();
+    _templatingService = TextTemplatingService(_userDataService);
+    _chatService = ChatService(
+      userDataService: _userDataService,
+      templatingService: _templatingService,
+    );
   }
 
   Future<void> _loadAndDisplayMessages() async {
@@ -52,7 +66,10 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _displayMessages(List<ChatMessage> messages) async {
-    for (ChatMessage message in messages) {
+    // Process templates in messages before displaying
+    final processedMessages = await _chatService.processMessageTemplates(messages);
+    
+    for (ChatMessage message in processedMessages) {
       if (_disposed) break;
       
       await Future.delayed(Duration(milliseconds: message.delay));
@@ -208,6 +225,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _onChoiceSelected(Choice choice, ChatMessage choiceMessage) async {
+    // Store the user's choice if storeKey is provided
+    await _chatService.handleUserChoice(choiceMessage, choice.text);
+    
     // Replace choice bubbles with selected text as regular user message
     setState(() {
       int choiceIndex = _displayedMessages.indexOf(choiceMessage);
@@ -287,6 +307,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _onTextInputSubmitted(String userInput, ChatMessage textInputMessage) async {
     if (userInput.trim().isEmpty) return;
+
+    // Store the user's input if storeKey is provided
+    await _chatService.handleUserTextInput(textInputMessage, userInput.trim());
 
     // Create user response message
     final userResponseMessage = _chatService.createUserResponseMessage(

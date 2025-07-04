@@ -76,11 +76,12 @@
       "delay": 1000,
       "sender": "bot",
       "isTextInput": true,
+      "storeKey": "user.name",
       "nextMessageId": 24
     },
     {
       "id": 24,
-      "text": "Nice to meet you! How would you like to get started?",
+      "text": "Nice to meet you {user.name}! How would you like to get started?",
       "delay": 1500,
       "sender": "bot"
     },

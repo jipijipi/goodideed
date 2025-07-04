@@ -4,6 +4,7 @@ import '../models/choice.dart';
 import '../services/chat_service.dart';
 import '../services/user_data_service.dart';
 import '../services/text_templating_service.dart';
+import 'user_variables_panel.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -22,6 +23,8 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _disposed = false;
   final TextEditingController _textController = TextEditingController();
   ChatMessage? _currentTextInputMessage;
+  bool _isPanelVisible = false;
+  final GlobalKey<UserVariablesPanelState> _panelKey = GlobalKey();
 
   @override
   void initState() {
@@ -99,23 +102,71 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
+  void _togglePanel() {
+    setState(() {
+      _isPanelVisible = !_isPanelVisible;
+    });
+    if (_isPanelVisible) {
+      _panelKey.currentState?.refreshData();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: _togglePanel,
+            tooltip: 'My Information',
+          ),
+        ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: _displayedMessages.length,
-              itemBuilder: (context, index) {
-                final message = _displayedMessages[index];
-                return _buildMessageBubble(message);
-              },
+      body: Stack(
+        children: [
+          // Main chat content
+          _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: _displayedMessages.length,
+                  itemBuilder: (context, index) {
+                    final message = _displayedMessages[index];
+                    return _buildMessageBubble(message);
+                  },
+                ),
+          
+          // Sliding panel overlay
+          if (_isPanelVisible)
+            GestureDetector(
+              onTap: _togglePanel,
+              child: Container(
+                color: Colors.black.withOpacity(0.3),
+                child: const SizedBox.expand(),
+              ),
             ),
+          
+          // Sliding panel
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            bottom: _isPanelVisible ? 0 : -400,
+            left: 0,
+            right: 0,
+            height: 400,
+            child: GestureDetector(
+              onTap: () {}, // Prevent tap from closing panel
+              child: UserVariablesPanel(
+                key: _panelKey,
+                userDataService: _userDataService,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

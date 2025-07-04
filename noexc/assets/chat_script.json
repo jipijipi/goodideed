@@ -67,6 +67,21 @@
       "id": 22,
       "text": "Then you can customize your profile and start exploring.",
       "delay": 1500,
+      "sender": "bot",
+      "nextMessageId": 23
+    },
+    {
+      "id": 23,
+      "text": "What's your name so I can personalize your experience?",
+      "delay": 1000,
+      "sender": "bot",
+      "isTextInput": true,
+      "nextMessageId": 24
+    },
+    {
+      "id": 24,
+      "text": "Nice to meet you! How would you like to get started?",
+      "delay": 1500,
       "sender": "bot"
     },
     {

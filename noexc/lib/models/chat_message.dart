@@ -6,6 +6,7 @@ class ChatMessage {
   final int delay;
   final String sender;
   final bool isChoice;
+  final bool isTextInput;
   final List<Choice>? choices;
   final int? nextMessageId;
 
@@ -15,6 +16,7 @@ class ChatMessage {
     required this.delay,
     this.sender = 'bot',
     this.isChoice = false,
+    this.isTextInput = false,
     this.choices,
     this.nextMessageId,
   });
@@ -33,6 +35,7 @@ class ChatMessage {
       delay: json['delay'] as int,
       sender: json['sender'] as String? ?? 'bot',
       isChoice: json['isChoice'] as bool? ?? false,
+      isTextInput: json['isTextInput'] as bool? ?? false,
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
     );
@@ -48,6 +51,10 @@ class ChatMessage {
 
     if (isChoice) {
       json['isChoice'] = isChoice;
+    }
+
+    if (isTextInput) {
+      json['isTextInput'] = isTextInput;
     }
 
     if (choices != null) {

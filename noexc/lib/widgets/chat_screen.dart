@@ -16,6 +16,8 @@ class _ChatScreenState extends State<ChatScreen> {
   List<ChatMessage> _displayedMessages = [];
   bool _isLoading = true;
   bool _disposed = false;
+  final TextEditingController _textController = TextEditingController();
+  ChatMessage? _currentTextInputMessage;
 
   @override
   void initState() {
@@ -61,14 +63,22 @@ class _ChatScreenState extends State<ChatScreen> {
         });
       }
       
-      // Stop at choice messages to wait for user interaction
-      if (message.isChoice) break;
+      // Stop at choice messages or text input messages to wait for user interaction
+      if (message.isChoice || message.isTextInput) {
+        if (message.isTextInput) {
+          setState(() {
+            _currentTextInputMessage = message;
+          });
+        }
+        break;
+      }
     }
   }
 
   @override
   void dispose() {
     _disposed = true;
+    _textController.dispose();
     super.dispose();
   }
 
@@ -95,6 +105,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildMessageBubble(ChatMessage message) {
     if (message.isChoice && message.choices != null) {
       return _buildChoiceBubbles(message);
+    }
+    if (message.isTextInput && message == _currentTextInputMessage) {
+      return _buildTextInputBubble(message);
     }
     return _buildRegularBubble(message);
   }
@@ -213,6 +226,90 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _continueWithChoice(int nextMessageId) async {
     final nextMessages = _chatService.getMessagesAfterChoice(nextMessageId);
+    await _displayMessages(nextMessages);
+  }
+
+  Widget _buildTextInputBubble(ChatMessage message) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.7,
+              ),
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _textController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: const InputDecoration(
+                        hintText: 'Type your answer...',
+                        hintStyle: TextStyle(color: Colors.white70),
+                        border: InputBorder.none,
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      onSubmitted: (value) => _onTextInputSubmitted(value, message),
+                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  GestureDetector(
+                    onTap: () => _onTextInputSubmitted(_textController.text, message),
+                    child: const Icon(
+                      Icons.send,
+                      color: Colors.white,
+                      size: 20.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 12.0),
+          CircleAvatar(
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            child: const Icon(Icons.person, color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _onTextInputSubmitted(String userInput, ChatMessage textInputMessage) async {
+    if (userInput.trim().isEmpty) return;
+
+    // Create user response message
+    final userResponseMessage = _chatService.createUserResponseMessage(
+      textInputMessage.id + 1000, // Use a high ID to avoid conflicts
+      userInput.trim(),
+    );
+
+    // Replace text input bubble with user response
+    setState(() {
+      int textInputIndex = _displayedMessages.indexOf(textInputMessage);
+      _displayedMessages[textInputIndex] = userResponseMessage;
+      _currentTextInputMessage = null;
+      _textController.clear();
+    });
+
+    // Continue with next messages if available
+    if (textInputMessage.nextMessageId != null) {
+      await _continueWithTextInput(textInputMessage.nextMessageId!, userInput.trim());
+    }
+  }
+
+  Future<void> _continueWithTextInput(int nextMessageId, String userInput) async {
+    final nextMessages = _chatService.getMessagesAfterTextInput(nextMessageId, userInput);
     await _displayMessages(nextMessages);
   }
 }

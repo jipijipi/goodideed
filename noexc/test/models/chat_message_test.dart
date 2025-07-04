@@ -188,5 +188,85 @@ void main() {
       expect(choiceMessage.isChoice, true);
       expect(regularMessage.isChoice, false);
     });
+
+    test('should create text input message from JSON', () {
+      // Arrange
+      final json = {
+        'id': 5,
+        'text': 'What is your name?',
+        'delay': 1000,
+        'sender': 'bot',
+        'isTextInput': true,
+        'nextMessageId': 6,
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.id, 5);
+      expect(message.text, 'What is your name?');
+      expect(message.isTextInput, true);
+      expect(message.nextMessageId, 6);
+    });
+
+    test('should create regular message without text input flag', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'Hello World',
+        'delay': 1000,
+        'sender': 'bot',
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.isTextInput, false);
+    });
+
+    test('should convert text input message to JSON', () {
+      // Arrange
+      final message = ChatMessage(
+        id: 5,
+        text: 'What is your name?',
+        delay: 1000,
+        sender: 'bot',
+        isTextInput: true,
+        nextMessageId: 6,
+      );
+
+      // Act
+      final json = message.toJson();
+
+      // Assert
+      expect(json['id'], 5);
+      expect(json['text'], 'What is your name?');
+      expect(json['isTextInput'], true);
+      expect(json['nextMessageId'], 6);
+    });
+
+    test('should identify text input messages correctly', () {
+      // Arrange
+      final textInputMessage = ChatMessage(
+        id: 5,
+        text: 'What is your name?',
+        delay: 1000,
+        sender: 'bot',
+        isTextInput: true,
+      );
+
+      final regularMessage = ChatMessage(
+        id: 1,
+        text: 'Hello',
+        delay: 1000,
+        sender: 'bot',
+      );
+
+      // Act & Assert
+      expect(textInputMessage.isTextInput, true);
+      expect(regularMessage.isTextInput, false);
+    });
   });
 }

@@ -28,7 +28,7 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      expect(messages.length, 19); // Updated for new JSON structure
+      expect(messages.length, 21); // Updated for new JSON structure with text input messages
       expect(messages[0].id, 1);
       expect(messages[1].id, 2);
       expect(messages[2].id, 3);
@@ -107,6 +107,34 @@ void main() {
       // Assert
       expect(messages, isNotNull);
       expect(messages, isA<List<ChatMessage>>());
+    });
+
+    test('should handle text input messages in conversation flow', () async {
+      // Arrange
+      await chatService.loadChatScript();
+
+      // Act
+      final messages = chatService.getMessagesAfterTextInput(100, 'John Doe');
+
+      // Assert
+      expect(messages, isNotNull);
+      expect(messages, isA<List<ChatMessage>>());
+    });
+
+    test('should create user response message from text input', () {
+      // Arrange
+      const userInput = 'My name is Alice';
+      const messageId = 999;
+
+      // Act
+      final userMessage = chatService.createUserResponseMessage(messageId, userInput);
+
+      // Assert
+      expect(userMessage.id, messageId);
+      expect(userMessage.text, userInput);
+      expect(userMessage.sender, 'user');
+      expect(userMessage.isFromUser, true);
+      expect(userMessage.delay, 0);
     });
   });
 }

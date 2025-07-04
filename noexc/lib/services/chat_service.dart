@@ -45,6 +45,19 @@ class ChatService {
     return _getMessagesFromId(startId);
   }
 
+  List<ChatMessage> getMessagesAfterTextInput(int nextMessageId, String userInput) {
+    return _getMessagesFromId(nextMessageId);
+  }
+
+  ChatMessage createUserResponseMessage(int id, String userInput) {
+    return ChatMessage(
+      id: id,
+      text: userInput,
+      delay: 0,
+      sender: 'user',
+    );
+  }
+
   List<ChatMessage> _getMessagesFromId(int startId) {
     List<ChatMessage> messages = [];
     int? currentId = startId;
@@ -53,8 +66,8 @@ class ChatService {
       ChatMessage msg = _messageMap[currentId]!;
       messages.add(msg);
       
-      // Stop at choice messages - let UI handle the choice interaction
-      if (msg.isChoice) break;
+      // Stop at choice messages or text input messages - let UI handle the interaction
+      if (msg.isChoice || msg.isTextInput) break;
       
       // Move to next message
       if (msg.nextMessageId != null) {

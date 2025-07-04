@@ -17,7 +17,7 @@ void main() {
 
       // Assert
       expect(message.delay, ChatMessage.defaultDelay);
-      expect(message.delay, 1500); // Verify the default value
+      expect(message.delay, 1000); // Verify the default value
     });
 
     test('should use provided delay when specified in JSON', () {

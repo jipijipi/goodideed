@@ -77,7 +77,23 @@
       "sender": "bot",
       "isTextInput": true,
       "storeKey": "user.name",
-      "nextMessageId": 24
+      "nextMessageId": 81
+    },
+    {
+      "id": 81,
+      "text": "{user.name}? Are you sure?",
+      "sender": "bot",
+      "nextMessageId": 82
+    },
+    {
+      "id": 82,
+      "text": "CHOICES",
+      "sender": "user",
+      "isChoice": true,
+      "choices": [
+        {"text": "Yes", "nextMessageId": 24},
+        {"text": "No", "nextMessageId": 23}
+      ]
     },
     {
       "id": 24,

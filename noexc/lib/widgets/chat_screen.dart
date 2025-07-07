@@ -145,7 +145,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
                   controller: _scrollController,
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
                   itemCount: _displayedMessages.length,
                   itemBuilder: (context, index) {
                     final message = _displayedMessages[index];

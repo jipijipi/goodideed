@@ -1,0 +1,27 @@
+/// Configuration specific to chat functionality
+class ChatConfig {
+  // Message Types
+  static const String botSender = 'bot';
+  static const String userSender = 'user';
+  
+  // Chat Flow
+  static const int initialMessageId = 1;
+  
+  // Template Processing
+  static const String templateVariablePattern = r'\{([^}]+)\}';
+  static const String templateFallbackSeparator = '|';
+  
+  // Error Messages
+  static const String chatScriptLoadError = 'Failed to load chat script';
+  static const String messageNotFoundError = 'Message not found';
+  
+  // UI Labels
+  static const String chatScreenTitle = 'Chat';
+  static const String userInfoPanelTitle = 'My Information';
+  static const String emptyDataMessage = 'No information stored yet';
+  static const String toggleThemeTooltip = 'Toggle Theme';
+  static const String userInfoTooltip = 'My Information';
+  
+  // Private constructor to prevent instantiation
+  ChatConfig._();
+}

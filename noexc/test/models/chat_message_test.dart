@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/choice.dart';
+import 'package:noexc/constants/app_constants.dart';
 
 void main() {
   group('ChatMessage', () {
@@ -16,7 +17,7 @@ void main() {
       final message = ChatMessage.fromJson(json);
 
       // Assert
-      expect(message.delay, ChatMessage.defaultDelay);
+      expect(message.delay, AppConstants.defaultMessageDelay);
       expect(message.delay, 1000); // Verify the default value
     });
 
@@ -44,7 +45,7 @@ void main() {
       );
 
       // Assert
-      expect(message.delay, ChatMessage.defaultDelay);
+      expect(message.delay, AppConstants.defaultMessageDelay);
       expect(message.delay, 1000);
     });
 

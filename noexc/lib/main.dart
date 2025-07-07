@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'widgets/chat_screen.dart';
 import 'services/user_data_service.dart';
 import 'themes/app_themes.dart';
+import 'constants/app_constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'noexc',
+      title: AppConstants.appTitle,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: AppThemes.getThemeMode(_isDarkMode),

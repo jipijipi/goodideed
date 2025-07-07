@@ -5,6 +5,10 @@ import '../models/choice.dart';
 import '../services/chat_service.dart';
 import '../services/user_data_service.dart';
 import '../services/text_templating_service.dart';
+import '../constants/ui_constants.dart';
+import '../constants/app_constants.dart';
+import '../config/chat_config.dart';
+import '../constants/theme_constants.dart';
 import 'user_variables_panel.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -82,8 +86,8 @@ class _ChatScreenState extends State<ChatScreen> {
             if (_scrollController.hasClients) {
               _scrollController.animateTo(
                 _scrollController.position.minScrollExtent,
-                duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut,
+                duration: UIConstants.scrollAnimationDuration,
+              curve: UIConstants.scrollAnimationCurve,
             );
           }
         });
@@ -137,18 +141,18 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: const Text(ChatConfig.chatScreenTitle),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           IconButton(
             icon: const Icon(Icons.brightness_6),
             onPressed: widget.onThemeToggle,
-            tooltip: 'Toggle Theme',
+            tooltip: ChatConfig.toggleThemeTooltip,
           ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: _togglePanel,
-            tooltip: 'My Information',
+            tooltip: ChatConfig.userInfoTooltip,
           ),
         ],
       ),
@@ -158,7 +162,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ListView.builder(
             reverse: true,
             controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(16.0, 80.0, 16.0, 16.0),
+            padding: UIConstants.chatListPadding,
             itemCount: _displayedMessages.length,
             itemBuilder: (context, index) {
               final message = _displayedMessages.reversed.toList()[index];
@@ -171,19 +175,19 @@ class _ChatScreenState extends State<ChatScreen> {
             GestureDetector(
               onTap: _togglePanel,
               child: Container(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withOpacity(UIConstants.overlayOpacity),
                 child: const SizedBox.expand(),
               ),
             ),
           
           // Sliding panel
           AnimatedPositioned(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            bottom: _isPanelVisible ? 0 : -400,
+            duration: UIConstants.panelAnimationDuration,
+            curve: UIConstants.panelAnimationCurve,
+            bottom: _isPanelVisible ? 0 : -UIConstants.panelHeight,
             left: 0,
             right: 0,
-            height: 400,
+            height: UIConstants.panelHeight,
             child: GestureDetector(
               onTap: () {}, // Prevent tap from closing panel
               child: UserVariablesPanel(
@@ -211,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final isBot = message.isFromBot;
     
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: UIConstants.messageBubbleMargin,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: isBot ? MainAxisAlignment.start : MainAxisAlignment.end,
@@ -219,36 +223,36 @@ class _ChatScreenState extends State<ChatScreen> {
           if (isBot) ...[
             CircleAvatar(
               backgroundColor: Theme.of(context).colorScheme.primary,
-              child: const Icon(Icons.smart_toy, color: Colors.white),
+              child: const Icon(Icons.smart_toy, color: ThemeConstants.avatarIconColor),
             ),
-            const SizedBox(width: 12.0),
+            const SizedBox(width: UIConstants.avatarSpacing),
           ],
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
+                maxWidth: MediaQuery.of(context).size.width * UIConstants.messageMaxWidthFactor,
               ),
-              padding: const EdgeInsets.all(12.0),
+              padding: UIConstants.messageBubblePadding,
               decoration: BoxDecoration(
                 color: isBot 
-                    ? Colors.grey[200] 
+                    ? ThemeConstants.botMessageBackgroundLight 
                     : Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
               ),
               child: Text(
                 message.text,
                 style: TextStyle(
-                  fontSize: 16.0,
-                  color: isBot ? Colors.black : Colors.white,
+                  fontSize: UIConstants.messageFontSize,
+                  color: isBot ? ThemeConstants.botMessageTextColor : ThemeConstants.userMessageTextColor,
                 ),
               ),
             ),
           ),
           if (!isBot) ...[
-            const SizedBox(width: 12.0),
+            const SizedBox(width: UIConstants.avatarSpacing),
             CircleAvatar(
               backgroundColor: Theme.of(context).colorScheme.secondary,
-              child: const Icon(Icons.person, color: Colors.white),
+              child: const Icon(Icons.person, color: ThemeConstants.avatarIconColor),
             ),
           ],
         ],
@@ -265,7 +269,7 @@ class _ChatScreenState extends State<ChatScreen> {
         final bool isUnselected = hasSelection && !isSelected;
         
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: UIConstants.choiceButtonMargin,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -274,21 +278,21 @@ class _ChatScreenState extends State<ChatScreen> {
                   onTap: hasSelection ? null : () => _onChoiceSelected(choice, message),
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.7,
+                      maxWidth: MediaQuery.of(context).size.width * UIConstants.messageMaxWidthFactor,
                     ),
-                    padding: const EdgeInsets.all(12.0),
+                    padding: UIConstants.messageBubblePadding,
                     decoration: BoxDecoration(
                       color: isSelected
                           ? Theme.of(context).colorScheme.primary
                           : isUnselected
-                              ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
-                              : Theme.of(context).colorScheme.primary.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(12.0),
+                              ? Theme.of(context).colorScheme.primary.withOpacity(UIConstants.unselectedChoiceOpacity)
+                              : Theme.of(context).colorScheme.primary.withOpacity(UIConstants.selectedChoiceOpacity),
+                      borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
                       border: Border.all(
                         color: isSelected
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).colorScheme.primary.withOpacity(0.5),
-                        width: isSelected ? 2.0 : 1.0,
+                        width: isSelected ? UIConstants.selectedChoiceBorderWidth : UIConstants.unselectedChoiceBorderWidth,
                       ),
                     ),
                     child: Row(
@@ -298,18 +302,18 @@ class _ChatScreenState extends State<ChatScreen> {
                           child: Text(
                             choice.text,
                             style: TextStyle(
-                              fontSize: 16.0,
-                              color: isUnselected ? Colors.white60 : Colors.white,
+                              fontSize: UIConstants.messageFontSize,
+                              color: isUnselected ? ThemeConstants.userMessageTextColor.withOpacity(UIConstants.unselectedTextOpacity) : ThemeConstants.userMessageTextColor,
                               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             ),
                           ),
                         ),
                         if (isSelected) ...[
-                          const SizedBox(width: 8.0),
+                          const SizedBox(width: UIConstants.iconSpacing),
                           const Icon(
                             Icons.check_circle,
-                            color: Colors.white,
-                            size: 18.0,
+                            color: ThemeConstants.userMessageTextColor,
+                            size: UIConstants.checkIconSize,
                           ),
                         ],
                       ],
@@ -317,10 +321,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12.0),
+              const SizedBox(width: UIConstants.avatarSpacing),
               CircleAvatar(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
-                child: const Icon(Icons.person, color: Colors.white),
+                child: const Icon(Icons.person, color: ThemeConstants.avatarIconColor),
               ),
             ],
           ),
@@ -361,19 +365,19 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildTextInputBubble(ChatMessage message) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: UIConstants.messageBubbleMargin,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Flexible(
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
+                maxWidth: MediaQuery.of(context).size.width * UIConstants.messageMaxWidthFactor,
               ),
-              padding: const EdgeInsets.all(12.0),
+              padding: UIConstants.messageBubblePadding,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(12.0),
+                borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -381,10 +385,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   Expanded(
                     child: TextField(
                       controller: _textController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: ThemeConstants.userMessageTextColor),
                       decoration: InputDecoration(
                         hintText: message.placeholderText,
-                        hintStyle: const TextStyle(color: Colors.white70),
+                        hintStyle: const TextStyle(color: ThemeConstants.hintTextColor),
                         border: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
@@ -392,23 +396,23 @@ class _ChatScreenState extends State<ChatScreen> {
                       onSubmitted: (value) => _onTextInputSubmitted(value, message),
                     ),
                   ),
-                  const SizedBox(width: 8.0),
+                  const SizedBox(width: UIConstants.iconSpacing),
                   GestureDetector(
                     onTap: () => _onTextInputSubmitted(_textController.text, message),
                     child: const Icon(
                       Icons.send,
-                      color: Colors.white,
-                      size: 20.0,
+                      color: ThemeConstants.userMessageTextColor,
+                      size: UIConstants.sendIconSize,
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          const SizedBox(width: 12.0),
+          const SizedBox(width: UIConstants.avatarSpacing),
           CircleAvatar(
             backgroundColor: Theme.of(context).colorScheme.secondary,
-            child: const Icon(Icons.person, color: Colors.white),
+            child: const Icon(Icons.person, color: ThemeConstants.avatarIconColor),
           ),
         ],
       ),
@@ -423,7 +427,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // Create user response message
     final userResponseMessage = _chatService.createUserResponseMessage(
-      textInputMessage.id + 1000, // Use a high ID to avoid conflicts
+      textInputMessage.id + AppConstants.userResponseIdOffset, // Use a high ID to avoid conflicts
       userInput.trim(),
     );
 

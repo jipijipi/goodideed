@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/user_data_service.dart';
+import '../constants/ui_constants.dart';
+import '../config/chat_config.dart';
 
 class UserVariablesPanel extends StatefulWidget {
   final UserDataService userDataService;
@@ -63,12 +65,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(UIConstants.panelTopRadius)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
+            color: Colors.black.withOpacity(UIConstants.shadowOpacity),
+            blurRadius: UIConstants.shadowBlurRadius,
+            offset: UIConstants.shadowOffset,
           ),
         ],
       ),
@@ -77,15 +79,15 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
         children: [
           // Header
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: UIConstants.panelHeaderPadding,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(UIConstants.panelTopRadius)),
             ),
             child: Row(
               children: [
                 Text(
-                  'My Information',
+                  ChatConfig.userInfoPanelTitle,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
                     fontWeight: FontWeight.bold,
@@ -99,14 +101,14 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
           Flexible(
             child: _isLoading
                 ? const Padding(
-                    padding: EdgeInsets.all(32),
+                    padding: UIConstants.panelEmptyStatePadding,
                     child: CircularProgressIndicator(),
                   )
                 : _userData.isEmpty
                     ? Padding(
-                        padding: const EdgeInsets.all(32),
+                        padding: UIConstants.panelEmptyStatePadding,
                         child: Text(
-                          'No information stored yet',
+                          ChatConfig.emptyDataMessage,
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
@@ -115,13 +117,13 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                       )
                     : ListView.separated(
                         shrinkWrap: true,
-                        padding: const EdgeInsets.all(16),
+                        padding: UIConstants.panelContentPadding,
                         itemCount: _userData.length,
                         separatorBuilder: (context, index) => const Divider(),
                         itemBuilder: (context, index) {
                           final entry = _userData.entries.elementAt(index);
                           return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            padding: UIConstants.variableItemPadding,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -135,7 +137,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 16),
+                                const SizedBox(width: UIConstants.variableKeySpacing),
                                 Expanded(
                                   flex: 3,
                                   child: Text(

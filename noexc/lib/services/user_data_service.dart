@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../constants/app_constants.dart';
 
 class UserDataService {
-  static const String _keyPrefix = 'noexc_user_data_';
+  static const String _keyPrefix = AppConstants.userDataKeyPrefix;
 
   /// Store a value with the given key
   Future<void> storeValue(String key, dynamic value) async {

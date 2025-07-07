@@ -1,3 +1,4 @@
+import '../config/chat_config.dart';
 import 'user_data_service.dart';
 
 class TextTemplatingService {
@@ -13,7 +14,7 @@ class TextTemplatingService {
     }
 
     // Regular expression to find template variables like {user.name} or {user.name|fallback}
-    final RegExp templateRegex = RegExp(r'\{([^}]+)\}');
+    final RegExp templateRegex = RegExp(ChatConfig.templateVariablePattern);
     
     String result = text;
     final matches = templateRegex.allMatches(text);
@@ -26,11 +27,11 @@ class TextTemplatingService {
       String key;
       String? fallback;
       
-      if (content.contains('|')) {
-        final parts = content.split('|');
+      if (content.contains(ChatConfig.templateFallbackSeparator)) {
+        final parts = content.split(ChatConfig.templateFallbackSeparator);
         key = parts[0];
         // Join remaining parts in case fallback contains pipe characters
-        fallback = parts.sublist(1).join('|');
+        fallback = parts.sublist(1).join(ChatConfig.templateFallbackSeparator);
       } else {
         key = content;
         fallback = null;

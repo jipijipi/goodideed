@@ -1,4 +1,6 @@
 import 'choice.dart';
+import '../constants/app_constants.dart';
+import '../config/chat_config.dart';
 
 class ChatMessage {
   final int id;
@@ -13,20 +15,17 @@ class ChatMessage {
   final String placeholderText;
   final String? selectedChoiceText;
 
-  static const int defaultDelay = 1000; // Default delay in milliseconds
-  static const String defaultPlaceholderText = 'Type your answer...';
-
   ChatMessage({
     required this.id,
     required this.text,
-    this.delay = defaultDelay,
-    this.sender = 'bot',
+    this.delay = AppConstants.defaultMessageDelay,
+    this.sender = ChatConfig.botSender,
     this.isChoice = false,
     this.isTextInput = false,
     this.choices,
     this.nextMessageId,
     this.storeKey,
-    this.placeholderText = defaultPlaceholderText,
+    this.placeholderText = AppConstants.defaultPlaceholderText,
     this.selectedChoiceText,
   });
 
@@ -41,14 +40,14 @@ class ChatMessage {
     return ChatMessage(
       id: json['id'] as int,
       text: json['text'] as String,
-      delay: json['delay'] as int? ?? defaultDelay,
-      sender: json['sender'] as String? ?? 'bot',
+      delay: json['delay'] as int? ?? AppConstants.defaultMessageDelay,
+      sender: json['sender'] as String? ?? ChatConfig.botSender,
       isChoice: json['isChoice'] as bool? ?? false,
       isTextInput: json['isTextInput'] as bool? ?? false,
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
       storeKey: json['storeKey'] as String?,
-      placeholderText: json['placeholderText'] as String? ?? defaultPlaceholderText,
+      placeholderText: json['placeholderText'] as String? ?? AppConstants.defaultPlaceholderText,
       selectedChoiceText: json['selectedChoiceText'] as String?,
     );
   }
@@ -81,7 +80,7 @@ class ChatMessage {
       json['storeKey'] = storeKey!;
     }
 
-    if (placeholderText != defaultPlaceholderText) {
+    if (placeholderText != AppConstants.defaultPlaceholderText) {
       json['placeholderText'] = placeholderText;
     }
 
@@ -92,6 +91,6 @@ class ChatMessage {
     return json;
   }
 
-  bool get isFromBot => sender == 'bot';
-  bool get isFromUser => sender == 'user';
+  bool get isFromBot => sender == ChatConfig.botSender;
+  bool get isFromUser => sender == ChatConfig.userSender;
 }

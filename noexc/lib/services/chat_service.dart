@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/chat_message.dart';
+import '../constants/app_constants.dart';
+import '../config/chat_config.dart';
 import 'user_data_service.dart';
 import 'text_templating_service.dart';
 
@@ -18,7 +20,7 @@ class ChatService {
 
   Future<List<ChatMessage>> loadChatScript() async {
     try {
-      final String jsonString = await rootBundle.loadString('assets/chat_script.json');
+      final String jsonString = await rootBundle.loadString(AppConstants.chatScriptAssetPath);
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       final List<dynamic> messagesJson = jsonData['messages'];
       
@@ -31,7 +33,7 @@ class ChatService {
       
       return _allMessages;
     } catch (e) {
-      throw Exception('Failed to load chat script: $e');
+      throw Exception('${ChatConfig.chatScriptLoadError}: $e');
     }
   }
 
@@ -48,7 +50,7 @@ class ChatService {
       await loadChatScript();
     }
     
-    return _getMessagesFromId(1);
+    return _getMessagesFromId(ChatConfig.initialMessageId);
   }
 
   List<ChatMessage> getMessagesAfterChoice(int startId) {
@@ -64,7 +66,7 @@ class ChatService {
       id: id,
       text: userInput,
       delay: 0,
-      sender: 'user',
+      sender: ChatConfig.userSender,
     );
   }
 

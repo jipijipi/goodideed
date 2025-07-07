@@ -79,7 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (_scrollController.hasClients) {
               _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
+                _scrollController.position.minScrollExtent,
                 duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut,
             );
@@ -149,11 +149,12 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           // Main chat content
           ListView.builder(
+            reverse: true,
             controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 80.0, 16.0, 16.0),
             itemCount: _displayedMessages.length,
             itemBuilder: (context, index) {
-              final message = _displayedMessages[index];
+              final message = _displayedMessages.reversed.toList()[index];
               return _buildMessageBubble(message);
             },
           ),

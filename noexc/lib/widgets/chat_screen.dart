@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/chat_message.dart';
 import '../models/choice.dart';
@@ -25,6 +26,7 @@ class _ChatScreenState extends State<ChatScreen> {
   ChatMessage? _currentTextInputMessage;
   bool _isPanelVisible = false;
   final GlobalKey<UserVariablesPanelState> _panelKey = GlobalKey();
+  final List<Timer> _activeTimers = [];
 
   @override
   void initState() {
@@ -65,26 +67,35 @@ class _ChatScreenState extends State<ChatScreen> {
     for (ChatMessage message in processedMessages) {
       if (_disposed) break;
       
-      await Future.delayed(Duration(milliseconds: message.delay));
-      
-      if (!_disposed && mounted) {
-        setState(() {
-          _displayedMessages.add(message);
-        });
-        
-        // Scroll to bottom after adding message
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_scrollController.hasClients) {
-            _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 300),
+      // Use Timer instead of Future.delayed for better control
+      final completer = Completer<void>();
+      final timer = Timer(Duration(milliseconds: message.delay), () {
+        if (!_disposed && mounted) {
+          setState(() {
+            _displayedMessages.add(message);
+          });
+          
+          // Scroll to bottom after adding message
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_scrollController.hasClients) {
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
               curve: Curves.easeOut,
             );
           }
         });
       }
-      
-      // Stop at choice messages or text input messages to wait for user interaction
+      completer.complete();
+    });
+    
+    _activeTimers.add(timer);
+    await completer.future;
+    _activeTimers.remove(timer);
+    
+    if (_disposed) break;
+    
+    // Stop at choice messages or text input messages to wait for user interaction
       if (message.isChoice || message.isTextInput) {
         if (message.isTextInput) {
           setState(() {
@@ -99,6 +110,13 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _disposed = true;
+    
+    // Cancel all active timers
+    for (final timer in _activeTimers) {
+      timer.cancel();
+    }
+    _activeTimers.clear();
+    
     _textController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -387,4 +405,5 @@ class _ChatScreenState extends State<ChatScreen> {
     final nextMessages = _chatService.getMessagesAfterTextInput(nextMessageId, userInput);
     await _displayMessages(nextMessages);
   }
+
 }

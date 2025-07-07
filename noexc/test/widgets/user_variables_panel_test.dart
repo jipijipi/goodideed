@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/user_variables_panel.dart';
 import 'package:noexc/services/user_data_service.dart';
 
 void main() {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('UserVariablesPanel', () {
     testWidgets('displays header correctly', (WidgetTester tester) async {
       final userDataService = UserDataService();
@@ -30,7 +35,7 @@ void main() {
         ),
       );
 
-      // Wait for initial loading
+      // Wait for initial loading to complete
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
       

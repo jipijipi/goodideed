@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/chat_screen.dart';
 
 void main() {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('ChatScreen Widget Tests', () {
     testWidgets('should display chat screen with app bar', (WidgetTester tester) async {
       // Arrange & Act
@@ -15,6 +20,9 @@ void main() {
       // Assert
       expect(find.byType(AppBar), findsOneWidget);
       expect(find.text('Chat'), findsOneWidget);
+      
+      // Just pump once to avoid timer issues
+      await tester.pump();
     });
 
 
@@ -28,7 +36,6 @@ void main() {
 
       // Wait for async loading to complete
       await tester.pump();
-      await tester.pump(const Duration(seconds: 5)); // Wait for all timers
       
       // Verify content area exists (should show ListView)
       expect(find.byType(ListView), findsOneWidget);
@@ -44,7 +51,6 @@ void main() {
 
       // Wait for loading
       await tester.pump();
-      await tester.pump(const Duration(seconds: 5));
       
       // For now, just verify the screen loads without errors
       expect(find.byType(ListView), findsOneWidget);
@@ -60,7 +66,6 @@ void main() {
 
       // Wait for loading
       await tester.pump();
-      await tester.pump(const Duration(seconds: 5));
       
       // For now, just verify the screen loads without errors
       expect(find.byType(ListView), findsOneWidget);

@@ -22,6 +22,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isLoading = true;
   bool _disposed = false;
   final TextEditingController _textController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   ChatMessage? _currentTextInputMessage;
   bool _isPanelVisible = false;
   final GlobalKey<UserVariablesPanelState> _panelKey = GlobalKey();
@@ -81,6 +82,17 @@ class _ChatScreenState extends State<ChatScreen> {
         setState(() {
           _displayedMessages.add(message);
         });
+        
+        // Scroll to bottom after adding message
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          }
+        });
       }
       
       // Stop at choice messages or text input messages to wait for user interaction
@@ -99,6 +111,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void dispose() {
     _disposed = true;
     _textController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -131,6 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
           _isLoading
               ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(16.0),
                   itemCount: _displayedMessages.length,
                   itemBuilder: (context, index) {

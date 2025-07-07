@@ -10,8 +10,10 @@ class ChatMessage {
   final List<Choice>? choices;
   final int? nextMessageId;
   final String? storeKey;
+  final String placeholderText;
 
   static const int defaultDelay = 1000; // Default delay in milliseconds
+  static const String defaultPlaceholderText = 'Type your answer...';
 
   ChatMessage({
     required this.id,
@@ -23,6 +25,7 @@ class ChatMessage {
     this.choices,
     this.nextMessageId,
     this.storeKey,
+    this.placeholderText = defaultPlaceholderText,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -43,6 +46,7 @@ class ChatMessage {
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
       storeKey: json['storeKey'] as String?,
+      placeholderText: json['placeholderText'] as String? ?? defaultPlaceholderText,
     );
   }
 
@@ -72,6 +76,10 @@ class ChatMessage {
 
     if (storeKey != null) {
       json['storeKey'] = storeKey!;
+    }
+
+    if (placeholderText != defaultPlaceholderText) {
+      json['placeholderText'] = placeholderText;
     }
 
     return json;

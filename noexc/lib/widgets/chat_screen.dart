@@ -323,9 +323,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: TextField(
                       controller: _textController,
                       style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        hintText: 'Type your answer...',
-                        hintStyle: TextStyle(color: Colors.white70),
+                      decoration: InputDecoration(
+                        hintText: message.placeholderText,
+                        hintStyle: const TextStyle(color: Colors.white70),
                         border: InputBorder.none,
                         isDense: true,
                         contentPadding: EdgeInsets.zero,

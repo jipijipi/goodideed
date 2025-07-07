@@ -112,6 +112,7 @@ class ChatService {
       choices: message.choices,
       nextMessageId: message.nextMessageId,
       storeKey: message.storeKey,
+      placeholderText: message.placeholderText,
     );
   }
 

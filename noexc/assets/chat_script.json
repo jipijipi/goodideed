@@ -69,6 +69,7 @@
       "sender": "bot",
       "isTextInput": true,
       "storeKey": "user.name",
+      "placeholderText": "Enter your full name here...",
       "nextMessageId": 81
     },
     {

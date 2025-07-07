@@ -391,4 +391,70 @@ void main() {
       expect(json.containsKey('storeKey'), isFalse);
     });
   });
+
+  group('placeholderText field', () {
+    test('should use default placeholder text when not provided in JSON', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'Enter your name',
+        'isTextInput': true,
+        // No placeholderText field provided
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.placeholderText, 'Type your answer...');
+    });
+
+    test('should use provided placeholder text when specified in JSON', () {
+      // Arrange
+      final json = {
+        'id': 1,
+        'text': 'Enter your name',
+        'isTextInput': true,
+        'placeholderText': 'Enter your full name here...',
+      };
+
+      // Act
+      final message = ChatMessage.fromJson(json);
+
+      // Assert
+      expect(message.placeholderText, 'Enter your full name here...');
+    });
+
+    test('should include placeholderText in toJson when provided', () {
+      // Arrange
+      final message = ChatMessage(
+        id: 1,
+        text: 'Enter your name',
+        isTextInput: true,
+        placeholderText: 'Your name here...',
+      );
+
+      // Act
+      final json = message.toJson();
+
+      // Assert
+      expect(json['placeholderText'], 'Your name here...');
+    });
+
+    test('should not include placeholderText in toJson when using default', () {
+      // Arrange
+      final message = ChatMessage(
+        id: 1,
+        text: 'Enter your name',
+        isTextInput: true,
+        // Using default placeholder text
+      );
+
+      // Act
+      final json = message.toJson();
+
+      // Assert
+      expect(json.containsKey('placeholderText'), false);
+    });
+  });
 }

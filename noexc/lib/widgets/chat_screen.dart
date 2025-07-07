@@ -8,7 +8,9 @@ import '../services/text_templating_service.dart';
 import 'user_variables_panel.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final VoidCallback? onThemeToggle;
+  
+  const ChatScreen({super.key, this.onThemeToggle});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -138,6 +140,11 @@ class _ChatScreenState extends State<ChatScreen> {
         title: const Text('Chat'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.brightness_6),
+            onPressed: widget.onThemeToggle,
+            tooltip: 'Toggle Theme',
+          ),
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: _togglePanel,

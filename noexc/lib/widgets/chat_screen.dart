@@ -257,35 +257,62 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildChoiceBubbles(ChatMessage message) {
+    final bool hasSelection = message.selectedChoiceText != null;
+    
     return Column(
-      children: message.choices!.map((choice) => 
-        Padding(
+      children: message.choices!.map((choice) {
+        final bool isSelected = message.selectedChoiceText == choice.text;
+        final bool isUnselected = hasSelection && !isSelected;
+        
+        return Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Flexible(
                 child: GestureDetector(
-                  onTap: () => _onChoiceSelected(choice, message),
+                  onTap: hasSelection ? null : () => _onChoiceSelected(choice, message),
                   child: Container(
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.of(context).size.width * 0.7,
                     ),
                     padding: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+                      color: isSelected
+                          ? Theme.of(context).colorScheme.primary
+                          : isUnselected
+                              ? Theme.of(context).colorScheme.primary.withOpacity(0.3)
+                              : Theme.of(context).colorScheme.primary.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(12.0),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.primary,
-                        width: 1.0,
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.primary.withOpacity(0.5),
+                        width: isSelected ? 2.0 : 1.0,
                       ),
                     ),
-                    child: Text(
-                      choice.text,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            choice.text,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: isUnselected ? Colors.white60 : Colors.white,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        if (isSelected) ...[
+                          const SizedBox(width: 8.0),
+                          const Icon(
+                            Icons.check_circle,
+                            color: Colors.white,
+                            size: 18.0,
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 ),
@@ -297,8 +324,8 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
-        ),
-      ).toList(),
+        );
+      }).toList(),
     );
   }
 
@@ -306,15 +333,20 @@ class _ChatScreenState extends State<ChatScreen> {
     // Store the user's choice if storeKey is provided
     await _chatService.handleUserChoice(choiceMessage, choice.text);
     
-    // Replace choice bubbles with selected text as regular user message
+    // Update choice message to mark the selected choice and disable interaction
     setState(() {
       int choiceIndex = _displayedMessages.indexOf(choiceMessage);
       _displayedMessages[choiceIndex] = ChatMessage(
         id: choiceMessage.id,
-        text: choice.text,
-        delay: 0,
-        sender: 'user',
-        isChoice: false,
+        text: choiceMessage.text,
+        delay: choiceMessage.delay,
+        sender: choiceMessage.sender,
+        isChoice: true, // Keep as choice message
+        choices: choiceMessage.choices,
+        nextMessageId: choiceMessage.nextMessageId,
+        storeKey: choiceMessage.storeKey,
+        placeholderText: choiceMessage.placeholderText,
+        selectedChoiceText: choice.text, // Mark which choice was selected
       );
     });
 

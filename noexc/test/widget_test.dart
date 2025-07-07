@@ -10,6 +10,6 @@ void main() {
 
     // Verify that the chat screen loads
     expect(find.text('Chat'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(ListView), findsOneWidget);
   });
 }

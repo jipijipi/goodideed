@@ -19,7 +19,6 @@ class _ChatScreenState extends State<ChatScreen> {
   late final ChatService _chatService;
   List<ChatMessage> _messages = [];
   List<ChatMessage> _displayedMessages = [];
-  bool _isLoading = true;
   bool _disposed = false;
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -50,21 +49,11 @@ class _ChatScreenState extends State<ChatScreen> {
         _simulateInitialChat();
       }
     } catch (e) {
-      if (!_disposed) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      // Handle error silently or add error handling as needed
     }
   }
 
   void _simulateInitialChat() async {
-    if (!_disposed) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-
     final initialMessages = await _chatService.getInitialMessages();
     await _displayMessages(initialMessages);
   }
@@ -141,17 +130,15 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Stack(
         children: [
           // Main chat content
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
-                  itemCount: _displayedMessages.length,
-                  itemBuilder: (context, index) {
-                    final message = _displayedMessages[index];
-                    return _buildMessageBubble(message);
-                  },
-                ),
+          ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
+            itemCount: _displayedMessages.length,
+            itemBuilder: (context, index) {
+              final message = _displayedMessages[index];
+              return _buildMessageBubble(message);
+            },
+          ),
           
           // Sliding panel overlay
           if (_isPanelVisible)

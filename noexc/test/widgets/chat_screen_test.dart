@@ -17,17 +17,6 @@ void main() {
       expect(find.text('Chat'), findsOneWidget);
     });
 
-    testWidgets('should display loading indicator initially', (WidgetTester tester) async {
-      // Arrange & Act
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ChatScreen(),
-        ),
-      );
-
-      // Assert
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
 
     testWidgets('should load chat content after initialization', (WidgetTester tester) async {
       // Arrange & Act
@@ -41,8 +30,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(seconds: 5)); // Wait for all timers
       
-      // Verify content area exists (should show ListView when not loading)
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      // Verify content area exists (should show ListView)
+      expect(find.byType(ListView), findsOneWidget);
     });
 
     testWidgets('should display text input field for text input messages', (WidgetTester tester) async {
@@ -58,7 +47,7 @@ void main() {
       await tester.pump(const Duration(seconds: 5));
       
       // For now, just verify the screen loads without errors
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(ListView), findsOneWidget);
     });
 
     testWidgets('should handle text input submission', (WidgetTester tester) async {
@@ -74,7 +63,7 @@ void main() {
       await tester.pump(const Duration(seconds: 5));
       
       // For now, just verify the screen loads without errors
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byType(ListView), findsOneWidget);
     });
   });
 }

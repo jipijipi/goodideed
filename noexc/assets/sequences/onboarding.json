@@ -35,7 +35,7 @@
       "storeKey": "user.primary_interest",
       "choices": [
         {"text": "Exploring features", "nextMessageId": 10},
-        {"text": "Getting help", "nextMessageId": 20},
+        {"text": "Getting help", "sequenceId": "support", "nextMessageId": 1},
         {"text": "Just browsing", "nextMessageId": 30}
       ]
     },
@@ -67,22 +67,9 @@
       "isChoice": true,
       "choices": [
         {"text": "Yes, let's do it", "nextMessageId": 40},
+        {"text": "Show me a tutorial first", "sequenceId": "tutorial", "nextMessageId": 1},
         {"text": "Maybe later", "nextMessageId": 50}
       ]
-    },
-    {
-      "id": 20,
-      "text": "I'm here to help! You can always reach out through our support system.",
-      "sender": "bot",
-      "delay": 1500,
-      "nextMessageId": 21
-    },
-    {
-      "id": 21,
-      "text": "For now, let me show you the basics to get you started.",
-      "sender": "bot",
-      "delay": 1500,
-      "nextMessageId": 50
     },
     {
       "id": 30,
@@ -95,7 +82,8 @@
       "id": 31,
       "text": "If you need any help, just ask. I'm always here to assist you, {user.name|friend}!",
       "sender": "bot",
-      "delay": 2000
+      "delay": 2000,
+      "nextMessageId": 51
     },
     {
       "id": 40,
@@ -119,13 +107,26 @@
       "id": 42,
       "text": "Perfect! Your preferences have been saved. Welcome aboard, {user.name}!",
       "sender": "bot",
-      "delay": 1500
+      "delay": 1500,
+      "nextMessageId": 51
     },
     {
       "id": 50,
-      "text": "You're all set! Enjoy exploring the app, {user.name|friend}.",
+      "text": "You're all set! What would you like to do next?",
       "sender": "bot",
-      "delay": 1000
+      "delay": 1000,
+      "nextMessageId": 51
+    },
+    {
+      "id": 51,
+      "text": "CHOICES",
+      "sender": "user",
+      "isChoice": true,
+      "choices": [
+        {"text": "Learn app features", "sequenceId": "tutorial", "nextMessageId": 1},
+        {"text": "Get support", "sequenceId": "support", "nextMessageId": 1},
+        {"text": "Main menu", "sequenceId": "menu", "nextMessageId": 1}
+      ]
     }
   ]
 }

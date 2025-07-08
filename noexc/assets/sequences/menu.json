@@ -1,0 +1,26 @@
+{
+  "sequenceId": "menu",
+  "name": "Main Menu",
+  "description": "Central hub for navigating between different chat sequences",
+  "messages": [
+    {
+      "id": 1,
+      "text": "Hi {user.name|there}! What can I help you with today?",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "text": "Choose what you'd like to do:",
+      "sender": "bot",
+      "delay": 1500,
+      "isChoice": true,
+      "choices": [
+        {"text": "🎯 Get started with setup", "sequenceId": "onboarding", "nextMessageId": 1},
+        {"text": "📚 Learn app features", "sequenceId": "tutorial", "nextMessageId": 1},
+        {"text": "🆘 Get help with issues", "sequenceId": "support", "nextMessageId": 1}
+      ]
+    }
+  ]
+}

@@ -146,14 +146,54 @@ class ChatStateManager extends ChangeNotifier {
       notifyListeners();
     }
 
-    // Continue with branched conversation
-    await _continueWithChoice(choice.nextMessageId);
+    // Check if this choice switches sequences
+    if (choice.sequenceId != null) {
+      debugPrint('SEQUENCE: Switching to sequence: ${choice.sequenceId}');
+      await _switchToSequenceFromChoice(choice.sequenceId!, choice.nextMessageId ?? 1);
+    } else if (choice.nextMessageId != null) {
+      debugPrint('CONTINUE: Continuing in current sequence to message: ${choice.nextMessageId}');
+      await _continueWithChoice(choice.nextMessageId!);
+    } else {
+      debugPrint('END: Choice has no next action - conversation may end here');
+    }
   }
 
   /// Continue conversation after choice selection
   Future<void> _continueWithChoice(int nextMessageId) async {
     final nextMessages = _chatService.getMessagesAfterChoice(nextMessageId);
     await _displayMessages(nextMessages);
+  }
+
+  /// Switch to a different sequence from a choice selection
+  Future<void> _switchToSequenceFromChoice(String sequenceId, int startMessageId) async {
+    if (_disposed) return;
+    
+    try {
+      debugPrint('SEQUENCE_SWITCH: Starting sequence switch from choice...');
+      debugPrint('SEQUENCE_SWITCH: Target sequence: $sequenceId');
+      debugPrint('SEQUENCE_SWITCH: Start message ID: $startMessageId');
+      
+      // Clear active timers but keep displayed messages for context
+      _clearActiveTimers();
+      _currentTextInputMessage = null;
+      _currentSequenceId = sequenceId;
+      
+      // Load the new sequence
+      await _chatService.loadSequence(sequenceId);
+      debugPrint('SEQUENCE_SWITCH: New sequence loaded: ${_chatService.currentSequence?.name}');
+      
+      // Get messages starting from the specified message ID
+      final nextMessages = _chatService.getMessagesAfterChoice(startMessageId);
+      debugPrint('SEQUENCE_SWITCH: Found ${nextMessages.length} messages to display');
+      
+      // Display the new sequence messages
+      await _displayMessages(nextMessages);
+      
+      notifyListeners();
+      debugPrint('SEQUENCE_SWITCH: Sequence switch completed successfully');
+    } catch (e) {
+      debugPrint('SEQUENCE_SWITCH_ERROR: Error switching sequence from choice: $e');
+    }
   }
 
   /// Handle user text input submission

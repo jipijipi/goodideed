@@ -10,7 +10,12 @@ class AppConstants {
   // Chat Configuration
   static const int defaultMessageDelay = 1000; // milliseconds
   static const String defaultPlaceholderText = 'Type your answer...';
-  static const String chatScriptAssetPath = 'assets/chat_script.json';
+  static const String chatScriptAssetPath = 'assets/chat_script.json'; // Legacy support
+  
+  // Chat Sequences
+  static const String sequencesAssetPath = 'assets/sequences/';
+  static const String defaultSequenceId = 'onboarding';
+  static const List<String> availableSequences = ['onboarding', 'tutorial', 'support'];
   
   // User Response ID Offset
   static const int userResponseIdOffset = 1000;

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
+import '../../models/chat_sequence.dart';
 import '../../services/chat_service.dart';
 import '../../services/user_data_service.dart';
 import '../../services/text_templating_service.dart';
@@ -21,6 +22,7 @@ class ChatStateManager extends ChangeNotifier {
   ChatMessage? _currentTextInputMessage;
   bool _isPanelVisible = false;
   bool _disposed = false;
+  String _currentSequenceId = AppConstants.defaultSequenceId;
 
   // Controllers
   final ScrollController _scrollController = ScrollController();
@@ -32,6 +34,8 @@ class ChatStateManager extends ChangeNotifier {
   bool get isPanelVisible => _isPanelVisible;
   ScrollController get scrollController => _scrollController;
   UserDataService get userDataService => _userDataService;
+  String get currentSequenceId => _currentSequenceId;
+  ChatSequence? get currentSequence => _chatService.currentSequence;
 
   /// Initialize the chat state manager
   Future<void> initialize() async {
@@ -52,7 +56,7 @@ class ChatStateManager extends ChangeNotifier {
   /// Load chat script and display initial messages
   Future<void> _loadAndDisplayMessages() async {
     try {
-      await _chatService.loadChatScript();
+      await _chatService.getInitialMessages(sequenceId: _currentSequenceId);
       if (!_disposed) {
         await _simulateInitialChat();
       }
@@ -64,7 +68,7 @@ class ChatStateManager extends ChangeNotifier {
 
   /// Start the initial chat conversation
   Future<void> _simulateInitialChat() async {
-    final initialMessages = await _chatService.getInitialMessages();
+    final initialMessages = await _chatService.getInitialMessages(sequenceId: _currentSequenceId);
     await _displayMessages(initialMessages);
   }
 
@@ -189,6 +193,35 @@ class ChatStateManager extends ChangeNotifier {
   void togglePanel() {
     _isPanelVisible = !_isPanelVisible;
     notifyListeners();
+  }
+
+  /// Switch to a different chat sequence
+  Future<void> switchSequence(String sequenceId) async {
+    if (_disposed || sequenceId == _currentSequenceId) return;
+    
+    try {
+      // Clear current state
+      _clearActiveTimers();
+      _displayedMessages.clear();
+      _currentTextInputMessage = null;
+      _currentSequenceId = sequenceId;
+      
+      // Load new sequence
+      await _chatService.getInitialMessages(sequenceId: sequenceId);
+      await _simulateInitialChat();
+      
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error switching sequence: $e');
+    }
+  }
+
+  /// Clear all active timers
+  void _clearActiveTimers() {
+    for (final timer in _activeTimers) {
+      timer.cancel();
+    }
+    _activeTimers.clear();
   }
 
   /// Dispose of resources and cancel timers

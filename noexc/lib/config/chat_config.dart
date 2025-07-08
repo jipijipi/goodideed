@@ -21,6 +21,14 @@ class ChatConfig {
   static const String emptyDataMessage = 'No information stored yet';
   static const String toggleThemeTooltip = 'Toggle Theme';
   static const String userInfoTooltip = 'My Information';
+  static const String sequenceSelectorTooltip = 'Choose Chat Sequence';
+  
+  // Sequence Names
+  static const Map<String, String> sequenceDisplayNames = {
+    'onboarding': 'Welcome & Setup',
+    'tutorial': 'App Tutorial',
+    'support': 'Get Help',
+  };
   
   // Private constructor to prevent instantiation
   ChatConfig._();

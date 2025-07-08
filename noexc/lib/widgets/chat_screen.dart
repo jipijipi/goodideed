@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/chat_message.dart';
-import '../models/choice.dart';
 import 'chat_screen/chat_state_manager.dart';
 import 'chat_screen/chat_app_bar.dart';
 import 'chat_screen/chat_message_list.dart';
@@ -55,6 +53,8 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: ChatAppBar(
         onThemeToggle: widget.onThemeToggle,
         onPanelToggle: _stateManager.togglePanel,
+        currentSequenceId: _stateManager.currentSequenceId,
+        onSequenceChanged: _stateManager.switchSequence,
       ),
       body: Stack(
         children: [

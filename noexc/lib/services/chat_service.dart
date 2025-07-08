@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/chat_message.dart';
+import '../models/chat_sequence.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 import 'user_data_service.dart';
 import 'text_templating_service.dart';
 
 class ChatService {
-  List<ChatMessage> _allMessages = [];
+  ChatSequence? _currentSequence;
   Map<int, ChatMessage> _messageMap = {};
   final UserDataService? _userDataService;
   final TextTemplatingService? _templatingService;
@@ -18,23 +19,29 @@ class ChatService {
   }) : _userDataService = userDataService,
        _templatingService = templatingService;
 
-  Future<List<ChatMessage>> loadChatScript() async {
+  /// Load a specific chat sequence by ID
+  Future<ChatSequence> loadSequence(String sequenceId) async {
     try {
-      final String jsonString = await rootBundle.loadString(AppConstants.chatScriptAssetPath);
+      final String assetPath = 'assets/sequences/$sequenceId.json';
+      final String jsonString = await rootBundle.loadString(assetPath);
       final Map<String, dynamic> jsonData = json.decode(jsonString);
-      final List<dynamic> messagesJson = jsonData['messages'];
       
-      _allMessages = messagesJson
-          .map((messageJson) => ChatMessage.fromJson(messageJson))
-          .toList();
+      _currentSequence = ChatSequence.fromJson(jsonData);
       
       // Build message map for quick lookup
-      _messageMap = {for (var msg in _allMessages) msg.id: msg};
+      _messageMap = {for (var msg in _currentSequence!.messages) msg.id: msg};
       
-      return _allMessages;
+      return _currentSequence!;
     } catch (e) {
-      throw Exception('${ChatConfig.chatScriptLoadError}: $e');
+      throw Exception('${ChatConfig.chatScriptLoadError} for sequence $sequenceId: $e');
     }
+  }
+
+  /// Load the default chat script (for backward compatibility)
+  Future<List<ChatMessage>> loadChatScript() async {
+    // Default to onboarding sequence for backward compatibility
+    final sequence = await loadSequence('onboarding');
+    return sequence.messages;
   }
 
   bool hasMessage(int id) {
@@ -45,13 +52,17 @@ class ChatService {
     return _messageMap[id];
   }
 
-  Future<List<ChatMessage>> getInitialMessages() async {
-    if (_allMessages.isEmpty) {
-      await loadChatScript();
+  /// Get initial messages for a specific sequence
+  Future<List<ChatMessage>> getInitialMessages({String sequenceId = 'onboarding'}) async {
+    if (_currentSequence == null || _currentSequence!.sequenceId != sequenceId) {
+      await loadSequence(sequenceId);
     }
     
     return _getMessagesFromId(ChatConfig.initialMessageId);
   }
+
+  /// Get the current loaded sequence
+  ChatSequence? get currentSequence => _currentSequence;
 
   List<ChatMessage> getMessagesAfterChoice(int startId) {
     return _getMessagesFromId(startId);

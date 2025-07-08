@@ -1,0 +1,131 @@
+{
+  "sequenceId": "onboarding",
+  "name": "User Onboarding",
+  "description": "Welcome new users and collect basic information",
+  "messages": [
+    {
+      "id": 1,
+      "text": "Welcome to our app! I'm here to help you get started.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "text": "Let's begin by getting to know you better. What's your name?",
+      "sender": "bot",
+      "delay": 1500,
+      "isTextInput": true,
+      "storeKey": "user.name",
+      "placeholderText": "Enter your full name...",
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "text": "Nice to meet you, {user.name|there}! What brings you to our app today?",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 4
+    },
+    {
+      "id": 4,
+      "text": "CHOICES",
+      "sender": "user",
+      "isChoice": true,
+      "storeKey": "user.primary_interest",
+      "choices": [
+        {"text": "Exploring features", "nextMessageId": 10},
+        {"text": "Getting help", "nextMessageId": 20},
+        {"text": "Just browsing", "nextMessageId": 30}
+      ]
+    },
+    {
+      "id": 10,
+      "text": "Excellent! I'll show you around the key features.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 11
+    },
+    {
+      "id": 11,
+      "text": "Our app offers chat functionality, user management, and personalized experiences.",
+      "sender": "bot",
+      "delay": 2000,
+      "nextMessageId": 12
+    },
+    {
+      "id": 12,
+      "text": "Would you like to set up your preferences now?",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 13
+    },
+    {
+      "id": 13,
+      "text": "CHOICES",
+      "sender": "user",
+      "isChoice": true,
+      "choices": [
+        {"text": "Yes, let's do it", "nextMessageId": 40},
+        {"text": "Maybe later", "nextMessageId": 50}
+      ]
+    },
+    {
+      "id": 20,
+      "text": "I'm here to help! You can always reach out through our support system.",
+      "sender": "bot",
+      "delay": 1500,
+      "nextMessageId": 21
+    },
+    {
+      "id": 21,
+      "text": "For now, let me show you the basics to get you started.",
+      "sender": "bot",
+      "delay": 1500,
+      "nextMessageId": 50
+    },
+    {
+      "id": 30,
+      "text": "That's perfectly fine! Feel free to explore at your own pace.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 31
+    },
+    {
+      "id": 31,
+      "text": "If you need any help, just ask. I'm always here to assist you, {user.name|friend}!",
+      "sender": "bot",
+      "delay": 2000
+    },
+    {
+      "id": 40,
+      "text": "Great! What's your preferred theme?",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 41
+    },
+    {
+      "id": 41,
+      "text": "CHOICES",
+      "sender": "user",
+      "isChoice": true,
+      "storeKey": "user.theme_preference",
+      "choices": [
+        {"text": "Light theme", "nextMessageId": 42},
+        {"text": "Dark theme", "nextMessageId": 42}
+      ]
+    },
+    {
+      "id": 42,
+      "text": "Perfect! Your preferences have been saved. Welcome aboard, {user.name}!",
+      "sender": "bot",
+      "delay": 1500
+    },
+    {
+      "id": 50,
+      "text": "You're all set! Enjoy exploring the app, {user.name|friend}.",
+      "sender": "bot",
+      "delay": 1000
+    }
+  ]
+}

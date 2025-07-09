@@ -17,10 +17,10 @@ class ChatConfig {
   
   // UI Labels
   static const String chatScreenTitle = 'Chat';
-  static const String userInfoPanelTitle = 'My Information';
-  static const String emptyDataMessage = 'No information stored yet';
+  static const String userInfoPanelTitle = 'Debug Panel';
+  static const String emptyDataMessage = 'No debug data available';
   static const String toggleThemeTooltip = 'Toggle Theme';
-  static const String userInfoTooltip = 'My Information';
+  static const String userInfoTooltip = 'Debug Panel';
   static const String sequenceSelectorTooltip = 'Choose Chat Sequence';
   
   // Sequence Names

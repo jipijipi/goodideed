@@ -3,13 +3,15 @@ import '../../services/user_data_service.dart';
 import '../../constants/ui_constants.dart';
 import '../user_variables_panel.dart';
 
-/// A widget that manages the user variables panel overlay
+/// A widget that manages the debug panel overlay
 /// Handles panel visibility, animations, and user interactions
 class UserPanelOverlay extends StatelessWidget {
   final bool isVisible;
   final VoidCallback onToggle;
   final UserDataService userDataService;
   final GlobalKey<UserVariablesPanelState>? panelKey;
+  final String? currentSequenceId;
+  final int? totalMessages;
 
   const UserPanelOverlay({
     super.key,
@@ -17,6 +19,8 @@ class UserPanelOverlay extends StatelessWidget {
     required this.onToggle,
     required this.userDataService,
     this.panelKey,
+    this.currentSequenceId,
+    this.totalMessages,
   });
 
   @override
@@ -57,6 +61,8 @@ class UserPanelOverlay extends StatelessWidget {
         child: UserVariablesPanel(
           key: panelKey,
           userDataService: userDataService,
+          currentSequenceId: currentSequenceId,
+          totalMessages: totalMessages,
         ),
       ),
     );

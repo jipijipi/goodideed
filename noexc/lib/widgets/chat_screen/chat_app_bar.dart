@@ -48,10 +48,10 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  /// Builds the user info panel button
+  /// Builds the debug panel button
   Widget _buildUserInfoButton() {
     return IconButton(
-      icon: const Icon(Icons.person),
+      icon: const Icon(Icons.bug_report),
       onPressed: onPanelToggle,
       tooltip: ChatConfig.userInfoTooltip,
     );

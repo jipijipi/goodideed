@@ -21,10 +21,10 @@ void main() {
         ),
       );
 
-      expect(find.text('My Information'), findsOneWidget);
+      expect(find.text('Debug Panel'), findsOneWidget);
     });
 
-    testWidgets('shows empty state initially', (WidgetTester tester) async {
+    testWidgets('shows debug information initially', (WidgetTester tester) async {
       final userDataService = UserDataService();
       
       await tester.pumpWidget(
@@ -39,7 +39,9 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
       
-      expect(find.text('No information stored yet'), findsOneWidget);
+      // Should show debug information section
+      expect(find.text('Debug Information'), findsOneWidget);
+      expect(find.text('Flutter Framework'), findsOneWidget);
     });
 
     testWidgets('can be instantiated with required parameters', (WidgetTester tester) async {

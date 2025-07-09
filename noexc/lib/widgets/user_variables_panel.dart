@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import '../services/user_data_service.dart';
+import '../services/chat_service.dart';
 import '../constants/ui_constants.dart';
 import '../config/chat_config.dart';
 
 class UserVariablesPanel extends StatefulWidget {
   final UserDataService userDataService;
+  final ChatService? chatService;
+  final String? currentSequenceId;
+  final int? totalMessages;
 
   const UserVariablesPanel({
     super.key,
     required this.userDataService,
+    this.chatService,
+    this.currentSequenceId,
+    this.totalMessages,
   });
 
   @override
@@ -17,6 +24,7 @@ class UserVariablesPanel extends StatefulWidget {
 
 class UserVariablesPanelState extends State<UserVariablesPanel> {
   Map<String, dynamic> _userData = {};
+  Map<String, dynamic> _debugData = {};
   bool _isLoading = true;
 
   @override
@@ -32,9 +40,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
 
     try {
       final data = await widget.userDataService.getAllData();
+      final debugInfo = _getDebugInfo();
+      
       if (mounted) {
         setState(() {
           _userData = data;
+          _debugData = debugInfo;
           _isLoading = false;
         });
       }
@@ -42,10 +53,35 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       if (mounted) {
         setState(() {
           _userData = {};
+          _debugData = {};
           _isLoading = false;
         });
       }
     }
+  }
+
+  Map<String, dynamic> _getDebugInfo() {
+    final debugInfo = <String, dynamic>{};
+    
+    // Chat System Info
+    if (widget.currentSequenceId != null) {
+      debugInfo['Current Sequence'] = widget.currentSequenceId!;
+    }
+    
+    if (widget.chatService?.currentSequence != null) {
+      debugInfo['Sequence Name'] = widget.chatService!.currentSequence!.name;
+      debugInfo['Sequence Description'] = widget.chatService!.currentSequence!.description;
+    }
+    
+    if (widget.totalMessages != null) {
+      debugInfo['Total Messages'] = widget.totalMessages!;
+    }
+    
+    // App Info
+    debugInfo['Flutter Framework'] = 'Flutter 3.29.3';
+    debugInfo['Dart SDK'] = '^3.7.2';
+    
+    return debugInfo;
   }
 
   void refreshData() {
@@ -57,6 +93,55 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       return '[${value.join(', ')}]';
     }
     return value.toString();
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDataRow(MapEntry<String, dynamic> entry) {
+    return Padding(
+      padding: UIConstants.variableItemPadding,
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text(
+                  entry.key,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              ),
+              const SizedBox(width: UIConstants.variableKeySpacing),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  _formatValue(entry.value),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const Divider(height: 16),
+        ],
+      ),
+    );
   }
 
   @override
@@ -104,7 +189,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                     padding: UIConstants.panelEmptyStatePadding,
                     child: CircularProgressIndicator(),
                   )
-                : _userData.isEmpty
+                : _debugData.isEmpty && _userData.isEmpty
                     ? Padding(
                         padding: UIConstants.panelEmptyStatePadding,
                         child: Text(
@@ -115,42 +200,23 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                           textAlign: TextAlign.center,
                         ),
                       )
-                    : ListView.separated(
+                    : ListView(
                         shrinkWrap: true,
                         padding: UIConstants.panelContentPadding,
-                        itemCount: _userData.length,
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemBuilder: (context, index) {
-                          final entry = _userData.entries.elementAt(index);
-                          return Padding(
-                            padding: UIConstants.variableItemPadding,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    entry.key,
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: Theme.of(context).colorScheme.onSurface,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: UIConstants.variableKeySpacing),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    _formatValue(entry.value),
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                        children: [
+                          // Debug Information Section
+                          if (_debugData.isNotEmpty) ...[
+                            _buildSectionHeader('Debug Information'),
+                            ..._debugData.entries.map((entry) => _buildDataRow(entry)),
+                            const SizedBox(height: 16),
+                          ],
+                          
+                          // User Data Section
+                          if (_userData.isNotEmpty) ...[
+                            _buildSectionHeader('User Data'),
+                            ..._userData.entries.map((entry) => _buildDataRow(entry)),
+                          ],
+                        ],
                       ),
           ),
         ],

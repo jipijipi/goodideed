@@ -37,8 +37,8 @@ void main() {
       // Wait for async loading to complete
       await tester.pump();
       
-      // Verify content area exists (should show ListView)
-      expect(find.byType(ListView), findsOneWidget);
+      // Verify content area exists (should show chat messages)
+      expect(find.byType(ListView), findsWidgets);
     });
 
     testWidgets('should display text input field for text input messages', (WidgetTester tester) async {
@@ -53,7 +53,7 @@ void main() {
       await tester.pump();
       
       // For now, just verify the screen loads without errors
-      expect(find.byType(ListView), findsOneWidget);
+      expect(find.byType(ListView), findsWidgets);
     });
 
     testWidgets('should handle text input submission', (WidgetTester tester) async {
@@ -68,7 +68,7 @@ void main() {
       await tester.pump();
       
       // For now, just verify the screen loads without errors
-      expect(find.byType(ListView), findsOneWidget);
+      expect(find.byType(ListView), findsWidgets);
     });
   });
 }

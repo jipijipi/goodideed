@@ -73,6 +73,8 @@ class _ChatScreenState extends State<ChatScreen> {
             onToggle: _stateManager.togglePanel,
             userDataService: _stateManager.userDataService,
             panelKey: _panelKey,
+            currentSequenceId: _stateManager.currentSequenceId,
+            totalMessages: _stateManager.displayedMessages.length,
           ),
         ],
       ),

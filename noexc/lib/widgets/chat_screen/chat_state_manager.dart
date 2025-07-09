@@ -313,6 +313,22 @@ class ChatStateManager extends ChangeNotifier {
     }
   }
 
+  /// Debug Control: Clear all stored user data
+  Future<void> clearAllUserData() async {
+    if (_disposed) return;
+    
+    try {
+      debugPrint('DEBUG: Clearing all user data');
+      
+      // Clear all stored user variables
+      await _userDataService.clearAllData();
+      
+      debugPrint('DEBUG: All user data cleared successfully');
+    } catch (e) {
+      debugPrint('DEBUG ERROR: Failed to clear user data: $e');
+    }
+  }
+
   /// Clear all active timers
   void _clearActiveTimers() {
     for (final timer in _activeTimers) {

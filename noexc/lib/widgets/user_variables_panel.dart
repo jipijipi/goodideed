@@ -214,8 +214,71 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
             ],
           ),
         ),
+        
+        // Second row with Clear All Data button
+        Padding(
+          padding: UIConstants.variableItemPadding,
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    // Show confirmation dialog
+                    final confirmed = await _showClearDataConfirmation();
+                    if (confirmed == true) {
+                      await widget.stateManager!.clearAllUserData();
+                      if (mounted) {
+                        // Refresh the panel to show empty user data
+                        refreshData();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('All user data cleared')),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.delete_forever, size: 16),
+                  label: const Text('Clear All Data'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
+                    foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                ),
+              ),
+              const Expanded(flex: 2, child: SizedBox()), // Take up remaining space
+            ],
+          ),
+        ),
         const SizedBox(height: 16),
       ],
+    );
+  }
+
+  Future<bool?> _showClearDataConfirmation() {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Clear All Data'),
+          content: const Text(
+            'This will permanently delete all stored user information. '
+            'This action cannot be undone.\n\nAre you sure you want to continue?'
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: const Text('Clear All'),
+            ),
+          ],
+        );
+      },
     );
   }
 

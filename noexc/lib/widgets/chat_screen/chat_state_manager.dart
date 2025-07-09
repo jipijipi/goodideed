@@ -51,6 +51,9 @@ class ChatStateManager extends ChangeNotifier {
       userDataService: _userDataService,
       templatingService: _templatingService,
     );
+    
+    // Set up callback for autoroute sequence switching
+    _chatService.setSequenceSwitchCallback(_switchToSequenceFromAutoroute);
   }
 
   /// Load chat script and display initial messages
@@ -164,12 +167,12 @@ class ChatStateManager extends ChangeNotifier {
     await _displayMessages(nextMessages);
   }
 
-  /// Switch to a different sequence from a choice selection
-  Future<void> _switchToSequenceFromChoice(String sequenceId, int startMessageId) async {
+  /// Unified sequence switching method for both choices and autoroutes
+  Future<void> _switchSequence(String sequenceId, int startMessageId, {String source = 'unknown'}) async {
     if (_disposed) return;
     
     try {
-      debugPrint('SEQUENCE_SWITCH: Starting sequence switch from choice...');
+      debugPrint('SEQUENCE_SWITCH: Starting sequence switch from $source...');
       debugPrint('SEQUENCE_SWITCH: Target sequence: $sequenceId');
       debugPrint('SEQUENCE_SWITCH: Start message ID: $startMessageId');
       
@@ -192,8 +195,18 @@ class ChatStateManager extends ChangeNotifier {
       notifyListeners();
       debugPrint('SEQUENCE_SWITCH: Sequence switch completed successfully');
     } catch (e) {
-      debugPrint('SEQUENCE_SWITCH_ERROR: Error switching sequence from choice: $e');
+      debugPrint('SEQUENCE_SWITCH_ERROR: Error switching sequence from $source: $e');
     }
+  }
+
+  /// Switch to a different sequence from a choice selection
+  Future<void> _switchToSequenceFromChoice(String sequenceId, int startMessageId) async {
+    await _switchSequence(sequenceId, startMessageId, source: 'choice');
+  }
+
+  /// Switch to a different sequence from an autoroute
+  Future<void> _switchToSequenceFromAutoroute(String sequenceId, int startMessageId) async {
+    await _switchSequence(sequenceId, startMessageId, source: 'autoroute');
   }
 
   /// Handle user text input submission

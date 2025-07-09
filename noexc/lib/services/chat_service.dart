@@ -16,6 +16,9 @@ class ChatService {
   final UserDataService? _userDataService;
   final TextTemplatingService? _templatingService;
   final ConditionEvaluator? _conditionEvaluator;
+  
+  // Callback for notifying UI about sequence changes from autoroutes
+  Future<void> Function(String sequenceId, int startMessageId)? _onSequenceSwitch;
 
   ChatService({
     UserDataService? userDataService,
@@ -25,6 +28,11 @@ class ChatService {
        _conditionEvaluator = userDataService != null 
            ? ConditionEvaluator(userDataService) 
            : null;
+
+  /// Set callback for sequence switching notifications
+  void setSequenceSwitchCallback(Future<void> Function(String sequenceId, int startMessageId) callback) {
+    _onSequenceSwitch = callback;
+  }
 
   /// Load a specific chat sequence by ID
   Future<ChatSequence> loadSequence(String sequenceId) async {
@@ -200,9 +208,18 @@ class ChatService {
   /// Execute a route condition by loading sequence or returning message ID
   Future<int?> _executeRoute(RouteCondition route) async {
     if (route.sequenceId != null) {
-      // Load new sequence and go to specified message (or first message)
-      await loadSequence(route.sequenceId!);
-      return route.nextMessageId ?? ChatConfig.initialMessageId;
+      final startMessageId = route.nextMessageId ?? ChatConfig.initialMessageId;
+      
+      // Notify UI about sequence change if callback is set
+      if (_onSequenceSwitch != null) {
+        await _onSequenceSwitch!(route.sequenceId!, startMessageId);
+        // Return null to indicate that UI will handle the continuation
+        return null;
+      } else {
+        // Fallback: Load sequence directly (for backward compatibility)
+        await loadSequence(route.sequenceId!);
+        return startMessageId;
+      }
     }
     
     // Stay in current sequence, go to specified message

@@ -30,6 +30,7 @@ class ChatConfig {
     'support': 'Get Help',
     'menu': 'Main Menu',
     'autoroute_test': 'Autoroute Test',
+    'custom_value_demo': 'Custom Value Demo',
   };
   
   // Private constructor to prevent instantiation

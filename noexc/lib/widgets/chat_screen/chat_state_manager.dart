@@ -126,7 +126,7 @@ class ChatStateManager extends ChangeNotifier {
   /// Handle user choice selection
   Future<void> onChoiceSelected(Choice choice, ChatMessage choiceMessage) async {
     // Store the user's choice if storeKey is provided
-    await _chatService.handleUserChoice(choiceMessage, choice.text);
+    await _chatService.handleUserChoice(choiceMessage, choice);
     
     // Update choice message to mark the selected choice and disable interaction
     final choiceIndex = _displayedMessages.indexOf(choiceMessage);

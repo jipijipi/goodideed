@@ -1,0 +1,94 @@
+{
+  "sequenceId": "custom_value_demo",
+  "name": "Custom Value Demo",
+  "description": "Demonstrates custom values in choice storage",
+  "messages": [
+    {
+      "id": 1,
+      "text": "Welcome! Let's test custom values. What's your experience level?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "storeKey": "experience_level",
+      "choices": [
+        {
+          "text": "I'm just getting started with this",
+          "value": "beginner",
+          "nextMessageId": 2
+        },
+        {
+          "text": "I have some experience",
+          "value": "intermediate", 
+          "nextMessageId": 2
+        },
+        {
+          "text": "I'm an expert at this",
+          "value": "expert",
+          "nextMessageId": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Great! I've stored your experience level as: {experience_level}",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "text": "Do you want notifications?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "storeKey": "notifications_enabled",
+      "choices": [
+        {
+          "text": "Yes, keep me updated!",
+          "value": true,
+          "nextMessageId": 4
+        },
+        {
+          "text": "No thanks, I prefer quiet",
+          "value": false,
+          "nextMessageId": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Perfect! Your notification preference is: {notifications_enabled}",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 5
+    },
+    {
+      "id": 5,
+      "text": "ROUTE",
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "user.experience_level == 'beginner'",
+          "sequenceId": "tutorial",
+          "nextMessageId": 1
+        },
+        {
+          "condition": "user.experience_level == 'expert'",
+          "sequenceId": "menu",
+          "nextMessageId": 1
+        },
+        {
+          "default": true,
+          "nextMessageId": 6
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Thanks for the demo! You can check the debug panel to see the clean stored values.",
+      "sender": "bot",
+      "delay": 1000
+    }
+  ]
+}

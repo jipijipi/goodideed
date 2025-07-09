@@ -4,6 +4,7 @@ import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/services/text_templating_service.dart';
 import 'package:noexc/models/chat_message.dart';
+import 'package:noexc/models/choice.dart';
 
 void main() {
   group('Enhanced ChatService', () {
@@ -87,6 +88,10 @@ void main() {
       // Arrange
       const choiceText = 'App features';
       const storeKey = 'user.interest';
+      final choice = Choice(
+        text: choiceText,
+        nextMessageId: 4,
+      );
       final choiceMessage = ChatMessage(
         id: 3,
         text: 'What interests you?',
@@ -97,7 +102,7 @@ void main() {
       );
 
       // Act
-      await chatService.handleUserChoice(choiceMessage, choiceText);
+      await chatService.handleUserChoice(choiceMessage, choice);
 
       // Assert
       final storedValue = await userDataService.getValue<String>(storeKey);

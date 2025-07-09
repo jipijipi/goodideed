@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/chat_message.dart';
 import '../models/chat_sequence.dart';
+import '../models/choice.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 import 'user_data_service.dart';
@@ -162,9 +163,11 @@ class ChatService {
   }
 
   /// Handle user choice selection and store it if storeKey is provided
-  Future<void> handleUserChoice(ChatMessage choiceMessage, String choiceText) async {
+  Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
     if (_userDataService != null && choiceMessage.storeKey != null) {
-      await _userDataService!.storeValue(choiceMessage.storeKey!, choiceText);
+      // Use custom value if provided, fallback to choice text
+      final valueToStore = selectedChoice.value ?? selectedChoice.text;
+      await _userDataService!.storeValue(choiceMessage.storeKey!, valueToStore);
     }
   }
 

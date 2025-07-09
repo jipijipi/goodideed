@@ -31,6 +31,7 @@ class UIConstants {
   static const double panelHeight = 400.0;
   static const double avatarSpacing = 12.0;
   static const double iconSpacing = 8.0;
+  static const double messageSpacing = 8.0;
   static const double variableKeySpacing = 16.0;
   
   // Icon Sizes

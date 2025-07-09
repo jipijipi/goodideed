@@ -26,16 +26,30 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     // Route to appropriate message type
     if (message.isChoice && message.choices != null) {
-      return ChoiceButtons(
-        message: message,
-        onChoiceSelected: onChoiceSelected,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildRegularBubble(context),
+          const SizedBox(height: UIConstants.messageSpacing),
+          ChoiceButtons(
+            message: message,
+            onChoiceSelected: onChoiceSelected,
+          ),
+        ],
       );
     }
     
     if (message.isTextInput && isCurrentTextInput) {
-      return TextInputBubble(
-        message: message,
-        onSubmitted: onTextSubmitted,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildRegularBubble(context),
+          const SizedBox(height: UIConstants.messageSpacing),
+          TextInputBubble(
+            message: message,
+            onSubmitted: onTextSubmitted,
+          ),
+        ],
       );
     }
     

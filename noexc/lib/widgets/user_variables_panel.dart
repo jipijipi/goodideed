@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/user_data_service.dart';
 import '../services/chat_service.dart';
 import '../constants/ui_constants.dart';
+import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 import 'chat_screen/chat_state_manager.dart';
 
@@ -154,6 +155,9 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader('Chat Controls'),
+        
+        // Sequence Selection
+        _buildSequenceSelector(),
         Padding(
           padding: UIConstants.variableItemPadding,
           child: Row(
@@ -252,6 +256,80 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  Widget _buildSequenceSelector() {
+    return Padding(
+      padding: UIConstants.variableItemPadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Current Sequence',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              border: Border.all(color: Theme.of(context).colorScheme.outline),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: widget.currentSequenceId,
+                isExpanded: true,
+                items: AppConstants.availableSequences.map((String sequenceId) {
+                  final displayName = ChatConfig.sequenceDisplayNames[sequenceId] ?? sequenceId;
+                  return DropdownMenuItem<String>(
+                    value: sequenceId,
+                    child: Row(
+                      children: [
+                        Icon(
+                          _getSequenceIcon(sequenceId),
+                          size: 20,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(displayName),
+                      ],
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newSequenceId) {
+                  if (newSequenceId != null && newSequenceId != widget.currentSequenceId) {
+                    widget.stateManager?.switchSequence(newSequenceId);
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Switched to $newSequenceId sequence')),
+                      );
+                    }
+                  }
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  IconData _getSequenceIcon(String sequenceId) {
+    switch (sequenceId) {
+      case 'onboarding':
+        return Icons.waving_hand;
+      case 'tutorial':
+        return Icons.school;
+      case 'support':
+        return Icons.help_outline;
+      default:
+        return Icons.chat;
+    }
   }
 
   Future<bool?> _showClearDataConfirmation() {

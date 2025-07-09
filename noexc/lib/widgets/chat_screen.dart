@@ -53,8 +53,6 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: ChatAppBar(
         onThemeToggle: widget.onThemeToggle,
         onPanelToggle: _stateManager.togglePanel,
-        currentSequenceId: _stateManager.currentSequenceId,
-        onSequenceChanged: _stateManager.switchSequence,
       ),
       body: Stack(
         children: [

@@ -12,6 +12,7 @@ class UserPanelOverlay extends StatelessWidget {
   final GlobalKey<UserVariablesPanelState>? panelKey;
   final String? currentSequenceId;
   final int? totalMessages;
+  final dynamic stateManager; // ChatStateManager
 
   const UserPanelOverlay({
     super.key,
@@ -21,6 +22,7 @@ class UserPanelOverlay extends StatelessWidget {
     this.panelKey,
     this.currentSequenceId,
     this.totalMessages,
+    this.stateManager,
   });
 
   @override
@@ -63,6 +65,7 @@ class UserPanelOverlay extends StatelessWidget {
           userDataService: userDataService,
           currentSequenceId: currentSequenceId,
           totalMessages: totalMessages,
+          stateManager: stateManager,
         ),
       ),
     );

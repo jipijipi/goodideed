@@ -75,6 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
             panelKey: _panelKey,
             currentSequenceId: _stateManager.currentSequenceId,
             totalMessages: _stateManager.displayedMessages.length,
+            stateManager: _stateManager,
           ),
         ],
       ),

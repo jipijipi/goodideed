@@ -3,12 +3,14 @@ import '../services/user_data_service.dart';
 import '../services/chat_service.dart';
 import '../constants/ui_constants.dart';
 import '../config/chat_config.dart';
+import 'chat_screen/chat_state_manager.dart';
 
 class UserVariablesPanel extends StatefulWidget {
   final UserDataService userDataService;
   final ChatService? chatService;
   final String? currentSequenceId;
   final int? totalMessages;
+  final ChatStateManager? stateManager;
 
   const UserVariablesPanel({
     super.key,
@@ -16,6 +18,7 @@ class UserVariablesPanel extends StatefulWidget {
     this.chatService,
     this.currentSequenceId,
     this.totalMessages,
+    this.stateManager,
   });
 
   @override
@@ -144,6 +147,78 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
     );
   }
 
+  Widget _buildChatControls() {
+    if (widget.stateManager == null) return const SizedBox.shrink();
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionHeader('Chat Controls'),
+        Padding(
+          padding: UIConstants.variableItemPadding,
+          child: Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await widget.stateManager!.resetChat();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Chat reset successfully')),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.refresh, size: 16),
+                  label: const Text('Reset'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    widget.stateManager!.clearMessages();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Messages cleared')),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.clear_all, size: 16),
+                  label: const Text('Clear'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await widget.stateManager!.reloadSequence();
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Sequence reloaded')),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.file_download, size: 16),
+                  label: const Text('Reload'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -204,6 +279,9 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                         shrinkWrap: true,
                         padding: UIConstants.panelContentPadding,
                         children: [
+                          // Chat Controls Section
+                          _buildChatControls(),
+                          
                           // Debug Information Section
                           if (_debugData.isNotEmpty) ...[
                             _buildSectionHeader('Debug Information'),

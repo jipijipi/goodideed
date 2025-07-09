@@ -256,6 +256,63 @@ class ChatStateManager extends ChangeNotifier {
     }
   }
 
+  /// Debug Control: Reset current chat sequence
+  Future<void> resetChat() async {
+    if (_disposed) return;
+    
+    try {
+      debugPrint('DEBUG: Resetting chat sequence: $_currentSequenceId');
+      
+      // Clear current state
+      _clearActiveTimers();
+      _displayedMessages.clear();
+      _currentTextInputMessage = null;
+      
+      // Reload current sequence from beginning
+      await _chatService.getInitialMessages(sequenceId: _currentSequenceId);
+      await _simulateInitialChat();
+      
+      notifyListeners();
+      debugPrint('DEBUG: Chat reset completed');
+    } catch (e) {
+      debugPrint('DEBUG ERROR: Failed to reset chat: $e');
+    }
+  }
+
+  /// Debug Control: Clear displayed messages only
+  void clearMessages() {
+    if (_disposed) return;
+    
+    debugPrint('DEBUG: Clearing displayed messages');
+    
+    // Clear timers and messages but keep sequence loaded
+    _clearActiveTimers();
+    _displayedMessages.clear();
+    _currentTextInputMessage = null;
+    
+    notifyListeners();
+    debugPrint('DEBUG: Messages cleared');
+  }
+
+  /// Debug Control: Reload current sequence from file
+  Future<void> reloadSequence() async {
+    if (_disposed) return;
+    
+    try {
+      debugPrint('DEBUG: Reloading sequence: $_currentSequenceId');
+      
+      // Force reload sequence from JSON file
+      await _chatService.loadSequence(_currentSequenceId);
+      
+      // Reset chat with newly loaded sequence
+      await resetChat();
+      
+      debugPrint('DEBUG: Sequence reloaded successfully');
+    } catch (e) {
+      debugPrint('DEBUG ERROR: Failed to reload sequence: $e');
+    }
+  }
+
   /// Clear all active timers
   void _clearActiveTimers() {
     for (final timer in _activeTimers) {

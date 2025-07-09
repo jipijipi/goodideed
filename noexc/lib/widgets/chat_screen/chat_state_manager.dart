@@ -160,7 +160,7 @@ class ChatStateManager extends ChangeNotifier {
 
   /// Continue conversation after choice selection
   Future<void> _continueWithChoice(int nextMessageId) async {
-    final nextMessages = _chatService.getMessagesAfterChoice(nextMessageId);
+    final nextMessages = await _chatService.getMessagesAfterChoice(nextMessageId);
     await _displayMessages(nextMessages);
   }
 
@@ -183,7 +183,7 @@ class ChatStateManager extends ChangeNotifier {
       debugPrint('SEQUENCE_SWITCH: New sequence loaded: ${_chatService.currentSequence?.name}');
       
       // Get messages starting from the specified message ID
-      final nextMessages = _chatService.getMessagesAfterChoice(startMessageId);
+      final nextMessages = await _chatService.getMessagesAfterChoice(startMessageId);
       debugPrint('SEQUENCE_SWITCH: Found ${nextMessages.length} messages to display');
       
       // Display the new sequence messages
@@ -225,7 +225,7 @@ class ChatStateManager extends ChangeNotifier {
 
   /// Continue conversation after text input
   Future<void> _continueWithTextInput(int nextMessageId, String userInput) async {
-    final nextMessages = _chatService.getMessagesAfterTextInput(nextMessageId, userInput);
+    final nextMessages = await _chatService.getMessagesAfterTextInput(nextMessageId, userInput);
     await _displayMessages(nextMessages);
   }
 

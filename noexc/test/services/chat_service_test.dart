@@ -104,7 +104,7 @@ void main() {
       await chatService.loadChatScript();
 
       // Act
-      final messages = chatService.getMessagesAfterChoice(3);
+      final messages = await chatService.getMessagesAfterChoice(3);
 
       // Assert
       expect(messages, isNotNull);
@@ -116,7 +116,7 @@ void main() {
       await chatService.loadChatScript();
 
       // Act
-      final messages = chatService.getMessagesAfterTextInput(100, 'John Doe');
+      final messages = await chatService.getMessagesAfterTextInput(100, 'John Doe');
 
       // Assert
       expect(messages, isNotNull);

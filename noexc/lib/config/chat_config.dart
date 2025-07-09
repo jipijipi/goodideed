@@ -28,6 +28,8 @@ class ChatConfig {
     'onboarding': 'Welcome & Setup',
     'tutorial': 'App Tutorial',
     'support': 'Get Help',
+    'menu': 'Main Menu',
+    'autoroute_test': 'Autoroute Test',
   };
   
   // Private constructor to prevent instantiation

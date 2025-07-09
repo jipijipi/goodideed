@@ -6,18 +6,24 @@ import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 import 'user_data_service.dart';
 import 'text_templating_service.dart';
+import 'condition_evaluator.dart';
+import '../models/route_condition.dart';
 
 class ChatService {
   ChatSequence? _currentSequence;
   Map<int, ChatMessage> _messageMap = {};
   final UserDataService? _userDataService;
   final TextTemplatingService? _templatingService;
+  final ConditionEvaluator? _conditionEvaluator;
 
   ChatService({
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
   }) : _userDataService = userDataService,
-       _templatingService = templatingService;
+       _templatingService = templatingService,
+       _conditionEvaluator = userDataService != null 
+           ? ConditionEvaluator(userDataService) 
+           : null;
 
   /// Load a specific chat sequence by ID
   Future<ChatSequence> loadSequence(String sequenceId) async {
@@ -58,18 +64,18 @@ class ChatService {
       await loadSequence(sequenceId);
     }
     
-    return _getMessagesFromId(ChatConfig.initialMessageId);
+    return await _getMessagesFromId(ChatConfig.initialMessageId);
   }
 
   /// Get the current loaded sequence
   ChatSequence? get currentSequence => _currentSequence;
 
-  List<ChatMessage> getMessagesAfterChoice(int startId) {
-    return _getMessagesFromId(startId);
+  Future<List<ChatMessage>> getMessagesAfterChoice(int startId) async {
+    return await _getMessagesFromId(startId);
   }
 
-  List<ChatMessage> getMessagesAfterTextInput(int nextMessageId, String userInput) {
-    return _getMessagesFromId(nextMessageId);
+  Future<List<ChatMessage>> getMessagesAfterTextInput(int nextMessageId, String userInput) async {
+    return await _getMessagesFromId(nextMessageId);
   }
 
   ChatMessage createUserResponseMessage(int id, String userInput) {
@@ -81,12 +87,19 @@ class ChatService {
     );
   }
 
-  List<ChatMessage> _getMessagesFromId(int startId) {
+  Future<List<ChatMessage>> _getMessagesFromId(int startId) async {
     List<ChatMessage> messages = [];
     int? currentId = startId;
     
     while (currentId != null && _messageMap.containsKey(currentId)) {
       ChatMessage msg = _messageMap[currentId]!;
+      
+      // Handle autoroute messages
+      if (msg.isAutoRoute) {
+        currentId = await _processAutoRoute(msg);
+        continue; // Skip adding to display
+      }
+      
       messages.add(msg);
       
       // Stop at choice messages or text input messages - let UI handle the interaction
@@ -153,5 +166,43 @@ class ChatService {
     if (_userDataService != null && choiceMessage.storeKey != null) {
       await _userDataService!.storeValue(choiceMessage.storeKey!, choiceText);
     }
+  }
+
+  /// Process an autoroute message and return the next message ID
+  Future<int?> _processAutoRoute(ChatMessage routeMessage) async {
+    if (_conditionEvaluator == null || routeMessage.routes == null) {
+      return routeMessage.nextMessageId;
+    }
+
+    // Evaluate conditions in order
+    for (final route in routeMessage.routes!) {
+      // Check if this is a default route (no condition)
+      if (route.isDefault) {
+        return await _executeRoute(route);
+      }
+      
+      // Evaluate condition if present
+      if (route.condition != null) {
+        final matches = await _conditionEvaluator!.evaluate(route.condition!);
+        if (matches) {
+          return await _executeRoute(route);
+        }
+      }
+    }
+    
+    // If no routes matched, use the message's nextMessageId
+    return routeMessage.nextMessageId;
+  }
+
+  /// Execute a route condition by loading sequence or returning message ID
+  Future<int?> _executeRoute(RouteCondition route) async {
+    if (route.sequenceId != null) {
+      // Load new sequence and go to specified message (or first message)
+      await loadSequence(route.sequenceId!);
+      return route.nextMessageId ?? ChatConfig.initialMessageId;
+    }
+    
+    // Stay in current sequence, go to specified message
+    return route.nextMessageId;
   }
 }

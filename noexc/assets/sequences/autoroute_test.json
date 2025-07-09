@@ -1,0 +1,57 @@
+{
+  "sequenceId": "autoroute_test",
+  "name": "Autoroute Test",
+  "description": "Test sequence demonstrating conditional routing",
+  "messages": [
+    {
+      "id": 1,
+      "text": "Welcome! Let's test autorouting. What's your name?",
+      "sender": "bot",
+      "delay": 1000,
+      "isTextInput": true,
+      "storeKey": "name",
+      "placeholderText": "Enter your name...",
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "text": "Nice to meet you, {name}! Are you a new user or returning user?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "storeKey": "user_type",
+      "choices": [
+        {"text": "New user", "nextMessageId": 3},
+        {"text": "Returning user", "nextMessageId": 3}
+      ]
+    },
+    {
+      "id": 3,
+      "text": "ROUTE",
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "user.name == 'we'",
+          "sequenceId": "onboarding",
+          "nextMessageId": 1
+        },
+        {
+          "condition": "user.user_type == 'Returning user'",
+          "sequenceId": "menu",
+          "nextMessageId": 1
+        },
+        {
+          "default": true,
+          "nextMessageId": 4
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "text": "Something went wrong with routing. This is the fallback message.",
+      "sender": "bot",
+      "delay": 1000
+    }
+  ]
+}

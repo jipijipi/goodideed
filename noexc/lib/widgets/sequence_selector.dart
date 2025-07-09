@@ -69,6 +69,10 @@ class SequenceSelector extends StatelessWidget {
         return Icons.school;
       case 'support':
         return Icons.help_outline;
+      case 'menu':
+        return Icons.menu;
+      case 'autoroute_test':
+        return Icons.alt_route;
       default:
         return Icons.chat;
     }

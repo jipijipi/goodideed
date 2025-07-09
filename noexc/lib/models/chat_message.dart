@@ -1,4 +1,5 @@
 import 'choice.dart';
+import 'route_condition.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 
@@ -14,6 +15,8 @@ class ChatMessage {
   final String? storeKey;
   final String placeholderText;
   final String? selectedChoiceText;
+  final bool isAutoRoute;
+  final List<RouteCondition>? routes;
 
   ChatMessage({
     required this.id,
@@ -27,6 +30,8 @@ class ChatMessage {
     this.storeKey,
     this.placeholderText = AppConstants.defaultPlaceholderText,
     this.selectedChoiceText,
+    this.isAutoRoute = false,
+    this.routes,
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -34,6 +39,13 @@ class ChatMessage {
     if (json['choices'] != null) {
       choices = (json['choices'] as List)
           .map((choiceJson) => Choice.fromJson(choiceJson))
+          .toList();
+    }
+
+    List<RouteCondition>? routes;
+    if (json['routes'] != null) {
+      routes = (json['routes'] as List)
+          .map((routeJson) => RouteCondition.fromJson(routeJson))
           .toList();
     }
 
@@ -49,6 +61,8 @@ class ChatMessage {
       storeKey: json['storeKey'] as String?,
       placeholderText: json['placeholderText'] as String? ?? AppConstants.defaultPlaceholderText,
       selectedChoiceText: json['selectedChoiceText'] as String?,
+      isAutoRoute: json['isAutoRoute'] as bool? ?? false,
+      routes: routes,
     );
   }
 
@@ -86,6 +100,14 @@ class ChatMessage {
 
     if (selectedChoiceText != null) {
       json['selectedChoiceText'] = selectedChoiceText!;
+    }
+
+    if (isAutoRoute) {
+      json['isAutoRoute'] = isAutoRoute;
+    }
+
+    if (routes != null) {
+      json['routes'] = routes!.map((route) => route.toJson()).toList();
     }
 
     return json;

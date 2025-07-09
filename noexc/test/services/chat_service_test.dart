@@ -22,7 +22,7 @@ void main() {
       // Assert
       expect(messages, isA<List<ChatMessage>>());
       expect(messages.isNotEmpty, true);
-      expect(messages.first.text, 'Hello! Welcome to the app!');
+      expect(messages.first.text, 'Welcome to our app! I\'m here to help you get started.');
     });
 
     test('should return messages in correct order', () async {
@@ -30,7 +30,7 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      expect(messages.length, 23); // Updated for new JSON structure with text input messages
+      expect(messages.length, 15); // Updated for onboarding sequence
       expect(messages[0].id, 1);
       expect(messages[1].id, 2);
       expect(messages[2].id, 3);
@@ -41,9 +41,9 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      expect(messages[0].sender, 'bot');   // "Hello! Welcome to the app!"
-      expect(messages[1].sender, 'bot');   // "What would you like to learn about?"
-      expect(messages[2].sender, 'user');  // Choice message
+      expect(messages[0].sender, 'bot');   // "Welcome to our app! I'm here to help you get started."
+      expect(messages[1].sender, 'bot');   // "Let's begin by getting to know you better. What's your name?"
+      expect(messages[2].sender, 'bot');   // "Nice to meet you, {user.name|there}! What brings you to our app today?"
     });
 
     test('should load choice messages correctly', () async {
@@ -55,7 +55,7 @@ void main() {
       expect(choiceMessage.isChoice, true);
       expect(choiceMessage.choices, isNotNull);
       expect(choiceMessage.choices!.length, 3);
-      expect(choiceMessage.choices![0].text, 'App features');
+      expect(choiceMessage.choices![0].text, 'Exploring features');
       expect(choiceMessage.choices![0].nextMessageId, 10);
     });
 
@@ -77,7 +77,7 @@ void main() {
       final message = chatService.getMessageById(1);
       expect(message, isNotNull);
       expect(message!.id, 1);
-      expect(message.text, 'Hello! Welcome to the app!');
+      expect(message.text, 'Welcome to our app! I\'m here to help you get started.');
     });
 
     test('should return null for non-existent message id', () async {

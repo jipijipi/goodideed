@@ -32,6 +32,7 @@ class ChatConfig {
     'autoroute_test': 'Autoroute Test',
     'custom_value_demo': 'Custom Value Demo',
     'comparison_demo': 'Comparison Operators Demo',
+    'multi_text_demo': 'Multi-Text Message Demo',
   };
   
   // Private constructor to prevent instantiation

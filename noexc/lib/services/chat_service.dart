@@ -109,7 +109,9 @@ class ChatService {
         continue; // Skip adding to display
       }
       
-      messages.add(msg);
+      // Expand multi-text messages into individual messages
+      final expandedMessages = msg.expandToIndividualMessages();
+      messages.addAll(expandedMessages);
       
       // Stop at choice messages or text input messages - let UI handle the interaction
       if (msg.isChoice || msg.isTextInput) break;
@@ -137,10 +139,22 @@ class ChatService {
 
     final processedText = await _templatingService!.processTemplate(message.text);
     
+    // Process texts array if present
+    List<String>? processedTexts;
+    if (message.texts != null) {
+      processedTexts = [];
+      for (final text in message.texts!) {
+        final processed = await _templatingService!.processTemplate(text);
+        processedTexts.add(processed);
+      }
+    }
+    
     return ChatMessage(
       id: message.id,
       text: processedText,
+      texts: processedTexts,
       delay: message.delay,
+      delays: message.delays,
       sender: message.sender,
       isChoice: message.isChoice,
       isTextInput: message.isTextInput,
@@ -148,6 +162,8 @@ class ChatService {
       nextMessageId: message.nextMessageId,
       storeKey: message.storeKey,
       placeholderText: message.placeholderText,
+      isAutoRoute: message.isAutoRoute,
+      routes: message.routes,
     );
   }
 

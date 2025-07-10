@@ -458,4 +458,196 @@ void main() {
       expect(json.containsKey('placeholderText'), false);
     });
   });
+
+  group('Multi-text functionality', () {
+    test('should create ChatMessage with texts array from JSON', () {
+      final json = {
+        'id': 1,
+        'text': 'Primary text',
+        'texts': ['First message', 'Second message', 'Third message'],
+        'delays': [1000, 1500, 2000],
+        'sender': 'bot',
+      };
+
+      final message = ChatMessage.fromJson(json);
+
+      expect(message.id, equals(1));
+      expect(message.text, equals('Primary text'));
+      expect(message.texts, equals(['First message', 'Second message', 'Third message']));
+      expect(message.delays, equals([1000, 1500, 2000]));
+      expect(message.hasMultipleTexts, isTrue);
+    });
+
+    test('should create ChatMessage without texts array from JSON', () {
+      final json = {
+        'id': 1,
+        'text': 'Single message',
+        'sender': 'bot',
+      };
+
+      final message = ChatMessage.fromJson(json);
+
+      expect(message.id, equals(1));
+      expect(message.text, equals('Single message'));
+      expect(message.texts, isNull);
+      expect(message.delays, isNull);
+      expect(message.hasMultipleTexts, isFalse);
+    });
+
+    test('should convert ChatMessage with texts array to JSON', () {
+      final message = ChatMessage(
+        id: 1,
+        text: 'Primary text',
+        texts: ['First message', 'Second message'],
+        delays: [1000, 2000],
+        sender: 'bot',
+      );
+
+      final json = message.toJson();
+
+      expect(json['id'], equals(1));
+      expect(json['text'], equals('Primary text'));
+      expect(json['texts'], equals(['First message', 'Second message']));
+      expect(json['delays'], equals([1000, 2000]));
+    });
+
+    test('should return correct allTexts for single text message', () {
+      final message = ChatMessage(
+        id: 1,
+        text: 'Single message',
+        sender: 'bot',
+      );
+
+      expect(message.allTexts, equals(['Single message']));
+    });
+
+    test('should return correct allTexts for multi-text message', () {
+      final message = ChatMessage(
+        id: 1,
+        text: 'Primary text',
+        texts: ['First message', 'Second message', 'Third message'],
+        sender: 'bot',
+      );
+
+      expect(message.allTexts, equals(['First message', 'Second message', 'Third message']));
+    });
+
+    test('should return correct allDelays for single delay message', () {
+      final message = ChatMessage(
+        id: 1,
+        text: 'Single message',
+        delay: 1500,
+        sender: 'bot',
+      );
+
+      expect(message.allDelays, equals([1500]));
+    });
+
+    test('should return correct allDelays for multi-text with custom delays', () {
+      final message = ChatMessage(
+        id: 1,
+        text: 'Primary text',
+        texts: ['First message', 'Second message'],
+        delays: [1000, 2000],
+        sender: 'bot',
+      );
+
+      expect(message.allDelays, equals([1000, 2000]));
+    });
+
+    test('should return correct allDelays for multi-text with default delay', () {
+      final message = ChatMessage(
+        id: 1,
+        text: 'Primary text',
+        texts: ['First message', 'Second message', 'Third message'],
+        delay: 1200,
+        sender: 'bot',
+      );
+
+      expect(message.allDelays, equals([1200, 1200, 1200]));
+    });
+
+    test('should expand single text message to single message', () {
+      final message = ChatMessage(
+        id: 1,
+        text: 'Single message',
+        delay: 1000,
+        sender: 'bot',
+        nextMessageId: 2,
+      );
+
+      final expanded = message.expandToIndividualMessages();
+
+      expect(expanded.length, equals(1));
+      expect(expanded[0].id, equals(1));
+      expect(expanded[0].text, equals('Single message'));
+      expect(expanded[0].nextMessageId, equals(2));
+    });
+
+    test('should expand multi-text message to individual messages', () {
+      final message = ChatMessage(
+        id: 10,
+        text: 'Primary text',
+        texts: ['First message', 'Second message', 'Third message'],
+        delays: [1000, 1500, 2000],
+        sender: 'bot',
+        nextMessageId: 20,
+        isChoice: true,
+        choices: [Choice(text: 'Option 1', nextMessageId: 21)],
+      );
+
+      final expanded = message.expandToIndividualMessages();
+
+      expect(expanded.length, equals(3));
+      
+      // First message
+      expect(expanded[0].id, equals(10));
+      expect(expanded[0].text, equals('First message'));
+      expect(expanded[0].delay, equals(1000));
+      expect(expanded[0].isChoice, isFalse);
+      expect(expanded[0].choices, isNull);
+      expect(expanded[0].nextMessageId, isNull);
+      
+      // Second message
+      expect(expanded[1].id, equals(11));
+      expect(expanded[1].text, equals('Second message'));
+      expect(expanded[1].delay, equals(1500));
+      expect(expanded[1].isChoice, isFalse);
+      expect(expanded[1].choices, isNull);
+      expect(expanded[1].nextMessageId, isNull);
+      
+      // Third message (last one gets the interactive properties)
+      expect(expanded[2].id, equals(12));
+      expect(expanded[2].text, equals('Third message'));
+      expect(expanded[2].delay, equals(2000));
+      expect(expanded[2].isChoice, isTrue);
+      expect(expanded[2].choices, isNotNull);
+      expect(expanded[2].nextMessageId, equals(20));
+    });
+
+    test('should throw assertion error for empty texts array', () {
+      expect(
+        () => ChatMessage(
+          id: 1,
+          text: 'Primary text',
+          texts: [], // Empty array should fail
+          sender: 'bot',
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test('should throw assertion error for mismatched delays array length', () {
+      expect(
+        () => ChatMessage(
+          id: 1,
+          text: 'Primary text',
+          texts: ['First message', 'Second message'],
+          delays: [1000], // Wrong length should fail
+          sender: 'bot',
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+  });
 }

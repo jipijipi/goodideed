@@ -37,6 +37,7 @@ class ChatConfig {
     'comparison_demo': 'Comparison Operators Demo',
     'multi_text_demo': 'Multi-Text Message Demo',
     'test_single_responsibility': 'Single Responsibility Test',
+    'comprehensive_test': 'Comprehensive Feature Test',
   };
   
   // Private constructor to prevent instantiation

@@ -1,0 +1,393 @@
+{
+  "sequenceId": "comprehensive_test",
+  "name": "Comprehensive Feature Test",
+  "description": "Complete test of all chat system features including text input, choices, templates, variants, multi-text, custom values, autorouting, and cross-sequence navigation",
+  "messages": [
+    {
+      "id": 1,
+      "text": "🧪 Welcome to the Comprehensive Feature Test! ||| This sequence will test every feature of the chat system. ||| Let's start with basic bot messages and multi-text support.",
+      "sender": "bot",
+      "delay": 1500,
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "text": "First, let's collect your name for personalization:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "text": "Please enter your name:",
+      "sender": "bot",
+      "delay": 1000,
+      "isTextInput": true,
+      "storeKey": "user.name",
+      "placeholderText": "Enter your name here...",
+      "nextMessageId": 4
+    },
+    {
+      "id": 4,
+      "text": "Hello {user.name|there}! Nice to meet you. ||| Now I'll demonstrate text templating with fallback values. ||| Your name is stored as: {user.name}",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 5
+    },
+    {
+      "id": 5,
+      "text": "Now let's test choice functionality with custom values:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 6
+    },
+    {
+      "id": 6,
+      "text": "What's your experience level with chat systems?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "storeKey": "user.experience_level",
+      "choices": [
+        {
+          "text": "I'm completely new to this",
+          "value": "beginner",
+          "nextMessageId": 7
+        },
+        {
+          "text": "I have some experience",
+          "value": "intermediate",
+          "nextMessageId": 7
+        },
+        {
+          "text": "I'm an expert user",
+          "value": "expert",
+          "nextMessageId": 7
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "text": "Excellent! You selected: {user.experience_level} ||| This demonstrates custom value storage. ||| The display text was friendly, but I stored a clean value: '{user.experience_level}'",
+      "sender": "bot",
+      "delay": 1300,
+      "nextMessageId": 8
+    },
+    {
+      "id": 8,
+      "text": "Now let's test numeric input and comparison operators:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 9
+    },
+    {
+      "id": 9,
+      "text": "How old are you? (This will test numeric comparisons)",
+      "sender": "bot",
+      "delay": 1000,
+      "isTextInput": true,
+      "storeKey": "user.age",
+      "placeholderText": "Enter your age...",
+      "nextMessageId": 10
+    },
+    {
+      "id": 10,
+      "text": "You entered: {user.age} ||| Now let's test boolean choices:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 11
+    },
+    {
+      "id": 11,
+      "text": "Do you want to enable notifications?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "storeKey": "user.notifications_enabled",
+      "choices": [
+        {
+          "text": "Yes, keep me updated!",
+          "value": true,
+          "nextMessageId": 12
+        },
+        {
+          "text": "No thanks, I prefer quiet",
+          "value": false,
+          "nextMessageId": 12
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "Your notification preference: {user.notifications_enabled} ||| Now let's test preference storage:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 13
+    },
+    {
+      "id": 13,
+      "text": "What's your preferred theme?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "storeKey": "user.theme",
+      "choices": [
+        {
+          "text": "🌞 Light Theme",
+          "value": "light",
+          "nextMessageId": 14
+        },
+        {
+          "text": "🌙 Dark Theme",
+          "value": "dark",
+          "nextMessageId": 14
+        },
+        {
+          "text": "🌈 Auto Theme",
+          "value": "auto",
+          "nextMessageId": 14
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "Theme preference stored: {user.theme} ||| Now we'll test the autoroute system with multiple conditions:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 15
+    },
+    {
+      "id": 15,
+      "text": "ROUTE",
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "user.age >= 18",
+          "nextMessageId": 20
+        },
+        {
+          "condition": "user.experience_level == 'expert'",
+          "nextMessageId": 25
+        },
+        {
+          "condition": "user.notifications_enabled == true",
+          "nextMessageId": 30
+        },
+        {
+          "default": true,
+          "nextMessageId": 35
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "text": "✅ Adult Route: You're {user.age} years old (>= 18) ||| This route was chosen based on your age. ||| Let's continue with more tests...",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 40
+    },
+    {
+      "id": 25,
+      "text": "✅ Expert Route: You're an expert user! ||| This route was chosen based on your experience level. ||| Skipping beginner explanations...",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 40
+    },
+    {
+      "id": 30,
+      "text": "✅ Notifications Route: You enabled notifications! ||| This route was chosen based on your notification preference. ||| I'll keep you updated...",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 40
+    },
+    {
+      "id": 35,
+      "text": "✅ Default Route: None of the conditions matched ||| This is the fallback route. ||| This ensures the conversation always continues...",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 40
+    },
+    {
+      "id": 40,
+      "text": "Great! Now let's test cross-sequence navigation:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 41
+    },
+    {
+      "id": 41,
+      "text": "Where would you like to go next?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "storeKey": "user.next_destination",
+      "choices": [
+        {
+          "text": "🎓 Tutorial Sequence",
+          "value": "tutorial",
+          "sequenceId": "tutorial",
+          "nextMessageId": 1
+        },
+        {
+          "text": "🏠 Main Menu",
+          "value": "menu",
+          "sequenceId": "menu",
+          "nextMessageId": 1
+        },
+        {
+          "text": "🛤️ Autoroute Demo",
+          "value": "autoroute",
+          "sequenceId": "autoroute_test",
+          "nextMessageId": 1
+        },
+        {
+          "text": "Continue Testing",
+          "value": "continue",
+          "nextMessageId": 42
+        }
+      ]
+    },
+    {
+      "id": 42,
+      "text": "Perfect! Let's test more complex numeric comparisons:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 43
+    },
+    {
+      "id": 43,
+      "text": "What's your favorite number? (We'll use this for comparison tests)",
+      "sender": "bot",
+      "delay": 1000,
+      "isTextInput": true,
+      "storeKey": "user.favorite_number",
+      "placeholderText": "Enter a number...",
+      "nextMessageId": 44
+    },
+    {
+      "id": 44,
+      "text": "Your favorite number: {user.favorite_number} ||| Now testing all comparison operators...",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 45
+    },
+    {
+      "id": 45,
+      "text": "ROUTE",
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "user.favorite_number > 100",
+          "nextMessageId": 50
+        },
+        {
+          "condition": "user.favorite_number < 10",
+          "nextMessageId": 55
+        },
+        {
+          "condition": "user.favorite_number >= 50",
+          "nextMessageId": 60
+        },
+        {
+          "condition": "user.favorite_number <= 25",
+          "nextMessageId": 65
+        },
+        {
+          "condition": "user.favorite_number == 42",
+          "nextMessageId": 70
+        },
+        {
+          "default": true,
+          "nextMessageId": 75
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "text": "🔢 High Number Route: {user.favorite_number} > 100 ||| You like big numbers! ||| This tests the '>' operator.",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 80
+    },
+    {
+      "id": 55,
+      "text": "🔢 Low Number Route: {user.favorite_number} < 10 ||| You prefer single digits! ||| This tests the '<' operator.",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 80
+    },
+    {
+      "id": 60,
+      "text": "🔢 Medium-High Route: {user.favorite_number} >= 50 ||| A solid middle-high number! ||| This tests the '>=' operator.",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 80
+    },
+    {
+      "id": 65,
+      "text": "🔢 Medium-Low Route: {user.favorite_number} <= 25 ||| A nice moderate number! ||| This tests the '<=' operator.",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 80
+    },
+    {
+      "id": 70,
+      "text": "🔢 Special Route: The Answer! {user.favorite_number} == 42 ||| The ultimate answer to life, universe, and everything! ||| This tests the '==' operator.",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 80
+    },
+    {
+      "id": 75,
+      "text": "🔢 Default Route: {user.favorite_number} ||| Your number didn't match any specific conditions. ||| This ensures routing always works!",
+      "sender": "bot",
+      "delay": 1200,
+      "nextMessageId": 80
+    },
+    {
+      "id": 80,
+      "text": "🎯 Test Summary for {user.name|Guest}: ||| Experience Level: {user.experience_level} ||| Age: {user.age} ||| Notifications: {user.notifications_enabled} ||| Theme: {user.theme} ||| Favorite Number: {user.favorite_number}",
+      "sender": "bot",
+      "delay": 1500,
+      "nextMessageId": 81
+    },
+    {
+      "id": 81,
+      "text": "✨ Comprehensive test completed! ||| We tested: Multi-text messages, Text input, Choice buttons, Custom values, Text templating, Autorouting, Numeric comparisons, Boolean storage, Cross-sequence navigation ||| All features working perfectly!",
+      "sender": "bot",
+      "delay": 1800,
+      "nextMessageId": 82
+    },
+    {
+      "id": 82,
+      "text": "Final test - where would you like to go?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "choices": [
+        {
+          "text": "🔁 Run Test Again",
+          "sequenceId": "comprehensive_test",
+          "nextMessageId": 1
+        },
+        {
+          "text": "🏠 Main Menu",
+          "sequenceId": "menu",
+          "nextMessageId": 1
+        },
+        {
+          "text": "🎓 Tutorial",
+          "sequenceId": "tutorial",
+          "nextMessageId": 1
+        },
+        {
+          "text": "❓ Support",
+          "sequenceId": "support",
+          "nextMessageId": 1
+        }
+      ]
+    }
+  ]
+}

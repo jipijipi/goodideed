@@ -627,5 +627,62 @@ void main() {
       // Empty segments should be filtered out
       expect(message.allTexts, equals(['First message', 'Third message']));
     });
+
+    group('Text field separation enforcement', () {
+      test('should enforce empty text for choice messages from JSON with text field', () {
+        // Arrange
+        final json = {
+          'id': 1,
+          'text': 'This text should be ignored for choice messages',
+          'isChoice': true,
+          'choices': [
+            {'text': 'Option 1', 'nextMessageId': 2}
+          ]
+        };
+
+        // Act
+        final message = ChatMessage.fromJson(json);
+
+        // Assert
+        expect(message.text, '');
+        expect(message.isChoice, true);
+      });
+
+      test('should enforce empty text for autoroute messages from JSON with text field', () {
+        // Arrange
+        final json = {
+          'id': 1,
+          'text': 'This text should be ignored for autoroute messages',
+          'isAutoRoute': true,
+          'routes': [
+            {'default': true, 'nextMessageId': 2}
+          ]
+        };
+
+        // Act
+        final message = ChatMessage.fromJson(json);
+
+        // Assert
+        expect(message.text, '');
+        expect(message.isAutoRoute, true);
+      });
+
+      test('should allow text for regular messages', () {
+        // Arrange
+        final json = {
+          'id': 1,
+          'text': 'This text should be preserved for regular messages',
+        };
+
+        // Act
+        final message = ChatMessage.fromJson(json);
+
+        // Assert
+        expect(message.text, 'This text should be preserved for regular messages');
+        expect(message.isChoice, false);
+        expect(message.isTextInput, false);
+        expect(message.isAutoRoute, false);
+      });
+    });
   });
 }

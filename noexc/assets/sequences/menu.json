@@ -11,13 +11,24 @@
     },
     {
       "id": 2,
-      "text": "Choose what you'd like to do:",
       "delay": 1500,
       "isChoice": true,
       "choices": [
-        {"text": "🎯 Get started with setup", "sequenceId": "onboarding", "nextMessageId": 1},
-        {"text": "📚 Learn app features", "sequenceId": "tutorial", "nextMessageId": 1},
-        {"text": "🆘 Get help with issues", "sequenceId": "support", "nextMessageId": 1}
+        {
+          "text": "\ud83c\udfaf Get started with setup",
+          "sequenceId": "onboarding",
+          "nextMessageId": 1
+        },
+        {
+          "text": "\ud83d\udcda Learn app features",
+          "sequenceId": "tutorial",
+          "nextMessageId": 1
+        },
+        {
+          "text": "\ud83c\udd98 Get help with issues",
+          "sequenceId": "support",
+          "nextMessageId": 1
+        }
       ]
     }
   ]

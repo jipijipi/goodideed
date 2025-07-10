@@ -12,7 +12,6 @@
     },
     {
       "id": 2,
-      "text": "Let's begin by getting to know you better. What's your name?",
       "sender": "bot",
       "delay": 1500,
       "isTextInput": true,
@@ -29,14 +28,23 @@
     },
     {
       "id": 4,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "user.primary_interest",
       "choices": [
-        {"text": "Exploring features", "nextMessageId": 10},
-        {"text": "Getting help", "sequenceId": "support", "nextMessageId": 1},
-        {"text": "Just browsing", "nextMessageId": 30}
+        {
+          "text": "Exploring features",
+          "nextMessageId": 10
+        },
+        {
+          "text": "Getting help",
+          "sequenceId": "support",
+          "nextMessageId": 1
+        },
+        {
+          "text": "Just browsing",
+          "nextMessageId": 30
+        }
       ]
     },
     {
@@ -62,13 +70,22 @@
     },
     {
       "id": 13,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "choices": [
-        {"text": "Yes, let's do it", "nextMessageId": 40},
-        {"text": "Show me a tutorial first", "sequenceId": "tutorial", "nextMessageId": 1},
-        {"text": "Maybe later", "nextMessageId": 50}
+        {
+          "text": "Yes, let's do it",
+          "nextMessageId": 40
+        },
+        {
+          "text": "Show me a tutorial first",
+          "sequenceId": "tutorial",
+          "nextMessageId": 1
+        },
+        {
+          "text": "Maybe later",
+          "nextMessageId": 50
+        }
       ]
     },
     {
@@ -94,13 +111,18 @@
     },
     {
       "id": 41,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "user.theme_preference",
       "choices": [
-        {"text": "Light theme", "nextMessageId": 42},
-        {"text": "Dark theme", "nextMessageId": 42}
+        {
+          "text": "Light theme",
+          "nextMessageId": 42
+        },
+        {
+          "text": "Dark theme",
+          "nextMessageId": 42
+        }
       ]
     },
     {
@@ -119,13 +141,24 @@
     },
     {
       "id": 51,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "choices": [
-        {"text": "Learn app features", "sequenceId": "tutorial", "nextMessageId": 1},
-        {"text": "Get support", "sequenceId": "support", "nextMessageId": 1},
-        {"text": "Main menu", "sequenceId": "menu", "nextMessageId": 1}
+        {
+          "text": "Learn app features",
+          "sequenceId": "tutorial",
+          "nextMessageId": 1
+        },
+        {
+          "text": "Get support",
+          "sequenceId": "support",
+          "nextMessageId": 1
+        },
+        {
+          "text": "Main menu",
+          "sequenceId": "menu",
+          "nextMessageId": 1
+        }
       ]
     }
   ]

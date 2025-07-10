@@ -19,15 +19,26 @@
     },
     {
       "id": 3,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "support.issue_type",
       "choices": [
-        {"text": "App won't start", "nextMessageId": 10},
-        {"text": "Login problems", "nextMessageId": 20},
-        {"text": "Feature not working", "nextMessageId": 30},
-        {"text": "Other issue", "nextMessageId": 40}
+        {
+          "text": "App won't start",
+          "nextMessageId": 10
+        },
+        {
+          "text": "Login problems",
+          "nextMessageId": 20
+        },
+        {
+          "text": "Feature not working",
+          "nextMessageId": 30
+        },
+        {
+          "text": "Other issue",
+          "nextMessageId": 40
+        }
       ]
     },
     {
@@ -46,13 +57,18 @@
     },
     {
       "id": 12,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "support.tried_restart",
       "choices": [
-        {"text": "Yes, still not working", "nextMessageId": 13},
-        {"text": "No, let me try that", "nextMessageId": 14}
+        {
+          "text": "Yes, still not working",
+          "nextMessageId": 13
+        },
+        {
+          "text": "No, let me try that",
+          "nextMessageId": 14
+        }
       ]
     },
     {
@@ -92,14 +108,22 @@
     },
     {
       "id": 22,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "support.login_error",
       "choices": [
-        {"text": "Invalid credentials", "nextMessageId": 23},
-        {"text": "Network error", "nextMessageId": 24},
-        {"text": "App just freezes", "nextMessageId": 25}
+        {
+          "text": "Invalid credentials",
+          "nextMessageId": 23
+        },
+        {
+          "text": "Network error",
+          "nextMessageId": 24
+        },
+        {
+          "text": "App just freezes",
+          "nextMessageId": 25
+        }
       ]
     },
     {
@@ -125,7 +149,6 @@
     },
     {
       "id": 30,
-      "text": "I'd like to help you with that feature. Which feature isn't working properly?",
       "sender": "bot",
       "delay": 1500,
       "isTextInput": true,
@@ -142,7 +165,6 @@
     },
     {
       "id": 32,
-      "text": "Can you describe what happens when you try to use it?",
       "sender": "bot",
       "delay": 1500,
       "isTextInput": true,
@@ -166,7 +188,6 @@
     },
     {
       "id": 40,
-      "text": "I'm here to help with any issue! Please describe what's happening:",
       "sender": "bot",
       "delay": 1500,
       "isTextInput": true,
@@ -204,13 +225,18 @@
     },
     {
       "id": 61,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "support.issue_resolved",
       "choices": [
-        {"text": "Yes, it's working now!", "nextMessageId": 70},
-        {"text": "Still having problems", "nextMessageId": 80}
+        {
+          "text": "Yes, it's working now!",
+          "nextMessageId": 70
+        },
+        {
+          "text": "Still having problems",
+          "nextMessageId": 80
+        }
       ]
     },
     {

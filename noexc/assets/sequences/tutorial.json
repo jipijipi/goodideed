@@ -19,14 +19,22 @@
     },
     {
       "id": 3,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "tutorial.topic",
       "choices": [
-        {"text": "Chat features", "nextMessageId": 10},
-        {"text": "User interface", "nextMessageId": 20},
-        {"text": "Settings & preferences", "nextMessageId": 30}
+        {
+          "text": "Chat features",
+          "nextMessageId": 10
+        },
+        {
+          "text": "User interface",
+          "nextMessageId": 20
+        },
+        {
+          "text": "Settings & preferences",
+          "nextMessageId": 30
+        }
       ]
     },
     {
@@ -52,7 +60,6 @@
     },
     {
       "id": 13,
-      "text": "Try typing a message to see how it works:",
       "sender": "bot",
       "delay": 1000,
       "isTextInput": true,
@@ -118,14 +125,22 @@
     },
     {
       "id": 33,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "storeKey": "tutorial.priority",
       "choices": [
-        {"text": "Easy to use", "nextMessageId": 34},
-        {"text": "Customizable", "nextMessageId": 35},
-        {"text": "Fast and reliable", "nextMessageId": 36}
+        {
+          "text": "Easy to use",
+          "nextMessageId": 34
+        },
+        {
+          "text": "Customizable",
+          "nextMessageId": 35
+        },
+        {
+          "text": "Fast and reliable",
+          "nextMessageId": 36
+        }
       ]
     },
     {
@@ -158,12 +173,17 @@
     },
     {
       "id": 41,
-      "text": "CHOICES",
       "sender": "user",
       "isChoice": true,
       "choices": [
-        {"text": "Yes, show me more", "nextMessageId": 3},
-        {"text": "I'm good for now", "nextMessageId": 50}
+        {
+          "text": "Yes, show me more",
+          "nextMessageId": 3
+        },
+        {
+          "text": "I'm good for now",
+          "nextMessageId": 50
+        }
       ]
     },
     {

@@ -113,8 +113,11 @@ class ChatService {
         continue; // Skip adding to display
       }
       
+      // Process template and variants on the original message first
+      final processedMsg = await processMessageTemplate(msg);
+      
       // Expand multi-text messages into individual messages
-      final expandedMessages = msg.expandToIndividualMessages();
+      final expandedMessages = processedMsg.expandToIndividualMessages();
       messages.addAll(expandedMessages);
       
       // Stop at choice messages or text input messages - let UI handle the interaction
@@ -139,7 +142,6 @@ class ChatService {
   /// Also applies text variants for regular messages (not choices, inputs, conditionals, or multi-texts)
   Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
     String textToProcess = message.text;
-    List<String>? textsToProcess = message.texts;
     
     // Apply variants only for regular messages (not choices, inputs, conditionals, or multi-texts)
     if (_variantsService != null && 
@@ -147,7 +149,7 @@ class ChatService {
         !message.isChoice && 
         !message.isTextInput && 
         !message.isAutoRoute && 
-        message.texts == null) {
+        !message.hasMultipleTexts) {
       
       // Get variant for the main text
       textToProcess = await _variantsService!.getVariant(
@@ -160,24 +162,12 @@ class ChatService {
     // Apply template processing if service is available
     if (_templatingService != null) {
       textToProcess = await _templatingService!.processTemplate(textToProcess);
-      
-      // Process texts array if present (multi-text messages don't get variants)
-      if (textsToProcess != null) {
-        List<String> processedTexts = [];
-        for (final text in textsToProcess) {
-          final processed = await _templatingService!.processTemplate(text);
-          processedTexts.add(processed);
-        }
-        textsToProcess = processedTexts;
-      }
     }
     
     return ChatMessage(
       id: message.id,
       text: textToProcess,
-      texts: textsToProcess,
       delay: message.delay,
-      delays: message.delays,
       sender: message.sender,
       isChoice: message.isChoice,
       isTextInput: message.isTextInput,

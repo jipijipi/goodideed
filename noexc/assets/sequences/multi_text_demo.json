@@ -12,13 +12,8 @@
     },
     {
       "id": 2,
-      "text": "Multi-text sequence",
-      "texts": [
-        "This is the first message in a sequence.",
-        "This is the second message that follows immediately.",
-        "And this is the third message, all from one JSON object!"
-      ],
-      "delays": [1000, 1500, 2000],
+      "text": "This is the first message in a sequence. ||| This is the second message that follows immediately. ||| And this is the third message, all from one JSON object!",
+      "delay": 1500,
       "sender": "bot",
       "nextMessageId": 3
     },
@@ -31,12 +26,7 @@
     },
     {
       "id": 4,
-      "text": "Default delay sequence",
-      "texts": [
-        "This uses the default delay for all messages.",
-        "Much simpler when you don't need custom timing.",
-        "Perfect for rapid-fire explanations!"
-      ],
+      "text": "This uses the same delay for all messages. ||| Much simpler when you don't need custom timing. ||| Perfect for rapid-fire explanations!",
       "delay": 1200,
       "sender": "bot",
       "nextMessageId": 5
@@ -62,13 +52,8 @@
     },
     {
       "id": 10,
-      "text": "Positive feedback response",
-      "texts": [
-        "Fantastic! I'm glad you like it.",
-        "This feature reduces JSON verbosity by up to 70%.",
-        "And it's fully backward compatible with existing sequences."
-      ],
-      "delays": [1000, 2000, 1500],
+      "text": "Fantastic! I'm glad you like it. ||| This feature reduces JSON verbosity significantly. ||| And it's fully backward compatible with existing sequences.",
+      "delay": 1500,
       "sender": "bot",
       "nextMessageId": 20
     },

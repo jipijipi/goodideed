@@ -13,6 +13,7 @@ class TextVariantsService {
 
   /// Get a random variant for the given text
   /// If no variants file exists, returns the original text
+  /// Supports multi-text messages with separator
   Future<String> getVariant(String originalText, String sequenceId, int messageId) async {
     // Create a unique key for this message's variants
     final variantKey = '${sequenceId}_message_$messageId';

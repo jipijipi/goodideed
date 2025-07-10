@@ -1,0 +1,5 @@
+This is the first message in a sequence. ||| This is the second message that follows immediately. ||| And this is the third message, all from one JSON object!
+Here's the first part of a multi-message. ||| Followed by the second part seamlessly. ||| And concluding with the third part!
+Starting with message one. ||| Continuing with message two. ||| Finishing with message three.
+First segment here. ||| Second segment follows. ||| Third segment completes the sequence.
+Beginning of the sequence. ||| Middle part of the sequence. ||| End of the sequence demonstration.

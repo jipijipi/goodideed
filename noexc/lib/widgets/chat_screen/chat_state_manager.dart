@@ -81,10 +81,10 @@ class ChatStateManager extends ChangeNotifier {
 
   /// Display a list of messages with delays and animations
   Future<void> _displayMessages(List<ChatMessage> messages) async {
-    // Process templates in messages before displaying
-    final processedMessages = await _chatService.processMessageTemplates(messages);
+    // Messages are already processed in ChatService._getMessagesFromId()
+    // No need to process templates again
     
-    for (ChatMessage message in processedMessages) {
+    for (ChatMessage message in messages) {
       if (_disposed) break;
       
       // Skip messages with empty text that are not interactive (these are processed messages that had text cleared)

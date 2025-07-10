@@ -11,6 +11,9 @@ class ChatConfig {
   static const String templateVariablePattern = r'\{([^}]+)\}';
   static const String templateFallbackSeparator = '|';
   
+  // Multi-text Processing
+  static const String multiTextSeparator = '|||';
+  
   // Error Messages
   static const String chatScriptLoadError = 'Failed to load chat script';
   static const String messageNotFoundError = 'Message not found';

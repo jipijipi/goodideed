@@ -35,10 +35,11 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 ### Key Components
 
 #### Models (`lib/models/`)
-- **ChatMessage** - Core message model with multi-text support using `|||` separator
+- **ChatMessage** - Core message model with MessageType enum and multi-text support using `|||` separator
 - **ChatSequence** - Container for complete conversation flows
 - **Choice** - User interaction options with optional custom values
 - **RouteCondition** - Conditional routing logic
+- **MessageType** - Enum defining message types: bot, user, choice, textInput, autoroute
 
 #### Services (`lib/services/`)
 - **ChatService** - Main service for loading sequences and processing messages
@@ -77,7 +78,7 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 - Each part displays as separate message bubble with same delay
 
 ### Conditional Routing
-- **Auto-route messages** with `isAutoRoute: true` evaluate conditions
+- **Auto-route messages** with `"type": "autoroute"` evaluate conditions
 - Support for `==`, `!=`, `>`, `<`, `>=`, `<=`, null checks, and boolean evaluation
 - Numeric comparisons with automatic type conversion
 - Route to different sequences or continue in current sequence
@@ -104,7 +105,7 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 - Use `flutter test` to run tests
 - Test files mirror the `lib/` directory structure in `test/`
 - Import main app code using `package:noexc/main.dart`
-- **Current test status: 109 passing tests** (100% success rate)
+- **Current test status: 122 passing tests** (100% success rate)
 - Aim for high test coverage (minimum 80%) - Currently at 100% success rate
 - Never commit code without corresponding tests
 
@@ -116,11 +117,40 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 3. Add display name to `ChatConfig.sequenceDisplayNames`
 
 ### Message Types
-- **Basic**: Simple bot/user messages
-- **Choice**: Present buttons with optional data storage
-- **Text Input**: Collect user input with storage
-- **Auto-route**: Invisible conditional routing
-- **Multi-text**: Multiple messages from single JSON entry
+The app uses a **MessageType enum** system that replaces legacy boolean flags:
+
+#### MessageType Enum Values
+- **bot**: Simple bot messages (default)
+- **user**: User messages
+- **choice**: Present buttons with optional data storage
+- **textInput**: Collect user input with storage
+- **autoroute**: Invisible conditional routing
+
+#### JSON Format
+**New format** (preferred):
+```json
+{
+  "id": "msg1",
+  "type": "bot",
+  "text": "Hello! How can I help you?"
+}
+```
+
+**Legacy format** (backward compatible):
+```json
+{
+  "id": "msg1",
+  "isChoice": true,
+  "text": "Choose an option:",
+  "choices": [...]
+}
+```
+
+#### Features
+- **Backward Compatible**: Legacy boolean flags (`isChoice`, `isTextInput`, `isAutoRoute`) still work
+- **Convenience Getters**: `isChoice`, `isTextInput`, `isAutoRoute` getters maintained for API compatibility
+- **Multi-text Support**: Works with `|||` separator across all message types
+- **Clean Architecture**: Single `type` field replaces multiple boolean flags
 
 ### Template Syntax
 - `{key}` - Use stored value or leave unchanged

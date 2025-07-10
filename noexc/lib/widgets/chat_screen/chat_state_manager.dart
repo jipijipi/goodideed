@@ -222,13 +222,13 @@ class ChatStateManager extends ChangeNotifier {
       userInput.trim(),
     );
 
-    // Replace text input bubble with user response
-    final textInputIndex = _displayedMessages.indexOf(textInputMessage);
-    if (textInputIndex != -1) {
-      _displayedMessages[textInputIndex] = userResponseMessage;
-      _currentTextInputMessage = null;
-      notifyListeners();
-    }
+    // Add user response as new message instead of replacing
+    _displayedMessages.add(userResponseMessage);
+    _currentTextInputMessage = null;
+    notifyListeners();
+    
+    // Scroll to bottom to show the new user response
+    _scrollToBottom();
 
     // Continue with next messages if available
     if (textInputMessage.nextMessageId != null) {

@@ -47,7 +47,7 @@ void main() {
       const storeKey = 'user.name';
       final textInputMessage = ChatMessage(
         id: 23,
-        text: 'What is your name?',
+        text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
         isTextInput: true,
@@ -68,7 +68,7 @@ void main() {
       const userInput = 'Some input';
       final textInputMessage = ChatMessage(
         id: 23,
-        text: 'What is your name?',
+        text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
         isTextInput: true,
@@ -94,7 +94,7 @@ void main() {
       );
       final choiceMessage = ChatMessage(
         id: 3,
-        text: 'What interests you?',
+        text: '', // Choice messages have no text content
         delay: 1000,
         sender: 'bot',
         isChoice: true,
@@ -161,7 +161,7 @@ void main() {
       await userDataService.storeValue('user.name', 'John');
       final originalMessage = ChatMessage(
         id: 1,
-        text: 'Hello, {user.name}!',
+        text: '', // Choice messages have no text content
         delay: 1500,
         sender: 'bot',
         isChoice: true,
@@ -174,7 +174,7 @@ void main() {
       final processedMessage = await chatService.processMessageTemplate(originalMessage);
 
       // Assert
-      expect(processedMessage.text, equals('Hello, John!'));
+      expect(processedMessage.text, equals('')); // Choice messages have no text content
       expect(processedMessage.id, equals(originalMessage.id));
       expect(processedMessage.delay, equals(originalMessage.delay));
       expect(processedMessage.sender, equals(originalMessage.sender));

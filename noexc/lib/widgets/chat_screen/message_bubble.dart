@@ -24,35 +24,27 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Route to appropriate message type
+    // Route to appropriate message type based on single responsibility
     if (message.isChoice && message.choices != null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildRegularBubble(context),
-          const SizedBox(height: UIConstants.messageSpacing),
-          ChoiceButtons(
-            message: message,
-            onChoiceSelected: onChoiceSelected,
-          ),
-        ],
+      return ChoiceButtons(
+        message: message,
+        onChoiceSelected: onChoiceSelected,
       );
     }
     
     if (message.isTextInput && isCurrentTextInput) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildRegularBubble(context),
-          const SizedBox(height: UIConstants.messageSpacing),
-          TextInputBubble(
-            message: message,
-            onSubmitted: onTextSubmitted,
-          ),
-        ],
+      return TextInputBubble(
+        message: message,
+        onSubmitted: onTextSubmitted,
       );
     }
     
+    // Skip autoroute messages - they have no visual representation
+    if (message.isAutoRoute) {
+      return const SizedBox.shrink();
+    }
+    
+    // Regular text messages only
     return _buildRegularBubble(context);
   }
 

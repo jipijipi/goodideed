@@ -147,7 +147,7 @@ void main() {
 
       final originalMessage = ChatMessage(
         id: 1,
-        text: 'Hello there!',
+        text: '', // Text input messages have no text content
         isTextInput: true,
         placeholderText: 'Enter your custom name here...',
         storeKey: 'user.name',
@@ -160,7 +160,7 @@ void main() {
       expect(processedMessage.placeholderText, 'Enter your custom name here...');
       expect(processedMessage.isTextInput, true);
       expect(processedMessage.storeKey, 'user.name');
-      expect(processedMessage.text, 'Hello there!'); // Text unchanged without templating
+      expect(processedMessage.text, ''); // Text input messages have no text content
     });
 
     test('should preserve default placeholderText when processing templates', () async {
@@ -169,7 +169,7 @@ void main() {
 
       final originalMessage = ChatMessage(
         id: 1,
-        text: 'What is your name?',
+        text: '', // Text input messages have no text content
         isTextInput: true,
         // Using default placeholderText
       );

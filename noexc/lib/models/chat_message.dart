@@ -43,6 +43,18 @@ class ChatMessage {
        assert(
          delays == null || texts == null || delays.length == texts.length,
          'delays array must match texts array length'
+       ),
+       assert(
+         !isChoice || text.isEmpty,
+         'Choice messages should not have text content'
+       ),
+       assert(
+         !isTextInput || text.isEmpty,
+         'Text input messages should not have text content'
+       ),
+       assert(
+         !isAutoRoute || text.isEmpty,
+         'Autoroute messages should not have text content'
        );
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -72,21 +84,31 @@ class ChatMessage {
       delays = (json['delays'] as List).cast<int>();
     }
 
+    final isChoice = json['isChoice'] as bool? ?? false;
+    final isTextInput = json['isTextInput'] as bool? ?? false;
+    final isAutoRoute = json['isAutoRoute'] as bool? ?? false;
+    
+    // For interactive messages, use empty text to enforce single responsibility
+    String messageText = json['text'] as String;
+    if (isChoice || isTextInput || isAutoRoute) {
+      messageText = '';
+    }
+    
     return ChatMessage(
       id: json['id'] as int,
-      text: json['text'] as String,
+      text: messageText,
       texts: texts,
       delay: json['delay'] as int? ?? AppConstants.defaultMessageDelay,
       delays: delays,
       sender: json['sender'] as String? ?? ChatConfig.botSender,
-      isChoice: json['isChoice'] as bool? ?? false,
-      isTextInput: json['isTextInput'] as bool? ?? false,
+      isChoice: isChoice,
+      isTextInput: isTextInput,
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
       storeKey: json['storeKey'] as String?,
       placeholderText: json['placeholderText'] as String? ?? AppConstants.defaultPlaceholderText,
       selectedChoiceText: json['selectedChoiceText'] as String?,
-      isAutoRoute: json['isAutoRoute'] as bool? ?? false,
+      isAutoRoute: isAutoRoute,
       routes: routes,
     );
   }
@@ -181,7 +203,7 @@ class ChatMessage {
       final isLast = i == textList.length - 1;
       messages.add(ChatMessage(
         id: id + i, // Use incremental IDs for individual messages
-        text: textList[i],
+        text: isLast && (isChoice || isTextInput || isAutoRoute) ? '' : textList[i], // Interactive messages have no text
         delay: delayList[i],
         sender: sender,
         isChoice: isLast ? isChoice : false, // Only last message can have choices

@@ -153,7 +153,7 @@ void main() {
 
       // Assert
       expect(message.id, 2);
-      expect(message.text, 'CHOICES');
+      expect(message.text, ''); // Choice messages have no text content
       expect(message.isChoice, true);
       expect(message.choices, isNotNull);
       expect(message.choices!.length, 2);
@@ -190,7 +190,7 @@ void main() {
       ];
       final message = ChatMessage(
         id: 2,
-        text: 'CHOICES',
+        text: '', // Choice messages have no text content
         delay: 1500,
         sender: 'user',
         isChoice: true,
@@ -215,7 +215,7 @@ void main() {
       // Arrange
       final choiceMessage = ChatMessage(
         id: 2,
-        text: 'CHOICES',
+        text: '', // Choice messages have no text content
         delay: 1500,
         sender: 'user',
         isChoice: true,
@@ -250,7 +250,7 @@ void main() {
 
       // Assert
       expect(message.id, 5);
-      expect(message.text, 'What is your name?');
+      expect(message.text, ''); // Text input messages have no text content
       expect(message.isTextInput, true);
       expect(message.nextMessageId, 6);
     });
@@ -275,7 +275,7 @@ void main() {
       // Arrange
       final message = ChatMessage(
         id: 5,
-        text: 'What is your name?',
+        text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
         isTextInput: true,
@@ -287,7 +287,7 @@ void main() {
 
       // Assert
       expect(json['id'], 5);
-      expect(json['text'], 'What is your name?');
+      expect(json['text'], ''); // Text input messages have no text content
       expect(json['isTextInput'], true);
       expect(json['nextMessageId'], 6);
     });
@@ -296,7 +296,7 @@ void main() {
       // Arrange
       final textInputMessage = ChatMessage(
         id: 5,
-        text: 'What is your name?',
+        text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
         isTextInput: true,
@@ -330,7 +330,7 @@ void main() {
 
       // Assert
       expect(message.id, equals(1));
-      expect(message.text, equals('What is your name?'));
+      expect(message.text, equals('')); // Text input messages have no text content
       expect(message.storeKey, equals('user.name'));
       expect(message.isTextInput, isTrue);
     });
@@ -357,7 +357,7 @@ void main() {
       // Arrange
       final message = ChatMessage(
         id: 1,
-        text: 'What is your name?',
+        text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
         isTextInput: true,
@@ -369,7 +369,7 @@ void main() {
 
       // Assert
       expect(json['id'], equals(1));
-      expect(json['text'], equals('What is your name?'));
+      expect(json['text'], equals('')); // Text input messages have no text content
       expect(json['storeKey'], equals('user.name'));
       expect(json['isTextInput'], isTrue);
     });
@@ -430,7 +430,7 @@ void main() {
       // Arrange
       final message = ChatMessage(
         id: 1,
-        text: 'Enter your name',
+        text: '', // Text input messages have no text content
         isTextInput: true,
         placeholderText: 'Your name here...',
       );
@@ -446,7 +446,7 @@ void main() {
       // Arrange
       final message = ChatMessage(
         id: 1,
-        text: 'Enter your name',
+        text: '', // Text input messages have no text content
         isTextInput: true,
         // Using default placeholder text
       );
@@ -587,7 +587,7 @@ void main() {
     test('should expand multi-text message to individual messages', () {
       final message = ChatMessage(
         id: 10,
-        text: 'Primary text',
+        text: '', // Choice messages have no text content
         texts: ['First message', 'Second message', 'Third message'],
         delays: [1000, 1500, 2000],
         sender: 'bot',
@@ -618,7 +618,7 @@ void main() {
       
       // Third message (last one gets the interactive properties)
       expect(expanded[2].id, equals(12));
-      expect(expanded[2].text, equals('Third message'));
+      expect(expanded[2].text, equals('')); // Choice messages have no text content
       expect(expanded[2].delay, equals(2000));
       expect(expanded[2].isChoice, isTrue);
       expect(expanded[2].choices, isNotNull);

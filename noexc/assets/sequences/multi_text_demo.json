@@ -51,7 +51,7 @@
     {
       "id": 6,
       "text": "CHOICES",
-      "sender": "user",
+      "sender": "bot",
       "isChoice": true,
       "storeKey": "multi_text_feedback",
       "choices": [
@@ -96,7 +96,7 @@
     {
       "id": 21,
       "text": "CHOICES",
-      "sender": "user",
+      "sender": "bot",
       "isChoice": true,
       "choices": [
         {"text": "Show me more demos", "sequenceId": "tutorial", "nextMessageId": 1},

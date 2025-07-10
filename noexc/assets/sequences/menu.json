@@ -15,19 +15,16 @@
       "isChoice": true,
       "choices": [
         {
-          "text": "\ud83c\udfaf Get started with setup",
-          "sequenceId": "onboarding",
-          "nextMessageId": 1
+          "text": "🎯 Get started with setup",
+          "sequenceId": "onboarding"
         },
         {
-          "text": "\ud83d\udcda Learn app features",
-          "sequenceId": "tutorial",
-          "nextMessageId": 1
+          "text": "📚 Learn app features",
+          "sequenceId": "tutorial"
         },
         {
-          "text": "\ud83c\udd98 Get help with issues",
-          "sequenceId": "support",
-          "nextMessageId": 1
+          "text": "🆘 Get help with issues",
+          "sequenceId": "support"
         }
       ]
     }

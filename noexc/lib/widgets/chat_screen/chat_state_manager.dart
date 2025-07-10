@@ -161,7 +161,7 @@ class ChatStateManager extends ChangeNotifier {
     // Check if this choice switches sequences
     if (choice.sequenceId != null) {
       debugPrint('SEQUENCE: Switching to sequence: ${choice.sequenceId}');
-      await _switchToSequenceFromChoice(choice.sequenceId!, choice.nextMessageId ?? 1);
+      await _switchToSequenceFromChoice(choice.sequenceId!, 1);
     } else if (choice.nextMessageId != null) {
       debugPrint('CONTINUE: Continuing in current sequence to message: ${choice.nextMessageId}');
       await _continueWithChoice(choice.nextMessageId!);

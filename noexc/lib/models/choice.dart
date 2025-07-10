@@ -12,10 +12,11 @@ class Choice {
   });
 
   factory Choice.fromJson(Map<String, dynamic> json) {
+    final sequenceId = json['sequenceId'] as String?;
     return Choice(
       text: json['text'] as String,
-      nextMessageId: json['nextMessageId'] as int?,
-      sequenceId: json['sequenceId'] as String?,
+      nextMessageId: sequenceId != null ? null : json['nextMessageId'] as int?,
+      sequenceId: sequenceId,
       value: json['value'],
     );
   }
@@ -25,12 +26,11 @@ class Choice {
       'text': text,
     };
     
-    if (nextMessageId != null) {
-      json['nextMessageId'] = nextMessageId!;
-    }
-    
     if (sequenceId != null) {
       json['sequenceId'] = sequenceId!;
+      // When switching sequences, don't include nextMessageId as we always start at message 1
+    } else if (nextMessageId != null) {
+      json['nextMessageId'] = nextMessageId!;
     }
     
     if (value != null) {

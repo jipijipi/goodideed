@@ -237,7 +237,7 @@ class ChatService {
   /// Execute a route condition by loading sequence or returning message ID
   Future<int?> _executeRoute(RouteCondition route) async {
     if (route.sequenceId != null) {
-      final startMessageId = route.nextMessageId ?? ChatConfig.initialMessageId;
+      final startMessageId = ChatConfig.initialMessageId;
       
       // Notify UI about sequence change if callback is set
       if (_onSequenceSwitch != null) {

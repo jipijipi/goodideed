@@ -12,10 +12,11 @@ class RouteCondition {
   });
 
   factory RouteCondition.fromJson(Map<String, dynamic> json) {
+    final sequenceId = json['sequenceId'] as String?;
     return RouteCondition(
       condition: json['condition'] as String?,
-      sequenceId: json['sequenceId'] as String?,
-      nextMessageId: json['nextMessageId'] as int?,
+      sequenceId: sequenceId,
+      nextMessageId: sequenceId != null ? null : json['nextMessageId'] as int?,
       isDefault: json['default'] as bool? ?? false,
     );
   }
@@ -29,9 +30,8 @@ class RouteCondition {
     
     if (sequenceId != null) {
       json['sequenceId'] = sequenceId!;
-    }
-    
-    if (nextMessageId != null) {
+      // When switching sequences, don't include nextMessageId as we always start at message 1
+    } else if (nextMessageId != null) {
       json['nextMessageId'] = nextMessageId!;
     }
     

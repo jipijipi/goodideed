@@ -38,8 +38,7 @@
         },
         {
           "text": "Getting help",
-          "sequenceId": "support",
-          "nextMessageId": 1
+          "sequenceId": "support"
         },
         {
           "text": "Just browsing",
@@ -79,8 +78,7 @@
         },
         {
           "text": "Show me a tutorial first",
-          "sequenceId": "tutorial",
-          "nextMessageId": 1
+          "sequenceId": "tutorial"
         },
         {
           "text": "Maybe later",
@@ -146,18 +144,15 @@
       "choices": [
         {
           "text": "Learn app features",
-          "sequenceId": "tutorial",
-          "nextMessageId": 1
+          "sequenceId": "tutorial"
         },
         {
           "text": "Get support",
-          "sequenceId": "support",
-          "nextMessageId": 1
+          "sequenceId": "support"
         },
         {
           "text": "Main menu",
-          "sequenceId": "menu",
-          "nextMessageId": 1
+          "sequenceId": "menu"
         }
       ]
     }

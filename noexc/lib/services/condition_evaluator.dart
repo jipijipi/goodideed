@@ -9,84 +9,134 @@ class ConditionEvaluator {
   /// Supports operators: ==, !=, >, <, >=, <=
   /// Example: "user.name == 'Alice'" or "user.age >= 18"
   Future<bool> evaluate(String condition) async {
+    print('🔍 CONDITION_EVAL: Starting evaluation of: "$condition"');
     try {
-      // Handle >= operator (must come before >)
-      if (condition.contains('>=')) {
-        final parts = condition.split('>=').map((s) => s.trim()).toList();
-        if (parts.length != 2) return false;
-        
-        final value = await _getValue(parts[0]);
-        final expected = _parseValue(parts[1]);
-        return _compareNumbers(value, expected, '>=');
+      // Parse the condition using a smarter approach that handles quoted strings
+      final parsedCondition = _parseCondition(condition);
+      if (parsedCondition == null) {
+        // No operator found, treat as boolean check
+        print('🔍 CONDITION_EVAL: No operator found, treating as boolean check');
+        final value = await _getValue(condition);
+        print('🔍 CONDITION_EVAL: Boolean check - value: $value (type: ${value.runtimeType})');
+        final result = _isTruthy(value);
+        print('✅ CONDITION_EVAL: Boolean result: $result');
+        return result;
       }
       
-      // Handle <= operator (must come before <)
-      if (condition.contains('<=')) {
-        final parts = condition.split('<=').map((s) => s.trim()).toList();
-        if (parts.length != 2) return false;
-        
-        final value = await _getValue(parts[0]);
-        final expected = _parseValue(parts[1]);
-        return _compareNumbers(value, expected, '<=');
+      final operator = parsedCondition['operator'] as String;
+      final leftOperand = parsedCondition['left'] as String;
+      final rightOperand = parsedCondition['right'] as String;
+      
+      print('🔍 CONDITION_EVAL: Parsed - left: "$leftOperand", operator: "$operator", right: "$rightOperand"');
+      
+      final value = await _getValue(leftOperand);
+      final expected = _parseValue(rightOperand);
+      print('🔍 CONDITION_EVAL: Comparing $value $operator $expected (types: ${value.runtimeType} $operator ${expected.runtimeType})');
+      
+      bool result;
+      switch (operator) {
+        case '>=':
+          result = _compareNumbers(value, expected, '>=');
+          break;
+        case '<=':
+          result = _compareNumbers(value, expected, '<=');
+          break;
+        case '!=':
+          result = value != expected;
+          break;
+        case '==':
+          result = value == expected;
+          break;
+        case '>':
+          result = _compareNumbers(value, expected, '>');
+          break;
+        case '<':
+          result = _compareNumbers(value, expected, '<');
+          break;
+        default:
+          print('❌ CONDITION_EVAL: Unknown operator: $operator');
+          return false;
       }
       
-      // Handle != operator
-      if (condition.contains('!=')) {
-        final parts = condition.split('!=').map((s) => s.trim()).toList();
-        if (parts.length != 2) return false;
-        
-        final value = await _getValue(parts[0]);
-        final expected = _parseValue(parts[1]);
-        return value != expected;
-      }
-      
-      // Handle == operator
-      if (condition.contains('==')) {
-        final parts = condition.split('==').map((s) => s.trim()).toList();
-        if (parts.length != 2) return false;
-        
-        final value = await _getValue(parts[0]);
-        final expected = _parseValue(parts[1]);
-        return value == expected;
-      }
-      
-      // Handle > operator
-      if (condition.contains('>')) {
-        final parts = condition.split('>').map((s) => s.trim()).toList();
-        if (parts.length != 2) return false;
-        
-        final value = await _getValue(parts[0]);
-        final expected = _parseValue(parts[1]);
-        return _compareNumbers(value, expected, '>');
-      }
-      
-      // Handle < operator
-      if (condition.contains('<')) {
-        final parts = condition.split('<').map((s) => s.trim()).toList();
-        if (parts.length != 2) return false;
-        
-        final value = await _getValue(parts[0]);
-        final expected = _parseValue(parts[1]);
-        return _compareNumbers(value, expected, '<');
-      }
-      
-      // If no operator found, treat as boolean check
-      // Example: "user.is_premium" checks if the value is truthy
-      final value = await _getValue(condition);
-      return _isTruthy(value);
+      print('✅ CONDITION_EVAL: Result: $result');
+      return result;
     } catch (e) {
       // If evaluation fails, return false to be safe
+      print('❌ CONDITION_EVAL: ERROR evaluating "$condition": $e');
       return false;
     }
   }
 
-  /// Get a value from the user data service
-  /// Supports "user.key" format
-  Future<dynamic> _getValue(String key) async {
-    if (key.startsWith('user.')) {
-      final userKey = key.substring(5); // Remove "user." prefix
-      return await userDataService.getValue(userKey);
+  /// Parse a condition string into operator and operands
+  /// Returns null if no operator is found (for boolean checks)
+  Map<String, String>? _parseCondition(String condition) {
+    // List of operators in order of precedence (longer ones first to avoid conflicts)
+    final operators = ['>=', '<=', '!=', '==', '>', '<'];
+    
+    for (final operator in operators) {
+      final operatorIndex = _findOperatorOutsideQuotes(condition, operator);
+      if (operatorIndex != -1) {
+        final left = condition.substring(0, operatorIndex).trim();
+        final right = condition.substring(operatorIndex + operator.length).trim();
+        return {
+          'operator': operator,
+          'left': left,
+          'right': right,
+        };
+      }
     }
+    
+    return null; // No operator found - treat as boolean check
+  }
+
+  /// Find the position of an operator outside of quoted strings
+  /// Returns -1 if not found
+  int _findOperatorOutsideQuotes(String text, String operator) {
+    bool inSingleQuote = false;
+    bool inDoubleQuote = false;
+    
+    for (int i = 0; i <= text.length - operator.length; i++) {
+      final char = text[i];
+      
+      // Track quote state
+      if (char == "'" && !inDoubleQuote) {
+        inSingleQuote = !inSingleQuote;
+      } else if (char == '"' && !inSingleQuote) {
+        inDoubleQuote = !inDoubleQuote;
+      }
+      
+      // If we're not inside quotes, check for operator
+      if (!inSingleQuote && !inDoubleQuote) {
+        if (text.substring(i, i + operator.length) == operator) {
+          return i;
+        }
+      }
+    }
+    
+    return -1;
+  }
+
+  /// Get a value from the user data service
+  /// Supports "namespace.key" format (e.g., "user.name", "debug.age")
+  Future<dynamic> _getValue(String key) async {
+    print('🔍 CONDITION_EVAL: Getting value for key: "$key"');
+    if (key.contains('.')) {
+      // Extract namespace and key parts
+      final parts = key.split('.');
+      if (parts.length >= 2) {
+        final namespace = parts[0];
+        final actualKey = parts.sublist(1).join('.'); // Handle nested keys like "user.profile.name"
+        print('🔍 CONDITION_EVAL: Resolved namespace: "$namespace", key: "$actualKey"');
+        
+        // For now, all namespaces use the same storage (UserDataService)
+        // In the future, different namespaces could use different storage backends
+        final storageKey = '$namespace.$actualKey';
+        final value = await userDataService.getValue(storageKey);
+        print('🔍 CONDITION_EVAL: Retrieved value: $value (type: ${value.runtimeType})');
+        return value;
+      }
+    }
+    print('🔍 CONDITION_EVAL: Key does not contain namespace, returning null');
     return null;
   }
 
@@ -135,12 +185,17 @@ class ConditionEvaluator {
   /// Compare two values numerically
   /// Returns false if either value is not a number
   bool _compareNumbers(dynamic left, dynamic right, String operator) {
+    print('🔍 CONDITION_EVAL: Numeric comparison - left: $left, right: $right, operator: $operator');
     // Convert to numbers if possible
     final leftNum = _toNumber(left);
     final rightNum = _toNumber(right);
+    print('🔍 CONDITION_EVAL: Converted to numbers - left: $leftNum, right: $rightNum');
     
     // Return false if either value is not a number
-    if (leftNum == null || rightNum == null) return false;
+    if (leftNum == null || rightNum == null) {
+      print('❌ CONDITION_EVAL: Cannot convert to numbers for comparison');
+      return false;
+    }
     
     switch (operator) {
       case '>':

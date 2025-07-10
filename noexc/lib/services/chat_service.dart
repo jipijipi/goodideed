@@ -210,48 +210,68 @@ class ChatService {
 
   /// Process an autoroute message and return the next message ID
   Future<int?> _processAutoRoute(ChatMessage routeMessage) async {
+    print('🚏 AUTOROUTE: Processing autoroute message ID: ${routeMessage.id}');
     if (_conditionEvaluator == null || routeMessage.routes == null) {
+      print('❌ AUTOROUTE: No condition evaluator or routes found, using nextMessageId: ${routeMessage.nextMessageId}');
       return routeMessage.nextMessageId;
     }
 
+    print('🚏 AUTOROUTE: Found ${routeMessage.routes!.length} routes to evaluate');
+    
     // Evaluate conditions in order
-    for (final route in routeMessage.routes!) {
+    for (int i = 0; i < routeMessage.routes!.length; i++) {
+      final route = routeMessage.routes![i];
+      print('🚏 AUTOROUTE: Evaluating route ${i + 1}/${routeMessage.routes!.length}');
       // Check if this is a default route (no condition)
       if (route.isDefault) {
+        print('🚏 AUTOROUTE: Route ${i + 1} is default route, executing');
         return await _executeRoute(route);
       }
       
       // Evaluate condition if present
       if (route.condition != null) {
+        print('🚏 AUTOROUTE: Route ${i + 1} has condition: "${route.condition}"');
         final matches = await _conditionEvaluator!.evaluate(route.condition!);
+        print('🚏 AUTOROUTE: Route ${i + 1} condition result: $matches');
         if (matches) {
+          print('🚏 AUTOROUTE: Route ${i + 1} matches! Executing route');
           return await _executeRoute(route);
         }
+        print('🚏 AUTOROUTE: Route ${i + 1} does not match, trying next route');
+      } else {
+        print('🚏 AUTOROUTE: Route ${i + 1} has no condition and is not default, skipping');
       }
     }
     
     // If no routes matched, use the message's nextMessageId
+    print('🚏 AUTOROUTE: No routes matched, using fallback nextMessageId: ${routeMessage.nextMessageId}');
     return routeMessage.nextMessageId;
   }
 
   /// Execute a route condition by loading sequence or returning message ID
   Future<int?> _executeRoute(RouteCondition route) async {
+    print('🎯 EXECUTE_ROUTE: Executing route - sequenceId: ${route.sequenceId}, nextMessageId: ${route.nextMessageId}');
     if (route.sequenceId != null) {
       final startMessageId = ChatConfig.initialMessageId;
+      print('🎯 EXECUTE_ROUTE: Switching to sequence "${route.sequenceId}" starting at message $startMessageId');
       
       // Notify UI about sequence change if callback is set
       if (_onSequenceSwitch != null) {
+        print('🎯 EXECUTE_ROUTE: Notifying UI about sequence switch');
         await _onSequenceSwitch!(route.sequenceId!, startMessageId);
         // Return null to indicate that UI will handle the continuation
+        print('🎯 EXECUTE_ROUTE: UI will handle continuation, returning null');
         return null;
       } else {
         // Fallback: Load sequence directly (for backward compatibility)
+        print('🎯 EXECUTE_ROUTE: No UI callback, loading sequence directly');
         await loadSequence(route.sequenceId!);
         return startMessageId;
       }
     }
     
     // Stay in current sequence, go to specified message
+    print('🎯 EXECUTE_ROUTE: No sequence switch, returning nextMessageId: ${route.nextMessageId}');
     return route.nextMessageId;
   }
 }

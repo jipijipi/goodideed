@@ -25,6 +25,10 @@
         {
           "text": "🆘 Get help with issues",
           "sequenceId": "support"
+        },
+        {
+          "text": "🔬 Debug Autoroute Tests",
+          "sequenceId": "autoroute_debug"
         }
       ]
     }

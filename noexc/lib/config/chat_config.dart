@@ -33,6 +33,7 @@ class ChatConfig {
     'support': 'Get Help',
     'menu': 'Main Menu',
     'comprehensive_test': 'Comprehensive Feature Test',
+    'autoroute_debug': '🔬 Autoroute Debug Test',
   };
   
   // Private constructor to prevent instantiation

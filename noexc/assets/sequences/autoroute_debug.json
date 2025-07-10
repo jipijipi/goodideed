@@ -1,0 +1,394 @@
+{
+  "sequenceId": "autoroute_debug",
+  "name": "Autoroute Debug Test",
+  "description": "Comprehensive debugging test for autoroute/conditional logic with various edge cases",
+  "messages": [
+    {
+      "id": 1,
+      "text": "🔬 Welcome to the Autoroute Debug Test! ||| This sequence will test various conditional scenarios and help identify issues. ||| Let's start by collecting some basic data.",
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "text": "First, let's set your age (we'll test numeric comparisons):",
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "isTextInput": true,
+      "storeKey": "debug.age",
+      "placeholderText": "Enter your age (number)...",
+      "nextMessageId": 4
+    },
+    {
+      "id": 4,
+      "text": "Now let's set your experience level:",
+      "nextMessageId": 5
+    },
+    {
+      "id": 5,
+      "isChoice": true,
+      "storeKey": "debug.experience",
+      "choices": [
+        {
+          "text": "Beginner",
+          "value": "beginner",
+          "nextMessageId": 6
+        },
+        {
+          "text": "Intermediate", 
+          "value": "intermediate",
+          "nextMessageId": 6
+        },
+        {
+          "text": "Expert",
+          "value": "expert",
+          "nextMessageId": 6
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "text": "Set a boolean preference:",
+      "nextMessageId": 7
+    },
+    {
+      "id": 7,
+      "isChoice": true,
+      "storeKey": "debug.premium",
+      "choices": [
+        {
+          "text": "Yes, I'm premium",
+          "value": true,
+          "nextMessageId": 8
+        },
+        {
+          "text": "No, I'm not premium",
+          "value": false,
+          "nextMessageId": 8
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "Let's set a string value with special characters:",
+      "nextMessageId": 9
+    },
+    {
+      "id": 9,
+      "isTextInput": true,
+      "storeKey": "debug.special_string",
+      "placeholderText": "Enter text with >= or == symbols...",
+      "nextMessageId": 10
+    },
+    {
+      "id": 10,
+      "text": "📊 Data Collection Complete! ||| Age: {debug.age} ||| Experience: {debug.experience} ||| Premium: {debug.premium} ||| Special String: {debug.special_string}",
+      "delay": 2000,
+      "nextMessageId": 100
+    },
+    {
+      "id": 100,
+      "text": "🔍 Starting Autoroute Tests...",
+      "nextMessageId": 101
+    },
+    {
+      "id": 101,
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "debug.age >= 18",
+          "nextMessageId": 200
+        },
+        {
+          "condition": "debug.age < 18",
+          "nextMessageId": 210
+        },
+        {
+          "default": true,
+          "nextMessageId": 220
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "text": "✅ AGE TEST PASSED: You are 18 or older ({debug.age}) ||| Testing string equality next...",
+      "delay": 1500,
+      "nextMessageId": 300
+    },
+    {
+      "id": 210,
+      "text": "✅ AGE TEST PASSED: You are under 18 ({debug.age}) ||| Testing string equality next...",
+      "delay": 1500,
+      "nextMessageId": 300
+    },
+    {
+      "id": 220,
+      "text": "⚠️ AGE TEST: Default route taken (age: {debug.age}) ||| This means the age comparison failed ||| Testing string equality next...",
+      "delay": 1500,
+      "nextMessageId": 300
+    },
+    {
+      "id": 300,
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "debug.experience == 'expert'",
+          "nextMessageId": 400
+        },
+        {
+          "condition": "debug.experience == 'intermediate'",
+          "nextMessageId": 410
+        },
+        {
+          "condition": "debug.experience == 'beginner'",
+          "nextMessageId": 420
+        },
+        {
+          "default": true,
+          "nextMessageId": 430
+        }
+      ]
+    },
+    {
+      "id": 400,
+      "text": "✅ STRING TEST PASSED: You are an expert! ||| Testing boolean next...",
+      "delay": 1500,
+      "nextMessageId": 500
+    },
+    {
+      "id": 410,
+      "text": "✅ STRING TEST PASSED: You are intermediate! ||| Testing boolean next...",
+      "delay": 1500,
+      "nextMessageId": 500
+    },
+    {
+      "id": 420,
+      "text": "✅ STRING TEST PASSED: You are a beginner! ||| Testing boolean next...",
+      "delay": 1500,
+      "nextMessageId": 500
+    },
+    {
+      "id": 430,
+      "text": "⚠️ STRING TEST: Default route taken (experience: {debug.experience}) ||| This means the string comparison failed ||| Testing boolean next...",
+      "delay": 1500,
+      "nextMessageId": 500
+    },
+    {
+      "id": 500,
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "debug.premium == true",
+          "nextMessageId": 600
+        },
+        {
+          "condition": "debug.premium == false",
+          "nextMessageId": 610
+        },
+        {
+          "default": true,
+          "nextMessageId": 620
+        }
+      ]
+    },
+    {
+      "id": 600,
+      "text": "✅ BOOLEAN TEST PASSED: You are premium! ||| Testing inequality next...",
+      "delay": 1500,
+      "nextMessageId": 700
+    },
+    {
+      "id": 610,
+      "text": "✅ BOOLEAN TEST PASSED: You are not premium! ||| Testing inequality next...",
+      "delay": 1500,
+      "nextMessageId": 700
+    },
+    {
+      "id": 620,
+      "text": "⚠️ BOOLEAN TEST: Default route taken (premium: {debug.premium}) ||| This means the boolean comparison failed ||| Testing inequality next...",
+      "delay": 1500,
+      "nextMessageId": 700
+    },
+    {
+      "id": 700,
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "debug.experience != 'expert'",
+          "nextMessageId": 800
+        },
+        {
+          "condition": "debug.experience != 'beginner'",
+          "nextMessageId": 810
+        },
+        {
+          "default": true,
+          "nextMessageId": 820
+        }
+      ]
+    },
+    {
+      "id": 800,
+      "text": "✅ INEQUALITY TEST PASSED: You are not an expert! ||| Testing complex conditions next...",
+      "delay": 1500,
+      "nextMessageId": 900
+    },
+    {
+      "id": 810,
+      "text": "✅ INEQUALITY TEST PASSED: You are not a beginner! ||| Testing complex conditions next...",
+      "delay": 1500,
+      "nextMessageId": 900
+    },
+    {
+      "id": 820,
+      "text": "⚠️ INEQUALITY TEST: Default route taken ||| This means the inequality comparison failed ||| Testing complex conditions next...",
+      "delay": 1500,
+      "nextMessageId": 900
+    },
+    {
+      "id": 900,
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "debug.age > 65",
+          "nextMessageId": 1000
+        },
+        {
+          "condition": "debug.age > 30",
+          "nextMessageId": 1010
+        },
+        {
+          "condition": "debug.age > 18",
+          "nextMessageId": 1020
+        },
+        {
+          "condition": "debug.age <= 18",
+          "nextMessageId": 1030
+        },
+        {
+          "default": true,
+          "nextMessageId": 1040
+        }
+      ]
+    },
+    {
+      "id": 1000,
+      "text": "✅ COMPLEX AGE TEST: Senior (65+) - Age: {debug.age} ||| Testing edge cases next...",
+      "delay": 1500,
+      "nextMessageId": 1100
+    },
+    {
+      "id": 1010,
+      "text": "✅ COMPLEX AGE TEST: Adult (30+) - Age: {debug.age} ||| Testing edge cases next...",
+      "delay": 1500,
+      "nextMessageId": 1100
+    },
+    {
+      "id": 1020,
+      "text": "✅ COMPLEX AGE TEST: Young Adult (18+) - Age: {debug.age} ||| Testing edge cases next...",
+      "delay": 1500,
+      "nextMessageId": 1100
+    },
+    {
+      "id": 1030,
+      "text": "✅ COMPLEX AGE TEST: Minor (≤18) - Age: {debug.age} ||| Testing edge cases next...",
+      "delay": 1500,
+      "nextMessageId": 1100
+    },
+    {
+      "id": 1040,
+      "text": "⚠️ COMPLEX AGE TEST: Default route taken - Age: {debug.age} ||| This means all age comparisons failed ||| Testing edge cases next...",
+      "delay": 1500,
+      "nextMessageId": 1100
+    },
+    {
+      "id": 1100,
+      "text": "🧪 Testing Edge Cases: ||| Special String: '{debug.special_string}' ||| Now testing if it contains problematic operators...",
+      "delay": 2000,
+      "nextMessageId": 1101
+    },
+    {
+      "id": 1101,
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "debug.special_string == 'test >= 5'",
+          "nextMessageId": 1200
+        },
+        {
+          "condition": "debug.special_string == 'value == true'",
+          "nextMessageId": 1210
+        },
+        {
+          "condition": "debug.special_string == ''",
+          "nextMessageId": 1220
+        },
+        {
+          "default": true,
+          "nextMessageId": 1230
+        }
+      ]
+    },
+    {
+      "id": 1200,
+      "text": "✅ EDGE CASE TEST: Found 'test >= 5' - String parsing worked correctly!",
+      "delay": 1500,
+      "nextMessageId": 1300
+    },
+    {
+      "id": 1210,
+      "text": "✅ EDGE CASE TEST: Found 'value == true' - String parsing worked correctly!",
+      "delay": 1500,
+      "nextMessageId": 1300
+    },
+    {
+      "id": 1220,
+      "text": "✅ EDGE CASE TEST: Empty string detected correctly!",
+      "delay": 1500,
+      "nextMessageId": 1300
+    },
+    {
+      "id": 1230,
+      "text": "✅ EDGE CASE TEST: Your string '{debug.special_string}' didn't match predefined patterns - this is normal!",
+      "delay": 1500,
+      "nextMessageId": 1300
+    },
+    {
+      "id": 1300,
+      "text": "🏁 All Autoroute Tests Complete! ||| Summary: ||| Age: {debug.age} ||| Experience: {debug.experience} ||| Premium: {debug.premium} ||| Special String: '{debug.special_string}'",
+      "delay": 2000,
+      "nextMessageId": 1400
+    },
+    {
+      "id": 1400,
+      "text": "🔄 Check the console/debug output for detailed logging of each condition evaluation!",
+      "delay": 1000,
+      "nextMessageId": 1500
+    },
+    {
+      "id": 1500,
+      "isChoice": true,
+      "choices": [
+        {
+          "text": "🔁 Run Test Again",
+          "sequenceId": "autoroute_debug"
+        },
+        {
+          "text": "🏠 Main Menu",
+          "sequenceId": "menu"
+        },
+        {
+          "text": "🧪 Comprehensive Test",
+          "sequenceId": "comprehensive_test"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+Nice to meet you, {user.name|there}! What brings you to our app today?
+Great to have you here, {user.name|friend}! What's your main goal?
+Hello {user.name|there}! What can I help you accomplish?
+Welcome {user.name|friend}! What brings you our way?
+Hi {user.name|there}! What would you like to do today?
+Good to see you, {user.name|friend}! How can I assist?
+Hello there, {user.name}! What's on your agenda?
+Nice to meet you, {user.name}! What's your purpose here?
+Great to have you, {user.name|friend}! What's your goal?
+Hi {user.name|there}! What would you like to explore?

@@ -6,6 +6,7 @@ import '../../models/chat_sequence.dart';
 import '../../services/chat_service.dart';
 import '../../services/user_data_service.dart';
 import '../../services/text_templating_service.dart';
+import '../../services/text_variants_service.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/ui_constants.dart';
 
@@ -15,6 +16,7 @@ class ChatStateManager extends ChangeNotifier {
   // Services
   late final UserDataService _userDataService;
   late final TextTemplatingService _templatingService;
+  late final TextVariantsService _variantsService;
   late final ChatService _chatService;
 
   // State
@@ -47,9 +49,11 @@ class ChatStateManager extends ChangeNotifier {
   void _initializeServices() {
     _userDataService = UserDataService();
     _templatingService = TextTemplatingService(_userDataService);
+    _variantsService = TextVariantsService();
     _chatService = ChatService(
       userDataService: _userDataService,
       templatingService: _templatingService,
+      variantsService: _variantsService,
     );
     
     // Set up callback for autoroute sequence switching

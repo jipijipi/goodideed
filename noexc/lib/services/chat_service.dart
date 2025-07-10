@@ -7,6 +7,7 @@ import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 import 'user_data_service.dart';
 import 'text_templating_service.dart';
+import 'text_variants_service.dart';
 import 'condition_evaluator.dart';
 import '../models/route_condition.dart';
 
@@ -15,6 +16,7 @@ class ChatService {
   Map<int, ChatMessage> _messageMap = {};
   final UserDataService? _userDataService;
   final TextTemplatingService? _templatingService;
+  final TextVariantsService? _variantsService;
   final ConditionEvaluator? _conditionEvaluator;
   
   // Callback for notifying UI about sequence changes from autoroutes
@@ -23,8 +25,10 @@ class ChatService {
   ChatService({
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
+    TextVariantsService? variantsService,
   }) : _userDataService = userDataService,
        _templatingService = templatingService,
+       _variantsService = variantsService,
        _conditionEvaluator = userDataService != null 
            ? ConditionEvaluator(userDataService) 
            : null;
@@ -132,27 +136,46 @@ class ChatService {
   }
 
   /// Process a single message template and replace variables with stored values
+  /// Also applies text variants for regular messages (not choices, inputs, conditionals, or multi-texts)
   Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
-    if (_templatingService == null) {
-      return message;
-    }
-
-    final processedText = await _templatingService!.processTemplate(message.text);
+    String textToProcess = message.text;
+    List<String>? textsToProcess = message.texts;
     
-    // Process texts array if present
-    List<String>? processedTexts;
-    if (message.texts != null) {
-      processedTexts = [];
-      for (final text in message.texts!) {
-        final processed = await _templatingService!.processTemplate(text);
-        processedTexts.add(processed);
+    // Apply variants only for regular messages (not choices, inputs, conditionals, or multi-texts)
+    if (_variantsService != null && 
+        _currentSequence != null &&
+        !message.isChoice && 
+        !message.isTextInput && 
+        !message.isAutoRoute && 
+        message.texts == null) {
+      
+      // Get variant for the main text
+      textToProcess = await _variantsService!.getVariant(
+        message.text, 
+        _currentSequence!.sequenceId, 
+        message.id
+      );
+    }
+    
+    // Apply template processing if service is available
+    if (_templatingService != null) {
+      textToProcess = await _templatingService!.processTemplate(textToProcess);
+      
+      // Process texts array if present (multi-text messages don't get variants)
+      if (textsToProcess != null) {
+        List<String> processedTexts = [];
+        for (final text in textsToProcess) {
+          final processed = await _templatingService!.processTemplate(text);
+          processedTexts.add(processed);
+        }
+        textsToProcess = processedTexts;
       }
     }
     
     return ChatMessage(
       id: message.id,
-      text: processedText,
-      texts: processedTexts,
+      text: textToProcess,
+      texts: textsToProcess,
       delay: message.delay,
       delays: message.delays,
       sender: message.sender,

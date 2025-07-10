@@ -1,0 +1,27 @@
+{
+  "moduleId": "name_collection",
+  "name": "Name Collection Module",
+  "description": "Reusable module for collecting user names",
+  "nodes": [
+    {
+      "id": "name_prompt",
+      "type": "message",
+      "text": "What's your name?",
+      "variants": "name_prompts.txt",
+      "target": "name_input"
+    },
+    {
+      "id": "name_input",
+      "type": "input",
+      "store": "user.name",
+      "placeholder": "Enter your name...",
+      "target": "name_confirmation"
+    },
+    {
+      "id": "name_confirmation",
+      "type": "message",
+      "text": "Nice to meet you, {user.name}!",
+      "variants": "confirmations.txt"
+    }
+  ]
+}

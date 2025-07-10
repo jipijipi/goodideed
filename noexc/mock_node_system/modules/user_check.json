@@ -1,0 +1,78 @@
+{
+  "moduleId": "user_check",
+  "name": "User Check Module",
+  "description": "Example of conditional routing based on user data",
+  "nodes": [
+    {
+      "id": "check_user_data",
+      "type": "condition",
+      "routes": [
+        {
+          "condition": "user.name != null",
+          "target": "returning_user_message"
+        },
+        {
+          "condition": "user.onboarded == true",
+          "target": "skip_to_main"
+        },
+        {
+          "default": true,
+          "target": "new_user_message"
+        }
+      ]
+    },
+    {
+      "id": "returning_user_message",
+      "type": "message",
+      "text": "Welcome back, {user.name}!",
+      "variants": "returning_greetings.txt",
+      "target": "main_choice"
+    },
+    {
+      "id": "new_user_message",
+      "type": "message",
+      "text": "Hello! Looks like you're new here.",
+      "variants": "new_user_greetings.txt",
+      "target": "onboarding_choice"
+    },
+    {
+      "id": "skip_to_main",
+      "type": "message",
+      "text": "Welcome back! Ready to continue?",
+      "variants": "quick_greetings.txt",
+      "target": "main_choice"
+    },
+    {
+      "id": "onboarding_choice",
+      "type": "choice",
+      "options": [
+        {
+          "text": "Start onboarding",
+          "target": "onboarding"
+        },
+        {
+          "text": "Skip for now",
+          "target": "main_choice"
+        }
+      ]
+    },
+    {
+      "id": "main_choice",
+      "type": "choice",
+      "options": [
+        {
+          "text": "Explore features",
+          "target": "tutorial"
+        },
+        {
+          "text": "Get help",
+          "target": "support"
+        },
+        {
+          "text": "Main menu",
+          "target": "menu"
+        }
+      ]
+    }
+  ]
+}

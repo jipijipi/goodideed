@@ -1,0 +1,13 @@
+Would you like to explore another feature?
+Want to learn about something else?
+Ready to check out another feature?
+Interested in exploring more?
+Should we look at another feature?
+Want to see what else is available?
+Ready for the next feature?
+Curious about other capabilities?
+Want to continue exploring?
+Ready to discover more features?
+Want to explore another feature?|There's so much more to see
+Ready for the next topic?|We've got lots more to show you
+Curious about other features?|The tour is just getting started

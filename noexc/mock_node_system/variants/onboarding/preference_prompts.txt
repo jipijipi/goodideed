@@ -1,0 +1,14 @@
+Would you like to set up your preferences now?
+Ready to configure your settings?
+Want to customize your experience?
+Should we set up your preferences?
+Time to personalize your settings?
+Would you like to configure things now?
+Ready to customize your experience?
+Want to set up your personal preferences?
+Should we configure your settings?
+Time to personalize things?
+Let's set up your preferences|This will only take a moment
+Ready to configure your settings?|We'll make it quick and easy
+Want to customize your experience?|It's totally optional though
+Time to personalize your settings?|You can always change these later

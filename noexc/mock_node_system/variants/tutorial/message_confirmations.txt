@@ -1,0 +1,13 @@
+Perfect! I received: "{tutorial.test_message|your message}". That's how easy it is!
+Excellent! Got your message: "{tutorial.test_message|your message}". Simple, right?
+Great! I saw: "{tutorial.test_message|your message}". Pretty straightforward!
+Awesome! Received: "{tutorial.test_message|your message}". Easy as that!
+Nice! I got: "{tutorial.test_message|your message}". That's all there is to it!
+Perfect! Your message: "{tutorial.test_message|your message}" came through clearly!
+Excellent! I received "{tutorial.test_message|your message}" loud and clear!
+Great! Got your message perfectly: "{tutorial.test_message|your message}"!
+Awesome! Message received: "{tutorial.test_message|your message}". So simple!
+Nice! I saw your message: "{tutorial.test_message|your message}". Easy!
+Perfect! I received your message|"{tutorial.test_message|your message}"|That's how easy it is!
+Excellent! Got it loud and clear|"{tutorial.test_message|your message}"|Simple as that!
+Great! Message came through perfectly|"{tutorial.test_message|your message}"|Pretty straightforward!

@@ -7,21 +7,18 @@
       "id": 1,
       "text": "🧪 Welcome to the Comprehensive Feature Test! ||| This sequence will test every feature of the chat system. ||| Let's start with basic bot messages and multi-text support.",
       "sender": "bot",
-      "delay": 1500,
       "nextMessageId": 2
     },
     {
       "id": 2,
       "text": "First, let's collect your name for personalization:",
       "sender": "bot",
-      "delay": 1000,
       "nextMessageId": 3
     },
     {
       "id": 3,
       "text": "Please enter your name:",
       "sender": "bot",
-      "delay": 1000,
       "isTextInput": true,
       "storeKey": "user.name",
       "placeholderText": "Enter your name here...",

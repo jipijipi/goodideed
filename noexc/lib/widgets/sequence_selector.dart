@@ -75,6 +75,8 @@ class SequenceSelector extends StatelessWidget {
         return Icons.alt_route;
       case 'custom_value_demo':
         return Icons.settings;
+      case 'comparison_demo':
+        return Icons.compare_arrows;
       default:
         return Icons.chat;
     }

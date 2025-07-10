@@ -1,0 +1,205 @@
+{
+  "sequenceId": "comparison_demo",
+  "name": "Comparison Operators Demo",
+  "description": "Demonstration of new comparison operators (>, <, >=, <=)",
+  "messages": [
+    {
+      "id": 1,
+      "text": "Welcome to the Comparison Operators Demo! Let's test numeric conditions.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "text": "What's your age? (This will be used for comparison tests)",
+      "sender": "bot",
+      "delay": 1000,
+      "isTextInput": true,
+      "storeKey": "age",
+      "placeholderText": "Enter your age...",
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "text": "What's your experience level in years?",
+      "sender": "bot",
+      "delay": 1000,
+      "isTextInput": true,
+      "storeKey": "experience_years",
+      "placeholderText": "Enter years of experience...",
+      "nextMessageId": 4
+    },
+    {
+      "id": 4,
+      "text": "Now let's test the comparison operators based on your inputs!",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 5
+    },
+    {
+      "id": 5,
+      "text": "ROUTE",
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "user.age >= 18",
+          "nextMessageId": 10
+        },
+        {
+          "condition": "user.age < 18",
+          "nextMessageId": 20
+        },
+        {
+          "default": true,
+          "nextMessageId": 30
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "text": "Great! You're 18 or older ({age} years old). Let's check your experience level.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 11
+    },
+    {
+      "id": 11,
+      "text": "ROUTE",
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "user.experience_years > 5",
+          "nextMessageId": 12
+        },
+        {
+          "condition": "user.experience_years >= 2",
+          "nextMessageId": 13
+        },
+        {
+          "condition": "user.experience_years <= 1",
+          "nextMessageId": 14
+        },
+        {
+          "default": true,
+          "nextMessageId": 15
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "text": "Wow! You're very experienced with {experience_years} years! You're a senior professional.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 13,
+      "text": "Nice! With {experience_years} years of experience, you're at an intermediate level.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 14,
+      "text": "You're just starting out with {experience_years} year(s) of experience. Welcome to the field!",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 15,
+      "text": "Your experience level of {experience_years} years puts you in a unique category!",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 20,
+      "text": "You're under 18 ({age} years old). Here are some age-appropriate recommendations.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 21
+    },
+    {
+      "id": 21,
+      "text": "ROUTE",
+      "sender": "system",
+      "isAutoRoute": true,
+      "routes": [
+        {
+          "condition": "user.age >= 16",
+          "nextMessageId": 22
+        },
+        {
+          "condition": "user.age >= 13",
+          "nextMessageId": 23
+        },
+        {
+          "condition": "user.age < 13",
+          "nextMessageId": 24
+        },
+        {
+          "default": true,
+          "nextMessageId": 30
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "text": "At {age}, you can start exploring career preparation and internship opportunities!",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 23,
+      "text": "At {age}, focus on learning fundamentals and exploring your interests!",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 24,
+      "text": "At {age}, enjoy learning through games and creative activities!",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 30,
+      "text": "Something went wrong with the age comparison. Please check your input.",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 40
+    },
+    {
+      "id": 40,
+      "text": "Demo complete! The following comparison operators were tested:",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 41
+    },
+    {
+      "id": 41,
+      "text": "✅ >= (greater than or equal)\n✅ < (less than)\n✅ > (greater than)\n✅ <= (less than or equal)",
+      "sender": "bot",
+      "delay": 1000,
+      "nextMessageId": 42
+    },
+    {
+      "id": 42,
+      "text": "Would you like to test another scenario?",
+      "sender": "bot",
+      "delay": 1000,
+      "isChoice": true,
+      "choices": [
+        {"text": "Reset and try again", "nextMessageId": 1},
+        {"text": "Go to main menu", "sequenceId": "menu", "nextMessageId": 1},
+        {"text": "Test autoroute system", "sequenceId": "autoroute_test", "nextMessageId": 1}
+      ]
+    }
+  ]
+}

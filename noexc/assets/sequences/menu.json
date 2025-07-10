@@ -6,14 +6,12 @@
     {
       "id": 1,
       "text": "Hi {user.name|there}! What can I help you with today?",
-      "sender": "bot",
       "delay": 1000,
       "nextMessageId": 2
     },
     {
       "id": 2,
       "text": "Choose what you'd like to do:",
-      "sender": "bot",
       "delay": 1500,
       "isChoice": true,
       "choices": [

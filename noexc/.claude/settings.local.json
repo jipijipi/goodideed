@@ -3,7 +3,9 @@
     "allow": [
       "Bash(flutter test:*)",
       "Bash(flutter analyze:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

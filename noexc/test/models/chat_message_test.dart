@@ -133,6 +133,36 @@ void main() {
       expect(userMessage.isFromUser, true);
     });
 
+    test('should default to bot sender when no sender specified in constructor', () {
+      // Arrange & Act
+      final message = ChatMessage(
+        id: 1,
+        text: 'Hello World',
+        // No sender specified
+      );
+
+      // Assert
+      expect(message.sender, 'bot');
+      expect(message.isFromBot, true);
+      expect(message.isFromUser, false);
+    });
+
+    test('should include sender in JSON even when it is the default value', () {
+      // Arrange
+      final message = ChatMessage(
+        id: 1,
+        text: 'Hello World',
+        // sender defaults to 'bot'
+      );
+
+      // Act
+      final json = message.toJson();
+
+      // Assert
+      expect(json['sender'], 'bot');
+      expect(json.containsKey('sender'), true);
+    });
+
     test('should create choice message from JSON', () {
       // Arrange
       final json = {

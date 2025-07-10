@@ -5,37 +5,40 @@
   "messages": [
     {
       "id": 1,
-      "text": "🧪 Welcome to the Comprehensive Feature Test! ||| This sequence will test every feature of the chat system. ||| Let's start with basic bot messages and multi-text support.",
-      "nextMessageId": 2
+      "text": "\ud83e\uddea Welcome to the Comprehensive Feature Test! ||| This sequence will test every feature of the chat system. ||| Let's start with basic bot messages and multi-text support.",
+      "nextMessageId": 2,
+      "type": "bot"
     },
     {
       "id": 2,
       "text": "First, let's collect your name for personalization:",
-      "nextMessageId": 3
+      "nextMessageId": 3,
+      "type": "bot"
     },
     {
       "id": 3,
-      "isTextInput": true,
       "storeKey": "user.name",
       "placeholderText": "Enter your name here...",
-      "nextMessageId": 4
+      "nextMessageId": 4,
+      "type": "textInput"
     },
     {
       "id": 4,
       "text": "Hello {user.name|there}! Nice to meet you. ||| Now I'll demonstrate text templating with fallback values. ||| Your name is stored as: {user.name}",
       "delay": 1200,
-      "nextMessageId": 5
+      "nextMessageId": 5,
+      "type": "bot"
     },
     {
       "id": 5,
       "text": "Now let's test choice functionality with custom values:",
       "delay": 1000,
-      "nextMessageId": 6
+      "nextMessageId": 6,
+      "type": "bot"
     },
     {
       "id": 6,
       "delay": 1000,
-      "isChoice": true,
       "storeKey": "user.experience_level",
       "choices": [
         {
@@ -53,38 +56,41 @@
           "value": "expert",
           "nextMessageId": 7
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 7,
       "text": "Excellent! You selected: {user.experience_level} ||| This demonstrates custom value storage. ||| The display text was friendly, but I stored a clean value: '{user.experience_level}'",
       "delay": 1300,
-      "nextMessageId": 8
+      "nextMessageId": 8,
+      "type": "bot"
     },
     {
       "id": 8,
       "text": "Now let's test numeric input and comparison operators:",
       "delay": 1000,
-      "nextMessageId": 9
+      "nextMessageId": 9,
+      "type": "bot"
     },
     {
       "id": 9,
       "delay": 1000,
-      "isTextInput": true,
       "storeKey": "user.age",
       "placeholderText": "Enter your age...",
-      "nextMessageId": 10
+      "nextMessageId": 10,
+      "type": "textInput"
     },
     {
       "id": 10,
       "text": "You entered: {user.age} ||| Now let's test boolean choices:",
       "delay": 1000,
-      "nextMessageId": 11
+      "nextMessageId": 11,
+      "type": "bot"
     },
     {
       "id": 11,
       "delay": 1000,
-      "isChoice": true,
       "storeKey": "user.notifications_enabled",
       "choices": [
         {
@@ -97,47 +103,49 @@
           "value": false,
           "nextMessageId": 12
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 12,
       "text": "Your notification preference: {user.notifications_enabled} ||| Now let's test preference storage:",
       "delay": 1000,
-      "nextMessageId": 13
+      "nextMessageId": 13,
+      "type": "bot"
     },
     {
       "id": 13,
       "delay": 1000,
-      "isChoice": true,
       "storeKey": "user.theme",
       "choices": [
         {
-          "text": "🌞 Light Theme",
+          "text": "\ud83c\udf1e Light Theme",
           "value": "light",
           "nextMessageId": 14
         },
         {
-          "text": "🌙 Dark Theme",
+          "text": "\ud83c\udf19 Dark Theme",
           "value": "dark",
           "nextMessageId": 14
         },
         {
-          "text": "🌈 Auto Theme",
+          "text": "\ud83c\udf08 Auto Theme",
           "value": "auto",
           "nextMessageId": 14
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 14,
       "text": "Theme preference stored: {user.theme} ||| Now we'll test the autoroute system with multiple conditions:",
       "delay": 1000,
-      "nextMessageId": 15
+      "nextMessageId": 15,
+      "type": "bot"
     },
     {
       "id": 15,
       "sender": "system",
-      "isAutoRoute": true,
       "routes": [
         {
           "condition": "user.age >= 18",
@@ -155,56 +163,61 @@
           "default": true,
           "nextMessageId": 35
         }
-      ]
+      ],
+      "type": "autoroute"
     },
     {
       "id": 20,
-      "text": "✅ Adult Route: You're {user.age} years old (>= 18) ||| This route was chosen based on your age. ||| Let's continue with more tests...",
+      "text": "\u2705 Adult Route: You're {user.age} years old (>= 18) ||| This route was chosen based on your age. ||| Let's continue with more tests...",
       "delay": 1200,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 25,
-      "text": "✅ Expert Route: You're an expert user! ||| This route was chosen based on your experience level. ||| Skipping beginner explanations...",
+      "text": "\u2705 Expert Route: You're an expert user! ||| This route was chosen based on your experience level. ||| Skipping beginner explanations...",
       "delay": 1200,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 30,
-      "text": "✅ Notifications Route: You enabled notifications! ||| This route was chosen based on your notification preference. ||| I'll keep you updated...",
+      "text": "\u2705 Notifications Route: You enabled notifications! ||| This route was chosen based on your notification preference. ||| I'll keep you updated...",
       "delay": 1200,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 35,
-      "text": "✅ Default Route: None of the conditions matched ||| This is the fallback route. ||| This ensures the conversation always continues...",
+      "text": "\u2705 Default Route: None of the conditions matched ||| This is the fallback route. ||| This ensures the conversation always continues...",
       "delay": 1200,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 40,
       "text": "Great! Now let's test cross-sequence navigation:",
       "delay": 1000,
-      "nextMessageId": 41
+      "nextMessageId": 41,
+      "type": "bot"
     },
     {
       "id": 41,
       "delay": 1000,
-      "isChoice": true,
       "storeKey": "user.next_destination",
       "choices": [
         {
-          "text": "🎓 Tutorial Sequence",
+          "text": "\ud83c\udf93 Tutorial Sequence",
           "value": "tutorial",
           "sequenceId": "tutorial"
         },
         {
-          "text": "🏠 Main Menu",
+          "text": "\ud83c\udfe0 Main Menu",
           "value": "menu",
           "sequenceId": "menu"
         },
         {
-          "text": "🛤️ Autoroute Demo",
+          "text": "\ud83d\udee4\ufe0f Autoroute Demo",
           "value": "autoroute",
           "sequenceId": "autoroute_test"
         },
@@ -213,32 +226,34 @@
           "value": "continue",
           "nextMessageId": 42
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 42,
       "text": "Perfect! Let's test more complex numeric comparisons:",
       "delay": 1000,
-      "nextMessageId": 43
+      "nextMessageId": 43,
+      "type": "bot"
     },
     {
       "id": 43,
       "delay": 1000,
-      "isTextInput": true,
       "storeKey": "user.favorite_number",
       "placeholderText": "Enter a number...",
-      "nextMessageId": 44
+      "nextMessageId": 44,
+      "type": "textInput"
     },
     {
       "id": 44,
       "text": "Your favorite number: {user.favorite_number} ||| Now testing all comparison operators...",
       "delay": 1000,
-      "nextMessageId": 45
+      "nextMessageId": 45,
+      "type": "bot"
     },
     {
       "id": 45,
       "sender": "system",
-      "isAutoRoute": true,
       "routes": [
         {
           "condition": "user.favorite_number > 100",
@@ -264,78 +279,87 @@
           "default": true,
           "nextMessageId": 75
         }
-      ]
+      ],
+      "type": "autoroute"
     },
     {
       "id": 50,
-      "text": "🔢 High Number Route: {user.favorite_number} > 100 ||| You like big numbers! ||| This tests the '>' operator.",
+      "text": "\ud83d\udd22 High Number Route: {user.favorite_number} > 100 ||| You like big numbers! ||| This tests the '>' operator.",
       "delay": 1200,
-      "nextMessageId": 80
+      "nextMessageId": 80,
+      "type": "bot"
     },
     {
       "id": 55,
-      "text": "🔢 Low Number Route: {user.favorite_number} < 10 ||| You prefer single digits! ||| This tests the '<' operator.",
+      "text": "\ud83d\udd22 Low Number Route: {user.favorite_number} < 10 ||| You prefer single digits! ||| This tests the '<' operator.",
       "delay": 1200,
-      "nextMessageId": 80
+      "nextMessageId": 80,
+      "type": "bot"
     },
     {
       "id": 60,
-      "text": "🔢 Medium-High Route: {user.favorite_number} >= 50 ||| A solid middle-high number! ||| This tests the '>=' operator.",
+      "text": "\ud83d\udd22 Medium-High Route: {user.favorite_number} >= 50 ||| A solid middle-high number! ||| This tests the '>=' operator.",
       "delay": 1200,
-      "nextMessageId": 80
+      "nextMessageId": 80,
+      "type": "bot"
     },
     {
       "id": 65,
-      "text": "🔢 Medium-Low Route: {user.favorite_number} <= 25 ||| A nice moderate number! ||| This tests the '<=' operator.",
+      "text": "\ud83d\udd22 Medium-Low Route: {user.favorite_number} <= 25 ||| A nice moderate number! ||| This tests the '<=' operator.",
       "delay": 1200,
-      "nextMessageId": 80
+      "nextMessageId": 80,
+      "type": "bot"
     },
     {
       "id": 70,
-      "text": "🔢 Special Route: The Answer! {user.favorite_number} == 42 ||| The ultimate answer to life, universe, and everything! ||| This tests the '==' operator.",
+      "text": "\ud83d\udd22 Special Route: The Answer! {user.favorite_number} == 42 ||| The ultimate answer to life, universe, and everything! ||| This tests the '==' operator.",
       "delay": 1200,
-      "nextMessageId": 80
+      "nextMessageId": 80,
+      "type": "bot"
     },
     {
       "id": 75,
-      "text": "🔢 Default Route: {user.favorite_number} ||| Your number didn't match any specific conditions. ||| This ensures routing always works!",
+      "text": "\ud83d\udd22 Default Route: {user.favorite_number} ||| Your number didn't match any specific conditions. ||| This ensures routing always works!",
       "delay": 1200,
-      "nextMessageId": 80
+      "nextMessageId": 80,
+      "type": "bot"
     },
     {
       "id": 80,
-      "text": "🎯 Test Summary for {user.name|Guest}: ||| Experience Level: {user.experience_level} ||| Age: {user.age} ||| Notifications: {user.notifications_enabled} ||| Theme: {user.theme} ||| Favorite Number: {user.favorite_number}",
+      "text": "\ud83c\udfaf Test Summary for {user.name|Guest}: ||| Experience Level: {user.experience_level} ||| Age: {user.age} ||| Notifications: {user.notifications_enabled} ||| Theme: {user.theme} ||| Favorite Number: {user.favorite_number}",
       "delay": 1500,
-      "nextMessageId": 81
+      "nextMessageId": 81,
+      "type": "bot"
     },
     {
       "id": 81,
-      "text": "✨ Comprehensive test completed! ||| We tested: Multi-text messages, Text input, Choice buttons, Custom values, Text templating, Autorouting, Numeric comparisons, Boolean storage, Cross-sequence navigation ||| All features working perfectly!",
+      "text": "\u2728 Comprehensive test completed! ||| We tested: Multi-text messages, Text input, Choice buttons, Custom values, Text templating, Autorouting, Numeric comparisons, Boolean storage, Cross-sequence navigation ||| All features working perfectly!",
       "delay": 1800,
-      "nextMessageId": 82
+      "nextMessageId": 82,
+      "type": "bot"
     },
     {
       "id": 82,
       "delay": 1000,
-      "isChoice": true,
       "choices": [
         {
-          "text": "🔁 Run Test Again",
+          "text": "\ud83d\udd01 Run Test Again",
           "sequenceId": "comprehensive_test"
         },
         {
-          "text": "🏠 Main Menu",
+          "text": "\ud83c\udfe0 Main Menu",
           "sequenceId": "menu"
         },
         {
-          "text": "🎓 Tutorial",
+          "text": "\ud83c\udf93 Tutorial",
           "sequenceId": "tutorial"
         },
         {
-          "text": "❓ Support",
+          "text": "\u2753 Support",
           "sequenceId": "support"
         }
-      ]
+      ],
+      "type": "choice"
     }
   ]
 }

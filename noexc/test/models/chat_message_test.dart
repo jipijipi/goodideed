@@ -223,7 +223,7 @@ void main() {
         text: '', // Choice messages have no text content
         delay: 1500,
         sender: 'user',
-        isChoice: true,
+        type: MessageType.choice,
         choices: choices,
         nextMessageId: 30,
       );
@@ -248,7 +248,7 @@ void main() {
         text: '', // Choice messages have no text content
         delay: 1500,
         sender: 'user',
-        isChoice: true,
+        type: MessageType.choice,
         choices: [Choice(text: 'Yes', nextMessageId: 10)],
       );
 
@@ -308,7 +308,7 @@ void main() {
         text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
-        isTextInput: true,
+        type: MessageType.textInput,
         nextMessageId: 6,
       );
 
@@ -329,7 +329,7 @@ void main() {
         text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
-        isTextInput: true,
+        type: MessageType.textInput,
       );
 
       final regularMessage = ChatMessage(
@@ -390,7 +390,7 @@ void main() {
         text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
-        isTextInput: true,
+        type: MessageType.textInput,
         storeKey: 'user.name',
       );
 
@@ -461,7 +461,7 @@ void main() {
       final message = ChatMessage(
         id: 1,
         text: '', // Text input messages have no text content
-        isTextInput: true,
+        type: MessageType.textInput,
         placeholderText: 'Your name here...',
       );
 
@@ -477,7 +477,7 @@ void main() {
       final message = ChatMessage(
         id: 1,
         text: '', // Text input messages have no text content
-        isTextInput: true,
+        type: MessageType.textInput,
         // Using default placeholder text
       );
 

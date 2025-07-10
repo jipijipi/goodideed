@@ -8,19 +8,20 @@
       "text": "Welcome to the interactive tutorial! I'll guide you through our app's features.",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 2
+      "nextMessageId": 2,
+      "type": "bot"
     },
     {
       "id": 2,
       "text": "What would you like to learn about first?",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 3
+      "nextMessageId": 3,
+      "type": "bot"
     },
     {
       "id": 3,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "tutorial.topic",
       "choices": [
         {
@@ -35,98 +36,109 @@
           "text": "Settings & preferences",
           "nextMessageId": 30
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 10,
       "text": "Great choice! Let's explore the chat system.",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 11
+      "nextMessageId": 11,
+      "type": "bot"
     },
     {
       "id": 11,
       "text": "Our chat supports real-time messaging, file sharing, and interactive conversations like this one!",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 12
+      "nextMessageId": 12,
+      "type": "bot"
     },
     {
       "id": 12,
       "text": "You can send text messages, make choices, and even share information that I'll remember.",
       "sender": "bot",
       "delay": 2500,
-      "nextMessageId": 13
+      "nextMessageId": 13,
+      "type": "bot"
     },
     {
       "id": 13,
       "sender": "bot",
       "delay": 1000,
-      "isTextInput": true,
       "storeKey": "tutorial.test_message",
       "placeholderText": "Type anything you'd like...",
-      "nextMessageId": 14
+      "nextMessageId": 14,
+      "type": "textInput"
     },
     {
       "id": 14,
       "text": "Perfect! I received: \"{tutorial.test_message|your message}\". That's how easy it is!",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 20,
       "text": "Let me show you around the user interface!",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 21
+      "nextMessageId": 21,
+      "type": "bot"
     },
     {
       "id": 21,
       "text": "At the top, you'll see the app bar with the title and action buttons.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 22
+      "nextMessageId": 22,
+      "type": "bot"
     },
     {
       "id": 22,
       "text": "The person icon shows your stored information, and the theme button toggles between light and dark modes.",
       "sender": "bot",
       "delay": 2500,
-      "nextMessageId": 23
+      "nextMessageId": 23,
+      "type": "bot"
     },
     {
       "id": 23,
       "text": "Messages appear in bubbles - mine are on the left, yours on the right.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 30,
       "text": "Settings and preferences help you customize your experience.",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 31
+      "nextMessageId": 31,
+      "type": "bot"
     },
     {
       "id": 31,
       "text": "You can change themes, manage your information, and control how the app behaves.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 32
+      "nextMessageId": 32,
+      "type": "bot"
     },
     {
       "id": 32,
       "text": "What's most important to you in an app?",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 33
+      "nextMessageId": 33,
+      "type": "bot"
     },
     {
       "id": 33,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "tutorial.priority",
       "choices": [
         {
@@ -141,40 +153,44 @@
           "text": "Fast and reliable",
           "nextMessageId": 36
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 34,
       "text": "Absolutely! We've designed everything to be intuitive and user-friendly.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 35,
       "text": "Perfect! Our app offers lots of customization options to make it truly yours.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 36,
       "text": "Excellent! Performance and reliability are core to everything we build.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 40
+      "nextMessageId": 40,
+      "type": "bot"
     },
     {
       "id": 40,
       "text": "Would you like to explore another feature?",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 41
+      "nextMessageId": 41,
+      "type": "bot"
     },
     {
       "id": 41,
       "sender": "user",
-      "isChoice": true,
       "choices": [
         {
           "text": "Yes, show me more",
@@ -184,20 +200,23 @@
           "text": "I'm good for now",
           "nextMessageId": 50
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 50,
       "text": "Great job completing the tutorial! You're now ready to use the app effectively.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 51
+      "nextMessageId": 51,
+      "type": "bot"
     },
     {
       "id": 51,
       "text": "Remember, you can always come back to learn more. Happy exploring!",
       "sender": "bot",
-      "delay": 2000
+      "delay": 2000,
+      "type": "bot"
     }
   ]
 }

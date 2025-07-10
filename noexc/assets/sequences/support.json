@@ -8,19 +8,20 @@
       "text": "Hi there! I'm here to help you with any issues you're experiencing.",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 2
+      "nextMessageId": 2,
+      "type": "bot"
     },
     {
       "id": 2,
       "text": "What type of problem are you having today?",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 3
+      "nextMessageId": 3,
+      "type": "bot"
     },
     {
       "id": 3,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "support.issue_type",
       "choices": [
         {
@@ -39,26 +40,28 @@
           "text": "Other issue",
           "nextMessageId": 40
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 10,
       "text": "I understand how frustrating startup issues can be. Let's troubleshoot this step by step.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 11
+      "nextMessageId": 11,
+      "type": "bot"
     },
     {
       "id": 11,
       "text": "First, have you tried restarting your device completely?",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 12
+      "nextMessageId": 12,
+      "type": "bot"
     },
     {
       "id": 12,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "support.tried_restart",
       "choices": [
         {
@@ -69,47 +72,52 @@
           "text": "No, let me try that",
           "nextMessageId": 14
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 13,
       "text": "Let's check if you have the latest version. Please update the app from your app store.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 15
+      "nextMessageId": 15,
+      "type": "bot"
     },
     {
       "id": 14,
       "text": "Please restart your device and try opening the app again. This fixes most startup issues!",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 60
+      "nextMessageId": 60,
+      "type": "bot"
     },
     {
       "id": 15,
       "text": "If updating doesn't help, try clearing the app's cache or reinstalling it.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 60
+      "nextMessageId": 60,
+      "type": "bot"
     },
     {
       "id": 20,
       "text": "Login issues can be tricky. Let's figure out what's happening.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 21
+      "nextMessageId": 21,
+      "type": "bot"
     },
     {
       "id": 21,
       "text": "Are you getting an error message when you try to log in?",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 22
+      "nextMessageId": 22,
+      "type": "bot"
     },
     {
       "id": 22,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "support.login_error",
       "choices": [
         {
@@ -124,109 +132,119 @@
           "text": "App just freezes",
           "nextMessageId": 25
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 23,
       "text": "Double-check your username and password. If you're sure they're correct, try resetting your password.",
       "sender": "bot",
       "delay": 2500,
-      "nextMessageId": 60
+      "nextMessageId": 60,
+      "type": "bot"
     },
     {
       "id": 24,
       "text": "Check your internet connection. Try switching between WiFi and mobile data to see if that helps.",
       "sender": "bot",
       "delay": 2500,
-      "nextMessageId": 60
+      "nextMessageId": 60,
+      "type": "bot"
     },
     {
       "id": 25,
       "text": "If the app freezes during login, try force-closing and reopening it, or restart your device.",
       "sender": "bot",
       "delay": 2500,
-      "nextMessageId": 60
+      "nextMessageId": 60,
+      "type": "bot"
     },
     {
       "id": 30,
       "sender": "bot",
       "delay": 1500,
-      "isTextInput": true,
       "storeKey": "support.broken_feature",
       "placeholderText": "Describe the feature that's not working...",
-      "nextMessageId": 31
+      "nextMessageId": 31,
+      "type": "textInput"
     },
     {
       "id": 31,
       "text": "Thanks for letting me know about the issue with {support.broken_feature|that feature}.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 32
+      "nextMessageId": 32,
+      "type": "bot"
     },
     {
       "id": 32,
       "sender": "bot",
       "delay": 1500,
-      "isTextInput": true,
       "storeKey": "support.feature_behavior",
       "placeholderText": "What exactly happens when you try to use it?",
-      "nextMessageId": 33
+      "nextMessageId": 33,
+      "type": "textInput"
     },
     {
       "id": 33,
       "text": "I see. That behavior with {support.broken_feature|the feature} sounds unusual.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 34
+      "nextMessageId": 34,
+      "type": "bot"
     },
     {
       "id": 34,
       "text": "Try logging out and back in, or updating the app. If it persists, our team will investigate.",
       "sender": "bot",
       "delay": 2500,
-      "nextMessageId": 60
+      "nextMessageId": 60,
+      "type": "bot"
     },
     {
       "id": 40,
       "sender": "bot",
       "delay": 1500,
-      "isTextInput": true,
       "storeKey": "support.custom_issue",
       "placeholderText": "Describe your issue in detail...",
-      "nextMessageId": 41
+      "nextMessageId": 41,
+      "type": "textInput"
     },
     {
       "id": 41,
       "text": "Thank you for the detailed description. Let me see how I can help with that.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 42
+      "nextMessageId": 42,
+      "type": "bot"
     },
     {
       "id": 42,
       "text": "Based on what you've described, here are some general troubleshooting steps:",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 43
+      "nextMessageId": 43,
+      "type": "bot"
     },
     {
       "id": 43,
       "text": "1. Restart the app\n2. Check for updates\n3. Restart your device\n4. Contact our support team if the issue persists",
       "sender": "bot",
       "delay": 3000,
-      "nextMessageId": 60
+      "nextMessageId": 60,
+      "type": "bot"
     },
     {
       "id": 60,
       "text": "Did this help resolve your issue?",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 61
+      "nextMessageId": 61,
+      "type": "bot"
     },
     {
       "id": 61,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "support.issue_resolved",
       "choices": [
         {
@@ -237,40 +255,46 @@
           "text": "Still having problems",
           "nextMessageId": 80
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 70,
       "text": "Wonderful! I'm glad we could get that sorted out for you.",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 71
+      "nextMessageId": 71,
+      "type": "bot"
     },
     {
       "id": 71,
       "text": "If you run into any other issues, don't hesitate to reach out. We're always here to help!",
       "sender": "bot",
-      "delay": 2000
+      "delay": 2000,
+      "type": "bot"
     },
     {
       "id": 80,
       "text": "I'm sorry the issue persists. Let me connect you with our technical support team for further assistance.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 81
+      "nextMessageId": 81,
+      "type": "bot"
     },
     {
       "id": 81,
       "text": "They'll be able to provide more specialized help. You can reach them through the 'Contact Support' option in settings.",
       "sender": "bot",
       "delay": 2500,
-      "nextMessageId": 82
+      "nextMessageId": 82,
+      "type": "bot"
     },
     {
       "id": 82,
       "text": "Thank you for your patience, and we'll get this resolved for you soon!",
       "sender": "bot",
-      "delay": 1500
+      "delay": 1500,
+      "type": "bot"
     }
   ]
 }

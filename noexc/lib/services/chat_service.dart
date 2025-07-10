@@ -169,13 +169,11 @@ class ChatService {
       text: textToProcess,
       delay: message.delay,
       sender: message.sender,
-      isChoice: message.isChoice,
-      isTextInput: message.isTextInput,
+      type: message.type,
       choices: message.choices,
       nextMessageId: message.nextMessageId,
       storeKey: message.storeKey,
       placeholderText: message.placeholderText,
-      isAutoRoute: message.isAutoRoute,
       routes: message.routes,
     );
   }

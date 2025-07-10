@@ -148,7 +148,7 @@ class ChatStateManager extends ChangeNotifier {
         text: choiceMessage.text,
         delay: choiceMessage.delay,
         sender: choiceMessage.sender,
-        isChoice: true, // Keep as choice message
+        type: MessageType.choice, // Keep as choice message
         choices: choiceMessage.choices,
         nextMessageId: choiceMessage.nextMessageId,
         storeKey: choiceMessage.storeKey,

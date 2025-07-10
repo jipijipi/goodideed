@@ -50,7 +50,7 @@ void main() {
         text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
-        isTextInput: true,
+        type: MessageType.textInput,
         storeKey: storeKey,
         nextMessageId: 24,
       );
@@ -71,7 +71,7 @@ void main() {
         text: '', // Text input messages have no text content
         delay: 1000,
         sender: 'bot',
-        isTextInput: true,
+        type: MessageType.textInput,
         nextMessageId: 24,
         // storeKey is null
       );
@@ -97,7 +97,7 @@ void main() {
         text: '', // Choice messages have no text content
         delay: 1000,
         sender: 'bot',
-        isChoice: true,
+        type: MessageType.choice,
         storeKey: storeKey,
       );
 
@@ -164,8 +164,7 @@ void main() {
         text: '', // Choice messages have no text content
         delay: 1500,
         sender: 'bot',
-        isChoice: true,
-        isTextInput: false,
+        type: MessageType.choice,
         storeKey: 'some.key',
         nextMessageId: 2,
       );

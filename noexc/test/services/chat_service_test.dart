@@ -148,7 +148,7 @@ void main() {
       final originalMessage = ChatMessage(
         id: 1,
         text: '', // Text input messages have no text content
-        isTextInput: true,
+        type: MessageType.textInput,
         placeholderText: 'Enter your custom name here...',
         storeKey: 'user.name',
       );
@@ -170,7 +170,7 @@ void main() {
       final originalMessage = ChatMessage(
         id: 1,
         text: '', // Text input messages have no text content
-        isTextInput: true,
+        type: MessageType.textInput,
         // Using default placeholderText
       );
 

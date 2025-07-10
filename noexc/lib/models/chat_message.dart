@@ -3,19 +3,25 @@ import 'route_condition.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 
+enum MessageType {
+  bot,
+  user,
+  choice,
+  textInput,
+  autoroute,
+}
+
 class ChatMessage {
   final int id;
   final String text;
   final int delay;
   final String sender;
-  final bool isChoice;
-  final bool isTextInput;
+  final MessageType type;
   final List<Choice>? choices;
   final int? nextMessageId;
   final String? storeKey;
   final String placeholderText;
   final String? selectedChoiceText;
-  final bool isAutoRoute;
   final List<RouteCondition>? routes;
 
   ChatMessage({
@@ -23,26 +29,24 @@ class ChatMessage {
     required this.text,
     this.delay = AppConstants.defaultMessageDelay,
     this.sender = ChatConfig.botSender,
-    this.isChoice = false,
-    this.isTextInput = false,
+    this.type = MessageType.bot,
     this.choices,
     this.nextMessageId,
     this.storeKey,
     this.placeholderText = AppConstants.defaultPlaceholderText,
     this.selectedChoiceText,
-    this.isAutoRoute = false,
     this.routes,
   }) :
        assert(
-         !isChoice || text.isEmpty,
+         type != MessageType.choice || text.isEmpty,
          'Choice messages should not have text content'
        ),
        assert(
-         !isTextInput || text.isEmpty,
+         type != MessageType.textInput || text.isEmpty,
          'Text input messages should not have text content'
        ),
        assert(
-         !isAutoRoute || text.isEmpty,
+         type != MessageType.autoroute || text.isEmpty,
          'Autoroute messages should not have text content'
        );
 
@@ -61,15 +65,39 @@ class ChatMessage {
           .toList();
     }
 
-
-    final isChoice = json['isChoice'] as bool? ?? false;
-    final isTextInput = json['isTextInput'] as bool? ?? false;
-    final isAutoRoute = json['isAutoRoute'] as bool? ?? false;
+    // Determine message type from either new 'type' field or legacy boolean fields
+    MessageType messageType;
+    if (json['type'] != null) {
+      final typeString = json['type'] as String;
+      messageType = MessageType.values.firstWhere(
+        (e) => e.name == typeString,
+        orElse: () => MessageType.bot,
+      );
+    } else {
+      // Backward compatibility with boolean fields
+      final isChoice = json['isChoice'] as bool? ?? false;
+      final isTextInput = json['isTextInput'] as bool? ?? false;
+      final isAutoRoute = json['isAutoRoute'] as bool? ?? false;
+      final sender = json['sender'] as String? ?? ChatConfig.botSender;
+      
+      if (isChoice) {
+        messageType = MessageType.choice;
+      } else if (isTextInput) {
+        messageType = MessageType.textInput;
+      } else if (isAutoRoute) {
+        messageType = MessageType.autoroute;
+      } else if (sender == ChatConfig.userSender) {
+        messageType = MessageType.user;
+      } else {
+        messageType = MessageType.bot;
+      }
+    }
     
     // For interactive messages, use empty text to enforce single responsibility
-    // Handle optional text field for interactive messages
     String messageText = json['text'] as String? ?? '';
-    if (isChoice || isTextInput || isAutoRoute) {
+    if (messageType == MessageType.choice || 
+        messageType == MessageType.textInput || 
+        messageType == MessageType.autoroute) {
       messageText = '';
     }
     
@@ -78,14 +106,12 @@ class ChatMessage {
       text: messageText,
       delay: json['delay'] as int? ?? AppConstants.defaultMessageDelay,
       sender: json['sender'] as String? ?? ChatConfig.botSender,
-      isChoice: isChoice,
-      isTextInput: isTextInput,
+      type: messageType,
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
       storeKey: json['storeKey'] as String?,
       placeholderText: json['placeholderText'] as String? ?? AppConstants.defaultPlaceholderText,
       selectedChoiceText: json['selectedChoiceText'] as String?,
-      isAutoRoute: isAutoRoute,
       routes: routes,
     );
   }
@@ -96,15 +122,18 @@ class ChatMessage {
       'text': text,
       'delay': delay,
       'sender': sender,
+      'type': type.name,
     };
 
-
-    if (isChoice) {
-      json['isChoice'] = isChoice;
+    // Add backward compatibility boolean fields
+    if (type == MessageType.choice) {
+      json['isChoice'] = true;
     }
-
-    if (isTextInput) {
-      json['isTextInput'] = isTextInput;
+    if (type == MessageType.textInput) {
+      json['isTextInput'] = true;
+    }
+    if (type == MessageType.autoroute) {
+      json['isAutoRoute'] = true;
     }
 
     if (choices != null) {
@@ -127,10 +156,6 @@ class ChatMessage {
       json['selectedChoiceText'] = selectedChoiceText!;
     }
 
-    if (isAutoRoute) {
-      json['isAutoRoute'] = isAutoRoute;
-    }
-
     if (routes != null) {
       json['routes'] = routes!.map((route) => route.toJson()).toList();
     }
@@ -140,6 +165,11 @@ class ChatMessage {
 
   bool get isFromBot => sender == ChatConfig.botSender;
   bool get isFromUser => sender == ChatConfig.userSender;
+  
+  // Convenience getters for backward compatibility
+  bool get isChoice => type == MessageType.choice;
+  bool get isTextInput => type == MessageType.textInput;
+  bool get isAutoRoute => type == MessageType.autoroute;
   
   /// Returns true if this message has multiple texts (contains separator)
   bool get hasMultipleTexts => text.contains(ChatConfig.multiTextSeparator);
@@ -170,19 +200,21 @@ class ChatMessage {
     
     for (int i = 0; i < textList.length; i++) {
       final isLast = i == textList.length - 1;
+      final messageType = isLast ? type : MessageType.bot; // Only last message keeps original type
+      final messageText = isLast && (type == MessageType.choice || type == MessageType.textInput || type == MessageType.autoroute) 
+          ? '' : textList[i]; // Interactive messages have no text
+      
       messages.add(ChatMessage(
         id: id + i, // Use incremental IDs for individual messages
-        text: isLast && (isChoice || isTextInput || isAutoRoute) ? '' : textList[i], // Interactive messages have no text
+        text: messageText,
         delay: delayList[i],
         sender: sender,
-        isChoice: isLast ? isChoice : false, // Only last message can have choices
-        isTextInput: isLast ? isTextInput : false, // Only last message can have text input
+        type: messageType,
         choices: isLast ? choices : null,
         nextMessageId: isLast ? nextMessageId : null, // Only last message has next ID
         storeKey: isLast ? storeKey : null, // Only last message stores data
         placeholderText: placeholderText,
         selectedChoiceText: selectedChoiceText,
-        isAutoRoute: isLast ? isAutoRoute : false, // Only last message can autoroute
         routes: isLast ? routes : null,
       ));
     }

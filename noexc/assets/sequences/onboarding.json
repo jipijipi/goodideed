@@ -8,28 +8,29 @@
       "text": "Welcome to our app! I'm here to help you get started.",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 2
+      "nextMessageId": 2,
+      "type": "bot"
     },
     {
       "id": 2,
       "sender": "bot",
       "delay": 1500,
-      "isTextInput": true,
       "storeKey": "user.name",
       "placeholderText": "Enter your full name...",
-      "nextMessageId": 3
+      "nextMessageId": 3,
+      "type": "textInput"
     },
     {
       "id": 3,
       "text": "Nice to meet you, {user.name|there}! What brings you to our app today?",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 4
+      "nextMessageId": 4,
+      "type": "bot"
     },
     {
       "id": 4,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "user.primary_interest",
       "choices": [
         {
@@ -44,33 +45,36 @@
           "text": "Just browsing",
           "nextMessageId": 30
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 10,
       "text": "Excellent! I'll show you around the key features.",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 11
+      "nextMessageId": 11,
+      "type": "bot"
     },
     {
       "id": 11,
       "text": "Our app offers chat functionality, user management, and personalized experiences.",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 12
+      "nextMessageId": 12,
+      "type": "bot"
     },
     {
       "id": 12,
       "text": "Would you like to set up your preferences now?",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 13
+      "nextMessageId": 13,
+      "type": "bot"
     },
     {
       "id": 13,
       "sender": "user",
-      "isChoice": true,
       "choices": [
         {
           "text": "Yes, let's do it",
@@ -84,33 +88,36 @@
           "text": "Maybe later",
           "nextMessageId": 50
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 30,
       "text": "That's perfectly fine! Feel free to explore at your own pace.",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 31
+      "nextMessageId": 31,
+      "type": "bot"
     },
     {
       "id": 31,
       "text": "If you need any help, just ask. I'm always here to assist you, {user.name|friend}!",
       "sender": "bot",
       "delay": 2000,
-      "nextMessageId": 51
+      "nextMessageId": 51,
+      "type": "bot"
     },
     {
       "id": 40,
       "text": "Great! What's your preferred theme?",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 41
+      "nextMessageId": 41,
+      "type": "bot"
     },
     {
       "id": 41,
       "sender": "user",
-      "isChoice": true,
       "storeKey": "user.theme_preference",
       "choices": [
         {
@@ -121,26 +128,28 @@
           "text": "Dark theme",
           "nextMessageId": 42
         }
-      ]
+      ],
+      "type": "choice"
     },
     {
       "id": 42,
       "text": "Perfect! Your preferences have been saved. Welcome aboard, {user.name}!",
       "sender": "bot",
       "delay": 1500,
-      "nextMessageId": 51
+      "nextMessageId": 51,
+      "type": "bot"
     },
     {
       "id": 50,
       "text": "You're all set! What would you like to do next?",
       "sender": "bot",
       "delay": 1000,
-      "nextMessageId": 51
+      "nextMessageId": 51,
+      "type": "bot"
     },
     {
       "id": 51,
       "sender": "user",
-      "isChoice": true,
       "choices": [
         {
           "text": "Learn app features",
@@ -154,7 +163,8 @@
           "text": "Main menu",
           "sequenceId": "menu"
         }
-      ]
+      ],
+      "type": "choice"
     }
   ]
 }

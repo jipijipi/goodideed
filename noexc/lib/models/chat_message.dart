@@ -89,7 +89,8 @@ class ChatMessage {
     final isAutoRoute = json['isAutoRoute'] as bool? ?? false;
     
     // For interactive messages, use empty text to enforce single responsibility
-    String messageText = json['text'] as String;
+    // Handle optional text field for interactive messages
+    String messageText = json['text'] as String? ?? '';
     if (isChoice || isTextInput || isAutoRoute) {
       messageText = '';
     }

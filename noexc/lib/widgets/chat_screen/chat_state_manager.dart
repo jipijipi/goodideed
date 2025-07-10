@@ -83,6 +83,11 @@ class ChatStateManager extends ChangeNotifier {
     for (ChatMessage message in processedMessages) {
       if (_disposed) break;
       
+      // Skip messages with empty text that are not interactive (these are processed messages that had text cleared)
+      if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
+        continue;
+      }
+      
       // Use Timer instead of Future.delayed for better control
       final completer = Completer<void>();
       final timer = Timer(Duration(milliseconds: message.delay), () {

@@ -50,6 +50,11 @@ class MessageBubble extends StatelessWidget {
 
   /// Builds a regular text message bubble (bot or user)
   Widget _buildRegularBubble(BuildContext context) {
+    // Don't display messages with empty text
+    if (message.text.trim().isEmpty) {
+      return const SizedBox.shrink();
+    }
+    
     final isBot = message.isFromBot;
     
     return Padding(

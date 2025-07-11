@@ -219,7 +219,7 @@
         {
           "text": "\ud83d\udee4\ufe0f Autoroute Demo",
           "value": "autoroute",
-          "sequenceId": "autoroute_test"
+          "sequenceId": "autoroute_debug"
         },
         {
           "text": "Continue Testing",

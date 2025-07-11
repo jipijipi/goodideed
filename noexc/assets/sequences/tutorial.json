@@ -216,7 +216,21 @@
       "text": "Remember, you can always come back to learn more. Happy exploring!",
       "sender": "bot",
       "delay": 2000,
-      "type": "bot"
+      "type": "choice",
+      "choices": [
+        {
+          "text": "🔄 Restart Tutorial",
+          "sequenceId": "tutorial"
+        },
+        {
+          "text": "🏠 Main Menu",
+          "sequenceId": "menu"
+        },
+        {
+          "text": "💬 Continue Exploring",
+          "sequenceId": "onboarding"
+        }
+      ]
     }
   ]
 }

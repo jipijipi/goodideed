@@ -1,0 +1,195 @@
+flowchart TD
+    %% Sequence Metadata
+    %% sequenceId: habit_tracker
+    %% name: Habit Tracker
+    %% description: Daily habit tracking with streak management
+    
+    subgraph welcomeSeq["Welcome Sequence"]
+        onboarded["id:1|type:autoroute|condition:user.onboarded==true|next:2,400"]
+        welcome["id:2|type:bot|next:10"]
+    end
+    
+    subgraph failureSeq["Failure Sequence"]
+        excused["id:100|type:choice|store:task.excuse|next:101"]
+        failedisonnotice["id:101|type:autoroute|condition:user.on_notice==true|next:102,103"]
+        streakreset["id:102|type:bot|store:streak.count=0|next:105"]
+        streakpause["id:103|type:bot|store:streak.paused=true|next:104"]
+        failedonnotice["id:104|type:bot|store:user.on_notice=true|next:500"]
+        failedkeeptask["id:105|type:choice|store:task.keep|next:500,300"]
+    end
+    
+    subgraph successSeq["Success Sequence"]
+        congratulations["id:200|type:bot|next:201"]
+        streakincrement["id:201|type:bot|store:streak.count++|next:202"]
+        keeptask["id:202|type:choice|store:task.keep|next:500,300"]
+    end
+    
+    subgraph taskSettingSeq["Task Setting Sequence"]
+        taskinput["id:300|type:textInput|store:task.description|placeholder:Describe your daily habit|next:301"]
+        taskset["id:301|type:bot|store:task.active=true|next:302"]
+        timeinput["id:302|type:choice|store:task.deadline_time|next:303"]
+        timeset["id:303|type:bot|store:task.time_set=true|next:304"]
+        frequencyinput["id:304|type:choice|store:task.active_days|next:305"]
+        frequencyset["id:305|type:bot|store:task.frequency_set=true|next:500"]
+    end
+    
+    subgraph onboardingSeq["Onboarding Sequence"]
+        nameInput["id:400|type:textInput|store:user.name|placeholder:Enter your name|next:401"]
+        explainer["id:401|type:bot|next:402"]
+        setonboarded["id:402|type:bot|store:user.onboarded=true|next:300"]
+    end
+    
+    subgraph taskCheckingSeq["Task Checking Sequence"]
+        tasksetcheck["id:10|type:autoroute|condition:task.active==true|next:11,300"]
+        overdue["id:11|type:autoroute|condition:task.overdue==true|next:12,14"]
+        overduetaskstatus["id:12|type:choice|store:task.status|next:13"]
+        isonnotice["id:13|type:autoroute|condition:user.on_notice==true|next:100,15"]
+        taskstatus["id:14|type:choice|store:task.status|next:15"]
+        onnotice["id:15|type:bot|store:user.on_notice=true|next:19"]
+        encourage["id:16|type:bot|next:500"]
+        snark["id:17|type:bot|next:500"]
+        disbelief["id:18|type:bot|next:200"]
+        warning["id:19|type:bot|next:500"]
+    end
+    
+    subgraph sendoffSeq["Sendoff Sequence"]
+        visited["id:500|type:autoroute|condition:session.visitCount>1|next:502,501"]
+        plot["id:501|type:bot|store:session.wisdom=random|next:502"]
+        sendoff(["id:502|type:bot|end"])
+    end
+    
+    %% Flow connections with route conditions
+    checkin(["id:0|type:bot|next:1"]) --> welcomeSeq
+    onboarded -->|"user.onboarded==true"| welcome
+    onboarded -->|"user.onboarded!=true"| onboardingSeq
+    welcome --> taskCheckingSeq
+    tasksetcheck -->|"task.active!=true"| taskSettingSeq
+    tasksetcheck -->|"task.active==true"| overdue
+    overdue -->|"task.overdue==true"| overduetaskstatus
+    overduetaskstatus -->|"completed"| successSeq
+    overduetaskstatus -->|"failed"| failureSeq
+    overduetaskstatus -->|"in_progress"| isonnotice
+    overdue -->|"task.overdue!=true"| taskstatus
+    taskstatus -->|"completed"| disbelief
+    taskstatus -->|"in_progress"| encourage
+    taskstatus -->|"not_started"| snark
+    encourage --> sendoffSeq
+    isonnotice -->|"user.on_notice==true"| failureSeq
+    isonnotice -->|"user.on_notice!=true"| onnotice
+    onnotice --> warning
+    nameInput --> explainer
+    taskinput --> taskset
+    timeinput --> timeset
+    frequencyinput --> frequencyset
+    congratulations --> streakincrement
+    streakincrement --> keeptask
+    keeptask -->|"yes"| sendoffSeq
+    keeptask -->|"no"| taskSettingSeq
+    explainer --> setonboarded
+    setonboarded --> taskSettingSeq
+    excused -->|"no"| streakreset
+    excused -->|"yes"| failedisonnotice
+    failedisonnotice -->|"user.on_notice!=true"| streakpause
+    failedisonnotice -->|"user.on_notice==true"| streakreset
+    streakpause --> failedonnotice
+    failedkeeptask -->|"yes"| sendoffSeq
+    failedkeeptask -->|"no"| taskSettingSeq
+    failedonnotice --> sendoffSeq
+    visited -->|"session.visitCount<=1"| plot
+    visited -->|"session.visitCount>1"| sendoff
+    plot --> sendoff
+    taskset --> timeinput
+    timeset --> frequencyinput
+    snark --> sendoffSeq
+    disbelief --> successSeq
+    warning --> sendoffSeq
+    streakreset --> failedkeeptask
+    frequencyset --> sendoffSeq
+    
+    %% Node shapes based on types
+    onboarded@{ shape: lean-r}
+    excused@{ shape: lean-r}
+    failedisonnotice@{ shape: lean-r}
+    streakreset@{ shape: rect}
+    streakpause@{ shape: rect}
+    failedonnotice@{ shape: rect}
+    failedkeeptask@{ shape: lean-r}
+    streakincrement@{ shape: rect}
+    keeptask@{ shape: lean-r}
+    taskinput@{ shape: lean-r}
+    taskset@{ shape: rect}
+    timeinput@{ shape: lean-r}
+    timeset@{ shape: rect}
+    frequencyinput@{ shape: lean-r}
+    frequencyset@{ shape: rect}
+    nameInput@{ shape: lean-r}
+    setonboarded@{ shape: rect}
+    tasksetcheck@{ shape: lean-r}
+    overdue@{ shape: lean-r}
+    overduetaskstatus@{ shape: lean-r}
+    isonnotice@{ shape: lean-r}
+    taskstatus@{ shape: lean-r}
+    onnotice@{ shape: rect}
+    visited@{ shape: lean-r}
+    plot@{ shape: rect}
+    
+    %% Node type classifications
+    onboarded:::autoroute
+    welcome:::bot
+    excused:::choice
+    failedisonnotice:::autoroute
+    streakreset:::bot
+    streakpause:::bot
+    failedonnotice:::bot
+    failedkeeptask:::choice
+    congratulations:::bot
+    streakincrement:::bot
+    keeptask:::choice
+    taskinput:::textInput
+    taskset:::bot
+    timeinput:::choice
+    timeset:::bot
+    frequencyinput:::choice
+    frequencyset:::bot
+    nameInput:::textInput
+    explainer:::bot
+    setonboarded:::bot
+    tasksetcheck:::autoroute
+    overdue:::autoroute
+    overduetaskstatus:::choice
+    isonnotice:::autoroute
+    taskstatus:::choice
+    onnotice:::bot
+    encourage:::bot
+    snark:::bot
+    disbelief:::bot
+    warning:::bot
+    visited:::autoroute
+    plot:::bot
+    sendoff:::bot
+    checkin:::bot
+    
+    %% Type-based styling
+    classDef bot stroke-width:2px, stroke:#000, fill:#FFFFFF, color:#000000
+    classDef choice stroke-width:1px, stroke:#FBB35A, fill:#FFEFDB, color:#8F632D
+    classDef textInput stroke-width:1px, stroke:#9C27B0, fill:#F3E5F5, color:#4A148C
+    classDef autoroute stroke-width:1px, stroke:#999999, fill:#EEEEEE, color:#000000
+    
+    style checkin stroke:#00C853
+    
+    %% Choice Options Metadata
+    %% excused choices: [{"text":"Yes I have a valid excuse", "value":true}, {"text":"No excuse", "value":false}]
+    %% failedkeeptask choices: [{"text":"Keep current task", "value":true}, {"text":"Set new task", "value":false}]
+    %% keeptask choices: [{"text":"Keep current task", "value":true}, {"text":"Set new task", "value":false}]
+    %% timeinput choices: [{"text":"Morning", "value":"morning"}, {"text":"Afternoon", "value":"afternoon"}, {"text":"Evening", "value":"evening"}]
+    %% frequencyinput choices: [{"text":"Weekdays only", "value":"weekdays"}, {"text":"Every day", "value":"daily"}, {"text":"Custom", "value":"custom"}]
+    %% overduetaskstatus choices: [{"text":"Completed", "value":"completed"}, {"text":"Failed", "value":"failed"}, {"text":"Still working", "value":"in_progress"}]
+    %% taskstatus choices: [{"text":"Completed", "value":"completed"}, {"text":"In progress", "value":"in_progress"}, {"text":"Not started", "value":"not_started"}]
+    
+    %% Autoroute Metadata
+    %% onboarded routes: [{"condition":"user.onboarded==true", "nextMessageId":2}, {"default":true, "nextMessageId":400}]
+    %% tasksetcheck routes: [{"condition":"task.active==true", "nextMessageId":11}, {"default":true, "nextMessageId":300}]
+    %% overdue routes: [{"condition":"task.overdue==true", "nextMessageId":12}, {"default":true, "nextMessageId":14}]
+    %% failedisonnotice routes: [{"condition":"user.on_notice==true", "nextMessageId":102}, {"default":true, "nextMessageId":103}]
+    %% isonnotice routes: [{"condition":"user.on_notice==true", "nextMessageId":100}, {"default":true, "nextMessageId":15}]
+    %% visited routes: [{"condition":"session.visitCount>1", "nextMessageId":502}, {"default":true, "nextMessageId":501}]

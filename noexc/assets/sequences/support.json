@@ -271,7 +271,21 @@
       "text": "If you run into any other issues, don't hesitate to reach out. We're always here to help!",
       "sender": "bot",
       "delay": 2000,
-      "type": "bot"
+      "type": "choice",
+      "choices": [
+        {
+          "text": "🔄 Get More Help",
+          "sequenceId": "support"
+        },
+        {
+          "text": "🏠 Main Menu",
+          "sequenceId": "menu"
+        },
+        {
+          "text": "📚 Tutorial",
+          "sequenceId": "tutorial"
+        }
+      ]
     },
     {
       "id": 80,
@@ -294,7 +308,21 @@
       "text": "Thank you for your patience, and we'll get this resolved for you soon!",
       "sender": "bot",
       "delay": 1500,
-      "type": "bot"
+      "type": "choice",
+      "choices": [
+        {
+          "text": "🔄 Get More Help",
+          "sequenceId": "support"
+        },
+        {
+          "text": "🏠 Main Menu",
+          "sequenceId": "menu"
+        },
+        {
+          "text": "📚 Tutorial",
+          "sequenceId": "tutorial"
+        }
+      ]
     }
   ]
 }

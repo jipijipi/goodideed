@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/chat_screen.dart';
 import 'services/user_data_service.dart';
+import 'services/session_service.dart';
 import 'themes/app_themes.dart';
 import 'constants/app_constants.dart';
 
@@ -18,12 +19,19 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isDarkMode = false;
   late final UserDataService _userDataService;
+  late final SessionService _sessionService;
 
   @override
   void initState() {
     super.initState();
     _userDataService = UserDataService();
-    _loadThemePreference();
+    _sessionService = SessionService(_userDataService);
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    await _sessionService.initializeSession();
+    await _loadThemePreference();
   }
 
   Future<void> _loadThemePreference() async {

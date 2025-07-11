@@ -23,6 +23,33 @@ void main() {
       expect(result, true);
     });
 
+    test('should handle compound conditions with &&', () async {
+      await userDataService.storeValue('session.visitCount', 5);
+      await userDataService.storeValue('session.timeOfDay', 1);
+      
+      final result = await conditionEvaluator.evaluateCompound('session.visitCount > 1 && session.timeOfDay == 1');
+      expect(result, true);
+    });
+
+    test('should handle compound conditions with ||', () async {
+      await userDataService.storeValue('session.visitCount', 1);
+      await userDataService.storeValue('session.timeOfDay', 2);
+      
+      final result = await conditionEvaluator.evaluateCompound('session.visitCount > 5 || session.timeOfDay == 2');
+      expect(result, true);
+    });
+
+    test('should handle session time-based conditions', () async {
+      await userDataService.storeValue('session.timeOfDay', 1);
+      await userDataService.storeValue('session.isWeekend', true);
+      
+      final morningResult = await conditionEvaluator.evaluate('session.timeOfDay == 1');
+      final weekendResult = await conditionEvaluator.evaluate('session.isWeekend == true');
+      
+      expect(morningResult, true);
+      expect(weekendResult, true);
+    });
+
     test('should handle operators inside quoted strings', () async {
       // Store a value with operators in it
       await userDataService.storeValue('debug.special_string', 'test >= 5');

@@ -211,6 +211,41 @@ class ConditionEvaluator {
     }
   }
 
+  /// Evaluate compound conditions with && and || operators
+  Future<bool> evaluateCompound(String condition) async {
+    print('🔍 CONDITION_EVAL: Evaluating compound condition: "$condition"');
+    
+    // Handle OR conditions first (lower precedence)
+    if (condition.contains('||')) {
+      final parts = condition.split('||');
+      for (final part in parts) {
+        if (await _evaluateSingleCondition(part.trim())) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    // Handle AND conditions
+    if (condition.contains('&&')) {
+      final parts = condition.split('&&');
+      for (final part in parts) {
+        if (!await _evaluateSingleCondition(part.trim())) {
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    // Single condition
+    return await _evaluateSingleCondition(condition);
+  }
+
+  /// Evaluate a single condition (no && or ||)
+  Future<bool> _evaluateSingleCondition(String condition) async {
+    return await evaluate(condition);
+  }
+
   /// Convert a value to a number (int or double)
   /// Returns null if the value cannot be converted
   num? _toNumber(dynamic value) {

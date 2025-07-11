@@ -21,12 +21,40 @@ void main() {
       expect(visitCount, 1);
     });
 
-    test('should increment visit count on multiple initializations', () async {
+    test('should increment daily visit count on multiple initializations same day', () async {
       await sessionService.initializeSession();
       await sessionService.initializeSession();
       
       final visitCount = await userDataService.getValue<int>('session.visitCount');
       expect(visitCount, 2);
+    });
+
+    test('should always increment total visit count', () async {
+      await sessionService.initializeSession();
+      await sessionService.initializeSession();
+      
+      final totalVisitCount = await userDataService.getValue<int>('session.totalVisitCount');
+      expect(totalVisitCount, 2);
+    });
+
+    test('should reset daily visit count on new day', () async {
+      // Simulate first day
+      await sessionService.initializeSession();
+      await sessionService.initializeSession();
+      expect(await userDataService.getValue<int>('session.visitCount'), 2);
+      
+      // Manually set yesterday's date
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue('session.lastVisitDate', yesterdayString);
+      
+      // Initialize today (should reset daily count)
+      await sessionService.initializeSession();
+      final visitCount = await userDataService.getValue<int>('session.visitCount');
+      final totalVisitCount = await userDataService.getValue<int>('session.totalVisitCount');
+      
+      expect(visitCount, 1); // Reset to 1 for new day
+      expect(totalVisitCount, 3); // Total should continue incrementing
     });
 
     test('should set time of day correctly', () async {

@@ -8,14 +8,34 @@ class SessionService {
   /// Initialize session data on app start
   Future<void> initializeSession() async {
     await _updateVisitCount();
+    await _updateTotalVisitCount();
     await _updateTimeOfDay();
     await _updateDateInfo();
   }
   
-  /// Update visit count
+  /// Update visit count (daily counter that resets each day)
   Future<void> _updateVisitCount() async {
-    final currentCount = await userDataService.getValue<int>('session.visitCount') ?? 0;
-    await userDataService.storeValue('session.visitCount', currentCount + 1);
+    final now = DateTime.now();
+    final today = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    
+    // Check last visit date
+    final lastVisitDate = await userDataService.getValue<String>('session.lastVisitDate');
+    final isNewDay = lastVisitDate != today;
+    
+    if (isNewDay) {
+      // Reset daily visit count for new day
+      await userDataService.storeValue('session.visitCount', 1);
+    } else {
+      // Increment daily visit count for same day
+      final currentCount = await userDataService.getValue<int>('session.visitCount') ?? 0;
+      await userDataService.storeValue('session.visitCount', currentCount + 1);
+    }
+  }
+  
+  /// Update total visit count (never resets)
+  Future<void> _updateTotalVisitCount() async {
+    final currentTotal = await userDataService.getValue<int>('session.totalVisitCount') ?? 0;
+    await userDataService.storeValue('session.totalVisitCount', currentTotal + 1);
   }
   
   /// Update time of day (1=morning, 2=afternoon, 3=evening, 4=night)

@@ -326,20 +326,78 @@
     },
     {
       "id": 80,
-      "text": "\ud83c\udfaf Test Summary for {user.name|Guest}: ||| Experience Level: {user.experience_level} ||| Age: {user.age} ||| Notifications: {user.notifications_enabled} ||| Theme: {user.theme} ||| Favorite Number: {user.favorite_number}",
+      "text": "\ud83d\udd70\ufe0f Testing Session Variables: ||| Daily Visits: {session.visitCount} ||| Total Visits: {session.totalVisitCount} ||| Time of Day: {session.timeOfDay} ||| Is Weekend: {session.isWeekend} ||| Days Since First Visit: {session.daysSinceFirstVisit}",
       "delay": 1500,
       "nextMessageId": 81,
       "type": "bot"
     },
     {
       "id": 81,
-      "text": "\u2728 Comprehensive test completed! ||| We tested: Multi-text messages, Text input, Choice buttons, Custom values, Text templating, Autorouting, Numeric comparisons, Boolean storage, Cross-sequence navigation ||| All features working perfectly!",
-      "delay": 1800,
-      "nextMessageId": 82,
+      "sender": "system",
+      "routes": [
+        {
+          "condition": "session.totalVisitCount >= 3 && user.experience_level == 'expert'",
+          "nextMessageId": 85
+        },
+        {
+          "condition": "session.timeOfDay == 4 || session.isWeekend == true",
+          "nextMessageId": 86
+        },
+        {
+          "condition": "session.daysSinceFirstVisit >= 1",
+          "nextMessageId": 87
+        },
+        {
+          "default": true,
+          "nextMessageId": 88
+        }
+      ],
+      "type": "autoroute"
+    },
+    {
+      "id": 85,
+      "text": "\u2705 SESSION TEST: Expert returning user! (Total visits: {session.totalVisitCount}, Level: {user.experience_level})",
+      "delay": 1200,
+      "nextMessageId": 90,
       "type": "bot"
     },
     {
-      "id": 82,
+      "id": 86,
+      "text": "\u2705 SESSION TEST: Night owl or weekend warrior! (Time: {session.timeOfDay}, Weekend: {session.isWeekend})",
+      "delay": 1200,
+      "nextMessageId": 90,
+      "type": "bot"
+    },
+    {
+      "id": 87,
+      "text": "\u2705 SESSION TEST: Welcome back! (Days since first visit: {session.daysSinceFirstVisit})",
+      "delay": 1200,
+      "nextMessageId": 90,
+      "type": "bot"
+    },
+    {
+      "id": 88,
+      "text": "\u2705 SESSION TEST: First-time user! Welcome to our app!",
+      "delay": 1200,
+      "nextMessageId": 90,
+      "type": "bot"
+    },
+    {
+      "id": 90,
+      "text": "\ud83c\udfaf Complete Summary for {user.name|Guest}: ||| Experience: {user.experience_level} ||| Age: {user.age} ||| Notifications: {user.notifications_enabled} ||| Theme: {user.theme} ||| Number: {user.favorite_number} ||| Session: Daily {session.visitCount}, Total {session.totalVisitCount}, Time {session.timeOfDay}, Weekend: {session.isWeekend}",
+      "delay": 1500,
+      "nextMessageId": 91,
+      "type": "bot"
+    },
+    {
+      "id": 91,
+      "text": "\u2728 Comprehensive test completed! ||| We tested: Multi-text messages, Text input, Choice buttons, Custom values, Text templating, Autorouting, Numeric comparisons, Boolean storage, Cross-sequence navigation, Session tracking ||| All features working perfectly!",
+      "delay": 1800,
+      "nextMessageId": 92,
+      "type": "bot"
+    },
+    {
+      "id": 92,
       "delay": 1000,
       "choices": [
         {

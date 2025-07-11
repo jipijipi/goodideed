@@ -392,15 +392,77 @@
     },
     {
       "id": 1300,
-      "text": "\ud83c\udfc1 All Autoroute Tests Complete! ||| Summary: ||| Age: {debug.age} ||| Experience: {debug.experience} ||| Premium: {debug.premium} ||| Special String: '{debug.special_string}'",
+      "text": "\ud83d\udd70\ufe0f Testing Session-Based Conditions... ||| Daily Visits: {session.visitCount} ||| Total Visits: {session.totalVisitCount} ||| Time of Day: {session.timeOfDay} ||| Weekend: {session.isWeekend}",
       "delay": 2000,
+      "nextMessageId": 1301,
+      "type": "bot"
+    },
+    {
+      "id": 1301,
+      "sender": "system",
+      "routes": [
+        {
+          "condition": "session.visitCount > 1 && session.timeOfDay == 1",
+          "nextMessageId": 1310
+        },
+        {
+          "condition": "session.visitCount == 1 || session.timeOfDay >= 3",
+          "nextMessageId": 1320
+        },
+        {
+          "condition": "session.isWeekend == true",
+          "nextMessageId": 1330
+        },
+        {
+          "condition": "session.daysSinceFirstVisit >= 1",
+          "nextMessageId": 1340
+        },
+        {
+          "default": true,
+          "nextMessageId": 1350
+        }
+      ],
+      "type": "autoroute"
+    },
+    {
+      "id": 1310,
+      "text": "\u2705 SESSION TEST: Returning morning user! (Visit: {session.visitCount}, Time: {session.timeOfDay})",
+      "delay": 1500,
+      "nextMessageId": 1400,
+      "type": "bot"
+    },
+    {
+      "id": 1320,
+      "text": "\u2705 SESSION TEST: First visit or evening/night user! (Visit: {session.visitCount}, Time: {session.timeOfDay})",
+      "delay": 1500,
+      "nextMessageId": 1400,
+      "type": "bot"
+    },
+    {
+      "id": 1330,
+      "text": "\u2705 SESSION TEST: Weekend user! Enjoy your weekend! (Weekend: {session.isWeekend})",
+      "delay": 1500,
+      "nextMessageId": 1400,
+      "type": "bot"
+    },
+    {
+      "id": 1340,
+      "text": "\u2705 SESSION TEST: Returning user! (Days since first visit: {session.daysSinceFirstVisit})",
+      "delay": 1500,
+      "nextMessageId": 1400,
+      "type": "bot"
+    },
+    {
+      "id": 1350,
+      "text": "\u26a0\ufe0f SESSION TEST: Default route - First weekday visit in morning",
+      "delay": 1500,
       "nextMessageId": 1400,
       "type": "bot"
     },
     {
       "id": 1400,
-      "text": "\ud83d\udd04 Check the console/debug output for detailed logging of each condition evaluation!",
-      "delay": 1000,
+      "text": "\ud83c\udfc1 All Tests Complete! ||| Summary: ||| Age: {debug.age} ||| Experience: {debug.experience} ||| Premium: {debug.premium} ||| Special String: '{debug.special_string}' ||| Session: Daily {session.visitCount}, Total {session.totalVisitCount}, Time {session.timeOfDay}, Weekend: {session.isWeekend}",
+      "delay": 2000,
       "nextMessageId": 1500,
       "type": "bot"
     },

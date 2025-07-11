@@ -42,10 +42,10 @@ class ConditionEvaluator {
           result = _compareNumbers(value, expected, '<=');
           break;
         case '!=':
-          result = value != expected;
+          result = !_compareEquals(value, expected);
           break;
         case '==':
-          result = value == expected;
+          result = _compareEquals(value, expected);
           break;
         case '>':
           result = _compareNumbers(value, expected, '>');
@@ -217,9 +217,9 @@ class ConditionEvaluator {
     
     // Handle OR conditions first (lower precedence)
     if (condition.contains('||')) {
-      final parts = condition.split('||');
+      final parts = _splitOnOperatorOutsideQuotes(condition, '||');
       for (final part in parts) {
-        if (await _evaluateSingleCondition(part.trim())) {
+        if (await _evaluateCompoundPart(part.trim())) {
           return true;
         }
       }
@@ -228,9 +228,9 @@ class ConditionEvaluator {
     
     // Handle AND conditions
     if (condition.contains('&&')) {
-      final parts = condition.split('&&');
+      final parts = _splitOnOperatorOutsideQuotes(condition, '&&');
       for (final part in parts) {
-        if (!await _evaluateSingleCondition(part.trim())) {
+        if (!await _evaluateCompoundPart(part.trim())) {
           return false;
         }
       }
@@ -239,6 +239,49 @@ class ConditionEvaluator {
     
     // Single condition
     return await _evaluateSingleCondition(condition);
+  }
+
+  /// Split string on operator while respecting quotes
+  List<String> _splitOnOperatorOutsideQuotes(String text, String operator) {
+    final parts = <String>[];
+    int lastSplit = 0;
+    bool inSingleQuote = false;
+    bool inDoubleQuote = false;
+    
+    for (int i = 0; i <= text.length - operator.length; i++) {
+      final char = text[i];
+      
+      // Track quote state
+      if (char == "'" && !inDoubleQuote) {
+        inSingleQuote = !inSingleQuote;
+      } else if (char == '"' && !inSingleQuote) {
+        inDoubleQuote = !inDoubleQuote;
+      }
+      
+      // If we're not inside quotes, check for operator
+      if (!inSingleQuote && !inDoubleQuote) {
+        if (text.substring(i, i + operator.length) == operator) {
+          parts.add(text.substring(lastSplit, i));
+          lastSplit = i + operator.length;
+          i += operator.length - 1; // Skip ahead
+        }
+      }
+    }
+    
+    // Add the last part
+    parts.add(text.substring(lastSplit));
+    
+    return parts;
+  }
+
+  /// Evaluate a part of a compound condition (could be simple or have other operators)
+  Future<bool> _evaluateCompoundPart(String part) async {
+    // If this part contains && or ||, evaluate it as a compound condition
+    if (part.contains('&&') || part.contains('||')) {
+      return await evaluateCompound(part);
+    }
+    // Otherwise, evaluate as a single condition
+    return await _evaluateSingleCondition(part);
   }
 
   /// Evaluate a single condition (no && or ||)
@@ -257,5 +300,25 @@ class ConditionEvaluator {
       if (doubleValue != null) return doubleValue;
     }
     return null;
+  }
+
+  /// Compare two values for equality with type conversion
+  bool _compareEquals(dynamic left, dynamic right) {
+    // Direct equality check first
+    if (left == right) return true;
+    
+    // Try numeric comparison if both can be converted to numbers
+    final leftNum = _toNumber(left);
+    final rightNum = _toNumber(right);
+    if (leftNum != null && rightNum != null) {
+      return leftNum == rightNum;
+    }
+    
+    // Try string comparison
+    if (left != null && right != null) {
+      return left.toString() == right.toString();
+    }
+    
+    return false;
   }
 }

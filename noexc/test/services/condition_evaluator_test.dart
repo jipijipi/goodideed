@@ -59,6 +59,86 @@ void main() {
       expect(result, true);
     });
 
+    test('should handle edge case numeric comparisons', () async {
+      // Test zero comparisons
+      await userDataService.storeValue('test.zero', 0);
+      expect(await conditionEvaluator.evaluate('test.zero == 0'), true);
+      expect(await conditionEvaluator.evaluate('test.zero > 0'), false);
+      expect(await conditionEvaluator.evaluate('test.zero < 0'), false);
+      expect(await conditionEvaluator.evaluate('test.zero >= 0'), true);
+      expect(await conditionEvaluator.evaluate('test.zero <= 0'), true);
+      
+      // Test negative numbers
+      await userDataService.storeValue('test.negative', -5);
+      expect(await conditionEvaluator.evaluate('test.negative < 0'), true);
+      expect(await conditionEvaluator.evaluate('test.negative >= -5'), true);
+      expect(await conditionEvaluator.evaluate('test.negative <= -5'), true);
+      expect(await conditionEvaluator.evaluate('test.negative > -10'), true);
+      expect(await conditionEvaluator.evaluate('test.negative < -10'), false);
+    });
+
+    test('should handle decimal/float comparisons', () async {
+      await userDataService.storeValue('test.decimal', 3.14);
+      expect(await conditionEvaluator.evaluate('test.decimal > 3'), true);
+      expect(await conditionEvaluator.evaluate('test.decimal < 4'), true);
+      expect(await conditionEvaluator.evaluate('test.decimal >= 3.14'), true);
+      expect(await conditionEvaluator.evaluate('test.decimal <= 3.14'), true);
+      expect(await conditionEvaluator.evaluate('test.decimal == 3.14'), true);
+      expect(await conditionEvaluator.evaluate('test.decimal != 3.15'), true);
+    });
+
+    test('should handle string-to-number conversion edge cases', () async {
+      // String numbers
+      await userDataService.storeValue('test.string_num', '42');
+      expect(await conditionEvaluator.evaluate('test.string_num > 40'), true);
+      expect(await conditionEvaluator.evaluate('test.string_num < 50'), true);
+      expect(await conditionEvaluator.evaluate('test.string_num == 42'), true);
+      
+      // String decimals
+      await userDataService.storeValue('test.string_decimal', '3.14');
+      expect(await conditionEvaluator.evaluate('test.string_decimal > 3'), true);
+      expect(await conditionEvaluator.evaluate('test.string_decimal < 4'), true);
+      
+      // Invalid string numbers should fail numeric comparisons
+      await userDataService.storeValue('test.invalid_num', 'abc');
+      expect(await conditionEvaluator.evaluate('test.invalid_num > 0'), false);
+      expect(await conditionEvaluator.evaluate('test.invalid_num < 0'), false);
+    });
+
+    test('should handle boundary value comparisons', () async {
+      // Test with very large numbers
+      await userDataService.storeValue('test.large', 999999999);
+      expect(await conditionEvaluator.evaluate('test.large > 999999998'), true);
+      expect(await conditionEvaluator.evaluate('test.large < 1000000000'), true);
+      
+      // Test with very small numbers
+      await userDataService.storeValue('test.small', 0.001);
+      expect(await conditionEvaluator.evaluate('test.small > 0'), true);
+      expect(await conditionEvaluator.evaluate('test.small < 0.01'), true);
+    });
+
+    test('should handle complex compound conditions', () async {
+      await userDataService.storeValue('test.a', 10);
+      await userDataService.storeValue('test.b', 20);
+      await userDataService.storeValue('test.c', 30);
+      
+      // Multiple AND conditions
+      final result1 = await conditionEvaluator.evaluateCompound('test.a > 5 && test.b > 15 && test.c > 25');
+      expect(result1, true);
+      
+      // Mixed AND/OR (OR has lower precedence)
+      final result2 = await conditionEvaluator.evaluateCompound('test.a > 50 || test.b > 15 && test.c > 25');
+      expect(result2, true); // Should be (false || (true && true)) = true
+      
+      // All false AND
+      final result3 = await conditionEvaluator.evaluateCompound('test.a > 50 && test.b > 50 && test.c > 50');
+      expect(result3, false);
+      
+      // Mixed conditions with one true OR
+      final result4 = await conditionEvaluator.evaluateCompound('test.a > 50 || test.b > 50 || test.c == 30');
+      expect(result4, true);
+    });
+
     test('should handle multiple operators in condition', () async {
       // Store a value with == in it
       await userDataService.storeValue('debug.complex_string', 'value == true');

@@ -44,9 +44,10 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 #### Services (`lib/services/`)
 - **ChatService** - Main service for loading sequences and processing messages
 - **UserDataService** - Local storage using shared_preferences
+- **SessionService** - Session tracking with daily reset functionality
 - **TextTemplatingService** - Template processing with `{key|fallback}` syntax
 - **TextVariantsService** - Random text variation from asset files
-- **ConditionEvaluator** - Evaluates routing conditions
+- **ConditionEvaluator** - Evaluates routing conditions with compound logic support
 
 #### UI Architecture (`lib/widgets/`)
 - **ChatScreen** - Main container with state management
@@ -80,9 +81,23 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 ### Conditional Routing
 - **Auto-route messages** with `"type": "autoroute"` evaluate conditions
 - Support for `==`, `!=`, `>`, `<`, `>=`, `<=`, null checks, and boolean evaluation
+- **Compound conditions** with `&&` (AND) and `||` (OR) operators
 - Numeric comparisons with automatic type conversion
 - Route to different sequences or continue in current sequence
 - Always include default route as fallback
+
+### Session Tracking
+- **SessionService** automatically tracks user session data on app start
+- **Daily Visit Count** (`session.visitCount`) - Resets to 1 each new day, increments for same-day visits
+- **Total Visit Count** (`session.totalVisitCount`) - Never resets, tracks lifetime app launches
+- **Time of Day** (`session.timeOfDay`) - 1=morning, 2=afternoon, 3=evening, 4=night
+- **Date Tracking** (`session.lastVisitDate`, `session.firstVisitDate`, `session.daysSinceFirstVisit`)
+- **Weekend Detection** (`session.isWeekend`) - Boolean for Saturday/Sunday
+- **Use Cases**: 
+  - `session.visitCount > 1` - Returning daily user (visited app multiple times today)
+  - `session.totalVisitCount >= 10` - Experienced user (used app 10+ times total)
+  - `session.timeOfDay == 1` - Morning user
+  - `session.isWeekend == true` - Weekend user
 
 ### Text Variants
 - Random text variations loaded from `assets/variants/`

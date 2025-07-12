@@ -5,21 +5,29 @@ import ReactFlow, {
   useNodesState, 
   useEdgesState, 
   addEdge, 
+  reconnectEdge,
   Connection,
   Controls,
   Background,
   useReactFlow,
   ReactFlowProvider,
-  OnConnectStartParams,
-  OnConnectEnd,
-  ConnectionLineType
+  ConnectionLineType,
+  OnSelectionChangeParams,
+  EdgeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
+import GroupNode from './components/GroupNode';
+import CustomEdge from './components/CustomEdge';
 import { NodeData, NodeCategory, NodeLabel } from './constants/nodeTypes';
 
 const nodeTypes = {
   editable: EditableNode,
+  group: GroupNode,
+};
+
+const edgeTypes: EdgeTypes = {
+  custom: CustomEdge,
 };
 
 const initialNodes: Node<NodeData>[] = [
@@ -30,9 +38,15 @@ const initialNodes: Node<NodeData>[] = [
       label: 'Welcome',
       category: 'bot' as NodeCategory,
       nodeLabel: 'Welcome Message' as NodeLabel,
+      nodeId: '1',
+      content: 'Welcome to our app!',
       onLabelChange: () => {},
       onCategoryChange: () => {},
-      onNodeLabelChange: () => {}
+      onNodeLabelChange: () => {},
+      onNodeIdChange: () => {},
+      onContentChange: () => {},
+      onPlaceholderChange: () => {},
+      onStoreKeyChange: () => {}
     },
     type: 'editable',
   },
@@ -40,19 +54,31 @@ const initialNodes: Node<NodeData>[] = [
     id: '2',
     position: { x: 200, y: 150 },
     data: { 
-      label: 'User Response',
-      category: 'user' as NodeCategory,
-      nodeLabel: 'Response' as NodeLabel,
+      label: 'User Input',
+      category: 'textInput' as NodeCategory,
+      nodeLabel: 'Text Input' as NodeLabel,
+      nodeId: '2',
+      placeholderText: 'Enter your name...',
       onLabelChange: () => {},
       onCategoryChange: () => {},
-      onNodeLabelChange: () => {}
+      onNodeLabelChange: () => {},
+      onNodeIdChange: () => {},
+      onContentChange: () => {},
+      onPlaceholderChange: () => {},
+      onStoreKeyChange: () => {}
     },
     type: 'editable',
   },
 ];
 
 const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '2', type: 'default' },
+  { 
+    id: 'e1-2', 
+    source: '1', 
+    target: '2', 
+    type: 'custom',
+    data: {}
+  },
 ];
 
 const FlowWithProvider = () => {
@@ -66,90 +92,193 @@ const FlowWithProvider = () => {
 function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const connectingNodeId = useRef<string | null>(null);
-  const { screenToFlowPosition, getNodes } = useReactFlow();
+  const { getNodes } = useReactFlow();
   const [nodeIdCounter, setNodeIdCounter] = useState(3);
+  const [selectedNodes, setSelectedNodes] = useState<Node<NodeData>[]>([]);
+  const [groupIdCounter, setGroupIdCounter] = useState(1);
+  const edgeReconnectSuccessful = useRef(true);
+
+  const getId = () => `${nodeIdCounter}`;
+  const getGroupId = () => `group-${groupIdCounter}`;
+  const nodeOrigin: [number, number] = [0.5, 0];
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => {
+      const newEdge = {
+        ...params,
+        type: 'custom',
+        data: {}
+      };
+      setEdges((eds) => addEdge(newEdge, eds));
+    },
     [setEdges]
   );
 
-  const onConnectStart = useCallback((event: React.MouseEvent | React.TouchEvent, { nodeId }: OnConnectStartParams) => {
-    connectingNodeId.current = nodeId;
+  const onReconnectStart = useCallback(() => {
+    edgeReconnectSuccessful.current = false;
   }, []);
 
-  const onConnectEnd = useCallback(
-    (event: MouseEvent | TouchEvent) => {
-      if (!connectingNodeId.current) return;
+  const onReconnect = useCallback((oldEdge: Edge, newConnection: Connection) => {
+    edgeReconnectSuccessful.current = true;
+    setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
+  }, [setEdges]);
 
-      const targetIsPane = (event.target as Element)?.classList?.contains('react-flow__pane');
+  const onReconnectEnd = useCallback((event: MouseEvent | TouchEvent, edge: Edge) => {
+    if (!edgeReconnectSuccessful.current) {
+      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    }
+    edgeReconnectSuccessful.current = true;
+  }, [setEdges]);
 
-      if (targetIsPane) {
-        // Create new node at drop position
-        const position = screenToFlowPosition({
-          x: (event as MouseEvent).clientX,
-          y: (event as MouseEvent).clientY,
-        });
+  const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
+    setSelectedNodes(params.nodes as Node<NodeData>[]);
+  }, []);
 
-        const newNode: Node<NodeData> = {
-          id: `${nodeIdCounter}`,
-          position,
+  const createGroup = useCallback(() => {
+    if (selectedNodes.length < 2) {
+      alert('Please select at least 2 nodes to create a group');
+      return;
+    }
+
+    const groupId = getGroupId();
+    
+    // Calculate group bounds
+    const bounds = selectedNodes.reduce(
+      (acc, node) => ({
+        minX: Math.min(acc.minX, node.position.x),
+        minY: Math.min(acc.minY, node.position.y),
+        maxX: Math.max(acc.maxX, node.position.x + 180), // node width
+        maxY: Math.max(acc.maxY, node.position.y + 150), // node height
+      }),
+      { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
+    );
+
+    // Add padding
+    const padding = 20;
+    const groupNode: Node<NodeData> = {
+      id: groupId,
+      type: 'group',
+      position: { 
+        x: bounds.minX - padding, 
+        y: bounds.minY - padding 
+      },
+      style: {
+        width: bounds.maxX - bounds.minX + (padding * 2),
+        height: bounds.maxY - bounds.minY + (padding * 2),
+      },
+      data: {
+        label: `Group ${groupIdCounter}`,
+        category: 'bot' as NodeCategory,
+        nodeLabel: 'Custom' as NodeLabel,
+        nodeId: groupId,
+        content: `Group ${groupIdCounter}`,
+        onLabelChange: () => {},
+        onCategoryChange: () => {},
+        onNodeLabelChange: () => {},
+        onNodeIdChange: () => {},
+        onContentChange: () => {},
+        onPlaceholderChange: () => {},
+        onStoreKeyChange: () => {}
+      },
+      draggable: true,
+      selectable: true,
+    };
+
+    // Add group association to selected nodes without making them children
+    const updatedNodes = nodes.map(node => {
+      if (selectedNodes.find(selected => selected.id === node.id)) {
+        return {
+          ...node,
           data: {
-            label: `New Node`,
-            category: 'bot' as NodeCategory,
-            nodeLabel: 'Custom' as NodeLabel,
-            onLabelChange: () => {},
-            onCategoryChange: () => {},
-            onNodeLabelChange: () => {}
-          },
-          type: 'editable',
-        };
-
-        setNodes((nds) => nds.concat(newNode));
-        setEdges((eds) =>
-          eds.concat({
-            id: `e${connectingNodeId.current}-${nodeIdCounter}`,
-            source: connectingNodeId.current!,
-            target: `${nodeIdCounter}`,
-            type: 'default'
-          })
-        );
-        setNodeIdCounter((id) => id + 1);
-      }
-
-      connectingNodeId.current = null;
-    },
-    [screenToFlowPosition, setNodes, setEdges, nodeIdCounter]
-  );
-
-  // Enhanced onConnect with proximity detection
-  const onConnectWithProximity = useCallback(
-    (params: Connection) => {
-      const sourceNode = getNodes().find(n => n.id === params.source);
-      const targetNode = getNodes().find(n => n.id === params.target);
-      
-      if (sourceNode && targetNode) {
-        const distance = Math.sqrt(
-          Math.pow(targetNode.position.x - sourceNode.position.x, 2) +
-          Math.pow(targetNode.position.y - sourceNode.position.y, 2)
-        );
-        
-        // Auto-connect if nodes are within 150px
-        if (distance <= 150) {
-          setEdges((eds) => addEdge(params, eds));
-        } else {
-          // For distant connections, ask for confirmation
-          if (window.confirm(`Connect distant nodes? Distance: ${Math.round(distance)}px`)) {
-            setEdges((eds) => addEdge(params, eds));
+            ...node.data,
+            groupId: groupId, // Add group association
           }
-        }
-      } else {
-        setEdges((eds) => addEdge(params, eds));
+        };
       }
-    },
-    [setEdges, getNodes]
-  );
+      return node;
+    });
+
+    setNodes([...updatedNodes, groupNode]);
+    setGroupIdCounter(counter => counter + 1);
+    setSelectedNodes([]);
+  }, [selectedNodes, nodes, groupIdCounter]);
+
+  const ungroupNodes = useCallback(() => {
+    if (selectedNodes.length !== 1 || selectedNodes[0].type !== 'group') {
+      alert('Please select a single group to ungroup');
+      return;
+    }
+
+    const groupId = selectedNodes[0].id;
+    
+    // Remove group and clear group association from nodes
+    const updatedNodes = nodes
+      .filter(node => node.id !== groupId)
+      .map(node => {
+        if (node.data.groupId === groupId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              groupId: undefined, // Remove group association
+            }
+          };
+        }
+        return node;
+      });
+
+    setNodes(updatedNodes);
+    setSelectedNodes([]);
+  }, [selectedNodes, nodes]);
+
+  const createQuickNode = useCallback((nodeType: { category: NodeCategory, label: NodeLabel, text: string }) => {
+    const id = getId();
+    const position = { x: 300, y: 200 + (nodes.length * 50) }; // Stagger positions
+    
+    // Set default values based on node type
+    const getDefaultData = (category: NodeCategory) => {
+      const baseData = {
+        label: nodeType.text,
+        category: nodeType.category,
+        nodeLabel: nodeType.label,
+        nodeId: id,
+        onLabelChange: () => {},
+        onCategoryChange: () => {},
+        onNodeLabelChange: () => {},
+        onNodeIdChange: () => {},
+        onContentChange: () => {},
+        onPlaceholderChange: () => {},
+        onStoreKeyChange: () => {}
+      };
+
+      switch (category) {
+        case 'bot':
+        case 'user':
+          return { ...baseData, content: 'Enter your message here...' };
+        case 'textInput':
+          return { 
+            ...baseData, 
+            placeholderText: 'Enter placeholder text...'
+          };
+        case 'choice':
+          return baseData;
+        case 'autoroute':
+          return baseData;
+        default:
+          return baseData;
+      }
+    };
+    
+    const newNode: Node<NodeData> = {
+      id,
+      position,
+      data: getDefaultData(nodeType.category),
+      type: 'editable',
+    };
+
+    setNodes((nds) => nds.concat(newNode));
+    setNodeIdCounter((counter) => counter + 1);
+  }, [nodes.length, nodeIdCounter]);
 
   const onLabelChange = useCallback((nodeId: string, newLabel: string) => {
     setNodes((nds) =>
@@ -202,6 +331,91 @@ function Flow() {
     );
   }, [setNodes]);
 
+  const onNodeIdChange = useCallback((nodeId: string, newNodeId: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              nodeId: newNodeId,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  const onContentChange = useCallback((nodeId: string, newContent: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              content: newContent,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  const onPlaceholderChange = useCallback((nodeId: string, newPlaceholder: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              placeholderText: newPlaceholder,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  const onStoreKeyChange = useCallback((nodeId: string, newStoreKey: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              storeKey: newStoreKey,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  const onEdgeLabelChange = useCallback((edgeId: string, newLabel: string) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              label: newLabel,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  }, [setEdges]);
+
   // Update nodes with all callback functions
   const nodesWithCallbacks = nodes.map(node => ({
     ...node,
@@ -210,6 +424,19 @@ function Flow() {
       onLabelChange,
       onCategoryChange,
       onNodeLabelChange,
+      onNodeIdChange,
+      onContentChange,
+      onPlaceholderChange,
+      onStoreKeyChange,
+    },
+  }));
+
+  // Update edges with callback functions
+  const edgesWithCallbacks = edges.map(edge => ({
+    ...edge,
+    data: {
+      ...edge.data,
+      onLabelChange: onEdgeLabelChange,
     },
   }));
 
@@ -220,14 +447,19 @@ function Flow() {
         data: { 
           label: data.label,
           category: data.category,
-          nodeLabel: data.nodeLabel
+          nodeLabel: data.nodeLabel,
+          nodeId: data.nodeId,
+          content: data.content,
+          placeholderText: data.placeholderText,
+          storeKey: data.storeKey
         }
       })),
       edges: edges.map(edge => ({
         id: edge.id,
         source: edge.source,
         target: edge.target,
-        type: edge.type || 'default'
+        type: edge.type || 'default',
+        label: edge.data?.label
       }))
     };
 
@@ -241,8 +473,156 @@ function Flow() {
     linkElement.click();
   }, [nodes, edges]);
 
+  const importFromJSON = useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const content = e.target?.result as string;
+            const importData = JSON.parse(content);
+            
+            if (importData.nodes && importData.edges) {
+              // Convert imported nodes to the correct format
+              const importedNodes = importData.nodes.map((node: any) => ({
+                ...node,
+                data: {
+                  ...node.data,
+                  onLabelChange: () => {},
+                  onCategoryChange: () => {},
+                  onNodeLabelChange: () => {},
+                  onNodeIdChange: () => {},
+                  onContentChange: () => {},
+                  onPlaceholderChange: () => {},
+                  onStoreKeyChange: () => {}
+                }
+              }));
+
+              // Convert imported edges to the correct format
+              const importedEdges = importData.edges.map((edge: any) => ({
+                ...edge,
+                type: edge.type || 'custom',
+                data: { 
+                  label: edge.label,
+                  onLabelChange: () => {}
+                }
+              }));
+
+              setNodes(importedNodes);
+              setEdges(importedEdges);
+              
+              // Update node counter based on imported nodes
+              const maxNodeId = Math.max(
+                ...importedNodes
+                  .map((n: any) => parseInt(n.id))
+                  .filter((id: number) => !isNaN(id)),
+                nodeIdCounter
+              );
+              setNodeIdCounter(maxNodeId + 1);
+              
+              alert('Flow imported successfully!');
+            } else {
+              alert('Invalid JSON format. Please ensure the file contains nodes and edges.');
+            }
+          } catch (error) {
+            alert('Error parsing JSON file. Please check the file format.');
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  }, [setNodes, setEdges, nodeIdCounter, setNodeIdCounter]);
+
+  const nodeTemplates = [
+    { category: 'bot' as NodeCategory, label: 'Welcome Message' as NodeLabel, text: 'Welcome!', icon: '💬', description: 'Bot message' },
+    { category: 'user' as NodeCategory, label: 'Response' as NodeLabel, text: 'User response', icon: '👤', description: 'User message' },
+    { category: 'choice' as NodeCategory, label: 'Choice Menu' as NodeLabel, text: 'Select option:', icon: '🔘', description: 'Choice buttons' },
+    { category: 'textInput' as NodeCategory, label: 'Text Input' as NodeLabel, text: 'Enter text:', icon: '⌨️', description: 'Text input' },
+    { category: 'autoroute' as NodeCategory, label: 'Conditional Route' as NodeLabel, text: 'Route condition', icon: '🔀', description: 'Auto-route' },
+  ];
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      {/* Quick Create Panel */}
+      <div style={{
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        zIndex: 1000,
+        padding: '12px',
+        background: 'white',
+        borderRadius: '8px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        minWidth: '200px'
+      }}>
+        <div style={{ 
+          fontSize: '14px', 
+          fontWeight: 'bold', 
+          marginBottom: '10px',
+          color: '#333',
+          borderBottom: '1px solid #eee',
+          paddingBottom: '8px'
+        }}>
+          🚀 Quick Create
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          {nodeTemplates.map((template, index) => (
+            <button
+              key={index}
+              onClick={() => createQuickNode(template)}
+              style={{
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '6px',
+                background: '#fff',
+                cursor: 'pointer',
+                textAlign: 'left',
+                fontSize: '12px',
+                transition: 'all 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#f8f9fa';
+                e.currentTarget.style.borderColor = '#999';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#fff';
+                e.currentTarget.style.borderColor = '#ddd';
+              }}
+            >
+              <span style={{ fontSize: '16px' }}>{template.icon}</span>
+              <div>
+                <div style={{ fontWeight: 'bold', color: '#333' }}>
+                  {template.description}
+                </div>
+                <div style={{ color: '#666', fontSize: '11px' }}>
+                  {template.category} • {template.label}
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+        
+        <div style={{ 
+          fontSize: '11px', 
+          color: '#888', 
+          marginTop: '10px',
+          fontStyle: 'italic',
+          borderTop: '1px solid #eee',
+          paddingTop: '8px'
+        }}>
+          💡 Based on comprehensive_test.json
+        </div>
+      </div>
+
+      {/* Controls Panel */}
       <div style={{ 
         position: 'absolute', 
         top: 10, 
@@ -251,7 +631,10 @@ function Flow() {
         padding: '10px',
         background: 'white',
         borderRadius: '5px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px'
       }}>
         <button 
           onClick={exportToJSON}
@@ -262,25 +645,84 @@ function Flow() {
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            marginBottom: '8px'
           }}
         >
           Export JSON
         </button>
+        
+        <button 
+          onClick={importFromJSON}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#4caf50',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          Import JSON
+        </button>
+        
+        <div style={{ borderTop: '1px solid #eee', paddingTop: '8px' }}>
+          <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
+            Selected: {selectedNodes.length} nodes
+          </div>
+          <button 
+            onClick={createGroup}
+            disabled={selectedNodes.length < 2}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: selectedNodes.length >= 2 ? '#4caf50' : '#ccc',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: selectedNodes.length >= 2 ? 'pointer' : 'not-allowed',
+              fontSize: '12px',
+              marginBottom: '4px',
+              width: '100%'
+            }}
+          >
+            Create Group
+          </button>
+          <button 
+            onClick={ungroupNodes}
+            disabled={selectedNodes.length !== 1 || selectedNodes[0]?.type !== 'group'}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: (selectedNodes.length === 1 && selectedNodes[0]?.type === 'group') ? '#ff9800' : '#ccc',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: (selectedNodes.length === 1 && selectedNodes[0]?.type === 'group') ? 'pointer' : 'not-allowed',
+              fontSize: '12px',
+              width: '100%'
+            }}
+          >
+            Ungroup
+          </button>
+        </div>
       </div>
       
       <ReactFlow
         nodes={nodesWithCallbacks}
-        edges={edges}
+        edges={edgesWithCallbacks}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnectWithProximity}
-        onConnectStart={onConnectStart}
-        onConnectEnd={onConnectEnd}
+        onConnect={onConnect}
+        onReconnect={onReconnect}
+        onReconnectStart={onReconnectStart}
+        onReconnectEnd={onReconnectEnd}
+        onSelectionChange={onSelectionChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
-        connectionLineType={ConnectionLineType.SmoothStep}
+        connectionLineType={ConnectionLineType.Bezier}
         connectionRadius={30}
+        multiSelectionKeyCode="Shift"
       >
         <Controls />
         <Background />

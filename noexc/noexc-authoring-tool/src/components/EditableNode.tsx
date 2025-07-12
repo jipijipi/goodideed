@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { NodeData, NODE_CATEGORIES, NODE_LABELS, NodeCategory, NodeLabel } from '../constants/nodeTypes';
+import { NodeData, NodeCategory } from '../constants/nodeTypes';
 
 const getCategoryColor = (category: NodeCategory): string => {
   const colors = {
@@ -13,131 +13,266 @@ const getCategoryColor = (category: NodeCategory): string => {
   return colors[category] || '#f5f5f5';
 };
 
-const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempLabel, setTempLabel] = useState(data.label);
+const getNodeTitle = (category: NodeCategory): string => {
+  const titles = {
+    bot: 'Message',
+    user: 'Message',
+    choice: 'Choices',
+    textInput: 'Input',
+    autoroute: 'Auto-Route'
+  };
+  return titles[category] || 'Node';
+};
 
-  const handleDoubleClick = useCallback(() => {
-    setIsEditing(true);
-    setTempLabel(data.label);
-  }, [data.label]);
+const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => {
+  const handleNodeIdChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    data.onNodeIdChange(id, e.target.value);
+  }, [id, data]);
 
-  const handleSave = useCallback(() => {
-    data.onLabelChange(id, tempLabel);
-    setIsEditing(false);
-  }, [id, tempLabel, data]);
+  const handleContentChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    data.onContentChange(id, e.target.value);
+  }, [id, data]);
 
-  const handleCancel = useCallback(() => {
-    setTempLabel(data.label);
-    setIsEditing(false);
-  }, [data.label]);
+  const handlePlaceholderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    data.onPlaceholderChange(id, e.target.value);
+  }, [id, data]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSave();
-    } else if (e.key === 'Escape') {
-      handleCancel();
+  const handleStoreKeyChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    data.onStoreKeyChange(id, e.target.value);
+  }, [id, data]);
+
+  const renderFields = () => {
+    switch (data.category) {
+      case 'bot':
+      case 'user':
+        return (
+          <>
+            {/* ID Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                ID:
+              </label>
+              <input
+                type="text"
+                value={data.nodeId}
+                onChange={handleNodeIdChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            
+            {/* Content Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                Content:
+              </label>
+              <textarea
+                value={data.content || ''}
+                onChange={handleContentChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                  minHeight: '60px',
+                  resize: 'vertical',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="Enter message content..."
+              />
+            </div>
+          </>
+        );
+        
+      case 'textInput':
+        return (
+          <>
+            {/* ID Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                ID:
+              </label>
+              <input
+                type="text"
+                value={data.nodeId}
+                onChange={handleNodeIdChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            
+            {/* Placeholder Text Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                Placeholder:
+              </label>
+              <input
+                type="text"
+                value={data.placeholderText || ''}
+                onChange={handlePlaceholderChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="Enter placeholder text..."
+              />
+            </div>
+            
+            {/* Store Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                Store Key:
+              </label>
+              <input
+                type="text"
+                value={data.storeKey || ''}
+                onChange={handleStoreKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          </>
+        );
+        
+      case 'choice':
+        return (
+          <>
+            {/* ID Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                ID:
+              </label>
+              <input
+                type="text"
+                value={data.nodeId}
+                onChange={handleNodeIdChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+            
+            {/* Store Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                Store Key:
+              </label>
+              <input
+                type="text"
+                value={data.storeKey || ''}
+                onChange={handleStoreKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          </>
+        );
+        
+      case 'autoroute':
+        return (
+          <>
+            {/* ID Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+                ID:
+              </label>
+              <input
+                type="text"
+                value={data.nodeId}
+                onChange={handleNodeIdChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+          </>
+        );
+        
+      default:
+        return null;
     }
-  }, [handleSave, handleCancel]);
-
-  const handleCategoryChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    data.onCategoryChange(id, e.target.value as NodeCategory);
-  }, [id, data]);
-
-  const handleNodeLabelChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    data.onNodeLabelChange(id, e.target.value as NodeLabel);
-  }, [id, data]);
+  };
 
   return (
     <div
       style={{
         padding: '12px',
-        border: '2px solid #ddd',
+        border: selected ? '3px solid #1976d2' : '2px solid #ddd',
         borderRadius: '8px',
         background: getCategoryColor(data.category),
-        minWidth: '180px',
-        textAlign: 'center',
-        cursor: isEditing ? 'text' : 'pointer',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        minWidth: '220px',
+        textAlign: 'left',
+        boxShadow: selected 
+          ? '0 4px 12px rgba(25, 118, 210, 0.3)' 
+          : '0 2px 4px rgba(0,0,0,0.1)',
+        transform: selected ? 'scale(1.02)' : 'scale(1)',
+        transition: 'all 0.2s ease',
       }}
     >
       <Handle type="target" position={Position.Top} />
       
-      {/* Category Dropdown */}
-      <div style={{ marginBottom: '8px' }}>
-        <select
-          value={data.category}
-          onChange={handleCategoryChange}
-          style={{
-            width: '100%',
-            padding: '4px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            fontSize: '12px',
-            background: 'white',
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {NODE_CATEGORIES.map(category => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
+      {/* Node Title */}
+      <div style={{ 
+        fontSize: '14px', 
+        fontWeight: 'bold', 
+        marginBottom: '10px',
+        color: '#333',
+        textAlign: 'center',
+        borderBottom: '1px solid #ddd',
+        paddingBottom: '6px'
+      }}>
+        {getNodeTitle(data.category)}
       </div>
-
-      {/* Node Label Dropdown */}
-      <div style={{ marginBottom: '8px' }}>
-        <select
-          value={data.nodeLabel}
-          onChange={handleNodeLabelChange}
-          style={{
-            width: '100%',
-            padding: '4px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            fontSize: '12px',
-            background: 'white',
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {NODE_LABELS.map(label => (
-            <option key={label} value={label}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Editable Text */}
-      <div onDoubleClick={handleDoubleClick}>
-        {isEditing ? (
-          <input
-            type="text"
-            value={tempLabel}
-            onChange={(e) => setTempLabel(e.target.value)}
-            onBlur={handleSave}
-            onKeyDown={handleKeyDown}
-            autoFocus
-            style={{
-              border: 'none',
-              outline: 'none',
-              background: 'transparent',
-              textAlign: 'center',
-              width: '100%',
-              fontWeight: 'bold',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          />
-        ) : (
-          <div 
-            title="Double-click to edit text"
-            style={{ fontWeight: 'bold', fontSize: '14px' }}
-          >
-            {data.label}
-          </div>
-        )}
-      </div>
+      
+      {/* Dynamic Fields */}
+      {renderFields()}
       
       <Handle type="source" position={Position.Bottom} />
     </div>

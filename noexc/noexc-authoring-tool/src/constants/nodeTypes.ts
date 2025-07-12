@@ -25,7 +25,21 @@ export interface NodeData {
   label: string;
   category: NodeCategory;
   nodeLabel: NodeLabel;
+  // Common fields
+  nodeId: string;
+  // Bot/Message specific fields
+  content?: string;
+  // Input specific fields
+  placeholderText?: string;
+  storeKey?: string;
+  // Group association
+  groupId?: string;
+  // Callbacks
   onLabelChange: (id: string, newLabel: string) => void;
   onCategoryChange: (id: string, newCategory: NodeCategory) => void;
   onNodeLabelChange: (id: string, newNodeLabel: NodeLabel) => void;
+  onNodeIdChange: (id: string, newNodeId: string) => void;
+  onContentChange: (id: string, newContent: string) => void;
+  onPlaceholderChange: (id: string, newPlaceholder: string) => void;
+  onStoreKeyChange: (id: string, newStoreKey: string) => void;
 }

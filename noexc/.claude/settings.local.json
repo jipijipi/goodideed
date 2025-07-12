@@ -7,7 +7,16 @@
       "Bash(grep:*)",
       "Bash(sed:*)",
       "Bash(python:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npm start)",
+      "Bash(npm run build:*)",
+      "Bash(PORT=3001 npm start)",
+      "Bash(pkill:*)",
+      "Bash(curl:*)",
+      "Bash(/dev/null)",
+      "Bash(mv:*)",
+      "Bash(lsof:*)",
+      "Bash(PORT=3002 npm start)"
     ],
     "deny": []
   }

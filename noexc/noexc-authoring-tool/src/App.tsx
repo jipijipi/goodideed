@@ -9,7 +9,6 @@ import ReactFlow, {
   Connection,
   Controls,
   Background,
-  useReactFlow,
   ReactFlowProvider,
   ConnectionLineType,
   EdgeTypes
@@ -89,12 +88,10 @@ const FlowWithProvider = () => {
 function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const { getNodes } = useReactFlow();
   const [nodeIdCounter, setNodeIdCounter] = useState(3);
   const edgeReconnectSuccessful = useRef(true);
 
   const getId = () => `${nodeIdCounter}`;
-  const nodeOrigin: [number, number] = [0.5, 0];
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -172,7 +169,7 @@ function Flow() {
 
     setNodes((nds) => nds.concat(newNode));
     setNodeIdCounter((counter) => counter + 1);
-  }, [nodes.length, nodeIdCounter]);
+  }, [nodes.length, nodeIdCounter, getId, setNodes]);
 
   const onLabelChange = useCallback((nodeId: string, newLabel: string) => {
     setNodes((nds) =>
@@ -511,6 +508,210 @@ function Flow() {
     input.click();
   }, [setNodes, setEdges, nodeIdCounter, setNodeIdCounter]);
 
+  // Flutter Export Utility Functions
+  const validateFlowForExport = useCallback((nodes: Node<NodeData>[], edges: Edge[]) => {
+    const errors: string[] = [];
+    
+    // Check for required fields
+    if (!nodes?.length) errors.push("No nodes found");
+    if (!edges?.length) errors.push("No edges found");
+    
+    // Validate each node
+    nodes.forEach(node => {
+      if (!node.data.category) errors.push(`Node ${node.id} missing category`);
+      if (!node.data.nodeId) errors.push(`Node ${node.id} missing nodeId`);
+      
+      switch (node.data.category) {
+        case 'bot':
+          if (!node.data.content?.trim()) errors.push(`Bot node ${node.id} missing content`);
+          break;
+        case 'textInput':
+          if (!node.data.storeKey?.trim()) errors.push(`TextInput node ${node.id} missing storeKey`);
+          break;
+        case 'choice':
+          if (!node.data.storeKey?.trim()) errors.push(`Choice node ${node.id} missing storeKey`);
+          break;
+      }
+    });
+    
+    // Validate flow connectivity - find start node
+    const hasStartNode = nodes.some(node => 
+      !edges.some(edge => edge.target === node.id)
+    );
+    if (!hasStartNode) errors.push("No start node found (node with no incoming edges)");
+    
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  }, []);
+
+  const findStartNode = useCallback((nodes: Node<NodeData>[], edges: Edge[]) => {
+    return nodes.find(node => 
+      !edges.some(edge => edge.target === node.id)
+    );
+  }, []);
+
+  const sortNodesTopologically = useCallback((nodes: Node<NodeData>[], edges: Edge[]) => {
+    const startNode = findStartNode(nodes, edges);
+    if (!startNode) return [];
+    
+    const visited = new Set<string>();
+    const result: Node<NodeData>[] = [];
+    
+    const visit = (nodeId: string) => {
+      if (visited.has(nodeId)) return;
+      visited.add(nodeId);
+      
+      const node = nodes.find(n => n.id === nodeId);
+      if (node) result.push(node);
+      
+      // Visit connected nodes in order
+      edges
+        .filter(edge => edge.source === nodeId)
+        .sort((a, b) => a.target.localeCompare(b.target)) // Ensure consistent ordering
+        .forEach(edge => visit(edge.target));
+    };
+    
+    visit(startNode.id);
+    return result;
+  }, [findStartNode]);
+
+  const getNextMessageId = useCallback((nodeId: string, edges: Edge[]) => {
+    const edge = edges.find(e => e.source === nodeId);
+    return edge ? parseInt(edge.target) : null;
+  }, []);
+
+  const extractChoicesFromEdges = useCallback((nodeId: string, edges: Edge[]) => {
+    return edges
+      .filter(edge => edge.source === nodeId)
+      .map(edge => {
+        const label = edge.data?.label || '';
+        const [text, value] = label.includes('::') ? label.split('::') : [label, ''];
+        
+        const choice: any = { text: text.trim() || 'Choice option' };
+        
+        if (value && value.trim()) {
+          const trimmedValue = value.trim();
+          // Parse value types
+          if (trimmedValue === 'true') choice.value = true;
+          else if (trimmedValue === 'false') choice.value = false;
+          else if (trimmedValue === 'null') choice.value = null;
+          else if (!isNaN(Number(trimmedValue))) choice.value = Number(trimmedValue);
+          else choice.value = trimmedValue;
+        }
+        
+        choice.nextMessageId = parseInt(edge.target);
+        return choice;
+      });
+  }, []);
+
+  const extractRoutesFromEdges = useCallback((nodeId: string, edges: Edge[]) => {
+    return edges
+      .filter(edge => edge.source === nodeId)
+      .map(edge => {
+        const label = edge.data?.label || '';
+        if (label.toLowerCase() === 'default' || !label.trim()) {
+          return { default: true, nextMessageId: parseInt(edge.target) };
+        }
+        return {
+          condition: label,
+          nextMessageId: parseInt(edge.target)
+        };
+      });
+  }, []);
+
+  const convertNodesToMessages = useCallback((sortedNodes: Node<NodeData>[], edges: Edge[]) => {
+    return sortedNodes.map(node => {
+      const message: any = {
+        id: parseInt(node.data.nodeId || node.id),
+        type: node.data.category
+      };
+      
+      
+      switch (node.data.category) {
+        case 'bot':
+          message.text = node.data.content || 'Message content';
+          const nextId = getNextMessageId(node.id, edges);
+          if (nextId) message.nextMessageId = nextId;
+          break;
+          
+        case 'textInput':
+          message.storeKey = node.data.storeKey || 'user.input';
+          message.placeholderText = node.data.placeholderText || 'Enter text...';
+          const nextTextId = getNextMessageId(node.id, edges);
+          if (nextTextId) message.nextMessageId = nextTextId;
+          break;
+          
+        case 'choice':
+          message.storeKey = node.data.storeKey || 'user.choice';
+          message.choices = extractChoicesFromEdges(node.id, edges);
+          break;
+          
+        case 'autoroute':
+          message.routes = extractRoutesFromEdges(node.id, edges);
+          break;
+          
+        case 'user':
+          message.text = node.data.content || 'User message';
+          const nextUserId = getNextMessageId(node.id, edges);
+          if (nextUserId) message.nextMessageId = nextUserId;
+          break;
+      }
+      
+      return message;
+    });
+  }, [getNextMessageId, extractChoicesFromEdges, extractRoutesFromEdges]);
+
+  const exportToFlutterSequence = useCallback(() => {
+    // Get sequence metadata from user
+    const sequenceId = prompt('Enter sequence ID (e.g., "my_sequence"):') || 'exported_sequence';
+    const name = prompt('Enter sequence name (e.g., "My Custom Sequence"):') || 'Exported Sequence';
+    const description = prompt('Enter sequence description:') || 'Sequence exported from authoring tool';
+    
+    try {
+      // Validate flow data
+      const validation = validateFlowForExport(nodes, edges);
+      if (!validation.isValid) {
+        alert(`Export failed:\n${validation.errors.join('\n')}`);
+        return;
+      }
+
+      // Sort nodes by flow order
+      const sortedNodes = sortNodesTopologically(nodes, edges);
+      if (sortedNodes.length === 0) {
+        alert('Export failed: Could not determine node flow order');
+        return;
+      }
+
+      // Convert to Flutter format
+      const messages = convertNodesToMessages(sortedNodes, edges);
+      
+      const flutterSequence = {
+        sequenceId,
+        name,
+        description,
+        messages
+      };
+
+      // Download as JSON file
+      const dataStr = JSON.stringify(flutterSequence, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = `${sequenceId}.json`;
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+      
+      alert(`Successfully exported ${messages.length} messages to ${exportFileDefaultName}`);
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      alert(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages]);
+
   const nodeTemplates = [
     { category: 'bot' as NodeCategory, label: 'Welcome Message' as NodeLabel, text: 'Welcome!', icon: '💬', description: 'Bot message' },
     { category: 'user' as NodeCategory, label: 'Response' as NodeLabel, text: 'User response', icon: '👤', description: 'User message' },
@@ -669,6 +870,21 @@ function Flow() {
           }}
         >
           Import JSON
+        </button>
+        
+        <button 
+          onClick={exportToFlutterSequence}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#e91e63',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          🚀 Export to Flutter
         </button>
       </div>
       

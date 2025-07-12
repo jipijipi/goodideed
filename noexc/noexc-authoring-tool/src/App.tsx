@@ -367,6 +367,87 @@ function Flow() {
     linkElement.click();
   }, [nodes, edges]);
 
+  const saveData = useCallback(() => {
+    const data = {
+      nodes: nodes.map(({ data, ...node }) => ({
+        ...node,
+        data: { 
+          label: data.label,
+          category: data.category,
+          nodeLabel: data.nodeLabel,
+          nodeId: data.nodeId,
+          content: data.content,
+          placeholderText: data.placeholderText,
+          storeKey: data.storeKey
+        }
+      })),
+      edges: edges.map(edge => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+        type: edge.type || 'default',
+        label: edge.data?.label
+      }))
+    };
+    
+    localStorage.setItem('react-flow-data', JSON.stringify(data));
+  }, [nodes, edges]);
+
+  const restoreData = useCallback(() => {
+    const savedData = localStorage.getItem('react-flow-data');
+    
+    if (savedData) {
+      try {
+        const importData = JSON.parse(savedData);
+        
+        if (importData.nodes && importData.edges) {
+          // Convert saved nodes to the correct format
+          const importedNodes = importData.nodes.map((node: any) => ({
+            ...node,
+            data: {
+              ...node.data,
+              onLabelChange: () => {},
+              onCategoryChange: () => {},
+              onNodeLabelChange: () => {},
+              onNodeIdChange: () => {},
+              onContentChange: () => {},
+              onPlaceholderChange: () => {},
+              onStoreKeyChange: () => {}
+            }
+          }));
+
+          // Convert saved edges to the correct format
+          const importedEdges = importData.edges.map((edge: any) => ({
+            ...edge,
+            type: edge.type || 'custom',
+            data: { 
+              label: edge.label,
+              onLabelChange: () => {}
+            }
+          }));
+
+          setNodes(importedNodes);
+          setEdges(importedEdges);
+          
+          // Update node counter based on imported nodes
+          const maxNodeId = Math.max(
+            ...importedNodes
+              .map((n: any) => parseInt(n.id))
+              .filter((id: number) => !isNaN(id)),
+            nodeIdCounter
+          );
+          setNodeIdCounter(maxNodeId + 1);
+        } else {
+          alert('Invalid saved data format.');
+        }
+      } catch (error) {
+        alert('Error restoring saved data.');
+      }
+    } else {
+      alert('No saved data found.');
+    }
+  }, [setNodes, setEdges, nodeIdCounter, setNodeIdCounter]);
+
   const importFromJSON = useCallback(() => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -417,8 +498,6 @@ function Flow() {
                 nodeIdCounter
               );
               setNodeIdCounter(maxNodeId + 1);
-              
-              alert('Flow imported successfully!');
             } else {
               alert('Invalid JSON format. Please ensure the file contains nodes and edges.');
             }
@@ -533,6 +612,36 @@ function Flow() {
         gap: '8px'
       }}>
         <button 
+          onClick={saveData}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#ff9800',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          Save
+        </button>
+        
+        <button 
+          onClick={restoreData}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#673ab7',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          Restore
+        </button>
+        
+        <button 
           onClick={exportToJSON}
           style={{
             padding: '8px 16px',
@@ -541,8 +650,7 @@ function Flow() {
             border: 'none',
             borderRadius: '4px',
             cursor: 'pointer',
-            fontWeight: 'bold',
-            marginBottom: '8px'
+            fontWeight: 'bold'
           }}
         >
           Export JSON

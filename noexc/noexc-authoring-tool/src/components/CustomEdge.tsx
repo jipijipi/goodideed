@@ -83,6 +83,8 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
   }, [handleSave, handleCancel]);
 
   const hasLabel = data?.label && data.label.trim() !== '';
+  const isCrossSequence = data?.label && data.label.startsWith('@');
+  const isCondition = data?.label && (data.label.includes('==') || data.label.includes('!=') || data.label.includes('>') || data.label.includes('<'));
 
   return (
     <>
@@ -93,8 +95,9 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         markerEnd={markerEnd}
         onClick={handleEdgeClick}
         style={{ 
-          stroke: '#999', 
-          strokeWidth: 2,
+          stroke: isCrossSequence ? '#9c27b0' : isCondition ? '#ff9800' : '#999', 
+          strokeWidth: isCrossSequence ? 3 : 2,
+          strokeDasharray: isCrossSequence ? '5,3' : 'none',
           cursor: hasLabel ? 'default' : 'pointer'
         }}
       />
@@ -127,22 +130,25 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                   textAlign: 'center',
                 }}
                 onClick={(e) => e.stopPropagation()}
-                placeholder="Enter label..."
+                placeholder="@sequence_id | condition | choice::value"
+                title="Format: @sequence_id for cross-sequence, condition for routes, choice::value for choices"
               />
             ) : (
               <div
                 style={{
-                  background: 'white',
+                  background: isCrossSequence ? '#f3e5f5' : 'white',
                   padding: '2px 6px',
                   borderRadius: '4px',
-                  border: '1px solid #ddd',
+                  border: `1px solid ${isCrossSequence ? '#9c27b0' : '#ddd'}`,
                   cursor: 'pointer',
                   minWidth: '40px',
                   textAlign: 'center',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                  fontWeight: isCrossSequence ? 'bold' : 'normal',
+                  color: isCrossSequence ? '#6a1b9a' : 'inherit'
                 }}
                 onDoubleClick={handleDoubleClick}
-                title="Double-click to edit"
+                title={isCrossSequence ? "Cross-sequence navigation - Double-click to edit" : "Double-click to edit"}
               >
                 {data?.label}
               </div>

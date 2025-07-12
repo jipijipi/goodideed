@@ -729,7 +729,9 @@ function Flow() {
     
     // Check for required fields
     if (!nodes?.length) errors.push("No nodes found");
-    if (!edges?.length) errors.push("No edges found");
+    
+    // Get node IDs for this group
+    const nodeIds = new Set(nodes.map(n => n.id));
     
     // Validate each node
     nodes.forEach(node => {
@@ -749,11 +751,22 @@ function Flow() {
       }
     });
     
-    // Validate flow connectivity - find start node
+    // Validate flow connectivity - find start node (only check internal edges)
+    const internalEdges = edges.filter(edge => nodeIds.has(edge.target));
     const hasStartNode = nodes.some(node => 
-      !edges.some(edge => edge.target === node.id)
+      !internalEdges.some(edge => edge.target === node.id)
     );
-    if (!hasStartNode) errors.push("No start node found (node with no incoming edges)");
+    if (!hasStartNode) errors.push("No start node found (node with no incoming internal edges)");
+    
+    // Validate cross-sequence references
+    edges.forEach(edge => {
+      if (edge.data?.label?.startsWith('@')) {
+        const sequenceId = edge.data.label.substring(1);
+        if (!sequenceId.trim()) {
+          errors.push(`Edge ${edge.id} has invalid cross-sequence reference: missing sequence ID after @`);
+        }
+      }
+    });
     
     return {
       isValid: errors.length === 0,
@@ -762,8 +775,10 @@ function Flow() {
   }, []);
 
   const findStartNode = useCallback((nodes: Node<NodeData>[], edges: Edge[]) => {
+    const nodeIds = new Set(nodes.map(n => n.id));
+    const internalEdges = edges.filter(edge => nodeIds.has(edge.target));
     return nodes.find(node => 
-      !edges.some(edge => edge.target === node.id)
+      !internalEdges.some(edge => edge.target === node.id)
     );
   }, []);
 
@@ -781,9 +796,10 @@ function Flow() {
       const node = nodes.find(n => n.id === nodeId);
       if (node) result.push(node);
       
-      // Visit connected nodes in order
+      // Visit connected nodes in order (only within the same group)
       edges
         .filter(edge => edge.source === nodeId)
+        .filter(edge => nodes.some(n => n.id === edge.target)) // Only visit targets that exist in this group
         .sort((a, b) => a.target.localeCompare(b.target)) // Ensure consistent ordering
         .forEach(edge => visit(edge.target));
     };
@@ -792,12 +808,42 @@ function Flow() {
     return result;
   }, [findStartNode]);
 
-  const getNextMessageId = useCallback((nodeId: string, edges: Edge[]) => {
+  const getNextMessageId = useCallback((nodeId: string, edges: Edge[], groupNodes?: Node<NodeData>[]) => {
     const edge = edges.find(e => e.source === nodeId);
-    return edge ? parseInt(edge.target) : null;
-  }, []);
+    if (!edge) return null;
+    
+    // Check if this is cross-sequence navigation
+    const sourceNode = nodes.find(n => n.id === nodeId);
+    const targetNode = nodes.find(n => n.id === edge.target);
+    
+    if (sourceNode && targetNode && groupNodes) {
+      const sourceGroupId = sourceNode.parentId;
+      const targetGroupId = targetNode.parentId;
+      
+      // If target is in a different group, return an object with sequence info
+      if (sourceGroupId !== targetGroupId) {
+        if (targetGroupId) {
+          const targetGroup = groupNodes.find(g => g.id === targetGroupId);
+          if (targetGroup && targetGroup.data.groupId) {
+            return {
+              sequenceId: targetGroup.data.groupId,
+              messageId: parseInt(targetNode.data.nodeId || targetNode.id)
+            };
+          }
+        } else {
+          // Target is ungrouped
+          return {
+            sequenceId: 'main',
+            messageId: parseInt(targetNode.data.nodeId || targetNode.id)
+          };
+        }
+      }
+    }
+    
+    return parseInt(edge.target);
+  }, [nodes]);
 
-  const extractChoicesFromEdges = useCallback((nodeId: string, edges: Edge[]) => {
+  const extractChoicesFromEdges = useCallback((nodeId: string, edges: Edge[], groupNodes?: Node<NodeData>[], allNodes?: Node<NodeData>[]) => {
     return edges
       .filter(edge => edge.source === nodeId)
       .map(edge => {
@@ -816,27 +862,113 @@ function Flow() {
           else choice.value = trimmedValue;
         }
         
-        choice.nextMessageId = parseInt(edge.target);
+        // Check for explicit cross-sequence navigation syntax (@sequence_id)
+        if (label.startsWith('@')) {
+          // Extract sequence ID from the full label
+          const sequenceIdPart = label.includes('::') ? label.split('::')[0] : label;
+          const sequenceId = sequenceIdPart.substring(1); // Remove the @ symbol
+          choice.sequenceId = sequenceId;
+          choice.nextMessageId = 1; // Default to first message of target sequence
+        } else {
+          // Check if target is in a different group (auto-detect cross-sequence navigation)
+          const nodesToSearch = allNodes || nodes;
+          const targetNode = nodesToSearch.find(n => n.id === edge.target);
+          const sourceNode = nodesToSearch.find(n => n.id === nodeId);
+          
+          if (targetNode && sourceNode) {
+            const sourceGroupId = sourceNode.parentId;
+            const targetGroupId = targetNode.parentId;
+            
+            // If target is in a different group or ungrouped, set up cross-sequence navigation
+            if (sourceGroupId !== targetGroupId) {
+              if (targetGroupId && groupNodes) {
+                // Target is in another group - find the group's sequenceId
+                const targetGroup = groupNodes.find(g => g.id === targetGroupId);
+                if (targetGroup && targetGroup.data.groupId) {
+                  choice.sequenceId = targetGroup.data.groupId;
+                  choice.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+                }
+              } else {
+                // Target is ungrouped - use a special marker for main sequence
+                choice.sequenceId = 'main';
+                choice.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+              }
+            } else {
+              // Same group - normal internal navigation
+              choice.nextMessageId = parseInt(edge.target);
+            }
+          } else {
+            // Fallback to original behavior
+            choice.nextMessageId = parseInt(edge.target);
+          }
+        }
+        
         return choice;
       });
-  }, []);
+  }, [nodes]);
 
-  const extractRoutesFromEdges = useCallback((nodeId: string, edges: Edge[]) => {
+  const extractRoutesFromEdges = useCallback((nodeId: string, edges: Edge[], groupNodes?: Node<NodeData>[], allNodes?: Node<NodeData>[]) => {
     return edges
       .filter(edge => edge.source === nodeId)
       .map(edge => {
         const label = edge.data?.label || '';
-        if (label.toLowerCase() === 'default' || !label.trim()) {
-          return { default: true, nextMessageId: parseInt(edge.target) };
+        const isDefault = label.toLowerCase() === 'default' || !label.trim();
+        
+        // Check if target is in a different group (cross-sequence navigation)
+        const nodesToSearch = allNodes || nodes;
+        const targetNode = nodesToSearch.find(n => n.id === edge.target);
+        const sourceNode = nodesToSearch.find(n => n.id === nodeId);
+        
+        let route: any = isDefault 
+          ? { default: true }
+          : { condition: label };
+        
+        // Check for explicit cross-sequence navigation syntax (@sequence_id)
+        if (label.startsWith('@')) {
+          const sequenceId = label.substring(1); // Remove the @ symbol
+          route.sequenceId = sequenceId;
+          route.nextMessageId = 1; // Default to first message of target sequence
+          if (isDefault) {
+            route.default = true;
+            delete route.condition;
+          } else {
+            route.condition = label; // Keep original condition for backwards compatibility
+          }
+        } else {
+          // Auto-detect cross-sequence navigation based on group membership
+          if (targetNode && sourceNode) {
+            const sourceGroupId = sourceNode.parentId;
+            const targetGroupId = targetNode.parentId;
+            
+            // If target is in a different group or ungrouped, set up cross-sequence navigation
+            if (sourceGroupId !== targetGroupId) {
+              if (targetGroupId && groupNodes) {
+                // Target is in another group - find the group's sequenceId
+                const targetGroup = groupNodes.find(g => g.id === targetGroupId);
+                if (targetGroup && targetGroup.data.groupId) {
+                  route.sequenceId = targetGroup.data.groupId;
+                  route.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+                }
+              } else {
+                // Target is ungrouped - use a special marker for main sequence
+                route.sequenceId = 'main';
+                route.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+              }
+            } else {
+              // Same group - normal internal navigation
+              route.nextMessageId = parseInt(edge.target);
+            }
+          } else {
+            // Fallback to original behavior
+            route.nextMessageId = parseInt(edge.target);
+          }
         }
-        return {
-          condition: label,
-          nextMessageId: parseInt(edge.target)
-        };
+        
+        return route;
       });
-  }, []);
+  }, [nodes]);
 
-  const convertNodesToMessages = useCallback((sortedNodes: Node<NodeData>[], edges: Edge[]) => {
+  const convertNodesToMessages = useCallback((sortedNodes: Node<NodeData>[], edges: Edge[], groupNodes?: Node<NodeData>[], allNodes?: Node<NodeData>[]) => {
     return sortedNodes.map(node => {
       const message: any = {
         id: parseInt(node.data.nodeId || node.id),
@@ -847,30 +979,57 @@ function Flow() {
       switch (node.data.category) {
         case 'bot':
           message.text = node.data.content || 'Message content';
-          const nextId = getNextMessageId(node.id, edges);
-          if (nextId) message.nextMessageId = nextId;
+          const nextId = getNextMessageId(node.id, edges, groupNodes);
+          if (nextId) {
+            if (typeof nextId === 'object') {
+              // Cross-sequence navigation
+              message.sequenceId = nextId.sequenceId;
+              message.nextMessageId = nextId.messageId;
+            } else {
+              // Same sequence navigation
+              message.nextMessageId = nextId;
+            }
+          }
           break;
           
         case 'textInput':
           message.storeKey = node.data.storeKey || 'user.input';
           message.placeholderText = node.data.placeholderText || 'Enter text...';
-          const nextTextId = getNextMessageId(node.id, edges);
-          if (nextTextId) message.nextMessageId = nextTextId;
+          const nextTextId = getNextMessageId(node.id, edges, groupNodes);
+          if (nextTextId) {
+            if (typeof nextTextId === 'object') {
+              // Cross-sequence navigation
+              message.sequenceId = nextTextId.sequenceId;
+              message.nextMessageId = nextTextId.messageId;
+            } else {
+              // Same sequence navigation
+              message.nextMessageId = nextTextId;
+            }
+          }
           break;
           
         case 'choice':
           message.storeKey = node.data.storeKey || 'user.choice';
-          message.choices = extractChoicesFromEdges(node.id, edges);
+          message.choices = extractChoicesFromEdges(node.id, edges, groupNodes, allNodes);
           break;
           
         case 'autoroute':
-          message.routes = extractRoutesFromEdges(node.id, edges);
+          message.routes = extractRoutesFromEdges(node.id, edges, groupNodes, allNodes);
           break;
           
         case 'user':
           message.text = node.data.content || 'User message';
-          const nextUserId = getNextMessageId(node.id, edges);
-          if (nextUserId) message.nextMessageId = nextUserId;
+          const nextUserId = getNextMessageId(node.id, edges, groupNodes);
+          if (nextUserId) {
+            if (typeof nextUserId === 'object') {
+              // Cross-sequence navigation
+              message.sequenceId = nextUserId.sequenceId;
+              message.nextMessageId = nextUserId.messageId;
+            } else {
+              // Same sequence navigation
+              message.nextMessageId = nextUserId;
+            }
+          }
           break;
       }
       
@@ -899,8 +1058,11 @@ function Flow() {
         return;
       }
 
+      // Get group nodes for cross-sequence navigation
+      const groupNodes = nodes.filter(node => node.type === 'group');
+      
       // Convert to Flutter format
-      const messages = convertNodesToMessages(sortedNodes, edges);
+      const messages = convertNodesToMessages(sortedNodes, edges, groupNodes, nodes);
       
       const flutterSequence = {
         sequenceId,
@@ -926,6 +1088,7 @@ function Flow() {
       alert(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages]);
+
 
   const exportGroupsAsSequences = useCallback(() => {
     try {
@@ -959,10 +1122,10 @@ function Flow() {
           return;
         }
 
-        // Get edges between nodes in this group
+        // Get edges that originate from nodes in this group (including cross-sequence edges)
         const groupChildrenIds = new Set(groupChildren.map(n => n.id));
         const groupEdges = edges.filter(edge => 
-          groupChildrenIds.has(edge.source) && groupChildrenIds.has(edge.target)
+          groupChildrenIds.has(edge.source)
         );
 
         // Validate this group's flow
@@ -979,8 +1142,8 @@ function Flow() {
           return;
         }
 
-        // Convert to Flutter format
-        const messages = convertNodesToMessages(sortedGroupNodes, groupEdges);
+        // Convert to Flutter format (pass all nodes for cross-sequence navigation detection)
+        const messages = convertNodesToMessages(sortedGroupNodes, groupEdges, groupNodes, nodes);
         
         // Use group metadata or fallback values
         const sequenceId = groupNode.data.groupId || `group_${groupNode.id}`;

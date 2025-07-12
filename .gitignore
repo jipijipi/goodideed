@@ -132,3 +132,10 @@ app.*.symbols
 .DS_Store
 *.png
 .DS_Store
+
+#React
+noexc/noexc-authoring-tool/node_modules/
+noexc/noexc-authoring-tool/build/
+noexc/noexc-authoring-tool/dist/
+.env
+.DS_Store

@@ -158,19 +158,64 @@ function Flow() {
       return node;
     });
 
-    // Add the group node to the list
-    setNodes([...updatedNodes, groupNode]);
+    // Add the group node to the list (parent must come before children)
+    setNodes([groupNode, ...updatedNodes]);
     setNodeIdCounter(counter => counter + 1);
     setSelectedNodes([]);
 
     console.log(`Created group ${groupId} with ${selectedNodes.length} child nodes`);
   }, [selectedNodes, nodes, getId, setNodes, setNodeIdCounter]);
 
-  // Keyboard event handling for shift key
+  // Ungroup selected group nodes
+  const ungroupSelectedNodes = useCallback(() => {
+    const groupNodes = selectedNodes.filter(node => node.type === 'group');
+    if (groupNodes.length === 0) return;
+
+    let updatedNodes = [...nodes];
+    
+    groupNodes.forEach(groupNode => {
+      // Find child nodes of this group
+      const childNodes = updatedNodes.filter(node => node.parentId === groupNode.id);
+      
+      // Remove the group node
+      updatedNodes = updatedNodes.filter(node => node.id !== groupNode.id);
+      
+      // Update child nodes to remove parent relationship and restore absolute positions
+      updatedNodes = updatedNodes.map(node => {
+        if (node.parentId === groupNode.id) {
+          return {
+            ...node,
+            parentId: undefined,
+            position: {
+              x: groupNode.position.x + node.position.x,
+              y: groupNode.position.y + node.position.y
+            },
+            extent: undefined,
+            selected: false
+          };
+        }
+        return node;
+      });
+      
+      console.log(`Ungrouped ${childNodes.length} nodes from group ${groupNode.id}`);
+    });
+
+    setNodes(updatedNodes);
+    setSelectedNodes([]);
+  }, [selectedNodes, nodes, setNodes]);
+
+  // Enhanced keyboard event handling for shift key and ungrouping
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Shift') {
         setIsShiftPressed(true);
+      }
+      // Handle ungrouping with 'U' key
+      if (e.key === 'u' || e.key === 'U') {
+        const hasGroupSelected = selectedNodes.some(node => node.type === 'group');
+        if (hasGroupSelected) {
+          ungroupSelectedNodes();
+        }
       }
     };
 
@@ -191,7 +236,7 @@ function Flow() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [selectedNodes, createGroupFromSelectedNodes]);
+  }, [selectedNodes, createGroupFromSelectedNodes, ungroupSelectedNodes]);
 
   // Track selected nodes
   const handleNodesChange = useCallback((changes: any) => {
@@ -905,11 +950,12 @@ function Flow() {
           paddingTop: '8px'
         }}>
           💡 Based on comprehensive_test.json<br/>
-          🔗 Hold Shift + Select multiple nodes to create subflow
+          🔗 Hold Shift + Select multiple nodes to create subflow<br/>
+          🔓 Select group node + Press 'U' to ungroup
         </div>
       </div>
 
-      {/* Shift Status Indicator */}
+      {/* Status Indicators */}
       {isShiftPressed && (
         <div style={{
           position: 'absolute',
@@ -926,6 +972,26 @@ function Flow() {
           boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
         }}>
           🔗 Subflow Mode: Select multiple nodes ({selectedNodes.length} selected)
+        </div>
+      )}
+      
+      {/* Ungroup Status Indicator */}
+      {!isShiftPressed && selectedNodes.some(node => node.type === 'group') && (
+        <div style={{
+          position: 'absolute',
+          top: 50,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          padding: '8px 16px',
+          background: 'rgba(255, 152, 0, 0.9)',
+          color: 'white',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        }}>
+          🔓 Press 'U' to ungroup selected group ({selectedNodes.filter(node => node.type === 'group').length} group{selectedNodes.filter(node => node.type === 'group').length > 1 ? 's' : ''})
         </div>
       )}
 
@@ -1016,6 +1082,23 @@ function Flow() {
           }}
         >
           🚀 Export to Flutter
+        </button>
+        
+        <button 
+          onClick={ungroupSelectedNodes}
+          disabled={!selectedNodes.some(node => node.type === 'group')}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: selectedNodes.some(node => node.type === 'group') ? '#ff9800' : '#ccc',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: selectedNodes.some(node => node.type === 'group') ? 'pointer' : 'not-allowed',
+            fontWeight: 'bold',
+            opacity: selectedNodes.some(node => node.type === 'group') ? 1 : 0.5
+          }}
+        >
+          🔓 Ungroup
         </button>
       </div>
       

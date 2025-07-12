@@ -1081,60 +1081,7 @@ function Flow() {
     });
   }, [getNextMessageId, extractChoicesFromEdges, extractRoutesFromEdges]);
 
-  const exportToFlutterSequence = useCallback(() => {
-    // Get sequence metadata from user
-    const sequenceId = prompt('Enter sequence ID (e.g., "my_sequence"):') || 'exported_sequence';
-    const name = prompt('Enter sequence name (e.g., "My Custom Sequence"):') || 'Exported Sequence';
-    const description = prompt('Enter sequence description:') || 'Sequence exported from authoring tool';
-    
-    try {
-      // Validate flow data
-      const validation = validateFlowForExport(nodes, edges);
-      if (!validation.isValid) {
-        showError('Export failed - validation errors found', validation.errors);
-        return;
-      }
-
-      // Sort nodes by flow order
-      const sortedNodes = sortNodesTopologically(nodes, edges);
-      if (sortedNodes.length === 0) {
-        showError('Export failed', ['Could not determine node flow order']);
-        return;
-      }
-
-      // Get group nodes for cross-sequence navigation
-      const groupNodes = nodes.filter(node => node.type === 'group');
-      
-      // Convert to Flutter format
-      const messages = convertNodesToMessages(sortedNodes, edges, groupNodes, nodes);
-      
-      const flutterSequence = {
-        sequenceId,
-        name,
-        description,
-        messages
-      };
-
-      // Download as JSON file
-      const dataStr = JSON.stringify(flutterSequence, null, 2);
-      const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-      
-      const exportFileDefaultName = `${sequenceId}.json`;
-      const linkElement = document.createElement('a');
-      linkElement.setAttribute('href', dataUri);
-      linkElement.setAttribute('download', exportFileDefaultName);
-      linkElement.click();
-      
-      showNotification(`Exported ${messages.length} messages to ${exportFileDefaultName}`);
-      
-    } catch (error) {
-      console.error('Export error:', error);
-      showError('Export failed', [error instanceof Error ? error.message : 'Unknown error']);
-    }
-  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
-
-
-  const exportGroupsAsSequences = useCallback(() => {
+  const exportToFlutter = useCallback(() => {
     try {
       // Find all group nodes
       const groupNodes = nodes.filter(node => node.type === 'group');
@@ -1224,11 +1171,11 @@ function Flow() {
         linkElement.click();
       });
 
-      showNotification(`Exported ${exportedSequences.length} sequences from groups`);
+      showNotification(`Exported ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} to Flutter`);
       
     } catch (error) {
-      console.error('Group export error:', error);
-      showError('Group export failed', [error instanceof Error ? error.message : 'Unknown error']);
+      console.error('Export error:', error);
+      showError('Export failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
   }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
 
@@ -1435,7 +1382,7 @@ function Flow() {
         </button>
         
         <button 
-          onClick={exportToFlutterSequence}
+          onClick={exportToFlutter}
           style={{
             padding: '8px 16px',
             backgroundColor: '#e91e63',
@@ -1447,21 +1394,6 @@ function Flow() {
           }}
         >
           🚀 Export to Flutter
-        </button>
-        
-        <button 
-          onClick={exportGroupsAsSequences}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#9c27b0',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          📁 Export Groups as Sequences
         </button>
         
         <button 

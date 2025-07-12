@@ -33,8 +33,8 @@ The system automatically detects cross-sequence navigation when:
 
 ## Export Behavior
 
-### Group Export (`📁 Export Groups as Sequences`)
-When exporting groups as sequences:
+### Flutter Export (`🚀 Export to Flutter`)
+When exporting to Flutter:
 
 1. **Each group** becomes a separate JSON sequence file
 2. **Cross-sequence navigation** is preserved with `sequenceId` field
@@ -85,7 +85,7 @@ When exporting groups as sequences:
 3. **Add Cross-Sequence Edges**: 
    - Create edges between nodes in different groups (auto-detected)
    - OR use `@sequence_id` syntax in edge labels (explicit)
-4. **Export**: Use "📁 Export Groups as Sequences" button
+4. **Export**: Use "🚀 Export to Flutter" button
 
 ### Edge Label Examples
 - `@menu` - Jump to menu sequence

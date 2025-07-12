@@ -32,6 +32,39 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 - **Conditional routing** based on user attributes
 - **Choice-based interactions** with data persistence
 
+### React Flow Authoring Tool
+Located in `noexc-authoring-tool/`, this is a **visual authoring tool** for creating conversation sequences:
+
+#### Purpose
+- **Visual Flow Creation**: Drag-and-drop interface for building conversation flows
+- **Cross-Sequence Navigation**: Create complex multi-sequence workflows with visual connections
+- **Flutter Export**: Export groups as JSON sequences compatible with the Flutter chat app
+
+#### Key Features
+- **Node Types**: Bot messages, user responses, choices, text inputs, auto-routes
+- **Group System**: Organize nodes into groups that become separate sequences
+- **Cross-Sequence Edges**: Visual connections between groups with `@sequence_id` syntax
+- **Real-time Validation**: Live validation of flow structure and requirements
+- **Export Integration**: Direct export to Flutter-compatible JSON format
+
+#### Architecture
+- **React Flow**: Built on ReactFlow library for node-based editing
+- **TypeScript**: Fully typed with comprehensive interfaces
+- **Custom Components**: EditableNode, GroupNode, CustomEdge components
+- **Validation System**: Comprehensive validation rules for export integrity
+
+#### Development Commands
+- `cd noexc-authoring-tool && npm start` - Run authoring tool development server
+- `cd noexc-authoring-tool && npm run build` - Build authoring tool for production
+- `cd noexc-authoring-tool && npm test` - Run authoring tool tests
+
+#### Cross-Sequence Navigation
+The authoring tool supports advanced cross-sequence navigation:
+- **Auto-Detection**: Edges between different groups automatically create cross-sequence navigation
+- **Explicit Syntax**: Use `@sequence_id` in edge labels for explicit cross-sequence jumps
+- **Validation**: Ensures all cross-sequence references are valid
+- **Export**: Groups export as separate sequence files with proper `sequenceId` fields
+
 ### Key Components
 
 #### Models (`lib/models/`)
@@ -131,12 +164,69 @@ This is a Flutter chat app with a **sequence-based conversation system** that su
 - Aim for high test coverage (minimum 80%) - Currently at 100% success rate
 - Never commit code without corresponding tests
 
+## Authoring Tool ↔ Flutter Integration
+
+### Workflow Overview
+1. **Design in Authoring Tool**: Create conversation flows visually using React Flow interface
+2. **Organize into Groups**: Group related nodes to create logical sequences
+3. **Add Cross-Sequence Navigation**: Connect groups with `@sequence_id` syntax or auto-detection
+4. **Export to Flutter**: Use "🚀 Export to Flutter" button to generate JSON files
+5. **Import to Flutter**: Place exported JSON files in `assets/sequences/` directory
+
+### File Format Compatibility
+The authoring tool exports JSON files that are **100% compatible** with the Flutter app's sequence format:
+
+```json
+{
+  "sequenceId": "onboarding",
+  "name": "User Onboarding",
+  "description": "Initial user setup flow",
+  "messages": [
+    {
+      "id": 1,
+      "type": "bot",
+      "text": "Welcome! How can I help you?",
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "type": "choice",
+      "storeKey": "user.choice",
+      "choices": [
+        {
+          "text": "Continue to Tutorial",
+          "sequenceId": "tutorial"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Cross-Sequence Features
+- **sequenceId Field**: Enables navigation between different conversation sequences
+- **Auto-Detection**: Authoring tool automatically detects cross-group connections
+- **Validation**: Ensures all cross-sequence references are valid before export
+- **Multiple Sequences**: One authoring session can export multiple related sequences
+
 ## Development Notes
 
 ### Adding New Sequences
-1. Create JSON file in `assets/sequences/`
-2. Add sequence ID to `AppConstants.availableSequences`
-3. Add display name to `ChatConfig.sequenceDisplayNames`
+
+#### Method 1: Using the Authoring Tool (Recommended)
+1. Open the React Flow authoring tool (`cd noexc-authoring-tool && npm start`)
+2. Create conversation flows visually with drag-and-drop
+3. Organize nodes into groups for each sequence
+4. Export using "🚀 Export to Flutter" button
+5. Place exported JSON files in `assets/sequences/`
+6. Add sequence IDs to `AppConstants.availableSequences`
+7. Add display names to `ChatConfig.sequenceDisplayNames`
+
+#### Method 2: Manual JSON Creation
+1. Create JSON file manually in `assets/sequences/`
+2. Follow the sequence format with proper message structure
+3. Add sequence ID to `AppConstants.availableSequences`
+4. Add display name to `ChatConfig.sequenceDisplayNames`
 
 ### Message Types
 The app uses a **MessageType enum** system that replaces legacy boolean flags:
@@ -208,3 +298,40 @@ The app uses a **MessageType enum** system that replaces legacy boolean flags:
 - **Phase 3**: Platform-specific features, community features, enterprise features
 
 See detailed analysis for 80+ specific quick wins across all categories.
+
+## Quick Reference
+
+### Authoring Tool Commands
+```bash
+# Development
+cd noexc-authoring-tool
+npm start                    # Start development server (usually port 3003)
+npm run build               # Build for production
+npm test                    # Run tests
+
+# Usage
+# 1. Create nodes with Quick Create panel
+# 2. Select multiple nodes with Shift+click to create groups
+# 3. Double-click group info panels to edit metadata
+# 4. Add cross-sequence edges with @sequence_id syntax
+# 5. Export with "🚀 Export to Flutter" button
+```
+
+### Flutter App Commands
+```bash
+# Development
+flutter run                 # Run app
+flutter test                # Run all tests
+flutter analyze            # Static analysis
+
+# Sequences
+# 1. Place exported JSON files in assets/sequences/
+# 2. Add to AppConstants.availableSequences
+# 3. Add display names to ChatConfig.sequenceDisplayNames
+```
+
+### Cross-Sequence Navigation Syntax
+- `@sequence_id` - Jump to another sequence
+- `choice::value` - Store choice value  
+- `condition` - Auto-route condition
+- `default` - Default route

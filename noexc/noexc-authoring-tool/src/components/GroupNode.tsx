@@ -200,17 +200,6 @@ const GroupNode = ({ data, selected, id }: GroupNodeProps) => {
         borderRadius: '8px',
         position: 'relative'
       }}>
-        {/* Subflow indicator at bottom right */}
-        <div style={{
-          position: 'absolute',
-          bottom: '8px',
-          right: '8px',
-          fontSize: '10px',
-          color: '#999',
-          fontStyle: 'italic'
-        }}>
-          📁 Subflow
-        </div>
       </div>
     </>
   );

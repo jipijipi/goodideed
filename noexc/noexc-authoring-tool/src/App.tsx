@@ -12,7 +12,8 @@ import ReactFlow, {
   ReactFlowProvider,
   ConnectionLineType,
   EdgeTypes,
-  useReactFlow
+  useReactFlow,
+  useViewport
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
@@ -94,8 +95,16 @@ function Flow() {
   const [nodeIdCounter, setNodeIdCounter] = useState(3);
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [selectedNodes, setSelectedNodes] = useState<Node<NodeData>[]>([]);
+  const [notification, setNotification] = useState<string | null>(null);
   const edgeReconnectSuccessful = useRef(true);
   const { getNodes } = useReactFlow();
+  const { x: viewportX, y: viewportY, zoom } = useViewport();
+
+  // Show notification briefly
+  const showNotification = useCallback((message: string) => {
+    setNotification(message);
+    setTimeout(() => setNotification(null), 3000);
+  }, []);
 
 
   const getId = useCallback(() => `${nodeIdCounter}`, [nodeIdCounter]);
@@ -336,7 +345,17 @@ function Flow() {
 
   const createQuickNode = useCallback((nodeType: { category: NodeCategory, label: NodeLabel, text: string }) => {
     const id = getId();
-    const position = { x: 300, y: 200 + (nodes.length * 50) }; // Stagger positions
+    
+    // Calculate center of viewport with small random offset to avoid overlapping
+    const viewportCenterX = (-viewportX + window.innerWidth / 2) / zoom;
+    const viewportCenterY = (-viewportY + window.innerHeight / 2) / zoom;
+    const randomOffsetX = (Math.random() - 0.5) * 100; // ±50px
+    const randomOffsetY = (Math.random() - 0.5) * 100; // ±50px
+    
+    const position = { 
+      x: viewportCenterX + randomOffsetX, 
+      y: viewportCenterY + randomOffsetY 
+    };
     
     // Set default values based on node type
     const getDefaultData = (category: NodeCategory) => {
@@ -381,7 +400,7 @@ function Flow() {
 
     setNodes((nds) => nds.concat(newNode));
     setNodeIdCounter((counter) => counter + 1);
-  }, [nodes.length, getId, setNodes]);
+  }, [getId, setNodes, viewportX, viewportY, zoom]);
 
   const onLabelChange = useCallback((nodeId: string, newLabel: string) => {
     setNodes((nds) =>
@@ -868,7 +887,7 @@ function Flow() {
           const sequenceIdPart = label.includes('::') ? label.split('::')[0] : label;
           const sequenceId = sequenceIdPart.substring(1); // Remove the @ symbol
           choice.sequenceId = sequenceId;
-          choice.nextMessageId = 1; // Default to first message of target sequence
+          // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
         } else {
           // Check if target is in a different group (auto-detect cross-sequence navigation)
           const nodesToSearch = allNodes || nodes;
@@ -886,12 +905,12 @@ function Flow() {
                 const targetGroup = groupNodes.find(g => g.id === targetGroupId);
                 if (targetGroup && targetGroup.data.groupId) {
                   choice.sequenceId = targetGroup.data.groupId;
-                  choice.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+                  // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
                 }
               } else {
                 // Target is ungrouped - use a special marker for main sequence
                 choice.sequenceId = 'main';
-                choice.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+                // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
               }
             } else {
               // Same group - normal internal navigation
@@ -927,7 +946,7 @@ function Flow() {
         if (label.startsWith('@')) {
           const sequenceId = label.substring(1); // Remove the @ symbol
           route.sequenceId = sequenceId;
-          route.nextMessageId = 1; // Default to first message of target sequence
+          // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
           if (isDefault) {
             route.default = true;
             delete route.condition;
@@ -947,12 +966,12 @@ function Flow() {
                 const targetGroup = groupNodes.find(g => g.id === targetGroupId);
                 if (targetGroup && targetGroup.data.groupId) {
                   route.sequenceId = targetGroup.data.groupId;
-                  route.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+                  // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
                 }
               } else {
                 // Target is ungrouped - use a special marker for main sequence
                 route.sequenceId = 'main';
-                route.nextMessageId = parseInt(targetNode.data.nodeId || targetNode.id);
+                // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
               }
             } else {
               // Same group - normal internal navigation
@@ -982,9 +1001,8 @@ function Flow() {
           const nextId = getNextMessageId(node.id, edges, groupNodes);
           if (nextId) {
             if (typeof nextId === 'object') {
-              // Cross-sequence navigation
+              // Cross-sequence navigation - don't set nextMessageId, Flutter app assumes first node
               message.sequenceId = nextId.sequenceId;
-              message.nextMessageId = nextId.messageId;
             } else {
               // Same sequence navigation
               message.nextMessageId = nextId;
@@ -998,9 +1016,8 @@ function Flow() {
           const nextTextId = getNextMessageId(node.id, edges, groupNodes);
           if (nextTextId) {
             if (typeof nextTextId === 'object') {
-              // Cross-sequence navigation
+              // Cross-sequence navigation - don't set nextMessageId, Flutter app assumes first node
               message.sequenceId = nextTextId.sequenceId;
-              message.nextMessageId = nextTextId.messageId;
             } else {
               // Same sequence navigation
               message.nextMessageId = nextTextId;
@@ -1022,9 +1039,8 @@ function Flow() {
           const nextUserId = getNextMessageId(node.id, edges, groupNodes);
           if (nextUserId) {
             if (typeof nextUserId === 'object') {
-              // Cross-sequence navigation
+              // Cross-sequence navigation - don't set nextMessageId, Flutter app assumes first node
               message.sequenceId = nextUserId.sequenceId;
-              message.nextMessageId = nextUserId.messageId;
             } else {
               // Same sequence navigation
               message.nextMessageId = nextUserId;
@@ -1081,7 +1097,7 @@ function Flow() {
       linkElement.setAttribute('download', exportFileDefaultName);
       linkElement.click();
       
-      alert(`Successfully exported ${messages.length} messages to ${exportFileDefaultName}`);
+      showNotification(`Exported ${messages.length} messages to ${exportFileDefaultName}`);
       
     } catch (error) {
       console.error('Export error:', error);
@@ -1132,6 +1148,7 @@ function Flow() {
         const validation = validateFlowForExport(groupChildren, groupEdges);
         if (!validation.isValid) {
           console.warn(`Group ${groupNode.id} validation failed:`, validation.errors);
+          console.warn(`Group has ${groupChildren.length} children and ${groupEdges.length} edges`);
           return;
         }
 
@@ -1177,7 +1194,7 @@ function Flow() {
         linkElement.click();
       });
 
-      alert(`Successfully exported ${exportedSequences.length} sequences from groups. Ungrouped nodes were ignored.`);
+      showNotification(`Exported ${exportedSequences.length} sequences from groups`);
       
     } catch (error) {
       console.error('Group export error:', error);
@@ -1455,6 +1472,26 @@ function Flow() {
         <Controls />
         <Background />
       </ReactFlow>
+      
+      {/* Notification */}
+      {notification && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          backgroundColor: '#4caf50',
+          color: 'white',
+          padding: '12px 20px',
+          borderRadius: '6px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          zIndex: 2000,
+          fontSize: '14px',
+          fontWeight: '500',
+          animation: 'slideIn 0.3s ease-out'
+        }}>
+          ✓ {notification}
+        </div>
+      )}
     </div>
   );
 }

@@ -12,18 +12,15 @@ import ReactFlow, {
   useReactFlow,
   ReactFlowProvider,
   ConnectionLineType,
-  OnSelectionChangeParams,
   EdgeTypes
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
-import GroupNode from './components/GroupNode';
 import CustomEdge from './components/CustomEdge';
 import { NodeData, NodeCategory, NodeLabel } from './constants/nodeTypes';
 
 const nodeTypes = {
   editable: EditableNode,
-  group: GroupNode,
 };
 
 const edgeTypes: EdgeTypes = {
@@ -94,12 +91,9 @@ function Flow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { getNodes } = useReactFlow();
   const [nodeIdCounter, setNodeIdCounter] = useState(3);
-  const [selectedNodes, setSelectedNodes] = useState<Node<NodeData>[]>([]);
-  const [groupIdCounter, setGroupIdCounter] = useState(1);
   const edgeReconnectSuccessful = useRef(true);
 
   const getId = () => `${nodeIdCounter}`;
-  const getGroupId = () => `group-${groupIdCounter}`;
   const nodeOrigin: [number, number] = [0.5, 0];
 
   const onConnect = useCallback(
@@ -130,106 +124,6 @@ function Flow() {
     edgeReconnectSuccessful.current = true;
   }, [setEdges]);
 
-  const onSelectionChange = useCallback((params: OnSelectionChangeParams) => {
-    setSelectedNodes(params.nodes as Node<NodeData>[]);
-  }, []);
-
-  const createGroup = useCallback(() => {
-    if (selectedNodes.length < 2) {
-      alert('Please select at least 2 nodes to create a group');
-      return;
-    }
-
-    const groupId = getGroupId();
-    
-    // Calculate group bounds
-    const bounds = selectedNodes.reduce(
-      (acc, node) => ({
-        minX: Math.min(acc.minX, node.position.x),
-        minY: Math.min(acc.minY, node.position.y),
-        maxX: Math.max(acc.maxX, node.position.x + 180), // node width
-        maxY: Math.max(acc.maxY, node.position.y + 150), // node height
-      }),
-      { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity }
-    );
-
-    // Add padding
-    const padding = 20;
-    const groupNode: Node<NodeData> = {
-      id: groupId,
-      type: 'group',
-      position: { 
-        x: bounds.minX - padding, 
-        y: bounds.minY - padding 
-      },
-      style: {
-        width: bounds.maxX - bounds.minX + (padding * 2),
-        height: bounds.maxY - bounds.minY + (padding * 2),
-      },
-      data: {
-        label: `Group ${groupIdCounter}`,
-        category: 'bot' as NodeCategory,
-        nodeLabel: 'Custom' as NodeLabel,
-        nodeId: groupId,
-        content: `Group ${groupIdCounter}`,
-        onLabelChange: () => {},
-        onCategoryChange: () => {},
-        onNodeLabelChange: () => {},
-        onNodeIdChange: () => {},
-        onContentChange: () => {},
-        onPlaceholderChange: () => {},
-        onStoreKeyChange: () => {}
-      },
-      draggable: true,
-      selectable: true,
-    };
-
-    // Add group association to selected nodes without making them children
-    const updatedNodes = nodes.map(node => {
-      if (selectedNodes.find(selected => selected.id === node.id)) {
-        return {
-          ...node,
-          data: {
-            ...node.data,
-            groupId: groupId, // Add group association
-          }
-        };
-      }
-      return node;
-    });
-
-    setNodes([...updatedNodes, groupNode]);
-    setGroupIdCounter(counter => counter + 1);
-    setSelectedNodes([]);
-  }, [selectedNodes, nodes, groupIdCounter]);
-
-  const ungroupNodes = useCallback(() => {
-    if (selectedNodes.length !== 1 || selectedNodes[0].type !== 'group') {
-      alert('Please select a single group to ungroup');
-      return;
-    }
-
-    const groupId = selectedNodes[0].id;
-    
-    // Remove group and clear group association from nodes
-    const updatedNodes = nodes
-      .filter(node => node.id !== groupId)
-      .map(node => {
-        if (node.data.groupId === groupId) {
-          return {
-            ...node,
-            data: {
-              ...node.data,
-              groupId: undefined, // Remove group association
-            }
-          };
-        }
-        return node;
-      });
-
-    setNodes(updatedNodes);
-    setSelectedNodes([]);
-  }, [selectedNodes, nodes]);
 
   const createQuickNode = useCallback((nodeType: { category: NodeCategory, label: NodeLabel, text: string }) => {
     const id = getId();
@@ -546,6 +440,7 @@ function Flow() {
     { category: 'autoroute' as NodeCategory, label: 'Conditional Route' as NodeLabel, text: 'Route condition', icon: '🔀', description: 'Auto-route' },
   ];
 
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       {/* Quick Create Panel */}
@@ -609,6 +504,7 @@ function Flow() {
             </button>
           ))}
         </div>
+
         
         <div style={{ 
           fontSize: '11px', 
@@ -666,45 +562,6 @@ function Flow() {
         >
           Import JSON
         </button>
-        
-        <div style={{ borderTop: '1px solid #eee', paddingTop: '8px' }}>
-          <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>
-            Selected: {selectedNodes.length} nodes
-          </div>
-          <button 
-            onClick={createGroup}
-            disabled={selectedNodes.length < 2}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: selectedNodes.length >= 2 ? '#4caf50' : '#ccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: selectedNodes.length >= 2 ? 'pointer' : 'not-allowed',
-              fontSize: '12px',
-              marginBottom: '4px',
-              width: '100%'
-            }}
-          >
-            Create Group
-          </button>
-          <button 
-            onClick={ungroupNodes}
-            disabled={selectedNodes.length !== 1 || selectedNodes[0]?.type !== 'group'}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: (selectedNodes.length === 1 && selectedNodes[0]?.type === 'group') ? '#ff9800' : '#ccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: (selectedNodes.length === 1 && selectedNodes[0]?.type === 'group') ? 'pointer' : 'not-allowed',
-              fontSize: '12px',
-              width: '100%'
-            }}
-          >
-            Ungroup
-          </button>
-        </div>
       </div>
       
       <ReactFlow
@@ -716,13 +573,11 @@ function Flow() {
         onReconnect={onReconnect}
         onReconnectStart={onReconnectStart}
         onReconnectEnd={onReconnectEnd}
-        onSelectionChange={onSelectionChange}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView
         connectionLineType={ConnectionLineType.Bezier}
         connectionRadius={30}
-        multiSelectionKeyCode="Shift"
       >
         <Controls />
         <Background />

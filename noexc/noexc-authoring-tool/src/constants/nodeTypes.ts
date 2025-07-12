@@ -32,8 +32,6 @@ export interface NodeData {
   // Input specific fields
   placeholderText?: string;
   storeKey?: string;
-  // Group association
-  groupId?: string;
   // Callbacks
   onLabelChange: (id: string, newLabel: string) => void;
   onCategoryChange: (id: string, newCategory: NodeCategory) => void;

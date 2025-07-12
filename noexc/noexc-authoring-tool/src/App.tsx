@@ -17,11 +17,12 @@ import ReactFlow, {
 import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
 import CustomEdge from './components/CustomEdge';
+import GroupNode from './components/GroupNode';
 import { NodeData, NodeCategory, NodeLabel } from './constants/nodeTypes';
 
 const nodeTypes = {
   editable: EditableNode,
-  group: EditableNode,
+  group: GroupNode,
 };
 
 const edgeTypes: EdgeTypes = {
@@ -96,6 +97,7 @@ function Flow() {
   const edgeReconnectSuccessful = useRef(true);
   const { getNodes } = useReactFlow();
 
+
   const getId = useCallback(() => `${nodeIdCounter}`, [nodeIdCounter]);
 
   // Create group from selected nodes
@@ -123,21 +125,24 @@ function Flow() {
         nodeLabel: 'Group' as NodeLabel,
         nodeId: groupId,
         content: 'Subflow Group',
+        groupId: `group_${groupId}`,
+        title: `Subflow ${groupId}`,
+        description: 'A group of related nodes',
         onLabelChange: () => {},
         onCategoryChange: () => {},
         onNodeLabelChange: () => {},
         onNodeIdChange: () => {},
         onContentChange: () => {},
         onPlaceholderChange: () => {},
-        onStoreKeyChange: () => {}
+        onStoreKeyChange: () => {},
+        onGroupIdChange: () => {},
+        onTitleChange: () => {},
+        onDescriptionChange: () => {}
       },
       type: 'group',
       style: {
         width: groupWidth,
-        height: groupHeight,
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        border: '2px dashed #999',
-        borderRadius: '8px'
+        height: groupHeight
       }
     };
 
@@ -247,6 +252,58 @@ function Flow() {
     const selected = currentNodes.filter(node => node.selected);
     setSelectedNodes(selected);
   }, [onNodesChange, getNodes]);
+
+  // Group field editing callbacks
+  const onGroupIdChange = useCallback((nodeId: string, newGroupId: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              groupId: newGroupId,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  const onTitleChange = useCallback((nodeId: string, newTitle: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              title: newTitle,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  const onDescriptionChange = useCallback((nodeId: string, newDescription: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              description: newDescription,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -474,6 +531,9 @@ function Flow() {
       onContentChange,
       onPlaceholderChange,
       onStoreKeyChange,
+      onGroupIdChange,
+      onTitleChange,
+      onDescriptionChange,
     },
   }));
 
@@ -1117,6 +1177,7 @@ function Flow() {
         connectionLineType={ConnectionLineType.Bezier}
         connectionRadius={30}
         multiSelectionKeyCode="Shift"
+        defaultEdgeOptions={{ zIndex: 1 }}
       >
         <Controls />
         <Background />

@@ -32,6 +32,10 @@ export interface NodeData {
   // Input specific fields
   placeholderText?: string;
   storeKey?: string;
+  // Group specific fields
+  groupId?: string;
+  title?: string;
+  description?: string;
   // Callbacks
   onLabelChange: (id: string, newLabel: string) => void;
   onCategoryChange: (id: string, newCategory: NodeCategory) => void;
@@ -40,4 +44,7 @@ export interface NodeData {
   onContentChange: (id: string, newContent: string) => void;
   onPlaceholderChange: (id: string, newPlaceholder: string) => void;
   onStoreKeyChange: (id: string, newStoreKey: string) => void;
+  onGroupIdChange?: (id: string, newGroupId: string) => void;
+  onTitleChange?: (id: string, newTitle: string) => void;
+  onDescriptionChange?: (id: string, newDescription: string) => void;
 }

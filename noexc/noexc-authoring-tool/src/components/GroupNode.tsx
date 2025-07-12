@@ -67,8 +67,8 @@ const GroupNode = ({ data, selected, id }: GroupNodeProps) => {
         position: 'absolute',
         top: '8px',
         left: '8px',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        border: '1px solid #ff9800',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        border: '1px solid #ccc',
         borderRadius: '6px',
         padding: '8px',
         fontSize: '11px',
@@ -195,8 +195,8 @@ const GroupNode = ({ data, selected, id }: GroupNodeProps) => {
       <div style={{
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(255, 248, 230, 0.3)',
-        border: '2px dashed #ff9800',
+        backgroundColor: 'rgba(245, 245, 245, 0.15)',
+        border: '1px dashed #bbb',
         borderRadius: '8px',
         position: 'relative'
       }}>

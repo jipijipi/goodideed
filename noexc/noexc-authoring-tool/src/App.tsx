@@ -96,6 +96,7 @@ function Flow() {
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [selectedNodes, setSelectedNodes] = useState<Node<NodeData>[]>([]);
   const [notification, setNotification] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const edgeReconnectSuccessful = useRef(true);
   const { getNodes } = useReactFlow();
   const { x: viewportX, y: viewportY, zoom } = useViewport();
@@ -104,6 +105,13 @@ function Flow() {
   const showNotification = useCallback((message: string) => {
     setNotification(message);
     setTimeout(() => setNotification(null), 3000);
+  }, []);
+
+  // Show error with detailed information
+  const showError = useCallback((title: string, errors: string[]) => {
+    const errorDetails = errors.length > 0 ? `\n\nDetails:\n${errors.map(e => `• ${e}`).join('\n')}` : '';
+    setErrorMessage(`${title}${errorDetails}`);
+    setTimeout(() => setErrorMessage(null), 8000); // Longer display for errors
   }, []);
 
 
@@ -325,6 +333,11 @@ function Flow() {
     },
     [setEdges]
   );
+
+  const onPaneClick = useCallback(() => {
+    // Deselect all nodes when clicking on empty space
+    setNodes((nds) => nds.map(node => ({ ...node, selected: false })));
+  }, [setNodes]);
 
   const onReconnectStart = useCallback(() => {
     edgeReconnectSuccessful.current = false;
@@ -765,7 +778,22 @@ function Flow() {
           if (!node.data.storeKey?.trim()) errors.push(`TextInput node ${node.id} missing storeKey`);
           break;
         case 'choice':
-          if (!node.data.storeKey?.trim()) errors.push(`Choice node ${node.id} missing storeKey`);
+          // Check if any choice edges have parsable values (contain '::')
+          const choiceEdges = edges.filter(edge => edge.source === node.id);
+          const hasChoiceValues = choiceEdges.some(edge => {
+            const label = edge.data?.label || '';
+            const hasValueSyntax = label.includes('::');
+            if (hasValueSyntax) {
+              const [, value] = label.split('::');
+              return value && value.trim() !== '';
+            }
+            return false;
+          });
+          
+          // Only require storeKey if choices have values
+          if (hasChoiceValues && !node.data.storeKey?.trim()) {
+            errors.push(`Choice node ${node.id} missing storeKey (required when choices have values)`);
+          }
           break;
       }
     });
@@ -1063,14 +1091,14 @@ function Flow() {
       // Validate flow data
       const validation = validateFlowForExport(nodes, edges);
       if (!validation.isValid) {
-        alert(`Export failed:\n${validation.errors.join('\n')}`);
+        showError('Export failed - validation errors found', validation.errors);
         return;
       }
 
       // Sort nodes by flow order
       const sortedNodes = sortNodesTopologically(nodes, edges);
       if (sortedNodes.length === 0) {
-        alert('Export failed: Could not determine node flow order');
+        showError('Export failed', ['Could not determine node flow order']);
         return;
       }
 
@@ -1101,9 +1129,9 @@ function Flow() {
       
     } catch (error) {
       console.error('Export error:', error);
-      alert(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showError('Export failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages]);
+  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
 
 
   const exportGroupsAsSequences = useCallback(() => {
@@ -1112,7 +1140,7 @@ function Flow() {
       const groupNodes = nodes.filter(node => node.type === 'group');
       
       if (groupNodes.length === 0) {
-        alert('No groups found. Create groups by selecting multiple nodes with Shift+click first.');
+        showError('No groups found', ['Create groups by selecting multiple nodes with Shift+click first']);
         return;
       }
 
@@ -1122,7 +1150,7 @@ function Flow() {
       );
 
       if (groupedNodes.length === 0) {
-        alert('No grouped nodes found for export.');
+        showError('No grouped nodes found', ['Add nodes to groups before exporting']);
         return;
       }
 
@@ -1148,7 +1176,6 @@ function Flow() {
         const validation = validateFlowForExport(groupChildren, groupEdges);
         if (!validation.isValid) {
           console.warn(`Group ${groupNode.id} validation failed:`, validation.errors);
-          console.warn(`Group has ${groupChildren.length} children and ${groupEdges.length} edges`);
           return;
         }
 
@@ -1178,7 +1205,10 @@ function Flow() {
       });
 
       if (exportedSequences.length === 0) {
-        alert('No valid groups could be exported. Make sure groups have connected nodes with proper flow.');
+        showError('No valid groups could be exported', [
+          'Make sure groups have connected nodes with proper flow',
+          'Check validation errors in console for details'
+        ]);
         return;
       }
 
@@ -1198,9 +1228,9 @@ function Flow() {
       
     } catch (error) {
       console.error('Group export error:', error);
-      alert(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      showError('Group export failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages]);
+  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
 
   const nodeTemplates = [
     { category: 'bot' as NodeCategory, label: 'Welcome Message' as NodeLabel, text: 'Welcome!', icon: '💬', description: 'Bot message' },
@@ -1461,6 +1491,7 @@ function Flow() {
         onReconnect={onReconnect}
         onReconnectStart={onReconnectStart}
         onReconnectEnd={onReconnectEnd}
+        onPaneClick={onPaneClick}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView
@@ -1473,7 +1504,7 @@ function Flow() {
         <Background />
       </ReactFlow>
       
-      {/* Notification */}
+      {/* Success Notification */}
       {notification && (
         <div style={{
           position: 'fixed',
@@ -1490,6 +1521,32 @@ function Flow() {
           animation: 'slideIn 0.3s ease-out'
         }}>
           ✓ {notification}
+        </div>
+      )}
+
+      {/* Error Notification */}
+      {errorMessage && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: '#f44336',
+          color: 'white',
+          padding: '16px 24px',
+          borderRadius: '8px',
+          boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+          zIndex: 2001,
+          fontSize: '14px',
+          fontWeight: '500',
+          maxWidth: '600px',
+          whiteSpace: 'pre-line',
+          border: '2px solid #d32f2f'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <span style={{ fontSize: '18px', flexShrink: 0 }}>⚠️</span>
+            <div>{errorMessage}</div>
+          </div>
         </div>
       )}
     </div>

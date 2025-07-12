@@ -9,7 +9,9 @@
       "Bash(python:*)",
       "Bash(find:*)",
       "Bash(npm start)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(PORT=3001 npm start)",
+      "Bash(pkill:*)"
     ],
     "deny": []
   }

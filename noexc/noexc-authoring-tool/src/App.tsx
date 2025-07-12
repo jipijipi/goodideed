@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactFlow, { 
   Node, 
   Edge, 
@@ -11,7 +11,8 @@ import ReactFlow, {
   Background,
   ReactFlowProvider,
   ConnectionLineType,
-  EdgeTypes
+  EdgeTypes,
+  useReactFlow
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
@@ -20,6 +21,7 @@ import { NodeData, NodeCategory, NodeLabel } from './constants/nodeTypes';
 
 const nodeTypes = {
   editable: EditableNode,
+  group: EditableNode,
 };
 
 const edgeTypes: EdgeTypes = {
@@ -89,9 +91,117 @@ function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [nodeIdCounter, setNodeIdCounter] = useState(3);
+  const [isShiftPressed, setIsShiftPressed] = useState(false);
+  const [selectedNodes, setSelectedNodes] = useState<Node<NodeData>[]>([]);
   const edgeReconnectSuccessful = useRef(true);
+  const { getNodes } = useReactFlow();
 
-  const getId = () => `${nodeIdCounter}`;
+  const getId = useCallback(() => `${nodeIdCounter}`, [nodeIdCounter]);
+
+  // Create group from selected nodes
+  const createGroupFromSelectedNodes = useCallback(() => {
+    if (selectedNodes.length < 2) return;
+
+    // Calculate bounding box for the group
+    const selectedIds = selectedNodes.map(node => node.id);
+    const minX = Math.min(...selectedNodes.map(node => node.position.x));
+    const minY = Math.min(...selectedNodes.map(node => node.position.y));
+    const maxX = Math.max(...selectedNodes.map(node => node.position.x + (node.width || 150)));
+    const maxY = Math.max(...selectedNodes.map(node => node.position.y + (node.height || 50)));
+
+    const groupWidth = maxX - minX + 50; // Add padding
+    const groupHeight = maxY - minY + 50; // Add padding
+    const groupId = getId();
+
+    // Create group node
+    const groupNode: Node<NodeData> = {
+      id: groupId,
+      position: { x: minX - 25, y: minY - 25 }, // Offset for padding
+      data: {
+        label: `Group ${groupId}`,
+        category: 'bot' as NodeCategory,
+        nodeLabel: 'Group' as NodeLabel,
+        nodeId: groupId,
+        content: 'Subflow Group',
+        onLabelChange: () => {},
+        onCategoryChange: () => {},
+        onNodeLabelChange: () => {},
+        onNodeIdChange: () => {},
+        onContentChange: () => {},
+        onPlaceholderChange: () => {},
+        onStoreKeyChange: () => {}
+      },
+      type: 'group',
+      style: {
+        width: groupWidth,
+        height: groupHeight,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        border: '2px dashed #999',
+        borderRadius: '8px'
+      }
+    };
+
+    // Update selected nodes to be children of the group
+    const updatedNodes = nodes.map(node => {
+      if (selectedIds.includes(node.id)) {
+        return {
+          ...node,
+          parentId: groupId,
+          position: {
+            x: node.position.x - minX + 25,
+            y: node.position.y - minY + 25
+          },
+          extent: 'parent' as const,
+          selected: false
+        };
+      }
+      return node;
+    });
+
+    // Add the group node to the list
+    setNodes([...updatedNodes, groupNode]);
+    setNodeIdCounter(counter => counter + 1);
+    setSelectedNodes([]);
+
+    console.log(`Created group ${groupId} with ${selectedNodes.length} child nodes`);
+  }, [selectedNodes, nodes, getId, setNodes, setNodeIdCounter]);
+
+  // Keyboard event handling for shift key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        setIsShiftPressed(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        setIsShiftPressed(false);
+        // Trigger grouping when shift is released and multiple nodes are selected
+        if (selectedNodes.length > 1) {
+          createGroupFromSelectedNodes();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [selectedNodes, createGroupFromSelectedNodes]);
+
+  // Track selected nodes
+  const handleNodesChange = useCallback((changes: any) => {
+    onNodesChange(changes);
+    
+    // Update selected nodes list
+    const currentNodes = getNodes();
+    const selected = currentNodes.filter(node => node.selected);
+    setSelectedNodes(selected);
+  }, [onNodesChange, getNodes]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -169,7 +279,7 @@ function Flow() {
 
     setNodes((nds) => nds.concat(newNode));
     setNodeIdCounter((counter) => counter + 1);
-  }, [nodes.length, nodeIdCounter, getId, setNodes]);
+  }, [nodes.length, getId, setNodes]);
 
   const onLabelChange = useCallback((nodeId: string, newLabel: string) => {
     setNodes((nds) =>
@@ -794,9 +904,30 @@ function Flow() {
           borderTop: '1px solid #eee',
           paddingTop: '8px'
         }}>
-          💡 Based on comprehensive_test.json
+          💡 Based on comprehensive_test.json<br/>
+          🔗 Hold Shift + Select multiple nodes to create subflow
         </div>
       </div>
+
+      {/* Shift Status Indicator */}
+      {isShiftPressed && (
+        <div style={{
+          position: 'absolute',
+          top: 10,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          padding: '8px 16px',
+          background: 'rgba(76, 175, 80, 0.9)',
+          color: 'white',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        }}>
+          🔗 Subflow Mode: Select multiple nodes ({selectedNodes.length} selected)
+        </div>
+      )}
 
       {/* Controls Panel */}
       <div style={{ 
@@ -891,7 +1022,7 @@ function Flow() {
       <ReactFlow
         nodes={nodesWithCallbacks}
         edges={edgesWithCallbacks}
-        onNodesChange={onNodesChange}
+        onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         onReconnect={onReconnect}
@@ -902,6 +1033,7 @@ function Flow() {
         fitView
         connectionLineType={ConnectionLineType.Bezier}
         connectionRadius={30}
+        multiSelectionKeyCode="Shift"
       >
         <Controls />
         <Background />

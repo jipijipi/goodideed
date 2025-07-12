@@ -15,7 +15,8 @@
       "Bash(curl:*)",
       "Bash(/dev/null)",
       "Bash(mv:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(PORT=3002 npm start)"
     ],
     "deny": []
   }

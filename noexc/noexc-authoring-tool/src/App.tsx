@@ -927,6 +927,101 @@ function Flow() {
     }
   }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages]);
 
+  const exportGroupsAsSequences = useCallback(() => {
+    try {
+      // Find all group nodes
+      const groupNodes = nodes.filter(node => node.type === 'group');
+      
+      if (groupNodes.length === 0) {
+        alert('No groups found. Create groups by selecting multiple nodes with Shift+click first.');
+        return;
+      }
+
+      // Filter out ungrouped nodes (nodes without parentId)
+      const groupedNodes = nodes.filter(node => 
+        node.parentId || node.type === 'group'
+      );
+
+      if (groupedNodes.length === 0) {
+        alert('No grouped nodes found for export.');
+        return;
+      }
+
+      const exportedSequences: any[] = [];
+
+      // Process each group
+      groupNodes.forEach(groupNode => {
+        // Get nodes that belong to this group
+        const groupChildren = nodes.filter(node => node.parentId === groupNode.id);
+        
+        if (groupChildren.length === 0) {
+          console.warn(`Group ${groupNode.id} has no children, skipping`);
+          return;
+        }
+
+        // Get edges between nodes in this group
+        const groupChildrenIds = new Set(groupChildren.map(n => n.id));
+        const groupEdges = edges.filter(edge => 
+          groupChildrenIds.has(edge.source) && groupChildrenIds.has(edge.target)
+        );
+
+        // Validate this group's flow
+        const validation = validateFlowForExport(groupChildren, groupEdges);
+        if (!validation.isValid) {
+          console.warn(`Group ${groupNode.id} validation failed:`, validation.errors);
+          return;
+        }
+
+        // Sort nodes in this group topologically
+        const sortedGroupNodes = sortNodesTopologically(groupChildren, groupEdges);
+        if (sortedGroupNodes.length === 0) {
+          console.warn(`Group ${groupNode.id} could not be sorted topologically`);
+          return;
+        }
+
+        // Convert to Flutter format
+        const messages = convertNodesToMessages(sortedGroupNodes, groupEdges);
+        
+        // Use group metadata or fallback values
+        const sequenceId = groupNode.data.groupId || `group_${groupNode.id}`;
+        const name = groupNode.data.title || `Group ${groupNode.id}`;
+        const description = groupNode.data.description || `Sequence exported from group ${groupNode.id}`;
+
+        const flutterSequence = {
+          sequenceId,
+          name,
+          description,
+          messages
+        };
+
+        exportedSequences.push(flutterSequence);
+      });
+
+      if (exportedSequences.length === 0) {
+        alert('No valid groups could be exported. Make sure groups have connected nodes with proper flow.');
+        return;
+      }
+
+      // Export each sequence as a separate file
+      exportedSequences.forEach(sequence => {
+        const dataStr = JSON.stringify(sequence, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+        
+        const exportFileDefaultName = `${sequence.sequenceId}.json`;
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+      });
+
+      alert(`Successfully exported ${exportedSequences.length} sequences from groups. Ungrouped nodes were ignored.`);
+      
+    } catch (error) {
+      console.error('Group export error:', error);
+      alert(`Export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages]);
+
   const nodeTemplates = [
     { category: 'bot' as NodeCategory, label: 'Welcome Message' as NodeLabel, text: 'Welcome!', icon: '💬', description: 'Bot message' },
     { category: 'user' as NodeCategory, label: 'Response' as NodeLabel, text: 'User response', icon: '👤', description: 'User message' },
@@ -1142,6 +1237,21 @@ function Flow() {
           }}
         >
           🚀 Export to Flutter
+        </button>
+        
+        <button 
+          onClick={exportGroupsAsSequences}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#9c27b0',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          📁 Export Groups as Sequences
         </button>
         
         <button 

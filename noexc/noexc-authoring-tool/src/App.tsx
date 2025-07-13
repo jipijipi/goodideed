@@ -326,28 +326,36 @@ function Flow() {
   // Enhanced keyboard event handling for shift key and ungrouping
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Check if user is typing in an input field
+      const target = e.target as HTMLElement;
+      const isTyping = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+      
       if (e.key === 'Shift') {
         setIsShiftPressed(true);
       }
-      // Handle grouping with 'G' key
-      if (e.key === 'g' || e.key === 'G') {
-        const regularNodes = selectedNodes.filter(node => node.type !== 'group');
-        if (regularNodes.length > 1) {
-          createGroupFromSelectedNodes();
+      
+      // Only handle shortcuts if not typing in an input field
+      if (!isTyping) {
+        // Handle grouping with 'G' key
+        if (e.key === 'g' || e.key === 'G') {
+          const regularNodes = selectedNodes.filter(node => node.type !== 'group');
+          if (regularNodes.length > 1) {
+            createGroupFromSelectedNodes();
+          }
         }
-      }
-      // Handle ungrouping with 'U' key
-      if (e.key === 'u' || e.key === 'U') {
-        const hasGroupSelected = selectedNodes.some(node => node.type === 'group');
-        if (hasGroupSelected) {
-          ungroupSelectedNodes();
+        // Handle ungrouping with 'U' key
+        if (e.key === 'u' || e.key === 'U') {
+          const hasGroupSelected = selectedNodes.some(node => node.type === 'group');
+          if (hasGroupSelected) {
+            ungroupSelectedNodes();
+          }
         }
-      }
-      // Handle removing nodes from group with 'R' key
-      if (e.key === 'r' || e.key === 'R') {
-        const hasGroupedNodesSelected = selectedNodes.some(node => node.parentId && node.type !== 'group');
-        if (hasGroupedNodesSelected) {
-          removeNodesFromGroup();
+        // Handle removing nodes from group with 'R' key
+        if (e.key === 'r' || e.key === 'R') {
+          const hasGroupedNodesSelected = selectedNodes.some(node => node.parentId && node.type !== 'group');
+          if (hasGroupedNodesSelected) {
+            removeNodesFromGroup();
+          }
         }
       }
     };
@@ -445,7 +453,9 @@ function Flow() {
   const onPaneClick = useCallback(() => {
     // Deselect all nodes when clicking on empty space
     setNodes((nds) => nds.map(node => ({ ...node, selected: false })));
-  }, [setNodes]);
+    // Close any open style pickers by triggering a re-render
+    setEdges((eds) => [...eds]);
+  }, [setNodes, setEdges]);
 
   const onReconnectStart = useCallback(() => {
     edgeReconnectSuccessful.current = false;
@@ -781,7 +791,9 @@ function Flow() {
         source: edge.source,
         target: edge.target,
         type: edge.type || 'default',
-        label: edge.data?.label
+        label: edge.data?.label,
+        style: edge.data?.style,
+        delay: edge.data?.delay
       }))
     };
     
@@ -802,6 +814,10 @@ function Flow() {
             ...node,
             data: {
               ...node.data,
+              // Ensure group metadata is preserved
+              groupId: node.data.groupId || node.data.nodeId,
+              title: node.data.title || node.data.label,
+              description: node.data.description || 'Imported group',
               onLabelChange: () => {},
               onCategoryChange: () => {},
               onNodeLabelChange: () => {},
@@ -821,7 +837,11 @@ function Flow() {
             type: edge.type || 'custom',
             data: { 
               label: edge.label,
-              onLabelChange: () => {}
+              style: edge.style,
+              delay: edge.delay,
+              onLabelChange: () => {},
+              onStyleChange: () => {},
+              onDelayChange: () => {}
             }
           }));
 
@@ -867,6 +887,10 @@ function Flow() {
                 ...node,
                 data: {
                   ...node.data,
+                  // Ensure group metadata is preserved
+                  groupId: node.data.groupId || node.data.nodeId,
+                  title: node.data.title || node.data.label,
+                  description: node.data.description || 'Imported group',
                   onLabelChange: () => {},
                   onCategoryChange: () => {},
                   onNodeLabelChange: () => {},
@@ -886,7 +910,11 @@ function Flow() {
                 type: edge.type || 'custom',
                 data: { 
                   label: edge.label,
-                  onLabelChange: () => {}
+                  style: edge.style,
+                  delay: edge.delay,
+                  onLabelChange: () => {},
+                  onStyleChange: () => {},
+                  onDelayChange: () => {}
                 }
               }));
 

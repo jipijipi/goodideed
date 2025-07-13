@@ -31,6 +31,21 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
   const [showStylePicker, setShowStylePicker] = useState(false);
   const { setEdges } = useReactFlow();
 
+  // Close style picker when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (showStylePicker && !target.closest('.edge-style-picker')) {
+        setShowStylePicker(false);
+      }
+    };
+
+    if (showStylePicker) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showStylePicker]);
+
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
@@ -153,7 +168,8 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         }}
         onContextMenu={(e) => {
           e.preventDefault();
-          setShowStylePicker(true);
+          e.stopPropagation();
+          setShowStylePicker(!showStylePicker);
         }}
       />
       {(hasLabel || isEditing) && (
@@ -231,9 +247,11 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
               padding: '8px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
               zIndex: 1004,
-              minWidth: '120px'
+              minWidth: '120px',
+              pointerEvents: 'all'
             }}
-            className="nodrag nopan"
+            className="nodrag nopan edge-style-picker"
+            onClick={(e) => e.stopPropagation()}
           >
             <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}>Edge Style</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>

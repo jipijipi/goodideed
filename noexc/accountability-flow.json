@@ -1,26 +1,69 @@
 {
   "nodes": [
     {
+      "id": "59",
+      "position": {
+        "x": -30.04818327263854,
+        "y": 2746.392554976616
+      },
+      "type": "group",
+      "style": {
+        "width": 684.640439705931,
+        "height": 775.8968169388913
+      },
+      "width": 685,
+      "height": 776,
+      "data": {
+        "label": "Group 59",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "59",
+        "content": "Subflow Group"
+      }
+    },
+    {
       "id": "group-welcome",
       "type": "group",
-      "position": { "x": 50, "y": 50 },
-      "style": { "width": 400, "height": 300 },
+      "position": {
+        "x": -610,
+        "y": -1380
+      },
+      "style": {
+        "width": 800,
+        "height": 600
+      },
+      "width": 800,
+      "height": 600,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -610,
+        "y": -1380
+      },
+      "dragging": false,
       "data": {
         "label": "Welcome Sequence",
         "category": "bot",
         "nodeLabel": "Group",
-        "nodeId": "welcome-seq",
-        "groupId": "welcome_sequence",
-        "title": "Welcoming Sequence",
-        "description": "Initial welcome and onboarding check"
+        "nodeId": "welcome-seq"
       }
     },
     {
       "id": "onboarded-check",
       "type": "editable",
-      "position": { "x": 25, "y": 25 },
+      "position": {
+        "x": 284,
+        "y": 33
+      },
       "parentId": "group-welcome",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 190,
+        "y": -1289
+      },
+      "dragging": false,
       "data": {
         "label": "Is Onboarded?",
         "category": "autoroute",
@@ -30,10 +73,21 @@
     },
     {
       "id": "welcome-msg",
-      "type": "editable", 
-      "position": { "x": 25, "y": 150 },
+      "type": "editable",
+      "position": {
+        "x": 69,
+        "y": 358
+      },
       "parentId": "group-welcome",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -25,
+        "y": -964
+      },
+      "dragging": false,
       "data": {
         "label": "Welcome Message",
         "category": "bot",
@@ -45,39 +99,72 @@
     {
       "id": "group-onboarding",
       "type": "group",
-      "position": { "x": 500, "y": 50 },
-      "style": { "width": 400, "height": 400 },
+      "position": {
+        "x": 444.3358850636164,
+        "y": -568.3665058270176
+      },
+      "style": {
+        "width": 800,
+        "height": 800
+      },
+      "width": 800,
+      "height": 800,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 444.3358850636164,
+        "y": -568.3665058270176
+      },
+      "dragging": false,
       "data": {
         "label": "Onboarding Sequence",
         "category": "bot",
         "nodeLabel": "Group",
-        "nodeId": "onboarding-seq",
-        "groupId": "onboarding_sequence",
-        "title": "Onboarding Sequence",
-        "description": "New user setup and explanation"
+        "nodeId": "onboarding-seq"
       }
     },
     {
       "id": "name-input",
       "type": "editable",
-      "position": { "x": 25, "y": 25 },
+      "position": {
+        "x": 309,
+        "y": 35
+      },
       "parentId": "group-onboarding",
       "extent": "parent",
+      "width": 248,
+      "height": 203,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -239,
+        "y": 51
+      },
+      "dragging": false,
       "data": {
         "label": "Ask for Name",
         "category": "textInput",
         "nodeLabel": "Text Input",
         "nodeId": "name-input",
-        "storeKey": "user.name",
-        "placeholderText": "Enter your name..."
+        "placeholderText": "Enter your name...",
+        "storeKey": "user.name"
       }
     },
     {
       "id": "concept-explainer",
       "type": "editable",
-      "position": { "x": 25, "y": 150 },
+      "position": {
+        "x": 291,
+        "y": 288
+      },
       "parentId": "group-onboarding",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -257,
+        "y": 304
+      },
+      "dragging": false,
       "data": {
         "label": "Concept Explanation",
         "category": "bot",
@@ -89,37 +176,70 @@
     {
       "id": "set-onboarded",
       "type": "editable",
-      "position": { "x": 25, "y": 275 },
+      "position": {
+        "x": 289,
+        "y": 561
+      },
       "parentId": "group-onboarding",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -259,
+        "y": 577
+      },
+      "dragging": false,
       "data": {
         "label": "Set as Onboarded",
         "category": "autoroute",
-        "nodeLabel": "Conditional Route", 
+        "nodeLabel": "Conditional Route",
         "nodeId": "set-onboarded"
       }
     },
     {
       "id": "group-task-checking",
       "type": "group",
-      "position": { "x": 950, "y": 50 },
-      "style": { "width": 500, "height": 600 },
+      "position": {
+        "x": -798.7251206297369,
+        "y": -634.8244022773414
+      },
+      "style": {
+        "width": 1000,
+        "height": 1200
+      },
+      "width": 1000,
+      "height": 1200,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -798.7251206297369,
+        "y": -634.8244022773414
+      },
+      "dragging": false,
       "data": {
         "label": "Task Checking Sequence",
         "category": "bot",
         "nodeLabel": "Group",
-        "nodeId": "task-checking-seq",
-        "groupId": "task_checking_sequence",
-        "title": "Task Checking Sequence", 
-        "description": "Check current task status and respond accordingly"
+        "nodeId": "task-checking-seq"
       }
     },
     {
       "id": "task-set-check",
       "type": "editable",
-      "position": { "x": 25, "y": 25 },
+      "position": {
+        "x": 297.83971265904194,
+        "y": 43.67966115153172
+      },
       "parentId": "group-task-checking",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -426.16028734095806,
+        "y": -564.3203388484683
+      },
+      "dragging": false,
       "data": {
         "label": "Is Task Set?",
         "category": "autoroute",
@@ -130,9 +250,20 @@
     {
       "id": "overdue-check",
       "type": "editable",
-      "position": { "x": 25, "y": 150 },
+      "position": {
+        "x": 130.3815803752699,
+        "y": 255.3815803752699
+      },
       "parentId": "group-task-checking",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -668.343540254467,
+        "y": -379.4428219020715
+      },
+      "dragging": false,
       "data": {
         "label": "Is Overdue?",
         "category": "autoroute",
@@ -143,9 +274,20 @@
     {
       "id": "overdue-task-status",
       "type": "editable",
-      "position": { "x": 250, "y": 150 },
+      "position": {
+        "x": 415.49970690246226,
+        "y": 467.2074949343569
+      },
       "parentId": "group-task-checking",
       "extent": "parent",
+      "width": 248,
+      "height": 156,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -383.22541372727466,
+        "y": -167.61690734298455
+      },
+      "dragging": false,
       "data": {
         "label": "Overdue Task Status",
         "category": "choice",
@@ -157,13 +299,24 @@
     {
       "id": "task-status",
       "type": "editable",
-      "position": { "x": 25, "y": 275 },
+      "position": {
+        "x": 113.64104065457036,
+        "y": 503.7486809530969
+      },
       "parentId": "group-task-checking",
       "extent": "parent",
+      "width": 248,
+      "height": 156,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -685.0840799751666,
+        "y": -131.0757213242445
+      },
+      "dragging": false,
       "data": {
         "label": "Task Status",
         "category": "choice",
-        "nodeLabel": "Choice Menu", 
+        "nodeLabel": "Choice Menu",
         "nodeId": "task-status",
         "storeKey": "task.current_status"
       }
@@ -171,9 +324,20 @@
     {
       "id": "encourage-msg",
       "type": "editable",
-      "position": { "x": 250, "y": 275 },
+      "position": {
+        "x": 642,
+        "y": 891
+      },
       "parentId": "group-task-checking",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -156.72512062973692,
+        "y": 256.1755977226586
+      },
+      "dragging": false,
       "data": {
         "label": "Encouragement",
         "category": "bot",
@@ -185,9 +349,20 @@
     {
       "id": "snark-msg",
       "type": "editable",
-      "position": { "x": 250, "y": 400 },
+      "position": {
+        "x": 339.7954659858288,
+        "y": 873.6672773693488
+      },
       "parentId": "group-task-checking",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -458.9296546439081,
+        "y": 238.84287509200743
+      },
+      "dragging": false,
       "data": {
         "label": "Snark Message",
         "category": "bot",
@@ -199,13 +374,24 @@
     {
       "id": "disbelief-msg",
       "type": "editable",
-      "position": { "x": 250, "y": 525 },
+      "position": {
+        "x": 24,
+        "y": 831
+      },
       "parentId": "group-task-checking",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -774.7251206297369,
+        "y": 196.1755977226586
+      },
+      "dragging": false,
       "data": {
         "label": "Disbelief Message",
         "category": "bot",
-        "nodeLabel": "Bot Message", 
+        "nodeLabel": "Bot Message",
         "nodeId": "disbelief-message",
         "content": "Wait, you completed it already? That seems too easy!"
       }
@@ -213,39 +399,72 @@
     {
       "id": "group-task-setting",
       "type": "group",
-      "position": { "x": 50, "y": 500 },
-      "style": { "width": 500, "height": 600 },
+      "position": {
+        "x": 23.749442436969275,
+        "y": 655.1735407379509
+      },
+      "style": {
+        "width": 1000,
+        "height": 1200
+      },
+      "width": 1000,
+      "height": 1200,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 23.749442436969275,
+        "y": 655.1735407379509
+      },
+      "dragging": false,
       "data": {
         "label": "Task Setting Sequence",
         "category": "bot",
         "nodeLabel": "Group",
-        "nodeId": "task-setting-seq",
-        "groupId": "task_setting_sequence",
-        "title": "Task Setting Sequence",
-        "description": "Set up new task with time and frequency preferences"
+        "nodeId": "task-setting-seq"
       }
     },
     {
       "id": "task-input",
       "type": "editable",
-      "position": { "x": 25, "y": 25 },
+      "position": {
+        "x": 421,
+        "y": 185
+      },
       "parentId": "group-task-setting",
       "extent": "parent",
+      "width": 248,
+      "height": 203,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -135,
+        "y": 1405
+      },
+      "dragging": false,
       "data": {
         "label": "Task Input",
         "category": "textInput",
         "nodeLabel": "Text Input",
         "nodeId": "task-input",
-        "storeKey": "task.description",
-        "placeholderText": "Describe your daily task..."
+        "placeholderText": "Describe your daily task...",
+        "storeKey": "task.description"
       }
     },
     {
       "id": "task-set",
       "type": "editable",
-      "position": { "x": 25, "y": 150 },
+      "position": {
+        "x": 415,
+        "y": 426
+      },
       "parentId": "group-task-setting",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -141,
+        "y": 1646
+      },
+      "dragging": false,
       "data": {
         "label": "Set Task",
         "category": "autoroute",
@@ -256,9 +475,20 @@
     {
       "id": "time-input",
       "type": "editable",
-      "position": { "x": 25, "y": 275 },
+      "position": {
+        "x": 399,
+        "y": 585
+      },
       "parentId": "group-task-setting",
       "extent": "parent",
+      "width": 248,
+      "height": 156,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -157,
+        "y": 1805
+      },
+      "dragging": false,
       "data": {
         "label": "Time Input",
         "category": "choice",
@@ -270,9 +500,20 @@
     {
       "id": "time-set",
       "type": "editable",
-      "position": { "x": 25, "y": 400 },
+      "position": {
+        "x": 415,
+        "y": 782
+      },
       "parentId": "group-task-setting",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -141,
+        "y": 2002
+      },
+      "dragging": false,
       "data": {
         "label": "Set Time",
         "category": "autoroute",
@@ -283,9 +524,20 @@
     {
       "id": "frequency-input",
       "type": "editable",
-      "position": { "x": 25, "y": 525 },
+      "position": {
+        "x": 401,
+        "y": 943
+      },
       "parentId": "group-task-setting",
       "extent": "parent",
+      "width": 248,
+      "height": 156,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -155,
+        "y": 2163
+      },
+      "dragging": false,
       "data": {
         "label": "Frequency Input",
         "category": "choice",
@@ -297,24 +549,46 @@
     {
       "id": "group-success",
       "type": "group",
-      "position": { "x": 600, "y": 500 },
-      "style": { "width": 400, "height": 300 },
+      "position": {
+        "x": -1004.7478503688394,
+        "y": 622.4583681172198
+      },
+      "style": {
+        "width": 800,
+        "height": 600
+      },
+      "width": 800,
+      "height": 600,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -1004.7478503688394,
+        "y": 622.4583681172198
+      },
+      "dragging": false,
       "data": {
         "label": "Success Sequence",
         "category": "bot",
         "nodeLabel": "Group",
-        "nodeId": "success-seq",
-        "groupId": "success_sequence",
-        "title": "Success Sequence",
-        "description": "Handle successful task completion"
+        "nodeId": "success-seq"
       }
     },
     {
       "id": "congratulations",
       "type": "editable",
-      "position": { "x": 25, "y": 25 },
+      "position": {
+        "x": 279,
+        "y": 73
+      },
       "parentId": "group-success",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 893,
+        "y": 959
+      },
+      "dragging": false,
       "data": {
         "label": "Congratulations",
         "category": "bot",
@@ -326,9 +600,20 @@
     {
       "id": "streak-increment",
       "type": "editable",
-      "position": { "x": 25, "y": 150 },
+      "position": {
+        "x": 246.08468058281494,
+        "y": 295.82230364924646
+      },
       "parentId": "group-success",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -758.6631697860245,
+        "y": 918.2806717664663
+      },
+      "dragging": false,
       "data": {
         "label": "Streak Increment",
         "category": "autoroute",
@@ -339,9 +624,20 @@
     {
       "id": "keep-task-success",
       "type": "editable",
-      "position": { "x": 25, "y": 225 },
+      "position": {
+        "x": 41,
+        "y": 415
+      },
       "parentId": "group-success",
       "extent": "parent",
+      "width": 248,
+      "height": 156,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 655,
+        "y": 1301
+      },
+      "dragging": false,
       "data": {
         "label": "Keep Task Choice",
         "category": "choice",
@@ -353,24 +649,46 @@
     {
       "id": "group-failure",
       "type": "group",
-      "position": { "x": 1050, "y": 500 },
-      "style": { "width": 500, "height": 500 },
+      "position": {
+        "x": 1192,
+        "y": 1584
+      },
+      "style": {
+        "width": 1000,
+        "height": 1000
+      },
+      "width": 1000,
+      "height": 1000,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1192,
+        "y": 1584
+      },
+      "dragging": false,
       "data": {
         "label": "Failure Sequence",
         "category": "bot",
         "nodeLabel": "Group",
-        "nodeId": "failure-seq",
-        "groupId": "failure_sequence",
-        "title": "Failure Sequence",
-        "description": "Handle task failure and excuse processing"
+        "nodeId": "failure-seq"
       }
     },
     {
       "id": "excuse-check",
       "type": "editable",
-      "position": { "x": 25, "y": 25 },
+      "position": {
+        "x": 334.95782055252084,
+        "y": 59.87025481215869
+      },
       "parentId": "group-failure",
       "extent": "parent",
+      "width": 248,
+      "height": 156,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1526.9578205525208,
+        "y": 1643.8702548121587
+      },
+      "dragging": false,
       "data": {
         "label": "Has Valid Excuse?",
         "category": "choice",
@@ -382,9 +700,20 @@
     {
       "id": "already-on-notice-check",
       "type": "editable",
-      "position": { "x": 250, "y": 25 },
+      "position": {
+        "x": 368,
+        "y": 295
+      },
       "parentId": "group-failure",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1560,
+        "y": 1879
+      },
+      "dragging": false,
       "data": {
         "label": "Already On Notice?",
         "category": "autoroute",
@@ -395,9 +724,20 @@
     {
       "id": "streak-reset",
       "type": "editable",
-      "position": { "x": 25, "y": 150 },
+      "position": {
+        "x": 69,
+        "y": 490
+      },
       "parentId": "group-failure",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1261,
+        "y": 2074
+      },
       "data": {
         "label": "Reset Streak",
         "category": "autoroute",
@@ -408,9 +748,20 @@
     {
       "id": "streak-pause",
       "type": "editable",
-      "position": { "x": 250, "y": 150 },
+      "position": {
+        "x": 544,
+        "y": 480
+      },
       "parentId": "group-failure",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1736,
+        "y": 2064
+      },
+      "dragging": false,
       "data": {
         "label": "Pause Streak",
         "category": "autoroute",
@@ -421,9 +772,20 @@
     {
       "id": "failed-on-notice",
       "type": "editable",
-      "position": { "x": 250, "y": 275 },
+      "position": {
+        "x": 514,
+        "y": 741
+      },
       "parentId": "group-failure",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1706,
+        "y": 2325
+      },
+      "dragging": false,
       "data": {
         "label": "Put On Notice",
         "category": "autoroute",
@@ -434,9 +796,20 @@
     {
       "id": "failed-keep-task",
       "type": "editable",
-      "position": { "x": 25, "y": 400 },
+      "position": {
+        "x": 87,
+        "y": 722
+      },
       "parentId": "group-failure",
       "extent": "parent",
+      "width": 248,
+      "height": 156,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1279,
+        "y": 2306
+      },
+      "dragging": false,
       "data": {
         "label": "Keep Current Task?",
         "category": "choice",
@@ -446,26 +819,22 @@
       }
     },
     {
-      "id": "group-sendoff",
-      "type": "group",
-      "position": { "x": 50, "y": 1150 },
-      "style": { "width": 400, "height": 300 },
-      "data": {
-        "label": "Sendoff Sequence",
-        "category": "bot",
-        "nodeLabel": "Group",
-        "nodeId": "sendoff-seq",
-        "groupId": "sendoff_sequence",
-        "title": "Sendoff Sequence",
-        "description": "Final wisdom and goodbye message"
-      }
-    },
-    {
       "id": "visited-today",
       "type": "editable",
-      "position": { "x": 25, "y": 25 },
-      "parentId": "group-sendoff",
+      "position": {
+        "x": 226.8491413126642,
+        "y": 25
+      },
+      "parentId": "59",
       "extent": "parent",
+      "width": 248,
+      "height": 109,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 329,
+        "y": 1591
+      },
+      "dragging": false,
       "data": {
         "label": "Visited Today?",
         "category": "autoroute",
@@ -476,9 +845,20 @@
     {
       "id": "parting-wisdom",
       "type": "editable",
-      "position": { "x": 25, "y": 150 },
-      "parentId": "group-sendoff",
+      "position": {
+        "x": 25,
+        "y": 241.56409430823987
+      },
+      "parentId": "59",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -5.048183272638539,
+        "y": 2987.9566492848558
+      },
+      "dragging": false,
       "data": {
         "label": "Parting Wisdom",
         "category": "bot",
@@ -490,9 +870,20 @@
     {
       "id": "send-off",
       "type": "editable",
-      "position": { "x": 25, "y": 225 },
-      "parentId": "group-sendoff",
+      "position": {
+        "x": 409.6404397059311,
+        "y": 543.8968169388913
+      },
+      "parentId": "59",
       "extent": "parent",
+      "width": 248,
+      "height": 205,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 379.59225643329256,
+        "y": 3290.289371915507
+      },
+      "dragging": false,
       "data": {
         "label": "Send Off",
         "category": "bot",
@@ -504,27 +895,6 @@
   ],
   "edges": [
     {
-      "id": "e-onboarded-welcome",
-      "source": "onboarded-check",
-      "target": "welcome-msg",
-      "type": "custom",
-      "data": { "label": "user.onboarded == true" }
-    },
-    {
-      "id": "e-onboarded-onboarding",
-      "source": "onboarded-check", 
-      "target": "name-input",
-      "type": "custom",
-      "data": { "label": "user.onboarded != true" }
-    },
-    {
-      "id": "e-welcome-taskcheck",
-      "source": "welcome-msg",
-      "target": "task-set-check",
-      "type": "custom",
-      "data": { "label": "@task_checking_sequence" }
-    },
-    {
       "id": "e-name-explainer",
       "source": "name-input",
       "target": "concept-explainer",
@@ -533,99 +903,86 @@
     {
       "id": "e-explainer-setonboarded",
       "source": "concept-explainer",
-      "target": "set-onboarded", 
+      "target": "set-onboarded",
       "type": "custom"
     },
     {
       "id": "e-setonboarded-tasksetting",
       "source": "set-onboarded",
       "target": "task-input",
-      "type": "custom",
-      "data": { "label": "@task_setting_sequence" }
+      "type": "custom"
     },
     {
       "id": "e-taskcheck-tasksetting",
       "source": "task-set-check",
       "target": "task-input",
       "type": "custom",
-      "data": { "label": "task.description == null" }
-    },
-    {
-      "id": "e-taskcheck-overdue",
-      "source": "task-set-check",
-      "target": "overdue-check",
-      "type": "custom",
-      "data": { "label": "task.description != null" }
+      "label": "user.task==null"
     },
     {
       "id": "e-overdue-overduetask",
       "source": "overdue-check",
       "target": "overdue-task-status",
       "type": "custom",
-      "data": { "label": "task.overdue == true" }
+      "label": "task.overdue==true"
     },
     {
       "id": "e-overdue-taskstatus",
       "source": "overdue-check",
       "target": "task-status",
       "type": "custom",
-      "data": { "label": "task.overdue == false" }
+      "label": "task.overdue == false"
     },
     {
       "id": "e-overduetask-success",
       "source": "overdue-task-status",
       "target": "congratulations",
-      "type": "custom",
-      "data": { "label": "Completed → completed" }
+      "type": "custom"
     },
     {
       "id": "e-overduetask-failure",
       "source": "overdue-task-status",
       "target": "excuse-check",
-      "type": "custom",
-      "data": { "label": "Failed → failed" }
+      "type": "custom"
     },
     {
       "id": "e-taskstatus-encourage",
       "source": "task-status",
       "target": "encourage-msg",
       "type": "custom",
-      "data": { "label": "In Progress → in_progress" }
+      "label": "I'm on it::pending"
     },
     {
       "id": "e-taskstatus-snark",
       "source": "task-status",
       "target": "snark-msg",
       "type": "custom",
-      "data": { "label": "Not Started → not_started" }
+      "label": "I on it::pending"
     },
     {
       "id": "e-taskstatus-disbelief",
       "source": "task-status",
       "target": "disbelief-msg",
       "type": "custom",
-      "data": { "label": "Completed → completed" }
+      "label": "I completed it::complete"
     },
     {
       "id": "e-disbelief-success",
       "source": "disbelief-msg",
       "target": "congratulations",
-      "type": "custom",
-      "data": { "label": "@success_sequence" }
+      "type": "custom"
     },
     {
       "id": "e-encourage-sendoff",
       "source": "encourage-msg",
       "target": "visited-today",
-      "type": "custom",
-      "data": { "label": "@sendoff_sequence" }
+      "type": "custom"
     },
     {
       "id": "e-snark-sendoff",
       "source": "snark-msg",
       "target": "visited-today",
-      "type": "custom",
-      "data": { "label": "@sendoff_sequence" }
+      "type": "custom"
     },
     {
       "id": "e-task-taskset",
@@ -655,8 +1012,7 @@
       "id": "e-frequency-sendoff",
       "source": "frequency-input",
       "target": "visited-today",
-      "type": "custom",
-      "data": { "label": "@sendoff_sequence" }
+      "type": "custom"
     },
     {
       "id": "e-congratulations-streak",
@@ -674,43 +1030,37 @@
       "id": "e-keeptask-sendoff",
       "source": "keep-task-success",
       "target": "visited-today",
-      "type": "custom",
-      "data": { "label": "Yes → true" }
+      "type": "custom"
     },
     {
       "id": "e-keeptask-tasksetting",
       "source": "keep-task-success",
       "target": "task-input",
-      "type": "custom",
-      "data": { "label": "No → false" }
+      "type": "custom"
     },
     {
       "id": "e-excuse-reset",
       "source": "excuse-check",
       "target": "streak-reset",
-      "type": "custom",
-      "data": { "label": "No → false" }
+      "type": "custom"
     },
     {
       "id": "e-excuse-notice",
       "source": "excuse-check",
       "target": "already-on-notice-check",
-      "type": "custom",
-      "data": { "label": "Yes → true" }
+      "type": "custom"
     },
     {
       "id": "e-notice-pause",
       "source": "already-on-notice-check",
       "target": "streak-pause",
-      "type": "custom",
-      "data": { "label": "user.on_notice == false" }
+      "type": "custom"
     },
     {
       "id": "e-notice-reset",
       "source": "already-on-notice-check",
       "target": "streak-reset",
-      "type": "custom",
-      "data": { "label": "user.on_notice == true" }
+      "type": "custom"
     },
     {
       "id": "e-pause-failnotice",
@@ -728,42 +1078,64 @@
       "id": "e-failnotice-sendoff",
       "source": "failed-on-notice",
       "target": "visited-today",
-      "type": "custom",
-      "data": { "label": "@sendoff_sequence" }
+      "type": "custom"
     },
     {
       "id": "e-failkeep-sendoff",
       "source": "failed-keep-task",
       "target": "visited-today",
-      "type": "custom",
-      "data": { "label": "Yes → true" }
+      "type": "custom"
     },
     {
       "id": "e-failkeep-tasksetting",
       "source": "failed-keep-task",
       "target": "task-input",
-      "type": "custom",
-      "data": { "label": "No → false" }
+      "type": "custom"
     },
     {
       "id": "e-visited-wisdom",
       "source": "visited-today",
       "target": "parting-wisdom",
-      "type": "custom",
-      "data": { "label": "session.visitCount == 1" }
+      "type": "custom"
     },
     {
       "id": "e-visited-sendoff",
       "source": "visited-today",
       "target": "send-off",
-      "type": "custom",
-      "data": { "label": "session.visitCount > 1" }
+      "type": "custom"
     },
     {
       "id": "e-wisdom-sendoff",
       "source": "parting-wisdom",
       "target": "send-off",
       "type": "custom"
+    },
+    {
+      "id": "reactflow__edge-onboarded-check-welcome-msg",
+      "source": "onboarded-check",
+      "target": "welcome-msg",
+      "type": "custom",
+      "label": "user.onboarded==true"
+    },
+    {
+      "id": "reactflow__edge-onboarded-check-name-input",
+      "source": "onboarded-check",
+      "target": "name-input",
+      "type": "custom",
+      "label": "user.onboarded==false"
+    },
+    {
+      "id": "reactflow__edge-welcome-msg-task-set-check",
+      "source": "welcome-msg",
+      "target": "task-set-check",
+      "type": "custom"
+    },
+    {
+      "id": "reactflow__edge-task-set-check-overdue-check",
+      "source": "task-set-check",
+      "target": "overdue-check",
+      "type": "custom",
+      "label": "user.task!=null"
     }
   ]
 }

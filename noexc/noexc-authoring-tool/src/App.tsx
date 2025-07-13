@@ -182,7 +182,25 @@ function Flow() {
     });
 
     // Add the group node to the list (parent must come before children)
-    setNodes([groupNode, ...updatedNodes]);
+    // Sort nodes to ensure parents come before children
+    const sortedNodes = [groupNode, ...updatedNodes].sort((a, b) => {
+      // Groups (parents) come first
+      if (a.type === 'group' && b.type !== 'group') return -1;
+      if (a.type !== 'group' && b.type === 'group') return 1;
+      // Among groups, sort by ID
+      if (a.type === 'group' && b.type === 'group') return a.id.localeCompare(b.id);
+      // Among children, sort by parent then by ID
+      if (a.parentId && b.parentId) {
+        if (a.parentId !== b.parentId) return a.parentId.localeCompare(b.parentId);
+        return a.id.localeCompare(b.id);
+      }
+      // Nodes with parents come after nodes without parents
+      if (a.parentId && !b.parentId) return 1;
+      if (!a.parentId && b.parentId) return -1;
+      // Regular nodes sort by ID
+      return a.id.localeCompare(b.id);
+    });
+    setNodes(sortedNodes);
     setNodeIdCounter(counter => counter + 1);
     setSelectedNodes([]);
 
@@ -257,7 +275,20 @@ function Flow() {
       return node;
     });
 
-    setNodes(updatedNodes);
+    // Sort nodes to ensure parents come before children
+    const sortedNodes = updatedNodes.sort((a, b) => {
+      if (a.type === 'group' && b.type !== 'group') return -1;
+      if (a.type !== 'group' && b.type === 'group') return 1;
+      if (a.type === 'group' && b.type === 'group') return a.id.localeCompare(b.id);
+      if (a.parentId && b.parentId) {
+        if (a.parentId !== b.parentId) return a.parentId.localeCompare(b.parentId);
+        return a.id.localeCompare(b.id);
+      }
+      if (a.parentId && !b.parentId) return 1;
+      if (!a.parentId && b.parentId) return -1;
+      return a.id.localeCompare(b.id);
+    });
+    setNodes(sortedNodes);
     setSelectedNodes([]);
     showNotification(`Added ${regularNodes.length} node${regularNodes.length === 1 ? '' : 's'} to group ${targetGroupId}`);
   }, [selectedNodes, nodes, setNodes, showNotification, showError]);
@@ -628,6 +659,40 @@ function Flow() {
     );
   }, [setEdges]);
 
+  const onEdgeStyleChange = useCallback((edgeId: string, newStyle: 'solid' | 'dashed' | 'dotted') => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              style: newStyle,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  }, [setEdges]);
+
+  const onEdgeDelayChange = useCallback((edgeId: string, newDelay: number) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              delay: newDelay,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  }, [setEdges]);
+
   // Update nodes with all callback functions
   const nodesWithCallbacks = nodes.map(node => ({
     ...node,
@@ -652,6 +717,8 @@ function Flow() {
     data: {
       ...edge.data,
       onLabelChange: onEdgeLabelChange,
+      onStyleChange: onEdgeStyleChange,
+      onDelayChange: onEdgeDelayChange,
     },
   }));
 
@@ -666,7 +733,10 @@ function Flow() {
           nodeId: data.nodeId,
           content: data.content,
           placeholderText: data.placeholderText,
-          storeKey: data.storeKey
+          storeKey: data.storeKey,
+          groupId: data.groupId,
+          title: data.title,
+          description: data.description
         }
       })),
       edges: edges.map(edge => ({
@@ -700,7 +770,10 @@ function Flow() {
           nodeId: data.nodeId,
           content: data.content,
           placeholderText: data.placeholderText,
-          storeKey: data.storeKey
+          storeKey: data.storeKey,
+          groupId: data.groupId,
+          title: data.title,
+          description: data.description
         }
       })),
       edges: edges.map(edge => ({
@@ -735,7 +808,10 @@ function Flow() {
               onNodeIdChange: () => {},
               onContentChange: () => {},
               onPlaceholderChange: () => {},
-              onStoreKeyChange: () => {}
+              onStoreKeyChange: () => {},
+              onGroupIdChange: () => {},
+              onTitleChange: () => {},
+              onDescriptionChange: () => {}
             }
           }));
 
@@ -797,7 +873,10 @@ function Flow() {
                   onNodeIdChange: () => {},
                   onContentChange: () => {},
                   onPlaceholderChange: () => {},
-                  onStoreKeyChange: () => {}
+                  onStoreKeyChange: () => {},
+                  onGroupIdChange: () => {},
+                  onTitleChange: () => {},
+                  onDescriptionChange: () => {}
                 }
               }));
 
@@ -1346,7 +1425,8 @@ function Flow() {
           🔗 Hold Shift + Select multiple nodes, then Press 'G' to group<br/>
           🔓 Select group node + Press 'U' to ungroup<br/>
           ➖ Select grouped nodes + Press 'R' to remove from group<br/>
-          ➕ Select ungrouped nodes + Use dropdown to add to group
+          ➕ Select ungrouped nodes + Use dropdown to add to group<br/>
+          🎨 Right-click edges for style picker and delay settings
         </div>
       </div>
 

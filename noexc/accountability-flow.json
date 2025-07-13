@@ -1,0 +1,769 @@
+{
+  "nodes": [
+    {
+      "id": "group-welcome",
+      "type": "group",
+      "position": { "x": 50, "y": 50 },
+      "style": { "width": 400, "height": 300 },
+      "data": {
+        "label": "Welcome Sequence",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "welcome-seq",
+        "groupId": "welcome_sequence",
+        "title": "Welcoming Sequence",
+        "description": "Initial welcome and onboarding check"
+      }
+    },
+    {
+      "id": "onboarded-check",
+      "type": "editable",
+      "position": { "x": 25, "y": 25 },
+      "parentId": "group-welcome",
+      "extent": "parent",
+      "data": {
+        "label": "Is Onboarded?",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "onboarded-check"
+      }
+    },
+    {
+      "id": "welcome-msg",
+      "type": "editable", 
+      "position": { "x": 25, "y": 150 },
+      "parentId": "group-welcome",
+      "extent": "parent",
+      "data": {
+        "label": "Welcome Message",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "welcome-message",
+        "content": "Welcome back! Let's check on your progress today."
+      }
+    },
+    {
+      "id": "group-onboarding",
+      "type": "group",
+      "position": { "x": 500, "y": 50 },
+      "style": { "width": 400, "height": 400 },
+      "data": {
+        "label": "Onboarding Sequence",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "onboarding-seq",
+        "groupId": "onboarding_sequence",
+        "title": "Onboarding Sequence",
+        "description": "New user setup and explanation"
+      }
+    },
+    {
+      "id": "name-input",
+      "type": "editable",
+      "position": { "x": 25, "y": 25 },
+      "parentId": "group-onboarding",
+      "extent": "parent",
+      "data": {
+        "label": "Ask for Name",
+        "category": "textInput",
+        "nodeLabel": "Text Input",
+        "nodeId": "name-input",
+        "storeKey": "user.name",
+        "placeholderText": "Enter your name..."
+      }
+    },
+    {
+      "id": "concept-explainer",
+      "type": "editable",
+      "position": { "x": 25, "y": 150 },
+      "parentId": "group-onboarding",
+      "extent": "parent",
+      "data": {
+        "label": "Concept Explanation",
+        "category": "bot",
+        "nodeLabel": "Bot Message",
+        "nodeId": "concept-explanation",
+        "content": "Hi {user.name}! Let me explain how this accountability system works..."
+      }
+    },
+    {
+      "id": "set-onboarded",
+      "type": "editable",
+      "position": { "x": 25, "y": 275 },
+      "parentId": "group-onboarding",
+      "extent": "parent",
+      "data": {
+        "label": "Set as Onboarded",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route", 
+        "nodeId": "set-onboarded"
+      }
+    },
+    {
+      "id": "group-task-checking",
+      "type": "group",
+      "position": { "x": 950, "y": 50 },
+      "style": { "width": 500, "height": 600 },
+      "data": {
+        "label": "Task Checking Sequence",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "task-checking-seq",
+        "groupId": "task_checking_sequence",
+        "title": "Task Checking Sequence", 
+        "description": "Check current task status and respond accordingly"
+      }
+    },
+    {
+      "id": "task-set-check",
+      "type": "editable",
+      "position": { "x": 25, "y": 25 },
+      "parentId": "group-task-checking",
+      "extent": "parent",
+      "data": {
+        "label": "Is Task Set?",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "task-set-check"
+      }
+    },
+    {
+      "id": "overdue-check",
+      "type": "editable",
+      "position": { "x": 25, "y": 150 },
+      "parentId": "group-task-checking",
+      "extent": "parent",
+      "data": {
+        "label": "Is Overdue?",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "overdue-check"
+      }
+    },
+    {
+      "id": "overdue-task-status",
+      "type": "editable",
+      "position": { "x": 250, "y": 150 },
+      "parentId": "group-task-checking",
+      "extent": "parent",
+      "data": {
+        "label": "Overdue Task Status",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "overdue-task-status",
+        "storeKey": "task.overdue_status"
+      }
+    },
+    {
+      "id": "task-status",
+      "type": "editable",
+      "position": { "x": 25, "y": 275 },
+      "parentId": "group-task-checking",
+      "extent": "parent",
+      "data": {
+        "label": "Task Status",
+        "category": "choice",
+        "nodeLabel": "Choice Menu", 
+        "nodeId": "task-status",
+        "storeKey": "task.current_status"
+      }
+    },
+    {
+      "id": "encourage-msg",
+      "type": "editable",
+      "position": { "x": 250, "y": 275 },
+      "parentId": "group-task-checking",
+      "extent": "parent",
+      "data": {
+        "label": "Encouragement",
+        "category": "bot",
+        "nodeLabel": "Bot Message",
+        "nodeId": "encourage-message",
+        "content": "Great job working on your task! Keep it up!"
+      }
+    },
+    {
+      "id": "snark-msg",
+      "type": "editable",
+      "position": { "x": 250, "y": 400 },
+      "parentId": "group-task-checking",
+      "extent": "parent",
+      "data": {
+        "label": "Snark Message",
+        "category": "bot",
+        "nodeLabel": "Bot Message",
+        "nodeId": "snark-message",
+        "content": "Really? You haven't even started yet?"
+      }
+    },
+    {
+      "id": "disbelief-msg",
+      "type": "editable",
+      "position": { "x": 250, "y": 525 },
+      "parentId": "group-task-checking",
+      "extent": "parent",
+      "data": {
+        "label": "Disbelief Message",
+        "category": "bot",
+        "nodeLabel": "Bot Message", 
+        "nodeId": "disbelief-message",
+        "content": "Wait, you completed it already? That seems too easy!"
+      }
+    },
+    {
+      "id": "group-task-setting",
+      "type": "group",
+      "position": { "x": 50, "y": 500 },
+      "style": { "width": 500, "height": 600 },
+      "data": {
+        "label": "Task Setting Sequence",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "task-setting-seq",
+        "groupId": "task_setting_sequence",
+        "title": "Task Setting Sequence",
+        "description": "Set up new task with time and frequency preferences"
+      }
+    },
+    {
+      "id": "task-input",
+      "type": "editable",
+      "position": { "x": 25, "y": 25 },
+      "parentId": "group-task-setting",
+      "extent": "parent",
+      "data": {
+        "label": "Task Input",
+        "category": "textInput",
+        "nodeLabel": "Text Input",
+        "nodeId": "task-input",
+        "storeKey": "task.description",
+        "placeholderText": "Describe your daily task..."
+      }
+    },
+    {
+      "id": "task-set",
+      "type": "editable",
+      "position": { "x": 25, "y": 150 },
+      "parentId": "group-task-setting",
+      "extent": "parent",
+      "data": {
+        "label": "Set Task",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "task-set"
+      }
+    },
+    {
+      "id": "time-input",
+      "type": "editable",
+      "position": { "x": 25, "y": 275 },
+      "parentId": "group-task-setting",
+      "extent": "parent",
+      "data": {
+        "label": "Time Input",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "time-input",
+        "storeKey": "task.deadline_time"
+      }
+    },
+    {
+      "id": "time-set",
+      "type": "editable",
+      "position": { "x": 25, "y": 400 },
+      "parentId": "group-task-setting",
+      "extent": "parent",
+      "data": {
+        "label": "Set Time",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "time-set"
+      }
+    },
+    {
+      "id": "frequency-input",
+      "type": "editable",
+      "position": { "x": 25, "y": 525 },
+      "parentId": "group-task-setting",
+      "extent": "parent",
+      "data": {
+        "label": "Frequency Input",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "frequency-input",
+        "storeKey": "task.active_days"
+      }
+    },
+    {
+      "id": "group-success",
+      "type": "group",
+      "position": { "x": 600, "y": 500 },
+      "style": { "width": 400, "height": 300 },
+      "data": {
+        "label": "Success Sequence",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "success-seq",
+        "groupId": "success_sequence",
+        "title": "Success Sequence",
+        "description": "Handle successful task completion"
+      }
+    },
+    {
+      "id": "congratulations",
+      "type": "editable",
+      "position": { "x": 25, "y": 25 },
+      "parentId": "group-success",
+      "extent": "parent",
+      "data": {
+        "label": "Congratulations",
+        "category": "bot",
+        "nodeLabel": "Bot Message",
+        "nodeId": "congratulations",
+        "content": "Congratulations! You completed your task!"
+      }
+    },
+    {
+      "id": "streak-increment",
+      "type": "editable",
+      "position": { "x": 25, "y": 150 },
+      "parentId": "group-success",
+      "extent": "parent",
+      "data": {
+        "label": "Streak Increment",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "streak-increment"
+      }
+    },
+    {
+      "id": "keep-task-success",
+      "type": "editable",
+      "position": { "x": 25, "y": 225 },
+      "parentId": "group-success",
+      "extent": "parent",
+      "data": {
+        "label": "Keep Task Choice",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "keep-task-success",
+        "storeKey": "task.keep_current"
+      }
+    },
+    {
+      "id": "group-failure",
+      "type": "group",
+      "position": { "x": 1050, "y": 500 },
+      "style": { "width": 500, "height": 500 },
+      "data": {
+        "label": "Failure Sequence",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "failure-seq",
+        "groupId": "failure_sequence",
+        "title": "Failure Sequence",
+        "description": "Handle task failure and excuse processing"
+      }
+    },
+    {
+      "id": "excuse-check",
+      "type": "editable",
+      "position": { "x": 25, "y": 25 },
+      "parentId": "group-failure",
+      "extent": "parent",
+      "data": {
+        "label": "Has Valid Excuse?",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "excuse-check",
+        "storeKey": "failure.has_excuse"
+      }
+    },
+    {
+      "id": "already-on-notice-check",
+      "type": "editable",
+      "position": { "x": 250, "y": 25 },
+      "parentId": "group-failure",
+      "extent": "parent",
+      "data": {
+        "label": "Already On Notice?",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "already-on-notice-check"
+      }
+    },
+    {
+      "id": "streak-reset",
+      "type": "editable",
+      "position": { "x": 25, "y": 150 },
+      "parentId": "group-failure",
+      "extent": "parent",
+      "data": {
+        "label": "Reset Streak",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "streak-reset"
+      }
+    },
+    {
+      "id": "streak-pause",
+      "type": "editable",
+      "position": { "x": 250, "y": 150 },
+      "parentId": "group-failure",
+      "extent": "parent",
+      "data": {
+        "label": "Pause Streak",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "streak-pause"
+      }
+    },
+    {
+      "id": "failed-on-notice",
+      "type": "editable",
+      "position": { "x": 250, "y": 275 },
+      "parentId": "group-failure",
+      "extent": "parent",
+      "data": {
+        "label": "Put On Notice",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "failed-on-notice"
+      }
+    },
+    {
+      "id": "failed-keep-task",
+      "type": "editable",
+      "position": { "x": 25, "y": 400 },
+      "parentId": "group-failure",
+      "extent": "parent",
+      "data": {
+        "label": "Keep Current Task?",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "failed-keep-task",
+        "storeKey": "task.keep_after_failure"
+      }
+    },
+    {
+      "id": "group-sendoff",
+      "type": "group",
+      "position": { "x": 50, "y": 1150 },
+      "style": { "width": 400, "height": 300 },
+      "data": {
+        "label": "Sendoff Sequence",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "sendoff-seq",
+        "groupId": "sendoff_sequence",
+        "title": "Sendoff Sequence",
+        "description": "Final wisdom and goodbye message"
+      }
+    },
+    {
+      "id": "visited-today",
+      "type": "editable",
+      "position": { "x": 25, "y": 25 },
+      "parentId": "group-sendoff",
+      "extent": "parent",
+      "data": {
+        "label": "Visited Today?",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "visited-today"
+      }
+    },
+    {
+      "id": "parting-wisdom",
+      "type": "editable",
+      "position": { "x": 25, "y": 150 },
+      "parentId": "group-sendoff",
+      "extent": "parent",
+      "data": {
+        "label": "Parting Wisdom",
+        "category": "bot",
+        "nodeLabel": "Bot Message",
+        "nodeId": "parting-wisdom",
+        "content": "Remember: consistency beats perfection. See you tomorrow!"
+      }
+    },
+    {
+      "id": "send-off",
+      "type": "editable",
+      "position": { "x": 25, "y": 225 },
+      "parentId": "group-sendoff",
+      "extent": "parent",
+      "data": {
+        "label": "Send Off",
+        "category": "bot",
+        "nodeLabel": "End Message",
+        "nodeId": "send-off",
+        "content": "Have a great day! 👋"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-onboarded-welcome",
+      "source": "onboarded-check",
+      "target": "welcome-msg",
+      "type": "custom",
+      "data": { "label": "user.onboarded == true" }
+    },
+    {
+      "id": "e-onboarded-onboarding",
+      "source": "onboarded-check", 
+      "target": "name-input",
+      "type": "custom",
+      "data": { "label": "user.onboarded != true" }
+    },
+    {
+      "id": "e-welcome-taskcheck",
+      "source": "welcome-msg",
+      "target": "task-set-check",
+      "type": "custom",
+      "data": { "label": "@task_checking_sequence" }
+    },
+    {
+      "id": "e-name-explainer",
+      "source": "name-input",
+      "target": "concept-explainer",
+      "type": "custom"
+    },
+    {
+      "id": "e-explainer-setonboarded",
+      "source": "concept-explainer",
+      "target": "set-onboarded", 
+      "type": "custom"
+    },
+    {
+      "id": "e-setonboarded-tasksetting",
+      "source": "set-onboarded",
+      "target": "task-input",
+      "type": "custom",
+      "data": { "label": "@task_setting_sequence" }
+    },
+    {
+      "id": "e-taskcheck-tasksetting",
+      "source": "task-set-check",
+      "target": "task-input",
+      "type": "custom",
+      "data": { "label": "task.description == null" }
+    },
+    {
+      "id": "e-taskcheck-overdue",
+      "source": "task-set-check",
+      "target": "overdue-check",
+      "type": "custom",
+      "data": { "label": "task.description != null" }
+    },
+    {
+      "id": "e-overdue-overduetask",
+      "source": "overdue-check",
+      "target": "overdue-task-status",
+      "type": "custom",
+      "data": { "label": "task.overdue == true" }
+    },
+    {
+      "id": "e-overdue-taskstatus",
+      "source": "overdue-check",
+      "target": "task-status",
+      "type": "custom",
+      "data": { "label": "task.overdue == false" }
+    },
+    {
+      "id": "e-overduetask-success",
+      "source": "overdue-task-status",
+      "target": "congratulations",
+      "type": "custom",
+      "data": { "label": "Completed → completed" }
+    },
+    {
+      "id": "e-overduetask-failure",
+      "source": "overdue-task-status",
+      "target": "excuse-check",
+      "type": "custom",
+      "data": { "label": "Failed → failed" }
+    },
+    {
+      "id": "e-taskstatus-encourage",
+      "source": "task-status",
+      "target": "encourage-msg",
+      "type": "custom",
+      "data": { "label": "In Progress → in_progress" }
+    },
+    {
+      "id": "e-taskstatus-snark",
+      "source": "task-status",
+      "target": "snark-msg",
+      "type": "custom",
+      "data": { "label": "Not Started → not_started" }
+    },
+    {
+      "id": "e-taskstatus-disbelief",
+      "source": "task-status",
+      "target": "disbelief-msg",
+      "type": "custom",
+      "data": { "label": "Completed → completed" }
+    },
+    {
+      "id": "e-disbelief-success",
+      "source": "disbelief-msg",
+      "target": "congratulations",
+      "type": "custom",
+      "data": { "label": "@success_sequence" }
+    },
+    {
+      "id": "e-encourage-sendoff",
+      "source": "encourage-msg",
+      "target": "visited-today",
+      "type": "custom",
+      "data": { "label": "@sendoff_sequence" }
+    },
+    {
+      "id": "e-snark-sendoff",
+      "source": "snark-msg",
+      "target": "visited-today",
+      "type": "custom",
+      "data": { "label": "@sendoff_sequence" }
+    },
+    {
+      "id": "e-task-taskset",
+      "source": "task-input",
+      "target": "task-set",
+      "type": "custom"
+    },
+    {
+      "id": "e-taskset-time",
+      "source": "task-set",
+      "target": "time-input",
+      "type": "custom"
+    },
+    {
+      "id": "e-time-timeset",
+      "source": "time-input",
+      "target": "time-set",
+      "type": "custom"
+    },
+    {
+      "id": "e-timeset-frequency",
+      "source": "time-set",
+      "target": "frequency-input",
+      "type": "custom"
+    },
+    {
+      "id": "e-frequency-sendoff",
+      "source": "frequency-input",
+      "target": "visited-today",
+      "type": "custom",
+      "data": { "label": "@sendoff_sequence" }
+    },
+    {
+      "id": "e-congratulations-streak",
+      "source": "congratulations",
+      "target": "streak-increment",
+      "type": "custom"
+    },
+    {
+      "id": "e-streak-keeptask",
+      "source": "streak-increment",
+      "target": "keep-task-success",
+      "type": "custom"
+    },
+    {
+      "id": "e-keeptask-sendoff",
+      "source": "keep-task-success",
+      "target": "visited-today",
+      "type": "custom",
+      "data": { "label": "Yes → true" }
+    },
+    {
+      "id": "e-keeptask-tasksetting",
+      "source": "keep-task-success",
+      "target": "task-input",
+      "type": "custom",
+      "data": { "label": "No → false" }
+    },
+    {
+      "id": "e-excuse-reset",
+      "source": "excuse-check",
+      "target": "streak-reset",
+      "type": "custom",
+      "data": { "label": "No → false" }
+    },
+    {
+      "id": "e-excuse-notice",
+      "source": "excuse-check",
+      "target": "already-on-notice-check",
+      "type": "custom",
+      "data": { "label": "Yes → true" }
+    },
+    {
+      "id": "e-notice-pause",
+      "source": "already-on-notice-check",
+      "target": "streak-pause",
+      "type": "custom",
+      "data": { "label": "user.on_notice == false" }
+    },
+    {
+      "id": "e-notice-reset",
+      "source": "already-on-notice-check",
+      "target": "streak-reset",
+      "type": "custom",
+      "data": { "label": "user.on_notice == true" }
+    },
+    {
+      "id": "e-pause-failnotice",
+      "source": "streak-pause",
+      "target": "failed-on-notice",
+      "type": "custom"
+    },
+    {
+      "id": "e-reset-failkeep",
+      "source": "streak-reset",
+      "target": "failed-keep-task",
+      "type": "custom"
+    },
+    {
+      "id": "e-failnotice-sendoff",
+      "source": "failed-on-notice",
+      "target": "visited-today",
+      "type": "custom",
+      "data": { "label": "@sendoff_sequence" }
+    },
+    {
+      "id": "e-failkeep-sendoff",
+      "source": "failed-keep-task",
+      "target": "visited-today",
+      "type": "custom",
+      "data": { "label": "Yes → true" }
+    },
+    {
+      "id": "e-failkeep-tasksetting",
+      "source": "failed-keep-task",
+      "target": "task-input",
+      "type": "custom",
+      "data": { "label": "No → false" }
+    },
+    {
+      "id": "e-visited-wisdom",
+      "source": "visited-today",
+      "target": "parting-wisdom",
+      "type": "custom",
+      "data": { "label": "session.visitCount == 1" }
+    },
+    {
+      "id": "e-visited-sendoff",
+      "source": "visited-today",
+      "target": "send-off",
+      "type": "custom",
+      "data": { "label": "session.visitCount > 1" }
+    },
+    {
+      "id": "e-wisdom-sendoff",
+      "source": "parting-wisdom",
+      "target": "send-off",
+      "type": "custom"
+    }
+  ]
+}

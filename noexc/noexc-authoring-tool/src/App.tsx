@@ -703,6 +703,43 @@ function Flow() {
     );
   }, [setEdges]);
 
+  const onEdgeColorChange = useCallback((edgeId: string, newColor: string) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              color: newColor,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  }, [setEdges]);
+
+  const onEdgeReset = useCallback((edgeId: string) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              style: undefined,
+              delay: undefined,
+              color: undefined,
+              label: undefined,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  }, [setEdges]);
+
   // Update nodes with all callback functions
   const nodesWithCallbacks = nodes.map(node => ({
     ...node,
@@ -729,6 +766,8 @@ function Flow() {
       onLabelChange: onEdgeLabelChange,
       onStyleChange: onEdgeStyleChange,
       onDelayChange: onEdgeDelayChange,
+      onColorChange: onEdgeColorChange,
+      onReset: onEdgeReset,
     },
   }));
 
@@ -793,7 +832,8 @@ function Flow() {
         type: edge.type || 'default',
         label: edge.data?.label,
         style: edge.data?.style,
-        delay: edge.data?.delay
+        delay: edge.data?.delay,
+        color: edge.data?.color
       }))
     };
     
@@ -839,9 +879,12 @@ function Flow() {
               label: edge.label,
               style: edge.style,
               delay: edge.delay,
+              color: edge.color,
               onLabelChange: () => {},
               onStyleChange: () => {},
-              onDelayChange: () => {}
+              onDelayChange: () => {},
+              onColorChange: () => {},
+              onReset: () => {}
             }
           }));
 
@@ -912,9 +955,12 @@ function Flow() {
                   label: edge.label,
                   style: edge.style,
                   delay: edge.delay,
+                  color: edge.color,
                   onLabelChange: () => {},
                   onStyleChange: () => {},
-                  onDelayChange: () => {}
+                  onDelayChange: () => {},
+                  onColorChange: () => {},
+                  onReset: () => {}
                 }
               }));
 
@@ -1454,7 +1500,7 @@ function Flow() {
           🔓 Select group node + Press 'U' to ungroup<br/>
           ➖ Select grouped nodes + Press 'R' to remove from group<br/>
           ➕ Select ungrouped nodes + Use dropdown to add to group<br/>
-          🎨 Right-click edges for style picker and delay settings
+          🎨 Right-click edges for style, color, delay settings and reset
         </div>
       </div>
 

@@ -10,9 +10,12 @@ interface CustomEdgeData {
   label?: string;
   style?: 'solid' | 'dashed' | 'dotted';
   delay?: number;
+  color?: string;
   onLabelChange?: (edgeId: string, newLabel: string) => void;
   onStyleChange?: (edgeId: string, newStyle: 'solid' | 'dashed' | 'dotted') => void;
   onDelayChange?: (edgeId: string, newDelay: number) => void;
+  onColorChange?: (edgeId: string, newColor: string) => void;
+  onReset?: (edgeId: string) => void;
 }
 
 const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
@@ -103,6 +106,8 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
   }, [handleSave, handleCancel]);
 
   const hasLabel = data?.label && data.label.trim() !== '';
+  const hasDelay = data?.delay && data.delay > 0;
+  const hasCustomizations = hasLabel || hasDelay;
   const isCrossSequence = data?.label && data.label.startsWith('@');
   const isCondition = data?.label && (data.label.includes('==') || data.label.includes('!=') || data.label.includes('>') || data.label.includes('<'));
   
@@ -152,6 +157,49 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
     }
   }, [id, data, setEdges]);
 
+  const handleColorChange = useCallback((newColor: string) => {
+    if (data?.onColorChange) {
+      data.onColorChange(id, newColor);
+    } else {
+      setEdges((edges) =>
+        edges.map((edge) => {
+          if (edge.id === id) {
+            return {
+              ...edge,
+              data: { ...edge.data, color: newColor },
+            };
+          }
+          return edge;
+        })
+      );
+    }
+  }, [id, data, setEdges]);
+
+  const handleReset = useCallback(() => {
+    if (data?.onReset) {
+      data.onReset(id);
+    } else {
+      setEdges((edges) =>
+        edges.map((edge) => {
+          if (edge.id === id) {
+            return {
+              ...edge,
+              data: { 
+                ...edge.data, 
+                style: undefined,
+                delay: undefined,
+                color: undefined,
+                label: undefined
+              },
+            };
+          }
+          return edge;
+        })
+      );
+    }
+    setShowStylePicker(false);
+  }, [id, data, setEdges]);
+
   return (
     <>
       <path
@@ -161,10 +209,10 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         markerEnd={markerEnd}
         onClick={handleEdgeClick}
         style={{ 
-          stroke: isCrossSequence ? '#9c27b0' : isCondition ? '#ff9800' : '#999', 
+          stroke: data?.color || (isCrossSequence ? '#9c27b0' : isCondition ? '#ff9800' : '#999'), 
           strokeWidth: isCrossSequence ? 3 : 2,
           strokeDasharray: getStrokeDashArray(),
-          cursor: hasLabel ? 'default' : 'pointer'
+          cursor: hasCustomizations ? 'default' : 'pointer'
         }}
         onContextMenu={(e) => {
           e.preventDefault();
@@ -172,7 +220,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
           setShowStylePicker(!showStylePicker);
         }}
       />
-      {(hasLabel || isEditing) && (
+      {(hasCustomizations || isEditing) && (
         <EdgeLabelRenderer>
           <div
             style={{
@@ -222,10 +270,10 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                 onDoubleClick={handleDoubleClick}
                 title={isCrossSequence ? "Cross-sequence navigation - Double-click to edit" : "Double-click to edit"}
               >
-                {data?.label}
+                {data?.label || ''}
                 {data?.delay && data.delay > 0 && (
-                  <span style={{ fontSize: '10px', color: '#666', marginLeft: '4px' }}>
-                    ({data.delay}ms)
+                  <span style={{ fontSize: '10px', color: '#666', marginLeft: data?.label ? '4px' : '0px' }}>
+                    {data?.label ? `(${data.delay}ms)` : `${data.delay}ms`}
                   </span>
                 )}
               </div>
@@ -296,6 +344,61 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
               </button>
             </div>
             
+            <div style={{ fontSize: '12px', fontWeight: 'bold', marginTop: '8px', marginBottom: '4px' }}>Edge Color</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <button
+                onClick={() => handleColorChange('#4caf50')}
+                style={{
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  background: data?.color === '#4caf50' ? '#e8f5e9' : 'white',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#4caf50', borderRadius: '2px', border: '1px solid #ddd' }}></div>
+                Green
+              </button>
+              <button
+                onClick={() => handleColorChange('#2196f3')}
+                style={{
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  background: data?.color === '#2196f3' ? '#e3f2fd' : 'white',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#2196f3', borderRadius: '2px', border: '1px solid #ddd' }}></div>
+                Blue
+              </button>
+              <button
+                onClick={() => handleColorChange('#f44336')}
+                style={{
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  background: data?.color === '#f44336' ? '#ffebee' : 'white',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <div style={{ width: '12px', height: '12px', backgroundColor: '#f44336', borderRadius: '2px', border: '1px solid #ddd' }}></div>
+                Red
+              </button>
+            </div>
+            
             <div style={{ fontSize: '12px', fontWeight: 'bold', marginTop: '8px', marginBottom: '4px' }}>Delay (ms)</div>
             <input
               type="number"
@@ -313,21 +416,38 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
               step="100"
             />
             
-            <button
-              onClick={() => setShowStylePicker(false)}
-              style={{
-                marginTop: '8px',
-                padding: '4px 8px',
-                border: '1px solid #ddd',
-                borderRadius: '3px',
-                background: '#f5f5f5',
-                cursor: 'pointer',
-                fontSize: '11px',
-                width: '100%'
-              }}
-            >
-              Close
-            </button>
+            <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
+              <button
+                onClick={handleReset}
+                style={{
+                  flex: 1,
+                  padding: '4px 8px',
+                  border: '1px solid #f44336',
+                  borderRadius: '3px',
+                  background: '#ffebee',
+                  color: '#d32f2f',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  fontWeight: 'bold'
+                }}
+              >
+                Reset
+              </button>
+              <button
+                onClick={() => setShowStylePicker(false)}
+                style={{
+                  flex: 1,
+                  padding: '4px 8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '3px',
+                  background: '#f5f5f5',
+                  cursor: 'pointer',
+                  fontSize: '11px'
+                }}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </EdgeLabelRenderer>
       )}

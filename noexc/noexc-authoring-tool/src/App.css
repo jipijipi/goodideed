@@ -62,14 +62,30 @@
 /* Ensure edge labels are always on top */
 .react-flow__edge-text,
 .react-flow__edge-textbg {
-  z-index: 1001 !important;
+  z-index: 1002 !important;
 }
 
 .react-flow__edge {
+  z-index: 1001 !important;
+}
+
+/* Group nodes should be below edge labels */
+.react-flow__node[data-nodetype="group"] {
+  z-index: 999 !important;
+}
+
+/* Regular nodes */
+.react-flow__node {
   z-index: 1000 !important;
 }
 
 /* Custom edge label styling */
 .react-flow__edge-text {
+  pointer-events: all !important;
+}
+
+/* Edge label renderer should be on top */
+.react-flow__edge-label {
+  z-index: 1002 !important;
   pointer-events: all !important;
 }

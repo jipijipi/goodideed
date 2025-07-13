@@ -109,6 +109,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
               fontSize: 12,
               pointerEvents: 'all',
+              zIndex: 1003,
             }}
             className="nodrag nopan"
           >

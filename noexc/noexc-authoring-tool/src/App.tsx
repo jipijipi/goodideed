@@ -159,7 +159,8 @@ function Flow() {
       type: 'group',
       style: {
         width: groupWidth,
-        height: groupHeight
+        height: groupHeight,
+        zIndex: 999
       }
     };
 
@@ -297,6 +298,13 @@ function Flow() {
       if (e.key === 'Shift') {
         setIsShiftPressed(true);
       }
+      // Handle grouping with 'G' key
+      if (e.key === 'g' || e.key === 'G') {
+        const regularNodes = selectedNodes.filter(node => node.type !== 'group');
+        if (regularNodes.length > 1) {
+          createGroupFromSelectedNodes();
+        }
+      }
       // Handle ungrouping with 'U' key
       if (e.key === 'u' || e.key === 'U') {
         const hasGroupSelected = selectedNodes.some(node => node.type === 'group');
@@ -316,10 +324,7 @@ function Flow() {
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.key === 'Shift') {
         setIsShiftPressed(false);
-        // Trigger grouping when shift is released and multiple nodes are selected
-        if (selectedNodes.length > 1) {
-          createGroupFromSelectedNodes();
-        }
+        // Don't auto-group on shift release - use explicit 'G' key instead
       }
     };
 
@@ -1338,7 +1343,7 @@ function Flow() {
           paddingTop: '8px'
         }}>
           💡 Based on comprehensive_test.json<br/>
-          🔗 Hold Shift + Select multiple nodes to create subflow<br/>
+          🔗 Hold Shift + Select multiple nodes, then Press 'G' to group<br/>
           🔓 Select group node + Press 'U' to ungroup<br/>
           ➖ Select grouped nodes + Press 'R' to remove from group<br/>
           ➕ Select ungrouped nodes + Use dropdown to add to group
@@ -1361,7 +1366,27 @@ function Flow() {
           fontWeight: 'bold',
           boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
         }}>
-          🔗 Subflow Mode: Select multiple nodes ({selectedNodes.length} selected)
+          🔗 Subflow Mode: Select multiple nodes ({selectedNodes.length} selected) - Press 'G' to group
+        </div>
+      )}
+      
+      {/* Group Creation Status Indicator */}
+      {!isShiftPressed && selectedNodes.filter(node => node.type !== 'group').length > 1 && (
+        <div style={{
+          position: 'absolute',
+          top: 10,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          padding: '8px 16px',
+          background: 'rgba(76, 175, 80, 0.9)',
+          color: 'white',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        }}>
+          🔗 Press 'G' to group selected nodes ({selectedNodes.filter(node => node.type !== 'group').length} selected)
         </div>
       )}
       
@@ -1515,6 +1540,23 @@ function Flow() {
         </button>
         
         <button 
+          onClick={createGroupFromSelectedNodes}
+          disabled={selectedNodes.filter(node => node.type !== 'group').length < 2}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: selectedNodes.filter(node => node.type !== 'group').length >= 2 ? '#4caf50' : '#ccc',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: selectedNodes.filter(node => node.type !== 'group').length >= 2 ? 'pointer' : 'not-allowed',
+            fontWeight: 'bold',
+            opacity: selectedNodes.filter(node => node.type !== 'group').length >= 2 ? 1 : 0.5
+          }}
+        >
+          🔗 Group
+        </button>
+        
+        <button 
           onClick={ungroupSelectedNodes}
           disabled={!selectedNodes.some(node => node.type === 'group')}
           style={{
@@ -1594,7 +1636,7 @@ function Flow() {
         connectionLineType={ConnectionLineType.Bezier}
         connectionRadius={30}
         multiSelectionKeyCode="Shift"
-        defaultEdgeOptions={{ zIndex: 1000 }}
+        defaultEdgeOptions={{ zIndex: 1001 }}
       >
         <Controls 
           showZoom={true}

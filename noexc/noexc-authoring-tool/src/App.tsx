@@ -185,7 +185,7 @@ function Flow() {
     setNodeIdCounter(counter => counter + 1);
     setSelectedNodes([]);
 
-    console.log(`Created group ${groupId} with ${selectedNodes.length} child nodes`);
+    showNotification(`Created group ${groupId} with ${selectedNodes.length} child nodes`);
   }, [selectedNodes, nodes, getId, setNodes, setNodeIdCounter]);
 
   // Ungroup selected group nodes
@@ -219,12 +219,77 @@ function Flow() {
         return node;
       });
       
-      console.log(`Ungrouped ${childNodes.length} nodes from group ${groupNode.id}`);
+      showNotification(`Ungrouped ${childNodes.length} nodes from group ${groupNode.id}`);
     });
 
     setNodes(updatedNodes);
     setSelectedNodes([]);
   }, [selectedNodes, nodes, setNodes]);
+
+  // Add selected nodes to an existing group
+  const addNodesToGroup = useCallback((targetGroupId: string) => {
+    const regularNodes = selectedNodes.filter(node => node.type !== 'group' && !node.parentId);
+    if (regularNodes.length === 0) {
+      showError('No ungrouped nodes selected', ['Select nodes that are not already in a group']);
+      return;
+    }
+
+    const targetGroup = nodes.find(node => node.id === targetGroupId && node.type === 'group');
+    if (!targetGroup) {
+      showError('Target group not found', ['Please select a valid group']);
+      return;
+    }
+
+    const updatedNodes = nodes.map(node => {
+      if (regularNodes.some(selected => selected.id === node.id)) {
+        return {
+          ...node,
+          parentId: targetGroupId,
+          position: {
+            x: node.position.x - targetGroup.position.x + 25,
+            y: node.position.y - targetGroup.position.y + 25
+          },
+          extent: 'parent' as const,
+          selected: false
+        };
+      }
+      return node;
+    });
+
+    setNodes(updatedNodes);
+    setSelectedNodes([]);
+    showNotification(`Added ${regularNodes.length} node${regularNodes.length === 1 ? '' : 's'} to group ${targetGroupId}`);
+  }, [selectedNodes, nodes, setNodes, showNotification, showError]);
+
+  // Remove selected nodes from their groups
+  const removeNodesFromGroup = useCallback(() => {
+    const groupedNodes = selectedNodes.filter(node => node.parentId && node.type !== 'group');
+    if (groupedNodes.length === 0) {
+      showError('No grouped nodes selected', ['Select nodes that are currently in a group']);
+      return;
+    }
+
+    const updatedNodes = nodes.map(node => {
+      if (groupedNodes.some(selected => selected.id === node.id)) {
+        const parentGroup = nodes.find(n => n.id === node.parentId);
+        return {
+          ...node,
+          parentId: undefined,
+          position: {
+            x: (parentGroup?.position.x || 0) + node.position.x,
+            y: (parentGroup?.position.y || 0) + node.position.y
+          },
+          extent: undefined,
+          selected: false
+        };
+      }
+      return node;
+    });
+
+    setNodes(updatedNodes);
+    setSelectedNodes([]);
+    showNotification(`Removed ${groupedNodes.length} node${groupedNodes.length === 1 ? '' : 's'} from their group${groupedNodes.length === 1 ? '' : 's'}`);
+  }, [selectedNodes, nodes, setNodes, showNotification, showError]);
 
   // Enhanced keyboard event handling for shift key and ungrouping
   useEffect(() => {
@@ -237,6 +302,13 @@ function Flow() {
         const hasGroupSelected = selectedNodes.some(node => node.type === 'group');
         if (hasGroupSelected) {
           ungroupSelectedNodes();
+        }
+      }
+      // Handle removing nodes from group with 'R' key
+      if (e.key === 'r' || e.key === 'R') {
+        const hasGroupedNodesSelected = selectedNodes.some(node => node.parentId && node.type !== 'group');
+        if (hasGroupedNodesSelected) {
+          removeNodesFromGroup();
         }
       }
     };
@@ -258,7 +330,7 @@ function Flow() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [selectedNodes, createGroupFromSelectedNodes, ungroupSelectedNodes]);
+  }, [selectedNodes, createGroupFromSelectedNodes, ungroupSelectedNodes, removeNodesFromGroup]);
 
   // Track selected nodes
   const handleNodesChange = useCallback((changes: any) => {
@@ -609,6 +681,7 @@ function Flow() {
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
+    showNotification('JSON file exported successfully');
   }, [nodes, edges]);
 
   const saveData = useCallback(() => {
@@ -635,6 +708,7 @@ function Flow() {
     };
     
     localStorage.setItem('react-flow-data', JSON.stringify(data));
+    showNotification('Data saved to browser storage');
   }, [nodes, edges]);
 
   const restoreData = useCallback(() => {
@@ -681,14 +755,15 @@ function Flow() {
             nodeIdCounter
           );
           setNodeIdCounter(maxNodeId + 1);
+          showNotification('Data restored from browser storage');
         } else {
-          alert('Invalid saved data format.');
+          showError('Invalid saved data format', ['Please check the saved data structure']);
         }
       } catch (error) {
-        alert('Error restoring saved data.');
+        showError('Error restoring saved data', [error instanceof Error ? error.message : 'Unknown error']);
       }
     } else {
-      alert('No saved data found.');
+      showError('No saved data found', ['Save some data first before trying to restore']);
     }
   }, [setNodes, setEdges, nodeIdCounter, setNodeIdCounter]);
 
@@ -742,11 +817,12 @@ function Flow() {
                 nodeIdCounter
               );
               setNodeIdCounter(maxNodeId + 1);
+              showNotification('JSON file imported successfully');
             } else {
-              alert('Invalid JSON format. Please ensure the file contains nodes and edges.');
+              showError('Invalid JSON format', ['Please ensure the file contains nodes and edges']);
             }
           } catch (error) {
-            alert('Error parsing JSON file. Please check the file format.');
+            showError('Error parsing JSON file', [error instanceof Error ? error.message : 'Please check the file format']);
           }
         };
         reader.readAsText(file);
@@ -1109,7 +1185,7 @@ function Flow() {
         const groupChildren = nodes.filter(node => node.parentId === groupNode.id);
         
         if (groupChildren.length === 0) {
-          console.warn(`Group ${groupNode.id} has no children, skipping`);
+          showError(`Group ${groupNode.id} has no children`, ['Add nodes to the group before exporting']);
           return;
         }
 
@@ -1122,14 +1198,14 @@ function Flow() {
         // Validate this group's flow
         const validation = validateFlowForExport(groupChildren, groupEdges);
         if (!validation.isValid) {
-          console.warn(`Group ${groupNode.id} validation failed:`, validation.errors);
+          showError(`Group ${groupNode.id} validation failed`, validation.errors);
           return;
         }
 
         // Sort nodes in this group topologically
         const sortedGroupNodes = sortNodesTopologically(groupChildren, groupEdges);
         if (sortedGroupNodes.length === 0) {
-          console.warn(`Group ${groupNode.id} could not be sorted topologically`);
+          showError(`Group ${groupNode.id} could not be sorted topologically`, ['Check for circular dependencies in the flow']);
           return;
         }
 
@@ -1263,7 +1339,9 @@ function Flow() {
         }}>
           💡 Based on comprehensive_test.json<br/>
           🔗 Hold Shift + Select multiple nodes to create subflow<br/>
-          🔓 Select group node + Press 'U' to ungroup
+          🔓 Select group node + Press 'U' to ungroup<br/>
+          ➖ Select grouped nodes + Press 'R' to remove from group<br/>
+          ➕ Select ungrouped nodes + Use dropdown to add to group
         </div>
       </div>
 
@@ -1304,6 +1382,46 @@ function Flow() {
           boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
         }}>
           🔓 Press 'U' to ungroup selected group ({selectedNodes.filter(node => node.type === 'group').length} group{selectedNodes.filter(node => node.type === 'group').length > 1 ? 's' : ''})
+        </div>
+      )}
+
+      {/* Remove from Group Status Indicator */}
+      {!isShiftPressed && selectedNodes.some(node => node.parentId && node.type !== 'group') && (
+        <div style={{
+          position: 'absolute',
+          top: 90,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          padding: '8px 16px',
+          background: 'rgba(156, 39, 176, 0.9)',
+          color: 'white',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        }}>
+          ➖ Press 'R' to remove from group ({selectedNodes.filter(node => node.parentId && node.type !== 'group').length} node{selectedNodes.filter(node => node.parentId && node.type !== 'group').length > 1 ? 's' : ''})
+        </div>
+      )}
+
+      {/* Add to Group Status Indicator */}
+      {!isShiftPressed && selectedNodes.some(node => node.type !== 'group' && !node.parentId) && nodes.some(node => node.type === 'group') && (
+        <div style={{
+          position: 'absolute',
+          top: 130,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1000,
+          padding: '8px 16px',
+          background: 'rgba(33, 150, 243, 0.9)',
+          color: 'white',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: 'bold',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        }}>
+          ➕ Use dropdown to add to group ({selectedNodes.filter(node => node.type !== 'group' && !node.parentId).length} node{selectedNodes.filter(node => node.type !== 'group' && !node.parentId).length > 1 ? 's' : ''})
         </div>
       )}
 
@@ -1412,6 +1530,52 @@ function Flow() {
         >
           🔓 Ungroup
         </button>
+        
+        <button 
+          onClick={removeNodesFromGroup}
+          disabled={!selectedNodes.some(node => node.parentId && node.type !== 'group')}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: selectedNodes.some(node => node.parentId && node.type !== 'group') ? '#9c27b0' : '#ccc',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: selectedNodes.some(node => node.parentId && node.type !== 'group') ? 'pointer' : 'not-allowed',
+            fontWeight: 'bold',
+            opacity: selectedNodes.some(node => node.parentId && node.type !== 'group') ? 1 : 0.5
+          }}
+        >
+          ➖ Remove from Group
+        </button>
+        
+        {/* Add to Group dropdown - only show when ungrouped nodes are selected */}
+        {selectedNodes.some(node => node.type !== 'group' && !node.parentId) && (
+          <select 
+            onChange={(e) => {
+              if (e.target.value) {
+                addNodesToGroup(e.target.value);
+                e.target.value = ''; // Reset selection
+              }
+            }}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#2196f3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold'
+            }}
+            defaultValue=""
+          >
+            <option value="" disabled>➕ Add to Group</option>
+            {nodes.filter(node => node.type === 'group').map(group => (
+              <option key={group.id} value={group.id}>
+                {group.data.title || group.data.label || `Group ${group.id}`}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
       
       <ReactFlow
@@ -1430,9 +1594,18 @@ function Flow() {
         connectionLineType={ConnectionLineType.Bezier}
         connectionRadius={30}
         multiSelectionKeyCode="Shift"
-        defaultEdgeOptions={{ zIndex: 1 }}
+        defaultEdgeOptions={{ zIndex: 1000 }}
       >
-        <Controls />
+        <Controls 
+          showZoom={true}
+          showFitView={true}
+          showInteractive={true}
+          fitViewOptions={{ 
+            padding: 0.1,
+            minZoom: 0.01,
+            maxZoom: 4
+          }}
+        />
         <Background />
       </ReactFlow>
       
@@ -1473,7 +1646,8 @@ function Flow() {
           fontWeight: '500',
           maxWidth: '600px',
           whiteSpace: 'pre-line',
-          border: '2px solid #d32f2f'
+          border: '2px solid #d32f2f',
+          animation: 'slideInCenter 0.3s ease-out'
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
             <span style={{ fontSize: '18px', flexShrink: 0 }}>⚠️</span>

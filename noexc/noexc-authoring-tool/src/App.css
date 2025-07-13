@@ -36,3 +36,40 @@
     transform: rotate(360deg);
   }
 }
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInCenter {
+  from {
+    transform: translateX(-50%) translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Ensure edge labels are always on top */
+.react-flow__edge-text,
+.react-flow__edge-textbg {
+  z-index: 1001 !important;
+}
+
+.react-flow__edge {
+  z-index: 1000 !important;
+}
+
+/* Custom edge label styling */
+.react-flow__edge-text {
+  pointer-events: all !important;
+}

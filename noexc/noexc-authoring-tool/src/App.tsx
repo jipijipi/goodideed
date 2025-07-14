@@ -1199,6 +1199,7 @@ function Flow() {
           const sequenceIdPart = label.includes('::') ? label.split('::')[0] : label;
           const sequenceId = sequenceIdPart.substring(1); // Remove the @ symbol
           choice.sequenceId = sequenceId;
+          // Note: Delay will be applied to target sequence's first message during export
           // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
         } else {
           // Check if target is in a different group (auto-detect cross-sequence navigation)
@@ -1217,11 +1218,13 @@ function Flow() {
                 const targetGroup = groupNodes.find(g => g.id === targetGroupId);
                 if (targetGroup && targetGroup.data.groupId) {
                   choice.sequenceId = targetGroup.data.groupId;
+                  // Note: Delay will be applied to target sequence's first message during export
                   // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
                 }
               } else {
                 // Target is ungrouped - use a special marker for main sequence
                 choice.sequenceId = 'main';
+                // Note: Delay will be applied to target sequence's first message during export
                 // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
               }
             } else {
@@ -1258,6 +1261,7 @@ function Flow() {
         if (label.startsWith('@')) {
           const sequenceId = label.substring(1); // Remove the @ symbol
           route.sequenceId = sequenceId;
+          // Note: Delay will be applied to target sequence's first message during export
           // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
           if (isDefault) {
             route.default = true;
@@ -1278,11 +1282,13 @@ function Flow() {
                 const targetGroup = groupNodes.find(g => g.id === targetGroupId);
                 if (targetGroup && targetGroup.data.groupId) {
                   route.sequenceId = targetGroup.data.groupId;
+                  // Note: Delay will be applied to target sequence's first message during export
                   // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
                 }
               } else {
                 // Target is ungrouped - use a special marker for main sequence
                 route.sequenceId = 'main';
+                // Note: Delay will be applied to target sequence's first message during export
                 // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
               }
             } else {
@@ -1300,12 +1306,24 @@ function Flow() {
   }, [nodes]);
 
   const convertNodesToMessages = useCallback((sortedNodes: Node<NodeData>[], edges: Edge[], groupNodes?: Node<NodeData>[], allNodes?: Node<NodeData>[]) => {
+    // Create a map of edge delays by target node
+    const edgeDelayMap: { [nodeId: string]: number } = {};
+    edges.forEach(edge => {
+      if (edge.data?.delay && edge.data.delay > 0) {
+        edgeDelayMap[edge.target] = edge.data.delay;
+      }
+    });
+
     return sortedNodes.map(node => {
       const message: any = {
         id: parseInt(node.data.nodeId || node.id),
         type: node.data.category
       };
       
+      // Add delay from incoming edge (if any)
+      if (edgeDelayMap[node.id]) {
+        message.delay = edgeDelayMap[node.id];
+      }
       
       switch (node.data.category) {
         case 'bot':
@@ -1385,6 +1403,30 @@ function Flow() {
         return;
       }
 
+      // Collect cross-sequence delays that need to be applied to target sequences
+      const crossSequenceDelays: { [sequenceId: string]: number } = {};
+      
+      // Scan all edges for cross-sequence navigation with delays
+      edges.forEach(edge => {
+        if (edge.data?.delay && edge.data.delay > 0) {
+          const sourceNode = nodes.find(n => n.id === edge.source);
+          const targetNode = nodes.find(n => n.id === edge.target);
+          
+          if (sourceNode && targetNode && sourceNode.parentId !== targetNode.parentId) {
+            // This is cross-sequence navigation with delay
+            const targetGroup = groupNodes.find(g => g.id === targetNode.parentId);
+            if (targetGroup && targetGroup.data.groupId) {
+              const targetSequenceId = targetGroup.data.groupId;
+              // Store the maximum delay for this sequence (in case multiple edges point to it)
+              crossSequenceDelays[targetSequenceId] = Math.max(
+                crossSequenceDelays[targetSequenceId] || 0,
+                edge.data.delay
+              );
+            }
+          }
+        }
+      });
+
       const exportedSequences: any[] = [];
 
       // Process each group
@@ -1424,6 +1466,14 @@ function Flow() {
         const sequenceId = groupNode.data.groupId || `group_${groupNode.id}`;
         const name = groupNode.data.title || `Group ${groupNode.id}`;
         const description = groupNode.data.description || `Sequence exported from group ${groupNode.id}`;
+
+        // Apply cross-sequence delay to the first message if this sequence is a target
+        if (crossSequenceDelays[sequenceId] && messages.length > 0) {
+          messages[0] = {
+            ...messages[0],
+            delay: crossSequenceDelays[sequenceId]
+          };
+        }
 
         const flutterSequence = {
           sequenceId,

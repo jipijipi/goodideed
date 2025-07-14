@@ -744,9 +744,8 @@ function Flow() {
             data: {
               ...edge.data,
               style: undefined,
-              delay: undefined,
               color: undefined,
-              label: undefined,
+              // Keep the label and delay - only reset visual styling
             },
           };
           // Update selected edge if it's the one being reset
@@ -778,9 +777,19 @@ function Flow() {
     },
   }));
 
-  // Update edges with callback functions
+  // Update edges with callback functions and visual selection
   const edgesWithCallbacks = edges.map(edge => ({
     ...edge,
+    selected: selectedEdge?.id === edge.id,
+    style: {
+      ...edge.style,
+      // Make selected edge stand out visually
+      strokeWidth: selectedEdge?.id === edge.id ? 4 : (edge.data?.label?.startsWith('@') ? 3 : 2),
+      stroke: selectedEdge?.id === edge.id 
+        ? '#ff6b35' // Orange highlight for selected edge
+        : edge.data?.color || (edge.data?.label?.startsWith('@') ? '#9c27b0' : edge.data?.label && (edge.data.label.includes('==') || edge.data.label.includes('!=') || edge.data.label.includes('>') || edge.data.label.includes('<')) ? '#ff9800' : '#999'),
+      filter: selectedEdge?.id === edge.id ? 'drop-shadow(0 0 6px rgba(255, 107, 53, 0.6))' : 'none',
+    },
     data: {
       ...edge.data,
       onLabelChange: (edgeId: string, newLabel: string) => {
@@ -1541,7 +1550,7 @@ function Flow() {
           🔓 Select group node + Press 'U' to ungroup<br/>
           ➖ Select grouped nodes + Press 'R' to remove from group<br/>
           ➕ Select ungrouped nodes + Use dropdown to add to group<br/>
-          🎨 Right-click edges for style, color, delay settings and reset
+          🎨 Click edges to open style panel for color, delay, and styling options
         </div>
       </div>
 
@@ -1833,6 +1842,7 @@ function Flow() {
         connectionRadius={30}
         multiSelectionKeyCode="Shift"
         defaultEdgeOptions={{ zIndex: 1001 }}
+        elementsSelectable={true}
       >
         <Controls 
           showZoom={true}
@@ -2091,7 +2101,7 @@ function Flow() {
                 fontWeight: 'bold'
               }}
             >
-              🔄 Reset All Properties
+              🎨 Reset Styling
             </button>
           </div>
         </div>

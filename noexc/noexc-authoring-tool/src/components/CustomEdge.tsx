@@ -49,12 +49,10 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
   }, [data?.label]);
 
   const handleEdgeClick = useCallback((e: React.MouseEvent) => {
-    if (!data?.label) {
-      e.stopPropagation();
-      setIsEditing(true);
-      setTempLabel('');
-    }
-  }, [data?.label]);
+    e.stopPropagation();
+    // Only start editing if there's no label and user double-clicked
+    // Single clicks will be handled by React Flow for selection
+  }, []);
 
   const handleSave = useCallback(() => {
     if (data?.onLabelChange) {
@@ -189,12 +187,12 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         className="react-flow__edge-path"
         d={edgePath}
         markerEnd={markerEnd}
-        onClick={handleEdgeClick}
         style={{ 
           stroke: data?.color || (isCrossSequence ? '#9c27b0' : isCondition ? '#ff9800' : '#999'), 
           strokeWidth: isCrossSequence ? 3 : 2,
           strokeDasharray: getStrokeDashArray(),
-          cursor: hasCustomizations ? 'default' : 'pointer'
+          cursor: 'pointer',
+          pointerEvents: 'all'
         }}
       />
       {(hasCustomizations || isEditing) && (

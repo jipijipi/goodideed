@@ -1193,15 +1193,8 @@ function Flow() {
           else choice.value = trimmedValue;
         }
         
-        // Check for explicit cross-sequence navigation syntax (@sequence_id)
-        if (label.startsWith('@')) {
-          // Extract sequence ID from the full label
-          const sequenceIdPart = label.includes('::') ? label.split('::')[0] : label;
-          const sequenceId = sequenceIdPart.substring(1); // Remove the @ symbol
-          choice.sequenceId = sequenceId;
-          // Note: Delay will be applied to target sequence's first message during export
-          // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
-        } else {
+        // Only use inferred cross-sequence navigation (no explicit @sequence syntax)
+        {
           // Check if target is in a different group (auto-detect cross-sequence navigation)
           const nodesToSearch = allNodes || nodes;
           const targetNode = nodesToSearch.find(n => n.id === edge.target);
@@ -1257,19 +1250,8 @@ function Flow() {
           ? { default: true }
           : { condition: label };
         
-        // Check for explicit cross-sequence navigation syntax (@sequence_id)
-        if (label.startsWith('@')) {
-          const sequenceId = label.substring(1); // Remove the @ symbol
-          route.sequenceId = sequenceId;
-          // Note: Delay will be applied to target sequence's first message during export
-          // Don't set nextMessageId when sequenceId is present - Flutter app assumes first node
-          if (isDefault) {
-            route.default = true;
-            delete route.condition;
-          } else {
-            route.condition = label; // Keep original condition for backwards compatibility
-          }
-        } else {
+        // Only use inferred cross-sequence navigation (no explicit @sequence syntax)
+        {
           // Auto-detect cross-sequence navigation based on group membership
           if (targetNode && sourceNode) {
             const sourceGroupId = sourceNode.parentId;
@@ -1316,9 +1298,13 @@ function Flow() {
 
     return sortedNodes.map(node => {
       const message: any = {
-        id: parseInt(node.data.nodeId || node.id),
-        type: node.data.category
+        id: parseInt(node.data.nodeId || node.id)
       };
+      
+      // Only add type if it's not the default 'bot' type
+      if (node.data.category !== 'bot') {
+        message.type = node.data.category;
+      }
       
       // Add delay from incoming edge (if any)
       if (edgeDelayMap[node.id]) {
@@ -1327,7 +1313,9 @@ function Flow() {
       
       switch (node.data.category) {
         case 'bot':
-          message.text = node.data.content || 'Message content';
+          if (node.data.content) {
+            message.text = node.data.content;
+          }
           const nextId = getNextMessageId(node.id, edges, groupNodes);
           if (nextId) {
             if (typeof nextId === 'object') {
@@ -1341,8 +1329,12 @@ function Flow() {
           break;
           
         case 'textInput':
-          message.storeKey = node.data.storeKey || 'user.input';
-          message.placeholderText = node.data.placeholderText || 'Enter text...';
+          if (node.data.storeKey) {
+            message.storeKey = node.data.storeKey;
+          }
+          if (node.data.placeholderText) {
+            message.placeholderText = node.data.placeholderText;
+          }
           const nextTextId = getNextMessageId(node.id, edges, groupNodes);
           if (nextTextId) {
             if (typeof nextTextId === 'object') {
@@ -1356,16 +1348,26 @@ function Flow() {
           break;
           
         case 'choice':
-          message.storeKey = node.data.storeKey || 'user.choice';
-          message.choices = extractChoicesFromEdges(node.id, edges, groupNodes, allNodes);
+          if (node.data.storeKey) {
+            message.storeKey = node.data.storeKey;
+          }
+          const choices = extractChoicesFromEdges(node.id, edges, groupNodes, allNodes);
+          if (choices.length > 0) {
+            message.choices = choices;
+          }
           break;
           
         case 'autoroute':
-          message.routes = extractRoutesFromEdges(node.id, edges, groupNodes, allNodes);
+          const routes = extractRoutesFromEdges(node.id, edges, groupNodes, allNodes);
+          if (routes.length > 0) {
+            message.routes = routes;
+          }
           break;
           
         case 'user':
-          message.text = node.data.content || 'User message';
+          if (node.data.content) {
+            message.text = node.data.content;
+          }
           const nextUserId = getNextMessageId(node.id, edges, groupNodes);
           if (nextUserId) {
             if (typeof nextUserId === 'object') {

@@ -31,23 +31,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempLabel, setTempLabel] = useState(data?.label || '');
-  const [showStylePicker, setShowStylePicker] = useState(false);
   const { setEdges } = useReactFlow();
-
-  // Close style picker when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (showStylePicker && !target.closest('.edge-style-picker')) {
-        setShowStylePicker(false);
-      }
-    };
-
-    if (showStylePicker) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [showStylePicker]);
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -136,7 +120,6 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         })
       );
     }
-    setShowStylePicker(false);
   }, [id, data, setEdges]);
 
   const handleDelayChange = useCallback((newDelay: number) => {
@@ -197,7 +180,6 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         })
       );
     }
-    setShowStylePicker(false);
   }, [id, data, setEdges]);
 
   return (
@@ -213,11 +195,6 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
           strokeWidth: isCrossSequence ? 3 : 2,
           strokeDasharray: getStrokeDashArray(),
           cursor: hasCustomizations ? 'default' : 'pointer'
-        }}
-        onContextMenu={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setShowStylePicker(!showStylePicker);
         }}
       />
       {(hasCustomizations || isEditing) && (
@@ -282,175 +259,6 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         </EdgeLabelRenderer>
       )}
 
-      {/* Style Picker */}
-      {showStylePicker && (
-        <EdgeLabelRenderer>
-          <div
-            style={{
-              position: 'absolute',
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY + 30}px)`,
-              background: 'white',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              padding: '8px',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-              zIndex: 1004,
-              minWidth: '120px',
-              pointerEvents: 'all'
-            }}
-            className="nodrag nopan edge-style-picker"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}>Edge Style</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <button
-                onClick={() => handleStyleChange('solid')}
-                style={{
-                  padding: '4px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  background: (data?.style === 'solid' || !data?.style) ? '#e3f2fd' : 'white',
-                  cursor: 'pointer',
-                  fontSize: '11px'
-                }}
-              >
-                --- Solid
-              </button>
-              <button
-                onClick={() => handleStyleChange('dashed')}
-                style={{
-                  padding: '4px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  background: data?.style === 'dashed' ? '#e3f2fd' : 'white',
-                  cursor: 'pointer',
-                  fontSize: '11px'
-                }}
-              >
-                - - - Dashed
-              </button>
-              <button
-                onClick={() => handleStyleChange('dotted')}
-                style={{
-                  padding: '4px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  background: data?.style === 'dotted' ? '#e3f2fd' : 'white',
-                  cursor: 'pointer',
-                  fontSize: '11px'
-                }}
-              >
-                . . . Dotted
-              </button>
-            </div>
-            
-            <div style={{ fontSize: '12px', fontWeight: 'bold', marginTop: '8px', marginBottom: '4px' }}>Edge Color</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <button
-                onClick={() => handleColorChange('#4caf50')}
-                style={{
-                  padding: '4px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  background: data?.color === '#4caf50' ? '#e8f5e9' : 'white',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <div style={{ width: '12px', height: '12px', backgroundColor: '#4caf50', borderRadius: '2px', border: '1px solid #ddd' }}></div>
-                Green
-              </button>
-              <button
-                onClick={() => handleColorChange('#2196f3')}
-                style={{
-                  padding: '4px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  background: data?.color === '#2196f3' ? '#e3f2fd' : 'white',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <div style={{ width: '12px', height: '12px', backgroundColor: '#2196f3', borderRadius: '2px', border: '1px solid #ddd' }}></div>
-                Blue
-              </button>
-              <button
-                onClick={() => handleColorChange('#f44336')}
-                style={{
-                  padding: '4px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  background: data?.color === '#f44336' ? '#ffebee' : 'white',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <div style={{ width: '12px', height: '12px', backgroundColor: '#f44336', borderRadius: '2px', border: '1px solid #ddd' }}></div>
-                Red
-              </button>
-            </div>
-            
-            <div style={{ fontSize: '12px', fontWeight: 'bold', marginTop: '8px', marginBottom: '4px' }}>Delay (ms)</div>
-            <input
-              type="number"
-              value={data?.delay || 0}
-              onChange={(e) => handleDelayChange(parseInt(e.target.value) || 0)}
-              style={{
-                width: '100%',
-                padding: '4px',
-                border: '1px solid #ddd',
-                borderRadius: '3px',
-                fontSize: '11px'
-              }}
-              placeholder="0"
-              min="0"
-              step="100"
-            />
-            
-            <div style={{ display: 'flex', gap: '4px', marginTop: '8px' }}>
-              <button
-                onClick={handleReset}
-                style={{
-                  flex: 1,
-                  padding: '4px 8px',
-                  border: '1px solid #f44336',
-                  borderRadius: '3px',
-                  background: '#ffebee',
-                  color: '#d32f2f',
-                  cursor: 'pointer',
-                  fontSize: '11px',
-                  fontWeight: 'bold'
-                }}
-              >
-                Reset
-              </button>
-              <button
-                onClick={() => setShowStylePicker(false)}
-                style={{
-                  flex: 1,
-                  padding: '4px 8px',
-                  border: '1px solid #ddd',
-                  borderRadius: '3px',
-                  background: '#f5f5f5',
-                  cursor: 'pointer',
-                  fontSize: '11px'
-                }}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </EdgeLabelRenderer>
-      )}
     </>
   );
 };

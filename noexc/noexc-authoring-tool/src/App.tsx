@@ -95,6 +95,7 @@ function Flow() {
   const [nodeIdCounter, setNodeIdCounter] = useState(3);
   const [isShiftPressed, setIsShiftPressed] = useState(false);
   const [selectedNodes, setSelectedNodes] = useState<Node<NodeData>[]>([]);
+  const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const edgeReconnectSuccessful = useRef(true);
@@ -376,7 +377,7 @@ function Flow() {
     };
   }, [selectedNodes, createGroupFromSelectedNodes, ungroupSelectedNodes, removeNodesFromGroup]);
 
-  // Track selected nodes
+  // Track selected nodes and edges
   const handleNodesChange = useCallback((changes: any) => {
     onNodesChange(changes);
     
@@ -385,6 +386,20 @@ function Flow() {
     const selected = currentNodes.filter(node => node.selected);
     setSelectedNodes(selected);
   }, [onNodesChange, getNodes]);
+
+  const handleEdgesChange = useCallback((changes: any) => {
+    onEdgesChange(changes);
+    
+    // Update selected edge
+    const currentEdges = edges;
+    const selectedEdges = currentEdges.filter(edge => edge.selected);
+    setSelectedEdge(selectedEdges.length === 1 ? selectedEdges[0] : null);
+  }, [onEdgesChange, edges]);
+
+  const onSelectionChange = useCallback(({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
+    setSelectedNodes(nodes);
+    setSelectedEdge(edges.length === 1 ? edges[0] : null);
+  }, []);
 
   // Group field editing callbacks
   const onGroupIdChange = useCallback((nodeId: string, newGroupId: string) => {
@@ -451,10 +466,10 @@ function Flow() {
   );
 
   const onPaneClick = useCallback(() => {
-    // Deselect all nodes when clicking on empty space
+    // Deselect all nodes and edges when clicking on empty space
     setNodes((nds) => nds.map(node => ({ ...node, selected: false })));
-    // Close any open style pickers by triggering a re-render
-    setEdges((eds) => [...eds]);
+    setEdges((eds) => eds.map(edge => ({ ...edge, selected: false })));
+    setSelectedEdge(null);
   }, [setNodes, setEdges]);
 
   const onReconnectStart = useCallback(() => {
@@ -724,7 +739,7 @@ function Flow() {
     setEdges((eds) =>
       eds.map((edge) => {
         if (edge.id === edgeId) {
-          return {
+          const resetEdge = {
             ...edge,
             data: {
               ...edge.data,
@@ -734,11 +749,16 @@ function Flow() {
               label: undefined,
             },
           };
+          // Update selected edge if it's the one being reset
+          if (selectedEdge?.id === edgeId) {
+            setSelectedEdge(resetEdge);
+          }
+          return resetEdge;
         }
         return edge;
       })
     );
-  }, [setEdges]);
+  }, [setEdges, selectedEdge]);
 
   // Update nodes with all callback functions
   const nodesWithCallbacks = nodes.map(node => ({
@@ -763,10 +783,31 @@ function Flow() {
     ...edge,
     data: {
       ...edge.data,
-      onLabelChange: onEdgeLabelChange,
-      onStyleChange: onEdgeStyleChange,
-      onDelayChange: onEdgeDelayChange,
-      onColorChange: onEdgeColorChange,
+      onLabelChange: (edgeId: string, newLabel: string) => {
+        onEdgeLabelChange(edgeId, newLabel);
+        // Update selected edge if it's the one being changed
+        if (selectedEdge?.id === edgeId) {
+          setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, label: newLabel } } : null);
+        }
+      },
+      onStyleChange: (edgeId: string, newStyle: 'solid' | 'dashed' | 'dotted') => {
+        onEdgeStyleChange(edgeId, newStyle);
+        if (selectedEdge?.id === edgeId) {
+          setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, style: newStyle } } : null);
+        }
+      },
+      onDelayChange: (edgeId: string, newDelay: number) => {
+        onEdgeDelayChange(edgeId, newDelay);
+        if (selectedEdge?.id === edgeId) {
+          setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, delay: newDelay } } : null);
+        }
+      },
+      onColorChange: (edgeId: string, newColor: string) => {
+        onEdgeColorChange(edgeId, newColor);
+        if (selectedEdge?.id === edgeId) {
+          setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, color: newColor } } : null);
+        }
+      },
       onReset: onEdgeReset,
     },
   }));
@@ -1778,7 +1819,8 @@ function Flow() {
         nodes={nodesWithCallbacks}
         edges={edgesWithCallbacks}
         onNodesChange={handleNodesChange}
-        onEdgesChange={onEdgesChange}
+        onEdgesChange={handleEdgesChange}
+        onSelectionChange={onSelectionChange}
         onConnect={onConnect}
         onReconnect={onReconnect}
         onReconnectStart={onReconnectStart}
@@ -1848,6 +1890,209 @@ function Flow() {
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
             <span style={{ fontSize: '18px', flexShrink: 0 }}>⚠️</span>
             <div>{errorMessage}</div>
+          </div>
+        </div>
+      )}
+
+      {/* Edge Properties Side Panel */}
+      {selectedEdge && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          width: '300px',
+          height: '100vh',
+          backgroundColor: 'white',
+          borderLeft: '1px solid #ddd',
+          boxShadow: '-2px 0 8px rgba(0,0,0,0.1)',
+          zIndex: 1500,
+          padding: '20px',
+          overflowY: 'auto',
+          animation: 'slideInFromRight 0.3s ease-out'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '20px',
+            paddingBottom: '10px',
+            borderBottom: '2px solid #f0f0f0'
+          }}>
+            <h3 style={{ margin: 0, color: '#333', fontSize: '18px' }}>🎨 Edge Properties</h3>
+            <button
+              onClick={() => setSelectedEdge(null)}
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '20px',
+                cursor: 'pointer',
+                color: '#666',
+                padding: '4px'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Edge Info */}
+          <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '6px' }}>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Edge ID</div>
+            <div style={{ fontSize: '14px', fontFamily: 'monospace', color: '#333' }}>{selectedEdge.id}</div>
+          </div>
+
+          {/* Label Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              📝 Label
+            </label>
+            <input
+              type="text"
+              value={selectedEdge.data?.label || ''}
+              onChange={(e) => {
+                const newLabel = e.target.value;
+                onEdgeLabelChange(selectedEdge.id, newLabel);
+                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, label: newLabel } } : null);
+              }}
+              placeholder="@sequence_id | condition | choice::value"
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Format: @sequence_id for cross-sequence, condition for routes, choice::value for choices
+            </div>
+          </div>
+
+          {/* Style Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              ✏️ Style
+            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {['solid', 'dashed', 'dotted'].map(style => (
+                <button
+                  key={style}
+                  onClick={() => {
+                    onEdgeStyleChange(selectedEdge.id, style as any);
+                    setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, style } } : null);
+                  }}
+                  style={{
+                    padding: '10px 12px',
+                    border: '2px solid',
+                    borderColor: selectedEdge.data?.style === style ? '#2196f3' : '#ddd',
+                    borderRadius: '6px',
+                    background: selectedEdge.data?.style === style ? '#e3f2fd' : 'white',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: selectedEdge.data?.style === style ? 'bold' : 'normal',
+                    textAlign: 'left'
+                  }}
+                >
+                  {style === 'solid' && '--- Solid'}
+                  {style === 'dashed' && '- - - Dashed'}
+                  {style === 'dotted' && '. . . Dotted'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Color Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              🎨 Color
+            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {[
+                { color: '#4caf50', name: 'Green' },
+                { color: '#2196f3', name: 'Blue' },
+                { color: '#f44336', name: 'Red' }
+              ].map(({ color, name }) => (
+                <button
+                  key={color}
+                  onClick={() => {
+                    onEdgeColorChange(selectedEdge.id, color);
+                    setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, color } } : null);
+                  }}
+                  style={{
+                    padding: '10px 12px',
+                    border: '2px solid',
+                    borderColor: selectedEdge.data?.color === color ? color : '#ddd',
+                    borderRadius: '6px',
+                    background: selectedEdge.data?.color === color ? `${color}15` : 'white',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: selectedEdge.data?.color === color ? 'bold' : 'normal',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <div style={{
+                    width: '16px',
+                    height: '16px',
+                    backgroundColor: color,
+                    borderRadius: '3px',
+                    border: '1px solid #ddd'
+                  }}></div>
+                  {name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Delay Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              ⏱️ Delay (ms)
+            </label>
+            <input
+              type="number"
+              value={selectedEdge.data?.delay || 0}
+              onChange={(e) => {
+                const newDelay = parseInt(e.target.value) || 0;
+                onEdgeDelayChange(selectedEdge.id, newDelay);
+                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, delay: newDelay } } : null);
+              }}
+              min="0"
+              step="100"
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Delay before showing next message
+            </div>
+          </div>
+
+          {/* Reset Section */}
+          <div style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
+            <button
+              onClick={() => {
+                onEdgeReset(selectedEdge.id);
+                setSelectedEdge(null);
+              }}
+              style={{
+                width: '100%',
+                padding: '12px',
+                border: '2px solid #f44336',
+                borderRadius: '6px',
+                background: '#ffebee',
+                color: '#d32f2f',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold'
+              }}
+            >
+              🔄 Reset All Properties
+            </button>
           </div>
         </div>
       )}

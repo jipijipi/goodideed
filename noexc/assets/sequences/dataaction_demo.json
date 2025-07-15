@@ -1,0 +1,113 @@
+{
+  "sequenceId": "dataaction_demo",
+  "name": "DataAction Demo",
+  "description": "Demonstrates the new dataAction node functionality",
+  "messages": [
+    {
+      "id": 1,
+      "type": "bot",
+      "text": "Welcome to the scoring system! Let's start your score tracking.",
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "set",
+          "key": "user.score",
+          "value": 0
+        },
+        {
+          "type": "set",
+          "key": "user.streak",
+          "value": 0
+        },
+        {
+          "type": "set",
+          "key": "user.level",
+          "value": 1
+        }
+      ],
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "type": "bot",
+      "text": "Great job! You earned 10 points.",
+      "nextMessageId": 4
+    },
+    {
+      "id": 4,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "increment",
+          "key": "user.score",
+          "value": 10
+        },
+        {
+          "type": "increment",
+          "key": "user.streak",
+          "value": 1
+        }
+      ],
+      "nextMessageId": 5
+    },
+    {
+      "id": 5,
+      "type": "bot",
+      "text": "Your current score is {user.score|0} and your streak is {user.streak|0}!",
+      "nextMessageId": 6
+    },
+    {
+      "id": 6,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "Continue scoring",
+          "nextMessageId": 7
+        },
+        {
+          "text": "Reset my progress",
+          "nextMessageId": 8
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "increment",
+          "key": "user.score",
+          "value": 5
+        }
+      ],
+      "nextMessageId": 5
+    },
+    {
+      "id": 8,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "reset",
+          "key": "user.score",
+          "value": 0
+        },
+        {
+          "type": "reset",
+          "key": "user.streak",
+          "value": 0
+        }
+      ],
+      "nextMessageId": 9
+    },
+    {
+      "id": 9,
+      "type": "bot",
+      "text": "Your progress has been reset. Your score is now {user.score|0}.",
+      "nextMessageId": 5
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import 'user_data_service.dart';
 import 'text_templating_service.dart';
 import 'text_variants_service.dart';
 import 'condition_evaluator.dart';
+import 'data_action_processor.dart';
 import '../models/route_condition.dart';
 
 class ChatService {
@@ -18,6 +19,7 @@ class ChatService {
   final TextTemplatingService? _templatingService;
   final TextVariantsService? _variantsService;
   final ConditionEvaluator? _conditionEvaluator;
+  final DataActionProcessor? _dataActionProcessor;
   
   // Callback for notifying UI about sequence changes from autoroutes
   Future<void> Function(String sequenceId, int startMessageId)? _onSequenceSwitch;
@@ -31,6 +33,9 @@ class ChatService {
        _variantsService = variantsService,
        _conditionEvaluator = userDataService != null 
            ? ConditionEvaluator(userDataService) 
+           : null,
+       _dataActionProcessor = userDataService != null 
+           ? DataActionProcessor(userDataService) 
            : null;
 
   /// Set callback for sequence switching notifications
@@ -110,6 +115,12 @@ class ChatService {
       // Handle autoroute messages
       if (msg.isAutoRoute) {
         currentId = await _processAutoRoute(msg);
+        continue; // Skip adding to display
+      }
+      
+      // Handle dataAction messages
+      if (msg.isDataAction) {
+        currentId = await _processDataAction(msg);
         continue; // Skip adding to display
       }
       
@@ -244,6 +255,22 @@ class ChatService {
     // If no routes matched, use the message's nextMessageId
     print('🚏 AUTOROUTE: No routes matched, using fallback nextMessageId: ${routeMessage.nextMessageId}');
     return routeMessage.nextMessageId;
+  }
+
+  /// Process dataAction messages by executing data modifications
+  Future<int?> _processDataAction(ChatMessage dataActionMessage) async {
+    if (_dataActionProcessor == null || dataActionMessage.dataActions == null) {
+      return dataActionMessage.nextMessageId;
+    }
+
+    try {
+      await _dataActionProcessor!.processActions(dataActionMessage.dataActions!);
+    } catch (e) {
+      // Silent error handling - dataActions should not fail the message flow
+    }
+    
+    // Continue to next message
+    return dataActionMessage.nextMessageId;
   }
 
   /// Execute a route condition by loading sequence or returning message ID

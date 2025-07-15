@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/choice.dart';
+import 'package:noexc/models/data_action.dart';
 import 'package:noexc/constants/app_constants.dart';
 
 void main() {
@@ -679,6 +680,201 @@ void main() {
 
         // Assert
         expect(message.text, 'This text should be preserved for regular messages');
+        expect(message.isChoice, false);
+        expect(message.isTextInput, false);
+        expect(message.isAutoRoute, false);
+      });
+    });
+
+    group('DataAction Messages', () {
+      test('should create dataAction message with actions', () {
+        // Arrange
+        final actions = [
+          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+          DataAction(type: DataActionType.increment, key: 'user.score', value: 10),
+        ];
+
+        // Act
+        final message = ChatMessage(
+          id: 1,
+          text: '',
+          type: MessageType.dataAction,
+          dataActions: actions,
+          nextMessageId: 2,
+        );
+
+        // Assert
+        expect(message.type, MessageType.dataAction);
+        expect(message.isDataAction, true);
+        expect(message.dataActions, actions);
+        expect(message.text, '');
+        expect(message.nextMessageId, 2);
+      });
+
+      test('should create dataAction message from JSON', () {
+        // Arrange
+        final json = {
+          'id': 1,
+          'type': 'dataAction',
+          'dataActions': [
+            {
+              'type': 'set',
+              'key': 'user.name',
+              'value': 'John',
+            },
+            {
+              'type': 'increment',
+              'key': 'user.score',
+              'value': 10,
+            },
+          ],
+          'nextMessageId': 2,
+        };
+
+        // Act
+        final message = ChatMessage.fromJson(json);
+
+        // Assert
+        expect(message.type, MessageType.dataAction);
+        expect(message.isDataAction, true);
+        expect(message.dataActions, isNotNull);
+        expect(message.dataActions!.length, 2);
+        expect(message.dataActions![0].type, DataActionType.set);
+        expect(message.dataActions![0].key, 'user.name');
+        expect(message.dataActions![0].value, 'John');
+        expect(message.dataActions![1].type, DataActionType.increment);
+        expect(message.dataActions![1].key, 'user.score');
+        expect(message.dataActions![1].value, 10);
+        expect(message.nextMessageId, 2);
+      });
+
+      test('should serialize dataAction message to JSON', () {
+        // Arrange
+        final actions = [
+          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+          DataAction(type: DataActionType.increment, key: 'user.score', value: 10),
+        ];
+
+        final message = ChatMessage(
+          id: 1,
+          text: '',
+          type: MessageType.dataAction,
+          dataActions: actions,
+          nextMessageId: 2,
+        );
+
+        // Act
+        final json = message.toJson();
+
+        // Assert
+        expect(json['type'], 'dataAction');
+        expect(json['isDataAction'], true);
+        expect(json['dataActions'], isNotNull);
+        expect(json['dataActions'].length, 2);
+        expect(json['dataActions'][0]['type'], 'set');
+        expect(json['dataActions'][0]['key'], 'user.name');
+        expect(json['dataActions'][0]['value'], 'John');
+        expect(json['dataActions'][1]['type'], 'increment');
+        expect(json['dataActions'][1]['key'], 'user.score');
+        expect(json['dataActions'][1]['value'], 10);
+        expect(json['nextMessageId'], 2);
+      });
+
+      test('should enforce empty text for dataAction messages', () {
+        // Arrange & Act
+        final message = ChatMessage(
+          id: 1,
+          text: '',
+          type: MessageType.dataAction,
+          dataActions: [
+            DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+          ],
+        );
+
+        // Assert
+        expect(message.text, '');
+        expect(message.type, MessageType.dataAction);
+        expect(message.isDataAction, true);
+      });
+
+      test('should handle dataAction message without actions', () {
+        // Arrange
+        final json = {
+          'id': 1,
+          'type': 'dataAction',
+          'nextMessageId': 2,
+        };
+
+        // Act
+        final message = ChatMessage.fromJson(json);
+
+        // Assert
+        expect(message.type, MessageType.dataAction);
+        expect(message.isDataAction, true);
+        expect(message.dataActions, isNull);
+        expect(message.nextMessageId, 2);
+      });
+
+      test('should handle expandToIndividualMessages for dataAction', () {
+        // Arrange
+        final actions = [
+          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+        ];
+
+        final message = ChatMessage(
+          id: 1,
+          text: '',
+          type: MessageType.dataAction,
+          dataActions: actions,
+          nextMessageId: 2,
+        );
+
+        // Act
+        final expandedMessages = message.expandToIndividualMessages();
+
+        // Assert
+        expect(expandedMessages.length, 1);
+        expect(expandedMessages[0].type, MessageType.dataAction);
+        expect(expandedMessages[0].dataActions, actions);
+        expect(expandedMessages[0].text, '');
+        expect(expandedMessages[0].nextMessageId, 2);
+      });
+
+      test('should preserve dataActions in single message when expanding (dataAction messages have no text)', () {
+        // Arrange
+        final actions = [
+          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+        ];
+
+        final message = ChatMessage(
+          id: 1,
+          text: '',
+          type: MessageType.dataAction,
+          dataActions: actions,
+          nextMessageId: 2,
+        );
+
+        // Act
+        final expandedMessages = message.expandToIndividualMessages();
+
+        // Assert - dataAction messages with no text should not expand
+        expect(expandedMessages.length, 1);
+        expect(expandedMessages[0].type, MessageType.dataAction);
+        expect(expandedMessages[0].dataActions, actions);
+        expect(expandedMessages[0].text, '');
+        expect(expandedMessages[0].nextMessageId, 2);
+      });
+
+      test('should handle convenience getter isDataAction', () {
+        // Arrange
+        final message = ChatMessage(
+          id: 1,
+          text: '',
+          type: MessageType.dataAction,
+        );
+
+        // Act & Assert
+        expect(message.isDataAction, true);
         expect(message.isChoice, false);
         expect(message.isTextInput, false);
         expect(message.isAutoRoute, false);

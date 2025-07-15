@@ -1,5 +1,6 @@
 import 'choice.dart';
 import 'route_condition.dart';
+import 'data_action.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 
@@ -9,6 +10,7 @@ enum MessageType {
   choice,
   textInput,
   autoroute,
+  dataAction,
 }
 
 class ChatMessage {
@@ -23,6 +25,7 @@ class ChatMessage {
   final String placeholderText;
   final String? selectedChoiceText;
   final List<RouteCondition>? routes;
+  final List<DataAction>? dataActions;
 
   ChatMessage({
     required this.id,
@@ -36,6 +39,7 @@ class ChatMessage {
     this.placeholderText = AppConstants.defaultPlaceholderText,
     this.selectedChoiceText,
     this.routes,
+    this.dataActions,
   }) :
        assert(
          type != MessageType.choice || text.isEmpty,
@@ -48,6 +52,10 @@ class ChatMessage {
        assert(
          type != MessageType.autoroute || text.isEmpty,
          'Autoroute messages should not have text content'
+       ),
+       assert(
+         type != MessageType.dataAction || text.isEmpty,
+         'DataAction messages should not have text content'
        );
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -62,6 +70,13 @@ class ChatMessage {
     if (json['routes'] != null) {
       routes = (json['routes'] as List)
           .map((routeJson) => RouteCondition.fromJson(routeJson))
+          .toList();
+    }
+
+    List<DataAction>? dataActions;
+    if (json['dataActions'] != null) {
+      dataActions = (json['dataActions'] as List)
+          .map((actionJson) => DataAction.fromJson(actionJson))
           .toList();
     }
 
@@ -97,7 +112,8 @@ class ChatMessage {
     String messageText = json['text'] as String? ?? '';
     if (messageType == MessageType.choice || 
         messageType == MessageType.textInput || 
-        messageType == MessageType.autoroute) {
+        messageType == MessageType.autoroute ||
+        messageType == MessageType.dataAction) {
       messageText = '';
     }
     
@@ -113,6 +129,7 @@ class ChatMessage {
       placeholderText: json['placeholderText'] as String? ?? AppConstants.defaultPlaceholderText,
       selectedChoiceText: json['selectedChoiceText'] as String?,
       routes: routes,
+      dataActions: dataActions,
     );
   }
 
@@ -134,6 +151,9 @@ class ChatMessage {
     }
     if (type == MessageType.autoroute) {
       json['isAutoRoute'] = true;
+    }
+    if (type == MessageType.dataAction) {
+      json['isDataAction'] = true;
     }
 
     if (choices != null) {
@@ -160,6 +180,10 @@ class ChatMessage {
       json['routes'] = routes!.map((route) => route.toJson()).toList();
     }
 
+    if (dataActions != null) {
+      json['dataActions'] = dataActions!.map((action) => action.toJson()).toList();
+    }
+
     return json;
   }
 
@@ -170,6 +194,7 @@ class ChatMessage {
   bool get isChoice => type == MessageType.choice;
   bool get isTextInput => type == MessageType.textInput;
   bool get isAutoRoute => type == MessageType.autoroute;
+  bool get isDataAction => type == MessageType.dataAction;
   
   /// Returns true if this message has multiple texts (contains separator)
   bool get hasMultipleTexts => text.contains(ChatConfig.multiTextSeparator);
@@ -201,7 +226,7 @@ class ChatMessage {
     for (int i = 0; i < textList.length; i++) {
       final isLast = i == textList.length - 1;
       final messageType = isLast ? type : MessageType.bot; // Only last message keeps original type
-      final messageText = isLast && (type == MessageType.choice || type == MessageType.textInput || type == MessageType.autoroute) 
+      final messageText = isLast && (type == MessageType.choice || type == MessageType.textInput || type == MessageType.autoroute || type == MessageType.dataAction) 
           ? '' : textList[i]; // Interactive messages have no text
       
       messages.add(ChatMessage(
@@ -216,6 +241,7 @@ class ChatMessage {
         placeholderText: placeholderText,
         selectedChoiceText: selectedChoiceText,
         routes: isLast ? routes : null,
+        dataActions: isLast ? dataActions : null,
       ));
     }
     

@@ -23,6 +23,9 @@ class ChatService {
   
   // Callback for notifying UI about sequence changes from autoroutes
   Future<void> Function(String sequenceId, int startMessageId)? _onSequenceSwitch;
+  
+  // Callback for notifying UI about events from dataAction triggers
+  Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
 
   ChatService({
     UserDataService? userDataService,
@@ -36,11 +39,32 @@ class ChatService {
            : null,
        _dataActionProcessor = userDataService != null 
            ? DataActionProcessor(userDataService) 
-           : null;
+           : null {
+    // Set up event callback for dataActionProcessor
+    if (_dataActionProcessor != null) {
+      _dataActionProcessor!.setEventCallback(_handleEvent);
+    }
+  }
 
   /// Set callback for sequence switching notifications
   void setSequenceSwitchCallback(Future<void> Function(String sequenceId, int startMessageId) callback) {
     _onSequenceSwitch = callback;
+  }
+
+  /// Set callback for event notifications from dataAction triggers
+  void setEventCallback(Future<void> Function(String eventType, Map<String, dynamic> data) callback) {
+    _onEvent = callback;
+  }
+
+  /// Handle events from dataActionProcessor
+  Future<void> _handleEvent(String eventType, Map<String, dynamic> data) async {
+    if (_onEvent != null) {
+      try {
+        await _onEvent!(eventType, data);
+      } catch (e) {
+        // Silent error handling
+      }
+    }
   }
 
   /// Load a specific chat sequence by ID

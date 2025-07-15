@@ -3,8 +3,16 @@ import 'user_data_service.dart';
 
 class DataActionProcessor {
   final UserDataService _userDataService;
+  
+  // Event callback for UI notifications
+  Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
 
   DataActionProcessor(this._userDataService);
+
+  /// Set callback for event notifications
+  void setEventCallback(Future<void> Function(String eventType, Map<String, dynamic> data) callback) {
+    _onEvent = callback;
+  }
 
   Future<void> processActions(List<DataAction> actions) async {
     for (final action in actions) {
@@ -26,6 +34,9 @@ class DataActionProcessor {
       case DataActionType.reset:
         await _resetValue(action.key, action.value ?? 0);
         break;
+      case DataActionType.trigger:
+        await _processTrigger(action);
+        break;
     }
   }
 
@@ -43,5 +54,15 @@ class DataActionProcessor {
 
   Future<void> _resetValue(String key, dynamic resetValue) async {
     await _userDataService.storeValue(key, resetValue);
+  }
+
+  Future<void> _processTrigger(DataAction action) async {
+    if (_onEvent != null && action.event != null) {
+      try {
+        await _onEvent!(action.event!, action.data ?? {});
+      } catch (e) {
+        // Silent error handling - events should not fail the message flow
+      }
+    }
   }
 }

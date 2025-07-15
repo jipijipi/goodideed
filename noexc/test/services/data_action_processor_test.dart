@@ -199,5 +199,144 @@ void main() {
       // Should not throw error
       expect(true, true);
     });
+
+    test('should process trigger action', () async {
+      String? capturedEvent;
+      Map<String, dynamic>? capturedData;
+
+      // Set up event callback
+      processor.setEventCallback((eventType, data) async {
+        capturedEvent = eventType;
+        capturedData = data;
+      });
+
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'achievement_unlocked',
+        data: {
+          'title': 'Test Achievement',
+          'description': 'Test description',
+        },
+      );
+
+      await processor.processActions([action]);
+
+      expect(capturedEvent, 'achievement_unlocked');
+      expect(capturedData, {
+        'title': 'Test Achievement',
+        'description': 'Test description',
+      });
+    });
+
+    test('should process trigger action without data', () async {
+      String? capturedEvent;
+      Map<String, dynamic>? capturedData;
+
+      // Set up event callback
+      processor.setEventCallback((eventType, data) async {
+        capturedEvent = eventType;
+        capturedData = data;
+      });
+
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'simple_event',
+      );
+
+      await processor.processActions([action]);
+
+      expect(capturedEvent, 'simple_event');
+      expect(capturedData, {});
+    });
+
+    test('should handle trigger action without callback', () async {
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'achievement_unlocked',
+      );
+
+      // Should not throw error even without callback
+      await processor.processActions([action]);
+      
+      expect(true, true);
+    });
+
+    test('should handle trigger action without event', () async {
+      String? capturedEvent;
+      
+      // Set up event callback
+      processor.setEventCallback((eventType, data) async {
+        capturedEvent = eventType;
+      });
+
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+      );
+
+      await processor.processActions([action]);
+
+      // Should not trigger callback when event is null
+      expect(capturedEvent, isNull);
+    });
+
+    test('should handle error in event callback gracefully', () async {
+      // Set up event callback that throws an error
+      processor.setEventCallback((eventType, data) async {
+        throw Exception('Test error');
+      });
+
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'achievement_unlocked',
+      );
+
+      // Should not throw error even if callback fails
+      await processor.processActions([action]);
+      
+      expect(true, true);
+    });
+
+    test('should process mixed actions with triggers', () async {
+      final events = <String>[];
+      
+      // Set up event callback
+      processor.setEventCallback((eventType, data) async {
+        events.add(eventType);
+      });
+
+      final actions = [
+        DataAction(
+          type: DataActionType.set,
+          key: 'user.score',
+          value: 50,
+        ),
+        DataAction(
+          type: DataActionType.trigger,
+          key: 'event.key',
+          event: 'score_updated',
+        ),
+        DataAction(
+          type: DataActionType.increment,
+          key: 'user.score',
+          value: 50,
+        ),
+        DataAction(
+          type: DataActionType.trigger,
+          key: 'event.key',
+          event: 'achievement_unlocked',
+        ),
+      ];
+
+      await processor.processActions(actions);
+
+      final score = await userDataService.getValue<int>('user.score');
+      expect(score, 100);
+      expect(events, ['score_updated', 'achievement_unlocked']);
+    });
   });
 }

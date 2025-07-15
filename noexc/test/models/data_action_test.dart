@@ -129,5 +129,97 @@ void main() {
       expect(action.key, 'user.name');
       expect(action.value, 'John');
     });
+
+    test('should create DataAction with trigger type', () {
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'achievement_unlocked',
+        data: {
+          'title': 'Test Achievement',
+          'description': 'Test description',
+        },
+      );
+
+      expect(action.type, DataActionType.trigger);
+      expect(action.key, 'event.key');
+      expect(action.event, 'achievement_unlocked');
+      expect(action.data, {
+        'title': 'Test Achievement',
+        'description': 'Test description',
+      });
+    });
+
+    test('should create DataAction with trigger type from JSON', () {
+      final json = {
+        'type': 'trigger',
+        'key': 'event.key',
+        'event': 'achievement_unlocked',
+        'data': {
+          'title': 'Test Achievement',
+          'description': 'Test description',
+        },
+      };
+
+      final action = DataAction.fromJson(json);
+
+      expect(action.type, DataActionType.trigger);
+      expect(action.key, 'event.key');
+      expect(action.event, 'achievement_unlocked');
+      expect(action.data, {
+        'title': 'Test Achievement',
+        'description': 'Test description',
+      });
+    });
+
+    test('should serialize trigger DataAction to JSON', () {
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'achievement_unlocked',
+        data: {
+          'title': 'Test Achievement',
+          'description': 'Test description',
+        },
+      );
+
+      final json = action.toJson();
+
+      expect(json['type'], 'trigger');
+      expect(json['key'], 'event.key');
+      expect(json['event'], 'achievement_unlocked');
+      expect(json['data'], {
+        'title': 'Test Achievement',
+        'description': 'Test description',
+      });
+    });
+
+    test('should create trigger DataAction without data', () {
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'simple_event',
+      );
+
+      expect(action.type, DataActionType.trigger);
+      expect(action.key, 'event.key');
+      expect(action.event, 'simple_event');
+      expect(action.data, isNull);
+    });
+
+    test('should serialize trigger DataAction without data', () {
+      final action = DataAction(
+        type: DataActionType.trigger,
+        key: 'event.key',
+        event: 'simple_event',
+      );
+
+      final json = action.toJson();
+
+      expect(json['type'], 'trigger');
+      expect(json['key'], 'event.key');
+      expect(json['event'], 'simple_event');
+      expect(json.containsKey('data'), false);
+    });
   });
 }

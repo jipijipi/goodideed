@@ -68,11 +68,13 @@ The authoring tool supports advanced cross-sequence navigation:
 ### Key Components
 
 #### Models (`lib/models/`)
-- **ChatMessage** - Core message model with MessageType enum and multi-text support using `|||` separator
+- **ChatMessage** - Core message model with MessageType enum, multi-text support using `|||` separator
 - **ChatSequence** - Container for complete conversation flows
 - **Choice** - User interaction options with optional custom values
 - **RouteCondition** - Conditional routing logic
-- **MessageType** - Enum defining message types: bot, user, choice, textInput, autoroute
+- **MessageType** - Enum defining message types: bot, user, choice, textInput, autoroute, dataAction
+- **DataAction** - Model for data modification operations (set, increment, decrement, reset, trigger)
+
 
 #### Services (`lib/services/`)
 - **ChatService** - Main service for loading sequences and processing messages
@@ -82,12 +84,14 @@ The authoring tool supports advanced cross-sequence navigation:
 - **TextVariantsService** - Random text variation from asset files
 - **ConditionEvaluator** - Evaluates routing conditions with compound logic support (&&, ||)
 - **ErrorHandler** - Centralized error handling and logging service
+- **DataActionProcessor** - Processes data modification operations and event triggers
 
 #### UI Architecture (`lib/widgets/`)
 - **ChatScreen** - Main container with state management
 - **ChatStateManager** - Handles all chat state and message flow
 - **ChatMessageList** - Displays messages with automatic scrolling
 - **UserPanelOverlay** - Debug panel for user data and sequence management
+
 
 #### Validation System (`lib/validation/`)
 - **SequenceValidator** - Validates JSON sequence structure and content
@@ -103,7 +107,7 @@ The authoring tool supports advanced cross-sequence navigation:
 - `assets/sequences/` - JSON conversation flows
 - `assets/variants/` - Text variant files (format: `{sequenceId}_message_{messageId}.txt`)
 - Available sequences defined in `AppConstants.availableSequences`
-- Current sequences: onboarding, tutorial, support, menu, autoroute_debug, comprehensive_test
+- Current sequences: onboarding, tutorial, support, menu, autoroute_debug, comprehensive_test, image_demo
 
 ### Storage System
 - **Local Storage**: Uses shared_preferences for user data persistence
@@ -237,12 +241,13 @@ The app uses a **MessageType enum** system that replaces legacy boolean flags:
 - **choice**: Present buttons with optional data storage
 - **textInput**: Collect user input with storage
 - **autoroute**: Invisible conditional routing
+- **dataAction**: Data modification operations (set, increment, decrement, reset, trigger)
 
 #### JSON Format
 **New format** (preferred):
 ```json
 {
-  "id": "msg1",
+  "id": 1,
   "type": "bot",
   "text": "Hello! How can I help you?"
 }
@@ -251,7 +256,7 @@ The app uses a **MessageType enum** system that replaces legacy boolean flags:
 **Legacy format** (backward compatible):
 ```json
 {
-  "id": "msg1",
+  "id": 1,
   "isChoice": true,
   "text": "Choose an option:",
   "choices": [...]
@@ -335,3 +340,42 @@ flutter analyze            # Static analysis
 - `choice::value` - Store choice value  
 - `condition` - Auto-route condition
 - `default` - Default route
+
+## Data Action System
+
+### DataAction Types
+- **set**: Set a value in user data storage
+- **increment**: Increment numeric values (default: +1)
+- **decrement**: Decrement numeric values (default: -1)
+- **reset**: Reset a value to 0 or null
+- **trigger**: Fire events for achievements, notifications, etc.
+
+### DataAction JSON Format
+```json
+{
+  "id": 1,
+  "type": "dataAction",
+  "action": {
+    "type": "increment",
+    "key": "user.streak",
+    "value": 1
+  },
+  "nextMessageId": 2
+}
+```
+
+### Event Trigger System
+```json
+{
+  "id": 3,
+  "type": "dataAction",
+  "action": {
+    "type": "trigger",
+    "event": "achievement_unlocked",
+    "data": {
+      "achievement": "first_streak",
+      "title": "Getting Started",
+      "description": "Started your first streak"
+    }
+  }
+}

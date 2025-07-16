@@ -4,6 +4,11 @@
   "description": "Check if the user completed its task",
   "messages": [
     {
+      "id": 53,
+      "text": "{user.task|No task yet}? Really?",
+      "nextMessageId": 1
+    },
+    {
       "id": 1,
       "type": "autoroute",
       "routes": [
@@ -22,12 +27,12 @@
       "type": "autoroute",
       "routes": [
         {
-          "condition": "user.taskDeadline==overdue",
-          "nextMessageId": 23
-        },
-        {
           "default": true,
           "nextMessageId": 22
+        },
+        {
+          "condition": "user.taskDeadline==overdue",
+          "nextMessageId": 54
         }
       ]
     },
@@ -69,6 +74,11 @@
     {
       "id": 29,
       "text": "I'm not surprised|||Don't change"
+    },
+    {
+      "id": 54,
+      "text": "Did... Did you do it? Did you do {user.task| your task}?",
+      "nextMessageId": 23
     },
     {
       "id": 23,

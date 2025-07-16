@@ -1207,7 +1207,8 @@ function Flow() {
       }
     }
     
-    return parseInt(edge.target);
+    // FIX: Use target node's editable nodeId instead of internal React Flow ID
+    return parseInt(targetNode?.data.nodeId || edge.target);
   }, [nodes]);
 
   const extractChoicesFromEdges = useCallback((nodeId: string, edges: Edge[], groupNodes?: Node<NodeData>[], allNodes?: Node<NodeData>[]) => {
@@ -1258,11 +1259,13 @@ function Flow() {
               }
             } else {
               // Same group - normal internal navigation
-              choice.nextMessageId = parseInt(edge.target);
+              // FIX: Use target node's editable nodeId instead of internal React Flow ID
+              choice.nextMessageId = parseInt(targetNode.data.nodeId || edge.target);
             }
           } else {
             // Fallback to original behavior
-            choice.nextMessageId = parseInt(edge.target);
+            // FIX: Use target node's editable nodeId instead of internal React Flow ID
+            choice.nextMessageId = parseInt(targetNode?.data.nodeId || edge.target);
           }
         }
         
@@ -1311,11 +1314,13 @@ function Flow() {
               }
             } else {
               // Same group - normal internal navigation
-              route.nextMessageId = parseInt(edge.target);
+              // FIX: Use target node's editable nodeId instead of internal React Flow ID
+              route.nextMessageId = parseInt(targetNode.data.nodeId || edge.target);
             }
           } else {
             // Fallback to original behavior
-            route.nextMessageId = parseInt(edge.target);
+            // FIX: Use target node's editable nodeId instead of internal React Flow ID
+            route.nextMessageId = parseInt(targetNode?.data.nodeId || edge.target);
           }
         }
         

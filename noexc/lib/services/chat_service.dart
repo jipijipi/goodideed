@@ -158,6 +158,22 @@ class ChatService {
       // Stop at choice messages or text input messages - let UI handle the interaction
       if (msg.isChoice || msg.isTextInput) break;
       
+      // Check for universal cross-sequence navigation
+      if (msg.sequenceId != null) {
+        final startMessageId = ChatConfig.initialMessageId;
+        
+        // Notify UI about sequence change via callback
+        if (_onSequenceSwitch != null) {
+          await _onSequenceSwitch!(msg.sequenceId!, startMessageId);
+          break; // UI handles continuation
+        } else {
+          // Fallback: Load sequence directly
+          await loadSequence(msg.sequenceId!);
+          currentId = startMessageId;
+          continue;
+        }
+      }
+      
       // Move to next message
       if (msg.nextMessageId != null) {
         currentId = msg.nextMessageId;
@@ -251,14 +267,16 @@ class ChatService {
 
     print('🚏 AUTOROUTE: Found ${routeMessage.routes!.length} routes to evaluate');
     
-    // Evaluate conditions in order
+    // FIXED: First evaluate all conditional routes, then fall back to default
+    // First pass: Evaluate all conditional routes
     for (int i = 0; i < routeMessage.routes!.length; i++) {
       final route = routeMessage.routes![i];
-      print('🚏 AUTOROUTE: Evaluating route ${i + 1}/${routeMessage.routes!.length}');
-      // Check if this is a default route (no condition)
+      print('🚏 AUTOROUTE: Evaluating conditional route ${i + 1}/${routeMessage.routes!.length}');
+      
+      // Skip default routes in first pass
       if (route.isDefault) {
-        print('🚏 AUTOROUTE: Route ${i + 1} is default route, executing');
-        return await _executeRoute(route);
+        print('🚏 AUTOROUTE: Route ${i + 1} is default route, skipping in first pass');
+        continue;
       }
       
       // Evaluate condition if present
@@ -273,6 +291,15 @@ class ChatService {
         print('🚏 AUTOROUTE: Route ${i + 1} does not match, trying next route');
       } else {
         print('🚏 AUTOROUTE: Route ${i + 1} has no condition and is not default, skipping');
+      }
+    }
+    
+    // Second pass: Execute default route if no conditions matched
+    for (int i = 0; i < routeMessage.routes!.length; i++) {
+      final route = routeMessage.routes![i];
+      if (route.isDefault) {
+        print('🚏 AUTOROUTE: No conditions matched, executing default route ${i + 1}');
+        return await _executeRoute(route);
       }
     }
     

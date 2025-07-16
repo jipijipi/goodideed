@@ -21,6 +21,7 @@ class ChatMessage {
   final MessageType type;
   final List<Choice>? choices;
   final int? nextMessageId;
+  final String? sequenceId;  // Universal cross-sequence navigation
   final String? storeKey;
   final String placeholderText;
   final String? selectedChoiceText;
@@ -35,6 +36,7 @@ class ChatMessage {
     this.type = MessageType.bot,
     this.choices,
     this.nextMessageId,
+    this.sequenceId,  // Universal cross-sequence navigation
     this.storeKey,
     this.placeholderText = AppConstants.defaultPlaceholderText,
     this.selectedChoiceText,
@@ -125,6 +127,7 @@ class ChatMessage {
       type: messageType,
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
+      sequenceId: json['sequenceId'] as String?,  // Universal cross-sequence navigation
       storeKey: json['storeKey'] as String?,
       placeholderText: json['placeholderText'] as String? ?? AppConstants.defaultPlaceholderText,
       selectedChoiceText: json['selectedChoiceText'] as String?,
@@ -162,6 +165,10 @@ class ChatMessage {
 
     if (nextMessageId != null) {
       json['nextMessageId'] = nextMessageId!;
+    }
+
+    if (sequenceId != null) {
+      json['sequenceId'] = sequenceId!;
     }
 
     if (storeKey != null) {
@@ -237,6 +244,7 @@ class ChatMessage {
         type: messageType,
         choices: isLast ? choices : null,
         nextMessageId: isLast ? nextMessageId : null, // Only last message has next ID
+        sequenceId: isLast ? sequenceId : null, // Only last message has sequence navigation
         storeKey: isLast ? storeKey : null, // Only last message stores data
         placeholderText: placeholderText,
         selectedChoiceText: selectedChoiceText,

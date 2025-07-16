@@ -1,0 +1,31 @@
+{
+  "sequenceId": "welcome_seq",
+  "name": "Welcome",
+  "description": "Checkin Sequence",
+  "messages": [
+    {
+      "id": 1,
+      "text": "Well |||well||| well",
+      "nextMessageId": 2
+    },
+    {
+      "id": 3,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "user.isOnboarded==true",
+          "nextMessageId": 2
+        },
+        {
+          "default": true,
+          "sequenceId": "taskChecking_seq"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Well well well, guess who's back...",
+      "sequenceId": "taskChecking_seq"
+    }
+  ]
+}

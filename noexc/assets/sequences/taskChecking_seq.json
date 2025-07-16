@@ -1,0 +1,150 @@
+{
+  "sequenceId": "taskChecking_seq",
+  "name": "Task Checking",
+  "description": "Check if the user completed its task",
+  "messages": [
+    {
+      "id": 1,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "user.task!=null",
+          "nextMessageId": 20
+        },
+        {
+          "default": true,
+          "sequenceId": "taskSetting_seq"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "user.taskDeadline==overdue",
+          "nextMessageId": 23
+        },
+        {
+          "default": true,
+          "nextMessageId": 22
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "text": "Soooo, have you completed {user.task|your shit} yet?",
+      "nextMessageId": 26
+    },
+    {
+      "id": 26,
+      "type": "choice",
+      "storeKey": "user.taskDeadline",
+      "choices": [
+        {
+          "text": "As a matter of fact, yes...",
+          "value": "completed",
+          "nextMessageId": 27
+        },
+        {
+          "text": "I'm on it as we speak !",
+          "value": "ongoing",
+          "nextMessageId": 28
+        },
+        {
+          "text": "Chill, it's not due until noon...",
+          "value": "overdue",
+          "nextMessageId": 29
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "text": "It can't be...|||Well congrats"
+    },
+    {
+      "id": 28,
+      "text": "Alriiiight, keep it up"
+    },
+    {
+      "id": 29,
+      "text": "I'm not surprised|||Don't change"
+    },
+    {
+      "id": 23,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "I'm on it !",
+          "nextMessageId": 31
+        },
+        {
+          "text": "You bet I did!",
+          "nextMessageId": 32
+        },
+        {
+          "text": "I... I did not...",
+          "nextMessageId": 33
+        }
+      ]
+    },
+    {
+      "id": 31,
+      "text": "Right... Consider yourself on notice|||I'm watching you",
+      "nextMessageId": 34
+    },
+    {
+      "id": 34,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "set",
+          "key": "user.onNotice",
+          "value": true
+        }
+      ],
+      "nextMessageId": 38
+    },
+    {
+      "id": 38,
+      "text": "Now go back there|||And don't come back until you're done",
+      "nextMessageId": 39
+    },
+    {
+      "id": 39,
+      "delay": 2000,
+      "text": "Ya bum"
+    },
+    {
+      "id": 32,
+      "text": "Yo foreal?",
+      "nextMessageId": 35
+    },
+    {
+      "id": 35,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "Damn right I did",
+          "nextMessageId": 36
+        },
+        {
+          "text": "Well...No...",
+          "nextMessageId": 37
+        }
+      ]
+    },
+    {
+      "id": 36,
+      "text": "Bang on!|||Go {user.name|you}!"
+    },
+    {
+      "id": 37,
+      "text": "I see..."
+    },
+    {
+      "id": 33,
+      "text": "Enter your message here..."
+    }
+  ]
+}

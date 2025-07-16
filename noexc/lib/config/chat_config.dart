@@ -36,6 +36,7 @@ class ChatConfig {
     'autoroute_debug': '🔬 Autoroute Debug Test',
     'dataaction_demo': 'dataAction Debug Test',
     'achievement_demo': 'Achievement Debug Test',
+    'welcome_seq': 'Welcome Sequence'
   };
   
   // Private constructor to prevent instantiation

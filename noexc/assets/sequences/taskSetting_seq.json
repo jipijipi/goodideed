@@ -1,0 +1,28 @@
+{
+  "sequenceId": "taskSetting_seq",
+  "name": "Task Setting",
+  "description": "For setting a new task",
+  "messages": [
+    {
+      "id": 42,
+      "text": "So what are you trying to fail today?",
+      "nextMessageId": 43
+    },
+    {
+      "id": 43,
+      "type": "textInput",
+      "storeKey": "user.task",
+      "placeholderText": "Enter your pinky promise here",
+      "nextMessageId": 44
+    },
+    {
+      "id": 44,
+      "text": "Soooo, \"{user.task|nothing}\" huh?",
+      "nextMessageId": 45
+    },
+    {
+      "id": 45,
+      "text": "Aight, see you tomorrow"
+    }
+  ]
+}

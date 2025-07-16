@@ -63,7 +63,18 @@
     },
     {
       "id": 17,
-      "text": "But first I'll need to know what you need to accomplish every day."
+      "text": "But first I'll need to know what you need to accomplish every day.",
+      "nextMessageId": 52
+    },
+    {
+      "id": 52,
+      "type": "autoroute",
+      "routes": [
+        {
+          "default": true,
+          "sequenceId": "taskSetting_seq"
+        }
+      ]
     },
     {
       "id": 8,

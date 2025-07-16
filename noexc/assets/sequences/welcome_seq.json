@@ -7,20 +7,31 @@
       "id": 1,
       "type": "autoroute",
       "routes": [
-        {
+                {
           "condition": "user.isOnboarded==true",
-          "nextMessageId": 1
+          "nextMessageId": 50
         },
         {
           "default": true,
           "sequenceId": "onboarding_seq"
         }
+
       ]
     },
     {
-      "id": 2,
+      "id": 50,
       "text": "Well well well, guess who's back...",
-      "sequenceId": "taskChecking_seq"
+      "nextMessageId": 51
+    },
+    {
+      "id": 51,
+      "type": "autoroute",
+      "routes": [
+        {
+          "default": true,
+          "sequenceId": "taskChecking_seq"
+        }
+      ]
     }
   ]
 }

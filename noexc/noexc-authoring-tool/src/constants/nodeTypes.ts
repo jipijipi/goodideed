@@ -3,7 +3,8 @@ export const NODE_CATEGORIES = [
   'user', 
   'choice',
   'textInput',
-  'autoroute'
+  'autoroute',
+  'dataAction'
 ] as const;
 
 export const NODE_LABELS = [
@@ -13,6 +14,7 @@ export const NODE_LABELS = [
   'Choice Menu',
   'Text Input',
   'Conditional Route',
+  'Data Action',
   'End Message',
   'Error Handler',
   'Custom'
@@ -20,6 +22,14 @@ export const NODE_LABELS = [
 
 export type NodeCategory = typeof NODE_CATEGORIES[number];
 export type NodeLabel = typeof NODE_LABELS[number];
+
+export interface DataActionItem {
+  type: 'set' | 'increment' | 'decrement' | 'reset' | 'trigger';
+  key: string;
+  value?: any;
+  event?: string;
+  data?: any;
+}
 
 export interface NodeData {
   label: string;
@@ -32,6 +42,8 @@ export interface NodeData {
   // Input specific fields
   placeholderText?: string;
   storeKey?: string;
+  // DataAction specific fields
+  dataActions?: DataActionItem[];
   // Group specific fields
   groupId?: string;
   title?: string;
@@ -44,6 +56,7 @@ export interface NodeData {
   onContentChange: (id: string, newContent: string) => void;
   onPlaceholderChange: (id: string, newPlaceholder: string) => void;
   onStoreKeyChange: (id: string, newStoreKey: string) => void;
+  onDataActionsChange?: (id: string, newDataActions: DataActionItem[]) => void;
   onGroupIdChange?: (id: string, newGroupId: string) => void;
   onTitleChange?: (id: string, newTitle: string) => void;
   onDescriptionChange?: (id: string, newDescription: string) => void;

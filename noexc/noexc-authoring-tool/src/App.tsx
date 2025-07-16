@@ -19,7 +19,7 @@ import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
 import CustomEdge from './components/CustomEdge';
 import GroupNode from './components/GroupNode';
-import { NodeData, NodeCategory, NodeLabel } from './constants/nodeTypes';
+import { NodeData, NodeCategory, NodeLabel, DataActionItem } from './constants/nodeTypes';
 
 const nodeTypes = {
   editable: EditableNode,
@@ -46,7 +46,8 @@ const initialNodes: Node<NodeData>[] = [
       onNodeIdChange: () => {},
       onContentChange: () => {},
       onPlaceholderChange: () => {},
-      onStoreKeyChange: () => {}
+      onStoreKeyChange: () => {},
+      onDataActionsChange: () => {}
     },
     type: 'editable',
   },
@@ -65,7 +66,8 @@ const initialNodes: Node<NodeData>[] = [
       onNodeIdChange: () => {},
       onContentChange: () => {},
       onPlaceholderChange: () => {},
-      onStoreKeyChange: () => {}
+      onStoreKeyChange: () => {},
+      onDataActionsChange: () => {}
     },
     type: 'editable',
   },
@@ -516,7 +518,8 @@ function Flow() {
         onNodeIdChange: () => {},
         onContentChange: () => {},
         onPlaceholderChange: () => {},
-        onStoreKeyChange: () => {}
+        onStoreKeyChange: () => {},
+        onDataActionsChange: () => {}
       };
 
       switch (category) {
@@ -532,6 +535,15 @@ function Flow() {
           return baseData;
         case 'autoroute':
           return baseData;
+        case 'dataAction':
+          return {
+            ...baseData,
+            dataActions: [{
+              type: 'set' as const,
+              key: 'user.property',
+              value: ''
+            }]
+          };
         default:
           return baseData;
       }
@@ -667,6 +679,23 @@ function Flow() {
     );
   }, [setNodes]);
 
+  const onDataActionsChange = useCallback((nodeId: string, newDataActions: DataActionItem[]) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              dataActions: newDataActions,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
   const onEdgeLabelChange = useCallback((edgeId: string, newLabel: string) => {
     setEdges((eds) =>
       eds.map((edge) => {
@@ -771,6 +800,7 @@ function Flow() {
       onContentChange,
       onPlaceholderChange,
       onStoreKeyChange,
+      onDataActionsChange,
       onGroupIdChange,
       onTitleChange,
       onDescriptionChange,
@@ -833,6 +863,7 @@ function Flow() {
           content: data.content,
           placeholderText: data.placeholderText,
           storeKey: data.storeKey,
+          dataActions: data.dataActions,
           groupId: data.groupId,
           title: data.title,
           description: data.description
@@ -870,6 +901,7 @@ function Flow() {
           content: data.content,
           placeholderText: data.placeholderText,
           storeKey: data.storeKey,
+          dataActions: data.dataActions,
           groupId: data.groupId,
           title: data.title,
           description: data.description
@@ -915,6 +947,7 @@ function Flow() {
               onContentChange: () => {},
               onPlaceholderChange: () => {},
               onStoreKeyChange: () => {},
+              onDataActionsChange: () => {},
               onGroupIdChange: () => {},
               onTitleChange: () => {},
               onDescriptionChange: () => {}
@@ -1379,6 +1412,28 @@ function Flow() {
             }
           }
           break;
+          
+        case 'dataAction':
+          if (node.data.dataActions && node.data.dataActions.length > 0) {
+            message.dataActions = node.data.dataActions.map(action => ({
+              type: action.type,
+              key: action.key,
+              ...(action.value !== undefined && { value: action.value }),
+              ...(action.event && { event: action.event }),
+              ...(action.data && { data: action.data })
+            }));
+          }
+          const nextDataActionId = getNextMessageId(node.id, edges, groupNodes);
+          if (nextDataActionId) {
+            if (typeof nextDataActionId === 'object') {
+              // Cross-sequence navigation - don't set nextMessageId, Flutter app assumes first node
+              message.sequenceId = nextDataActionId.sequenceId;
+            } else {
+              // Same sequence navigation
+              message.nextMessageId = nextDataActionId;
+            }
+          }
+          break;
       }
       
       return message;
@@ -1521,6 +1576,7 @@ function Flow() {
     { category: 'choice' as NodeCategory, label: 'Choice Menu' as NodeLabel, text: 'Select option:', icon: '🔘', description: 'Choice buttons' },
     { category: 'textInput' as NodeCategory, label: 'Text Input' as NodeLabel, text: 'Enter text:', icon: '⌨️', description: 'Text input' },
     { category: 'autoroute' as NodeCategory, label: 'Conditional Route' as NodeLabel, text: 'Route condition', icon: '🔀', description: 'Auto-route' },
+    { category: 'dataAction' as NodeCategory, label: 'Data Action' as NodeLabel, text: 'Data action', icon: '⚙️', description: 'Data action' },
   ];
 
 

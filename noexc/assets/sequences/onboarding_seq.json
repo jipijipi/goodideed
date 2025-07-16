@@ -1,6 +1,6 @@
 {
   "sequenceId": "onboarding_seq",
-  "name": "Onboarding Sequence",
+  "name": "Onboarding",
   "description": "Onboarding of a new user",
   "messages": [
     {

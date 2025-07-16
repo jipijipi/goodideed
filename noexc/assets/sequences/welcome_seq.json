@@ -5,20 +5,15 @@
   "messages": [
     {
       "id": 1,
-      "text": "Well |||well||| well",
-      "nextMessageId": 2
-    },
-    {
-      "id": 3,
       "type": "autoroute",
       "routes": [
         {
           "condition": "user.isOnboarded==true",
-          "nextMessageId": 2
+          "nextMessageId": 1
         },
         {
           "default": true,
-          "sequenceId": "taskChecking_seq"
+          "sequenceId": "onboarding_seq"
         }
       ]
     },

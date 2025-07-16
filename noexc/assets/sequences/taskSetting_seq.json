@@ -4,7 +4,7 @@
   "description": "For setting a new task",
   "messages": [
     {
-      "id": 42,
+      "id": 1,
       "text": "So what are you trying to fail today?",
       "nextMessageId": 43
     },

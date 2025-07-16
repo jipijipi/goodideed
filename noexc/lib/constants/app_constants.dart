@@ -23,7 +23,7 @@ class AppConstants {
   // Chat Sequences
   static const String sequencesAssetPath = 'assets/sequences/';
   static const String defaultSequenceId = 'onboarding';
-  static const List<String> availableSequences = ['onboarding', 'tutorial', 'support', 'menu', 'comprehensive_test', 'autoroute_debug'];
+  static const List<String> availableSequences = ['onboarding', 'tutorial', 'support', 'menu', 'comprehensive_test', 'autoroute_debug','dataaction_demo','achievement_demo'];
   
   // User Response ID Offset
   static const int userResponseIdOffset = 1000;

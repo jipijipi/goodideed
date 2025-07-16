@@ -34,6 +34,8 @@ class ChatConfig {
     'menu': 'Main Menu',
     'comprehensive_test': 'Comprehensive Feature Test',
     'autoroute_debug': '🔬 Autoroute Debug Test',
+    'dataaction_demo': 'dataAction Debug Test',
+    'achievement_demo': 'Achievement Debug Test',
   };
   
   // Private constructor to prevent instantiation

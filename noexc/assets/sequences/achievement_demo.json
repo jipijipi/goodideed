@@ -1,0 +1,261 @@
+{
+  "sequenceId": "achievement_demo",
+  "name": "Achievement Demo",
+  "description": "Demonstrates the trigger system with autoroute conditionals",
+  "messages": [
+    {
+      "id": 1,
+      "type": "bot",
+      "text": "Welcome to the Achievement Demo! Let's start your journey.",
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "set",
+          "key": "user.score",
+          "value": 0
+        },
+        {
+          "type": "set",
+          "key": "user.level",
+          "value": 1
+        },
+        {
+          "type": "set",
+          "key": "user.achievements",
+          "value": 0
+        }
+      ],
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "type": "bot",
+      "text": "Your score is {user.score|0}. What would you like to do?",
+      "nextMessageId": 4
+    },
+    {
+      "id": 4,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "Complete a small task (+10 points)",
+          "nextMessageId": 5
+        },
+        {
+          "text": "Complete a big task (+50 points)",
+          "nextMessageId": 10
+        },
+        {
+          "text": "Check my achievements",
+          "nextMessageId": 15
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "increment",
+          "key": "user.score",
+          "value": 10
+        }
+      ],
+      "nextMessageId": 6
+    },
+    {
+      "id": 6,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "user.score >= 100",
+          "nextMessageId": 7
+        },
+        {
+          "condition": "user.score >= 50",
+          "nextMessageId": 8
+        },
+        {
+          "condition": "user.score >= 10",
+          "nextMessageId": 9
+        },
+        {
+          "default": true,
+          "nextMessageId": 3
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "trigger",
+          "key": "achievement.master",
+          "event": "achievement_unlocked",
+          "data": {
+            "id": "score_master",
+            "title": "Score Master",
+            "description": "Reached 100 points!",
+            "icon": "trophy",
+            "points": 100
+          }
+        },
+        {
+          "type": "increment",
+          "key": "user.achievements",
+          "value": 1
+        }
+      ],
+      "nextMessageId": 3
+    },
+    {
+      "id": 8,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "trigger",
+          "key": "achievement.halfway",
+          "event": "achievement_unlocked",
+          "data": {
+            "id": "halfway_there",
+            "title": "Halfway There",
+            "description": "Reached 50 points!",
+            "icon": "star",
+            "points": 50
+          }
+        },
+        {
+          "type": "increment",
+          "key": "user.achievements",
+          "value": 1
+        }
+      ],
+      "nextMessageId": 3
+    },
+    {
+      "id": 9,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "trigger",
+          "key": "achievement.first",
+          "event": "achievement_unlocked",
+          "data": {
+            "id": "first_points",
+            "title": "Getting Started",
+            "description": "Earned your first 10 points!",
+            "icon": "medal",
+            "points": 10
+          }
+        },
+        {
+          "type": "increment",
+          "key": "user.achievements",
+          "value": 1
+        }
+      ],
+      "nextMessageId": 3
+    },
+    {
+      "id": 10,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "increment",
+          "key": "user.score",
+          "value": 50
+        }
+      ],
+      "nextMessageId": 11
+    },
+    {
+      "id": 11,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "user.score >= 200",
+          "nextMessageId": 12
+        },
+        {
+          "condition": "user.score >= 100",
+          "nextMessageId": 13
+        },
+        {
+          "default": true,
+          "nextMessageId": 6
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "trigger",
+          "key": "achievement.legend",
+          "event": "achievement_unlocked",
+          "data": {
+            "id": "legend",
+            "title": "Legend",
+            "description": "Reached 200 points! You're a legend!",
+            "icon": "crown",
+            "points": 200
+          }
+        },
+        {
+          "type": "trigger",
+          "key": "level.up",
+          "event": "level_up",
+          "data": {
+            "newLevel": 2,
+            "bonus": 25
+          }
+        },
+        {
+          "type": "increment",
+          "key": "user.level",
+          "value": 1
+        },
+        {
+          "type": "increment",
+          "key": "user.achievements",
+          "value": 1
+        }
+      ],
+      "nextMessageId": 14
+    },
+    {
+      "id": 13,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "trigger",
+          "key": "milestone.100",
+          "event": "milestone_reached",
+          "data": {
+            "milestone": 100,
+            "message": "You've reached 100 points!"
+          }
+        }
+      ],
+      "nextMessageId": 3
+    },
+    {
+      "id": 14,
+      "type": "bot",
+      "text": "🎉 Congratulations! You've leveled up to level {user.level|1}! You now have {user.achievements|0} achievements.",
+      "nextMessageId": 3
+    },
+    {
+      "id": 15,
+      "type": "bot",
+      "text": "🏆 You have unlocked {user.achievements|0} achievements so far! Your current score is {user.score|0} points at level {user.level|1}.",
+      "nextMessageId": 3
+    }
+  ]
+}

@@ -20,6 +20,8 @@ import EditableNode from './components/EditableNode';
 import CustomEdge from './components/CustomEdge';
 import GroupNode from './components/GroupNode';
 import { NodeData, NodeCategory, NodeLabel, DataActionItem } from './constants/nodeTypes';
+import { VariableManagerProvider } from './context/VariableManagerContext';
+import VariableManager from './components/VariableManager';
 
 const nodeTypes = {
   editable: EditableNode,
@@ -100,6 +102,7 @@ function Flow() {
   const [selectedEdge, setSelectedEdge] = useState<Edge | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showVariableManager, setShowVariableManager] = useState(false);
   const edgeReconnectSuccessful = useRef(true);
   const { getNodes } = useReactFlow();
   const { x: viewportX, y: viewportY, zoom } = useViewport();
@@ -1852,6 +1855,21 @@ function Flow() {
         </button>
         
         <button 
+          onClick={() => setShowVariableManager(true)}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#607d8b',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          🗂️ Variables
+        </button>
+        
+        <button 
           onClick={createGroupFromSelectedNodes}
           disabled={selectedNodes.filter(node => node.type !== 'group').length < 2}
           style={{
@@ -2214,12 +2232,22 @@ function Flow() {
           </div>
         </div>
       )}
+      
+      {/* Variable Manager */}
+      <VariableManager 
+        isOpen={showVariableManager}
+        onClose={() => setShowVariableManager(false)}
+      />
     </div>
   );
 }
 
 function App() {
-  return <FlowWithProvider />;
+  return (
+    <VariableManagerProvider>
+      <FlowWithProvider />
+    </VariableManagerProvider>
+  );
 }
 
 export default App;

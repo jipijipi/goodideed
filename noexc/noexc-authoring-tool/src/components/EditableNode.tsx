@@ -1,6 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { NodeData, NodeCategory, DataActionItem } from '../constants/nodeTypes';
+import HelpTooltip from './HelpTooltip';
+import { helpContent } from '../constants/helpContent';
+import VariableInput from './VariableInput';
 
 const getCategoryColor = (category: NodeCategory): string => {
   const colors: Record<NodeCategory, string> = {
@@ -33,16 +36,8 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
     data.onNodeIdChange(id, e.target.value);
   }, [id, data]);
 
-  const handleContentChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    data.onContentChange(id, e.target.value);
-  }, [id, data]);
-
   const handlePlaceholderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     data.onPlaceholderChange(id, e.target.value);
-  }, [id, data]);
-
-  const handleStoreKeyChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    data.onStoreKeyChange(id, e.target.value);
   }, [id, data]);
 
   const handleDataActionsChange = useCallback((newDataActions: DataActionItem[]) => {
@@ -82,8 +77,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
           <>
             {/* ID Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 ID:
+                <HelpTooltip content={helpContent.nodeId} />
               </label>
               <input
                 type="text"
@@ -103,12 +99,14 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
             
             {/* Content Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 Content:
+                <HelpTooltip content={data.category === 'bot' ? helpContent.botMessage : helpContent.userMessage} />
               </label>
-              <textarea
+              <VariableInput
                 value={data.content || ''}
-                onChange={handleContentChange}
+                onChange={(value) => data.onContentChange(id, value)}
+                placeholder="Enter message content... Use {variable|fallback} for dynamic content"
                 style={{
                   width: '100%',
                   padding: '4px',
@@ -120,7 +118,6 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   resize: 'vertical',
                 }}
                 onClick={(e) => e.stopPropagation()}
-                placeholder="Enter message content..."
               />
             </div>
           </>
@@ -131,8 +128,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
           <>
             {/* ID Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 ID:
+                <HelpTooltip content={helpContent.nodeId} />
               </label>
               <input
                 type="text"
@@ -152,8 +150,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
             
             {/* Placeholder Text Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 Placeholder:
+                <HelpTooltip content={helpContent.placeholder} />
               </label>
               <input
                 type="text"
@@ -174,13 +173,14 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
             
             {/* Store Key Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 Store Key:
+                <HelpTooltip content={helpContent.storeKey} />
               </label>
-              <input
-                type="text"
+              <VariableInput
                 value={data.storeKey || ''}
-                onChange={handleStoreKeyChange}
+                onChange={(value) => data.onStoreKeyChange(id, value)}
+                placeholder="e.g., user.name"
                 style={{
                   width: '100%',
                   padding: '4px',
@@ -200,8 +200,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
           <>
             {/* ID Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 ID:
+                <HelpTooltip content={helpContent.nodeId} />
               </label>
               <input
                 type="text"
@@ -221,13 +222,14 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
             
             {/* Store Key Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 Store Key:
+                <HelpTooltip content={helpContent.storeKey} />
               </label>
-              <input
-                type="text"
+              <VariableInput
                 value={data.storeKey || ''}
-                onChange={handleStoreKeyChange}
+                onChange={(value) => data.onStoreKeyChange(id, value)}
+                placeholder="e.g., user.name"
                 style={{
                   width: '100%',
                   padding: '4px',
@@ -247,8 +249,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
           <>
             {/* ID Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 ID:
+                <HelpTooltip content={helpContent.nodeId} />
               </label>
               <input
                 type="text"
@@ -273,8 +276,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
           <>
             {/* ID Field */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '2px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
                 ID:
+                <HelpTooltip content={helpContent.nodeId} />
               </label>
               <input
                 type="text"
@@ -294,8 +298,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
             
             {/* Data Actions */}
             <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'block', marginBottom: '4px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
                 Data Actions:
+                <HelpTooltip content={helpContent.dataAction} />
               </label>
               
               {(data.dataActions || []).map((action, index) => (
@@ -345,6 +350,10 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   
                   {/* Action Type */}
                   <div style={{ marginBottom: '4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                      <span style={{ fontSize: '9px', color: '#666' }}>Type:</span>
+                      <HelpTooltip content={helpContent.dataActionType} />
+                    </div>
                     <select
                       value={action.type}
                       onChange={(e) => {
@@ -382,12 +391,14 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   
                   {/* Key Field */}
                   <div style={{ marginBottom: '4px' }}>
-                    <input
-                      type="text"
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                      <span style={{ fontSize: '9px', color: '#666' }}>Key:</span>
+                      <HelpTooltip content={helpContent.dataActionKey} />
+                    </div>
+                    <VariableInput
                       value={action.key}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        updateDataAction(index, { ...action, key: e.target.value });
+                      onChange={(value) => {
+                        updateDataAction(index, { ...action, key: value });
                       }}
                       placeholder="Key (e.g., user.score)"
                       style={{
@@ -404,6 +415,10 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   {/* Value Field (for non-trigger actions) */}
                   {action.type !== 'trigger' && (
                     <div style={{ marginBottom: expandedAction === index ? '4px' : '0' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                        <span style={{ fontSize: '9px', color: '#666' }}>Value:</span>
+                        <HelpTooltip content={helpContent.dataActionValue} />
+                      </div>
                       <input
                         type="text"
                         value={action.value || ''}
@@ -439,6 +454,10 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   {action.type === 'trigger' && expandedAction === index && (
                     <>
                       <div style={{ marginBottom: '4px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                          <span style={{ fontSize: '9px', color: '#666' }}>Event:</span>
+                          <HelpTooltip content={helpContent.triggerEvent} />
+                        </div>
                         <input
                           type="text"
                           value={action.event || ''}
@@ -458,6 +477,10 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                         />
                       </div>
                       <div>
+                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                          <span style={{ fontSize: '9px', color: '#666' }}>Data:</span>
+                          <HelpTooltip content={helpContent.triggerData} />
+                        </div>
                         <textarea
                           value={typeof action.data === 'object' ? JSON.stringify(action.data, null, 2) : (action.data || '')}
                           onChange={(e) => {

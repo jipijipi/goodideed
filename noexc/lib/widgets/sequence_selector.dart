@@ -63,20 +63,20 @@ class SequenceSelector extends StatelessWidget {
 
   IconData _getSequenceIcon(String sequenceId) {
     switch (sequenceId) {
-      case 'onboarding':
+      case 'welcome_seq':
         return Icons.waving_hand;
-      case 'tutorial':
-        return Icons.school;
-      case 'support':
-        return Icons.help_outline;
-      case 'menu':
-        return Icons.menu;
-      case 'autoroute_test':
-        return Icons.alt_route;
-      case 'custom_value_demo':
-        return Icons.settings;
-      case 'comparison_demo':
-        return Icons.compare_arrows;
+      case 'onboarding_seq':
+        return Icons.person_add;
+      case 'taskChecking_seq':
+        return Icons.check_circle_outline;
+      case 'taskSetting_seq':
+        return Icons.assignment;
+      case 'sendoff_seq':
+        return Icons.logout;
+      case 'success_seq':
+        return Icons.celebration;
+      case 'failure_seq':
+        return Icons.support_agent;
       default:
         return Icons.chat;
     }

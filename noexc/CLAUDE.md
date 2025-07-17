@@ -75,7 +75,6 @@ The authoring tool supports advanced cross-sequence navigation:
 - **MessageType** - Enum defining message types: bot, user, choice, textInput, autoroute, dataAction
 - **DataAction** - Model for data modification operations (set, increment, decrement, reset, trigger)
 
-
 #### Services (`lib/services/`)
 - **ChatService** - Main service for loading sequences and processing messages
 - **UserDataService** - Local storage using shared_preferences
@@ -85,13 +84,13 @@ The authoring tool supports advanced cross-sequence navigation:
 - **ConditionEvaluator** - Evaluates routing conditions with compound logic support (&&, ||)
 - **ErrorHandler** - Centralized error handling and logging service
 - **DataActionProcessor** - Processes data modification operations and event triggers
+- **MessageQueue** - Sequential message processing with proper timing and no race conditions
 
 #### UI Architecture (`lib/widgets/`)
 - **ChatScreen** - Main container with state management
 - **ChatStateManager** - Handles all chat state and message flow
 - **ChatMessageList** - Displays messages with automatic scrolling
 - **UserPanelOverlay** - Debug panel for user data and sequence management
-
 
 #### Validation System (`lib/validation/`)
 - **SequenceValidator** - Validates JSON sequence structure and content
@@ -107,7 +106,7 @@ The authoring tool supports advanced cross-sequence navigation:
 - `assets/sequences/` - JSON conversation flows
 - `assets/variants/` - Text variant files (format: `{sequenceId}_message_{messageId}.txt`)
 - Available sequences defined in `AppConstants.availableSequences`
-- Current sequences: onboarding, tutorial, support, menu, autoroute_debug, comprehensive_test, image_demo
+- Current sequences: welcome_seq, onboarding_seq, taskChecking_seq, taskSetting_seq, sendoff_seq, success_seq, failure_seq
 
 ### Storage System
 - **Local Storage**: Uses shared_preferences for user data persistence
@@ -164,9 +163,30 @@ The authoring tool supports advanced cross-sequence navigation:
 - Use `flutter test` to run tests
 - Test files mirror the `lib/` directory structure in `test/`
 - Import main app code using `package:noexc/main.dart`
-- **Current test status: 147 passing tests** (100% success rate)
-- Aim for high test coverage (minimum 80%) - Currently at 100% success rate
+- **Current test status: 225+ passing tests** (high success rate)
+- Aim for high test coverage (minimum 80%) - Currently at high success rate
 - Never commit code without corresponding tests
+
+## Message Flow Architecture (Recently Fixed)
+
+### Fixed Message Duplication Issue
+The app previously had a 4x message duplication problem that was resolved through architectural improvements:
+
+#### Root Cause
+- **Double initialization** - `getInitialMessages()` called multiple times
+- **Callback duplication** - Sequence switch callbacks creating parallel message flows
+- **No coordination** - Multiple async message processing without synchronization
+
+#### Solution Implemented
+- **Single-flow architecture** - Removed sequence switch callbacks
+- **Message accumulation** - `ChatService._getMessagesFromId()` handles all sequence switching internally
+- **MessageQueue integration** - Proper sequential message processing with timing
+- **Duplicate filtering** - Safety net at UI level to prevent any duplicates
+
+#### Key Files Modified
+- `lib/services/chat_service.dart` - Removed callback notifications, maintained message accumulation
+- `lib/widgets/chat_screen/chat_state_manager.dart` - Removed callback setup, simplified initialization
+- `lib/services/message_queue.dart` - Added for proper message sequencing
 
 ## Authoring Tool ↔ Flutter Integration
 
@@ -198,8 +218,8 @@ The authoring tool exports JSON files that are **100% compatible** with the Flut
       "storeKey": "user.choice",
       "choices": [
         {
-          "text": "Continue to Tutorial",
-          "sequenceId": "tutorial"
+          "text": "Continue to Task Setting",
+          "sequenceId": "taskSetting_seq"
         }
       ]
     }
@@ -214,6 +234,29 @@ The authoring tool exports JSON files that are **100% compatible** with the Flut
 - **Multiple Sequences**: One authoring session can export multiple related sequences
 
 ## Development Notes
+
+### Current Sequence Structure (Updated)
+The app now uses `welcome_seq` as the default starting sequence with a clean, focused architecture:
+
+#### Active Sequences (7 total)
+1. **welcome_seq** - Entry point with user routing logic
+2. **onboarding_seq** - New user setup and introduction
+3. **taskChecking_seq** - Daily task progress checking
+4. **taskSetting_seq** - Daily task planning and goal setting
+5. **sendoff_seq** - Session conclusion and wrap-up
+6. **success_seq** - Task completion celebration
+7. **failure_seq** - Task support and encouragement
+
+#### Sequence Flow Map
+```
+welcome_seq (entry)
+├── onboarding_seq → taskSetting_seq → sendoff_seq (new users)
+└── taskChecking_seq → (returning users)
+    ├── taskSetting_seq → sendoff_seq
+    ├── success_seq → taskSetting_seq | sendoff_seq
+    ├── sendoff_seq
+    └── failure_seq → sendoff_seq | taskSetting_seq
+```
 
 ### Adding New Sequences
 
@@ -379,3 +422,30 @@ flutter analyze            # Static analysis
     }
   }
 }
+```
+
+## Recent Major Changes (December 2024)
+
+### Message Duplication Fix
+- **Problem**: Messages displaying up to 4 times due to parallel processing
+- **Solution**: Implemented single-flow architecture with MessageQueue
+- **Files Modified**: ChatService, ChatStateManager, MessageQueue
+- **Result**: Clean message flow with no duplication
+
+### Sequence Architecture Cleanup
+- **Changed default sequence**: `onboarding` → `welcome_seq`
+- **Removed unused sequences**: 8 demo/test sequences deleted
+- **Updated configuration**: AppConstants, ChatConfig, UI components
+- **Result**: Clean, focused daily task management flow
+
+### Key Configuration Changes
+- `AppConstants.defaultSequenceId = 'welcome_seq'`
+- `AppConstants.availableSequences` - reduced to 7 core sequences
+- `ChatConfig.sequenceDisplayNames` - updated with user-friendly names
+- Sequence selector icons updated for new sequences
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

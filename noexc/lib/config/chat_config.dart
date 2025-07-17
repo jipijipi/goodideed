@@ -28,21 +28,13 @@ class ChatConfig {
   
   // Sequence Names
   static const Map<String, String> sequenceDisplayNames = {
-    'onboarding': 'Welcome & Setup',
-    'tutorial': 'App Tutorial',
-    'support': 'Get Help',
-    'menu': 'Main Menu',
-    'comprehensive_test': 'Comprehensive Feature Test',
-    'autoroute_debug': '🔬 Autoroute Debug Test',
-    'dataaction_demo': 'dataAction Debug Test',
-    'achievement_demo': 'Achievement Debug Test',
-    'welcome_seq': 'Welcome Sequence',
-    'taskChecking_seq': 'Task Checking Sequence',
-    'taskSetting_seq': 'Task Setting Sequence',
-    'onboarding_seq': 'Onboarding Sequence',
-    'sendoff_seq': 'Send Off Sequence',
-    'success_seq': 'Success Sequence',
-    'failure_seq': 'Failure Sequence'
+    'welcome_seq': 'Welcome Check-in',
+    'onboarding_seq': 'User Onboarding',
+    'taskChecking_seq': 'Task Progress Check',
+    'taskSetting_seq': 'Daily Task Setting',
+    'sendoff_seq': 'Session Wrap-up',
+    'success_seq': 'Task Completed',
+    'failure_seq': 'Task Support'
   };
   
   // Private constructor to prevent instantiation

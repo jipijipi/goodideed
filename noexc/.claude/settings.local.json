@@ -19,7 +19,8 @@
       "Bash(PORT=3002 npm start)",
       "Bash(ls:*)",
       "Bash(dart:*)",
-      "Bash(flutter run:*)"
+      "Bash(flutter run:*)",
+      "Bash(rg:*)"
     ],
     "deny": []
   }

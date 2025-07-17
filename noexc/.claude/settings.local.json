@@ -20,7 +20,8 @@
       "Bash(ls:*)",
       "Bash(dart:*)",
       "Bash(flutter run:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": []
   }

@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import '../services/user_data_service.dart';
 import '../services/chat_service.dart';
 import '../constants/ui_constants.dart';
-import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 import 'chat_screen/chat_state_manager.dart';
+import 'debug_panel/data_display_widget.dart';
+import 'debug_panel/chat_controls_widget.dart';
+import 'debug_panel/sequence_selector_widget.dart';
+import 'debug_panel/user_data_manager.dart';
 
+/// Main user variables panel that orchestrates the display of user data and debug controls
 class UserVariablesPanel extends StatefulWidget {
   final UserDataService userDataService;
   final ChatService? chatService;
@@ -30,10 +34,17 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
   Map<String, dynamic> _userData = {};
   Map<String, dynamic> _debugData = {};
   bool _isLoading = true;
+  late final UserDataManager _dataManager;
 
   @override
   void initState() {
     super.initState();
+    _dataManager = UserDataManager(
+      userDataService: widget.userDataService,
+      chatService: widget.chatService,
+      currentSequenceId: widget.currentSequenceId,
+      totalMessages: widget.totalMessages,
+    );
     _loadUserData();
   }
 
@@ -43,13 +54,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
     });
 
     try {
-      final data = await widget.userDataService.getAllData();
-      final debugInfo = _getDebugInfo();
+      final data = await _dataManager.loadAllData();
       
       if (mounted) {
         setState(() {
-          _userData = data;
-          _debugData = debugInfo;
+          _userData = data.userData;
+          _debugData = data.debugData;
           _isLoading = false;
         });
       }
@@ -64,308 +74,8 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
     }
   }
 
-  Map<String, dynamic> _getDebugInfo() {
-    final debugInfo = <String, dynamic>{};
-    
-    // Chat System Info
-    if (widget.currentSequenceId != null) {
-      debugInfo['Current Sequence'] = widget.currentSequenceId!;
-    }
-    
-    if (widget.chatService?.currentSequence != null) {
-      debugInfo['Sequence Name'] = widget.chatService!.currentSequence!.name;
-      debugInfo['Sequence Description'] = widget.chatService!.currentSequence!.description;
-    }
-    
-    if (widget.totalMessages != null) {
-      debugInfo['Total Messages'] = widget.totalMessages!;
-    }
-    
-    // App Info
-    debugInfo['Flutter Framework'] = 'Flutter 3.29.3';
-    debugInfo['Dart SDK'] = '^3.7.2';
-    
-    return debugInfo;
-  }
-
   void refreshData() {
     _loadUserData();
-  }
-
-  String _formatValue(dynamic value) {
-    if (value is List) {
-      return '[${value.join(', ')}]';
-    }
-    return value.toString();
-  }
-
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDataRow(MapEntry<String, dynamic> entry) {
-    return Padding(
-      padding: UIConstants.variableItemPadding,
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Text(
-                  entry.key,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-              ),
-              const SizedBox(width: UIConstants.variableKeySpacing),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  _formatValue(entry.value),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const Divider(height: 16),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChatControls() {
-    if (widget.stateManager == null) return const SizedBox.shrink();
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionHeader('Chat Controls'),
-        
-        // Sequence Selection
-        _buildSequenceSelector(),
-        Padding(
-          padding: UIConstants.variableItemPadding,
-          child: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    await widget.stateManager!.resetChat();
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Chat reset successfully')),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.refresh, size: 16),
-                  label: const Text('Reset'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    widget.stateManager!.clearMessages();
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Messages cleared')),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.clear_all, size: 16),
-                  label: const Text('Clear'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    await widget.stateManager!.reloadSequence();
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Sequence reloaded')),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.file_download, size: 16),
-                  label: const Text('Reload'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        
-        // Second row with Clear All Data button
-        Padding(
-          padding: UIConstants.variableItemPadding,
-          child: Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    // Show confirmation dialog
-                    final confirmed = await _showClearDataConfirmation();
-                    if (confirmed == true) {
-                      await widget.stateManager!.clearAllUserData();
-                      if (mounted) {
-                        // Refresh the panel to show empty user data
-                        refreshData();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('All user data cleared')),
-                        );
-                      }
-                    }
-                  },
-                  icon: const Icon(Icons.delete_forever, size: 16),
-                  label: const Text('Clear All Data'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
-                    foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                  ),
-                ),
-              ),
-              const Expanded(flex: 2, child: SizedBox()), // Take up remaining space
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-
-  Widget _buildSequenceSelector() {
-    return Padding(
-      padding: UIConstants.variableItemPadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Current Sequence',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              border: Border.all(color: Theme.of(context).colorScheme.outline),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: widget.currentSequenceId,
-                isExpanded: true,
-                items: AppConstants.availableSequences.map((String sequenceId) {
-                  final displayName = ChatConfig.sequenceDisplayNames[sequenceId] ?? sequenceId;
-                  return DropdownMenuItem<String>(
-                    value: sequenceId,
-                    child: Row(
-                      children: [
-                        Icon(
-                          _getSequenceIcon(sequenceId),
-                          size: 20,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(displayName),
-                      ],
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newSequenceId) {
-                  if (newSequenceId != null && newSequenceId != widget.currentSequenceId) {
-                    widget.stateManager?.switchSequence(newSequenceId);
-                    if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Switched to $newSequenceId sequence')),
-                      );
-                    }
-                  }
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-        ],
-      ),
-    );
-  }
-
-  IconData _getSequenceIcon(String sequenceId) {
-    switch (sequenceId) {
-      case 'welcome_seq':
-        return Icons.waving_hand;
-      case 'onboarding_seq':
-        return Icons.person_add;
-      case 'taskChecking_seq':
-        return Icons.check_circle_outline;
-      case 'taskSetting_seq':
-        return Icons.assignment;
-      case 'sendoff_seq':
-        return Icons.logout;
-      case 'success_seq':
-        return Icons.celebration;
-      case 'failure_seq':
-        return Icons.support_agent;
-      default:
-        return Icons.chat;
-    }
-  }
-
-  Future<bool?> _showClearDataConfirmation() {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Clear All Data'),
-          content: const Text(
-            'This will permanently delete all stored user information. '
-            'This action cannot be undone.\n\nAre you sure you want to continue?'
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Clear All'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -429,20 +139,22 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                         padding: UIConstants.panelContentPadding,
                         children: [
                           // Chat Controls Section
-                          _buildChatControls(),
+                          ChatControlsWidget(
+                            stateManager: widget.stateManager,
+                            onDataRefresh: refreshData,
+                          ),
                           
-                          // Debug Information Section
-                          if (_debugData.isNotEmpty) ...[
-                            _buildSectionHeader('Debug Information'),
-                            ..._debugData.entries.map((entry) => _buildDataRow(entry)),
-                            const SizedBox(height: 16),
-                          ],
+                          // Sequence Selector
+                          SequenceSelectorWidget(
+                            currentSequenceId: widget.currentSequenceId,
+                            stateManager: widget.stateManager,
+                          ),
                           
-                          // User Data Section
-                          if (_userData.isNotEmpty) ...[
-                            _buildSectionHeader('User Data'),
-                            ..._userData.entries.map((entry) => _buildDataRow(entry)),
-                          ],
+                          // Data Display Section
+                          DataDisplayWidget(
+                            userData: _userData,
+                            debugData: _debugData,
+                          ),
                         ],
                       ),
           ),

@@ -11,15 +11,16 @@ import 'text_variants_service.dart';
 import 'condition_evaluator.dart';
 import 'data_action_processor.dart';
 import '../models/route_condition.dart';
+import 'chat_service/sequence_loader.dart';
+import 'chat_service/message_processor.dart';
+import 'chat_service/route_processor.dart';
 
+/// Main chat service that orchestrates sequence loading, message processing, and routing
 class ChatService {
-  ChatSequence? _currentSequence;
-  Map<int, ChatMessage> _messageMap = {};
+  final SequenceLoader _sequenceLoader = SequenceLoader();
+  late final MessageProcessor _messageProcessor;
+  late final RouteProcessor _routeProcessor;
   final UserDataService? _userDataService;
-  final TextTemplatingService? _templatingService;
-  final TextVariantsService? _variantsService;
-  final ConditionEvaluator? _conditionEvaluator;
-  final DataActionProcessor? _dataActionProcessor;
   
   // Callback for notifying UI about sequence changes from autoroutes
   Future<void> Function(String sequenceId, int startMessageId)? _onSequenceSwitch;
@@ -31,18 +32,26 @@ class ChatService {
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
     TextVariantsService? variantsService,
-  }) : _userDataService = userDataService,
-       _templatingService = templatingService,
-       _variantsService = variantsService,
-       _conditionEvaluator = userDataService != null 
-           ? ConditionEvaluator(userDataService) 
-           : null,
-       _dataActionProcessor = userDataService != null 
-           ? DataActionProcessor(userDataService) 
-           : null {
+  }) : _userDataService = userDataService {
+    _messageProcessor = MessageProcessor(
+      userDataService: userDataService,
+      templatingService: templatingService,
+      variantsService: variantsService,
+    );
+    
+    _routeProcessor = RouteProcessor(
+      conditionEvaluator: userDataService != null 
+          ? ConditionEvaluator(userDataService) 
+          : null,
+      dataActionProcessor: userDataService != null 
+          ? DataActionProcessor(userDataService) 
+          : null,
+      sequenceLoader: _sequenceLoader,
+    );
+    
     // Set up event callback for dataActionProcessor
-    if (_dataActionProcessor != null) {
-      _dataActionProcessor!.setEventCallback(_handleEvent);
+    if (_routeProcessor.dataActionProcessor != null) {
+      _routeProcessor.dataActionProcessor!.setEventCallback(_handleEvent);
     }
   }
 
@@ -69,40 +78,25 @@ class ChatService {
 
   /// Load a specific chat sequence by ID
   Future<ChatSequence> loadSequence(String sequenceId) async {
-    try {
-      final String assetPath = 'assets/sequences/$sequenceId.json';
-      final String jsonString = await rootBundle.loadString(assetPath);
-      final Map<String, dynamic> jsonData = json.decode(jsonString);
-      
-      _currentSequence = ChatSequence.fromJson(jsonData);
-      
-      // Build message map for quick lookup
-      _messageMap = {for (var msg in _currentSequence!.messages) msg.id: msg};
-      
-      return _currentSequence!;
-    } catch (e) {
-      throw Exception('${ChatConfig.chatScriptLoadError} for sequence $sequenceId: $e');
-    }
+    return await _sequenceLoader.loadSequence(sequenceId);
   }
 
   /// Load the default chat script (for backward compatibility)
   Future<List<ChatMessage>> loadChatScript() async {
-    // Default to onboarding sequence for backward compatibility
-    final sequence = await loadSequence('onboarding');
-    return sequence.messages;
+    return await _sequenceLoader.loadChatScript();
   }
 
   bool hasMessage(int id) {
-    return _messageMap.containsKey(id);
+    return _sequenceLoader.hasMessage(id);
   }
 
   ChatMessage? getMessageById(int id) {
-    return _messageMap[id];
+    return _sequenceLoader.getMessageById(id);
   }
 
   /// Get initial messages for a specific sequence
-  Future<List<ChatMessage>> getInitialMessages({String sequenceId = 'onboarding'}) async {
-    if (_currentSequence == null || _currentSequence!.sequenceId != sequenceId) {
+  Future<List<ChatMessage>> getInitialMessages({String sequenceId = 'onboarding_seq'}) async {
+    if (_sequenceLoader.currentSequence == null || _sequenceLoader.currentSequence!.sequenceId != sequenceId) {
       await loadSequence(sequenceId);
     }
     
@@ -110,7 +104,7 @@ class ChatService {
   }
 
   /// Get the current loaded sequence
-  ChatSequence? get currentSequence => _currentSequence;
+  ChatSequence? get currentSequence => _sequenceLoader.currentSequence;
 
   Future<List<ChatMessage>> getMessagesAfterChoice(int startId) async {
     return await _getMessagesFromId(startId);
@@ -121,30 +115,45 @@ class ChatService {
   }
 
   ChatMessage createUserResponseMessage(int id, String userInput) {
-    return ChatMessage(
-      id: id,
-      text: userInput,
-      delay: 0,
-      sender: ChatConfig.userSender,
-    );
+    return _sequenceLoader.createUserResponseMessage(id, userInput);
+  }
+
+  /// Handle user text input and store it if storeKey is provided
+  Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
+    await _messageProcessor.handleUserTextInput(textInputMessage, userInput);
+  }
+
+  /// Handle user choice selection and store it if storeKey is provided
+  Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
+    await _messageProcessor.handleUserChoice(choiceMessage, selectedChoice);
+  }
+
+  /// Process a single message template and replace variables with stored values
+  Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
+    return await _messageProcessor.processMessageTemplate(message, _sequenceLoader.currentSequence);
+  }
+
+  /// Process a list of messages and replace template variables
+  Future<List<ChatMessage>> processMessageTemplates(List<ChatMessage> messages) async {
+    return await _messageProcessor.processMessageTemplates(messages, _sequenceLoader.currentSequence);
   }
 
   Future<List<ChatMessage>> _getMessagesFromId(int startId) async {
     List<ChatMessage> messages = [];
     int? currentId = startId;
     
-    while (currentId != null && _messageMap.containsKey(currentId)) {
-      ChatMessage msg = _messageMap[currentId]!;
+    while (currentId != null && _sequenceLoader.hasMessage(currentId)) {
+      ChatMessage msg = _sequenceLoader.getMessageById(currentId)!;
       
       // Handle autoroute messages
       if (msg.isAutoRoute) {
-        currentId = await _processAutoRoute(msg);
+        currentId = await _routeProcessor.processAutoRoute(msg);
         continue; // Skip adding to display
       }
       
       // Handle dataAction messages
       if (msg.isDataAction) {
-        currentId = await _processDataAction(msg);
+        currentId = await _routeProcessor.processDataAction(msg);
         continue; // Skip adding to display
       }
       
@@ -175,164 +184,12 @@ class ChatService {
       } else {
         // If no explicit next message, try sequential ID
         currentId = currentId + 1;
-        if (!_messageMap.containsKey(currentId)) {
+        if (!_sequenceLoader.hasMessage(currentId)) {
           break;
         }
       }
     }
     
     return messages;
-  }
-
-  /// Process a single message template and replace variables with stored values
-  /// Also applies text variants for regular messages (not choices, inputs, conditionals, or multi-texts)
-  Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
-    String textToProcess = message.text;
-    
-    // Apply variants only for regular messages (not choices, inputs, conditionals, or multi-texts)
-    if (_variantsService != null && 
-        _currentSequence != null &&
-        !message.isChoice && 
-        !message.isTextInput && 
-        !message.isAutoRoute && 
-        !message.hasMultipleTexts) {
-      
-      // Get variant for the main text
-      textToProcess = await _variantsService!.getVariant(
-        message.text, 
-        _currentSequence!.sequenceId, 
-        message.id
-      );
-    }
-    
-    // Apply template processing if service is available
-    if (_templatingService != null) {
-      textToProcess = await _templatingService!.processTemplate(textToProcess);
-    }
-    
-    return ChatMessage(
-      id: message.id,
-      text: textToProcess,
-      delay: message.delay,
-      sender: message.sender,
-      type: message.type,
-      choices: message.choices,
-      nextMessageId: message.nextMessageId,
-      storeKey: message.storeKey,
-      placeholderText: message.placeholderText,
-      routes: message.routes,
-    );
-  }
-
-  /// Process a list of messages and replace template variables
-  Future<List<ChatMessage>> processMessageTemplates(List<ChatMessage> messages) async {
-    final List<ChatMessage> processedMessages = [];
-    
-    for (final message in messages) {
-      final processedMessage = await processMessageTemplate(message);
-      processedMessages.add(processedMessage);
-    }
-    
-    return processedMessages;
-  }
-
-  /// Handle user text input and store it if storeKey is provided
-  Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
-    if (_userDataService != null && textInputMessage.storeKey != null) {
-      await _userDataService!.storeValue(textInputMessage.storeKey!, userInput);
-    }
-  }
-
-  /// Handle user choice selection and store it if storeKey is provided
-  Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
-    if (_userDataService != null && choiceMessage.storeKey != null) {
-      // Use custom value if provided, fallback to choice text
-      final valueToStore = selectedChoice.value ?? selectedChoice.text;
-      await _userDataService!.storeValue(choiceMessage.storeKey!, valueToStore);
-    }
-  }
-
-  /// Process an autoroute message and return the next message ID
-  Future<int?> _processAutoRoute(ChatMessage routeMessage) async {
-    print('🚏 AUTOROUTE: Processing autoroute message ID: ${routeMessage.id}');
-    if (_conditionEvaluator == null || routeMessage.routes == null) {
-      print('❌ AUTOROUTE: No condition evaluator or routes found, using nextMessageId: ${routeMessage.nextMessageId}');
-      return routeMessage.nextMessageId;
-    }
-
-    print('🚏 AUTOROUTE: Found ${routeMessage.routes!.length} routes to evaluate');
-    
-    // FIXED: First evaluate all conditional routes, then fall back to default
-    // First pass: Evaluate all conditional routes
-    for (int i = 0; i < routeMessage.routes!.length; i++) {
-      final route = routeMessage.routes![i];
-      print('🚏 AUTOROUTE: Evaluating conditional route ${i + 1}/${routeMessage.routes!.length}');
-      
-      // Skip default routes in first pass
-      if (route.isDefault) {
-        print('🚏 AUTOROUTE: Route ${i + 1} is default route, skipping in first pass');
-        continue;
-      }
-      
-      // Evaluate condition if present
-      if (route.condition != null) {
-        print('🚏 AUTOROUTE: Route ${i + 1} has condition: "${route.condition}"');
-        final matches = await _conditionEvaluator!.evaluateCompound(route.condition!);
-        print('🚏 AUTOROUTE: Route ${i + 1} condition result: $matches');
-        if (matches) {
-          print('🚏 AUTOROUTE: Route ${i + 1} matches! Executing route');
-          return await _executeRoute(route);
-        }
-        print('🚏 AUTOROUTE: Route ${i + 1} does not match, trying next route');
-      } else {
-        print('🚏 AUTOROUTE: Route ${i + 1} has no condition and is not default, skipping');
-      }
-    }
-    
-    // Second pass: Execute default route if no conditions matched
-    for (int i = 0; i < routeMessage.routes!.length; i++) {
-      final route = routeMessage.routes![i];
-      if (route.isDefault) {
-        print('🚏 AUTOROUTE: No conditions matched, executing default route ${i + 1}');
-        return await _executeRoute(route);
-      }
-    }
-    
-    // If no routes matched, use the message's nextMessageId
-    print('🚏 AUTOROUTE: No routes matched, using fallback nextMessageId: ${routeMessage.nextMessageId}');
-    return routeMessage.nextMessageId;
-  }
-
-  /// Process dataAction messages by executing data modifications
-  Future<int?> _processDataAction(ChatMessage dataActionMessage) async {
-    if (_dataActionProcessor == null || dataActionMessage.dataActions == null) {
-      return dataActionMessage.nextMessageId;
-    }
-
-    try {
-      await _dataActionProcessor!.processActions(dataActionMessage.dataActions!);
-    } catch (e) {
-      // Silent error handling - dataActions should not fail the message flow
-    }
-    
-    // Continue to next message
-    return dataActionMessage.nextMessageId;
-  }
-
-  /// Execute a route condition by loading sequence or returning message ID
-  Future<int?> _executeRoute(RouteCondition route) async {
-    if (route.sequenceId != null) {
-      final startMessageId = ChatConfig.initialMessageId;
-      
-      // Always load sequence directly for message accumulation
-      await loadSequence(route.sequenceId!);
-      
-      // Note: No UI notification needed - messages are accumulated seamlessly
-      
-      return startMessageId;
-    }
-    
-    // Stay in current sequence, go to specified message
-    return route.nextMessageId;
   }
 }

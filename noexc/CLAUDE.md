@@ -76,25 +76,39 @@ The authoring tool supports advanced cross-sequence navigation:
 - **DataAction** - Model for data modification operations (set, increment, decrement, reset, trigger)
 
 #### Services (`lib/services/`)
-- **ChatService** - Main service for loading sequences and processing messages
+- **ChatService** - Main orchestrator for chat functionality with focused processors:
+  - `chat_service/sequence_loader.dart` - Handles sequence loading and management
+  - `chat_service/message_processor.dart` - Processes message templates and user interactions
+  - `chat_service/route_processor.dart` - Handles autoroute and dataAction processing
 - **UserDataService** - Local storage using shared_preferences
 - **SessionService** - Session tracking with daily reset functionality
 - **TextTemplatingService** - Template processing with `{key|fallback}` syntax
 - **TextVariantsService** - Random text variation from asset files
 - **ConditionEvaluator** - Evaluates routing conditions with compound logic support (&&, ||)
-- **ErrorHandler** - Centralized error handling and logging service
+- **ErrorHandler** - Centralized error handling with modular components:
+  - `error_handling/chat_error_types.dart` - Error type classifications
+  - `error_handling/chat_exceptions.dart` - Custom exception classes
+  - `error_handling/error_classifier.dart` - Classifies errors by type and severity
+  - `error_handling/user_message_generator.dart` - Generates user-friendly error messages
 - **DataActionProcessor** - Processes data modification operations and event triggers
 - **MessageQueue** - Sequential message processing with proper timing and no race conditions
 
 #### UI Architecture (`lib/widgets/`)
 - **ChatScreen** - Main container with state management
-- **ChatStateManager** - Handles all chat state and message flow
+- **ChatStateManager** - Orchestrates chat state through focused managers:
+  - `state_management/service_manager.dart` - Manages service lifecycle and dependencies
+  - `state_management/message_display_manager.dart` - Handles message display and queue management
+  - `state_management/user_interaction_handler.dart` - Processes user choices and text inputs
 - **ChatMessageList** - Displays messages with automatic scrolling
 - **UserPanelOverlay** - Debug panel for user data and sequence management
 
 #### Validation System (`lib/validation/`)
-- **SequenceValidator** - Validates JSON sequence structure and content
-- **AssetValidator** - Validates asset files and dependencies
+- **AssetValidator** - Comprehensive asset validation with modular validators:
+  - `asset_validators/sequence_file_validator.dart` - Validates sequence JSON structure
+  - `asset_validators/variant_file_validator.dart` - Validates variant text files
+  - `asset_validators/template_variable_validator.dart` - Validates template variable usage
+  - `asset_validators/cross_reference_validator.dart` - Validates cross-references between files
+  - `asset_validators/json_schema_validator.dart` - JSON schema validation
 
 ### Data Flow
 1. **Sequence Loading**: JSON files from `assets/sequences/` loaded by ChatService
@@ -424,9 +438,22 @@ flutter analyze            # Static analysis
 }
 ```
 
-## Recent Major Changes (December 2024)
+## Recent Major Changes (December 2024 - July 2025)
 
-### Message Duplication Fix
+### Architecture Refactoring (July 2025)
+- **ChatService Refactor**: Split into focused processors for better separation of concerns
+  - `sequence_loader.dart` - Handles sequence loading and management
+  - `message_processor.dart` - Processes message templates and user interactions  
+  - `route_processor.dart` - Handles autoroute and dataAction processing
+- **ChatStateManager Refactor**: Split into specialized state managers
+  - `service_manager.dart` - Manages service lifecycle and dependencies
+  - `message_display_manager.dart` - Handles message display and queue management
+  - `user_interaction_handler.dart` - Processes user choices and text inputs
+- **Error Handling System**: Modular error handling with user-friendly messaging
+- **Validation System**: Comprehensive asset validation with focused validators
+- **Benefits**: Improved testability, maintainability, and single responsibility principle
+
+### Message Duplication Fix (December 2024)
 - **Problem**: Messages displaying up to 4 times due to parallel processing
 - **Solution**: Implemented single-flow architecture with MessageQueue
 - **Files Modified**: ChatService, ChatStateManager, MessageQueue

@@ -13,6 +13,7 @@ class UIConstants {
   // Border Radius
   static const double messageBubbleRadius = 12.0;
   static const double panelTopRadius = 16.0;
+  static const double standardBorderRadius = 8.0;
   
   // Spacing and Padding
   static const EdgeInsets chatListPadding = EdgeInsets.fromLTRB(16.0, 80.0, 16.0, 16.0);
@@ -33,10 +34,16 @@ class UIConstants {
   static const double iconSpacing = 8.0;
   static const double messageSpacing = 8.0;
   static const double variableKeySpacing = 16.0;
+  static const double smallSpacing = 8.0;
+  static const double mediumSpacing = 12.0;
+  static const double standardSpacing = 16.0;
   
   // Icon Sizes
   static const double sendIconSize = 20.0;
   static const double checkIconSize = 18.0;
+  static const double buttonIconSize = 16.0;
+  static const double panelIconSize = 20.0;
+  static const double sequenceSelectorIconSize = 20.0;
   
   // Font Sizes
   static const double messageFontSize = 16.0;
@@ -48,6 +55,7 @@ class UIConstants {
   static const double shadowOpacity = 0.1;
   static const double hintTextOpacity = 0.7;
   static const double unselectedTextOpacity = 0.6;
+  static const double choiceBorderOpacity = 0.5;
   
   // Border Widths
   static const double selectedChoiceBorderWidth = 2.0;

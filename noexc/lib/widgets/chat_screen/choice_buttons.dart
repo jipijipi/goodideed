@@ -138,7 +138,7 @@ class ChoiceButtons extends StatelessWidget {
   Color _getChoiceBorderColor(BuildContext context, bool isSelected) {
     return isSelected
         ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.primary.withOpacity(0.5);
+        : Theme.of(context).colorScheme.primary.withOpacity(UIConstants.choiceBorderOpacity);
   }
 
   /// Gets the appropriate text color for choice buttons

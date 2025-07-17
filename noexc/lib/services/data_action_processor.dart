@@ -1,5 +1,6 @@
 import '../models/data_action.dart';
 import 'user_data_service.dart';
+import '../constants/data_action_constants.dart';
 
 class DataActionProcessor {
   final UserDataService _userDataService;
@@ -26,13 +27,13 @@ class DataActionProcessor {
         await _userDataService.storeValue(action.key, action.value);
         break;
       case DataActionType.increment:
-        await _incrementValue(action.key, action.value ?? 1);
+        await _incrementValue(action.key, action.value ?? DataActionConstants.defaultIncrementValue);
         break;
       case DataActionType.decrement:
-        await _decrementValue(action.key, action.value ?? 1);
+        await _decrementValue(action.key, action.value ?? DataActionConstants.defaultDecrementValue);
         break;
       case DataActionType.reset:
-        await _resetValue(action.key, action.value ?? 0);
+        await _resetValue(action.key, action.value ?? DataActionConstants.defaultResetValue);
         break;
       case DataActionType.trigger:
         await _processTrigger(action);
@@ -41,13 +42,13 @@ class DataActionProcessor {
   }
 
   Future<void> _incrementValue(String key, dynamic incrementBy) async {
-    final currentValue = await _userDataService.getValue<int>(key) ?? 0;
+    final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
     final newValue = currentValue + (incrementBy as int);
     await _userDataService.storeValue(key, newValue);
   }
 
   Future<void> _decrementValue(String key, dynamic decrementBy) async {
-    final currentValue = await _userDataService.getValue<int>(key) ?? 0;
+    final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
     final newValue = currentValue - (decrementBy as int);
     await _userDataService.storeValue(key, newValue);
   }

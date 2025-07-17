@@ -25,6 +25,7 @@ class ChatStateManager extends ChangeNotifier {
   bool _isPanelVisible = false;
   bool _disposed = false;
   String _currentSequenceId = AppConstants.defaultSequenceId;
+  bool _isProcessingMessages = false;
 
   // Controllers
   final ScrollController _scrollController = ScrollController();
@@ -81,16 +82,35 @@ class ChatStateManager extends ChangeNotifier {
 
   /// Display a list of messages with delays and animations
   Future<void> _displayMessages(List<ChatMessage> messages) async {
+    // Prevent duplicate message processing
+    if (_isProcessingMessages) {
+      return;
+    }
+    
+    _isProcessingMessages = true;
+    
     // Messages are already processed in ChatService._getMessagesFromId()
     // No need to process templates again
     
-    for (ChatMessage message in messages) {
-      if (_disposed) break;
+    try {
+      for (ChatMessage message in messages) {
+        if (_disposed) break;
+        
+        // Skip messages that are already displayed to prevent duplicates
+        final isDuplicate = _displayedMessages.any((existing) => 
+          existing.id == message.id && 
+          existing.text == message.text &&
+          existing.sender == message.sender
+        );
+        
+        if (isDuplicate) {
+          continue;
+        }
       
-      // Skip messages with empty text that are not interactive (these are processed messages that had text cleared)
-      if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
-        continue;
-      }
+        // Skip messages with empty text that are not interactive (these are processed messages that had text cleared)
+        if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
+          continue;
+        }
       
       // Use Timer instead of Future.delayed for better control
       final completer = Completer<void>();
@@ -119,6 +139,9 @@ class ChatStateManager extends ChangeNotifier {
         }
         break;
       }
+      }
+    } finally {
+      _isProcessingMessages = false;
     }
   }
 

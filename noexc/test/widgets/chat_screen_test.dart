@@ -41,6 +41,37 @@ void main() {
       expect(find.byType(ListView), findsWidgets);
     });
 
+    testWidgets('should not show duplicate messages in onboarding sequence', (WidgetTester tester) async {
+      // Arrange
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: ChatScreen(),
+        ),
+      );
+
+      // Act - Allow sequence to load and all messages to display
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+      
+      // Wait for messages to appear and be animated
+      await tester.pumpAndSettle(const Duration(milliseconds: 4000));
+
+      // Assert - Check for any text messages (should be some by now)
+      final allText = find.byType(Text);
+      expect(allText, findsWidgets, 
+        reason: 'Should find some text messages after sequence loads');
+
+      // Check for duplicate "Hi" messages if they exist
+      final hiMessages = find.text('Hi');
+      expect(hiMessages.evaluate().length, lessThanOrEqualTo(1), 
+        reason: 'Should find at most one "Hi" message, not duplicates');
+
+      // Check for duplicate "I\'m Tristopher" messages if they exist  
+      final tristMessages = find.text('I\'m Tristopher');
+      expect(tristMessages.evaluate().length, lessThanOrEqualTo(1),
+        reason: 'Should find at most one "I\'m Tristopher" message, not duplicates');
+    });
+
     testWidgets('should display text input field for text input messages', (WidgetTester tester) async {
       // This test will verify that text input fields appear when needed
       await tester.pumpWidget(

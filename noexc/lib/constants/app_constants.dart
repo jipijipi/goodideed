@@ -16,7 +16,7 @@ class AppConstants {
   static const String lastVisitKey = 'user.lastVisit';
   
   // Chat Configuration
-  static const int defaultMessageDelay = 1000; // milliseconds
+  static const int defaultMessageDelay = 100; // milliseconds
   static const String defaultPlaceholderText = 'Type your answer...';
   static const String chatScriptAssetPath = 'assets/chat_script.json'; // Legacy support
   

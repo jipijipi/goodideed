@@ -46,6 +46,37 @@ void main() {
       expect(messages[2].sender, 'bot');   // "Nice to meet you, {user.name|there}! What brings you to our app today?"
     });
 
+    test('should not duplicate messages when switching sequences', () async {
+      // Arrange
+      final userDataService = UserDataService();
+      final templatingService = TextTemplatingService(userDataService);
+      final chatService = ChatService(
+        userDataService: userDataService,
+        templatingService: templatingService,
+      );
+      
+      // Track sequence switches to simulate the duplication scenario
+      List<String> switchedSequences = [];
+      chatService.setSequenceSwitchCallback((sequenceId, startMessageId) async {
+        switchedSequences.add(sequenceId);
+      });
+      
+      // Act - Load welcome sequence which routes to onboarding
+      final messages = await chatService.getInitialMessages(sequenceId: 'welcome_seq');
+      
+      // Assert - Should not contain duplicate messages
+      final messageTexts = messages.map((m) => m.text).toList();
+      final uniqueTexts = messageTexts.toSet().toList();
+      
+      expect(messageTexts.length, equals(uniqueTexts.length), 
+        reason: 'Found duplicate messages: $messageTexts');
+      
+      // Should not have "Hi" appearing twice
+      final hiCount = messageTexts.where((text) => text == 'Hi').length;
+      expect(hiCount, lessThanOrEqualTo(1), 
+        reason: 'Message "Hi" appears $hiCount times, should appear at most once');
+    });
+
     test('should load choice messages correctly', () async {
       // Act
       final messages = await chatService.loadChatScript();

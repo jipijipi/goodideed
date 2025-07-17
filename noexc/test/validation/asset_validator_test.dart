@@ -16,7 +16,7 @@ void main() {
     group('JSON Schema Validation', () {
       test('should validate basic JSON structure', () async {
         // This will test against actual sequence files
-        final result = await validator.validateJsonSchema('onboarding');
+        final result = await validator.validateJsonSchema('onboarding_seq');
         
         // Should not have critical errors for well-formed sequences
         expect(result.errors.where((e) => e.type == 'JSON_PARSE_ERROR').length, 0);

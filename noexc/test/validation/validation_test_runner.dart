@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/validation/sequence_validator.dart';
 import 'package:noexc/validation/asset_validator.dart';
+import 'package:noexc/validation/models/validation_models.dart';
 import 'package:noexc/constants/app_constants.dart';
 
 /// Comprehensive validation test runner
@@ -8,12 +9,10 @@ import 'package:noexc/constants/app_constants.dart';
 void main() {
   group('Comprehensive Sequence Validation', () {
     late AssetValidator assetValidator;
-    late SequenceValidator sequenceValidator;
     
     setUpAll(() {
       TestWidgetsFlutterBinding.ensureInitialized();
       assetValidator = AssetValidator();
-      sequenceValidator = SequenceValidator();
     });
     
     test('Validate all sequence files for structural integrity', () async {
@@ -208,7 +207,6 @@ void main() {
   
   group('Individual Sequence Validation', () {
     test('Validate each sequence individually', () async {
-      final validator = SequenceValidator();
       final assetValidator = AssetValidator();
       
       for (final sequenceId in AppConstants.availableSequences) {

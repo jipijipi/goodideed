@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/validation/asset_validator.dart';
 import 'package:noexc/validation/sequence_validator.dart';
+import 'package:noexc/validation/models/validation_models.dart';
 
 void main() {
   group('AssetValidator', () {

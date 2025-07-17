@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/validation/sequence_validator.dart';
+import 'package:noexc/validation/models/validation_models.dart';
 import 'package:noexc/models/chat_sequence.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/choice.dart';

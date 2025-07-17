@@ -5,6 +5,7 @@ import '../models/chat_sequence.dart';
 import '../models/chat_message.dart';
 import '../constants/app_constants.dart';
 import 'sequence_validator.dart';
+import 'models/validation_models.dart';
 
 /// Validates assets and file integrity
 class AssetValidator {

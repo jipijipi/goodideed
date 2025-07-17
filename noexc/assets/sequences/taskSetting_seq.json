@@ -22,7 +22,8 @@
     },
     {
       "id": 45,
-      "text": "Aight, see you tomorrow"
+      "text": "Aight, see you tomorrow",
+      "sequenceId": "sendoff_seq"
     }
   ]
 }

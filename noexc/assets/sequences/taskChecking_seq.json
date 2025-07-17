@@ -4,12 +4,12 @@
   "description": "Check if the user completed its task",
   "messages": [
     {
-      "id": 53,
+      "id": 1,
       "text": "{user.task|No task yet}? Really?",
-      "nextMessageId": 1
+      "nextMessageId": 2
     },
     {
-      "id": 1,
+      "id": 2,
       "type": "autoroute",
       "routes": [
         {
@@ -123,7 +123,8 @@
     {
       "id": 39,
       "delay": 2000,
-      "text": "Ya bum"
+      "text": "Ya bum",
+      "sequenceId": "sendoff_seq"
     },
     {
       "id": 32,
@@ -136,17 +137,13 @@
       "choices": [
         {
           "text": "Damn right I did",
-          "nextMessageId": 36
+          "sequenceId": "success_seq"
         },
         {
           "text": "Well...No...",
           "nextMessageId": 37
         }
       ]
-    },
-    {
-      "id": 36,
-      "text": "Bang on!|||Go {user.name|you}!"
     },
     {
       "id": 37,

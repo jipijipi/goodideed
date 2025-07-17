@@ -39,7 +39,9 @@ class ChatConfig {
     'welcome_seq': 'Welcome Sequence',
     'taskChecking_seq': 'Task Checking Sequence',
     'taskSetting_seq': 'Task Setting Sequence',
-    'onboarding_seq': 'Onbaording Sequence'
+    'onboarding_seq': 'Onboarding Sequence',
+    'sendoff_seq': 'Send Off Sequence',
+    'success_seq': 'Success Sequence'
   };
   
   // Private constructor to prevent instantiation

@@ -7,6 +7,7 @@ import '../../services/chat_service.dart';
 import '../../services/user_data_service.dart';
 import '../../services/text_templating_service.dart';
 import '../../services/text_variants_service.dart';
+import '../../services/message_queue.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/ui_constants.dart';
 
@@ -18,6 +19,7 @@ class ChatStateManager extends ChangeNotifier {
   late final TextTemplatingService _templatingService;
   late final TextVariantsService _variantsService;
   late final ChatService _chatService;
+  late final MessageQueue _messageQueue;
 
   // State
   List<ChatMessage> _displayedMessages = [];
@@ -25,11 +27,9 @@ class ChatStateManager extends ChangeNotifier {
   bool _isPanelVisible = false;
   bool _disposed = false;
   String _currentSequenceId = AppConstants.defaultSequenceId;
-  bool _isProcessingMessages = false;
 
   // Controllers
   final ScrollController _scrollController = ScrollController();
-  final List<Timer> _activeTimers = [];
 
   // Getters
   List<ChatMessage> get displayedMessages => _displayedMessages;
@@ -56,6 +56,7 @@ class ChatStateManager extends ChangeNotifier {
       templatingService: _templatingService,
       variantsService: _variantsService,
     );
+    _messageQueue = MessageQueue();
     
     // Set up callback for autoroute sequence switching
     _chatService.setSequenceSwitchCallback(_switchToSequenceFromAutoroute);
@@ -82,67 +83,60 @@ class ChatStateManager extends ChangeNotifier {
 
   /// Display a list of messages with delays and animations
   Future<void> _displayMessages(List<ChatMessage> messages) async {
-    // Prevent duplicate message processing
-    if (_isProcessingMessages) {
-      return;
+    debugPrint('📱 DISPLAY_MESSAGES: Starting to display ${messages.length} messages');
+    
+    // Filter out duplicates and empty messages
+    final filteredMessages = messages.where((message) {
+      // Skip messages that are already displayed to prevent duplicates
+      final isDuplicate = _displayedMessages.any((existing) => 
+        existing.id == message.id && 
+        existing.text == message.text &&
+        existing.sender == message.sender
+      );
+      
+      if (isDuplicate) {
+        debugPrint('📱 DISPLAY_MESSAGES: Skipping duplicate message ID ${message.id}: "${message.text.substring(0, message.text.length > 30 ? 30 : message.text.length)}..."');
+        return false;
+      }
+      
+      // Skip messages with empty text that are not interactive
+      if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
+        debugPrint('📱 DISPLAY_MESSAGES: Skipping empty non-interactive message ID ${message.id}');
+        return false;
+      }
+      
+      return true;
+    }).toList();
+    
+    debugPrint('📱 DISPLAY_MESSAGES: After filtering: ${filteredMessages.length} messages to display');
+    
+    // Log filtered messages for debugging
+    for (int i = 0; i < filteredMessages.length && i < 5; i++) {
+      final msg = filteredMessages[i];
+      debugPrint('📱 DISPLAY_MESSAGES: Filtered message ${i + 1}: ID=${msg.id}, Text="${msg.text.substring(0, msg.text.length > 30 ? 30 : msg.text.length)}...", Delay=${msg.delay}ms');
     }
     
-    _isProcessingMessages = true;
-    
-    // Messages are already processed in ChatService._getMessagesFromId()
-    // No need to process templates again
-    
-    try {
-      for (ChatMessage message in messages) {
-        if (_disposed) break;
-        
-        // Skip messages that are already displayed to prevent duplicates
-        final isDuplicate = _displayedMessages.any((existing) => 
-          existing.id == message.id && 
-          existing.text == message.text &&
-          existing.sender == message.sender
-        );
-        
-        if (isDuplicate) {
-          continue;
-        }
+    // Enqueue messages for processing
+    debugPrint('📱 DISPLAY_MESSAGES: Enqueueing ${filteredMessages.length} messages to MessageQueue');
+    await _messageQueue.enqueue(filteredMessages, (message) async {
+      if (_disposed) return;
       
-        // Skip messages with empty text that are not interactive (these are processed messages that had text cleared)
-        if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
-          continue;
-        }
+      debugPrint('📱 DISPLAY_MESSAGES: Actually displaying message ID ${message.id}: "${message.text.substring(0, message.text.length > 30 ? 30 : message.text.length)}..."');
+      _displayedMessages.add(message);
+      notifyListeners();
       
-      // Use Timer instead of Future.delayed for better control
-      final completer = Completer<void>();
-      final timer = Timer(Duration(milliseconds: message.delay), () {
-        if (!_disposed) {
-          _displayedMessages.add(message);
-          notifyListeners();
-          
-          // Scroll to bottom after adding message
-          _scrollToBottom();
-        }
-        completer.complete();
-      });
+      // Scroll to bottom after adding message
+      _scrollToBottom();
       
-      _activeTimers.add(timer);
-      await completer.future;
-      _activeTimers.remove(timer);
-      
-      if (_disposed) break;
-      
-      // Stop at choice messages or text input messages to wait for user interaction
-      if (message.isChoice || message.isTextInput) {
-        if (message.isTextInput) {
-          _currentTextInputMessage = message;
-          notifyListeners();
-        }
-        break;
+      // Handle interactive messages
+      if (message.isTextInput) {
+        debugPrint('📱 DISPLAY_MESSAGES: Setting text input message ID ${message.id}');
+        _currentTextInputMessage = message;
+        notifyListeners();
       }
-      }
-    } finally {
-      _isProcessingMessages = false;
-    }
+    });
+    
+    debugPrint('📱 DISPLAY_MESSAGES: Completed displaying messages. Total displayed: ${_displayedMessages.length}');
   }
 
   /// Scroll to the bottom of the message list
@@ -204,30 +198,42 @@ class ChatStateManager extends ChangeNotifier {
     if (_disposed) return;
     
     try {
-      debugPrint('SEQUENCE_SWITCH: Starting sequence switch from $source...');
-      debugPrint('SEQUENCE_SWITCH: Target sequence: $sequenceId');
-      debugPrint('SEQUENCE_SWITCH: Start message ID: $startMessageId');
+      debugPrint('🔄 SEQUENCE_SWITCH: Starting sequence switch from $source...');
+      debugPrint('🔄 SEQUENCE_SWITCH: Current sequence: $_currentSequenceId');
+      debugPrint('🔄 SEQUENCE_SWITCH: Target sequence: $sequenceId');
+      debugPrint('🔄 SEQUENCE_SWITCH: Start message ID: $startMessageId');
+      debugPrint('🔄 SEQUENCE_SWITCH: Current displayed messages: ${_displayedMessages.length}');
       
-      // Clear active timers but keep displayed messages for context
-      _clearActiveTimers();
+      // Clear current text input message
       _currentTextInputMessage = null;
       _currentSequenceId = sequenceId;
       
       // Load the new sequence
+      debugPrint('🔄 SEQUENCE_SWITCH: Loading sequence "$sequenceId"...');
       await _chatService.loadSequence(sequenceId);
-      debugPrint('SEQUENCE_SWITCH: New sequence loaded: ${_chatService.currentSequence?.name}');
+      debugPrint('🔄 SEQUENCE_SWITCH: New sequence loaded: ${_chatService.currentSequence?.name}');
+      debugPrint('🔄 SEQUENCE_SWITCH: Sequence has ${_chatService.currentSequence?.messages.length} messages');
       
       // Get messages starting from the specified message ID
+      debugPrint('🔄 SEQUENCE_SWITCH: Getting messages starting from ID $startMessageId...');
       final nextMessages = await _chatService.getMessagesAfterChoice(startMessageId);
-      debugPrint('SEQUENCE_SWITCH: Found ${nextMessages.length} messages to display');
+      debugPrint('🔄 SEQUENCE_SWITCH: Found ${nextMessages.length} messages to display');
+      
+      // Log first few messages for debugging
+      for (int i = 0; i < nextMessages.length && i < 3; i++) {
+        final msg = nextMessages[i];
+        debugPrint('🔄 SEQUENCE_SWITCH: Message ${i + 1}: ID=${msg.id}, Text="${msg.text.substring(0, msg.text.length > 30 ? 30 : msg.text.length)}..."');
+      }
       
       // Display the new sequence messages
+      debugPrint('🔄 SEQUENCE_SWITCH: Displaying ${nextMessages.length} messages...');
       await _displayMessages(nextMessages);
       
       notifyListeners();
-      debugPrint('SEQUENCE_SWITCH: Sequence switch completed successfully');
+      debugPrint('🔄 SEQUENCE_SWITCH: Sequence switch completed successfully');
+      debugPrint('🔄 SEQUENCE_SWITCH: Total displayed messages now: ${_displayedMessages.length}');
     } catch (e) {
-      debugPrint('SEQUENCE_SWITCH_ERROR: Error switching sequence from $source: $e');
+      debugPrint('🔄 SEQUENCE_SWITCH_ERROR: Error switching sequence from $source: $e');
     }
   }
 
@@ -286,7 +292,6 @@ class ChatStateManager extends ChangeNotifier {
     
     try {
       // Clear current state
-      _clearActiveTimers();
       _displayedMessages.clear();
       _currentTextInputMessage = null;
       _currentSequenceId = sequenceId;
@@ -309,7 +314,6 @@ class ChatStateManager extends ChangeNotifier {
       debugPrint('DEBUG: Resetting chat sequence: $_currentSequenceId');
       
       // Clear current state
-      _clearActiveTimers();
       _displayedMessages.clear();
       _currentTextInputMessage = null;
       
@@ -330,8 +334,7 @@ class ChatStateManager extends ChangeNotifier {
     
     debugPrint('DEBUG: Clearing displayed messages');
     
-    // Clear timers and messages but keep sequence loaded
-    _clearActiveTimers();
+    // Clear messages but keep sequence loaded
     _displayedMessages.clear();
     _currentTextInputMessage = null;
     
@@ -374,24 +377,13 @@ class ChatStateManager extends ChangeNotifier {
     }
   }
 
-  /// Clear all active timers
-  void _clearActiveTimers() {
-    for (final timer in _activeTimers) {
-      timer.cancel();
-    }
-    _activeTimers.clear();
-  }
-
   /// Dispose of resources and cancel timers
   @override
   void dispose() {
     _disposed = true;
     
-    // Cancel all active timers
-    for (final timer in _activeTimers) {
-      timer.cancel();
-    }
-    _activeTimers.clear();
+    // Dispose the message queue
+    _messageQueue.dispose();
     
     _scrollController.dispose();
     super.dispose();

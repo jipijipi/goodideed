@@ -130,21 +130,31 @@ class ChatService {
   }
 
   Future<List<ChatMessage>> _getMessagesFromId(int startId) async {
+    print('🔄 GETMESSAGES: Starting from ID $startId in sequence "${_currentSequence?.sequenceId}"');
     List<ChatMessage> messages = [];
     int? currentId = startId;
+    int loopCount = 0;
     
     while (currentId != null && _messageMap.containsKey(currentId)) {
+      loopCount++;
+      print('🔄 GETMESSAGES: Loop $loopCount - Processing message ID $currentId');
       ChatMessage msg = _messageMap[currentId]!;
+      
+      print('🔄 GETMESSAGES: Message details - ID: ${msg.id}, Type: ${msg.type}, Text: "${msg.text.substring(0, msg.text.length > 30 ? 30 : msg.text.length)}...", SequenceId: ${msg.sequenceId}, NextMessageId: ${msg.nextMessageId}');
       
       // Handle autoroute messages
       if (msg.isAutoRoute) {
+        print('🔄 GETMESSAGES: Processing autoroute message ID ${msg.id}');
         currentId = await _processAutoRoute(msg);
+        print('🔄 GETMESSAGES: Autoroute returned next ID: $currentId');
         continue; // Skip adding to display
       }
       
       // Handle dataAction messages
       if (msg.isDataAction) {
+        print('🔄 GETMESSAGES: Processing dataAction message ID ${msg.id}');
         currentId = await _processDataAction(msg);
+        print('🔄 GETMESSAGES: DataAction returned next ID: $currentId');
         continue; // Skip adding to display
       }
       
@@ -153,23 +163,32 @@ class ChatService {
       
       // Expand multi-text messages into individual messages
       final expandedMessages = processedMsg.expandToIndividualMessages();
+      print('🔄 GETMESSAGES: Adding ${expandedMessages.length} expanded messages to result');
       messages.addAll(expandedMessages);
       
       // Stop at choice messages or text input messages - let UI handle the interaction
-      if (msg.isChoice || msg.isTextInput) break;
+      if (msg.isChoice || msg.isTextInput) {
+        print('🔄 GETMESSAGES: Stopping at interactive message (choice/textInput) ID ${msg.id}');
+        break;
+      }
       
       // Check for universal cross-sequence navigation
       if (msg.sequenceId != null) {
+        print('🔄 GETMESSAGES: Found cross-sequence navigation to "${msg.sequenceId}"');
         final startMessageId = ChatConfig.initialMessageId;
         
         // Notify UI about sequence change via callback
         if (_onSequenceSwitch != null) {
+          print('🔄 GETMESSAGES: Notifying UI about sequence switch to "${msg.sequenceId}" starting at message $startMessageId');
           await _onSequenceSwitch!(msg.sequenceId!, startMessageId);
+          print('🔄 GETMESSAGES: UI callback completed, breaking from loop');
           break; // UI handles continuation
         } else {
           // Fallback: Load sequence directly
+          print('🔄 GETMESSAGES: No UI callback, loading sequence "${msg.sequenceId}" directly');
           await loadSequence(msg.sequenceId!);
           currentId = startMessageId;
+          print('🔄 GETMESSAGES: Sequence loaded, continuing from message $currentId');
           continue;
         }
       }
@@ -177,15 +196,19 @@ class ChatService {
       // Move to next message
       if (msg.nextMessageId != null) {
         currentId = msg.nextMessageId;
+        print('🔄 GETMESSAGES: Moving to next message ID: $currentId');
       } else {
         // If no explicit next message, try sequential ID
         currentId = currentId + 1;
+        print('🔄 GETMESSAGES: No explicit next ID, trying sequential ID: $currentId');
         if (!_messageMap.containsKey(currentId)) {
+          print('🔄 GETMESSAGES: Sequential ID $currentId not found, breaking loop');
           break;
         }
       }
     }
     
+    print('🔄 GETMESSAGES: Completed after $loopCount loops, returning ${messages.length} messages');
     return messages;
   }
 
@@ -327,21 +350,24 @@ class ChatService {
   /// Execute a route condition by loading sequence or returning message ID
   Future<int?> _executeRoute(RouteCondition route) async {
     print('🎯 EXECUTE_ROUTE: Executing route - sequenceId: ${route.sequenceId}, nextMessageId: ${route.nextMessageId}');
+    print('🎯 EXECUTE_ROUTE: Current sequence: "${_currentSequence?.sequenceId}", Current message map size: ${_messageMap.length}');
+    
     if (route.sequenceId != null) {
       final startMessageId = ChatConfig.initialMessageId;
       print('🎯 EXECUTE_ROUTE: Switching to sequence "${route.sequenceId}" starting at message $startMessageId');
       
       // Notify UI about sequence change if callback is set
       if (_onSequenceSwitch != null) {
-        print('🎯 EXECUTE_ROUTE: Notifying UI about sequence switch');
+        print('🎯 EXECUTE_ROUTE: Notifying UI about sequence switch from "${_currentSequence?.sequenceId}" to "${route.sequenceId}"');
         await _onSequenceSwitch!(route.sequenceId!, startMessageId);
         // Return null to indicate that UI will handle the continuation
         print('🎯 EXECUTE_ROUTE: UI will handle continuation, returning null');
         return null;
       } else {
         // Fallback: Load sequence directly (for backward compatibility)
-        print('🎯 EXECUTE_ROUTE: No UI callback, loading sequence directly');
+        print('🎯 EXECUTE_ROUTE: No UI callback, loading sequence "${route.sequenceId}" directly');
         await loadSequence(route.sequenceId!);
+        print('🎯 EXECUTE_ROUTE: Sequence loaded, new message map size: ${_messageMap.length}');
         return startMessageId;
       }
     }

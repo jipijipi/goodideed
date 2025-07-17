@@ -20,17 +20,7 @@
     {
       "id": 57,
       "text": "Well well well, guess who's back...",
-      "nextMessageId": 55
-    },
-    {
-      "id": 55,
-      "type": "autoroute",
-      "routes": [
-        {
-          "default": true,
-          "sequenceId": "taskChecking_seq"
-        }
-      ]
+      "sequenceId": "taskChecking_seq"
     }
   ]
 }

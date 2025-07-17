@@ -58,16 +58,17 @@ class ChatStateManager extends ChangeNotifier {
     );
     _messageQueue = MessageQueue();
     
-    // Set up callback for autoroute sequence switching
-    _chatService.setSequenceSwitchCallback(_switchToSequenceFromAutoroute);
+    // Note: Sequence switching is now handled entirely by ChatService message accumulation
+    // No callback needed - this prevents duplicate message processing
   }
 
   /// Load chat script and display initial messages
   Future<void> _loadAndDisplayMessages() async {
     try {
-      await _chatService.getInitialMessages(sequenceId: _currentSequenceId);
+      final initialMessages = await _chatService.getInitialMessages(sequenceId: _currentSequenceId);
+      
       if (!_disposed) {
-        await _simulateInitialChat();
+        await _displayMessages(initialMessages);
       }
     } catch (e) {
       // Handle error silently or add error handling as needed
@@ -75,16 +76,8 @@ class ChatStateManager extends ChangeNotifier {
     }
   }
 
-  /// Start the initial chat conversation
-  Future<void> _simulateInitialChat() async {
-    final initialMessages = await _chatService.getInitialMessages(sequenceId: _currentSequenceId);
-    await _displayMessages(initialMessages);
-  }
-
   /// Display a list of messages with delays and animations
   Future<void> _displayMessages(List<ChatMessage> messages) async {
-    debugPrint('📱 DISPLAY_MESSAGES: Starting to display ${messages.length} messages');
-    
     // Filter out duplicates and empty messages
     final filteredMessages = messages.where((message) {
       // Skip messages that are already displayed to prevent duplicates
@@ -94,34 +87,20 @@ class ChatStateManager extends ChangeNotifier {
         existing.sender == message.sender
       );
       
-      if (isDuplicate) {
-        debugPrint('📱 DISPLAY_MESSAGES: Skipping duplicate message ID ${message.id}: "${message.text.substring(0, message.text.length > 30 ? 30 : message.text.length)}..."');
-        return false;
-      }
+      if (isDuplicate) return false;
       
       // Skip messages with empty text that are not interactive
       if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
-        debugPrint('📱 DISPLAY_MESSAGES: Skipping empty non-interactive message ID ${message.id}');
         return false;
       }
       
       return true;
     }).toList();
     
-    debugPrint('📱 DISPLAY_MESSAGES: After filtering: ${filteredMessages.length} messages to display');
-    
-    // Log filtered messages for debugging
-    for (int i = 0; i < filteredMessages.length && i < 5; i++) {
-      final msg = filteredMessages[i];
-      debugPrint('📱 DISPLAY_MESSAGES: Filtered message ${i + 1}: ID=${msg.id}, Text="${msg.text.substring(0, msg.text.length > 30 ? 30 : msg.text.length)}...", Delay=${msg.delay}ms');
-    }
-    
     // Enqueue messages for processing
-    debugPrint('📱 DISPLAY_MESSAGES: Enqueueing ${filteredMessages.length} messages to MessageQueue');
     await _messageQueue.enqueue(filteredMessages, (message) async {
       if (_disposed) return;
       
-      debugPrint('📱 DISPLAY_MESSAGES: Actually displaying message ID ${message.id}: "${message.text.substring(0, message.text.length > 30 ? 30 : message.text.length)}..."');
       _displayedMessages.add(message);
       notifyListeners();
       
@@ -130,13 +109,10 @@ class ChatStateManager extends ChangeNotifier {
       
       // Handle interactive messages
       if (message.isTextInput) {
-        debugPrint('📱 DISPLAY_MESSAGES: Setting text input message ID ${message.id}');
         _currentTextInputMessage = message;
         notifyListeners();
       }
     });
-    
-    debugPrint('📱 DISPLAY_MESSAGES: Completed displaying messages. Total displayed: ${_displayedMessages.length}');
   }
 
   /// Scroll to the bottom of the message list
@@ -193,58 +169,26 @@ class ChatStateManager extends ChangeNotifier {
     await _displayMessages(nextMessages);
   }
 
-  /// Unified sequence switching method for both choices and autoroutes
-  Future<void> _switchSequence(String sequenceId, int startMessageId, {String source = 'unknown'}) async {
+  /// Switch to a different sequence from a choice selection
+  Future<void> _switchToSequenceFromChoice(String sequenceId, int startMessageId) async {
     if (_disposed) return;
     
     try {
-      debugPrint('🔄 SEQUENCE_SWITCH: Starting sequence switch from $source...');
-      debugPrint('🔄 SEQUENCE_SWITCH: Current sequence: $_currentSequenceId');
-      debugPrint('🔄 SEQUENCE_SWITCH: Target sequence: $sequenceId');
-      debugPrint('🔄 SEQUENCE_SWITCH: Start message ID: $startMessageId');
-      debugPrint('🔄 SEQUENCE_SWITCH: Current displayed messages: ${_displayedMessages.length}');
-      
-      // Clear current text input message
+      // Clear current text input message and update sequence tracking
       _currentTextInputMessage = null;
       _currentSequenceId = sequenceId;
       
-      // Load the new sequence
-      debugPrint('🔄 SEQUENCE_SWITCH: Loading sequence "$sequenceId"...');
+      // Load the new sequence and get messages
       await _chatService.loadSequence(sequenceId);
-      debugPrint('🔄 SEQUENCE_SWITCH: New sequence loaded: ${_chatService.currentSequence?.name}');
-      debugPrint('🔄 SEQUENCE_SWITCH: Sequence has ${_chatService.currentSequence?.messages.length} messages');
-      
-      // Get messages starting from the specified message ID
-      debugPrint('🔄 SEQUENCE_SWITCH: Getting messages starting from ID $startMessageId...');
       final nextMessages = await _chatService.getMessagesAfterChoice(startMessageId);
-      debugPrint('🔄 SEQUENCE_SWITCH: Found ${nextMessages.length} messages to display');
-      
-      // Log first few messages for debugging
-      for (int i = 0; i < nextMessages.length && i < 3; i++) {
-        final msg = nextMessages[i];
-        debugPrint('🔄 SEQUENCE_SWITCH: Message ${i + 1}: ID=${msg.id}, Text="${msg.text.substring(0, msg.text.length > 30 ? 30 : msg.text.length)}..."');
-      }
       
       // Display the new sequence messages
-      debugPrint('🔄 SEQUENCE_SWITCH: Displaying ${nextMessages.length} messages...');
       await _displayMessages(nextMessages);
       
       notifyListeners();
-      debugPrint('🔄 SEQUENCE_SWITCH: Sequence switch completed successfully');
-      debugPrint('🔄 SEQUENCE_SWITCH: Total displayed messages now: ${_displayedMessages.length}');
     } catch (e) {
-      debugPrint('🔄 SEQUENCE_SWITCH_ERROR: Error switching sequence from $source: $e');
+      debugPrint('SEQUENCE_SWITCH_ERROR: Error switching sequence from choice: $e');
     }
-  }
-
-  /// Switch to a different sequence from a choice selection
-  Future<void> _switchToSequenceFromChoice(String sequenceId, int startMessageId) async {
-    await _switchSequence(sequenceId, startMessageId, source: 'choice');
-  }
-
-  /// Switch to a different sequence from an autoroute
-  Future<void> _switchToSequenceFromAutoroute(String sequenceId, int startMessageId) async {
-    await _switchSequence(sequenceId, startMessageId, source: 'autoroute');
   }
 
   /// Handle user text input submission
@@ -297,8 +241,7 @@ class ChatStateManager extends ChangeNotifier {
       _currentSequenceId = sequenceId;
       
       // Load new sequence
-      await _chatService.getInitialMessages(sequenceId: sequenceId);
-      await _simulateInitialChat();
+      await _loadAndDisplayMessages();
       
       notifyListeners();
     } catch (e) {
@@ -318,8 +261,7 @@ class ChatStateManager extends ChangeNotifier {
       _currentTextInputMessage = null;
       
       // Reload current sequence from beginning
-      await _chatService.getInitialMessages(sequenceId: _currentSequenceId);
-      await _simulateInitialChat();
+      await _loadAndDisplayMessages();
       
       notifyListeners();
       debugPrint('DEBUG: Chat reset completed');

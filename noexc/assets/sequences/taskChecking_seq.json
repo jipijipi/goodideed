@@ -65,15 +65,18 @@
     },
     {
       "id": 27,
-      "text": "It can't be...|||Well congrats"
+      "text": "It can't be...|||Well congrats",
+      "sequenceId": "success_seq"
     },
     {
       "id": 28,
-      "text": "Alriiiight, keep it up"
+      "text": "Alriiiight, keep it up",
+      "sequenceId": "sendoff_seq"
     },
     {
       "id": 29,
-      "text": "I'm not surprised|||Don't change"
+      "text": "I'm not surprised|||Don't change",
+      "sequenceId": "sendoff_seq"
     },
     {
       "id": 54,
@@ -141,17 +144,14 @@
         },
         {
           "text": "Well...No...",
-          "nextMessageId": 37
+          "sequenceId": "failure_seq"
         }
       ]
     },
     {
-      "id": 37,
-      "text": "I see..."
-    },
-    {
       "id": 33,
-      "text": "Knew it..."
+      "text": "Knew it...",
+      "sequenceId": "failure_seq"
     }
   ]
 }

@@ -13,6 +13,7 @@ class SessionService {
     await _updateTotalVisitCount();
     await _updateTimeOfDay();
     await _updateDateInfo();
+    await _updateTaskInfo();
   }
   
   /// Update visit count (daily counter that resets each day)
@@ -91,6 +92,30 @@ class SessionService {
     // Set weekend flag
     final isWeekend = now.weekday == DateTime.saturday || now.weekday == DateTime.sunday;
     await userDataService.storeValue(StorageKeys.sessionIsWeekend, isWeekend);
+  }
+
+  /// Update daily task information
+  Future<void> _updateTaskInfo() async {
+    final now = DateTime.now();
+    final today = _formatDate(now);
+    
+    // Check if this is a new day for tasks
+    final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    final isNewDay = lastTaskDate != today;
+    
+    // Always set current date to today
+    await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
+    
+    if (isNewDay) {
+      // Reset task status to pending for new day
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+    }
+    
+    // Set default status if not exists
+    final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
+    if (currentStatus == null) {
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+    }
   }
   
   /// Helper method to format date consistently

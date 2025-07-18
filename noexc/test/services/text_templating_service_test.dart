@@ -224,5 +224,29 @@ void main() {
       // Assert
       expect(result, equals('Hello, John|Doe!'));
     });
+
+    test('should handle task current date and status templates', () async {
+      // Arrange
+      await userDataService.storeValue('task.current_date', '2024-07-18');
+      await userDataService.storeValue('task.current_status', 'pending');
+      const text = 'Today ({task.current_date}), your task status is: {task.current_status}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Today (2024-07-18), your task status is: pending'));
+    });
+
+    test('should handle task templates with fallbacks', () async {
+      // Arrange - don't set any task data
+      const text = 'Date: {task.current_date|unknown}, Status: {task.current_status|none}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Date: unknown, Status: none'));
+    });
   });
 }

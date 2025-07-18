@@ -14,6 +14,8 @@ class StorageKeys {
   static const String taskPrefix = 'task.';
   static const String taskDeadlineTime = '${taskPrefix}deadline_time';
   static const String taskActiveDays = '${taskPrefix}active_days';
+  static const String taskCurrentDate = '${taskPrefix}current_date';
+  static const String taskCurrentStatus = '${taskPrefix}current_status';
   
   // Private constructor to prevent instantiation
   StorageKeys._();

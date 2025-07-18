@@ -79,5 +79,69 @@ void main() {
       expect(daysSinceFirst, isA<int>());
       expect(isWeekend, isA<bool>());
     });
+
+    test('should initialize task current date and status', () async {
+      await sessionService.initializeSession();
+      
+      final currentDate = await userDataService.getValue<String>('task.current_date');
+      final currentStatus = await userDataService.getValue<String>('task.current_status');
+      
+      expect(currentDate, isNotNull);
+      expect(currentStatus, 'pending');
+      
+      // Verify date format matches today
+      final today = DateTime.now();
+      final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      expect(currentDate, expectedDate);
+    });
+
+    test('should reset task status to pending on new day', () async {
+      // First day initialization
+      await sessionService.initializeSession();
+      
+      // Manually change status to completed
+      await userDataService.storeValue('task.current_status', 'completed');
+      expect(await userDataService.getValue<String>('task.current_status'), 'completed');
+      
+      // Simulate new day by setting yesterday's task date
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue('task.current_date', yesterdayString);
+      
+      // Initialize today (should reset status)
+      await sessionService.initializeSession();
+      
+      final currentStatus = await userDataService.getValue<String>('task.current_status');
+      expect(currentStatus, 'pending');
+    });
+
+    test('should preserve task status on same day', () async {
+      // Initialize first time
+      await sessionService.initializeSession();
+      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+      
+      // Change status to completed
+      await userDataService.storeValue('task.current_status', 'completed');
+      
+      // Initialize again same day
+      await sessionService.initializeSession();
+      
+      // Status should remain completed
+      final currentStatus = await userDataService.getValue<String>('task.current_status');
+      expect(currentStatus, 'completed');
+    });
+
+    test('should always update current date to today', () async {
+      // Set an old date
+      await userDataService.storeValue('task.current_date', '2024-01-01');
+      
+      await sessionService.initializeSession();
+      
+      final currentDate = await userDataService.getValue<String>('task.current_date');
+      final today = DateTime.now();
+      final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      expect(currentDate, expectedDate);
+    });
   });
 }

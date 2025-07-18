@@ -248,5 +248,67 @@ void main() {
       // Assert
       expect(result, equals('Date: unknown, Status: none'));
     });
+
+    test('should handle previous day task templates', () async {
+      // Arrange
+      await userDataService.storeValue('task.previous_date', '2024-07-17');
+      await userDataService.storeValue('task.previous_status', 'pending');
+      await userDataService.storeValue('task.previous_task', 'Morning run');
+      const text = 'Yesterday ({task.previous_date}), your task "{task.previous_task}" is {task.previous_status}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Yesterday (2024-07-17), your task "Morning run" is pending'));
+    });
+
+    test('should handle previous day templates with fallbacks', () async {
+      // Arrange - don't set any previous day data
+      const text = 'Previous: {task.previous_date|none}, Status: {task.previous_status|no previous task}, Task: {task.previous_task|nothing}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Previous: none, Status: no previous task, Task: nothing'));
+    });
+
+    test('should handle mixed current and previous day templates', () async {
+      // Arrange
+      await userDataService.storeValue('task.current_date', '2024-07-18');
+      await userDataService.storeValue('task.current_status', 'pending');
+      await userDataService.storeValue('task.previous_date', '2024-07-17');
+      await userDataService.storeValue('task.previous_status', 'completed');
+      await userDataService.storeValue('task.previous_task', 'Read book');
+      const text = 'Today ({task.current_date}): {task.current_status}. Yesterday ({task.previous_date}): {task.previous_task} was {task.previous_status}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Today (2024-07-18): pending. Yesterday (2024-07-17): Read book was completed'));
+    });
+
+    test('should handle previous day status values correctly', () async {
+      // Test all possible status values
+      const testCases = [
+        {'status': 'pending', 'expected': 'pending'},
+        {'status': 'completed', 'expected': 'completed'},
+        {'status': 'failed', 'expected': 'failed'},
+      ];
+
+      for (final testCase in testCases) {
+        // Arrange
+        await userDataService.storeValue('task.previous_status', testCase['status']);
+        const text = 'Previous task is {task.previous_status}';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Previous task is ${testCase['expected']}'));
+      }
+    });
   });
 }

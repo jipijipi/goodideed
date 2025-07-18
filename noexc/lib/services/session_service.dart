@@ -103,6 +103,14 @@ class SessionService {
     final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
     final isNewDay = lastTaskDate != today;
     
+    if (isNewDay && lastTaskDate != null) {
+      // Archive current day as previous day before updating
+      await _archivePreviousDay(lastTaskDate);
+      
+      // Check if previous day grace period expired
+      await _checkPreviousDayGracePeriod(now);
+    }
+    
     // Always set current date to today
     await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
     
@@ -115,6 +123,40 @@ class SessionService {
     final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
     if (currentStatus == null) {
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+    }
+  }
+
+  /// Archive current day task as previous day
+  Future<void> _archivePreviousDay(String lastTaskDate) async {
+    final lastStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
+    final lastTask = await userDataService.getValue<String>('user.task');
+    
+    // Only archive if there was an actual task and it was pending
+    if (lastTask != null && lastStatus == 'pending') {
+      await userDataService.storeValue(StorageKeys.taskPreviousDate, lastTaskDate);
+      await userDataService.storeValue(StorageKeys.taskPreviousStatus, 'pending');
+      await userDataService.storeValue(StorageKeys.taskPreviousTask, lastTask);
+    }
+  }
+
+  /// Check if previous day grace period has expired
+  Future<void> _checkPreviousDayGracePeriod(DateTime now) async {
+    final previousStatus = await userDataService.getValue<String>(StorageKeys.taskPreviousStatus);
+    
+    if (previousStatus == 'pending') {
+      // Get deadline time (default 21:00 if not set)
+      final deadlineTime = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime) ?? '21:00';
+      final deadlineParts = deadlineTime.split(':');
+      final deadlineHour = int.parse(deadlineParts[0]);
+      final deadlineMinute = int.parse(deadlineParts[1]);
+      
+      // Create today's deadline datetime
+      final todayDeadline = DateTime(now.year, now.month, now.day, deadlineHour, deadlineMinute);
+      
+      if (now.isAfter(todayDeadline)) {
+        // Grace period expired - mark previous day as failed
+        await userDataService.storeValue(StorageKeys.taskPreviousStatus, 'failed');
+      }
     }
   }
   

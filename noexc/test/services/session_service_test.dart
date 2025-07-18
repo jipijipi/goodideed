@@ -143,5 +143,64 @@ void main() {
       
       expect(currentDate, expectedDate);
     });
+
+    test('should archive previous day task when moving to new day', () async {
+      // Day 1: Set task and status
+      await userDataService.storeValue('user.task', 'Exercise for 30 minutes');
+      await sessionService.initializeSession();
+      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+      
+      // Simulate Day 2 by setting yesterday's date
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue('task.current_date', yesterdayString);
+      
+      // Initialize today (should archive previous day)
+      await sessionService.initializeSession();
+      
+      // Check previous day was archived
+      expect(await userDataService.getValue<String>('task.previous_date'), yesterdayString);
+      expect(await userDataService.getValue<String>('task.previous_status'), 'pending');
+      expect(await userDataService.getValue<String>('task.previous_task'), 'Exercise for 30 minutes');
+      
+      // Check current day was reset
+      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+    });
+
+    test('should not archive if no task was set', () async {
+      // Day 1: No task set
+      await sessionService.initializeSession();
+      
+      // Simulate Day 2
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue('task.current_date', yesterdayString);
+      
+      await sessionService.initializeSession();
+      
+      // Should not have archived anything
+      expect(await userDataService.getValue<String>('task.previous_date'), isNull);
+      expect(await userDataService.getValue<String>('task.previous_status'), isNull);
+      expect(await userDataService.getValue<String>('task.previous_task'), isNull);
+    });
+
+    test('should not archive if task was already completed', () async {
+      // Day 1: Set task and mark as completed
+      await userDataService.storeValue('user.task', 'Read a book');
+      await sessionService.initializeSession();
+      await userDataService.storeValue('task.current_status', 'completed');
+      
+      // Simulate Day 2
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue('task.current_date', yesterdayString);
+      
+      await sessionService.initializeSession();
+      
+      // Should not have archived completed task
+      expect(await userDataService.getValue<String>('task.previous_date'), isNull);
+      expect(await userDataService.getValue<String>('task.previous_status'), isNull);
+      expect(await userDataService.getValue<String>('task.previous_task'), isNull);
+    });
   });
 }

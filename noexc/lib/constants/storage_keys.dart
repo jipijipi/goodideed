@@ -10,6 +10,11 @@ class StorageKeys {
   static const String sessionDaysSinceFirstVisit = '${sessionPrefix}daysSinceFirstVisit';
   static const String sessionIsWeekend = '${sessionPrefix}isWeekend';
   
+  // Task configuration keys
+  static const String taskPrefix = 'task.';
+  static const String taskDeadlineTime = '${taskPrefix}deadline_time';
+  static const String taskActiveDays = '${taskPrefix}active_days';
+  
   // Private constructor to prevent instantiation
   StorageKeys._();
 }

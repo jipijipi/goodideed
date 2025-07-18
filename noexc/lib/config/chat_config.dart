@@ -34,7 +34,9 @@ class ChatConfig {
     'taskSetting_seq': 'Daily Task Setting',
     'sendoff_seq': 'Session Wrap-up',
     'success_seq': 'Task Completed',
-    'failure_seq': 'Task Support'
+    'failure_seq': 'Task Support',
+    'task_config_seq': 'Task Configuration',
+    'task_config_test_seq': '🧪 Config Test'
   };
   
   // Private constructor to prevent instantiation

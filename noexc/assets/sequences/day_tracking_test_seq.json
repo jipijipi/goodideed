@@ -1,0 +1,167 @@
+{
+  "sequenceId": "day_tracking_test_seq",
+  "name": "Day Tracking Test",
+  "description": "Test sequence for current and previous day tracking features",
+  "messages": [
+    {
+      "id": 1,
+      "type": "bot",
+      "text": "Welcome to the Day Tracking Test! Let's check your task status.",
+      "nextMessageId": 2
+    },
+    {
+      "id": 2,
+      "type": "bot",
+      "text": "Today is {task.current_date} and your current task status is: {task.current_status}",
+      "nextMessageId": 3
+    },
+    {
+      "id": 3,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "task.previous_status == pending",
+          "nextMessageId": 10
+        },
+        {
+          "condition": "task.previous_status == completed",
+          "nextMessageId": 20
+        },
+        {
+          "condition": "task.previous_status == failed",
+          "nextMessageId": 30
+        },
+        {
+          "default": true,
+          "nextMessageId": 40
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "bot",
+      "text": "I see you have a pending task from {task.previous_date}: \"{task.previous_task}\"",
+      "nextMessageId": 11
+    },
+    {
+      "id": 11,
+      "type": "bot",
+      "text": "Did you manage to complete it yesterday?",
+      "nextMessageId": 12
+    },
+    {
+      "id": 12,
+      "type": "choice",
+      "storeKey": "task.previous_status",
+      "choices": [
+        {
+          "text": "Yes, I completed it!",
+          "value": "completed",
+          "nextMessageId": 21
+        },
+        {
+          "text": "No, I didn't get to it",
+          "value": "failed",
+          "nextMessageId": 31
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "type": "bot",
+      "text": "Great! I see you completed \"{task.previous_task}\" from {task.previous_date}. Well done!",
+      "nextMessageId": 40
+    },
+    {
+      "id": 21,
+      "type": "bot",
+      "text": "Excellent! Thanks for letting me know you completed it.",
+      "nextMessageId": 40
+    },
+    {
+      "id": 30,
+      "type": "bot",
+      "text": "I see the task \"{task.previous_task}\" from {task.previous_date} wasn't completed. That's okay!",
+      "nextMessageId": 40
+    },
+    {
+      "id": 31,
+      "type": "bot",
+      "text": "No worries! Let's focus on today instead.",
+      "nextMessageId": 40
+    },
+    {
+      "id": 40,
+      "type": "bot",
+      "text": "Now let's check your current task for today ({task.current_date}).",
+      "nextMessageId": 41
+    },
+    {
+      "id": 41,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "user.task != null",
+          "nextMessageId": 50
+        },
+        {
+          "default": true,
+          "nextMessageId": 60
+        }
+      ]
+    },
+    {
+      "id": 50,
+      "type": "bot",
+      "text": "Your current task is: \"{user.task}\" (Status: {task.current_status})",
+      "nextMessageId": 51
+    },
+    {
+      "id": 51,
+      "type": "choice",
+      "storeKey": "task.current_status",
+      "choices": [
+        {
+          "text": "Mark as completed",
+          "value": "completed",
+      "nextMessageId": 70
+        },
+        {
+          "text": "Still working on it",
+          "value": "pending",
+      "nextMessageId": 70
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "type": "bot",
+      "text": "You don't have a task set yet. Let's set one!",
+      "nextMessageId": 61
+    },
+    {
+      "id": 61,
+      "type": "textInput",
+      "text": "What would you like to accomplish today?",
+      "storeKey": "user.task",
+      "nextMessageId": 62
+    },
+    {
+      "id": 62,
+      "type": "bot",
+      "text": "Perfect! Your task for today is: \"{user.task}\"",
+      "nextMessageId": 70
+    },
+    {
+      "id": 70,
+      "type": "bot",
+      "text": "Summary:|||Today ({task.current_date}): {user.task|No task} - {task.current_status}|||Previous ({task.previous_date|None}): {task.previous_task|No previous task} - {task.previous_status|None}",
+      "nextMessageId": 71
+    },
+    {
+      "id": 71,
+      "type": "bot",
+      "text": "Test complete! This sequence demonstrates:|||• Current day tracking ({task.current_date}, {task.current_status})|||• Previous day tracking ({task.previous_date|none}, {task.previous_status|none})|||• Template variables with fallbacks|||• Conditional routing based on task status"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import 'debug_panel/data_display_widget.dart';
 import 'debug_panel/chat_controls_widget.dart';
 import 'debug_panel/sequence_selector_widget.dart';
 import 'debug_panel/user_data_manager.dart';
+import 'debug_panel/date_time_picker_widget.dart';
 
 /// Main user variables panel that orchestrates the display of user data and debug controls
 class UserVariablesPanel extends StatefulWidget {
@@ -87,7 +88,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(UIConstants.panelTopRadius)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(UIConstants.shadowOpacity),
+            color: Colors.black.withValues(alpha: UIConstants.shadowOpacity),
             blurRadius: UIConstants.shadowBlurRadius,
             offset: UIConstants.shadowOffset,
           ),
@@ -148,6 +149,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                           SequenceSelectorWidget(
                             currentSequenceId: widget.currentSequenceId,
                             stateManager: widget.stateManager,
+                          ),
+                          
+                          // Date/Time Picker Section
+                          DateTimePickerWidget(
+                            userDataService: widget.userDataService,
+                            onDataChanged: refreshData,
                           ),
                           
                           // Data Display Section

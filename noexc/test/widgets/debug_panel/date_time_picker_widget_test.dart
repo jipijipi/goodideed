@@ -40,8 +40,12 @@ void main() {
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Yesterday'), findsOneWidget);
       
-      // Check that time setting section is present
-      expect(find.text('Set Deadline Time'), findsOneWidget);
+      // Check that deadline options section is present
+      expect(find.text('Set Deadline Option'), findsOneWidget);
+      expect(find.text('Morning (before noon)'), findsOneWidget);
+      expect(find.text('Afternoon (noon to 5pm)'), findsOneWidget);
+      expect(find.text('Evening (5pm to 9pm)'), findsOneWidget);
+      expect(find.text('Night (9pm to midnight)'), findsOneWidget);
     });
 
     testWidgets('should show default values when no data is stored', (WidgetTester tester) async {
@@ -58,8 +62,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Should show default values
-      expect(find.text('Not set'), findsOneWidget);
-      expect(find.text('21:00'), findsAtLeastNWidgets(1)); // Allow multiple instances
+      expect(find.text('Not set'), findsAtLeastNWidgets(1)); // Task date and deadline both show "Not set"
     });
 
     testWidgets('should have functional today and yesterday buttons', (WidgetTester tester) async {
@@ -112,6 +115,44 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(callbackCalled, true);
+    });
+
+    testWidgets('should allow selecting deadline options', (WidgetTester tester) async {
+      bool callbackCalled = false;
+      final userDataService = UserDataService();
+      
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DateTimePickerWidget(
+              userDataService: userDataService,
+              onDataChanged: () {
+                callbackCalled = true;
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      // Should show all deadline options
+      expect(find.text('Morning (before noon)'), findsOneWidget);
+      expect(find.text('Afternoon (noon to 5pm)'), findsOneWidget);
+      expect(find.text('Evening (5pm to 9pm)'), findsOneWidget);
+      expect(find.text('Night (9pm to midnight)'), findsOneWidget);
+
+      // Tap the evening option
+      await tester.tap(find.text('Evening (5pm to 9pm)'));
+      await tester.pumpAndSettle();
+
+      // Should update the display and trigger callback
+      expect(find.text('Evening (5pm to 9pm)'), findsAtLeastNWidgets(1)); // In both button and current value
+      expect(callbackCalled, true);
+
+      // Verify the value was stored correctly
+      final storedValue = await userDataService.getValue<int>('task.deadline_time');
+      expect(storedValue, 3); // Evening = option 3
     });
   });
 }

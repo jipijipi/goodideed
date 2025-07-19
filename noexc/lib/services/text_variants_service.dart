@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart';
-import '../config/chat_config.dart';
 
 class TextVariantsService {
   static const String _variantsBasePath = 'assets/variants/';

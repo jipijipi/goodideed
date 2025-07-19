@@ -24,7 +24,7 @@ abstract class ChatException implements Exception {
   String get userMessage => _createFallbackMessage(type);
   
   /// Creates a safe fallback message for UI display
-  static String _createFallbackMessage(ChatErrorType errorType, {String? context}) {
+  static String _createFallbackMessage(ChatErrorType errorType) {
     switch (errorType) {
       case ChatErrorType.assetNotFound:
         return 'Sorry, I couldn\'t find the conversation content. Please try again.';

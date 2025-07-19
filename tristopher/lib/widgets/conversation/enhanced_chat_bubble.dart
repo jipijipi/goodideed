@@ -21,11 +21,11 @@ class EnhancedChatBubble extends StatefulWidget {
   final Function(String)? onInputSubmitted;
 
   const EnhancedChatBubble({
-    Key? key,
+    super.key,
     required this.message,
     this.onOptionSelected,
     this.onInputSubmitted,
-  }) : super(key: key);
+  });
 
   @override
   State<EnhancedChatBubble> createState() => _EnhancedChatBubbleState();

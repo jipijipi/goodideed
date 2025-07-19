@@ -1,10 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/services.dart';
-import '../models/chat_sequence.dart';
-import '../models/chat_message.dart';
 import '../constants/app_constants.dart';
-import 'sequence_validator.dart';
 import 'models/validation_models.dart';
 import 'asset_validators/sequence_file_validator.dart';
 import 'asset_validators/variant_file_validator.dart';

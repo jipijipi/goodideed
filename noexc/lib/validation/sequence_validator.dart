@@ -1,4 +1,5 @@
 /// Main sequence validator that orchestrates all validation types
+library;
 import '../models/chat_sequence.dart';
 import '../constants/validation_constants.dart';
 import 'models/validation_models.dart';

@@ -1,4 +1,5 @@
 /// Validates choice message configurations
+library;
 import '../../models/chat_sequence.dart';
 import '../../models/chat_message.dart';
 import '../../constants/validation_constants.dart';

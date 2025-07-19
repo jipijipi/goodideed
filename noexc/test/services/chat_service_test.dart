@@ -1,10 +1,8 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/services/text_templating_service.dart';
 import 'package:noexc/models/chat_message.dart';
-import 'package:noexc/models/choice.dart';
 
 void main() {
   group('ChatService', () {

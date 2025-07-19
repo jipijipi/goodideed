@@ -1,4 +1,5 @@
 /// Validates template syntax in message text
+library;
 import '../../models/chat_sequence.dart';
 import '../../constants/validation_constants.dart';
 import '../models/validation_models.dart';

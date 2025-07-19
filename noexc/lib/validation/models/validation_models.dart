@@ -1,4 +1,5 @@
 /// Shared validation models for sequence validation
+library;
 import '../../constants/validation_constants.dart';
 
 /// Represents a validation error found in a sequence

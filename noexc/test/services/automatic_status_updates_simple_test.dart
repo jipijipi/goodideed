@@ -37,60 +37,53 @@ void main() {
       expect(await userDataService.getValue<String>('task.last_auto_update'), 'test');
     });
 
-    test('should handle context-aware morning reset', () async {
+    test('should preserve overdue status on same day (no morning recovery)', () async {
       // Setup: Set overdue status and morning time
       await sessionService.initializeSession();
       await userDataService.storeValue('user.task', 'Test task');
       await userDataService.storeValue('task.current_status', 'overdue');
       await userDataService.storeValue('session.timeOfDay', SessionConstants.timeOfDayMorning);
       
-      // Trigger update
+      // Trigger update - should preserve overdue status on same day
       await sessionService.initializeSession();
       
-      // Should reset to pending in morning
-      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
-      expect(await userDataService.getValue<String>('task.auto_update_reason'), contains('morning_fresh_start'));
+      // Should remain overdue (no morning recovery)
+      expect(await userDataService.getValue<String>('task.current_status'), 'overdue');
     });
 
-    test('should not reset overdue status outside morning hours', () async {
+    test('should preserve overdue status regardless of time of day', () async {
       // Setup: Set overdue status and afternoon time
       await sessionService.initializeSession();
       await userDataService.storeValue('user.task', 'Test task');
       await userDataService.storeValue('task.current_status', 'overdue');
       await userDataService.storeValue('session.timeOfDay', SessionConstants.timeOfDayAfternoon);
       
-      // Trigger update - should not reset since it's not morning
+      // Trigger update - should preserve status regardless of time
       await sessionService.initializeSession();
       
-      // In our current implementation, same-day initialization preserves status
-      // but morning logic only runs during morning hours
-      final currentStatus = await userDataService.getValue<String>('task.current_status');
-      final timeOfDay = await userDataService.getValue<int>('session.timeOfDay');
-      
-      // If it's actually morning during test, status might reset
-      if (timeOfDay == SessionConstants.timeOfDayMorning) {
-        expect(currentStatus, 'pending'); // Expected morning reset
-      } else {
-        expect(currentStatus, 'overdue'); // Should remain overdue
-      }
+      // Should remain overdue (no time-based recovery)
+      expect(await userDataService.getValue<String>('task.current_status'), 'overdue');
     });
 
-    test('should log status updates with proper format', () async {
-      // Setup: Trigger a morning fresh start update
+    test('should log deadline-based status updates with proper format', () async {
+      // Setup: Task with early deadline that will trigger overdue status
       await sessionService.initializeSession();
       await userDataService.storeValue('user.task', 'Test task');
-      await userDataService.storeValue('task.current_status', 'overdue');
-      await userDataService.storeValue('session.timeOfDay', SessionConstants.timeOfDayMorning);
+      await userDataService.storeValue('task.deadline_time', '06:00'); // Early deadline
+      await userDataService.storeValue('task.current_status', 'pending');
       
-      // Trigger update
+      // Trigger update - if current time is past 6 AM, should mark as overdue
       await sessionService.initializeSession();
       
-      // Should log the update
-      final updateReason = await userDataService.getValue<String>('task.auto_update_reason');
-      final lastUpdate = await userDataService.getValue<String>('task.last_auto_update');
-      
-      expect(updateReason, contains('current_day: overdue → pending (morning_fresh_start)'));
-      expect(lastUpdate, matches(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}'));
+      final now = DateTime.now();
+      if (now.hour >= 6) {
+        // Should log the deadline-passed update
+        final updateReason = await userDataService.getValue<String>('task.auto_update_reason');
+        final lastUpdate = await userDataService.getValue<String>('task.last_auto_update');
+        
+        expect(updateReason, contains('current_day: pending → overdue (deadline_passed)'));
+        expect(lastUpdate, matches(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}'));
+      }
     });
 
     test('should preserve completed status during automatic updates', () async {

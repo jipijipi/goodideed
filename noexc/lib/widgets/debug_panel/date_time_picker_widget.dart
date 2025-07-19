@@ -32,11 +32,11 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 
   Future<void> _loadCurrentValues() async {
     final taskDate = await widget.userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    final deadlineTime = await widget.userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+    final deadlineTimeString = await _getDeadlineTimeAsString();
     
     setState(() {
       _currentTaskDate = taskDate ?? 'Not set';
-      _currentDeadlineTime = deadlineTime ?? '21:00';
+      _currentDeadlineTime = deadlineTimeString;
     });
 
     // Parse current task date if it exists
@@ -166,6 +166,39 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
         SnackBar(content: Text('Task date set to $dateString')),
       );
     }
+  }
+
+  /// Get deadline time as string, handling both integer and string storage formats
+  Future<String> _getDeadlineTimeAsString() async {
+    // Try to get as string first (new format)
+    try {
+      final stringValue = await widget.userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+      if (stringValue != null) {
+        return stringValue;
+      }
+    } catch (e) {
+      // Type cast failed, value is probably an integer
+    }
+    
+    // Try to get as integer (legacy format from JSON sequences)
+    try {
+      final intValue = await widget.userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
+      if (intValue != null) {
+        // Convert integer to time string based on task config sequence format
+        switch (intValue) {
+          case 1: return '11:00'; // Morning (before noon)
+          case 2: return '17:00'; // Afternoon (noon to 5pm) 
+          case 3: return '21:00'; // Evening (5pm to 9pm)
+          case 4: return '06:00'; // Night (9pm to 6am) - use 6am as reasonable night deadline
+          default: return '21:00'; // Default to evening
+        }
+      }
+    } catch (e) {
+      // Type cast failed, value is probably a string or doesn't exist
+    }
+    
+    // Default if neither format found
+    return '21:00';
   }
 
   Future<void> _setDeadlineTime() async {

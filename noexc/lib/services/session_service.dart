@@ -148,9 +148,9 @@ class SessionService {
     final previousStatus = await userDataService.getValue<String>(StorageKeys.taskPreviousStatus);
     
     if (previousStatus == 'pending') {
-      // Get deadline time (default 21:00 if not set)
-      final deadlineTime = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime) ?? '21:00';
-      final deadlineParts = deadlineTime.split(':');
+      // Get deadline time using helper that handles both int and string formats
+      final deadlineTimeString = await _getDeadlineTimeAsString();
+      final deadlineParts = deadlineTimeString.split(':');
       final deadlineHour = int.parse(deadlineParts[0]);
       final deadlineMinute = int.parse(deadlineParts[1]);
       
@@ -172,8 +172,8 @@ class SessionService {
     
     // Only check if task exists and is currently pending
     if (currentStatus == 'pending' && userTask != null) {
-      final deadlineTime = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime) ?? '21:00';
-      final deadlineParts = deadlineTime.split(':');
+      final deadlineTimeString = await _getDeadlineTimeAsString();
+      final deadlineParts = deadlineTimeString.split(':');
       final deadlineHour = int.parse(deadlineParts[0]);
       final deadlineMinute = int.parse(deadlineParts[1]);
       
@@ -190,18 +190,42 @@ class SessionService {
 
   /// Update task status based on contextual factors like time of day
   Future<void> _updateStatusBasedOnContext(DateTime now) async {
-    final timeOfDay = await userDataService.getValue<int>(StorageKeys.sessionTimeOfDay);
-    final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
-    final userTask = await userDataService.getValue<String>('user.task');
-    
-    // Only update if task exists
-    if (userTask != null && currentStatus != null) {
-      // Morning fresh start: Reset overdue to pending
-      if (timeOfDay == SessionConstants.timeOfDayMorning && currentStatus == 'overdue') {
-        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
-        await _logStatusUpdate('current_day', 'overdue', 'pending', 'morning_fresh_start');
+    // Note: Morning recovery logic removed - new days start as pending 
+    // and are immediately checked against deadline, which is the correct behavior
+    // No additional context-based updates needed at this time
+  }
+
+  /// Get deadline time as string, handling both integer and string storage formats
+  Future<String> _getDeadlineTimeAsString() async {
+    // Try to get as string first (new format)
+    try {
+      final stringValue = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+      if (stringValue != null) {
+        return stringValue;
       }
+    } catch (e) {
+      // Type cast failed, value is probably an integer
     }
+    
+    // Try to get as integer (legacy format from JSON sequences)
+    try {
+      final intValue = await userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
+      if (intValue != null) {
+        // Convert integer to time string based on task config sequence format
+        switch (intValue) {
+          case 1: return '11:00'; // Morning (before noon)
+          case 2: return '17:00'; // Afternoon (noon to 5pm) 
+          case 3: return '21:00'; // Evening (5pm to 9pm)
+          case 4: return '06:00'; // Night (9pm to 6am) - use 6am as reasonable night deadline
+          default: return '21:00'; // Default to evening
+        }
+      }
+    } catch (e) {
+      // Type cast failed, value is probably a string or doesn't exist
+    }
+    
+    // Default if neither format found
+    return '21:00';
   }
 
   /// Log automatic status updates for transparency

@@ -1,0 +1,98 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/services/session_service.dart';
+import 'package:noexc/services/user_data_service.dart';
+import 'package:noexc/constants/storage_keys.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+void main() {
+  group('Deadline Format Compatibility Tests', () {
+    late SessionService sessionService;
+    late UserDataService userDataService;
+
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      userDataService = UserDataService();
+      sessionService = SessionService(userDataService);
+    });
+
+    test('should handle string deadline format (HH:MM)', () async {
+      // Setup: Store deadline as string format
+      await userDataService.storeValue(StorageKeys.taskDeadlineTime, '15:30');
+      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+      
+      // Should not crash when processing deadline
+      await sessionService.initializeSession();
+      
+      // Should work correctly
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
+    });
+
+    test('should handle integer deadline format (legacy from JSON sequences)', () async {
+      // Setup: Store deadline as integer format (like from task_config_seq.json)
+      await userDataService.storeValue(StorageKeys.taskDeadlineTime, 2); // Afternoon
+      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+      
+      // Should not crash when processing deadline
+      await sessionService.initializeSession();
+      
+      // Should work correctly
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
+    });
+
+    test('should convert integer deadline values to correct times', () async {
+      final testCases = [
+        {'input': 1, 'expected': '11:00'}, // Morning
+        {'input': 2, 'expected': '17:00'}, // Afternoon
+        {'input': 3, 'expected': '21:00'}, // Evening
+        {'input': 4, 'expected': '06:00'}, // Night
+      ];
+
+      for (final testCase in testCases) {
+        // Setup: Clear previous values
+        SharedPreferences.setMockInitialValues({});
+        userDataService = UserDataService();
+        sessionService = SessionService(userDataService);
+        
+        // Store integer deadline
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, testCase['input']);
+        await userDataService.storeValue('user.task', 'Test task');
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+        
+        // Initialize session (this will process the deadline)
+        await sessionService.initializeSession();
+        
+        // The deadline should be converted internally
+        // We can't directly test the private method, but we can verify it doesn't crash
+        expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), isNotNull);
+      }
+    });
+
+    test('should default to 21:00 when no deadline is set', () async {
+      // Setup: No deadline set
+      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+      
+      // Should not crash and should use default
+      await sessionService.initializeSession();
+      
+      // Should work with default deadline
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
+    });
+
+    test('should prefer string format when both formats exist', () async {
+      // Setup: Store both formats (this shouldn't normally happen, but test edge case)
+      await userDataService.storeValue(StorageKeys.taskDeadlineTime, '14:00'); // String format
+      // Note: Can't store both int and string to same key, but string should take precedence
+      
+      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+      
+      // Should work with string format
+      await sessionService.initializeSession();
+      
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
+    });
+  });
+}

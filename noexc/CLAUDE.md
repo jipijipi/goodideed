@@ -120,12 +120,20 @@ The authoring tool supports advanced cross-sequence navigation:
 - `assets/sequences/` - JSON conversation flows
 - `assets/variants/` - Text variant files (format: `{sequenceId}_message_{messageId}.txt`)
 - Available sequences defined in `AppConstants.availableSequences`
-- Current sequences: welcome_seq, onboarding_seq, taskChecking_seq, taskSetting_seq, sendoff_seq, success_seq, failure_seq
+- Current sequences: welcome_seq, onboarding_seq, taskChecking_seq, taskSetting_seq, sendoff_seq, success_seq, failure_seq, task_config_seq, task_config_test_seq, day_tracking_test_seq
 
 ### Storage System
 - **Local Storage**: Uses shared_preferences for user data persistence
 - **Template System**: `{key|fallback}` syntax for dynamic text substitution
 - **Data Keys**: Dot notation supported (e.g., `user.name`, `preferences.theme`)
+- **Task Storage Keys**: Comprehensive task management with dedicated storage keys:
+  - `task.currentDate` - Current task date (YYYY-MM-DD format)
+  - `task.status` - Task status (pending, completed, failed)
+  - `task.deadlineTime` - Deadline option (1-4 integer values)
+  - `task.isActiveDay` - Computed boolean for active day status
+  - `task.isPastDeadline` - Computed boolean for deadline status
+  - `task.previousDate` - Previous day's task date for archiving
+  - `task.gracePeriodUsed` - Boolean for grace period tracking
 
 ### Multi-Text Messages
 - Use `|||` separator to split single message into multiple bubbles
@@ -141,18 +149,28 @@ The authoring tool supports advanced cross-sequence navigation:
 - Route to different sequences or continue in current sequence
 - Always include default route as fallback
 
-### Session Tracking
+### Session Tracking & Task Management
 - **SessionService** automatically tracks user session data on app start
 - **Daily Visit Count** (`session.visitCount`) - Resets to 1 each new day, increments for same-day visits
 - **Total Visit Count** (`session.totalVisitCount`) - Never resets, tracks lifetime app launches
 - **Time of Day** (`session.timeOfDay`) - 1=morning, 2=afternoon, 3=evening, 4=night
 - **Date Tracking** (`session.lastVisitDate`, `session.firstVisitDate`, `session.daysSinceFirstVisit`)
 - **Weekend Detection** (`session.isWeekend`) - Boolean for Saturday/Sunday
+- **Task Date Management**: Automatic task date initialization and archiving
+  - New day detection with task date updates
+  - Previous day task archiving with grace period handling
+  - Task status preservation across sessions
+- **Automatic Status Updates**: Enhanced automatic status updates with deadline checking
+  - Task status transitions based on deadlines and completion
+  - Grace period tracking for task completion
+  - Logging for debugging status changes
 - **Use Cases**: 
   - `session.visitCount > 1` - Returning daily user (visited app multiple times today)
   - `session.totalVisitCount >= 10` - Experienced user (used app 10+ times total)
   - `session.timeOfDay == 1` - Morning user
   - `session.isWeekend == true` - Weekend user
+  - `task.isActiveDay == true` - Today is configured as an active day
+  - `task.isPastDeadline == true` - Current time is past user's deadline
 
 ### Text Variants
 - Random text variations loaded from `assets/variants/`
@@ -174,10 +192,16 @@ The authoring tool supports advanced cross-sequence navigation:
   - User data storage and templating services (`test/services/`)
   - Validation system tests (`test/validation/`)
   - Error handling and edge case testing
+  - **Task management tests** with comprehensive coverage:
+    - Task boolean computation tests (14 tests for isActiveDay/isPastDeadline)
+    - Automatic status updates tests (complex deadline scenarios)
+    - Previous day grace period tests (archiving and recovery)
+    - DateTimePickerWidget tests (UI interaction and data flow)
+    - Deadline format compatibility tests (integer vs string handling)
 - Use `flutter test` to run tests
 - Test files mirror the `lib/` directory structure in `test/`
 - Import main app code using `package:noexc/main.dart`
-- **Current test status: 225+ passing tests** (high success rate)
+- **Current test status: 290+ passing tests** (high success rate)
 - Aim for high test coverage (minimum 80%) - Currently at high success rate
 - Never commit code without corresponding tests
 
@@ -336,6 +360,11 @@ The app uses a **MessageType enum** system that replaces legacy boolean flags:
 - **Chat Controls**: Reset Chat, Clear Messages, Reload Sequence buttons
 - **Data Management**: "Clear All Data" removes all stored user data (with confirmation)
 - **Sequence Selection**: Dropdown to switch between sequences
+- **Date & Time Testing**: DateTimePickerWidget for testing task management features
+  - Task date selection with quick preset options (today, yesterday)
+  - Deadline option selection (Morning, Afternoon, Evening, Night)
+  - Real-time display of computed boolean values (isActiveDay, isPastDeadline)
+  - Integration with SessionService for immediate testing
 - Current sequence and message count displayed in panel
 
 ### Custom Value Storage
@@ -464,6 +493,26 @@ flutter analyze            # Static analysis
 - **Removed unused sequences**: 8 demo/test sequences deleted
 - **Updated configuration**: AppConstants, ChatConfig, UI components
 - **Result**: Clean, focused daily task management flow
+
+### Task Boolean Computation System (July 2025)
+- **Boolean Computation**: Added pre-computed boolean values for simplified conditional routing
+  - `task.isActiveDay` - Computed based on user's configured active days
+  - `task.isPastDeadline` - Computed based on current time vs user's deadline
+- **Storage Integration**: New storage keys in `StorageKeys` class
+- **SessionService Integration**: Automatic computation on session initialization via `_computeTaskBooleans()`
+- **Debug Panel Enhancement**: Added display of computed boolean values in debug panel
+- **Comprehensive Testing**: 14 new tests covering various scenarios and edge cases
+- **Benefits**: Simplified JSON sequence conditions, better UX with consistent boolean logic
+
+### Deadline Options System (July 2025)
+- **Debug Panel Redesign**: Replaced time picker with preset deadline options
+- **Option Mapping**: Mirror production sequence choices with integer values
+  - 1: Morning (before noon)
+  - 2: Afternoon (noon to 5pm)
+  - 3: Evening (5pm to 9pm)
+  - 4: Night (9pm to midnight)
+- **UI Improvements**: Button-based selection interface with visual feedback
+- **Morning Recovery Removal**: Eliminated flawed morning recovery logic for cleaner status transitions
 
 ### Key Configuration Changes
 - `AppConstants.defaultSequenceId = 'welcome_seq'`

@@ -160,8 +160,34 @@
     },
     {
       "id": 71,
+      "type": "autoroute",
+      "routes": [
+        {
+          "condition": "task.auto_update_reason != null",
+          "nextMessageId": 72
+        },
+        {
+          "default": true,
+          "nextMessageId": 75
+        }
+      ]
+    },
+    {
+      "id": 72,
       "type": "bot",
-      "text": "Test complete! This sequence demonstrates:|||• Current day tracking ({task.current_date}, {task.current_status})|||• Previous day tracking ({task.previous_date|none}, {task.previous_status|none})|||• Template variables with fallbacks|||• Conditional routing based on task status"
+      "text": "📱 Automatic Status Update:",
+      "nextMessageId": 73
+    },
+    {
+      "id": 73,
+      "type": "bot", 
+      "text": "{task.auto_update_reason}|||Last updated: {task.last_auto_update}",
+      "nextMessageId": 75
+    },
+    {
+      "id": 75,
+      "type": "bot",
+      "text": "Test complete! This sequence demonstrates:|||• Current day tracking ({task.current_date}, {task.current_status})|||• Previous day tracking ({task.previous_date|none}, {task.previous_status|none})|||• Automatic status updates (overdue, fresh start)|||• Template variables with fallbacks|||• Conditional routing based on task status"
     }
   ]
 }

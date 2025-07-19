@@ -124,6 +124,10 @@ class SessionService {
     if (currentStatus == null) {
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
     }
+    
+    // Phase 1: Enhanced automatic status updates (run after status initialization)
+    await _checkCurrentDayDeadline(now);
+    await _updateStatusBasedOnContext(now);
   }
 
   /// Archive current day task as previous day
@@ -156,8 +160,57 @@ class SessionService {
       if (now.isAfter(todayDeadline)) {
         // Grace period expired - mark previous day as failed
         await userDataService.storeValue(StorageKeys.taskPreviousStatus, 'failed');
+        await _logStatusUpdate('previous_day', 'pending', 'failed', 'grace_period_expired');
       }
     }
+  }
+
+  /// Check if current day task is past deadline and update status
+  Future<void> _checkCurrentDayDeadline(DateTime now) async {
+    final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
+    final userTask = await userDataService.getValue<String>('user.task');
+    
+    // Only check if task exists and is currently pending
+    if (currentStatus == 'pending' && userTask != null) {
+      final deadlineTime = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime) ?? '21:00';
+      final deadlineParts = deadlineTime.split(':');
+      final deadlineHour = int.parse(deadlineParts[0]);
+      final deadlineMinute = int.parse(deadlineParts[1]);
+      
+      // Create today's deadline datetime
+      final todayDeadline = DateTime(now.year, now.month, now.day, deadlineHour, deadlineMinute);
+      
+      if (now.isAfter(todayDeadline)) {
+        // Past deadline - mark as overdue (allows recovery unlike "failed")
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
+        await _logStatusUpdate('current_day', 'pending', 'overdue', 'deadline_passed');
+      }
+    }
+  }
+
+  /// Update task status based on contextual factors like time of day
+  Future<void> _updateStatusBasedOnContext(DateTime now) async {
+    final timeOfDay = await userDataService.getValue<int>(StorageKeys.sessionTimeOfDay);
+    final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
+    final userTask = await userDataService.getValue<String>('user.task');
+    
+    // Only update if task exists
+    if (userTask != null && currentStatus != null) {
+      // Morning fresh start: Reset overdue to pending
+      if (timeOfDay == SessionConstants.timeOfDayMorning && currentStatus == 'overdue') {
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+        await _logStatusUpdate('current_day', 'overdue', 'pending', 'morning_fresh_start');
+      }
+    }
+  }
+
+  /// Log automatic status updates for transparency
+  Future<void> _logStatusUpdate(String scope, String oldStatus, String newStatus, String reason) async {
+    final now = DateTime.now();
+    final timestamp = '${_formatDate(now)} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
+    
+    await userDataService.storeValue(StorageKeys.taskLastAutoUpdate, timestamp);
+    await userDataService.storeValue(StorageKeys.taskAutoUpdateReason, '$scope: $oldStatus → $newStatus ($reason)');
   }
   
   /// Helper method to format date consistently

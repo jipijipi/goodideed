@@ -16,10 +16,7 @@ class ChatService {
   final SequenceLoader _sequenceLoader = SequenceLoader();
   late final MessageProcessor _messageProcessor;
   late final RouteProcessor _routeProcessor;
-  final UserDataService? _userDataService;
   
-  // Callback for notifying UI about sequence changes from autoroutes
-  Future<void> Function(String sequenceId, int startMessageId)? _onSequenceSwitch;
   
   // Callback for notifying UI about events from dataAction triggers
   Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
@@ -28,7 +25,7 @@ class ChatService {
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
     TextVariantsService? variantsService,
-  }) : _userDataService = userDataService {
+  }) {
     _messageProcessor = MessageProcessor(
       userDataService: userDataService,
       templatingService: templatingService,
@@ -51,10 +48,6 @@ class ChatService {
     }
   }
 
-  /// Set callback for sequence switching notifications
-  void setSequenceSwitchCallback(Future<void> Function(String sequenceId, int startMessageId) callback) {
-    _onSequenceSwitch = callback;
-  }
 
   /// Set callback for event notifications from dataAction triggers
   void setEventCallback(Future<void> Function(String eventType, Map<String, dynamic> data) callback) {

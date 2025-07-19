@@ -43,7 +43,7 @@ class UserPanelOverlay extends StatelessWidget {
     return GestureDetector(
       onTap: onToggle,
       child: Container(
-        color: Colors.black.withOpacity(UIConstants.overlayOpacity),
+        color: Colors.black.withValues(alpha: UIConstants.overlayOpacity),
         child: const SizedBox.expand(),
       ),
     );

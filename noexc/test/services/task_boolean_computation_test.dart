@@ -107,7 +107,6 @@ void main() {
         await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
         await sessionService.initializeSession();
         
-        final firstResult = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
         
         // Change to every day
         await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5, 6, 7]);

@@ -54,11 +54,7 @@ void main() {
         templatingService: templatingService,
       );
       
-      // Track sequence switches to simulate the duplication scenario
-      List<String> switchedSequences = [];
-      chatService.setSequenceSwitchCallback((sequenceId, startMessageId) async {
-        switchedSequences.add(sequenceId);
-      });
+      // Note: setSequenceSwitchCallback method was removed as it was unused
       
       // Act - Load welcome sequence which routes to onboarding
       final messages = await chatService.getInitialMessages(sequenceId: 'welcome_seq');

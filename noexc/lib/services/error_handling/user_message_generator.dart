@@ -21,8 +21,6 @@ class UserMessageGenerator {
         return 'I\'m having trouble loading the conversation. Please check your connection.';
       case ChatErrorType.assetValidation:
         return 'There\'s an issue with the conversation content. Please contact support.';
-      default:
-        return 'I encountered an unexpected issue. Please try again.';
     }
   }
   
@@ -64,8 +62,6 @@ class UserMessageGenerator {
         return 'Check your connection and try again.';
       case ChatErrorType.assetValidation:
         return 'Please contact support for assistance.';
-      default:
-        return 'Please try again or contact support if the issue persists.';
     }
   }
   

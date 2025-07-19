@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tristopher_app/constants/app_constants.dart';
-import 'package:tristopher_app/models/conversation/enhanced_message_model.dart';
 import 'package:tristopher_app/providers/conversation/conversation_provider.dart';
 import 'package:tristopher_app/widgets/conversation/enhanced_chat_bubble.dart';
 import 'package:tristopher_app/widgets/common/drawer/app_drawer.dart';
 import 'package:tristopher_app/widgets/common/paper_background_widget.dart';
 import 'package:tristopher_app/widgets/debug/conversation_debug_panel.dart';
-import 'package:tristopher_app/utils/database/conversation_database.dart';
 
 /// Enhanced Main Chat Screen with the new conversation system.
 /// 

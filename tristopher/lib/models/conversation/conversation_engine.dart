@@ -629,9 +629,7 @@ class ConversationEngine {
       animation: _parseAnimationType(properties['animation']),
       delayMs: scriptMessage.delayMs,
       textEffect: _parseTextEffect(properties['textEffect']),
-      options: scriptMessage.options != null
-          ? scriptMessage.options!.map((o) => MessageOption.fromJson(o)).toList()
-          : null,
+      options: scriptMessage.options?.map((o) => MessageOption.fromJson(o)).toList(),
       inputConfig: scriptMessage.inputConfig != null
           ? InputConfig.fromJson(scriptMessage.inputConfig!)
           : null,

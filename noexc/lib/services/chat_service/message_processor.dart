@@ -33,7 +33,7 @@ class MessageProcessor {
         !message.hasMultipleTexts) {
       
       // Get variant for the main text
-      textToProcess = await _variantsService!.getVariant(
+      textToProcess = await _variantsService.getVariant(
         message.text, 
         currentSequence.sequenceId, 
         message.id
@@ -42,7 +42,7 @@ class MessageProcessor {
     
     // Apply template processing if service is available
     if (_templatingService != null) {
-      textToProcess = await _templatingService!.processTemplate(textToProcess);
+      textToProcess = await _templatingService.processTemplate(textToProcess);
     }
     
     return ChatMessage(
@@ -74,7 +74,7 @@ class MessageProcessor {
   /// Handle user text input and store it if storeKey is provided
   Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
     if (_userDataService != null && textInputMessage.storeKey != null) {
-      await _userDataService!.storeValue(textInputMessage.storeKey!, userInput);
+      await _userDataService.storeValue(textInputMessage.storeKey!, userInput);
     }
   }
 
@@ -83,7 +83,7 @@ class MessageProcessor {
     if (_userDataService != null && choiceMessage.storeKey != null) {
       // Use custom value if provided, fallback to choice text
       final valueToStore = selectedChoice.value ?? selectedChoice.text;
-      await _userDataService!.storeValue(choiceMessage.storeKey!, valueToStore);
+      await _userDataService.storeValue(choiceMessage.storeKey!, valueToStore);
     }
   }
 }

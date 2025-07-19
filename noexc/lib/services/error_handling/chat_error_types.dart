@@ -24,7 +24,7 @@ abstract class ChatException implements Exception {
   String get userMessage => _createFallbackMessage(type);
   
   /// Creates a safe fallback message for UI display
-  static String _createFallbackMessage(ChatErrorType errorType, {String? context}) {
+  static String _createFallbackMessage(ChatErrorType errorType) {
     switch (errorType) {
       case ChatErrorType.assetNotFound:
         return 'Sorry, I couldn\'t find the conversation content. Please try again.';
@@ -42,8 +42,6 @@ abstract class ChatException implements Exception {
         return 'I\'m having trouble loading the conversation. Please check your connection.';
       case ChatErrorType.assetValidation:
         return 'There\'s an issue with the conversation content. Please contact support.';
-      default:
-        return 'I encountered an unexpected issue. Please try again.';
     }
   }
 }

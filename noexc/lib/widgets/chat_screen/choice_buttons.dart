@@ -128,9 +128,9 @@ class ChoiceButtons extends StatelessWidget {
     if (isSelected) {
       return Theme.of(context).colorScheme.primary;
     } else if (isUnselected) {
-      return Theme.of(context).colorScheme.primary.withOpacity(UIConstants.unselectedChoiceOpacity);
+      return Theme.of(context).colorScheme.primary.withValues(alpha: UIConstants.unselectedChoiceOpacity);
     } else {
-      return Theme.of(context).colorScheme.primary.withOpacity(UIConstants.selectedChoiceOpacity);
+      return Theme.of(context).colorScheme.primary.withValues(alpha: UIConstants.selectedChoiceOpacity);
     }
   }
 
@@ -138,13 +138,13 @@ class ChoiceButtons extends StatelessWidget {
   Color _getChoiceBorderColor(BuildContext context, bool isSelected) {
     return isSelected
         ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.primary.withOpacity(UIConstants.choiceBorderOpacity);
+        : Theme.of(context).colorScheme.primary.withValues(alpha: UIConstants.choiceBorderOpacity);
   }
 
   /// Gets the appropriate text color for choice buttons
   Color _getChoiceTextColor(bool isUnselected) {
     return isUnselected 
-        ? ThemeConstants.userMessageTextColor.withOpacity(UIConstants.unselectedTextOpacity)
+        ? ThemeConstants.userMessageTextColor.withValues(alpha: UIConstants.unselectedTextOpacity)
         : ThemeConstants.userMessageTextColor;
   }
 }

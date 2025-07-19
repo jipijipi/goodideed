@@ -1,4 +1,5 @@
 /// Validates conversation flow, detects dead ends, unreachable messages, and circular references
+library;
 import '../../models/chat_sequence.dart';
 import '../../models/chat_message.dart';
 import '../../constants/validation_constants.dart';

@@ -5,10 +5,10 @@ class ChatSequenceException extends ChatException {
   final String? sequenceId;
   
   const ChatSequenceException(
-    String message, {
-    required ChatErrorType type,
+    super.message, {
+    required super.type,
     this.sequenceId,
-  }) : super(message, type: type);
+  });
   
   @override
   String toString() => 'ChatSequenceException: $message (Sequence: $sequenceId)';
@@ -19,10 +19,10 @@ class ChatMessageException extends ChatException {
   final int? messageId;
   
   const ChatMessageException(
-    String message, {
-    required ChatErrorType type,
+    super.message, {
+    required super.type,
     this.messageId,
-  }) : super(message, type: type);
+  });
   
   @override
   String toString() => 'ChatMessageException: $message (Message ID: $messageId)';
@@ -33,10 +33,10 @@ class ChatTemplateException extends ChatException {
   final String? template;
   
   const ChatTemplateException(
-    String message, {
-    required ChatErrorType type,
+    super.message, {
+    required super.type,
     this.template,
-  }) : super(message, type: type);
+  });
   
   @override
   String toString() => 'ChatTemplateException: $message (Template: $template)';
@@ -47,10 +47,10 @@ class ChatConditionException extends ChatException {
   final String? condition;
   
   const ChatConditionException(
-    String message, {
-    required ChatErrorType type,
+    super.message, {
+    required super.type,
     this.condition,
-  }) : super(message, type: type);
+  });
   
   @override
   String toString() => 'ChatConditionException: $message (Condition: $condition)';
@@ -61,10 +61,10 @@ class ChatFlowException extends ChatException {
   final String? description;
   
   const ChatFlowException(
-    String message, {
-    required ChatErrorType type,
+    super.message, {
+    required super.type,
     this.description,
-  }) : super(message, type: type);
+  });
   
   @override
   String toString() => 'ChatFlowException: $message (Description: $description)';
@@ -75,10 +75,10 @@ class ChatAssetException extends ChatException {
   final String? asset;
   
   const ChatAssetException(
-    String message, {
-    required ChatErrorType type,
+    super.message, {
+    required super.type,
     this.asset,
-  }) : super(message, type: type);
+  });
   
   @override
   String toString() => 'ChatAssetException: $message (Asset: $asset)';

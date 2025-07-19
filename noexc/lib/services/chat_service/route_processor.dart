@@ -47,7 +47,7 @@ class RouteProcessor {
       // Evaluate condition if present
       if (route.condition != null) {
         print('🚏 AUTOROUTE: Route ${i + 1} has condition: "${route.condition}"');
-        final matches = await _conditionEvaluator!.evaluateCompound(route.condition!);
+        final matches = await _conditionEvaluator.evaluateCompound(route.condition!);
         print('🚏 AUTOROUTE: Route ${i + 1} condition result: $matches');
         if (matches) {
           print('🚏 AUTOROUTE: Route ${i + 1} matches! Executing route');
@@ -80,7 +80,7 @@ class RouteProcessor {
     }
 
     try {
-      await _dataActionProcessor!.processActions(dataActionMessage.dataActions!);
+      await _dataActionProcessor.processActions(dataActionMessage.dataActions!);
     } catch (e) {
       // Silent error handling - dataActions should not fail the message flow
     }

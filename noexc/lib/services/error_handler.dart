@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'error_handling/chat_error_types.dart';
-import 'error_handling/chat_exceptions.dart';
 import 'error_handling/error_classifier.dart';
 import 'error_handling/user_message_generator.dart';
 

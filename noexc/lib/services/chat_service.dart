@@ -1,16 +1,12 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import '../models/chat_message.dart';
 import '../models/chat_sequence.dart';
 import '../models/choice.dart';
-import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 import 'user_data_service.dart';
 import 'text_templating_service.dart';
 import 'text_variants_service.dart';
 import 'condition_evaluator.dart';
 import 'data_action_processor.dart';
-import '../models/route_condition.dart';
 import 'chat_service/sequence_loader.dart';
 import 'chat_service/message_processor.dart';
 import 'chat_service/route_processor.dart';
@@ -20,10 +16,7 @@ class ChatService {
   final SequenceLoader _sequenceLoader = SequenceLoader();
   late final MessageProcessor _messageProcessor;
   late final RouteProcessor _routeProcessor;
-  final UserDataService? _userDataService;
   
-  // Callback for notifying UI about sequence changes from autoroutes
-  Future<void> Function(String sequenceId, int startMessageId)? _onSequenceSwitch;
   
   // Callback for notifying UI about events from dataAction triggers
   Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
@@ -32,7 +25,7 @@ class ChatService {
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
     TextVariantsService? variantsService,
-  }) : _userDataService = userDataService {
+  }) {
     _messageProcessor = MessageProcessor(
       userDataService: userDataService,
       templatingService: templatingService,
@@ -55,10 +48,6 @@ class ChatService {
     }
   }
 
-  /// Set callback for sequence switching notifications
-  void setSequenceSwitchCallback(Future<void> Function(String sequenceId, int startMessageId) callback) {
-    _onSequenceSwitch = callback;
-  }
 
   /// Set callback for event notifications from dataAction triggers
   void setEventCallback(Future<void> Function(String eventType, Map<String, dynamic> data) callback) {

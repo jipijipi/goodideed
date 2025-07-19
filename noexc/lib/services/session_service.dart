@@ -125,6 +125,9 @@ class SessionService {
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
     }
     
+    // Compute derived task boolean values
+    await _computeTaskBooleans(now);
+    
     // Phase 1: Enhanced automatic status updates (run after status initialization)
     await _checkCurrentDayDeadline(now);
     await _updateStatusBasedOnContext(now);
@@ -185,6 +188,52 @@ class SessionService {
         await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
         await _logStatusUpdate('current_day', 'pending', 'overdue', 'deadline_passed');
       }
+    }
+  }
+
+  /// Compute derived task boolean values for easier conditional routing
+  Future<void> _computeTaskBooleans(DateTime now) async {
+    // Compute isActiveDay
+    final isActiveDay = await _computeIsActiveDay(now);
+    await userDataService.storeValue(StorageKeys.taskIsActiveDay, isActiveDay);
+    
+    // Compute isPastDeadline
+    final isPastDeadline = await _computeIsPastDeadline(now);
+    await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+  }
+
+  /// Check if today is an active day based on user's active_days configuration
+  Future<bool> _computeIsActiveDay(DateTime now) async {
+    final activeDays = await userDataService.getValue<List<dynamic>>(StorageKeys.taskActiveDays);
+    
+    if (activeDays == null || activeDays.isEmpty) {
+      // If no active days configured, default to every day being active
+      return true;
+    }
+    
+    // Convert current day to weekday number (1=Monday, 7=Sunday)
+    final currentWeekday = now.weekday;
+    
+    // Check if current weekday is in the active days list
+    return activeDays.contains(currentWeekday);
+  }
+
+  /// Check if current time is past today's deadline
+  Future<bool> _computeIsPastDeadline(DateTime now) async {
+    try {
+      final deadlineTimeString = await _getDeadlineTimeAsString();
+      final deadlineParts = deadlineTimeString.split(':');
+      final deadlineHour = int.parse(deadlineParts[0]);
+      final deadlineMinute = int.parse(deadlineParts[1]);
+      
+      // Create today's deadline datetime
+      final todayDeadline = DateTime(now.year, now.month, now.day, deadlineHour, deadlineMinute);
+      
+      // Return true if current time is after deadline
+      return now.isAfter(todayDeadline);
+    } catch (e) {
+      // If there's any error parsing deadline, default to false (not past deadline)
+      return false;
     }
   }
 

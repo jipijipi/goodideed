@@ -22,6 +22,8 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
   DateTime _selectedDate = DateTime.now();
   String _currentTaskDate = '';
   String _currentDeadlineTime = '';
+  String _currentIsActiveDay = '';
+  String _currentIsPastDeadline = '';
   int? _selectedDeadlineOption;
 
   // Deadline options matching the JSON sequence choices
@@ -41,6 +43,8 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
   Future<void> _loadCurrentValues() async {
     final taskDate = await widget.userDataService.getValue<String>(StorageKeys.taskCurrentDate);
     final deadlineOption = await widget.userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
+    final isActiveDay = await widget.userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+    final isPastDeadline = await widget.userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
     
     setState(() {
       _currentTaskDate = taskDate ?? 'Not set';
@@ -48,6 +52,8 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
       _currentDeadlineTime = deadlineOption != null 
           ? deadlineOptions[deadlineOption] ?? 'Unknown option'
           : 'Not set';
+      _currentIsActiveDay = isActiveDay?.toString() ?? 'Not computed';
+      _currentIsPastDeadline = isPastDeadline?.toString() ?? 'Not computed';
     });
 
     // Parse current task date if it exists
@@ -241,6 +247,8 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
               const SizedBox(height: 8),
               _buildCurrentValueRow('Task Date:', _currentTaskDate),
               _buildCurrentValueRow('Deadline Time:', _currentDeadlineTime),
+              _buildCurrentValueRow('Is Active Day:', _currentIsActiveDay),
+              _buildCurrentValueRow('Is Past Deadline:', _currentIsPastDeadline),
             ],
           ),
         ),

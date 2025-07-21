@@ -36,6 +36,10 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
     data.onNodeIdChange(id, e.target.value);
   }, [id, data]);
 
+  const handleContentKeyChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    data.onContentKeyChange(id, e.target.value);
+  }, [id, data]);
+
   const handlePlaceholderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     data.onPlaceholderChange(id, e.target.value);
   }, [id, data]);
@@ -96,6 +100,29 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
+
+            {/* Content Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                Content Key:
+                <HelpTooltip content={helpContent.contentKey} />
+              </label>
+              <input
+                type="text"
+                value={data.contentKey || ''}
+                onChange={handleContentKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="e.g., welcome_message, error_response..."
+              />
+            </div>
             
             {/* Content Field */}
             <div style={{ marginBottom: '8px' }}>
@@ -145,6 +172,29 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   background: 'white',
                 }}
                 onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+
+            {/* Content Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                Content Key:
+                <HelpTooltip content={helpContent.contentKey} />
+              </label>
+              <input
+                type="text"
+                value={data.contentKey || ''}
+                onChange={handleContentKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="e.g., user_name_input, age_input..."
               />
             </div>
             
@@ -219,6 +269,29 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
+
+            {/* Content Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                Content Key:
+                <HelpTooltip content={helpContent.contentKey} />
+              </label>
+              <input
+                type="text"
+                value={data.contentKey || ''}
+                onChange={handleContentKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="e.g., main_menu, difficulty_selection..."
+              />
+            </div>
             
             {/* Store Key Field */}
             <div style={{ marginBottom: '8px' }}>
@@ -268,6 +341,29 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                 onClick={(e) => e.stopPropagation()}
               />
             </div>
+
+            {/* Content Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                Content Key:
+                <HelpTooltip content={helpContent.contentKey} />
+              </label>
+              <input
+                type="text"
+                value={data.contentKey || ''}
+                onChange={handleContentKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="e.g., user_type_check, time_based_route..."
+              />
+            </div>
           </>
         );
         
@@ -293,6 +389,29 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   background: 'white',
                 }}
                 onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+
+            {/* Content Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                Content Key:
+                <HelpTooltip content={helpContent.contentKey} />
+              </label>
+              <input
+                type="text"
+                value={data.contentKey || ''}
+                onChange={handleContentKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="e.g., increment_streak, reset_score..."
               />
             </div>
             

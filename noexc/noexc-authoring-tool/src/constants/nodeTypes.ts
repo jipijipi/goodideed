@@ -37,6 +37,7 @@ export interface NodeData {
   nodeLabel: NodeLabel;
   // Common fields
   nodeId: string;
+  contentKey?: string;
   // Bot/Message specific fields
   content?: string;
   // Input specific fields
@@ -53,6 +54,7 @@ export interface NodeData {
   onCategoryChange: (id: string, newCategory: NodeCategory) => void;
   onNodeLabelChange: (id: string, newNodeLabel: NodeLabel) => void;
   onNodeIdChange: (id: string, newNodeId: string) => void;
+  onContentKeyChange: (id: string, newContentKey: string) => void;
   onContentChange: (id: string, newContent: string) => void;
   onPlaceholderChange: (id: string, newPlaceholder: string) => void;
   onStoreKeyChange: (id: string, newStoreKey: string) => void;

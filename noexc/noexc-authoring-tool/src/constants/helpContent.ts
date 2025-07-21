@@ -17,6 +17,18 @@ export const helpContent: Record<string, HelpContent> = {
     ]
   },
 
+  contentKey: {
+    title: "Content Key",
+    description: "Semantic identifier for this content. Used for organization, analytics, and content management.",
+    examples: ["welcome_message", "error_response", "user_name_input", "main_menu", "difficulty_selection"],
+    tips: [
+      "Use descriptive, readable names",
+      "Follow consistent naming conventions",
+      "Helps with content tracking and analytics",
+      "Optional but recommended for better organization"
+    ]
+  },
+
   botMessage: {
     title: "Bot Message",
     description: "Text message from the bot to the user. Supports templates and multi-text.",

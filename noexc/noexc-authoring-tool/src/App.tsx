@@ -46,6 +46,7 @@ const initialNodes: Node<NodeData>[] = [
       onCategoryChange: () => {},
       onNodeLabelChange: () => {},
       onNodeIdChange: () => {},
+      onContentKeyChange: () => {},
       onContentChange: () => {},
       onPlaceholderChange: () => {},
       onStoreKeyChange: () => {},
@@ -66,6 +67,7 @@ const initialNodes: Node<NodeData>[] = [
       onCategoryChange: () => {},
       onNodeLabelChange: () => {},
       onNodeIdChange: () => {},
+      onContentKeyChange: () => {},
       onContentChange: () => {},
       onPlaceholderChange: () => {},
       onStoreKeyChange: () => {},
@@ -155,6 +157,7 @@ function Flow() {
         onCategoryChange: () => {},
         onNodeLabelChange: () => {},
         onNodeIdChange: () => {},
+        onContentKeyChange: () => {},
         onContentChange: () => {},
         onPlaceholderChange: () => {},
         onStoreKeyChange: () => {},
@@ -519,6 +522,7 @@ function Flow() {
         onCategoryChange: () => {},
         onNodeLabelChange: () => {},
         onNodeIdChange: () => {},
+        onContentKeyChange: () => {},
         onContentChange: () => {},
         onPlaceholderChange: () => {},
         onStoreKeyChange: () => {},
@@ -640,6 +644,23 @@ function Flow() {
             data: {
               ...node.data,
               content: newContent,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
+  const onContentKeyChange = useCallback((nodeId: string, newContentKey: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              contentKey: newContentKey,
             },
           };
         }
@@ -800,6 +821,7 @@ function Flow() {
       onCategoryChange,
       onNodeLabelChange,
       onNodeIdChange,
+      onContentKeyChange,
       onContentChange,
       onPlaceholderChange,
       onStoreKeyChange,
@@ -947,6 +969,7 @@ function Flow() {
               onCategoryChange: () => {},
               onNodeLabelChange: () => {},
               onNodeIdChange: () => {},
+              onContentKeyChange: () => {},
               onContentChange: () => {},
               onPlaceholderChange: () => {},
               onStoreKeyChange: () => {},
@@ -1024,6 +1047,7 @@ function Flow() {
                   onCategoryChange: () => {},
                   onNodeLabelChange: () => {},
                   onNodeIdChange: () => {},
+                  onContentKeyChange: () => {},
                   onContentChange: () => {},
                   onPlaceholderChange: () => {},
                   onStoreKeyChange: () => {},
@@ -1345,6 +1369,11 @@ function Flow() {
       // Only add type if it's not the default 'bot' type
       if (node.data.category !== 'bot') {
         message.type = node.data.category;
+      }
+      
+      // Add contentKey if provided
+      if (node.data.contentKey) {
+        message.contentKey = node.data.contentKey;
       }
       
       // Add delay from incoming edge (if any)

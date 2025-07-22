@@ -12,11 +12,13 @@ interface CustomEdgeData {
   delay?: number;
   color?: string;
   value?: any;
+  contentKey?: string;
   onLabelChange?: (edgeId: string, newLabel: string) => void;
   onStyleChange?: (edgeId: string, newStyle: 'solid' | 'dashed' | 'dotted') => void;
   onDelayChange?: (edgeId: string, newDelay: number) => void;
   onColorChange?: (edgeId: string, newColor: string) => void;
   onValueChange?: (edgeId: string, newValue: any) => void;
+  onContentKeyChange?: (edgeId: string, newContentKey: string) => void;
   onReset?: (edgeId: string) => void;
 }
 

@@ -284,5 +284,24 @@ export const helpContent: Record<string, HelpContent> = {
       "Keep each part conversational",
       "Don't overuse - 2-3 parts max"
     ]
+  },
+
+  edgeContentKey: {
+    title: "Edge Content Key",
+    description: "Semantic identifier for this choice or condition edge. Used for analytics, content management, and robust references.",
+    examples: [
+      "main_menu_option",
+      "difficulty_selection",
+      "continue_button",
+      "retry_choice",
+      "exit_condition"
+    ],
+    tips: [
+      "Use descriptive, readable names",
+      "Follow consistent naming conventions",
+      "Helps identify choices in analytics",
+      "Useful for content tracking and A/B testing",
+      "Optional but recommended for important choices"
+    ]
   }
 };

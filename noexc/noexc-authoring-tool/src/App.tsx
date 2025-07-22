@@ -22,6 +22,8 @@ import GroupNode from './components/GroupNode';
 import { NodeData, NodeCategory, NodeLabel, DataActionItem } from './constants/nodeTypes';
 import { VariableManagerProvider } from './context/VariableManagerContext';
 import VariableManager from './components/VariableManager';
+import HelpTooltip from './components/HelpTooltip';
+import { helpContent } from './constants/helpContent';
 
 const nodeTypes = {
   editable: EditableNode,
@@ -806,6 +808,23 @@ function Flow() {
     );
   }, [setEdges]);
 
+  const onEdgeContentKeyChange = useCallback((edgeId: string, newContentKey: string) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              contentKey: newContentKey,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  }, [setEdges]);
+
   const onEdgeReset = useCallback((edgeId: string) => {
     setEdges((eds) =>
       eds.map((edge) => {
@@ -896,6 +915,12 @@ function Flow() {
           setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, value: newValue } } : null);
         }
       },
+      onContentKeyChange: (edgeId: string, newContentKey: string) => {
+        onEdgeContentKeyChange(edgeId, newContentKey);
+        if (selectedEdge?.id === edgeId) {
+          setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, contentKey: newContentKey } } : null);
+        }
+      },
       onReset: onEdgeReset,
     },
   }));
@@ -928,7 +953,8 @@ function Flow() {
         style: edge.data?.style,
         delay: edge.data?.delay,
         color: edge.data?.color,
-        value: edge.data?.value
+        value: edge.data?.value,
+        contentKey: edge.data?.contentKey
       }))
     };
 
@@ -971,7 +997,8 @@ function Flow() {
         style: edge.data?.style,
         delay: edge.data?.delay,
         color: edge.data?.color,
-        value: edge.data?.value
+        value: edge.data?.value,
+        contentKey: edge.data?.contentKey
       }))
     };
     
@@ -1021,6 +1048,7 @@ function Flow() {
               delay: edge.delay,
               color: edge.color,
               value: edge.value,
+              contentKey: edge.contentKey,
               onLabelChange: () => {},
               onStyleChange: () => {},
               onDelayChange: () => {},
@@ -1100,6 +1128,7 @@ function Flow() {
                   delay: edge.delay,
                   color: edge.color,
                   value: edge.value,
+                  contentKey: edge.contentKey,
                   onLabelChange: () => {},
                   onStyleChange: () => {},
                   onDelayChange: () => {},
@@ -1269,6 +1298,11 @@ function Flow() {
         const text = label.includes('::') ? label.split('::')[0].trim() : label.trim();
         
         const choice: any = { text: text || 'Choice option' };
+        
+        // Add contentKey if available
+        if (edge.data?.contentKey) {
+          choice.contentKey = edge.data.contentKey;
+        }
         
         // Use dedicated value field if available, otherwise fallback to legacy parsing for backward compatibility
         if (edge.data && edge.data.value !== undefined) {
@@ -2216,6 +2250,34 @@ function Flow() {
             />
             <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
               Value stored when this choice is selected (optional)
+            </div>
+          </div>
+
+          {/* Content Key Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              🔑 Content Key
+              <HelpTooltip content={helpContent.edgeContentKey} />
+            </label>
+            <input
+              type="text"
+              value={selectedEdge.data?.contentKey || ''}
+              onChange={(e) => {
+                const newContentKey = e.target.value;
+                onEdgeContentKeyChange(selectedEdge.id, newContentKey);
+                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, contentKey: newContentKey } } : null);
+              }}
+              placeholder="e.g., main_menu_option, difficulty_choice..."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Semantic identifier for this choice/condition (optional)
             </div>
           </div>
 

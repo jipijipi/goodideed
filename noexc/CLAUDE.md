@@ -41,11 +41,13 @@ Located in `noexc-authoring-tool/`, this is a **visual authoring tool** for crea
 - **Flutter Export**: Export groups as JSON sequences compatible with the Flutter chat app
 
 #### Key Features
-- **Node Types**: Bot messages, user responses, choices, text inputs, auto-routes
+- **Node Types**: Bot messages, user responses, choices, text inputs, auto-routes, data actions
 - **Group System**: Organize nodes into groups that become separate sequences
-- **Cross-Sequence Edges**: Visual connections between groups with `@sequence_id` syntax
+- **Cross-Sequence Edges**: Visual connections between groups with auto-detection
 - **Real-time Validation**: Live validation of flow structure and requirements
 - **Export Integration**: Direct export to Flutter-compatible JSON format
+- **Content Management**: Semantic contentKey fields for nodes and edges for robust referencing
+- **Edge Properties**: Advanced edge customization with labels, values, contentKeys, delays, and styling
 
 #### Architecture
 - **React Flow**: Built on ReactFlow library for node-based editing
@@ -61,9 +63,17 @@ Located in `noexc-authoring-tool/`, this is a **visual authoring tool** for crea
 #### Cross-Sequence Navigation
 The authoring tool supports advanced cross-sequence navigation:
 - **Auto-Detection**: Edges between different groups automatically create cross-sequence navigation
-- **Explicit Syntax**: Use `@sequence_id` in edge labels for explicit cross-sequence jumps
+- **Explicit Syntax**: Removed `@sequence_id` syntax - now uses auto-detection only
 - **Validation**: Ensures all cross-sequence references are valid
 - **Export**: Groups export as separate sequence files with proper `sequenceId` fields
+
+#### Recent Updates (2025)
+- **Edge ContentKey System**: Added semantic contentKey field to edges for robust choice/condition referencing
+- **Edge Value System**: Moved choice values from parsed labels to dedicated value fields for safety
+- **Visual Edge Display**: Enhanced edge rendering with Label → ContentKey → Value → Delay display order
+- **Export/Import Integrity**: Fixed JSON import/export discrepancy that added unwanted group metadata to regular nodes
+- **Edge Properties Panel**: Added comprehensive edge properties panel with data/style property organization and bottom padding
+- **Delete-on-Drop Disabled**: Removed accidental edge deletion when reconnecting edges
 
 ### Key Components
 

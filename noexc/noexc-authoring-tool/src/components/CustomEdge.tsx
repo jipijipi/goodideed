@@ -257,7 +257,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                 )}
                 {hasValue && (
                   <span style={{ fontSize: '10px', color: '#2196f3', marginLeft: (data?.label || (data?.delay && data.delay > 0)) ? '4px' : '0px' }}>
-                    {(data?.label || (data?.delay && data.delay > 0)) ? `[${JSON.stringify(data.value)}]` : `${JSON.stringify(data.value)}`}
+                    {(data?.label || (data?.delay && data.delay > 0)) ? `[${String(data.value)}]` : `${String(data.value)}`}
                   </span>
                 )}
               </div>

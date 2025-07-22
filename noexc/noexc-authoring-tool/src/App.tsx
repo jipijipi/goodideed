@@ -923,7 +923,11 @@ function Flow() {
         source: edge.source,
         target: edge.target,
         type: edge.type || 'default',
-        label: edge.data?.label
+        label: edge.data?.label,
+        style: edge.data?.style,
+        delay: edge.data?.delay,
+        color: edge.data?.color,
+        value: edge.data?.value
       }))
     };
 
@@ -1015,6 +1019,7 @@ function Flow() {
               style: edge.style,
               delay: edge.delay,
               color: edge.color,
+              value: edge.value,
               onLabelChange: () => {},
               onStyleChange: () => {},
               onDelayChange: () => {},
@@ -1093,10 +1098,12 @@ function Flow() {
                   style: edge.style,
                   delay: edge.delay,
                   color: edge.color,
+                  value: edge.value,
                   onLabelChange: () => {},
                   onStyleChange: () => {},
                   onDelayChange: () => {},
                   onColorChange: () => {},
+                  onValueChange: () => {},
                   onReset: () => {}
                 }
               }));
@@ -1273,7 +1280,7 @@ function Flow() {
         const choice: any = { text: text || 'Choice option' };
         
         // Use dedicated value field if available, otherwise fallback to legacy parsing for backward compatibility
-        if (edge.data?.value !== undefined) {
+        if (edge.data && edge.data.value !== undefined) {
           choice.value = edge.data.value;
         } else if (label.includes('::')) {
           // Legacy fallback - parse from label for backward compatibility
@@ -2284,7 +2291,7 @@ function Flow() {
             </label>
             <input
               type="text"
-              value={selectedEdge.data?.value !== undefined ? JSON.stringify(selectedEdge.data.value) : ''}
+              value={selectedEdge.data?.value !== undefined ? String(selectedEdge.data.value) : ''}
               onChange={(e) => {
                 let newValue: any = e.target.value;
                 

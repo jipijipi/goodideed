@@ -490,11 +490,12 @@ function Flow() {
   }, [setEdges]);
 
   const onReconnectEnd = useCallback((event: MouseEvent | TouchEvent, edge: Edge) => {
-    if (!edgeReconnectSuccessful.current) {
-      setEdges((eds) => eds.filter((e) => e.id !== edge.id));
-    }
+    // Disabled delete on drop functionality
+    // if (!edgeReconnectSuccessful.current) {
+    //   setEdges((eds) => eds.filter((e) => e.id !== edge.id));
+    // }
     edgeReconnectSuccessful.current = true;
-  }, [setEdges]);
+  }, []);
 
 
   const createQuickNode = useCallback((nodeType: { category: NodeCategory, label: NodeLabel, text: string }) => {

@@ -94,7 +94,8 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
   const hasLabel = data?.label && data.label.trim() !== '';
   const hasDelay = data?.delay && data.delay > 0;
   const hasValue = data?.value !== undefined && data?.value !== null && data?.value !== '';
-  const hasCustomizations = hasLabel || hasDelay || hasValue;
+  const hasContentKey = data?.contentKey && data.contentKey.trim() !== '';
+  const hasCustomizations = hasLabel || hasDelay || hasValue || hasContentKey;
   const isCrossSequence = false; // Removed explicit @sequence_id syntax
   const isCondition = data?.label && (data.label.includes('==') || data.label.includes('!=') || data.label.includes('>') || data.label.includes('<'));
   
@@ -252,14 +253,19 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                 title="Double-click to edit"
               >
                 {data?.label || ''}
+                {hasContentKey && (
+                  <span style={{ fontSize: '10px', color: '#9c27b0', marginLeft: data?.label ? '4px' : '0px' }}>
+                    {data?.label ? `{${data.contentKey}}` : `${data.contentKey}`}
+                  </span>
+                )}
                 {hasValue && (
-                  <span style={{ fontSize: '10px', color: '#2196f3', marginLeft: data?.label ? '4px' : '0px' }}>
-                    {data?.label ? `[${String(data.value)}]` : `${String(data.value)}`}
+                  <span style={{ fontSize: '10px', color: '#2196f3', marginLeft: (data?.label || hasContentKey) ? '4px' : '0px' }}>
+                    {(data?.label || hasContentKey) ? `[${String(data.value)}]` : `${String(data.value)}`}
                   </span>
                 )}
                 {data?.delay && data.delay > 0 && (
-                  <span style={{ fontSize: '10px', color: '#666', marginLeft: (data?.label || hasValue) ? '4px' : '0px' }}>
-                    {(data?.label || hasValue) ? `(${data.delay}ms)` : `${data.delay}ms`}
+                  <span style={{ fontSize: '10px', color: '#666', marginLeft: (data?.label || hasContentKey || hasValue) ? '4px' : '0px' }}>
+                    {(data?.label || hasContentKey || hasValue) ? `(${data.delay}ms)` : `${data.delay}ms`}
                   </span>
                 )}
               </div>

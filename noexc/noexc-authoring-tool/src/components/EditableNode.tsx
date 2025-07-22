@@ -433,22 +433,24 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                     <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#555' }}>Action {index + 1}</span>
                     <div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setExpandedAction(expandedAction === index ? null : index);
-                        }}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          fontSize: '10px',
-                          cursor: 'pointer',
-                          color: '#666',
-                          marginRight: '4px'
-                        }}
-                      >
-                        {expandedAction === index ? '▼' : '▶'}
-                      </button>
+                      {action.type === 'trigger' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedAction(expandedAction === index ? null : index);
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            fontSize: '10px',
+                            cursor: 'pointer',
+                            color: '#666',
+                            marginRight: '4px'
+                          }}
+                        >
+                          {expandedAction === index ? '▼' : '▶'}
+                        </button>
+                      )}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

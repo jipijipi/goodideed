@@ -93,7 +93,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
   const hasDelay = data?.delay && data.delay > 0;
   const hasValue = data?.value !== undefined && data?.value !== null && data?.value !== '';
   const hasCustomizations = hasLabel || hasDelay || hasValue;
-  const isCrossSequence = data?.label && data.label.startsWith('@');
+  const isCrossSequence = false; // Removed explicit @sequence_id syntax
   const isCondition = data?.label && (data.label.includes('==') || data.label.includes('!=') || data.label.includes('>') || data.label.includes('<'));
   
   const getStrokeDashArray = () => {
@@ -229,8 +229,8 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                   textAlign: 'center',
                 }}
                 onClick={(e) => e.stopPropagation()}
-                placeholder="@sequence_id | condition | choice::value"
-                title="Format: @sequence_id for cross-sequence, condition for routes, choice::value for choices"
+                placeholder="condition | choice text"
+                title="Format: condition for routes, choice text for choices"
               />
             ) : (
               <div
@@ -247,17 +247,17 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                   color: isCrossSequence ? '#6a1b9a' : 'inherit'
                 }}
                 onDoubleClick={handleDoubleClick}
-                title={isCrossSequence ? "Cross-sequence navigation - Double-click to edit" : "Double-click to edit"}
+                title="Double-click to edit"
               >
                 {data?.label || ''}
-                {data?.delay && data.delay > 0 && (
-                  <span style={{ fontSize: '10px', color: '#666', marginLeft: data?.label ? '4px' : '0px' }}>
-                    {data?.label ? `(${data.delay}ms)` : `${data.delay}ms`}
+                {hasValue && (
+                  <span style={{ fontSize: '10px', color: '#2196f3', marginLeft: data?.label ? '4px' : '0px' }}>
+                    {data?.label ? `[${String(data.value)}]` : `${String(data.value)}`}
                   </span>
                 )}
-                {hasValue && (
-                  <span style={{ fontSize: '10px', color: '#2196f3', marginLeft: (data?.label || (data?.delay && data.delay > 0)) ? '4px' : '0px' }}>
-                    {(data?.label || (data?.delay && data.delay > 0)) ? `[${String(data.value)}]` : `${String(data.value)}`}
+                {data?.delay && data.delay > 0 && (
+                  <span style={{ fontSize: '10px', color: '#666', marginLeft: (data?.label || hasValue) ? '4px' : '0px' }}>
+                    {(data?.label || hasValue) ? `(${data.delay}ms)` : `${data.delay}ms`}
                   </span>
                 )}
               </div>

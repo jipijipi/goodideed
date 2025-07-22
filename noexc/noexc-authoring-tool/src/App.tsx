@@ -856,10 +856,10 @@ function Flow() {
     style: {
       ...edge.style,
       // Make selected edge stand out visually
-      strokeWidth: selectedEdge?.id === edge.id ? 4 : (edge.data?.label?.startsWith('@') ? 3 : 2),
+      strokeWidth: selectedEdge?.id === edge.id ? 4 : 2,
       stroke: selectedEdge?.id === edge.id 
         ? '#ff6b35' // Orange highlight for selected edge
-        : edge.data?.color || (edge.data?.label?.startsWith('@') ? '#9c27b0' : edge.data?.label && (edge.data.label.includes('==') || edge.data.label.includes('!=') || edge.data.label.includes('>') || edge.data.label.includes('<')) ? '#ff9800' : '#999'),
+        : edge.data?.color || (edge.data?.label && (edge.data.label.includes('==') || edge.data.label.includes('!=') || edge.data.label.includes('>') || edge.data.label.includes('<')) ? '#ff9800' : '#999'),
       filter: selectedEdge?.id === edge.id ? 'drop-shadow(0 0 6px rgba(255, 107, 53, 0.6))' : 'none',
     },
     data: {
@@ -1182,16 +1182,6 @@ function Flow() {
       !internalEdges.some(edge => edge.target === node.id)
     );
     if (!hasStartNode) errors.push("No start node found (node with no incoming internal edges)");
-    
-    // Validate cross-sequence references
-    edges.forEach(edge => {
-      if (edge.data?.label?.startsWith('@')) {
-        const sequenceId = edge.data.label.substring(1);
-        if (!sequenceId.trim()) {
-          errors.push(`Edge ${edge.id} has invalid cross-sequence reference: missing sequence ID after @`);
-        }
-      }
-    });
     
     return {
       isValid: errors.length === 0,
@@ -2152,6 +2142,13 @@ function Flow() {
             <div style={{ fontSize: '14px', fontFamily: 'monospace', color: '#333' }}>{selectedEdge.id}</div>
           </div>
 
+          {/* Data Properties Header */}
+          <div style={{ marginBottom: '16px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', margin: '0 0 12px 0', borderBottom: '2px solid #e3f2fd', paddingBottom: '8px' }}>
+              📊 Data Properties
+            </h3>
+          </div>
+
           {/* Label Section */}
           <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
@@ -2165,7 +2162,7 @@ function Flow() {
                 onEdgeLabelChange(selectedEdge.id, newLabel);
                 setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, label: newLabel } } : null);
               }}
-              placeholder="@sequence_id | condition | choice::value"
+              placeholder="condition | choice text"
               style={{
                 width: '100%',
                 padding: '8px 12px',
@@ -2175,8 +2172,85 @@ function Flow() {
               }}
             />
             <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Format: @sequence_id for cross-sequence, condition for routes, choice::value for choices
+              Format: condition for routes, choice text for choices
             </div>
+          </div>
+
+          {/* Value Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              🏷️ Choice Value
+            </label>
+            <input
+              type="text"
+              value={selectedEdge.data?.value !== undefined ? String(selectedEdge.data.value) : ''}
+              onChange={(e) => {
+                let newValue: any = e.target.value;
+                
+                // Parse value types similar to the current parsing
+                if (newValue === '') {
+                  newValue = undefined;
+                } else if (newValue === 'true') {
+                  newValue = true;
+                } else if (newValue === 'false') {
+                  newValue = false;
+                } else if (newValue === 'null') {
+                  newValue = null;
+                } else if (!isNaN(Number(newValue)) && newValue.trim() !== '') {
+                  newValue = Number(newValue);
+                }
+                // newValue is already a string at this point
+                
+                onEdgeValueChange(selectedEdge.id, newValue);
+                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, value: newValue } } : null);
+              }}
+              placeholder="Enter value (text, number, true, false, null)"
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Value stored when this choice is selected (optional)
+            </div>
+          </div>
+
+          {/* Delay Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              ⏱️ Delay (ms)
+            </label>
+            <input
+              type="number"
+              value={selectedEdge.data?.delay || 0}
+              onChange={(e) => {
+                const newDelay = parseInt(e.target.value) || 0;
+                onEdgeDelayChange(selectedEdge.id, newDelay);
+                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, delay: newDelay } } : null);
+              }}
+              min="0"
+              step="100"
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Delay before showing next message
+            </div>
+          </div>
+
+          {/* Style Properties Header */}
+          <div style={{ marginTop: '32px', marginBottom: '16px', paddingTop: '24px', borderTop: '1px solid #ddd' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', margin: '0 0 12px 0', borderBottom: '2px solid #fff3e0', paddingBottom: '8px' }}>
+              🎨 Style Properties
+            </h3>
           </div>
 
           {/* Style Section */}
@@ -2253,76 +2327,6 @@ function Flow() {
                   {name}
                 </button>
               ))}
-            </div>
-          </div>
-
-          {/* Delay Section */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              ⏱️ Delay (ms)
-            </label>
-            <input
-              type="number"
-              value={selectedEdge.data?.delay || 0}
-              onChange={(e) => {
-                const newDelay = parseInt(e.target.value) || 0;
-                onEdgeDelayChange(selectedEdge.id, newDelay);
-                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, delay: newDelay } } : null);
-              }}
-              min="0"
-              step="100"
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Delay before showing next message
-            </div>
-          </div>
-
-          {/* Value Section */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              🏷️ Choice Value
-            </label>
-            <input
-              type="text"
-              value={selectedEdge.data?.value !== undefined ? String(selectedEdge.data.value) : ''}
-              onChange={(e) => {
-                let newValue: any = e.target.value;
-                
-                // Parse value types similar to the current parsing
-                if (newValue === '') {
-                  newValue = undefined;
-                } else if (newValue === 'true') {
-                  newValue = true;
-                } else if (newValue === 'false') {
-                  newValue = false;
-                } else if (newValue === 'null') {
-                  newValue = null;
-                } else if (!isNaN(Number(newValue)) && newValue.trim() !== '') {
-                  newValue = Number(newValue);
-                }
-                // newValue is already a string at this point
-                
-                onEdgeValueChange(selectedEdge.id, newValue);
-                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, value: newValue } } : null);
-              }}
-              placeholder="Enter value (text, number, true, false, null)"
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Value stored when this choice is selected (optional)
             </div>
           </div>
 

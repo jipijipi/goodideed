@@ -1,0 +1,89 @@
+{
+  "sequenceId": "group_30",
+  "name": "Subflow 30",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 1,
+      "contentKey": "concept_introduction",
+      "text": "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
+      "nextMessageId": 29
+    },
+    {
+      "id": 29,
+      "type": "dataAction",
+      "contentKey": "onboarding_complete",
+      "dataActions": [
+        {
+          "type": "set",
+          "key": "user.isOnboarded",
+          "value": true
+        }
+      ],
+      "nextMessageId": 13
+    },
+    {
+      "id": 13,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "How will you make sure?",
+          "nextMessageId": 14
+        },
+        {
+          "text": "Cut to the chase",
+          "nextMessageId": 15
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "text": "Let's just say that I've a few trickies up my sleevies|||Or let's not say that|||But you'll see really soon",
+      "nextMessageId": 18
+    },
+    {
+      "id": 18,
+      "text": "First thing first, think about what you want to accomplish everyday",
+      "nextMessageId": 19
+    },
+    {
+      "id": 19,
+      "text": "It can be anything really, study, exercise, world domination you name it.",
+      "nextMessageId": 20
+    },
+    {
+      "id": 20,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "Ok I've got it",
+          "sequenceId": "group_31"
+        },
+        {
+          "text": "Can I change my mind later?",
+          "nextMessageId": 23
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "text": "Well yes, I'll ask you everyday.",
+      "nextMessageId": 25
+    },
+    {
+      "id": 25,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "All right I'm ready",
+          "sequenceId": "group_31"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "text": "Fine.",
+      "nextMessageId": 18
+    }
+  ]
+}

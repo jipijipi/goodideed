@@ -1,0 +1,17 @@
+{
+  "sequenceId": "group_62",
+  "name": "Subflow 62",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 1,
+      "text": "But we're not ready for you. Yet.",
+      "nextMessageId": 61
+    },
+    {
+      "id": 61,
+      "text": "Sorry.",
+      "sequenceId": "group_59"
+    }
+  ]
+}

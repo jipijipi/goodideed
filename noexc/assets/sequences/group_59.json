@@ -1,0 +1,33 @@
+{
+  "sequenceId": "group_59",
+  "name": "Subflow 59",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 1,
+      "type": "autoroute",
+      "contentKey": "user_visited_check",
+      "routes": [
+        {
+          "condition": "session.visits < 2",
+          "nextMessageId": 57
+        },
+        {
+          "default": true,
+          "nextMessageId": 58
+        }
+      ]
+    },
+    {
+      "id": 57,
+      "contentKey": "plot_advancement",
+      "text": "I have something to confess... But it can wait.",
+      "nextMessageId": 58
+    },
+    {
+      "id": 58,
+      "contentKey": "bot_sendoff",
+      "text": "See you later, or tomorrow"
+    }
+  ]
+}

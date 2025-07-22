@@ -1,26 +1,32 @@
 {
   "sequenceId": "welcome_seq",
-  "name": "Welcome",
-  "description": "Checkin Sequence",
+  "name": "welcome",
+  "description": "A group of related nodes",
   "messages": [
     {
       "id": 1,
       "type": "autoroute",
+      "contentKey": "user_onboarded_check",
       "routes": [
         {
-          "default": true,
-          "sequenceId": "onboarding_seq"
+          "condition": "user.isOnboarded == true",
+          "nextMessageId": 4
         },
         {
-          "condition": "user.isOnboarded==true",
-          "nextMessageId": 57
+          "condition": "user.name==null",
+          "sequenceId": "group_28"
+        },
+        {
+          "default": true,
+          "sequenceId": "group_30"
         }
       ]
     },
     {
-      "id": 57,
-      "text": "Well well well, guess who's back...",
-      "sequenceId": "taskChecking_seq"
+      "id": 4,
+      "contentKey": "welcome_back",
+      "text": "Welcome back!",
+      "sequenceId": "group_62"
     }
   ]
 }

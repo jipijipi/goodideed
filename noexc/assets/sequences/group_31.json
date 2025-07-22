@@ -1,0 +1,21 @@
+{
+  "sequenceId": "group_31",
+  "name": "Subflow 31",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 1,
+      "type": "textInput",
+      "contentKey": "user_set_task",
+      "storeKey": "user.task",
+      "placeholderText": "Everyday, I'll do :",
+      "nextMessageId": 26
+    },
+    {
+      "id": 26,
+      "contentKey": "bot_reacts_new_task",
+      "text": "{user.task}? Hey, baby steps, smart I guess.",
+      "sequenceId": "group_39"
+    }
+  ]
+}

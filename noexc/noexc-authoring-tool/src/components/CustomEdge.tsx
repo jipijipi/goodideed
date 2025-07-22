@@ -11,10 +11,12 @@ interface CustomEdgeData {
   style?: 'solid' | 'dashed' | 'dotted';
   delay?: number;
   color?: string;
+  value?: any;
   onLabelChange?: (edgeId: string, newLabel: string) => void;
   onStyleChange?: (edgeId: string, newStyle: 'solid' | 'dashed' | 'dotted') => void;
   onDelayChange?: (edgeId: string, newDelay: number) => void;
   onColorChange?: (edgeId: string, newColor: string) => void;
+  onValueChange?: (edgeId: string, newValue: any) => void;
   onReset?: (edgeId: string) => void;
 }
 
@@ -89,7 +91,8 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
 
   const hasLabel = data?.label && data.label.trim() !== '';
   const hasDelay = data?.delay && data.delay > 0;
-  const hasCustomizations = hasLabel || hasDelay;
+  const hasValue = data?.value !== undefined && data?.value !== null && data?.value !== '';
+  const hasCustomizations = hasLabel || hasDelay || hasValue;
   const isCrossSequence = data?.label && data.label.startsWith('@');
   const isCondition = data?.label && (data.label.includes('==') || data.label.includes('!=') || data.label.includes('>') || data.label.includes('<'));
   
@@ -170,7 +173,8 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                 style: undefined,
                 delay: undefined,
                 color: undefined,
-                label: undefined
+                label: undefined,
+                value: undefined
               },
             };
           }
@@ -249,6 +253,11 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                 {data?.delay && data.delay > 0 && (
                   <span style={{ fontSize: '10px', color: '#666', marginLeft: data?.label ? '4px' : '0px' }}>
                     {data?.label ? `(${data.delay}ms)` : `${data.delay}ms`}
+                  </span>
+                )}
+                {hasValue && (
+                  <span style={{ fontSize: '10px', color: '#2196f3', marginLeft: (data?.label || (data?.delay && data.delay > 0)) ? '4px' : '0px' }}>
+                    {(data?.label || (data?.delay && data.delay > 0)) ? `[${JSON.stringify(data.value)}]` : `${JSON.stringify(data.value)}`}
                   </span>
                 )}
               </div>

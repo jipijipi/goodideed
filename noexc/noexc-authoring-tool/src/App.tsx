@@ -788,6 +788,23 @@ function Flow() {
     );
   }, [setEdges]);
 
+  const onEdgeValueChange = useCallback((edgeId: string, newValue: any) => {
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === edgeId) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              value: newValue,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  }, [setEdges]);
+
   const onEdgeReset = useCallback((edgeId: string) => {
     setEdges((eds) =>
       eds.map((edge) => {
@@ -872,6 +889,12 @@ function Flow() {
           setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, color: newColor } } : null);
         }
       },
+      onValueChange: (edgeId: string, newValue: any) => {
+        onEdgeValueChange(edgeId, newValue);
+        if (selectedEdge?.id === edgeId) {
+          setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, value: newValue } } : null);
+        }
+      },
       onReset: onEdgeReset,
     },
   }));
@@ -942,7 +965,8 @@ function Flow() {
         label: edge.data?.label,
         style: edge.data?.style,
         delay: edge.data?.delay,
-        color: edge.data?.color
+        color: edge.data?.color,
+        value: edge.data?.value
       }))
     };
     
@@ -995,6 +1019,7 @@ function Flow() {
               onStyleChange: () => {},
               onDelayChange: () => {},
               onColorChange: () => {},
+              onValueChange: () => {},
               onReset: () => {}
             }
           }));
@@ -1242,18 +1267,26 @@ function Flow() {
       .filter(edge => edge.source === nodeId)
       .map(edge => {
         const label = edge.data?.label || '';
-        const [text, value] = label.includes('::') ? label.split('::') : [label, ''];
+        // Use label as text, but remove any legacy :: parsing
+        const text = label.includes('::') ? label.split('::')[0].trim() : label.trim();
         
-        const choice: any = { text: text.trim() || 'Choice option' };
+        const choice: any = { text: text || 'Choice option' };
         
-        if (value && value.trim()) {
-          const trimmedValue = value.trim();
-          // Parse value types
-          if (trimmedValue === 'true') choice.value = true;
-          else if (trimmedValue === 'false') choice.value = false;
-          else if (trimmedValue === 'null') choice.value = null;
-          else if (!isNaN(Number(trimmedValue))) choice.value = Number(trimmedValue);
-          else choice.value = trimmedValue;
+        // Use dedicated value field if available, otherwise fallback to legacy parsing for backward compatibility
+        if (edge.data?.value !== undefined) {
+          choice.value = edge.data.value;
+        } else if (label.includes('::')) {
+          // Legacy fallback - parse from label for backward compatibility
+          const legacyValue = label.split('::')[1];
+          if (legacyValue && legacyValue.trim()) {
+            const trimmedValue = legacyValue.trim();
+            // Parse value types
+            if (trimmedValue === 'true') choice.value = true;
+            else if (trimmedValue === 'false') choice.value = false;
+            else if (trimmedValue === 'null') choice.value = null;
+            else if (!isNaN(Number(trimmedValue))) choice.value = Number(trimmedValue);
+            else choice.value = trimmedValue;
+          }
         }
         
         // Only use inferred cross-sequence navigation (no explicit @sequence syntax)
@@ -2241,6 +2274,48 @@ function Flow() {
             />
             <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
               Delay before showing next message
+            </div>
+          </div>
+
+          {/* Value Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              🏷️ Choice Value
+            </label>
+            <input
+              type="text"
+              value={selectedEdge.data?.value !== undefined ? JSON.stringify(selectedEdge.data.value) : ''}
+              onChange={(e) => {
+                let newValue: any = e.target.value;
+                
+                // Parse value types similar to the current parsing
+                if (newValue === '') {
+                  newValue = undefined;
+                } else if (newValue === 'true') {
+                  newValue = true;
+                } else if (newValue === 'false') {
+                  newValue = false;
+                } else if (newValue === 'null') {
+                  newValue = null;
+                } else if (!isNaN(Number(newValue)) && newValue.trim() !== '') {
+                  newValue = Number(newValue);
+                }
+                // newValue is already a string at this point
+                
+                onEdgeValueChange(selectedEdge.id, newValue);
+                setSelectedEdge(prev => prev ? { ...prev, data: { ...prev.data, value: newValue } } : null);
+              }}
+              placeholder="Enter value (text, number, true, false, null)"
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Value stored when this choice is selected (optional)
             </div>
           </div>
 

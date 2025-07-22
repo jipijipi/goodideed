@@ -1019,10 +1019,12 @@ function Flow() {
             ...node,
             data: {
               ...node.data,
-              // Ensure group metadata is preserved
-              groupId: node.data.groupId || node.data.nodeId,
-              title: node.data.title || node.data.label,
-              description: node.data.description || 'Imported group',
+              // Only add group metadata if this was actually a group node
+              ...(node.type === 'group' ? {
+                groupId: node.data.groupId || node.data.nodeId,
+                title: node.data.title || node.data.label,
+                description: node.data.description || 'Imported group',
+              } : {}),
               onLabelChange: () => {},
               onCategoryChange: () => {},
               onNodeLabelChange: () => {},
@@ -1100,10 +1102,12 @@ function Flow() {
                 ...node,
                 data: {
                   ...node.data,
-                  // Ensure group metadata is preserved
-                  groupId: node.data.groupId || node.data.nodeId,
-                  title: node.data.title || node.data.label,
-                  description: node.data.description || 'Imported group',
+                  // Only add group metadata if this was actually a group node
+                  ...(node.type === 'group' ? {
+                    groupId: node.data.groupId || node.data.nodeId,
+                    title: node.data.title || node.data.label,
+                    description: node.data.description || 'Imported group',
+                  } : {}),
                   onLabelChange: () => {},
                   onCategoryChange: () => {},
                   onNodeLabelChange: () => {},
@@ -2415,6 +2419,7 @@ function Flow() {
               🎨 Reset Styling
             </button>
           </div>
+          <div style={{ height: '40px' }} />
         </div>
       )}
       

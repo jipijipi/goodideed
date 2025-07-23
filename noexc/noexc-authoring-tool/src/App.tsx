@@ -1721,19 +1721,32 @@ function Flow() {
         return;
       }
 
-      // Export each sequence as a separate file
-      exportedSequences.forEach(sequence => {
-        const dataStr = JSON.stringify(sequence, null, 2);
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+      // Export each sequence as a separate file with delays to prevent browser throttling
+      for (let i = 0; i < exportedSequences.length; i++) {
+        const sequence = exportedSequences[i];
         
-        const exportFileDefaultName = `${sequence.sequenceId}.json`;
-        const linkElement = document.createElement('a');
-        linkElement.setAttribute('href', dataUri);
-        linkElement.setAttribute('download', exportFileDefaultName);
-        linkElement.click();
-      });
+        setTimeout(() => {
+          const dataStr = JSON.stringify(sequence, null, 2);
+          const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+          
+          const exportFileDefaultName = `${sequence.sequenceId}.json`;
+          const linkElement = document.createElement('a');
+          linkElement.setAttribute('href', dataUri);
+          linkElement.setAttribute('download', exportFileDefaultName);
+          linkElement.click();
+          
+          // Show progress notification for each file
+          if (i === exportedSequences.length - 1) {
+            // Final notification when all downloads are triggered
+            setTimeout(() => {
+              showNotification(`All ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} exported to Flutter`);
+            }, 100);
+          }
+        }, i * 500); // 500ms delay between downloads
+      }
 
-      showNotification(`Exported ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} to Flutter`);
+      // Show initial notification immediately
+      showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} to Flutter...`);
       
     } catch (error) {
       console.error('Export error:', error);

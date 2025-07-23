@@ -18,6 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isDarkMode = false;
+  bool _isInitialized = false;
   late final UserDataService _userDataService;
   late final SessionService _sessionService;
 
@@ -30,8 +31,14 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initializeApp() async {
+    // Ensure SessionService completes BEFORE ChatScreen initializes
     await _sessionService.initializeSession();
     await _loadThemePreference();
+    
+    // Mark initialization as complete
+    setState(() {
+      _isInitialized = true;
+    });
   }
 
   Future<void> _loadThemePreference() async {
@@ -55,7 +62,13 @@ class _MyAppState extends State<MyApp> {
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: AppThemes.getThemeMode(_isDarkMode),
-      home: ChatScreen(onThemeToggle: _toggleTheme),
+      home: _isInitialized 
+        ? ChatScreen(onThemeToggle: _toggleTheme)
+        : const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
     );
   }
 }

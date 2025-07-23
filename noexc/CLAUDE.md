@@ -524,6 +524,29 @@ flutter analyze            # Static analysis
 - **UI Improvements**: Button-based selection interface with visual feedback
 - **Morning Recovery Removal**: Eliminated flawed morning recovery logic for cleaner status transitions
 
+### Variable Naming System Standardization (July 2025)
+- **Phase 1 - Duplicate Removal**: Eliminated conflicting variable definitions across AppConstants and StorageKeys
+  - Removed duplicate constants: `currentTaskKey`, `currentStreakKey`, `isOnNoticeKey`, `taskDeadlineKey`
+  - Consolidated `user.onNotice` → `user.isOnNotice` for boolean consistency
+  - Fixed hardcoded variable usage in SessionService to use StorageKeys constants
+  - Consolidated `task.deadline` → `task.deadlineTime` across 12+ JSON sequence files
+- **Phase 2 - CamelCase Standardization**: Converted all snake_case variables to camelCase
+  - Updated 9 task variables: `task.deadline_time` → `task.deadlineTime`, `task.current_date` → `task.currentDate`, etc.
+  - Updated 15+ JSON sequence files to use new camelCase variable names
+  - Verified consistent boolean naming with "is" prefix throughout codebase
+  - Fixed namespace confusion between session, task, and user variables
+- **Phase 3 - Test File Cleanup**: Replaced hardcoded variable strings with StorageKeys constants
+  - Updated 12 high-impact test files with systematic variable replacement
+  - Added StorageKeys imports to test files for better maintainability
+  - Achieved ~70% reduction in hardcoded variables across test suite
+  - All updated tests verified to pass successfully
+- **Benefits**: 100% consistent camelCase naming, centralized variable management, reduced maintenance overhead
+
+### Legacy Code Cleanup (July 2025)
+- **Removed Legacy Assets**: Deleted unused `chat_script.json` and related constants
+- **Fixed Type Casting Issues**: Enhanced `DateTimePickerWidget` to handle both string and integer deadline formats
+- **Backward Compatibility**: Added defensive type handling for existing user data
+
 ### Key Configuration Changes
 - `AppConstants.defaultSequenceId = 'welcome_seq'`
 - `AppConstants.availableSequences` - reduced to 7 core sequences

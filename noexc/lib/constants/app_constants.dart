@@ -18,7 +18,6 @@ class AppConstants {
   // Chat Configuration
   static const int defaultMessageDelay = 100; // milliseconds
   static const String defaultPlaceholderText = 'Type your answer...';
-  static const String chatScriptAssetPath = 'assets/chat_script.json'; // Legacy support
   
   // Chat Sequences
   static const String sequencesAssetPath = 'assets/sequences/';

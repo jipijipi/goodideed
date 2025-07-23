@@ -22,7 +22,8 @@
       "Bash(flutter run:*)",
       "Bash(rg:*)",
       "Bash(mkdir:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(flutter build:*)"
     ],
     "deny": []
   }

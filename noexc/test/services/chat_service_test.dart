@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/services/text_templating_service.dart';
@@ -176,7 +177,7 @@ void main() {
         text: '', // Text input messages have no text content
         type: MessageType.textInput,
         placeholderText: 'Enter your custom name here...',
-        storeKey: 'user.name',
+        storeKey: StorageKeys.userName,
       );
 
       // Act
@@ -185,7 +186,7 @@ void main() {
       // Assert
       expect(processedMessage.placeholderText, 'Enter your custom name here...');
       expect(processedMessage.isTextInput, true);
-      expect(processedMessage.storeKey, 'user.name');
+      expect(processedMessage.storeKey, StorageKeys.userName);
       expect(processedMessage.text, ''); // Text input messages have no text content
     });
 

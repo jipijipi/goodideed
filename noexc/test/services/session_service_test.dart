@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:noexc/services/session_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,8 +84,8 @@ void main() {
     test('should initialize task current date and status', () async {
       await sessionService.initializeSession();
       
-      final currentDate = await userDataService.getValue<String>('task.current_date');
-      final currentStatus = await userDataService.getValue<String>('task.current_status');
+      final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+      final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       
       expect(currentDate, isNotNull);
       expect(currentStatus, 'pending');
@@ -100,44 +101,44 @@ void main() {
       await sessionService.initializeSession();
       
       // Manually change status to completed
-      await userDataService.storeValue('task.current_status', 'completed');
-      expect(await userDataService.getValue<String>('task.current_status'), 'completed');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'completed');
       
       // Simulate new day by setting yesterday's task date
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-      await userDataService.storeValue('task.current_date', yesterdayString);
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
       
       // Initialize today (should reset status)
       await sessionService.initializeSession();
       
-      final currentStatus = await userDataService.getValue<String>('task.current_status');
+      final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       expect(currentStatus, 'pending');
     });
 
     test('should preserve task status on same day', () async {
       // Initialize first time
       await sessionService.initializeSession();
-      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
       
       // Change status to completed
-      await userDataService.storeValue('task.current_status', 'completed');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
       
       // Initialize again same day
       await sessionService.initializeSession();
       
       // Status should remain completed
-      final currentStatus = await userDataService.getValue<String>('task.current_status');
+      final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       expect(currentStatus, 'completed');
     });
 
     test('should always update current date to today', () async {
       // Set an old date
-      await userDataService.storeValue('task.current_date', '2024-01-01');
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, '2024-01-01');
       
       await sessionService.initializeSession();
       
-      final currentDate = await userDataService.getValue<String>('task.current_date');
+      final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       final today = DateTime.now();
       final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
       
@@ -146,26 +147,26 @@ void main() {
 
     test('should archive previous day task when moving to new day', () async {
       // Day 1: Set task and status
-      await userDataService.storeValue('user.task', 'Exercise for 30 minutes');
+      await userDataService.storeValue(StorageKeys.userTask, 'Exercise for 30 minutes');
       await sessionService.initializeSession();
-      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
       
       // Simulate Day 2 by setting yesterday's date
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-      await userDataService.storeValue('task.current_date', yesterdayString);
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
       
       // Initialize today (should archive previous day)
       await sessionService.initializeSession();
       
       // Check previous day was archived
-      expect(await userDataService.getValue<String>('task.previous_date'), yesterdayString);
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousDate), yesterdayString);
       // The archived status should be 'overdue' due to automatic status updates
-      expect(await userDataService.getValue<String>('task.previous_status'), 'overdue');
-      expect(await userDataService.getValue<String>('task.previous_task'), 'Exercise for 30 minutes');
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), 'overdue');
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousTask), 'Exercise for 30 minutes');
       
       // Check current day was reset (should be pending for new day, but may be overdue due to automatic status updates)
-      final currentStatus = await userDataService.getValue<String>('task.current_status');
+      final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       expect(currentStatus, anyOf(equals('pending'), equals('overdue'))); // May be updated by automatic status system
     });
 
@@ -176,33 +177,33 @@ void main() {
       // Simulate Day 2
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-      await userDataService.storeValue('task.current_date', yesterdayString);
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
       
       await sessionService.initializeSession();
       
       // Should not have archived anything
-      expect(await userDataService.getValue<String>('task.previous_date'), isNull);
-      expect(await userDataService.getValue<String>('task.previous_status'), isNull);
-      expect(await userDataService.getValue<String>('task.previous_task'), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousDate), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousTask), isNull);
     });
 
     test('should not archive if task was already completed', () async {
       // Day 1: Set task and mark as completed
-      await userDataService.storeValue('user.task', 'Read a book');
+      await userDataService.storeValue(StorageKeys.userTask, 'Read a book');
       await sessionService.initializeSession();
-      await userDataService.storeValue('task.current_status', 'completed');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
       
       // Simulate Day 2
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-      await userDataService.storeValue('task.current_date', yesterdayString);
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
       
       await sessionService.initializeSession();
       
       // Should not have archived completed task
-      expect(await userDataService.getValue<String>('task.previous_date'), isNull);
-      expect(await userDataService.getValue<String>('task.previous_status'), isNull);
-      expect(await userDataService.getValue<String>('task.previous_task'), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousDate), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousTask), isNull);
     });
   });
 }

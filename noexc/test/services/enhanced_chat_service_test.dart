@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/services/user_data_service.dart';
@@ -24,7 +25,7 @@ void main() {
 
     test('should process text templates in messages', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       final message = ChatMessage(
         id: 1,
         text: 'Hello, {user.name}! Welcome back.',
@@ -44,7 +45,7 @@ void main() {
     test('should store user input when storeKey is provided', () async {
       // Arrange
       const userInput = 'Alice Smith';
-      const storeKey = 'user.name';
+      const storeKey = StorageKeys.userName;
       final textInputMessage = ChatMessage(
         id: 23,
         text: '', // Text input messages have no text content
@@ -111,7 +112,7 @@ void main() {
 
     test('should process templates in message list', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       await userDataService.storeValue('user.age', 25);
       
       final messages = [
@@ -158,7 +159,7 @@ void main() {
 
     test('should preserve message properties when processing templates', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John');
+      await userDataService.storeValue(StorageKeys.userName, 'John');
       final originalMessage = ChatMessage(
         id: 1,
         text: '', // Choice messages have no text content
@@ -185,7 +186,7 @@ void main() {
 
     test('should process templates with fallback values', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'Alice');
+      await userDataService.storeValue(StorageKeys.userName, 'Alice');
       // user.status is not stored, should use fallback
       final message = ChatMessage(
         id: 1,
@@ -203,7 +204,7 @@ void main() {
 
     test('should process message list with fallback values', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'Bob');
+      await userDataService.storeValue(StorageKeys.userName, 'Bob');
       
       final messages = [
         ChatMessage(

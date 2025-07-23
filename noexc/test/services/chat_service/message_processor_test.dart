@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/services/chat_service/message_processor.dart';
 import 'package:noexc/services/user_data_service.dart';
@@ -36,7 +37,7 @@ void main() {
     group('processMessageTemplate', () {
       test('should process regular bot message with template variables', () async {
         // Arrange
-        await mockUserDataService.storeValue('user.name', 'John');
+        await mockUserDataService.storeValue(StorageKeys.userName, 'John');
         final message = ChatMessage(
           id: 1,
           text: 'Hello {user.name|Guest}!',
@@ -121,7 +122,7 @@ void main() {
           delay: 1000,
           sender: 'bot',
           type: MessageType.textInput,
-          storeKey: 'user.name',
+          storeKey: StorageKeys.userName,
         );
         final sequence = ChatSequence(
           sequenceId: 'test_seq',
@@ -135,7 +136,7 @@ void main() {
 
         // Assert
         expect(result.text, equals(''));
-        expect(result.storeKey, equals('user.name'));
+        expect(result.storeKey, equals(StorageKeys.userName));
       });
 
       test('should not apply variants to autoroute messages', () async {
@@ -207,7 +208,7 @@ void main() {
     group('processMessageTemplates', () {
       test('should process multiple messages correctly', () async {
         // Arrange
-        await mockUserDataService.storeValue('user.name', 'Alice');
+        await mockUserDataService.storeValue(StorageKeys.userName, 'Alice');
         final messages = [
           ChatMessage(
             id: 1,
@@ -259,7 +260,7 @@ void main() {
           delay: 1000,
           sender: 'bot',
           type: MessageType.textInput,
-          storeKey: 'user.name',
+          storeKey: StorageKeys.userName,
         );
         const userInput = 'John Doe';
 
@@ -267,7 +268,7 @@ void main() {
         await messageProcessor.handleUserTextInput(textInputMessage, userInput);
 
         // Assert
-        final storedValue = await mockUserDataService.getValue('user.name');
+        final storedValue = await mockUserDataService.getValue(StorageKeys.userName);
         expect(storedValue, equals('John Doe'));
       });
 
@@ -298,7 +299,7 @@ void main() {
           delay: 1000,
           sender: 'bot',
           type: MessageType.textInput,
-          storeKey: 'user.name',
+          storeKey: StorageKeys.userName,
         );
         const userInput = 'Some input';
 

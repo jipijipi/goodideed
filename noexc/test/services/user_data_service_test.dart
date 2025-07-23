@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/services/user_data_service.dart';
 
@@ -14,7 +15,7 @@ void main() {
 
     test('should store and retrieve string values', () async {
       // Arrange
-      const key = 'user.name';
+      const key = StorageKeys.userName;
       const value = 'John Doe';
 
       // Act
@@ -74,7 +75,7 @@ void main() {
 
     test('should check if value exists', () async {
       // Arrange
-      const key = 'user.name';
+      const key = StorageKeys.userName;
       const value = 'John Doe';
 
       // Act & Assert - before storing
@@ -89,7 +90,7 @@ void main() {
 
     test('should remove specific values', () async {
       // Arrange
-      const key = 'user.name';
+      const key = StorageKeys.userName;
       const value = 'John Doe';
       await userDataService.storeValue(key, value);
 
@@ -106,12 +107,12 @@ void main() {
 
     test('should clear all data', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       await userDataService.storeValue('user.age', 25);
       await userDataService.storeValue('user.isActive', true);
 
       // Verify data exists
-      expect(await userDataService.hasValue('user.name'), isTrue);
+      expect(await userDataService.hasValue(StorageKeys.userName), isTrue);
       expect(await userDataService.hasValue('user.age'), isTrue);
       expect(await userDataService.hasValue('user.isActive'), isTrue);
 
@@ -119,7 +120,7 @@ void main() {
       await userDataService.clearAllData();
 
       // Assert
-      expect(await userDataService.hasValue('user.name'), isFalse);
+      expect(await userDataService.hasValue(StorageKeys.userName), isFalse);
       expect(await userDataService.hasValue('user.age'), isFalse);
       expect(await userDataService.hasValue('user.isActive'), isFalse);
     });
@@ -127,7 +128,7 @@ void main() {
     test('should get all data as map', () async {
       // Arrange
       const userData = {
-        'user.name': 'John Doe',
+        StorageKeys.userName: 'John Doe',
         'user.age': 25,
         'user.isActive': true,
       };
@@ -145,7 +146,7 @@ void main() {
 
     test('should handle storing null values by removing the key', () async {
       // Arrange
-      const key = 'user.name';
+      const key = StorageKeys.userName;
       await userDataService.storeValue(key, 'John Doe');
       expect(await userDataService.hasValue(key), isTrue);
 

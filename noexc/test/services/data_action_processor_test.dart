@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/models/data_action.dart';
 import 'package:noexc/services/data_action_processor.dart';
@@ -23,13 +24,13 @@ void main() {
     test('should process set action', () async {
       final action = DataAction(
         type: DataActionType.set,
-        key: 'user.name',
+        key: StorageKeys.userName,
         value: 'John',
       );
 
       await processor.processActions([action]);
 
-      final result = await userDataService.getValue<String>('user.name');
+      final result = await userDataService.getValue<String>(StorageKeys.userName);
       expect(result, 'John');
     });
 
@@ -120,32 +121,32 @@ void main() {
 
     test('should process reset action', () async {
       // Set initial value
-      await userDataService.storeValue('user.streak', 25);
+      await userDataService.storeValue(StorageKeys.userStreak, 25);
 
       final action = DataAction(
         type: DataActionType.reset,
-        key: 'user.streak',
+        key: StorageKeys.userStreak,
         value: 0,
       );
 
       await processor.processActions([action]);
 
-      final result = await userDataService.getValue<int>('user.streak');
+      final result = await userDataService.getValue<int>(StorageKeys.userStreak);
       expect(result, 0);
     });
 
     test('should process reset action with default value', () async {
       // Set initial value
-      await userDataService.storeValue('user.streak', 25);
+      await userDataService.storeValue(StorageKeys.userStreak, 25);
 
       final action = DataAction(
         type: DataActionType.reset,
-        key: 'user.streak',
+        key: StorageKeys.userStreak,
       );
 
       await processor.processActions([action]);
 
-      final result = await userDataService.getValue<int>('user.streak');
+      final result = await userDataService.getValue<int>(StorageKeys.userStreak);
       expect(result, 0); // Default reset value is 0
     });
 
@@ -179,7 +180,7 @@ void main() {
         ),
         DataAction(
           type: DataActionType.set,
-          key: 'user.name',
+          key: StorageKeys.userName,
           value: 'John',
         ),
       ];
@@ -187,7 +188,7 @@ void main() {
       await processor.processActions(actions);
 
       final score = await userDataService.getValue<int>('user.score');
-      final name = await userDataService.getValue<String>('user.name');
+      final name = await userDataService.getValue<String>(StorageKeys.userName);
       
       expect(score, 15);
       expect(name, 'John');

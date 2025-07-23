@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/choice.dart';
 import 'package:noexc/models/data_action.dart';
@@ -353,7 +354,7 @@ void main() {
         'delay': 1000,
         'sender': 'bot',
         'isTextInput': true,
-        'storeKey': 'user.name',
+        'storeKey': StorageKeys.userName,
       };
 
       // Act
@@ -362,7 +363,7 @@ void main() {
       // Assert
       expect(message.id, equals(1));
       expect(message.text, equals('')); // Text input messages have no text content
-      expect(message.storeKey, equals('user.name'));
+      expect(message.storeKey, equals(StorageKeys.userName));
       expect(message.isTextInput, isTrue);
     });
 
@@ -392,7 +393,7 @@ void main() {
         delay: 1000,
         sender: 'bot',
         type: MessageType.textInput,
-        storeKey: 'user.name',
+        storeKey: StorageKeys.userName,
       );
 
       // Act
@@ -401,7 +402,7 @@ void main() {
       // Assert
       expect(json['id'], equals(1));
       expect(json['text'], equals('')); // Text input messages have no text content
-      expect(json['storeKey'], equals('user.name'));
+      expect(json['storeKey'], equals(StorageKeys.userName));
       expect(json['isTextInput'], isTrue);
     });
 
@@ -690,7 +691,7 @@ void main() {
       test('should create dataAction message with actions', () {
         // Arrange
         final actions = [
-          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
           DataAction(type: DataActionType.increment, key: 'user.score', value: 10),
         ];
 
@@ -719,7 +720,7 @@ void main() {
           'dataActions': [
             {
               'type': 'set',
-              'key': 'user.name',
+              'key': StorageKeys.userName,
               'value': 'John',
             },
             {
@@ -740,7 +741,7 @@ void main() {
         expect(message.dataActions, isNotNull);
         expect(message.dataActions!.length, 2);
         expect(message.dataActions![0].type, DataActionType.set);
-        expect(message.dataActions![0].key, 'user.name');
+        expect(message.dataActions![0].key, StorageKeys.userName);
         expect(message.dataActions![0].value, 'John');
         expect(message.dataActions![1].type, DataActionType.increment);
         expect(message.dataActions![1].key, 'user.score');
@@ -751,7 +752,7 @@ void main() {
       test('should serialize dataAction message to JSON', () {
         // Arrange
         final actions = [
-          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
           DataAction(type: DataActionType.increment, key: 'user.score', value: 10),
         ];
 
@@ -772,7 +773,7 @@ void main() {
         expect(json['dataActions'], isNotNull);
         expect(json['dataActions'].length, 2);
         expect(json['dataActions'][0]['type'], 'set');
-        expect(json['dataActions'][0]['key'], 'user.name');
+        expect(json['dataActions'][0]['key'], StorageKeys.userName);
         expect(json['dataActions'][0]['value'], 'John');
         expect(json['dataActions'][1]['type'], 'increment');
         expect(json['dataActions'][1]['key'], 'user.score');
@@ -787,7 +788,7 @@ void main() {
           text: '',
           type: MessageType.dataAction,
           dataActions: [
-            DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+            DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
           ],
         );
 
@@ -818,7 +819,7 @@ void main() {
       test('should handle expandToIndividualMessages for dataAction', () {
         // Arrange
         final actions = [
-          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
         ];
 
         final message = ChatMessage(
@@ -843,7 +844,7 @@ void main() {
       test('should preserve dataActions in single message when expanding (dataAction messages have no text)', () {
         // Arrange
         final actions = [
-          DataAction(type: DataActionType.set, key: 'user.name', value: 'John'),
+          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
         ];
 
         final message = ChatMessage(

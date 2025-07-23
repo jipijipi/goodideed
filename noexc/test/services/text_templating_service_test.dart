@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/services/text_templating_service.dart';
 import 'package:noexc/services/user_data_service.dart';
@@ -16,7 +17,7 @@ void main() {
 
     test('should replace single template variable', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       const text = 'Hello, {user.name}!';
 
       // Act
@@ -28,7 +29,7 @@ void main() {
 
     test('should replace multiple template variables', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       await userDataService.storeValue('user.age', 25);
       const text = 'Hello, {user.name}! You are {user.age} years old.';
 
@@ -52,7 +53,7 @@ void main() {
 
     test('should handle mixed existing and non-existing variables', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       const text = 'Hello, {user.name}! Your favorite color is {user.color}.';
 
       // Act
@@ -145,7 +146,7 @@ void main() {
 
     test('should use stored value instead of fallback when stored value exists', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       const text = 'Hello, {user.name|Guest}!';
 
       // Act
@@ -157,7 +158,7 @@ void main() {
 
     test('should handle multiple templates with different fallback scenarios', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'Alice');
+      await userDataService.storeValue(StorageKeys.userName, 'Alice');
       // user.age is not stored, so should use fallback
       const text = 'Hello, {user.name|Guest}! You are {user.age|unknown} years old.';
 
@@ -203,7 +204,7 @@ void main() {
 
     test('should handle template without fallback alongside template with fallback', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'Bob');
+      await userDataService.storeValue(StorageKeys.userName, 'Bob');
       const text = 'Hello, {user.name|Guest}! Your email is {user.email}.';
 
       // Act
@@ -215,7 +216,7 @@ void main() {
 
     test('should handle pipe character in stored value', () async {
       // Arrange
-      await userDataService.storeValue('user.name', 'John|Doe');
+      await userDataService.storeValue(StorageKeys.userName, 'John|Doe');
       const text = 'Hello, {user.name|Guest}!';
 
       // Act

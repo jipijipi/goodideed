@@ -18,7 +18,7 @@ void main() {
     test('should handle string deadline format (HH:MM)', () async {
       // Setup: Store deadline as string format
       await userDataService.storeValue(StorageKeys.taskDeadlineTime, '15:30');
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
       
       // Should not crash when processing deadline
@@ -32,7 +32,7 @@ void main() {
     test('should handle integer deadline format (legacy from JSON sequences)', () async {
       // Setup: Store deadline as integer format (like from task_config_seq.json)
       await userDataService.storeValue(StorageKeys.taskDeadlineTime, 2); // Afternoon
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
       
       // Should not crash when processing deadline
@@ -59,7 +59,7 @@ void main() {
         
         // Store integer deadline
         await userDataService.storeValue(StorageKeys.taskDeadlineTime, testCase['input']);
-        await userDataService.storeValue('user.task', 'Test task');
+        await userDataService.storeValue(StorageKeys.userTask, 'Test task');
         await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
         
         // Initialize session (this will process the deadline)
@@ -73,7 +73,7 @@ void main() {
 
     test('should default to 21:00 when no deadline is set', () async {
       // Setup: No deadline set
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
       
       // Should not crash and should use default
@@ -89,7 +89,7 @@ void main() {
       await userDataService.storeValue(StorageKeys.taskDeadlineTime, '14:00'); // String format
       // Note: Can't store both int and string to same key, but string should take precedence
       
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
       
       // Should work with string format

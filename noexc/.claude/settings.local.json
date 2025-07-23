@@ -23,7 +23,12 @@
       "Bash(rg:*)",
       "Bash(mkdir:*)",
       "Bash(node:*)",
-      "Bash(flutter build:*)"
+      "Bash(flutter build:*)",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)",
+      "Bash(chmod:*)",
+      "Bash(./update_test_storage_keys.sh:*)"
     ],
     "deny": []
   }

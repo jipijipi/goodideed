@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:noexc/constants/storage_keys.dart';
 import 'package:noexc/services/session_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/constants/session_constants.dart';
@@ -40,9 +41,9 @@ void main() {
     test('should preserve overdue status on same day (no morning recovery)', () async {
       // Setup: Set overdue status and morning time
       await sessionService.initializeSession();
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue('task.current_status', 'overdue');
-      await userDataService.storeValue('session.timeOfDay', SessionConstants.timeOfDayMorning);
+      await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayMorning);
       
       // Trigger update - should preserve overdue status on same day
       await sessionService.initializeSession();
@@ -54,9 +55,9 @@ void main() {
     test('should preserve overdue status regardless of time of day', () async {
       // Setup: Set overdue status and afternoon time
       await sessionService.initializeSession();
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue('task.current_status', 'overdue');
-      await userDataService.storeValue('session.timeOfDay', SessionConstants.timeOfDayAfternoon);
+      await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayAfternoon);
       
       // Trigger update - should preserve status regardless of time
       await sessionService.initializeSession();
@@ -68,7 +69,7 @@ void main() {
     test('should log deadline-based status updates with proper format', () async {
       // Setup: Task with early deadline that will trigger overdue status
       await sessionService.initializeSession();
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue('task.deadline_time', '06:00'); // Early deadline
       await userDataService.storeValue('task.current_status', 'pending');
       
@@ -89,9 +90,9 @@ void main() {
     test('should preserve completed status during automatic updates', () async {
       // Setup: Set completed status
       await sessionService.initializeSession();
-      await userDataService.storeValue('user.task', 'Test task');
+      await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue('task.current_status', 'completed');
-      await userDataService.storeValue('session.timeOfDay', SessionConstants.timeOfDayMorning);
+      await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayMorning);
       
       // Trigger update
       await sessionService.initializeSession();

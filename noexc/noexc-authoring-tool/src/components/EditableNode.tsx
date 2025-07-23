@@ -542,7 +542,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                       </div>
                       <input
                         type="text"
-                        value={action.value || ''}
+                        value={action.value === null ? 'null' : action.value === false ? 'false' : action.value === true ? 'true' : action.value ?? ''}
                         onChange={(e) => {
                           e.stopPropagation();
                           let value: any = e.target.value;

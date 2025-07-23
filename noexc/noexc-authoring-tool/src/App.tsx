@@ -108,7 +108,7 @@ function Flow() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showVariableManager, setShowVariableManager] = useState(false);
   const edgeReconnectSuccessful = useRef(true);
-  const { getNodes } = useReactFlow();
+  const { getNodes, zoomTo, fitView } = useReactFlow();
   const { x: viewportX, y: viewportY, zoom } = useViewport();
 
   // Show notification briefly
@@ -274,6 +274,12 @@ function Flow() {
       showNotification('All groups are already properly sized');
     }
   }, [nodes, setNodes, showNotification, showError]);
+
+  // Zoom out significantly to see the entire canvas
+  const zoomOutLot = useCallback(() => {
+    zoomTo(0.01, { duration: 800 });
+    showNotification('Zoomed out to 1% for maximum canvas overview');
+  }, [zoomTo, showNotification]);
 
   // Ungroup selected group nodes
   const ungroupSelectedNodes = useCallback(() => {
@@ -1928,204 +1934,286 @@ function Flow() {
       )}
 
       {/* Controls Panel */}
-      <div style={{ 
-        position: 'absolute', 
-        top: 10, 
-        right: 10, 
+      <div style={{
+        position: 'absolute',
+        top: 10,
+        right: 10,
         zIndex: 1000,
-        padding: '10px',
-        background: 'white',
-        borderRadius: '5px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px'
+        gap: '12px',
+        maxWidth: '200px'
       }}>
-        <button 
-          onClick={saveData}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#ff9800',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          Save
-        </button>
         
-        <button 
-          onClick={restoreData}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#673ab7',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          Restore
-        </button>
-        
-        <button 
-          onClick={exportToJSON}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#1976d2',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          Export JSON
-        </button>
-        
-        <button 
-          onClick={importFromJSON}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#4caf50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          Import JSON
-        </button>
-        
-        <button 
-          onClick={exportToFlutter}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#e91e63',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          🚀 Export to Flutter
-        </button>
-        
-        <button 
-          onClick={() => setShowVariableManager(true)}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#607d8b',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          🗂️ Variables
-        </button>
-        
-        <button 
-          onClick={createGroupFromSelectedNodes}
-          disabled={selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length < 2}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? '#4caf50' : '#ccc',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 'pointer' : 'not-allowed',
+
+        {/* File Operations */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px',
+          padding: '10px',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          border: '1px solid #e0e0e0'
+        }}>
+          <div style={{
+            fontSize: '11px',
             fontWeight: 'bold',
-            opacity: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 1 : 0.5
-          }}
-        >
-          🔗 Group
-        </button>
-        
-        <button 
-          onClick={ungroupSelectedNodes}
-          disabled={!selectedNodes.some(node => node.type === NODE_TYPES.GROUP)}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? '#ff9800' : '#ccc',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
-            fontWeight: 'bold',
-            opacity: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 1 : 0.5
-          }}
-        >
-          🔓 Ungroup
-        </button>
-        
-        <button 
-          onClick={removeNodesFromGroup}
-          disabled={!selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP)}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? '#9c27b0' : '#ccc',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
-            fontWeight: 'bold',
-            opacity: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 1 : 0.5
-          }}
-        >
-          ➖ Remove from Group
-        </button>
-        
-        {/* Resize Groups Button */}
-        <button 
-          onClick={resizeAllGroups}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#673ab7',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          📏 Resize Groups
-        </button>
-        
-        {/* Add to Group dropdown - only show when ungrouped nodes are selected */}
-        {selectedNodes.some(node => node.type !== NODE_TYPES.GROUP && !node.parentId) && (
-          <select 
-            onChange={(e) => {
-              if (e.target.value) {
-                addNodesToGroup(e.target.value);
-                e.target.value = ''; // Reset selection
-              }
-            }}
+            color: '#666',
+            textAlign: 'center',
+            marginBottom: '4px',
+            borderBottom: '1px solid #ddd',
+            paddingBottom: '4px'
+          }}>
+            💾 FILES
+          </div>
+          
+          <button 
+            onClick={saveData}
             style={{
-              padding: '8px 16px',
-              backgroundColor: '#2196f3',
+              padding: '6px 12px',
+              backgroundColor: '#ff9800',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              fontSize: '11px'
             }}
-            defaultValue=""
           >
-            <option value="" disabled>➕ Add to Group</option>
-            {nodes.filter(node => node.type === NODE_TYPES.GROUP).map(group => (
-              <option key={group.id} value={group.id}>
-                {group.data.title || group.data.label || `Group ${group.id}`}
-              </option>
-            ))}
-          </select>
-        )}
+            💾 Save
+          </button>
+          
+          <button 
+            onClick={restoreData}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#673ab7',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+          >
+            📂 Restore
+          </button>
+          
+          <button 
+            onClick={exportToJSON}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#1976d2',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+          >
+            📄 Export JSON
+          </button>
+          
+          <button 
+            onClick={importFromJSON}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#4caf50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+          >
+            📥 Import JSON
+          </button>
+        </div>
+
+        {/* Export & Tools */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px',
+          padding: '10px',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          border: '1px solid #e0e0e0'
+        }}>
+          <div style={{
+            fontSize: '11px',
+            fontWeight: 'bold',
+            color: '#666',
+            textAlign: 'center',
+            marginBottom: '4px',
+            borderBottom: '1px solid #ddd',
+            paddingBottom: '4px'
+          }}>
+            🛠️ TOOLS
+          </div>
+          
+          <button 
+            onClick={exportToFlutter}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#e91e63',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+          >
+            🚀 Export Flutter
+          </button>
+          
+          <button 
+            onClick={() => setShowVariableManager(true)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#607d8b',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+          >
+            🗂️ Variables
+          </button>
+        </div>
+
+        {/* Group Management */}
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '4px',
+          padding: '8px',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderRadius: '6px',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+          border: '1px solid #e0e0e0'
+        }}>
+          <div style={{
+            fontSize: '10px',
+            fontWeight: 'bold',
+            color: '#666',
+            textAlign: 'center',
+            marginBottom: '2px',
+            borderBottom: '1px solid #ddd',
+            paddingBottom: '2px'
+          }}>
+            📦 GROUPS
+          </div>
+          
+          <button 
+            onClick={createGroupFromSelectedNodes}
+            disabled={selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length < 2}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? '#4caf50' : '#ccc',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 'pointer' : 'not-allowed',
+              fontWeight: 'bold',
+              opacity: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 1 : 0.5,
+              fontSize: '11px'
+            }}
+          >
+            🔗 Group
+          </button>
+          
+          <button 
+            onClick={ungroupSelectedNodes}
+            disabled={!selectedNodes.some(node => node.type === NODE_TYPES.GROUP)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? '#ff9800' : '#ccc',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
+              fontWeight: 'bold',
+              opacity: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 1 : 0.5,
+              fontSize: '11px'
+            }}
+          >
+            🔓 Ungroup
+          </button>
+          
+          <button 
+            onClick={removeNodesFromGroup}
+            disabled={!selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP)}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? '#9c27b0' : '#ccc',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
+              fontWeight: 'bold',
+              opacity: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 1 : 0.5,
+              fontSize: '11px'
+            }}
+          >
+            ➖ Remove
+          </button>
+          
+          <button 
+            onClick={resizeAllGroups}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#673ab7',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+          >
+            📏 Resize
+          </button>
+          
+          {/* Add to Group dropdown - only show when ungrouped nodes are selected */}
+          {selectedNodes.some(node => node.type !== NODE_TYPES.GROUP && !node.parentId) && (
+            <select 
+              onChange={(e) => {
+                if (e.target.value) {
+                  addNodesToGroup(e.target.value);
+                  e.target.value = ''; // Reset selection
+                }
+              }}
+              style={{
+                padding: '6px 12px',
+                backgroundColor: '#2196f3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '11px'
+              }}
+              defaultValue=""
+            >
+              <option value="" disabled>➕ Add to Group</option>
+              {nodes.filter(node => node.type === NODE_TYPES.GROUP).map(group => (
+                <option key={group.id} value={group.id}>
+                  {group.data.title || group.data.label || `Group ${group.id}`}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+
       </div>
       
       <ReactFlow

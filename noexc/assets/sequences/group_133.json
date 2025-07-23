@@ -32,7 +32,7 @@
         {
           "type": "reset",
           "key": "task.previous_status",
-          "value": "0"
+          "value": ""
         }
       ],
       "sequenceId": "group_131"

@@ -9,11 +9,11 @@
       "contentKey": "previous_task_check",
       "routes": [
         {
-          "condition": "task.previousStatus == \"pending\"",
+          "condition": "task.previous_status == \"pending\"",
           "nextMessageId": 87
         },
         {
-          "condition": "task.previousStatus == \"failed\"",
+          "condition": "task.previous_status == \"failed\"",
           "nextMessageId": 79
         }
       ]
@@ -27,11 +27,11 @@
     {
       "id": 80,
       "type": "dataAction",
-      "contentKey": "reset_previousStatus",
+      "contentKey": "reset_previous_status",
       "dataActions": [
         {
           "type": "reset",
-          "key": "task.previousStatus",
+          "key": "task.previous_status",
           "value": "0"
         }
       ],
@@ -54,7 +54,7 @@
         },
         {
           "text": "I... Did not...",
-          "value": "choice_failed",
+          "contentKey": "choice_failed",
           "nextMessageId": 90
         }
       ]

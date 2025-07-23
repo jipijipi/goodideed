@@ -12,7 +12,7 @@
     {
       "id": 97,
       "type": "choice",
-      "storeKey": "task.currentStatus",
+      "storeKey": "task.current_status",
       "choices": [
         {
           "text": "I failed...",
@@ -60,7 +60,7 @@
       "dataActions": [
         {
           "type": "set",
-          "key": "task.currentStatus",
+          "key": "task.current_status",
           "value": "failed"
         }
       ],

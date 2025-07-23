@@ -61,7 +61,12 @@
     {
       "id": 44,
       "contentKey": "bot_react_days_custom",
-      "text": "Well this app can't deal with that yet your majesty, so pick whichever and lie when necessary...",
+      "text": "Well this app can't deal with that yet your majesty",
+      "nextMessageId": 155
+    },
+    {
+      "id": 155,
+      "text": "So pick whichever and lie when necessary...",
       "nextMessageId": 41
     },
     {

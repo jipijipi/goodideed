@@ -1,0 +1,73 @@
+{
+  "sequenceId": "group_131",
+  "name": "Subflow 131",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 116,
+      "type": "autoroute",
+      "contentKey": "notice_check",
+      "routes": [
+        {
+          "condition": "user.isOnNotice == false",
+          "sequenceId": "group_128"
+        },
+        {
+          "condition": "user.isOnNotice == true",
+          "nextMessageId": 117
+        }
+      ]
+    },
+    {
+      "id": 117,
+      "text": "You've done it this time. And by done it I mean you didn't. You failed.",
+      "nextMessageId": 118
+    },
+    {
+      "id": 118,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "increment",
+          "key": "user.streak",
+          "value": 1
+        },
+        {
+          "type": "set",
+          "key": "user.isOnNotice",
+          "value": "0"
+        }
+      ],
+      "nextMessageId": 121
+    },
+    {
+      "id": 121,
+      "text": "You want to keep this task or set an easier one?",
+      "nextMessageId": 122
+    },
+    {
+      "id": 122,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "I'll keep this one",
+          "nextMessageId": 123
+        },
+        {
+          "text": "I'll change I guess...",
+          "nextMessageId": 124
+        }
+      ]
+    },
+    {
+      "id": 123,
+      "text": "Sure why not",
+      "sequenceId": "group_59"
+    },
+    {
+      "id": 124,
+      "text": "Smart...",
+      "sequenceId": "group_31"
+    }
+  ]
+}

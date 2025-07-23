@@ -1,0 +1,26 @@
+{
+  "sequenceId": "group_130",
+  "name": "Subflow 130",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 103,
+      "type": "dataAction",
+      "contentKey": "set_notice",
+      "dataActions": [
+        {
+          "type": "set",
+          "key": "user.onNotice",
+          "value": true
+        }
+      ],
+      "nextMessageId": 102
+    },
+    {
+      "id": 102,
+      "contentKey": "bot_react_notice",
+      "text": "Consider yourself on notice",
+      "sequenceId": "group_59"
+    }
+  ]
+}

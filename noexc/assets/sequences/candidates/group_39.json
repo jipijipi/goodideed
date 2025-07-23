@@ -1,0 +1,71 @@
+{
+  "sequenceId": "group_39",
+  "name": "Subflow 39",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 1,
+      "contentKey": "bot_ask_time",
+      "text": "By what time of the day should your task be completed?",
+      "nextMessageId": 33
+    },
+    {
+      "id": 33,
+      "type": "choice",
+      "contentKey": "user_choose_time",
+      "storeKey": "task.deadline",
+      "choices": [
+        {
+          "text": "By morning",
+          "value": "morning",
+          "nextMessageId": 34
+        },
+        {
+          "text": "By the afternoon",
+          "value": "afternoon",
+          "nextMessageId": 35
+        },
+        {
+          "text": "By the evening",
+          "value": "evening",
+          "nextMessageId": 36
+        },
+        {
+          "text": "By night time",
+          "value": "night",
+          "nextMessageId": 37
+        }
+      ]
+    },
+    {
+      "id": 34,
+      "contentKey": "bot_react_morning",
+      "text": "{task.deadline}, early riser, good.",
+      "nextMessageId": 38
+    },
+    {
+      "id": 38,
+      "contentKey": "bot_warn_deadline",
+      "text": "By {task.deadline} everyday, I'll consider you've failed.",
+      "sequenceId": "group_47"
+    },
+    {
+      "id": 35,
+      "contentKey": "bot_react_afternoon",
+      "text": "{task.deadline}, neat",
+      "nextMessageId": 38
+    },
+    {
+      "id": 36,
+      "contentKey": "bot_react_evening",
+      "text": "{task.deadline}, noted",
+      "nextMessageId": 38
+    },
+    {
+      "id": 37,
+      "contentKey": "bot_react_night",
+      "text": "{task.deadline}, giving yourself all the time possible, nice",
+      "nextMessageId": 38
+    }
+  ]
+}

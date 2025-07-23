@@ -2081,7 +2081,7 @@ function Flow() {
           showInteractive={true}
           fitViewOptions={{ 
             padding: 0.1,
-            minZoom: 0.005,
+            minZoom: 0.0005,
             maxZoom: 4
           }}
         />

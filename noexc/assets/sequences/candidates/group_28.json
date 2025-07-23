@@ -1,0 +1,58 @@
+{
+  "sequenceId": "group_28",
+  "name": "Subflow 28",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 1,
+      "contentKey": "welcome_first_time",
+      "text": "Hi|||You must be new here",
+      "nextMessageId": 6
+    },
+    {
+      "id": 6,
+      "contentKey": "bot_introduction",
+      "text": "I'm Tristopher|||But my friends call me Trist",
+      "nextMessageId": 7
+    },
+    {
+      "id": 7,
+      "type": "choice",
+      "contentKey": "user_greeting",
+      "choices": [
+        {
+          "text": "Hi Tristopher!",
+          "nextMessageId": 8
+        },
+        {
+          "text": "Whatever",
+          "nextMessageId": 9
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "text": "Please, call me Tristopher.",
+      "nextMessageId": 9
+    },
+    {
+      "id": 9,
+      "contentKey": "bot_ask_name",
+      "text": "So, what should I call you?",
+      "nextMessageId": 10
+    },
+    {
+      "id": 10,
+      "type": "textInput",
+      "contentKey": "user_name_input",
+      "storeKey": "user.name",
+      "placeholderText": "Call me...",
+      "nextMessageId": 11
+    },
+    {
+      "id": 11,
+      "text": "{user.name}? Really? |||All right {user.name}",
+      "sequenceId": "group_30"
+    }
+  ]
+}

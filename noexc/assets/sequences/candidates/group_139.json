@@ -1,0 +1,18 @@
+{
+  "sequenceId": "group_139",
+  "name": "Subflow 139",
+  "description": "A group of related nodes",
+  "messages": [
+    {
+      "id": 82,
+      "contentKey": "bot_acknowledge_completed",
+      "text": "You are clear today, congrats, come back tomorrow.",
+      "nextMessageId": 138
+    },
+    {
+      "id": 138,
+      "text": "Enter your message here...",
+      "sequenceId": "group_59"
+    }
+  ]
+}

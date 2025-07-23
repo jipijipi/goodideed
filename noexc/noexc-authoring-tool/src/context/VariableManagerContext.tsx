@@ -6,7 +6,7 @@ export interface VariableDefinition {
   type: 'string' | 'number' | 'boolean' | 'object';
   defaultValue: any;
   description: string;
-  category: 'user' | 'session' | 'system' | 'custom';
+  category: 'user' | 'session' | 'system' | 'achievement' | 'custom';
   readonly: boolean;
 }
 
@@ -43,136 +43,38 @@ export const VariableManagerProvider: React.FC<{ children: React.ReactNode }> = 
       category: 'user',
       readonly: false
     }],
-    ['user.userTask', {
-      key: 'user.userTask',
-      type: 'string',
-      defaultValue: '',
-      description: 'User\'s current task description',
+    ['user.score', {
+      key: 'user.score',
+      type: 'number',
+      defaultValue: 0,
+      description: 'User\'s current score points',
       category: 'user',
       readonly: false
     }],
-    ['user.userStreak', {
-      key: 'user.userStreak',
+    ['user.level', {
+      key: 'user.level',
+      type: 'number',
+      defaultValue: 1,
+      description: 'User\'s current level',
+      category: 'user',
+      readonly: false
+    }],
+    ['user.streak', {
+      key: 'user.streak',
       type: 'number',
       defaultValue: 0,
       description: 'User\'s current streak count',
       category: 'user',
       readonly: false
     }],
-    ['user.isOnboarded', {
-      key: 'user.isOnboarded',
-      type: 'boolean',
-      defaultValue: false,
-      description: 'Whether user has completed onboarding',
-      category: 'user',
-      readonly: false
-    }],
-    ['user.isOnNotice', {
-      key: 'user.isOnNotice',
-      type: 'boolean',
-      defaultValue: false,
-      description: 'Whether user is on notice for task performance',
-      category: 'user',
-      readonly: false
-    }],
-    ['user.userTaskDeadline', {
-      key: 'user.userTaskDeadline',
-      type: 'number',
-      defaultValue: 1,
-      description: 'User\'s configured deadline: 1=morning, 2=afternoon, 3=evening, 4=night',
-      category: 'user',
-      readonly: false
-    }],
-    // Task namespace variables
-    ['task.deadlineTime', {
-      key: 'task.deadlineTime',
-      type: 'number',
-      defaultValue: 1,
-      description: 'Task deadline time: 1=morning, 2=afternoon, 3=evening, 4=night',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.currentDate', {
-      key: 'task.currentDate',
-      type: 'string',
-      defaultValue: '',
-      description: 'Current task date (YYYY-MM-DD format)',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.currentStatus', {
-      key: 'task.currentStatus',
-      type: 'string',
-      defaultValue: 'pending',
-      description: 'Task status: pending, completed, failed',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.previousDate', {
-      key: 'task.previousDate',
-      type: 'string',
-      defaultValue: '',
-      description: 'Previous day\'s task date for archiving',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.activeDays', {
-      key: 'task.activeDays',
-      type: 'string',
-      defaultValue: '',
-      description: 'User configured active days (comma-separated)',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.gracePeriodUsed', {
-      key: 'task.gracePeriodUsed',
-      type: 'boolean',
-      defaultValue: false,
-      description: 'Whether grace period has been used',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.currentTime', {
-      key: 'task.currentTime',
-      type: 'string',
-      defaultValue: '',
-      description: 'Current time in HH:MM format',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.currentHour', {
-      key: 'task.currentHour',
+    ['user.achievements', {
+      key: 'user.achievements',
       type: 'number',
       defaultValue: 0,
-      description: 'Current hour (0-23)',
-      category: 'system',
+      description: 'Total number of achievements unlocked',
+      category: 'achievement',
       readonly: false
     }],
-    ['task.currentMinute', {
-      key: 'task.currentMinute',
-      type: 'number',
-      defaultValue: 0,
-      description: 'Current minute (0-59)',
-      category: 'system',
-      readonly: false
-    }],
-    ['task.isActiveDay', {
-      key: 'task.isActiveDay',
-      type: 'boolean',
-      defaultValue: false,
-      description: 'Computed: Whether today is an active day for tasks',
-      category: 'system',
-      readonly: true
-    }],
-    ['task.isPastDeadline', {
-      key: 'task.isPastDeadline',
-      type: 'boolean',
-      defaultValue: false,
-      description: 'Computed: Whether current time is past task deadline',
-      category: 'system',
-      readonly: true
-    }],
-    // Session namespace variables
     ['session.visitCount', {
       key: 'session.visitCount',
       type: 'number',

@@ -1,0 +1,146 @@
+{
+  "new_user": {
+    "name": "🆕 New User - First Visit",
+    "description": "Brand new user opening app for the first time",
+    "variables": {
+      "session.visitCount": 1,
+      "session.totalVisitCount": 1,
+      "session.timeOfDay": 1,
+      "session.daysSinceFirstVisit": 0,
+      "session.isWeekend": false,
+      "user.isOnboarded": false,
+      "user.name": null,
+      "user.streak": 0,
+      "task.currentDate": "2024-12-20",
+      "task.isActiveDay": true,
+      "task.isPastDeadline": false
+    }
+  },
+  "returning_morning": {
+    "name": "☀️ Returning User - Morning",
+    "description": "Experienced user checking in during morning routine",
+    "variables": {
+      "session.visitCount": 2,
+      "session.totalVisitCount": 23,
+      "session.timeOfDay": 1,
+      "session.daysSinceFirstVisit": 12,
+      "session.isWeekend": false,
+      "user.isOnboarded": true,
+      "user.name": "Alex",
+      "user.streak": 7,
+      "task.deadlineTime": 1,
+      "task.currentDate": "2024-12-20",
+      "task.isActiveDay": true,
+      "task.isPastDeadline": false
+    }
+  },
+  "weekend_user": {
+    "name": "🏖️ Weekend User",
+    "description": "User opening app on weekend (inactive day)",
+    "variables": {
+      "session.visitCount": 1,
+      "session.totalVisitCount": 15,
+      "session.timeOfDay": 2,
+      "session.daysSinceFirstVisit": 8,
+      "session.isWeekend": true,
+      "user.isOnboarded": true,
+      "user.name": "Sam",
+      "user.streak": 4,
+      "task.isActiveDay": false,
+      "task.isPastDeadline": false
+    }
+  },
+  "past_deadline": {
+    "name": "⏰ Past Deadline",
+    "description": "User who missed their configured deadline",
+    "variables": {
+      "session.visitCount": 3,
+      "session.totalVisitCount": 31,
+      "session.timeOfDay": 4,
+      "session.daysSinceFirstVisit": 15,
+      "session.isWeekend": false,
+      "task.deadlineTime": 2,
+      "task.currentDate": "2024-12-20",
+      "task.isActiveDay": true,
+      "task.isPastDeadline": true,
+      "user.isOnboarded": true,
+      "user.name": "Jordan",
+      "user.streak": 3
+    }
+  },
+  "high_streak": {
+    "name": "🔥 High Streak User",
+    "description": "Experienced user with long task completion streak",
+    "variables": {
+      "session.visitCount": 1,
+      "session.totalVisitCount": 89,
+      "session.timeOfDay": 2,
+      "session.daysSinceFirstVisit": 45,
+      "session.isWeekend": false,
+      "user.isOnboarded": true,
+      "user.name": "Casey",
+      "user.streak": 23,
+      "task.deadlineTime": 3,
+      "task.currentDate": "2024-12-20",
+      "task.isActiveDay": true,
+      "task.isPastDeadline": false,
+      "user.isOnNotice": false
+    }
+  },
+  "struggling_user": {
+    "name": "😓 Struggling User",
+    "description": "User who keeps failing tasks and is on notice",
+    "variables": {
+      "session.visitCount": 2,
+      "session.totalVisitCount": 12,
+      "session.timeOfDay": 3,
+      "session.daysSinceFirstVisit": 10,
+      "session.isWeekend": false,
+      "user.isOnboarded": true,
+      "user.name": "Taylor",
+      "user.streak": 0,
+      "user.isOnNotice": true,
+      "task.deadlineTime": 2,
+      "task.currentDate": "2024-12-20",
+      "task.isActiveDay": true,
+      "task.isPastDeadline": true
+    }
+  },
+  "evening_check": {
+    "name": "🌅 Evening Check-in",
+    "description": "User doing their evening task review",
+    "variables": {
+      "session.visitCount": 1,
+      "session.totalVisitCount": 56,
+      "session.timeOfDay": 3,
+      "session.daysSinceFirstVisit": 28,
+      "session.isWeekend": false,
+      "user.isOnboarded": true,
+      "user.name": "River",
+      "user.streak": 12,
+      "task.deadlineTime": 4,
+      "task.currentDate": "2024-12-20",
+      "task.isActiveDay": true,
+      "task.isPastDeadline": false
+    }
+  },
+  "reset_everything": {
+    "name": "🔄 Reset All Data",
+    "description": "Clear all user data back to defaults",
+    "variables": {
+      "session.visitCount": 1,
+      "session.totalVisitCount": 1,
+      "session.timeOfDay": 1,
+      "session.daysSinceFirstVisit": 0,
+      "session.isWeekend": false,
+      "user.isOnboarded": false,
+      "user.name": null,
+      "user.streak": 0,
+      "user.isOnNotice": false,
+      "task.deadlineTime": null,
+      "task.currentDate": null,
+      "task.isActiveDay": true,
+      "task.isPastDeadline": false
+    }
+  }
+}

@@ -28,7 +28,8 @@
       "Bash(do echo \"=== $file ===\")",
       "Bash(done)",
       "Bash(chmod:*)",
-      "Bash(./update_test_storage_keys.sh:*)"
+      "Bash(./update_test_storage_keys.sh:*)",
+      "Bash(flutter pub:*)"
     ],
     "deny": []
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/user_data_service.dart';
 import '../services/chat_service.dart';
+import '../services/scenario_manager.dart';
 import '../constants/ui_constants.dart';
 import '../config/chat_config.dart';
 import 'chat_screen/chat_state_manager.dart';
@@ -36,6 +37,11 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
   Map<String, dynamic> _debugData = {};
   bool _isLoading = true;
   late final UserDataManager _dataManager;
+  
+  // Scenario-related state
+  Map<String, dynamic> _scenarios = {};
+  String? _selectedScenario;
+  bool _isApplyingScenario = false;
 
   @override
   void initState() {
@@ -47,6 +53,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       totalMessages: widget.totalMessages,
     );
     _loadUserData();
+    _loadScenarios();
   }
 
   Future<void> _loadUserData() async {
@@ -77,6 +84,143 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
 
   void refreshData() {
     _loadUserData();
+  }
+
+  Future<void> _loadScenarios() async {
+    try {
+      final scenarios = await ScenarioManager.loadScenarios();
+      if (mounted) {
+        setState(() {
+          _scenarios = scenarios;
+        });
+      }
+    } catch (e) {
+      print('Failed to load scenarios: $e');
+    }
+  }
+
+  Future<void> _applyScenario() async {
+    if (_selectedScenario == null) return;
+
+    setState(() {
+      _isApplyingScenario = true;
+    });
+
+    try {
+      await ScenarioManager.applyScenario(_selectedScenario!, widget.userDataService);
+      
+      // Refresh the data to show updated values
+      refreshData();
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Applied scenario: ${_scenarios[_selectedScenario!]['name']}'),
+            duration: const Duration(seconds: 2),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to apply scenario: $e'),
+            duration: const Duration(seconds: 3),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isApplyingScenario = false;
+        });
+      }
+    }
+  }
+
+  Widget _buildScenarioSection() {
+    if (_scenarios.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Test Scenarios',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    hint: const Text('Select a scenario...'),
+                    value: _selectedScenario,
+                    items: _scenarios.entries.map((entry) {
+                      final scenario = entry.value as Map<String, dynamic>;
+                      return DropdownMenuItem(
+                        value: entry.key,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              scenario['name'] ?? entry.key,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            if (scenario['description'] != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2),
+                                child: Text(
+                                  scenario['description'],
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedScenario = value;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                ElevatedButton(
+                  onPressed: _selectedScenario != null && !_isApplyingScenario 
+                      ? _applyScenario 
+                      : null,
+                  child: _isApplyingScenario
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Apply'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -144,6 +288,9 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                             stateManager: widget.stateManager,
                             onDataRefresh: refreshData,
                           ),
+                          
+                          // Test Scenarios Section
+                          _buildScenarioSection(),
                           
                           // Sequence Selector
                           SequenceSelectorWidget(

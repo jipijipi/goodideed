@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useVariableManager, VariableDefinition } from '../context/VariableManagerContext';
+import FlutterSyncPanel from './FlutterSyncPanel';
 
 interface VariableManagerProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose, node
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [showFlutterSync, setShowFlutterSync] = useState(false);
   const [newVariable, setNewVariable] = useState<Partial<VariableDefinition>>({
     key: '',
     type: 'string',
@@ -251,6 +253,22 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose, node
             }}
           >
             📊 {showAnalysis ? 'Hide Analysis' : 'Show Analysis'}
+          </button>
+
+          <button
+            onClick={() => setShowFlutterSync(true)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#9c27b0',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            🔄 Sync Flutter
           </button>
 
           <button 
@@ -639,6 +657,12 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose, node
           )}
         </div>
       </div>
+      
+      {/* Flutter Sync Panel */}
+      <FlutterSyncPanel 
+        isOpen={showFlutterSync}
+        onClose={() => setShowFlutterSync(false)}
+      />
     </div>
   );
 };

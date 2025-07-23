@@ -59,6 +59,18 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     return value is String && !value.startsWith('[') && !value.startsWith('{');
   }
 
+  bool _isIntValue(dynamic value) {
+    return value is int;
+  }
+
+  bool _isBoolValue(dynamic value) {
+    return value is bool;
+  }
+
+  bool _isEditableValue(dynamic value) {
+    return _isStringValue(value) || _isIntValue(value) || _isBoolValue(value);
+  }
+
   bool _isReadOnlyKey(String key) {
     // Read-only computed values
     return key.contains('isActiveDay') || 
@@ -67,7 +79,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
            key.contains('daysSince');
   }
 
-  Future<void> _saveValue(String key, String newValue) async {
+  Future<void> _saveStringValue(String key, String newValue) async {
     if (widget.userDataService == null) return;
     
     setState(() {
@@ -76,39 +88,77 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
 
     try {
       await widget.userDataService!.storeValue(key, newValue);
-      
-      setState(() {
-        _editingStates[key] = false;
-        _savingStates[key] = false;
-      });
-      
-      if (widget.onDataChanged != null) {
-        widget.onDataChanged!();
-      }
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Saved $key'),
-            duration: const Duration(seconds: 2),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
-      }
+      await _finalizeSave(key);
     } catch (e) {
-      setState(() {
-        _savingStates[key] = false;
-      });
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save $key: $e'),
-            duration: const Duration(seconds: 3),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      }
+      await _handleSaveError(key, e);
+    }
+  }
+
+  Future<void> _saveIntValue(String key, String newValue) async {
+    if (widget.userDataService == null) return;
+    
+    setState(() {
+      _savingStates[key] = true;
+    });
+
+    try {
+      final intValue = int.parse(newValue);
+      await widget.userDataService!.storeValue(key, intValue);
+      await _finalizeSave(key);
+    } catch (e) {
+      await _handleSaveError(key, e);
+    }
+  }
+
+  Future<void> _saveBoolValue(String key, bool newValue) async {
+    if (widget.userDataService == null) return;
+    
+    setState(() {
+      _savingStates[key] = true;
+    });
+
+    try {
+      await widget.userDataService!.storeValue(key, newValue);
+      await _finalizeSave(key);
+    } catch (e) {
+      await _handleSaveError(key, e);
+    }
+  }
+
+  Future<void> _finalizeSave(String key) async {
+    setState(() {
+      _editingStates[key] = false;
+      _savingStates[key] = false;
+    });
+    
+    if (widget.onDataChanged != null) {
+      widget.onDataChanged!();
+    }
+    
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Saved $key'),
+          duration: const Duration(seconds: 2),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+      );
+    }
+  }
+
+  Future<void> _handleSaveError(String key, dynamic error) async {
+    setState(() {
+      _savingStates[key] = false;
+    });
+    
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to save $key: $error'),
+          duration: const Duration(seconds: 3),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
     }
   }
 
@@ -130,12 +180,63 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     });
   }
 
+  Widget _buildInputWidget(BuildContext context, String key, dynamic value) {
+    if (_isBoolValue(value)) {
+      return Switch(
+        value: value as bool,
+        onChanged: (newValue) {
+          _saveBoolValue(key, newValue);
+        },
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      );
+    } else if (_isIntValue(value)) {
+      return TextField(
+        controller: _controllers[key],
+        style: Theme.of(context).textTheme.bodyMedium,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 4,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        onSubmitted: (newValue) {
+          _saveIntValue(key, newValue);
+        },
+      );
+    } else {
+      // String input
+      return TextField(
+        controller: _controllers[key],
+        style: Theme.of(context).textTheme.bodyMedium,
+        decoration: InputDecoration(
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: 4,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+        onSubmitted: (newValue) {
+          _saveStringValue(key, newValue);
+        },
+      );
+    }
+  }
+
   Widget _buildDataRow(BuildContext context, MapEntry<String, dynamic> entry) {
     final isEditing = _editingStates[entry.key] ?? false;
     final isSaving = _savingStates[entry.key] ?? false;
-    final isStringValue = _isStringValue(entry.value);
+    final isIntValue = _isIntValue(entry.value);
+    final isBoolValue = _isBoolValue(entry.value);
     final isReadOnly = _isReadOnlyKey(entry.key);
-    final canEdit = isStringValue && !isReadOnly && widget.userDataService != null;
+    final canEdit = _isEditableValue(entry.value) && !isReadOnly && widget.userDataService != null;
 
     return Padding(
       padding: UIConstants.variableItemPadding,
@@ -157,32 +258,18 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
               const SizedBox(width: UIConstants.variableKeySpacing),
               Expanded(
                 flex: 3,
-                child: isEditing
-                    ? TextField(
-                        controller: _controllers[entry.key],
-                        style: Theme.of(context).textTheme.bodyMedium,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
+                child: (isBoolValue && canEdit)
+                    ? _buildInputWidget(context, entry.key, entry.value)
+                    : isEditing
+                        ? _buildInputWidget(context, entry.key, entry.value)
+                        : Text(
+                            _formatValue(entry.value),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            ),
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        onSubmitted: (value) {
-                          _saveValue(entry.key, value);
-                        },
-                      )
-                    : Text(
-                        _formatValue(entry.value),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
               ),
-              if (canEdit) ...[
+              if (canEdit && !isBoolValue) ...[
                 const SizedBox(width: 8),
                 if (isSaving)
                   const SizedBox(
@@ -195,7 +282,11 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
                     icon: const Icon(Icons.save, size: 16),
                     onPressed: () {
                       final value = _controllers[entry.key]?.text ?? '';
-                      _saveValue(entry.key, value);
+                      if (isIntValue) {
+                        _saveIntValue(entry.key, value);
+                      } else {
+                        _saveStringValue(entry.key, value);
+                      }
                     },
                     padding: const EdgeInsets.all(4),
                     constraints: const BoxConstraints(

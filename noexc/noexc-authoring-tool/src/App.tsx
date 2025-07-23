@@ -2601,6 +2601,8 @@ function Flow() {
       <VariableManager 
         isOpen={showVariableManager}
         onClose={() => setShowVariableManager(false)}
+        nodes={nodes}
+        edges={edges}
       />
     </div>
   );

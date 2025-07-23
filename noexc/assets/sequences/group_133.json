@@ -9,11 +9,11 @@
       "contentKey": "previous_task_check",
       "routes": [
         {
-          "condition": "task.previousStatus == \"pending\"",
+          "condition": "task.previousStatus == 'pending'",
           "nextMessageId": 87
         },
         {
-          "condition": "task.previousStatus == \"failed\"",
+          "condition": "task.previousStatus == 'failed'",
           "nextMessageId": 79
         }
       ]

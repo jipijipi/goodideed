@@ -60,7 +60,7 @@
       "dataActions": [
         {
           "type": "set",
-          "key": "task.currentStatus",
+          "key": "task.current_status",
           "value": "failed"
         }
       ],

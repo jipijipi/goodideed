@@ -52,7 +52,7 @@
     {
       "id": 35,
       "contentKey": "bot_react_afternoon",
-      "text": "{task.deadlineTime}, neat",
+      "text": "{task.deadlineTime} allright",
       "nextMessageId": 38
     },
     {

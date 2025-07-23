@@ -36,7 +36,7 @@
     },
     {
       "id": 136,
-      "text": "All right, see you by {task.deadline}",
+      "text": "All right, see you by {task.deadlineTime}",
       "sequenceId": "group_59"
     },
     {

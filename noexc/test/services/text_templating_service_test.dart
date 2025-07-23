@@ -228,9 +228,9 @@ void main() {
 
     test('should handle task current date and status templates', () async {
       // Arrange
-      await userDataService.storeValue('task.current_date', '2024-07-18');
-      await userDataService.storeValue('task.current_status', 'pending');
-      const text = 'Today ({task.current_date}), your task status is: {task.current_status}';
+      await userDataService.storeValue('task.currentDate', '2024-07-18');
+      await userDataService.storeValue('task.currentStatus', 'pending');
+      const text = 'Today ({task.currentDate}), your task status is: {task.currentStatus}';
 
       // Act
       final result = await templatingService.processTemplate(text);
@@ -241,7 +241,7 @@ void main() {
 
     test('should handle task templates with fallbacks', () async {
       // Arrange - don't set any task data
-      const text = 'Date: {task.current_date|unknown}, Status: {task.current_status|none}';
+      const text = 'Date: {task.currentDate|unknown}, Status: {task.currentStatus|none}';
 
       // Act
       final result = await templatingService.processTemplate(text);
@@ -252,10 +252,10 @@ void main() {
 
     test('should handle previous day task templates', () async {
       // Arrange
-      await userDataService.storeValue('task.previous_date', '2024-07-17');
-      await userDataService.storeValue('task.previous_status', 'pending');
-      await userDataService.storeValue('task.previous_task', 'Morning run');
-      const text = 'Yesterday ({task.previous_date}), your task "{task.previous_task}" is {task.previous_status}';
+      await userDataService.storeValue('task.previousDate', '2024-07-17');
+      await userDataService.storeValue('task.previousStatus', 'pending');
+      await userDataService.storeValue('task.previousTask', 'Morning run');
+      const text = 'Yesterday ({task.previousDate}), your task "{task.previousTask}" is {task.previousStatus}';
 
       // Act
       final result = await templatingService.processTemplate(text);
@@ -266,7 +266,7 @@ void main() {
 
     test('should handle previous day templates with fallbacks', () async {
       // Arrange - don't set any previous day data
-      const text = 'Previous: {task.previous_date|none}, Status: {task.previous_status|no previous task}, Task: {task.previous_task|nothing}';
+      const text = 'Previous: {task.previousDate|none}, Status: {task.previousStatus|no previous task}, Task: {task.previousTask|nothing}';
 
       // Act
       final result = await templatingService.processTemplate(text);
@@ -277,12 +277,12 @@ void main() {
 
     test('should handle mixed current and previous day templates', () async {
       // Arrange
-      await userDataService.storeValue('task.current_date', '2024-07-18');
-      await userDataService.storeValue('task.current_status', 'pending');
-      await userDataService.storeValue('task.previous_date', '2024-07-17');
-      await userDataService.storeValue('task.previous_status', 'completed');
-      await userDataService.storeValue('task.previous_task', 'Read book');
-      const text = 'Today ({task.current_date}): {task.current_status}. Yesterday ({task.previous_date}): {task.previous_task} was {task.previous_status}';
+      await userDataService.storeValue('task.currentDate', '2024-07-18');
+      await userDataService.storeValue('task.currentStatus', 'pending');
+      await userDataService.storeValue('task.previousDate', '2024-07-17');
+      await userDataService.storeValue('task.previousStatus', 'completed');
+      await userDataService.storeValue('task.previousTask', 'Read book');
+      const text = 'Today ({task.currentDate}): {task.currentStatus}. Yesterday ({task.previousDate}): {task.previousTask} was {task.previousStatus}';
 
       // Act
       final result = await templatingService.processTemplate(text);
@@ -301,8 +301,8 @@ void main() {
 
       for (final testCase in testCases) {
         // Arrange
-        await userDataService.storeValue('task.previous_status', testCase['status']);
-        const text = 'Previous task is {task.previous_status}';
+        await userDataService.storeValue('task.previousStatus', testCase['status']);
+        const text = 'Previous task is {task.previousStatus}';
 
         // Act
         final result = await templatingService.processTemplate(text);

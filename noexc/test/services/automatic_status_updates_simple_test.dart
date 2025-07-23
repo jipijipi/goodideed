@@ -21,8 +21,8 @@ void main() {
       await sessionService.initializeSession();
       
       // Should have basic task tracking initialized
-      expect(await userDataService.getValue<String>('task.current_date'), isNotNull);
-      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentDate), isNotNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
     });
 
     test('should add auto-update logging storage keys', () async {
@@ -30,48 +30,48 @@ void main() {
       await sessionService.initializeSession();
       
       // These should be null initially (no updates yet)
-      expect(await userDataService.getValue<String>('task.last_auto_update'), isNull);
-      expect(await userDataService.getValue<String>('task.auto_update_reason'), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskLastAutoUpdate), isNull);
+      expect(await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason), isNull);
       
       // But the keys should be accessible
-      await userDataService.storeValue('task.last_auto_update', 'test');
-      expect(await userDataService.getValue<String>('task.last_auto_update'), 'test');
+      await userDataService.storeValue(StorageKeys.taskLastAutoUpdate, 'test');
+      expect(await userDataService.getValue<String>(StorageKeys.taskLastAutoUpdate), 'test');
     });
 
     test('should preserve overdue status on same day (no morning recovery)', () async {
       // Setup: Set overdue status and morning time
       await sessionService.initializeSession();
       await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-      await userDataService.storeValue('task.current_status', 'overdue');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
       await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayMorning);
       
       // Trigger update - should preserve overdue status on same day
       await sessionService.initializeSession();
       
       // Should remain overdue (no morning recovery)
-      expect(await userDataService.getValue<String>('task.current_status'), 'overdue');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'overdue');
     });
 
     test('should preserve overdue status regardless of time of day', () async {
       // Setup: Set overdue status and afternoon time
       await sessionService.initializeSession();
       await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-      await userDataService.storeValue('task.current_status', 'overdue');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
       await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayAfternoon);
       
       // Trigger update - should preserve status regardless of time
       await sessionService.initializeSession();
       
       // Should remain overdue (no time-based recovery)
-      expect(await userDataService.getValue<String>('task.current_status'), 'overdue');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'overdue');
     });
 
     test('should log deadline-based status updates with proper format', () async {
       // Setup: Task with early deadline that will trigger overdue status
       await sessionService.initializeSession();
       await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-      await userDataService.storeValue('task.deadline_time', '06:00'); // Early deadline
-      await userDataService.storeValue('task.current_status', 'pending');
+      await userDataService.storeValue(StorageKeys.taskDeadlineTime, '06:00'); // Early deadline
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
       
       // Trigger update - if current time is past 6 AM, should mark as overdue
       await sessionService.initializeSession();
@@ -79,8 +79,8 @@ void main() {
       final now = DateTime.now();
       if (now.hour >= 6) {
         // Should log the deadline-passed update
-        final updateReason = await userDataService.getValue<String>('task.auto_update_reason');
-        final lastUpdate = await userDataService.getValue<String>('task.last_auto_update');
+        final updateReason = await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason);
+        final lastUpdate = await userDataService.getValue<String>(StorageKeys.taskLastAutoUpdate);
         
         expect(updateReason, contains('current_day: pending → overdue (deadline_passed)'));
         expect(lastUpdate, matches(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}'));
@@ -91,14 +91,14 @@ void main() {
       // Setup: Set completed status
       await sessionService.initializeSession();
       await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-      await userDataService.storeValue('task.current_status', 'completed');
+      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
       await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayMorning);
       
       // Trigger update
       await sessionService.initializeSession();
       
       // Should remain completed (not reset by morning logic)
-      expect(await userDataService.getValue<String>('task.current_status'), 'completed');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'completed');
     });
 
     test('should handle multiple session initializations', () async {
@@ -108,7 +108,7 @@ void main() {
       await sessionService.initializeSession();
       
       // Should still work normally
-      expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+      expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
     });
   });
 }

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/debug_panel/date_time_picker_widget.dart';
 import 'package:noexc/services/user_data_service.dart';
+import 'package:noexc/constants/storage_keys.dart';
 
 void main() {
   group('DateTimePickerWidget', () {
@@ -151,7 +152,7 @@ void main() {
       expect(callbackCalled, true);
 
       // Verify the value was stored correctly
-      final storedValue = await userDataService.getValue<int>('task.deadline_time');
+      final storedValue = await userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
       expect(storedValue, 3); // Evening = option 3
     });
   });

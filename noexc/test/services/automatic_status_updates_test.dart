@@ -23,7 +23,7 @@ void main() {
         
         // Then set up task with early deadline  
         await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-        await userDataService.storeValue('task.deadline_time', '06:00'); // Early deadline
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '06:00'); // Early deadline
         
         // Run session again to trigger deadline check
         await sessionService.initializeSession();
@@ -31,10 +31,10 @@ void main() {
         // Should automatically mark as overdue (assuming test runs after 6 AM)
         final now = DateTime.now();
         if (now.hour >= 6) {
-          expect(await userDataService.getValue<String>('task.current_status'), 'overdue');
-          expect(await userDataService.getValue<String>('task.auto_update_reason'), contains('deadline_passed'));
+          expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'overdue');
+          expect(await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason), contains('deadline_passed'));
         } else {
-          expect(await userDataService.getValue<String>('task.current_status'), 'pending');
+          expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
         }
       });
 
@@ -44,14 +44,14 @@ void main() {
         
         // Set up completed task past deadline
         await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-        await userDataService.storeValue('task.current_status', 'completed');
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
         await userDataService.storeValue('task.deadline_time', '06:00');
         
         // Run session again
         await sessionService.initializeSession();
         
         // Should remain completed regardless of deadline
-        expect(await userDataService.getValue<String>('task.current_status'), 'completed');
+        expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'completed');
       });
 
       test('should not update if no task exists', () async {
@@ -60,8 +60,8 @@ void main() {
         await sessionService.initializeSession();
         
         // Should remain pending (default) and not trigger overdue
-        expect(await userDataService.getValue<String>('task.current_status'), 'pending');
-        expect(await userDataService.getValue<String>('task.auto_update_reason'), isNull);
+        expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'pending');
+        expect(await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason), isNull);
       });
     });
 
@@ -70,7 +70,7 @@ void main() {
         // Setup: Task marked as overdue
         await sessionService.initializeSession();
         await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-        await userDataService.storeValue('task.current_status', 'overdue');
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
         await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayMorning);
         
         await sessionService.initializeSession();
@@ -83,7 +83,7 @@ void main() {
         // Setup: Task marked as overdue in afternoon
         await sessionService.initializeSession();
         await userDataService.storeValue(StorageKeys.userTask, 'Afternoon task');
-        await userDataService.storeValue('task.current_status', 'overdue');
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
         await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayAfternoon);
         
         await sessionService.initializeSession();
@@ -96,13 +96,13 @@ void main() {
         // Setup: Completed task
         await sessionService.initializeSession();
         await userDataService.storeValue(StorageKeys.userTask, 'Completed task');
-        await userDataService.storeValue('task.current_status', 'completed');
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
         await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayMorning);
         
         await sessionService.initializeSession();
         
         // Should remain completed
-        expect(await userDataService.getValue<String>('task.current_status'), 'completed');
+        expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'completed');
       });
     });
 
@@ -111,7 +111,7 @@ void main() {
         // Setup: Task with early deadline to trigger overdue status
         await sessionService.initializeSession();
         await userDataService.storeValue(StorageKeys.userTask, 'Test task');
-        await userDataService.storeValue('task.deadline_time', '06:00'); // Early deadline
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '06:00'); // Early deadline
         await userDataService.storeValue('task.current_status', 'pending');
         
         await sessionService.initializeSession();
@@ -119,8 +119,8 @@ void main() {
         final now = DateTime.now();
         if (now.hour >= 6) {
           // Should log the deadline-passed update
-          final updateReason = await userDataService.getValue<String>('task.auto_update_reason');
-          final lastUpdate = await userDataService.getValue<String>('task.last_auto_update');
+          final updateReason = await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason);
+          final lastUpdate = await userDataService.getValue<String>(StorageKeys.taskLastAutoUpdate);
           
           expect(updateReason, isNotNull);
           expect(updateReason, contains('current_day: pending → overdue (deadline_passed)'));
@@ -132,33 +132,33 @@ void main() {
       test('should not log if no updates occur', () async {
         // Setup: Normal pending task with future deadline
         await userDataService.storeValue(StorageKeys.userTask, 'Future task');
-        await userDataService.storeValue('task.deadline_time', '23:59');
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '23:59');
         await sessionService.initializeSession();
         
         // Should not log anything
-        expect(await userDataService.getValue<String>('task.auto_update_reason'), isNull);
-        expect(await userDataService.getValue<String>('task.last_auto_update'), isNull);
+        expect(await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason), isNull);
+        expect(await userDataService.getValue<String>(StorageKeys.taskLastAutoUpdate), isNull);
       });
     });
 
     group('Enhanced Grace Period Logging', () {
       test('should log previous day grace period expiration', () async {
         // Setup: Previous day task with expired grace period
-        await userDataService.storeValue('task.previous_status', 'pending');
-        await userDataService.storeValue('task.deadline_time', '06:00'); // Early deadline
+        await userDataService.storeValue(StorageKeys.taskPreviousStatus, 'pending');
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '06:00'); // Early deadline
         
         // Simulate moving to new day
         final yesterday = DateTime.now().subtract(const Duration(days: 1));
         final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-        await userDataService.storeValue('task.current_date', yesterdayString);
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
         
         await sessionService.initializeSession();
         
         // Should log grace period expiration (if test runs after 6 AM)
         final now = DateTime.now();
         if (now.hour >= 6) {
-          expect(await userDataService.getValue<String>('task.previous_status'), 'failed');
-          expect(await userDataService.getValue<String>('task.auto_update_reason'), contains('grace_period_expired'));
+          expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), 'failed');
+          expect(await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason), contains('grace_period_expired'));
         }
       });
     });
@@ -167,30 +167,30 @@ void main() {
       test('should handle multiple status updates in one session', () async {
         // Setup: Complex scenario with both current and previous day updates
         await userDataService.storeValue(StorageKeys.userTask, 'Complex task');
-        await userDataService.storeValue('task.current_status', 'overdue');
-        await userDataService.storeValue('task.previous_status', 'pending');
+        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
+        await userDataService.storeValue(StorageKeys.taskPreviousStatus, 'pending');
         await userDataService.storeValue('task.deadline_time', '06:00');
         await userDataService.storeValue(StorageKeys.sessionTimeOfDay, SessionConstants.timeOfDayMorning);
         
         // Simulate new day transition
         final yesterday = DateTime.now().subtract(const Duration(days: 1));
         final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-        await userDataService.storeValue('task.current_date', yesterdayString);
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
         
         await sessionService.initializeSession();
         
         // Should handle new day transition (starts as pending, then deadline check)
-        final currentStatus = await userDataService.getValue<String>('task.current_status');
+        final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
         final now = DateTime.now();
         if (now.hour >= 6) {
           expect(currentStatus, 'overdue'); // Past deadline, so overdue
-          expect(await userDataService.getValue<String>('task.previous_status'), 'failed'); // Grace period expired
+          expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), 'failed'); // Grace period expired
         } else {
           expect(currentStatus, 'pending'); // Before deadline, so pending
         }
         
         // Should log the most recent update
-        expect(await userDataService.getValue<String>('task.auto_update_reason'), isNotNull);
+        expect(await userDataService.getValue<String>(StorageKeys.taskAutoUpdateReason), isNotNull);
       });
     });
   });

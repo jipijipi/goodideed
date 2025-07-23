@@ -33,9 +33,9 @@
           "value": 1
         },
         {
-          "type": "set",
+          "type": "reset",
           "key": "user.isOnNotice",
-          "value": "0"
+          "value": ""
         }
       ],
       "nextMessageId": 121

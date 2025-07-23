@@ -860,7 +860,7 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "user.onNotice",
+            "key": "user.isOnNotice",
             "value": true
           }
         ]
@@ -2210,7 +2210,7 @@
         "nodeLabel": "Choice Menu",
         "nodeId": "33",
         "contentKey": "user_choose_time",
-        "storeKey": "task.deadline"
+        "storeKey": "task.deadline_time"
       }
     },
     {
@@ -2236,7 +2236,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "34",
         "contentKey": "bot_react_morning",
-        "content": "{task.deadline}, early riser, good."
+        "content": "{task.deadline_time}, early riser, good."
       }
     },
     {
@@ -2262,7 +2262,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "35",
         "contentKey": "bot_react_afternoon",
-        "content": "{task.deadline}, neat"
+        "content": "{task.deadline_time}, neat"
       }
     },
     {
@@ -2288,7 +2288,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "36",
         "contentKey": "bot_react_evening",
-        "content": "{task.deadline}, noted"
+        "content": "{task.deadline_time}, noted"
       }
     },
     {
@@ -2314,7 +2314,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "37",
         "contentKey": "bot_react_night",
-        "content": "{task.deadline}, giving yourself all the time possible, nice"
+        "content": "{task.deadline_time}, giving yourself all the time possible, nice"
       }
     },
     {
@@ -2340,7 +2340,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "38",
         "contentKey": "bot_warn_deadline",
-        "content": "By {task.deadline} everyday, I'll consider you've failed."
+        "content": "By {task.deadline_time} everyday, I'll consider you've failed."
       }
     },
     {

@@ -10,6 +10,15 @@ class StorageKeys {
   static const String sessionDaysSinceFirstVisit = '${sessionPrefix}daysSinceFirstVisit';
   static const String sessionIsWeekend = '${sessionPrefix}isWeekend';
   
+  // User data keys  
+  static const String userPrefix = 'user.';
+  static const String userName = '${userPrefix}name';
+  static const String userTask = '${userPrefix}task';
+  static const String userStreak = '${userPrefix}streak';
+  static const String userIsOnboarded = '${userPrefix}isOnboarded';
+  static const String userIsOnNotice = '${userPrefix}isOnNotice';
+  static const String userTaskDeadline = '${userPrefix}taskDeadline';
+  
   // Task configuration keys
   static const String taskPrefix = 'task.';
   static const String taskDeadlineTime = '${taskPrefix}deadline_time';

@@ -136,7 +136,7 @@ class SessionService {
   /// Archive current day task as previous day
   Future<void> _archivePreviousDay(String lastTaskDate) async {
     final lastStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
-    final lastTask = await userDataService.getValue<String>('user.task');
+    final lastTask = await userDataService.getValue<String>(StorageKeys.userTask);
     
     // Only archive if there was an actual task and it was pending
     if (lastTask != null && lastStatus == 'pending') {
@@ -171,7 +171,7 @@ class SessionService {
   /// Check if current day task is past deadline and update status
   Future<void> _checkCurrentDayDeadline(DateTime now) async {
     final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
-    final userTask = await userDataService.getValue<String>('user.task');
+    final userTask = await userDataService.getValue<String>(StorageKeys.userTask);
     
     // Only check if task exists and is currently pending
     if (currentStatus == 'pending' && userTask != null) {

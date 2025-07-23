@@ -31,7 +31,7 @@
           "nextMessageId": 68
         },
         {
-          "condition": "user.onNotice==true",
+          "condition": "user.isOnNotice==true",
           "nextMessageId": 71
         }
       ]
@@ -42,7 +42,7 @@
       "dataActions": [
         {
           "type": "set",
-          "key": "user.onNotice",
+          "key": "user.isOnNotice",
           "value": true
         }
       ],

@@ -7,13 +7,7 @@ class AppConstants {
   static const String userDataKeyPrefix = 'noexc_user_data_';
   static const String themeKey = 'theme.isDark';
   
-  // Habit Tracking User Attributes
-  static const String isOnboardedKey = 'user.isOnboarded';
-  static const String currentTaskKey = 'user.currentTask';
-  static const String taskDeadlineKey = 'user.taskDeadline';
-  static const String currentStreakKey = 'user.currentStreak';
-  static const String isOnNoticeKey = 'user.isOnNotice';
-  static const String lastVisitKey = 'user.lastVisit';
+  // Note: User attribute constants moved to StorageKeys for consistency
   
   // Chat Configuration
   static const int defaultMessageDelay = 100; // milliseconds

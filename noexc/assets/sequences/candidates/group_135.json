@@ -45,7 +45,7 @@
       "contentKey": "notice_check",
       "routes": [
         {
-          "condition": "user.isOnNotice == false",
+          "default": true,
           "sequenceId": "group_130"
         },
         {

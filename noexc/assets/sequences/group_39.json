@@ -13,26 +13,26 @@
       "id": 33,
       "type": "choice",
       "contentKey": "user_choose_time",
-      "storeKey": "task.deadline",
+      "storeKey": "task.deadline_time",
       "choices": [
         {
           "text": "By morning",
-          "value": "morning",
+          "value": 1,
           "nextMessageId": 34
         },
         {
           "text": "By the afternoon",
-          "value": "afternoon",
+          "value": 2,
           "nextMessageId": 35
         },
         {
           "text": "By the evening",
-          "value": "evening",
+          "value": 3,
           "nextMessageId": 36
         },
         {
           "text": "By night time",
-          "value": "night",
+          "value": 4,
           "nextMessageId": 37
         }
       ]

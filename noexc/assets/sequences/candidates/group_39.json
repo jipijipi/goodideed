@@ -13,7 +13,7 @@
       "id": 33,
       "type": "choice",
       "contentKey": "user_choose_time",
-      "storeKey": "task.deadline",
+      "storeKey": "task.deadline_time",
       "choices": [
         {
           "text": "By morning",
@@ -40,31 +40,31 @@
     {
       "id": 34,
       "contentKey": "bot_react_morning",
-      "text": "{task.deadline}, early riser, good.",
+      "text": "{task.deadline_time}, early riser, good.",
       "nextMessageId": 38
     },
     {
       "id": 38,
       "contentKey": "bot_warn_deadline",
-      "text": "By {task.deadline} everyday, I'll consider you've failed.",
+      "text": "By {task.deadline_time} everyday, I'll consider you've failed.",
       "sequenceId": "group_47"
     },
     {
       "id": 35,
       "contentKey": "bot_react_afternoon",
-      "text": "{task.deadline}, neat",
+      "text": "{task.deadline_time}, neat",
       "nextMessageId": 38
     },
     {
       "id": 36,
       "contentKey": "bot_react_evening",
-      "text": "{task.deadline}, noted",
+      "text": "{task.deadline_time}, noted",
       "nextMessageId": 38
     },
     {
       "id": 37,
       "contentKey": "bot_react_night",
-      "text": "{task.deadline}, giving yourself all the time possible, nice",
+      "text": "{task.deadline_time}, giving yourself all the time possible, nice",
       "nextMessageId": 38
     }
   ]

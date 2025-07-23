@@ -112,7 +112,7 @@
       "dataActions": [
         {
           "type": "set",
-          "key": "user.onNotice",
+          "key": "user.isOnNotice",
           "value": true
         }
       ],

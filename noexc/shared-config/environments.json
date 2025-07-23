@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-27T10:00:00.000Z",
+  "environments": {
+    "development": {
+      "name": "Development",
+      "description": "Local development environment",
+      "settings": {
+        "debugMode": true,
+        "logLevel": "debug",
+        "apiEndpoint": "http://localhost:3000",
+        "enableAnalytics": false
+      },
+      "variableOverrides": {
+        "system.environment": "development",
+        "system.debugMode": true
+      }
+    },
+    "staging": {
+      "name": "Staging",
+      "description": "Testing environment for QA",
+      "settings": {
+        "debugMode": true,
+        "logLevel": "info", 
+        "apiEndpoint": "https://staging-api.example.com",
+        "enableAnalytics": true
+      },
+      "variableOverrides": {
+        "system.environment": "staging",
+        "system.debugMode": true
+      }
+    },
+    "production": {
+      "name": "Production",
+      "description": "Live production environment",
+      "settings": {
+        "debugMode": false,
+        "logLevel": "error",
+        "apiEndpoint": "https://api.example.com", 
+        "enableAnalytics": true
+      },
+      "variableOverrides": {
+        "system.environment": "production",
+        "system.debugMode": false
+      }
+    }
+  }
+}

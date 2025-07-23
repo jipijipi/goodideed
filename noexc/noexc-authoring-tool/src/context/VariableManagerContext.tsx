@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import { LocalStoragePersistence, AutoSave, PersistenceResult } from '../utils/variablePersistence';
 
 export interface VariableDefinition {
   key: string;
@@ -18,12 +19,21 @@ interface VariableManagerContextType {
   getVariablesByCategory: (category: string) => VariableDefinition[];
   getVariableSuggestions: (prefix: string) => string[];
   validateVariable: (key: string) => { valid: boolean; errors: string[] };
+  // Persistence methods
+  saveToLocalStorage: () => PersistenceResult;
+  loadFromLocalStorage: () => PersistenceResult;
+  clearLocalStorage: () => PersistenceResult;
+  importVariables: (newVariables: Map<string, VariableDefinition>) => void;
+  replaceAllVariables: (newVariables: Map<string, VariableDefinition>) => void;
 }
 
 const VariableManagerContext = createContext<VariableManagerContextType | null>(null);
 
 export const VariableManagerProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [variables, setVariables] = useState<Map<string, VariableDefinition>>(new Map([
+  const [variables, setVariables] = useState<Map<string, VariableDefinition>>(new Map());
+
+  // Default variables for fallback
+  const defaultVariables: [string, VariableDefinition][] = [
     // Built-in system variables
     ['user.name', {
       key: 'user.name',
@@ -105,7 +115,31 @@ export const VariableManagerProvider: React.FC<{ children: React.ReactNode }> = 
       category: 'session',
       readonly: true
     }]
-  ]));
+  ];
+
+  // Load variables from localStorage on mount
+  useEffect(() => {
+    const result = LocalStoragePersistence.load();
+    if (result.success && result.data) {
+      const loadedVariables = result.data as Map<string, VariableDefinition>;
+      if (loadedVariables.size > 0) {
+        setVariables(loadedVariables);
+      } else {
+        // No saved variables, use defaults
+        setVariables(new Map(defaultVariables));
+      }
+    } else {
+      // Failed to load or no data, use defaults
+      setVariables(new Map(defaultVariables));
+    }
+  }, []);
+
+  // Auto-save to localStorage when variables change
+  useEffect(() => {
+    if (variables.size > 0) {
+      AutoSave.schedule(variables);
+    }
+  }, [variables]);
 
   const addVariable = useCallback((variable: VariableDefinition) => {
     setVariables(prev => new Map(prev).set(variable.key, variable));
@@ -164,6 +198,39 @@ export const VariableManagerProvider: React.FC<{ children: React.ReactNode }> = 
     return { valid: errors.length === 0, errors };
   }, []);
 
+  // Persistence methods
+  const saveToLocalStorage = useCallback((): PersistenceResult => {
+    return LocalStoragePersistence.save(variables);
+  }, [variables]);
+
+  const loadFromLocalStorage = useCallback((): PersistenceResult => {
+    const result = LocalStoragePersistence.load();
+    if (result.success && result.data) {
+      setVariables(result.data as Map<string, VariableDefinition>);
+    }
+    return result;
+  }, []);
+
+  const clearLocalStorage = useCallback((): PersistenceResult => {
+    const result = LocalStoragePersistence.clear();
+    if (result.success) {
+      setVariables(new Map(defaultVariables));
+    }
+    return result;
+  }, []);
+
+  const importVariables = useCallback((newVariables: Map<string, VariableDefinition>): void => {
+    const merged = new Map(variables);
+    newVariables.forEach((variable, key) => {
+      merged.set(key, variable);
+    });
+    setVariables(merged);
+  }, [variables]);
+
+  const replaceAllVariables = useCallback((newVariables: Map<string, VariableDefinition>): void => {
+    setVariables(new Map(newVariables));
+  }, []);
+
   return (
     <VariableManagerContext.Provider value={{
       variables,
@@ -173,7 +240,12 @@ export const VariableManagerProvider: React.FC<{ children: React.ReactNode }> = 
       getVariable,
       getVariablesByCategory,
       getVariableSuggestions,
-      validateVariable
+      validateVariable,
+      saveToLocalStorage,
+      loadFromLocalStorage,
+      clearLocalStorage,
+      importVariables,
+      replaceAllVariables
     }}>
       {children}
     </VariableManagerContext.Provider>

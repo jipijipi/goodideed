@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useVariableManager, VariableDefinition } from '../context/VariableManagerContext';
 import FlutterSyncPanel from './FlutterSyncPanel';
+import PersistencePanel from './PersistencePanel';
 
 interface VariableManagerProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose, node
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [showFlutterSync, setShowFlutterSync] = useState(false);
+  const [showPersistence, setShowPersistence] = useState(false);
   const [newVariable, setNewVariable] = useState<Partial<VariableDefinition>>({
     key: '',
     type: 'string',
@@ -269,6 +271,22 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose, node
             }}
           >
             🔄 Sync Flutter
+          </button>
+
+          <button
+            onClick={() => setShowPersistence(true)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#ff9800',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            💾 Persistence
           </button>
 
           <button 
@@ -662,6 +680,12 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose, node
       <FlutterSyncPanel 
         isOpen={showFlutterSync}
         onClose={() => setShowFlutterSync(false)}
+      />
+      
+      {/* Persistence Panel */}
+      <PersistencePanel 
+        isOpen={showPersistence}
+        onClose={() => setShowPersistence(false)}
       />
     </div>
   );

@@ -67,9 +67,20 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     return value is bool;
   }
 
+  bool _isTimeOfDayEnum(String key) {
+    return key.contains('timeOfDay');
+  }
+
   bool _isEditableValue(dynamic value) {
     return _isStringValue(value) || _isIntValue(value) || _isBoolValue(value);
   }
+
+  Map<int, String> get _timeOfDayOptions => {
+    1: '☀️ Morning (before noon)',
+    2: '🌤️ Afternoon (noon - 5pm)', 
+    3: '🌅 Evening (5pm - 9pm)',
+    4: '🌙 Night (9pm - midnight)',
+  };
 
   bool _isReadOnlyKey(String key) {
     // Read-only computed values
@@ -189,6 +200,26 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
         },
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       );
+    } else if (_isTimeOfDayEnum(key) && _isIntValue(value)) {
+      // TimeOfDay enum dropdown
+      return DropdownButton<int>(
+        isExpanded: true,
+        value: value as int,
+        items: _timeOfDayOptions.entries.map((entry) =>
+          DropdownMenuItem(
+            value: entry.key,
+            child: Text(
+              entry.value,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ),
+        ).toList(),
+        onChanged: (newValue) {
+          if (newValue != null) {
+            _saveIntValue(key, newValue.toString());
+          }
+        },
+      );
     } else if (_isIntValue(value)) {
       return TextField(
         controller: _controllers[key],
@@ -235,6 +266,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     final isSaving = _savingStates[entry.key] ?? false;
     final isIntValue = _isIntValue(entry.value);
     final isBoolValue = _isBoolValue(entry.value);
+    final isTimeOfDayEnum = _isTimeOfDayEnum(entry.key) && _isIntValue(entry.value);
     final isReadOnly = _isReadOnlyKey(entry.key);
     final canEdit = _isEditableValue(entry.value) && !isReadOnly && widget.userDataService != null;
 
@@ -258,18 +290,20 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
               const SizedBox(width: UIConstants.variableKeySpacing),
               Expanded(
                 flex: 3,
-                child: (isBoolValue && canEdit)
+                child: ((isBoolValue || isTimeOfDayEnum) && canEdit)
                     ? _buildInputWidget(context, entry.key, entry.value)
                     : isEditing
                         ? _buildInputWidget(context, entry.key, entry.value)
                         : Text(
-                            _formatValue(entry.value),
+                            isTimeOfDayEnum 
+                                ? _timeOfDayOptions[entry.value] ?? _formatValue(entry.value)
+                                : _formatValue(entry.value),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
               ),
-              if (canEdit && !isBoolValue) ...[
+              if (canEdit && !isBoolValue && !isTimeOfDayEnum) ...[
                 const SizedBox(width: 8),
                 if (isSaving)
                   const SizedBox(
@@ -325,24 +359,111 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     );
   }
 
+  String _getVariableCategory(String key) {
+    if (key.startsWith('session.')) {
+      return 'Session Tracking';
+    } else if (key.startsWith('task.')) {
+      return 'Task Management';
+    } else if (key.startsWith('user.')) {
+      return 'User Profile';
+    } else {
+      return 'Other';
+    }
+  }
+
+  Map<String, List<MapEntry<String, dynamic>>> _groupVariables(Map<String, dynamic> data) {
+    final groups = <String, List<MapEntry<String, dynamic>>>{};
+    
+    for (final entry in data.entries) {
+      final category = _getVariableCategory(entry.key);
+      groups.putIfAbsent(category, () => []).add(entry);
+    }
+    
+    // Sort entries within each group
+    for (final group in groups.values) {
+      group.sort((a, b) => a.key.compareTo(b.key));
+    }
+    
+    return groups;
+  }
+
+  Widget _buildCategorySection(BuildContext context, String category, List<MapEntry<String, dynamic>> entries) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              Icon(
+                _getCategoryIcon(category),
+                size: 16,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                category,
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ],
+          ),
+        ),
+        ...entries.map((entry) => _buildDataRow(context, entry)),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'Session Tracking':
+        return Icons.access_time;
+      case 'Task Management':
+        return Icons.task_alt;
+      case 'User Profile':
+        return Icons.person;
+      default:
+        return Icons.more_horiz;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Debug Information Section
+        // Debug Information Section (ungrouped)
         if (widget.debugData.isNotEmpty) ...[
           _buildSectionHeader(context, 'Debug Information'),
           ...widget.debugData.entries.map((entry) => _buildDataRow(context, entry)),
           const SizedBox(height: 16),
         ],
         
-        // User Data Section
+        // User Data Section (grouped by category)
         if (widget.userData.isNotEmpty) ...[
           _buildSectionHeader(context, 'User Data'),
-          ...widget.userData.entries.map((entry) => _buildDataRow(context, entry)),
+          ..._buildGroupedUserData(context),
         ],
       ],
     );
+  }
+
+  List<Widget> _buildGroupedUserData(BuildContext context) {
+    final groups = _groupVariables(widget.userData);
+    final widgets = <Widget>[];
+    
+    // Define preferred order for categories
+    const categoryOrder = ['User Profile', 'Session Tracking', 'Task Management', 'Other'];
+    
+    for (final category in categoryOrder) {
+      if (groups.containsKey(category) && groups[category]!.isNotEmpty) {
+        widgets.add(_buildCategorySection(context, category, groups[category]!));
+      }
+    }
+    
+    return widgets;
   }
 }

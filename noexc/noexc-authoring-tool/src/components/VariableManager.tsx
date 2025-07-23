@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 import { useVariableManager, VariableDefinition } from '../context/VariableManagerContext';
+import FlutterSyncPanel from './FlutterSyncPanel';
+import PersistencePanel from './PersistencePanel';
 
 interface VariableManagerProps {
   isOpen: boolean;
   onClose: () => void;
+  nodes?: any[];
+  edges?: any[];
 }
 
-const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose }) => {
+const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose, nodes = [], edges = [] }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [showFlutterSync, setShowFlutterSync] = useState(false);
+  const [showPersistence, setShowPersistence] = useState(false);
   const [newVariable, setNewVariable] = useState<Partial<VariableDefinition>>({
     key: '',
     type: 'string',
@@ -20,6 +27,78 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose }) =>
   });
 
   const variableManager = useVariableManager();
+
+  // Variable analysis function
+  const analyzeVariables = () => {
+    const usedVariables = new Set<string>();
+    const variableUsageCount: { [key: string]: number } = {};
+
+    // Extract variables from template strings like {user.name} or {user.name|fallback}
+    const extractVariables = (text: string) => {
+      if (!text) return;
+      const matches = text.match(/\{([^}|]+)(\|[^}]*)?\}/g);
+      if (matches) {
+        matches.forEach(match => {
+          const variable = match.replace(/\{([^}|]+)(\|[^}]*)?\}/, '$1').trim();
+          usedVariables.add(variable);
+          variableUsageCount[variable] = (variableUsageCount[variable] || 0) + 1;
+        });
+      }
+    };
+
+    // Scan all nodes for variables
+    nodes.forEach(node => {
+      if (node.data) {
+        // Check content, placeholderText, storeKey
+        extractVariables(node.data.content);
+        extractVariables(node.data.placeholderText);
+        
+        // Check storeKey (variables being set)
+        if (node.data.storeKey) {
+          usedVariables.add(node.data.storeKey);
+          variableUsageCount[node.data.storeKey] = (variableUsageCount[node.data.storeKey] || 0) + 1;
+        }
+
+        // Check data actions
+        if (node.data.dataActions) {
+          node.data.dataActions.forEach((action: any) => {
+            if (action.key) {
+              usedVariables.add(action.key);
+              variableUsageCount[action.key] = (variableUsageCount[action.key] || 0) + 1;
+            }
+          });
+        }
+      }
+    });
+
+    // Scan all edges for variables
+    edges.forEach(edge => {
+      if (edge.data) {
+        extractVariables(edge.data.label);
+        extractVariables(edge.data.contentKey);
+      }
+    });
+
+    // Get defined variables
+    const definedVariables = new Set(Array.from(variableManager.variables.keys()));
+
+    // Categorize variables
+    const knownVariables = Array.from(usedVariables).filter(v => definedVariables.has(v));
+    const unknownVariables = Array.from(usedVariables).filter(v => !definedVariables.has(v));
+    const unusedVariables = Array.from(definedVariables).filter(v => !usedVariables.has(v));
+
+    return {
+      used: Array.from(usedVariables),
+      known: knownVariables,
+      unknown: unknownVariables,
+      unused: unusedVariables,
+      usageCount: variableUsageCount,
+      totalUsed: usedVariables.size,
+      totalDefined: definedVariables.size
+    };
+  };
+
+  const analysis = analyzeVariables();
 
   if (!isOpen) return null;
 
@@ -162,11 +241,59 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose }) =>
             ))}
           </select>
           
+          <button
+            onClick={() => setShowAnalysis(!showAnalysis)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: showAnalysis ? '#ff9800' : '#2196f3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            📊 {showAnalysis ? 'Hide Analysis' : 'Show Analysis'}
+          </button>
+
+          <button
+            onClick={() => setShowFlutterSync(true)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#9c27b0',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            🔄 Sync Flutter
+          </button>
+
+          <button
+            onClick={() => setShowPersistence(true)}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#ff9800',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: 'bold'
+            }}
+          >
+            💾 Persistence
+          </button>
+
           <button 
             onClick={() => setShowAddForm(true)}
             style={{
               padding: '8px 16px',
-              backgroundColor: '#2196f3',
+              backgroundColor: '#4CAF50',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
@@ -177,6 +304,169 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose }) =>
             + Add Variable
           </button>
         </div>
+
+        {/* Variable Analysis Section */}
+        {showAnalysis && (
+          <div style={{
+            margin: '0 20px 20px 20px',
+            padding: '16px',
+            backgroundColor: '#f8f9fa',
+            borderRadius: '8px',
+            border: '1px solid #e9ecef'
+          }}>
+            <h3 style={{ 
+              margin: '0 0 16px 0', 
+              fontSize: '16px', 
+              fontWeight: 'bold',
+              color: '#333',
+              borderBottom: '2px solid #dee2e6',
+              paddingBottom: '8px'
+            }}>
+              📊 Variable Usage Analysis
+            </h3>
+            
+            {/* Summary Stats */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+              gap: '12px',
+              marginBottom: '16px'
+            }}>
+              <div style={{ textAlign: 'center', padding: '8px', backgroundColor: 'white', borderRadius: '4px' }}>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#2196f3' }}>{analysis.totalUsed}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Used in Graph</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '8px', backgroundColor: 'white', borderRadius: '4px' }}>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#4caf50' }}>{analysis.known.length}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Known</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '8px', backgroundColor: 'white', borderRadius: '4px' }}>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#f44336' }}>{analysis.unknown.length}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Unknown</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '8px', backgroundColor: 'white', borderRadius: '4px' }}>
+                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ff9800' }}>{analysis.unused.length}</div>
+                <div style={{ fontSize: '12px', color: '#666' }}>Unused</div>
+              </div>
+            </div>
+
+            {/* Known Variables */}
+            {analysis.known.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <h4 style={{ 
+                  margin: '0 0 8px 0', 
+                  fontSize: '14px', 
+                  fontWeight: 'bold',
+                  color: '#4caf50',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  ✅ Known Variables ({analysis.known.length})
+                </h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {analysis.known.map(variable => (
+                    <span
+                      key={variable}
+                      style={{
+                        padding: '4px 8px',
+                        backgroundColor: '#e8f5e8',
+                        color: '#2e7d32',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        border: '1px solid #c8e6c9'
+                      }}
+                    >
+                      {variable} ({analysis.usageCount[variable] || 0}×)
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Unknown Variables */}
+            {analysis.unknown.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <h4 style={{ 
+                  margin: '0 0 8px 0', 
+                  fontSize: '14px', 
+                  fontWeight: 'bold',
+                  color: '#f44336',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  ❌ Unknown Variables ({analysis.unknown.length}) - Need Definition
+                </h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {analysis.unknown.map(variable => (
+                    <span
+                      key={variable}
+                      style={{
+                        padding: '4px 8px',
+                        backgroundColor: '#ffebee',
+                        color: '#c62828',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        border: '1px solid #ffcdd2'
+                      }}
+                    >
+                      {variable} ({analysis.usageCount[variable] || 0}×)
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Unused Variables */}
+            {analysis.unused.length > 0 && (
+              <div>
+                <h4 style={{ 
+                  margin: '0 0 8px 0', 
+                  fontSize: '14px', 
+                  fontWeight: 'bold',
+                  color: '#ff9800',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}>
+                  ⚪ Unused Variables ({analysis.unused.length}) - Defined but Not Used
+                </h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {analysis.unused.map(variable => (
+                    <span
+                      key={variable}
+                      style={{
+                        padding: '4px 8px',
+                        backgroundColor: '#fff3e0',
+                        color: '#ef6c00',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        border: '1px solid #ffcc02'
+                      }}
+                    >
+                      {variable}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {analysis.totalUsed === 0 && (
+              <div style={{
+                textAlign: 'center',
+                padding: '20px',
+                color: '#666',
+                fontStyle: 'italic'
+              }}>
+                No variables found in the current graph. Add some template variables like {'{user.name}'} to see analysis.
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Add Variable Form */}
         {showAddForm && (
@@ -385,6 +675,18 @@ const VariableManager: React.FC<VariableManagerProps> = ({ isOpen, onClose }) =>
           )}
         </div>
       </div>
+      
+      {/* Flutter Sync Panel */}
+      <FlutterSyncPanel 
+        isOpen={showFlutterSync}
+        onClose={() => setShowFlutterSync(false)}
+      />
+      
+      {/* Persistence Panel */}
+      <PersistencePanel 
+        isOpen={showPersistence}
+        onClose={() => setShowPersistence(false)}
+      />
     </div>
   );
 };

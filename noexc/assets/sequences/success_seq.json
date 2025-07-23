@@ -1,0 +1,38 @@
+{
+  "sequenceId": "success_seq",
+  "name": "Success Sequence",
+  "description": "When the user completes his daily task",
+  "messages": [
+    {
+      "id": 1,
+      "text": "Bang on!|||Go {user.name|you}!",
+      "nextMessageId": 57
+    },
+    {
+      "id": 57,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "increment",
+          "key": "user.streak",
+          "value": 1
+        }
+      ],
+      "nextMessageId": 58
+    },
+    {
+      "id": 58,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "I want to update my task",
+          "sequenceId": "taskSetting_seq"
+        },
+        {
+          "text": "I'll keep this task alive",
+          "sequenceId": "sendoff_seq"
+        }
+      ]
+    }
+  ]
+}

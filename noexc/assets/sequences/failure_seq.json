@@ -1,0 +1,88 @@
+{
+  "sequenceId": "failure_seq",
+  "name": "Failure Sequence",
+  "description": "When the user failed his daily task",
+  "messages": [
+    {
+      "id": 1,
+      "text": "I see...|||Do you have an excuse? |||A valid one?",
+      "nextMessageId": 63
+    },
+    {
+      "id": 63,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "I really don't...",
+          "nextMessageId": 65
+        },
+        {
+          "text": "Yes, I have a good excuse!",
+          "nextMessageId": 64
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "type": "autoroute",
+      "routes": [
+        {
+          "default": true,
+          "nextMessageId": 68
+        },
+        {
+          "condition": "user.isOnNotice==true",
+          "nextMessageId": 71
+        }
+      ]
+    },
+    {
+      "id": 68,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "set",
+          "key": "user.isOnNotice",
+          "value": true
+        }
+      ],
+      "sequenceId": "sendoff_seq"
+    },
+    {
+      "id": 71,
+      "text": "Well. Too bad, you had your chance.",
+      "nextMessageId": 65
+    },
+    {
+      "id": 65,
+      "type": "dataAction",
+      "dataActions": [
+        {
+          "type": "set",
+          "key": "user.streak",
+          "value": "0"
+        }
+      ],
+      "nextMessageId": 73
+    },
+    {
+      "id": 73,
+      "text": "Do you wish to keep trying or make it easier on yourself ?",
+      "nextMessageId": 69
+    },
+    {
+      "id": 69,
+      "type": "choice",
+      "choices": [
+        {
+          "text": "I'll make it this time",
+          "sequenceId": "sendoff_seq"
+        },
+        {
+          "text": "Let me review my task",
+          "sequenceId": "taskSetting_seq"
+        }
+      ]
+    }
+  ]
+}

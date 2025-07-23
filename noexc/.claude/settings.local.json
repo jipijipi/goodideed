@@ -29,7 +29,8 @@
       "Bash(done)",
       "Bash(chmod:*)",
       "Bash(./update_test_storage_keys.sh:*)",
-      "Bash(flutter pub:*)"
+      "Bash(flutter pub:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

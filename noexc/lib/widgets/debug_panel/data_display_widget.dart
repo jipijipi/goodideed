@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import '../../constants/ui_constants.dart';
+import '../../services/user_data_service.dart';
 
 /// Widget responsible for displaying user data and debug information in a formatted way
-class DataDisplayWidget extends StatelessWidget {
+class DataDisplayWidget extends StatefulWidget {
   final Map<String, dynamic> userData;
   final Map<String, dynamic> debugData;
+  final UserDataService? userDataService;
+  final VoidCallback? onDataChanged;
 
   const DataDisplayWidget({
     super.key,
     required this.userData,
     required this.debugData,
+    this.userDataService,
+    this.onDataChanged,
   });
+
+  @override
+  State<DataDisplayWidget> createState() => _DataDisplayWidgetState();
+}
+
+class _DataDisplayWidgetState extends State<DataDisplayWidget> {
 
   String _formatValue(dynamic value) {
     if (value is List) {
@@ -32,7 +43,100 @@ class DataDisplayWidget extends StatelessWidget {
     );
   }
 
+  final Map<String, bool> _editingStates = {};
+  final Map<String, TextEditingController> _controllers = {};
+  final Map<String, bool> _savingStates = {};
+
+  @override
+  void dispose() {
+    for (final controller in _controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  bool _isStringValue(dynamic value) {
+    return value is String && !value.startsWith('[') && !value.startsWith('{');
+  }
+
+  bool _isReadOnlyKey(String key) {
+    // Read-only computed values
+    return key.contains('isActiveDay') || 
+           key.contains('isPastDeadline') || 
+           key.contains('visitCount') ||
+           key.contains('daysSince');
+  }
+
+  Future<void> _saveValue(String key, String newValue) async {
+    if (widget.userDataService == null) return;
+    
+    setState(() {
+      _savingStates[key] = true;
+    });
+
+    try {
+      await widget.userDataService!.storeValue(key, newValue);
+      
+      setState(() {
+        _editingStates[key] = false;
+        _savingStates[key] = false;
+      });
+      
+      if (widget.onDataChanged != null) {
+        widget.onDataChanged!();
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Saved $key'),
+            duration: const Duration(seconds: 2),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _savingStates[key] = false;
+      });
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save $key: $e'),
+            duration: const Duration(seconds: 3),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
+  void _startEditing(String key, dynamic value) {
+    final controller = TextEditingController(text: value.toString());
+    _controllers[key] = controller;
+    
+    setState(() {
+      _editingStates[key] = true;
+    });
+  }
+
+  void _cancelEditing(String key) {
+    _controllers[key]?.dispose();
+    _controllers.remove(key);
+    
+    setState(() {
+      _editingStates[key] = false;
+    });
+  }
+
   Widget _buildDataRow(BuildContext context, MapEntry<String, dynamic> entry) {
+    final isEditing = _editingStates[entry.key] ?? false;
+    final isSaving = _savingStates[entry.key] ?? false;
+    final isStringValue = _isStringValue(entry.value);
+    final isReadOnly = _isReadOnlyKey(entry.key);
+    final canEdit = isStringValue && !isReadOnly && widget.userDataService != null;
+
     return Padding(
       padding: UIConstants.variableItemPadding,
       child: Column(
@@ -53,13 +157,75 @@ class DataDisplayWidget extends StatelessWidget {
               const SizedBox(width: UIConstants.variableKeySpacing),
               Expanded(
                 flex: 3,
-                child: Text(
-                  _formatValue(entry.value),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
+                child: isEditing
+                    ? TextField(
+                        controller: _controllers[entry.key],
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        onSubmitted: (value) {
+                          _saveValue(entry.key, value);
+                        },
+                      )
+                    : Text(
+                        _formatValue(entry.value),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
               ),
+              if (canEdit) ...[
+                const SizedBox(width: 8),
+                if (isSaving)
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                else if (isEditing) ...[
+                  IconButton(
+                    icon: const Icon(Icons.save, size: 16),
+                    onPressed: () {
+                      final value = _controllers[entry.key]?.text ?? '';
+                      _saveValue(entry.key, value);
+                    },
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(
+                      minWidth: 24,
+                      minHeight: 24,
+                    ),
+                    tooltip: 'Save',
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.cancel, size: 16),
+                    onPressed: () => _cancelEditing(entry.key),
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(
+                      minWidth: 24,
+                      minHeight: 24,
+                    ),
+                    tooltip: 'Cancel',
+                  ),
+                ] else
+                  IconButton(
+                    icon: const Icon(Icons.edit, size: 16),
+                    onPressed: () => _startEditing(entry.key, entry.value),
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(
+                      minWidth: 24,
+                      minHeight: 24,
+                    ),
+                    tooltip: 'Edit',
+                  ),
+              ],
             ],
           ),
           const Divider(height: 16),
@@ -74,16 +240,16 @@ class DataDisplayWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Debug Information Section
-        if (debugData.isNotEmpty) ...[
+        if (widget.debugData.isNotEmpty) ...[
           _buildSectionHeader(context, 'Debug Information'),
-          ...debugData.entries.map((entry) => _buildDataRow(context, entry)),
+          ...widget.debugData.entries.map((entry) => _buildDataRow(context, entry)),
           const SizedBox(height: 16),
         ],
         
         // User Data Section
-        if (userData.isNotEmpty) ...[
+        if (widget.userData.isNotEmpty) ...[
           _buildSectionHeader(context, 'User Data'),
-          ...userData.entries.map((entry) => _buildDataRow(context, entry)),
+          ...widget.userData.entries.map((entry) => _buildDataRow(context, entry)),
         ],
       ],
     );

@@ -161,6 +161,8 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                           DataDisplayWidget(
                             userData: _userData,
                             debugData: _debugData,
+                            userDataService: widget.userDataService,
+                            onDataChanged: refreshData,
                           ),
                         ],
                       ),

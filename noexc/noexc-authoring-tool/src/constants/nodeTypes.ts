@@ -20,6 +20,12 @@ export const NODE_LABELS = [
   'Custom'
 ] as const;
 
+// Node type constants
+export const NODE_TYPES = {
+  EDITABLE: 'editable',
+  GROUP: 'group'
+} as const;
+
 export type NodeCategory = typeof NODE_CATEGORIES[number];
 export type NodeLabel = typeof NODE_LABELS[number];
 

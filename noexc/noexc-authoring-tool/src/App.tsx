@@ -19,15 +19,15 @@ import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
 import CustomEdge from './components/CustomEdge';
 import GroupNode from './components/GroupNode';
-import { NodeData, NodeCategory, NodeLabel, DataActionItem } from './constants/nodeTypes';
+import { NodeData, NodeCategory, NodeLabel, DataActionItem, NODE_TYPES } from './constants/nodeTypes';
 import { VariableManagerProvider } from './context/VariableManagerContext';
 import VariableManager from './components/VariableManager';
 import HelpTooltip from './components/HelpTooltip';
 import { helpContent } from './constants/helpContent';
 
 const nodeTypes = {
-  editable: EditableNode,
-  group: GroupNode,
+  [NODE_TYPES.EDITABLE]: EditableNode,
+  [NODE_TYPES.GROUP]: GroupNode,
 };
 
 const edgeTypes: EdgeTypes = {
@@ -54,7 +54,7 @@ const initialNodes: Node<NodeData>[] = [
       onStoreKeyChange: () => {},
       onDataActionsChange: () => {}
     },
-    type: 'editable',
+    type: NODE_TYPES.EDITABLE,
   },
   {
     id: '2',
@@ -75,7 +75,7 @@ const initialNodes: Node<NodeData>[] = [
       onStoreKeyChange: () => {},
       onDataActionsChange: () => {}
     },
-    type: 'editable',
+    type: NODE_TYPES.EDITABLE,
   },
 ];
 
@@ -167,7 +167,7 @@ function Flow() {
         onTitleChange: () => {},
         onDescriptionChange: () => {}
       },
-      type: 'group',
+      type: NODE_TYPES.GROUP,
       style: {
         width: groupWidth,
         height: groupHeight,
@@ -218,9 +218,66 @@ function Flow() {
     showNotification(`Created group ${groupId} with ${selectedNodes.length} child nodes`);
   }, [selectedNodes, nodes, getId, setNodes, setNodeIdCounter]);
 
+  // Resize all groups to fit their children with generous padding
+  const resizeAllGroups = useCallback(() => {
+    const groupNodes = nodes.filter(node => node.type === NODE_TYPES.GROUP);
+    if (groupNodes.length === 0) {
+      showError('No groups found', ['Create some groups first to resize them']);
+      return;
+    }
+
+    let resizedCount = 0;
+    const updatedNodes = nodes.map(node => {
+      if (node.type === NODE_TYPES.GROUP) {
+        // Find all child nodes of this group
+        const childNodes = nodes.filter(child => child.parentId === node.id);
+        
+        if (childNodes.length === 0) {
+          // Empty group - keep current size or set minimum size
+          return node;
+        }
+
+        // Calculate bounding box of all children
+        const minX = Math.min(...childNodes.map(child => child.position.x));
+        const minY = Math.min(...childNodes.map(child => child.position.y));
+        const maxX = Math.max(...childNodes.map(child => child.position.x + (child.width || 150)));
+        const maxY = Math.max(...childNodes.map(child => child.position.y + (child.height || 50)));
+
+        // Add generous padding (50px on all sides)
+        const padding = 50;
+        const newWidth = maxX - minX + (padding * 2);
+        const newHeight = maxY - minY + (padding * 2);
+
+        // Only resize if the new size is different
+        const currentWidth = node.style?.width || 200;
+        const currentHeight = node.style?.height || 100;
+        
+        if (Math.abs(newWidth - Number(currentWidth)) > 5 || Math.abs(newHeight - Number(currentHeight)) > 5) {
+          resizedCount++;
+          return {
+            ...node,
+            style: {
+              ...node.style,
+              width: newWidth,
+              height: newHeight,
+            }
+          };
+        }
+      }
+      return node;
+    });
+
+    if (resizedCount > 0) {
+      setNodes(updatedNodes);
+      showNotification(`Resized ${resizedCount} group${resizedCount === 1 ? '' : 's'} to fit their children`);
+    } else {
+      showNotification('All groups are already properly sized');
+    }
+  }, [nodes, setNodes, showNotification, showError]);
+
   // Ungroup selected group nodes
   const ungroupSelectedNodes = useCallback(() => {
-    const groupNodes = selectedNodes.filter(node => node.type === 'group');
+    const groupNodes = selectedNodes.filter(node => node.type === NODE_TYPES.GROUP);
     if (groupNodes.length === 0) return;
 
     let updatedNodes = [...nodes];
@@ -258,13 +315,13 @@ function Flow() {
 
   // Add selected nodes to an existing group
   const addNodesToGroup = useCallback((targetGroupId: string) => {
-    const regularNodes = selectedNodes.filter(node => node.type !== 'group' && !node.parentId);
+    const regularNodes = selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP && !node.parentId);
     if (regularNodes.length === 0) {
       showError('No ungrouped nodes selected', ['Select nodes that are not already in a group']);
       return;
     }
 
-    const targetGroup = nodes.find(node => node.id === targetGroupId && node.type === 'group');
+    const targetGroup = nodes.find(node => node.id === targetGroupId && node.type === NODE_TYPES.GROUP);
     if (!targetGroup) {
       showError('Target group not found', ['Please select a valid group']);
       return;
@@ -306,7 +363,7 @@ function Flow() {
 
   // Remove selected nodes from their groups
   const removeNodesFromGroup = useCallback(() => {
-    const groupedNodes = selectedNodes.filter(node => node.parentId && node.type !== 'group');
+    const groupedNodes = selectedNodes.filter(node => node.parentId && node.type !== NODE_TYPES.GROUP);
     if (groupedNodes.length === 0) {
       showError('No grouped nodes selected', ['Select nodes that are currently in a group']);
       return;
@@ -349,21 +406,21 @@ function Flow() {
       if (!isTyping) {
         // Handle grouping with 'G' key
         if (e.key === 'g' || e.key === 'G') {
-          const regularNodes = selectedNodes.filter(node => node.type !== 'group');
+          const regularNodes = selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP);
           if (regularNodes.length > 1) {
             createGroupFromSelectedNodes();
           }
         }
         // Handle ungrouping with 'U' key
         if (e.key === 'u' || e.key === 'U') {
-          const hasGroupSelected = selectedNodes.some(node => node.type === 'group');
+          const hasGroupSelected = selectedNodes.some(node => node.type === NODE_TYPES.GROUP);
           if (hasGroupSelected) {
             ungroupSelectedNodes();
           }
         }
         // Handle removing nodes from group with 'R' key
         if (e.key === 'r' || e.key === 'R') {
-          const hasGroupedNodesSelected = selectedNodes.some(node => node.parentId && node.type !== 'group');
+          const hasGroupedNodesSelected = selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP);
           if (hasGroupedNodesSelected) {
             removeNodesFromGroup();
           }
@@ -563,7 +620,7 @@ function Flow() {
       id,
       position,
       data: getDefaultData(nodeType.category),
-      type: 'editable',
+      type: NODE_TYPES.EDITABLE,
     };
 
     setNodes((nds) => nds.concat(newNode));
@@ -1020,7 +1077,7 @@ function Flow() {
             data: {
               ...node.data,
               // Only add group metadata if this was actually a group node
-              ...(node.type === 'group' ? {
+              ...(node.type === NODE_TYPES.GROUP ? {
                 groupId: node.data.groupId || node.data.nodeId,
                 title: node.data.title || node.data.label,
                 description: node.data.description || 'Imported group',
@@ -1103,7 +1160,7 @@ function Flow() {
                 data: {
                   ...node.data,
                   // Only add group metadata if this was actually a group node
-                  ...(node.type === 'group' ? {
+                  ...(node.type === NODE_TYPES.GROUP ? {
                     groupId: node.data.groupId || node.data.nodeId,
                     title: node.data.title || node.data.label,
                     description: node.data.description || 'Imported group',
@@ -1551,7 +1608,7 @@ function Flow() {
   const exportToFlutter = useCallback(() => {
     try {
       // Find all group nodes
-      const groupNodes = nodes.filter(node => node.type === 'group');
+      const groupNodes = nodes.filter(node => node.type === NODE_TYPES.GROUP);
       
       if (groupNodes.length === 0) {
         showError('No groups found', ['Create groups by selecting multiple nodes with Shift+click first']);
@@ -1560,7 +1617,7 @@ function Flow() {
 
       // Filter out ungrouped nodes (nodes without parentId)
       const groupedNodes = nodes.filter(node => 
-        node.parentId || node.type === 'group'
+        node.parentId || node.type === NODE_TYPES.GROUP
       );
 
       if (groupedNodes.length === 0) {
@@ -1811,7 +1868,7 @@ function Flow() {
       )}
       
       {/* Ungroup Status Indicator */}
-      {!isShiftPressed && selectedNodes.some(node => node.type === 'group') && (
+      {!isShiftPressed && selectedNodes.some(node => node.type === NODE_TYPES.GROUP) && (
         <div style={{
           position: 'absolute',
           top: 50,
@@ -1826,7 +1883,7 @@ function Flow() {
           fontWeight: 'bold',
           boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
         }}>
-          🔓 Press 'U' to ungroup selected group ({selectedNodes.filter(node => node.type === 'group').length} group{selectedNodes.filter(node => node.type === 'group').length > 1 ? 's' : ''})
+          🔓 Press 'U' to ungroup selected group ({selectedNodes.filter(node => node.type === NODE_TYPES.GROUP).length} group{selectedNodes.filter(node => node.type === NODE_TYPES.GROUP).length > 1 ? 's' : ''})
         </div>
       )}
 
@@ -1851,7 +1908,7 @@ function Flow() {
       )}
 
       {/* Add to Group Status Indicator */}
-      {!isShiftPressed && selectedNodes.some(node => node.type !== 'group' && !node.parentId) && nodes.some(node => node.type === 'group') && (
+      {!isShiftPressed && selectedNodes.some(node => node.type !== NODE_TYPES.GROUP && !node.parentId) && nodes.some(node => node.type === NODE_TYPES.GROUP) && (
         <div style={{
           position: 'absolute',
           top: 130,
@@ -1976,16 +2033,16 @@ function Flow() {
         
         <button 
           onClick={createGroupFromSelectedNodes}
-          disabled={selectedNodes.filter(node => node.type !== 'group').length < 2}
+          disabled={selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length < 2}
           style={{
             padding: '8px 16px',
-            backgroundColor: selectedNodes.filter(node => node.type !== 'group').length >= 2 ? '#4caf50' : '#ccc',
+            backgroundColor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? '#4caf50' : '#ccc',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: selectedNodes.filter(node => node.type !== 'group').length >= 2 ? 'pointer' : 'not-allowed',
+            cursor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 'pointer' : 'not-allowed',
             fontWeight: 'bold',
-            opacity: selectedNodes.filter(node => node.type !== 'group').length >= 2 ? 1 : 0.5
+            opacity: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 1 : 0.5
           }}
         >
           🔗 Group
@@ -1993,16 +2050,16 @@ function Flow() {
         
         <button 
           onClick={ungroupSelectedNodes}
-          disabled={!selectedNodes.some(node => node.type === 'group')}
+          disabled={!selectedNodes.some(node => node.type === NODE_TYPES.GROUP)}
           style={{
             padding: '8px 16px',
-            backgroundColor: selectedNodes.some(node => node.type === 'group') ? '#ff9800' : '#ccc',
+            backgroundColor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? '#ff9800' : '#ccc',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: selectedNodes.some(node => node.type === 'group') ? 'pointer' : 'not-allowed',
+            cursor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
             fontWeight: 'bold',
-            opacity: selectedNodes.some(node => node.type === 'group') ? 1 : 0.5
+            opacity: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 1 : 0.5
           }}
         >
           🔓 Ungroup
@@ -2010,23 +2067,39 @@ function Flow() {
         
         <button 
           onClick={removeNodesFromGroup}
-          disabled={!selectedNodes.some(node => node.parentId && node.type !== 'group')}
+          disabled={!selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP)}
           style={{
             padding: '8px 16px',
-            backgroundColor: selectedNodes.some(node => node.parentId && node.type !== 'group') ? '#9c27b0' : '#ccc',
+            backgroundColor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? '#9c27b0' : '#ccc',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: selectedNodes.some(node => node.parentId && node.type !== 'group') ? 'pointer' : 'not-allowed',
+            cursor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
             fontWeight: 'bold',
-            opacity: selectedNodes.some(node => node.parentId && node.type !== 'group') ? 1 : 0.5
+            opacity: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 1 : 0.5
           }}
         >
           ➖ Remove from Group
         </button>
         
+        {/* Resize Groups Button */}
+        <button 
+          onClick={resizeAllGroups}
+          style={{
+            padding: '8px 16px',
+            backgroundColor: '#673ab7',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}
+        >
+          📏 Resize Groups
+        </button>
+        
         {/* Add to Group dropdown - only show when ungrouped nodes are selected */}
-        {selectedNodes.some(node => node.type !== 'group' && !node.parentId) && (
+        {selectedNodes.some(node => node.type !== NODE_TYPES.GROUP && !node.parentId) && (
           <select 
             onChange={(e) => {
               if (e.target.value) {
@@ -2046,7 +2119,7 @@ function Flow() {
             defaultValue=""
           >
             <option value="" disabled>➕ Add to Group</option>
-            {nodes.filter(node => node.type === 'group').map(group => (
+            {nodes.filter(node => node.type === NODE_TYPES.GROUP).map(group => (
               <option key={group.id} value={group.id}>
                 {group.data.title || group.data.label || `Group ${group.id}`}
               </option>

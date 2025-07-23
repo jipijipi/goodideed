@@ -9,7 +9,7 @@
       "contentKey": "task_set_check",
       "routes": [
         {
-          "condition": "task.currentStatus != null",
+          "condition": "user.task != null",
           "nextMessageId": 78
         },
         {
@@ -28,7 +28,7 @@
           "nextMessageId": 81
         },
         {
-          "condition": "task.previousStatus !=  null",
+          "condition": "task.previous_status !=  null",
           "sequenceId": "group_133"
         }
       ]
@@ -39,20 +39,20 @@
       "contentKey": "current_task_check",
       "routes": [
         {
-          "condition": "task.currentStatus == \"overdue\"",
+          "condition": "task.current_status == \"overdue\"",
           "sequenceId": "group_135"
         },
         {
-          "condition": "task.currentStatus == \"completed\"",
-          "sequenceId": "group_139"
+          "condition": "task.current_status == \"failed\"",
+          "sequenceId": "group_154"
         },
         {
-          "condition": "task.currentStatus == \"failed\"",
-          "sequenceId": "group_139"
+          "condition": "task.current_status == \"pending\"",
+          "sequenceId": "group_150"
         },
         {
-          "condition": "task.currentStatus == \"pending\"",
-          "sequenceId": "group_139"
+          "condition": "task.current_status == \"completed\"",
+          "sequenceId": "group_153"
         }
       ]
     }

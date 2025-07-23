@@ -50,7 +50,7 @@
     {
       "id": 54,
       "contentKey": "bot_warn_notification_intensity",
-      "text": "You chose, notification intensity : {notifications.intensity}",
+      "text": "You chose, notification intensity : {notification.intensity}",
       "sequenceId": "group_59"
     },
     {

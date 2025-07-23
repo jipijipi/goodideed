@@ -33,6 +33,12 @@
     {
       "id": 8,
       "text": "Please, call me Tristopher.",
+      "nextMessageId": 9
+    },
+    {
+      "id": 9,
+      "contentKey": "bot_ask_name",
+      "text": "So, what should I call you?",
       "nextMessageId": 10
     },
     {
@@ -45,14 +51,8 @@
     },
     {
       "id": 11,
-      "text": "{user.name}? Really? |||All right {user.name",
+      "text": "{user.name}? Really? |||All right {user.name}",
       "sequenceId": "group_30"
-    },
-    {
-      "id": 9,
-      "contentKey": "bot_ask_name",
-      "text": "So, what should I call you?",
-      "nextMessageId": 10
     }
   ]
 }

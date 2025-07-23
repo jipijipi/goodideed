@@ -9,7 +9,7 @@
       "contentKey": "user_visited_check",
       "routes": [
         {
-          "condition": "session.visits < 2",
+          "condition": "session.visitCount < 2",
           "nextMessageId": 57
         },
         {

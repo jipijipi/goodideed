@@ -102,6 +102,10 @@ The authoring tool supports advanced cross-sequence navigation:
   - `error_handling/user_message_generator.dart` - Generates user-friendly error messages
 - **DataActionProcessor** - Processes data modification operations and event triggers
 - **MessageQueue** - Sequential message processing with proper timing and no race conditions
+- **ScenarioManager** - Manages debug test scenarios for rapid user state simulation
+  - Loads predefined scenarios from `assets/debug/scenarios.json`
+  - Applies variable sets to UserDataService for testing different user personas
+  - Simple API: `loadScenarios()`, `applyScenario()`, helper methods for metadata
 
 #### UI Architecture (`lib/widgets/`)
 - **ChatScreen** - Main container with state management
@@ -111,6 +115,10 @@ The authoring tool supports advanced cross-sequence navigation:
   - `state_management/user_interaction_handler.dart` - Processes user choices and text inputs
 - **ChatMessageList** - Displays messages with automatic scrolling
 - **UserPanelOverlay** - Debug panel for user data and sequence management
+- **Enhanced Debug Panel Components**:
+  - `UserVariablesPanel` - Main orchestrator with scenario integration
+  - `DataDisplayWidget` - Variable display with inline editing, type-aware inputs, and grouped categories
+  - `ScenarioManager` integration - Test scenario dropdown and application
 
 #### Validation System (`lib/validation/`)
 - **AssetValidator** - Comprehensive asset validation with modular validators:
@@ -129,6 +137,8 @@ The authoring tool supports advanced cross-sequence navigation:
 ### Asset Structure
 - `assets/sequences/` - JSON conversation flows
 - `assets/variants/` - Text variant files (format: `{sequenceId}_message_{messageId}.txt`)
+- `assets/debug/` - Debug and testing assets
+  - `scenarios.json` - Predefined user state scenarios for testing (8 scenarios: New User, Returning User, Weekend User, Past Deadline, High Streak, Struggling User, Evening Check, Reset All)
 - Available sequences defined in `AppConstants.availableSequences`
 - Current sequences: welcome_seq, onboarding_seq, taskChecking_seq, taskSetting_seq, sendoff_seq, success_seq, failure_seq, task_config_seq, task_config_test_seq, day_tracking_test_seq
 
@@ -370,11 +380,24 @@ The app uses a **MessageType enum** system that replaces legacy boolean flags:
 - **Chat Controls**: Reset Chat, Clear Messages, Reload Sequence buttons
 - **Data Management**: "Clear All Data" removes all stored user data (with confirmation)
 - **Sequence Selection**: Dropdown to switch between sequences
+- **Test Scenarios**: Predefined user state scenarios for rapid testing
+  - New User, Returning User, Weekend User, Past Deadline, High Streak, etc.
+  - Simple dropdown selection + Apply button workflow
+  - 8 predefined scenarios in `assets/debug/scenarios.json`
+  - Instant state changes for testing different user personas
 - **Date & Time Testing**: DateTimePickerWidget for testing task management features
   - Task date selection with quick preset options (today, yesterday)
   - Deadline option selection (Morning, Afternoon, Evening, Night)
   - Real-time display of computed boolean values (isActiveDay, isPastDeadline)
   - Integration with SessionService for immediate testing
+- **Variable Editing**: Inline editing of user data variables
+  - **String variables**: Click edit → text input → save/cancel
+  - **Integer variables**: Click edit → number input → save/cancel  
+  - **Boolean variables**: Instant toggle switches (no edit buttons)
+  - **TimeOfDay enum**: Dropdown with user-friendly labels (☀️ Morning, 🌅 Evening, etc.)
+  - **Grouped display**: Variables organized by category (User Profile, Session Tracking, Task Management)
+  - **Type-safe editing**: Proper validation and error handling
+  - **Read-only protection**: Computed values like `isActiveDay` cannot be edited
 - Current sequence and message count displayed in panel
 
 ### Custom Value Storage
@@ -429,6 +452,12 @@ flutter analyze            # Static analysis
 # 1. Place exported JSON files in assets/sequences/
 # 2. Add to AppConstants.availableSequences
 # 3. Add display names to ChatConfig.sequenceDisplayNames
+
+# Debug Scenarios
+# 1. Edit assets/debug/scenarios.json with any text editor
+# 2. Add new scenarios or modify existing ones
+# 3. Hot reload to see changes in debug panel dropdown
+# 4. Select scenario → click Apply → instant state change
 ```
 
 ### Cross-Sequence Navigation Syntax
@@ -546,6 +575,27 @@ flutter analyze            # Static analysis
 - **Removed Legacy Assets**: Deleted unused `chat_script.json` and related constants
 - **Fixed Type Casting Issues**: Enhanced `DateTimePickerWidget` to handle both string and integer deadline formats
 - **Backward Compatibility**: Added defensive type handling for existing user data
+
+### Debug Panel Enhancement System (December 2024)
+- **Scenario Management**: Added comprehensive test scenario system for rapid user state simulation
+  - `ScenarioManager` service for loading and applying predefined scenarios
+  - 8 predefined scenarios in `assets/debug/scenarios.json` (New User, Returning User, Weekend User, etc.)
+  - Simple dropdown selection + Apply button workflow
+  - Instant state changes for testing different user personas and edge cases
+- **Variable Inline Editing**: Enhanced debug panel with type-aware variable editing
+  - **String variables**: Click-to-edit with text input and save/cancel buttons
+  - **Integer variables**: Number input with validation and type-safe saving
+  - **Boolean variables**: Instant toggle switches with immediate saving
+  - **TimeOfDay enum**: User-friendly dropdown (☀️ Morning, 🌅 Evening, etc.) instead of raw numbers
+  - **Type-safe editing**: Proper validation, error handling, and data type preservation
+  - **Read-only protection**: Computed values like `isActiveDay` and `isPastDeadline` cannot be edited
+- **Grouped Variable Display**: Organized debug panel with logical categorization
+  - **👤 User Profile**: `user.name`, `user.streak`, `user.isOnboarded`, etc.
+  - **⏰ Session Tracking**: `session.visitCount`, `session.timeOfDay`, `session.isWeekend`, etc.
+  - **📋 Task Management**: `task.currentDate`, `task.deadlineTime`, `task.isActiveDay`, etc.
+  - **Category headers** with icons, sorted variables within categories, improved visual hierarchy
+- **UI/UX Improvements**: Fixed dropdown overflow issues, enhanced visual feedback, consistent spacing
+- **Benefits**: Dramatically improved debugging efficiency, better developer experience, safer variable editing
 
 ### Key Configuration Changes
 - `AppConstants.defaultSequenceId = 'welcome_seq'`

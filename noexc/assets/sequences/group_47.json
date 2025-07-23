@@ -13,7 +13,7 @@
       "id": 41,
       "type": "choice",
       "contentKey": "user_choose_day",
-      "storeKey": "task.active_days",
+      "storeKey": "task.activeDays",
       "choices": [
         {
           "text": "Every. Single. Day.",

@@ -12,7 +12,7 @@
     {
       "id": 101,
       "type": "choice",
-      "storeKey": "task.current_status",
+      "storeKey": "task.currentStatus",
       "choices": [
         {
           "text": "You bet",

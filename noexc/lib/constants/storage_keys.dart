@@ -21,15 +21,15 @@ class StorageKeys {
   
   // Task configuration keys
   static const String taskPrefix = 'task.';
-  static const String taskDeadlineTime = '${taskPrefix}deadline_time';
-  static const String taskActiveDays = '${taskPrefix}active_days';
-  static const String taskCurrentDate = '${taskPrefix}current_date';
-  static const String taskCurrentStatus = '${taskPrefix}current_status';
-  static const String taskPreviousDate = '${taskPrefix}previous_date';
-  static const String taskPreviousStatus = '${taskPrefix}previous_status';
-  static const String taskPreviousTask = '${taskPrefix}previous_task';
-  static const String taskLastAutoUpdate = '${taskPrefix}last_auto_update';
-  static const String taskAutoUpdateReason = '${taskPrefix}auto_update_reason';
+  static const String taskDeadlineTime = '${taskPrefix}deadlineTime';
+  static const String taskActiveDays = '${taskPrefix}activeDays';
+  static const String taskCurrentDate = '${taskPrefix}currentDate';
+  static const String taskCurrentStatus = '${taskPrefix}currentStatus';
+  static const String taskPreviousDate = '${taskPrefix}previousDate';
+  static const String taskPreviousStatus = '${taskPrefix}previousStatus';
+  static const String taskPreviousTask = '${taskPrefix}previousTask';
+  static const String taskLastAutoUpdate = '${taskPrefix}lastAutoUpdate';
+  static const String taskAutoUpdateReason = '${taskPrefix}autoUpdateReason';
   static const String taskIsActiveDay = '${taskPrefix}isActiveDay';
   static const String taskIsPastDeadline = '${taskPrefix}isPastDeadline';
   

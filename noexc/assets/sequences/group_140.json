@@ -28,7 +28,7 @@
           "nextMessageId": 81
         },
         {
-          "condition": "task.previous_status !=  null",
+          "condition": "task.previousStatus !=  null",
           "sequenceId": "group_133"
         }
       ]
@@ -39,19 +39,19 @@
       "contentKey": "current_task_check",
       "routes": [
         {
-          "condition": "task.current_status == \"overdue\"",
+          "condition": "task.currentStatus == 'overdue'",
           "sequenceId": "group_135"
         },
         {
-          "condition": "task.current_status == \"failed\"",
+          "condition": "task.currentStatus == 'failed'",
           "sequenceId": "group_154"
         },
         {
-          "condition": "task.current_status == \"pending\"",
+          "condition": "task.currentStatus == 'pending'",
           "sequenceId": "group_150"
         },
         {
-          "condition": "task.current_status == \"completed\"",
+          "condition": "task.currentStatus == 'completed'",
           "sequenceId": "group_153"
         }
       ]

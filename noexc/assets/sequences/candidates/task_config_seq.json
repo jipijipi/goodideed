@@ -13,7 +13,7 @@
       "id": 2,
       "type": "choice",
       "text": "Choose your preferred completion time:",
-      "storeKey": "task.deadline_time",
+      "storeKey": "task.deadlineTime",
       "choices": [
         {
           "text": "Morning (before noon)",
@@ -47,7 +47,7 @@
       "id": 4,
       "type": "choice",
       "text": "Select your active days:",
-      "storeKey": "task.active_days",
+      "storeKey": "task.activeDays",
       "choices": [
         {
           "text": "Every day (7 days a week)",
@@ -80,7 +80,7 @@
     {
       "id": 6,
       "type": "bot",
-      "text": "📅 **Your Task Schedule:**\n\n⏰ **Deadline Time:** {task.deadline_time|Not set}\n📋 **Active Days:** {task.active_days|Not set}\n\nYour daily tasks will be due by your selected time on your chosen active days!",
+      "text": "📅 **Your Task Schedule:**\n\n⏰ **Deadline Time:** {task.deadlineTime|Not set}\n📋 **Active Days:** {task.activeDays|Not set}\n\nYour daily tasks will be due by your selected time on your chosen active days!",
       "nextMessageId": 7
     },
     {

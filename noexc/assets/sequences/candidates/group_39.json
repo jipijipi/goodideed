@@ -13,26 +13,26 @@
       "id": 33,
       "type": "choice",
       "contentKey": "user_choose_time",
-      "storeKey": "task.deadline_time",
+      "storeKey": "task.deadlineTime",
       "choices": [
         {
           "text": "By morning",
-          "value": "morning",
+          "value": 1,
           "nextMessageId": 34
         },
         {
           "text": "By the afternoon",
-          "value": "afternoon",
+          "value": 2,
           "nextMessageId": 35
         },
         {
           "text": "By the evening",
-          "value": "evening",
+          "value": 3,
           "nextMessageId": 36
         },
         {
           "text": "By night time",
-          "value": "night",
+          "value": 4,
           "nextMessageId": 37
         }
       ]
@@ -40,31 +40,31 @@
     {
       "id": 34,
       "contentKey": "bot_react_morning",
-      "text": "{task.deadline_time}, early riser, good.",
+      "text": "{task.deadlineTime}, early riser, good.",
       "nextMessageId": 38
     },
     {
       "id": 38,
       "contentKey": "bot_warn_deadline",
-      "text": "By {task.deadline_time} everyday, I'll consider you've failed.",
+      "text": "By {task.deadlineTime} everyday, I'll consider you've failed.",
       "sequenceId": "group_47"
     },
     {
       "id": 35,
       "contentKey": "bot_react_afternoon",
-      "text": "{task.deadline_time}, neat",
+      "text": "{task.deadlineTime}, neat",
       "nextMessageId": 38
     },
     {
       "id": 36,
       "contentKey": "bot_react_evening",
-      "text": "{task.deadline_time}, noted",
+      "text": "{task.deadlineTime}, noted",
       "nextMessageId": 38
     },
     {
       "id": 37,
       "contentKey": "bot_react_night",
-      "text": "{task.deadline_time}, giving yourself all the time possible, nice",
+      "text": "{task.deadlineTime}, giving yourself all the time possible, nice",
       "nextMessageId": 38
     }
   ]

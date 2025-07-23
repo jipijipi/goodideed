@@ -12,7 +12,7 @@
     {
       "id": 101,
       "type": "choice",
-      "storeKey": "task.current_status",
+      "storeKey": "task.currentStatus",
       "choices": [
         {
           "text": "You bet",
@@ -36,7 +36,7 @@
     },
     {
       "id": 136,
-      "text": "All right, see you by {task.deadline_time}",
+      "text": "All right, see you by {task.deadline}",
       "sequenceId": "group_59"
     },
     {

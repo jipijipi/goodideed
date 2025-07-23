@@ -12,7 +12,7 @@
     {
       "id": 2,
       "type": "bot",
-      "text": "📊 **Current Configuration:**\n\n⏰ **Deadline Time:** {task.deadline_time|Not configured}\n📅 **Active Days:** {task.active_days|Not configured}\n\nDeadline Time Values:\n• 1 = Morning\n• 2 = Afternoon  \n• 3 = Evening\n• 4 = Night\n\nActive Days Format: [1,2,3,4,5,6,7] where 1=Monday, 7=Sunday",
+      "text": "📊 **Current Configuration:**\n\n⏰ **Deadline Time:** {task.deadlineTime|Not configured}\n📅 **Active Days:** {task.activeDays|Not configured}\n\nDeadline Time Values:\n• 1 = Morning\n• 2 = Afternoon  \n• 3 = Evening\n• 4 = Night\n\nActive Days Format: [1,2,3,4,5,6,7] where 1=Monday, 7=Sunday",
       "nextMessageId": 3
     },
     {
@@ -47,7 +47,7 @@
       "type": "dataAction",
       "action": {
         "type": "set",
-        "key": "task.deadline_time",
+        "key": "task.deadlineTime",
         "value": 3
       },
       "nextMessageId": 5
@@ -55,7 +55,7 @@
     {
       "id": 5,
       "type": "bot",
-      "text": "✅ **Manual Test Complete**\n\nI've set your deadline time to 3 (Evening). Current value: {task.deadline_time}\n\nThis should now show '3' if the storage is working correctly.",
+      "text": "✅ **Manual Test Complete**\n\nI've set your deadline time to 3 (Evening). Current value: {task.deadlineTime}\n\nThis should now show '3' if the storage is working correctly.",
       "nextMessageId": 3
     },
     {
@@ -63,7 +63,7 @@
       "type": "dataAction",
       "action": {
         "type": "set",
-        "key": "task.active_days",
+        "key": "task.activeDays",
         "value": [1, 2, 3, 4, 5]
       },
       "nextMessageId": 7
@@ -71,7 +71,7 @@
     {
       "id": 7,
       "type": "bot",
-      "text": "✅ **Manual Test Complete**\n\nI've set your active days to [1,2,3,4,5] (Weekdays). Current value: {task.active_days}\n\nThis should now show the weekday array if storage is working correctly.",
+      "text": "✅ **Manual Test Complete**\n\nI've set your active days to [1,2,3,4,5] (Weekdays). Current value: {task.activeDays}\n\nThis should now show the weekday array if storage is working correctly.",
       "nextMessageId": 3
     },
     {
@@ -79,7 +79,7 @@
       "type": "dataAction",
       "action": {
         "type": "set",
-        "key": "task.deadline_time",
+        "key": "task.deadlineTime",
         "value": null
       },
       "nextMessageId": 9
@@ -89,7 +89,7 @@
       "type": "dataAction",
       "action": {
         "type": "set",
-        "key": "task.active_days",
+        "key": "task.activeDays",
         "value": null
       },
       "nextMessageId": 10
@@ -97,7 +97,7 @@
     {
       "id": 10,
       "type": "bot",
-      "text": "🗑️ **Configuration Cleared**\n\nI've cleared your task configuration. Values should now show fallback text:\n\n⏰ **Deadline Time:** {task.deadline_time|Not configured}\n📅 **Active Days:** {task.active_days|Not configured}",
+      "text": "🗑️ **Configuration Cleared**\n\nI've cleared your task configuration. Values should now show fallback text:\n\n⏰ **Deadline Time:** {task.deadlineTime|Not configured}\n📅 **Active Days:** {task.activeDays|Not configured}",
       "nextMessageId": 3
     }
   ]

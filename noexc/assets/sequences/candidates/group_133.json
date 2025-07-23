@@ -9,11 +9,11 @@
       "contentKey": "previous_task_check",
       "routes": [
         {
-          "condition": "task.previous_status == \"pending\"",
+          "condition": "task.previousStatus == \"pending\"",
           "nextMessageId": 87
         },
         {
-          "condition": "task.previous_status == \"failed\"",
+          "condition": "task.previousStatus == \"failed\"",
           "nextMessageId": 79
         }
       ]
@@ -31,7 +31,7 @@
       "dataActions": [
         {
           "type": "reset",
-          "key": "task.previous_status",
+          "key": "task.previousStatus",
           "value": ""
         }
       ],

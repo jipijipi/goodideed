@@ -136,7 +136,8 @@ The authoring tool supports advanced cross-sequence navigation:
 
 ### Asset Structure
 - `assets/sequences/` - JSON conversation flows
-- `assets/variants/` - Text variant files (format: `{sequenceId}_message_{messageId}.txt`)
+- `assets/content/` - **NEW** Semantic content system (organized by actor/action/subject)
+- `assets/variants/` - Legacy text variant files (format: `{sequenceId}_message_{messageId}.txt`)
 - `assets/debug/` - Debug and testing assets
   - `scenarios.json` - Predefined user state scenarios for testing (8 scenarios: New User, Returning User, Weekend User, Past Deadline, High Streak, Struggling User, Evening Check, Reset All)
 - Available sequences defined in `AppConstants.availableSequences`
@@ -192,11 +193,82 @@ The authoring tool supports advanced cross-sequence navigation:
   - `task.isActiveDay == true` - Today is configured as an active day
   - `task.isPastDeadline == true` - Current time is past user's deadline
 
-### Text Variants
-- Random text variations loaded from `assets/variants/`
-- NOT applied to choice messages, text inputs, auto-routes, or multi-text messages
-- Supports separator-formatted variants for consistency
-- Cached for performance
+### Semantic Content Management System (NEW)
+The app now uses a **dynamic semantic content system** that replaces the legacy text variants system:
+
+#### **Core Architecture**
+- **Semantic Keys**: Content referenced by meaning, not location (`bot.acknowledge.completion.positive`)
+- **Graceful Fallbacks**: 5+ fallback levels ensure content always resolves
+- **Cross-Sequence Reuse**: Same content used across multiple sequences
+- **Ordered Modifiers**: Simple left-to-right importance (tone → experience → context)
+- **Full Integration**: Works with choices, multi-text, and all message types
+
+#### **Key Components**
+- **SemanticContentService** (`lib/services/semantic_content_service.dart`) - Singleton service with caching
+- **SemanticContentResolver** (`lib/services/content/semantic_content_resolver.dart`) - Core resolution logic
+- **ChatMessage.contentKey** - Added contentKey field to ChatMessage and Choice models
+- **Content Directory** (`assets/content/`) - Organized by actor → action → subject structure
+
+#### **Semantic Key Structure**
+```
+{actor}.{action}.{subject}[.modifier1][.modifier2]...
+
+Examples:
+bot.acknowledge.completion.positive
+user.choose.task_status.completed
+bot.request.input.gentle.first_time
+```
+
+#### **File System Organization**
+```
+assets/content/
+├── bot/acknowledge/
+│   ├── completion.txt                    # Generic completion
+│   ├── completion_positive.txt           # Positive tone
+│   └── task_completion_celebratory.txt   # Task-specific celebration
+├── user/choose/
+│   └── task_status.txt                   # User choice options
+└── system/inform/
+    └── connectivity.txt                  # System messages
+```
+
+#### **Content Resolution Fallback Chain**
+1. `bot/acknowledge/task_completion_positive_first_time.txt` (exact match)
+2. `bot/acknowledge/task_completion_positive.txt` (remove last modifier)
+3. `bot/acknowledge/task_completion.txt` (remove all modifiers)
+4. `bot/acknowledge/completion_positive_first_time.txt` (generic subject)
+5. `bot/acknowledge/completion_positive.txt` (generic + fewer modifiers)
+6. `bot/acknowledge/completion.txt` (generic subject only)
+7. `bot/acknowledge/default.txt` (action default)
+8. [original text from JSON] (final fallback)
+
+#### **TDD Implementation**
+- **28 comprehensive tests** covering all functionality
+- **SemanticContentResolver**: 11 tests (parsing, fallbacks, caching)
+- **SemanticContentService**: 7 tests (singleton, error handling)
+- **ChatMessage ContentKey**: 10 tests (serialization, multi-text, choices)
+- **All existing tests still pass** (87+ total tests, no regressions)
+
+#### **Usage in JSON Sequences**
+```json
+{
+  "id": 1,
+  "type": "bot",
+  "text": "Great work!",
+  "contentKey": "bot.acknowledge.completion.positive"
+}
+```
+
+#### **Legacy Text Variants**
+- Legacy `assets/variants/` files still supported for backward compatibility
+- New content should use semantic system in `assets/content/`
+- Migration tools available for converting legacy content
+
+#### **Content Authoring**
+- **Complete Documentation**: See `docs/CONTENT_AUTHORING_GUIDE.md`
+- **No Code Changes**: New content works automatically via fallback system
+- **Localization Ready**: Clean separation for multi-language support
+- **Performance Optimized**: Intelligent caching and minimal file I/O
 
 ### Testing (Test-Driven Development Required)
 - **ALWAYS use Test-Driven Development (TDD)** for this project
@@ -507,6 +579,21 @@ flutter analyze            # Static analysis
 ```
 
 ## Recent Major Changes (December 2024 - July 2025)
+
+### Semantic Content Management System (July 2025)
+- **New Content Architecture**: Replaced legacy text variants with semantic content system
+- **TDD Implementation**: 28 comprehensive tests using Red-Green-Refactor methodology
+- **Core Components Added**: 
+  - `SemanticContentService` - Singleton service with caching
+  - `SemanticContentResolver` - Dynamic content resolution with graceful fallbacks
+  - `ChatMessage.contentKey` and `Choice.contentKey` fields
+- **File System Organization**: `assets/content/` with actor → action → subject structure
+- **Semantic Keys**: `{actor}.{action}.{subject}[.modifier1][.modifier2]...` pattern
+- **Graceful Fallbacks**: 8-level fallback chain ensures content always resolves
+- **Cross-Sequence Reuse**: Same contentKeys work across multiple sequences
+- **Full Documentation**: Complete authoring guide in `docs/CONTENT_AUTHORING_GUIDE.md`
+- **Backward Compatibility**: Legacy `assets/variants/` still supported
+- **Benefits**: Better content organization, infinite scalability, localization-ready
 
 ### Architecture Refactoring (July 2025)
 - **ChatService Refactor**: Split into focused processors for better separation of concerns

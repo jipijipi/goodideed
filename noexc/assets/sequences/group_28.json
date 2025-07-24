@@ -22,10 +22,12 @@
       "choices": [
         {
           "text": "Hi Tristopher!",
+          "contentKey": "user.greet.character.friendly",
           "nextMessageId": 8
         },
         {
           "text": "Whatever",
+          "contentKey": "user.greet.character.snarky",
           "nextMessageId": 9
         }
       ]

@@ -5,37 +5,36 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot_ask_days",
+      "contentKey": "bot.request.active_days.casual",
       "text": "On which days of the week can you achieve your task? ({user.task})",
       "nextMessageId": 41
     },
     {
       "id": 41,
       "type": "choice",
-      "contentKey": "user_choose_day",
       "storeKey": "task.activeDays",
       "choices": [
         {
           "text": "Every. Single. Day.",
-          "contentKey": "choice_active_days_all",
+          "contentKey": "user.choose.active_days.all",
           "value": "[1,2,3,4,5,6,7]",
           "nextMessageId": 42
         },
         {
           "text": "Only on weekends.",
-          "contentKey": "choice_active_days_weekends",
+          "contentKey": "user.choose.active_days.weekends",
           "value": "[6,7]",
           "nextMessageId": 43
         },
         {
           "text": "It's more complicated",
-          "contentKey": "choice_active_days_custom",
+          "contentKey": "user.choose.active_days.custom",
           "value": null,
           "nextMessageId": 44
         },
         {
           "text": "Only on week days",
-          "contentKey": "choice_active_days_weekends",
+          "contentKey": "user.choose.active_days.weekends",
           "value": "[1,2,3,4,5]",
           "nextMessageId": 45
         }
@@ -43,7 +42,7 @@
     },
     {
       "id": 42,
-      "contentKey": "bot_react_days_all",
+      "contentKey": "bot.acknowledge.active_days.all",
       "text": "Everyday. Right on.",
       "nextMessageId": 46
     },
@@ -54,13 +53,13 @@
     },
     {
       "id": 43,
-      "contentKey": "bot_react_days_weekend",
+      "contentKey": "bot.acknowledge.active_days.weekend",
       "text": "Little weekend project is it?",
       "nextMessageId": 46
     },
     {
       "id": 44,
-      "contentKey": "bot_react_days_custom",
+      "contentKey": "bot.acknowledge.active_days.custom",
       "text": "Well this app can't deal with that yet your majesty",
       "nextMessageId": 155
     },
@@ -71,7 +70,7 @@
     },
     {
       "id": 45,
-      "contentKey": "bot_react_days_week",
+      "contentKey": "bot.acknowledge.active_days.weekdays",
       "text": "Giving yourself a bit of rest on the weekend, I get that.",
       "nextMessageId": 46
     }

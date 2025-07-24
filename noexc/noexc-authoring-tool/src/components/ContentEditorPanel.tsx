@@ -8,6 +8,8 @@ interface ContentEditorPanelProps {
   directoryHandle: FileSystemDirectoryHandle | null;
   onNotification: (message: string) => void;
   onError: (title: string, messages: string[]) => void;
+  nodeCategory?: string;
+  isEdge?: boolean;
 }
 
 const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
@@ -17,16 +19,56 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
   isVisible,
   directoryHandle,
   onNotification,
-  onError
+  onError,
+  nodeCategory,
+  isEdge
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState('');
   const [isLoadingExisting, setIsLoadingExisting] = useState(false);
   const [hasExistingContent, setHasExistingContent] = useState(false);
 
+  const shouldLoadContent = (key: string, category?: string, edge?: boolean): boolean => {
+    if (!key) return false;
+    
+    // Edges (choice options) can always have content
+    if (edge) return true;
+    
+    // Only bot/user nodes can have text content
+    return category === 'bot' || category === 'user';
+  };
+
+  const getContentMessage = (category?: string, edge?: boolean): { canEdit: boolean; message: string; icon: string } => {
+    if (edge) {
+      return { canEdit: true, message: 'Choice option text variants', icon: '🔘' };
+    }
+    
+    switch (category) {
+      case 'bot':
+      case 'user':
+        return { canEdit: true, message: 'Message text variants', icon: '💬' };
+      case 'choice':
+        return { canEdit: false, message: 'Choice options have individual content (select edges to edit)', icon: '🔘' };
+      case 'textInput':
+        return { canEdit: false, message: 'Text input uses placeholder text, not content variants', icon: '⌨️' };
+      case 'autoroute':
+        return { canEdit: false, message: 'Autoroute uses conditions, not text content', icon: '🔀' };
+      case 'dataAction':
+        return { canEdit: false, message: 'Data actions use operations, not text content', icon: '⚙️' };
+      default:
+        return { canEdit: false, message: 'Content variants not applicable for this node type', icon: '❓' };
+    }
+  };
+
 
   const loadExistingContent = async (key: string) => {
     if (!key || !directoryHandle) {
+      setHasExistingContent(false);
+      return;
+    }
+    
+    // Only load content for supported node/edge types
+    if (!shouldLoadContent(key, nodeCategory, isEdge)) {
       setHasExistingContent(false);
       return;
     }
@@ -82,7 +124,7 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
       setEditText('');
       setHasExistingContent(false);
     }
-  }, [contentKey, currentVariants, directoryHandle]);
+  }, [contentKey, currentVariants, directoryHandle, nodeCategory, isEdge]);
 
   const saveToFileSystem = async (key: string, variants: string[]) => {
     if (!directoryHandle || !key) return false;
@@ -147,6 +189,8 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
     return `content/${actor}/${action}/${fileName}`;
   };
 
+  const contentInfo = getContentMessage(nodeCategory, isEdge);
+
   if (!isVisible || !contentKey) {
     return null;
   }
@@ -173,7 +217,7 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
         paddingBottom: '8px'
       }}>
         <span style={{ fontSize: '18px', marginRight: '8px' }}>
-          {isLoadingExisting ? '⏳' : hasExistingContent ? '📁' : '✨'}
+          {isLoadingExisting ? '⏳' : hasExistingContent ? '📁' : contentInfo.icon}
         </span>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
@@ -182,134 +226,150 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
           <div style={{ fontSize: '11px', color: '#666', fontFamily: 'monospace' }}>
             {getFilePathFromContentKey(contentKey)}
           </div>
-          <div style={{ fontSize: '10px', color: hasExistingContent ? '#28a745' : '#6c757d', marginTop: '2px' }}>
+          <div style={{ fontSize: '10px', color: hasExistingContent ? '#28a745' : contentInfo.canEdit ? '#6c757d' : '#ffc107', marginTop: '2px' }}>
             {isLoadingExisting ? 'Loading existing content...' :
              hasExistingContent ? 'Loaded from existing file' : 
-             directoryHandle ? 'New content (will save to Flutter)' : 'New content (connect Flutter to sync)'}
+             contentInfo.canEdit ? 
+               (directoryHandle ? 'New content (will save to Flutter)' : 'New content (connect Flutter to sync)') :
+               contentInfo.message}
           </div>
         </div>
       </div>
 
-      {!isEditing ? (
-        <div>
-          <div style={{
-            backgroundColor: '#f8f9fa',
-            border: '1px solid #e9ecef',
-            borderRadius: '4px',
-            padding: '8px',
-            marginBottom: '12px',
-            maxHeight: '200px',
-            overflowY: 'auto',
-            fontSize: '13px',
-            lineHeight: '1.4'
-          }}>
-            {currentVariants.length > 0 ? (
-              currentVariants.map((variant, index) => (
-                <div key={index} style={{ 
-                  marginBottom: index < currentVariants.length - 1 ? '4px' : '0',
-                  color: '#495057'
-                }}>
-                  {variant}
-                </div>
-              ))
-            ) : (
-              <div style={{ color: '#6c757d', fontStyle: 'italic' }}>
-                No variants defined
-              </div>
-            )}
-          </div>
-          
-          <button
-            onClick={() => setIsEditing(true)}
-            style={{
-              backgroundColor: '#007bff',
-              color: 'white',
-              border: 'none',
-              padding: '6px 12px',
-              borderRadius: '4px',
-              fontSize: '12px',
-              cursor: 'pointer',
-              width: '100%'
-            }}
-          >
-            ✏️ Edit Variants
-          </button>
-          
-          <div style={{ 
-            fontSize: '11px', 
-            color: '#6c757d', 
-            marginTop: '8px',
-            textAlign: 'center'
-          }}>
-            {currentVariants.length > 0 
-              ? `${currentVariants.length} variant${currentVariants.length === 1 ? '' : 's'} defined`
-              : 'Click to add variants'
-            }
-          </div>
-        </div>
-      ) : (
-        <div>
-          <textarea
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            placeholder="Enter variants, one per line..."
-            style={{
-              width: '100%',
-              height: '150px',
-              border: '1px solid #ddd',
+      {contentInfo.canEdit ? (
+        !isEditing ? (
+          <div>
+            <div style={{
+              backgroundColor: '#f8f9fa',
+              border: '1px solid #e9ecef',
               borderRadius: '4px',
               padding: '8px',
+              marginBottom: '12px',
+              maxHeight: '200px',
+              overflowY: 'auto',
               fontSize: '13px',
-              resize: 'vertical',
-              fontFamily: 'inherit'
-            }}
-          />
-          
-          <div style={{ 
-            display: 'flex', 
-            gap: '8px', 
-            marginTop: '12px' 
-          }}>
+              lineHeight: '1.4'
+            }}>
+              {currentVariants.length > 0 ? (
+                currentVariants.map((variant, index) => (
+                  <div key={index} style={{ 
+                    marginBottom: index < currentVariants.length - 1 ? '4px' : '0',
+                    color: '#495057'
+                  }}>
+                    {variant}
+                  </div>
+                ))
+              ) : (
+                <div style={{ color: '#6c757d', fontStyle: 'italic' }}>
+                  No variants defined
+                </div>
+              )}
+            </div>
+            
             <button
-              onClick={handleSave}
+              onClick={() => setIsEditing(true)}
               style={{
-                backgroundColor: '#28a745',
+                backgroundColor: '#007bff',
                 color: 'white',
                 border: 'none',
                 padding: '6px 12px',
                 borderRadius: '4px',
                 fontSize: '12px',
                 cursor: 'pointer',
-                flex: 1
+                width: '100%'
               }}
             >
-              💾 Save
+              ✏️ Edit Variants
             </button>
-            <button
-              onClick={handleCancel}
+            
+            <div style={{ 
+              fontSize: '11px', 
+              color: '#6c757d', 
+              marginTop: '8px',
+              textAlign: 'center'
+            }}>
+              {currentVariants.length > 0 
+                ? `${currentVariants.length} variant${currentVariants.length === 1 ? '' : 's'} defined`
+                : 'Click to add variants'
+              }
+            </div>
+          </div>
+        ) : (
+          <div>
+            <textarea
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              placeholder="Enter variants, one per line..."
               style={{
-                backgroundColor: '#6c757d',
-                color: 'white',
-                border: 'none',
-                padding: '6px 12px',
+                width: '100%',
+                height: '150px',
+                border: '1px solid #ddd',
                 borderRadius: '4px',
-                fontSize: '12px',
-                cursor: 'pointer',
-                flex: 1
+                padding: '8px',
+                fontSize: '13px',
+                resize: 'vertical',
+                fontFamily: 'inherit'
               }}
-            >
-              ❌ Cancel
-            </button>
+            />
+            
+            <div style={{ 
+              display: 'flex', 
+              gap: '8px', 
+              marginTop: '12px' 
+            }}>
+              <button
+                onClick={handleSave}
+                style={{
+                  backgroundColor: '#28a745',
+                  color: 'white',
+                  border: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  flex: 1
+                }}
+              >
+                💾 Save
+              </button>
+              <button
+                onClick={handleCancel}
+                style={{
+                  backgroundColor: '#6c757d',
+                  color: 'white',
+                  border: 'none',
+                  padding: '6px 12px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  flex: 1
+                }}
+              >
+                ❌ Cancel
+              </button>
+            </div>
+            
+            <div style={{ 
+              fontSize: '11px', 
+              color: '#6c757d', 
+              marginTop: '8px',
+              textAlign: 'center'
+            }}>
+              Tip: One variant per line
+            </div>
           </div>
-          
-          <div style={{ 
-            fontSize: '11px', 
-            color: '#6c757d', 
-            marginTop: '8px',
-            textAlign: 'center'
-          }}>
-            Tip: One variant per line
-          </div>
+        )
+      ) : (
+        <div style={{
+          backgroundColor: '#fff3cd',
+          border: '1px solid #ffeaa7',
+          borderRadius: '4px',
+          padding: '12px',
+          textAlign: 'center',
+          fontSize: '13px',
+          color: '#856404'
+        }}>
+          {contentInfo.message}
         </div>
       )}
     </div>

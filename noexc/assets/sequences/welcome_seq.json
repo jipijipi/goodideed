@@ -6,7 +6,6 @@
     {
       "id": 1,
       "type": "autoroute",
-      "contentKey": "user_onboarded_check",
       "routes": [
         {
           "condition": "user.name==null",
@@ -25,7 +24,6 @@
     {
       "id": 63,
       "type": "autoroute",
-      "contentKey": "active_day_check",
       "routes": [
         {
           "default": true,

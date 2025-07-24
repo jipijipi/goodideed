@@ -1550,8 +1550,8 @@ function Flow() {
         message.type = node.data.category;
       }
       
-      // Add contentKey if provided
-      if (node.data.contentKey) {
+      // Add contentKey only for message types that support text content
+      if (node.data.contentKey && ['bot', 'user'].includes(node.data.category)) {
         message.contentKey = node.data.contentKey;
       }
       
@@ -2427,6 +2427,8 @@ function Flow() {
         directoryHandle={directoryHandle}
         onNotification={showNotification}
         onError={showError}
+        nodeCategory={selectedNodes.length === 1 ? selectedNodes[0].data.category : undefined}
+        isEdge={!!selectedEdge}
       />
       
       {/* Success Notification */}

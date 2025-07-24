@@ -5,7 +5,7 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "task_check_pending",
+      "contentKey": "bot.request.task_status.casual",
       "text": "Did it already?",
       "nextMessageId": 101
     },
@@ -16,19 +16,19 @@
       "choices": [
         {
           "text": "You bet",
-          "contentKey": "choice_completed",
+          "contentKey": "user.choose.task_status.completed",
           "value": "completed",
           "nextMessageId": 137
         },
         {
           "text": "not yet",
-          "contentKey": "choice_pending",
+          "contentKey": "user.choose.task_status.pending",
           "value": "pending",
           "nextMessageId": 136
         },
         {
           "text": "I'm on it as we speak",
-          "contentKey": "choice_started",
+          "contentKey": "user.choose.task_status.started",
           "value": "pending",
           "nextMessageId": 146
         }
@@ -41,7 +41,7 @@
     },
     {
       "id": 137,
-      "contentKey": "bot_react_completed",
+      "contentKey": "bot.acknowledge.completion.positive",
       "text": "Holy hell",
       "sequenceId": "group_145"
     },

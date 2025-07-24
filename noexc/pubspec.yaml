@@ -64,6 +64,17 @@ flutter:
     - assets/variants/
     - assets/debug/
     - assets/content/
+    - assets/content/bot/
+    - assets/content/bot/introduce/
+    - assets/content/bot/inform/
+    - assets/content/bot/acknowledge/
+    - assets/content/bot/request/
+    - assets/content/user/
+    - assets/content/user/choose/
+    - assets/content/user/greet/
+    - assets/content/user/comment/
+    - assets/content/system/
+    - assets/content/system/check/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

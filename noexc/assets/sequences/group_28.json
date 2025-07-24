@@ -5,7 +5,7 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "welcome_first_time",
+      "contentKey": "bot.introduce.character.casual",
       "text": "Hi|||You must be new here",
       "nextMessageId": 6
     },

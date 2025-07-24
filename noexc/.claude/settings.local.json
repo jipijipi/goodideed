@@ -31,7 +31,8 @@
       "Bash(./update_test_storage_keys.sh:*)",
       "Bash(flutter pub:*)",
       "Bash(cp:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(flutter clean:*)"
     ],
     "deny": []
   }

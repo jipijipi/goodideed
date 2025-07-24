@@ -32,24 +32,12 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
     if (!key) return;
     
     setIsLoadingExisting(true);
-    try {
-      const filePath = convertSemanticKeyToFilePath(key);
-      // Try to fetch the existing content file
-      const response = await fetch(filePath);
-      if (response.ok) {
-        const content = await response.text();
-        const variants = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-        if (variants.length > 0) {
-          onContentChange(key, variants);
-          setHasExistingContent(true);
-        }
-      }
-    } catch (error) {
-      // File doesn't exist or can't be loaded - this is fine for new content
+    // Auto-loading disabled: Files aren't accessible via HTTP in React dev server
+    // This prevents loading HTML boilerplate instead of content files
+    setTimeout(() => {
       setHasExistingContent(false);
-    } finally {
       setIsLoadingExisting(false);
-    }
+    }, 100); // Brief loading state for UI feedback
   };
 
   useEffect(() => {
@@ -102,7 +90,7 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
     <div style={{
       position: 'absolute',
       top: '10px',
-      right: '220px',
+      right: '530px',
       background: 'white',
       border: '1px solid #ddd',
       borderRadius: '8px',

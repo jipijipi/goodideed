@@ -1795,10 +1795,10 @@ function Flow() {
         const variants = contentVariants[contentKey];
         
         setTimeout(() => {
-          // Convert semantic key to proper folder structure filename
+          // Convert semantic key to semantic filename only
           const parts = contentKey.split('.');
           const [actor, action, ...rest] = parts;
-          const fileName = `content_${actor}_${action}_${rest.join('_')}.txt`;
+          const fileName = `${rest.join('_')}.txt`;
           const content = variants.join('\n');
           
           const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(content);

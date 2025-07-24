@@ -19,6 +19,7 @@ import 'reactflow/dist/style.css';
 import EditableNode from './components/EditableNode';
 import CustomEdge from './components/CustomEdge';
 import GroupNode from './components/GroupNode';
+import ContentEditorPanel from './components/ContentEditorPanel';
 import { NodeData, NodeCategory, NodeLabel, DataActionItem, NODE_TYPES } from './constants/nodeTypes';
 import { VariableManagerProvider } from './context/VariableManagerContext';
 import VariableManager from './components/VariableManager';
@@ -107,6 +108,7 @@ function Flow() {
   const [notification, setNotification] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showVariableManager, setShowVariableManager] = useState(false);
+  const [contentVariants, setContentVariants] = useState<{ [contentKey: string]: string[] }>({});
   const edgeReconnectSuccessful = useRef(true);
   const { getNodes, zoomTo, fitView } = useReactFlow();
   const { x: viewportX, y: viewportY, zoom } = useViewport();
@@ -472,6 +474,14 @@ function Flow() {
   const onSelectionChange = useCallback(({ nodes, edges }: { nodes: Node[]; edges: Edge[] }) => {
     setSelectedNodes(nodes);
     setSelectedEdge(edges.length === 1 ? edges[0] : null);
+  }, []);
+
+  // Content variants management
+  const handleContentVariantChange = useCallback((contentKey: string, variants: string[]) => {
+    setContentVariants(prev => ({
+      ...prev,
+      [contentKey]: variants
+    }));
   }, []);
 
   // Group field editing callbacks
@@ -1721,6 +1731,27 @@ function Flow() {
         return;
       }
 
+      // Collect all contentKeys from nodes and edges
+      const allContentKeys = new Set<string>();
+      
+      // Collect from nodes
+      nodes.forEach(node => {
+        if (node.data.contentKey && contentVariants[node.data.contentKey]) {
+          allContentKeys.add(node.data.contentKey);
+        }
+      });
+      
+      // Collect from edges
+      edges.forEach(edge => {
+        if (edge.data?.contentKey && contentVariants[edge.data.contentKey]) {
+          allContentKeys.add(edge.data.contentKey);
+        }
+      });
+
+      const contentKeysArray = Array.from(allContentKeys);
+      const totalFiles = exportedSequences.length + contentKeysArray.length;
+      let fileIndex = 0;
+
       // Export each sequence as a separate file with delays to prevent browser throttling
       for (let i = 0; i < exportedSequences.length; i++) {
         const sequence = exportedSequences[i];
@@ -1735,24 +1766,50 @@ function Flow() {
           linkElement.setAttribute('download', exportFileDefaultName);
           linkElement.click();
           
-          // Show progress notification for each file
-          if (i === exportedSequences.length - 1) {
-            // Final notification when all downloads are triggered
-            setTimeout(() => {
-              showNotification(`All ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} exported to Flutter`);
-            }, 100);
-          }
+          fileIndex++;
         }, i * 500); // 500ms delay between downloads
       }
 
+      // Export content variant files
+      for (let i = 0; i < contentKeysArray.length; i++) {
+        const contentKey = contentKeysArray[i];
+        const variants = contentVariants[contentKey];
+        
+        setTimeout(() => {
+          // Convert semantic key to file path: bot.request.excuse.direct -> bot_request_excuse_direct.txt
+          const fileName = contentKey.replace(/\./g, '_') + '.txt';
+          const content = variants.join('\n');
+          
+          const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(content);
+          const linkElement = document.createElement('a');
+          linkElement.setAttribute('href', dataUri);
+          linkElement.setAttribute('download', fileName);
+          linkElement.click();
+          
+          fileIndex++;
+          
+          // Show final notification when all files are exported
+          if (fileIndex === totalFiles) {
+            setTimeout(() => {
+              showNotification(`Exported ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} and ${contentKeysArray.length} content variant file${contentKeysArray.length === 1 ? '' : 's'}`);
+            }, 100);
+          }
+        }, (exportedSequences.length + i) * 500); // Continue delay sequence after sequences
+      }
+
       // Show initial notification immediately
-      showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} to Flutter...`);
+      const hasContentVariants = contentKeysArray.length > 0;
+      if (hasContentVariants) {
+        showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} and ${contentKeysArray.length} content file${contentKeysArray.length === 1 ? '' : 's'}...`);
+      } else {
+        showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} to Flutter...`);
+      }
       
     } catch (error) {
       console.error('Export error:', error);
       showError('Export failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
+  }, [nodes, edges, contentVariants, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
 
   const nodeTemplates = [
     { category: 'bot' as NodeCategory, label: 'Welcome Message' as NodeLabel, text: 'Welcome!', icon: '💬', description: 'Bot message' },
@@ -2082,8 +2139,9 @@ function Flow() {
               fontWeight: 'bold',
               fontSize: '11px'
             }}
+            title={`Export sequences and content variants (${Object.keys(contentVariants).length} content files defined)`}
           >
-            🚀 Export Flutter
+            🚀 Export Flutter {Object.keys(contentVariants).length > 0 && `(+${Object.keys(contentVariants).length} content)`}
           </button>
           
           <button 
@@ -2261,6 +2319,27 @@ function Flow() {
         />
         <Background />
       </ReactFlow>
+      
+      {/* Content Editor Panel */}
+      <ContentEditorPanel
+        contentKey={
+          selectedNodes.length === 1 && selectedNodes[0].data.contentKey 
+            ? selectedNodes[0].data.contentKey
+            : selectedEdge?.data?.contentKey
+        }
+        onContentChange={handleContentVariantChange}
+        currentVariants={
+          selectedNodes.length === 1 && selectedNodes[0].data.contentKey
+            ? contentVariants[selectedNodes[0].data.contentKey] || []
+            : selectedEdge?.data?.contentKey
+            ? contentVariants[selectedEdge.data.contentKey] || []
+            : []
+        }
+        isVisible={
+          (selectedNodes.length === 1 && !!selectedNodes[0].data.contentKey) ||
+          (!!selectedEdge?.data?.contentKey)
+        }
+      />
       
       {/* Success Notification */}
       {notification && (

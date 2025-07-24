@@ -32,7 +32,8 @@
       "Bash(flutter pub:*)",
       "Bash(cp:*)",
       "Bash(git checkout:*)",
-      "Bash(flutter clean:*)"
+      "Bash(flutter clean:*)",
+      "Bash(PORT=3003 npm start)"
     ],
     "deny": []
   }

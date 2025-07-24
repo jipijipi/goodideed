@@ -3,12 +3,14 @@ class Choice {
   final int? nextMessageId;
   final String? sequenceId;
   final dynamic value;
+  final String? contentKey;
 
   Choice({
     required this.text,
     this.nextMessageId,
     this.sequenceId,
     this.value,
+    this.contentKey,
   });
 
   factory Choice.fromJson(Map<String, dynamic> json) {
@@ -18,6 +20,7 @@ class Choice {
       nextMessageId: sequenceId != null ? null : json['nextMessageId'] as int?,
       sequenceId: sequenceId,
       value: json['value'],
+      contentKey: json['contentKey'] as String?,
     );
   }
 
@@ -37,6 +40,10 @@ class Choice {
       json['value'] = value;
     }
     
+    if (contentKey != null) {
+      json['contentKey'] = contentKey;
+    }
+    
     return json;
   }
 
@@ -47,9 +54,10 @@ class Choice {
         other.text == text &&
         other.nextMessageId == nextMessageId &&
         other.sequenceId == sequenceId &&
-        other.value == value;
+        other.value == value &&
+        other.contentKey == contentKey;
   }
 
   @override
-  int get hashCode => text.hashCode ^ nextMessageId.hashCode ^ sequenceId.hashCode ^ value.hashCode;
+  int get hashCode => text.hashCode ^ nextMessageId.hashCode ^ sequenceId.hashCode ^ value.hashCode ^ contentKey.hashCode;
 }

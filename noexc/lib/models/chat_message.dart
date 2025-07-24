@@ -27,6 +27,7 @@ class ChatMessage {
   final String? selectedChoiceText;
   final List<RouteCondition>? routes;
   final List<DataAction>? dataActions;
+  final String? contentKey;
 
   ChatMessage({
     required this.id,
@@ -42,6 +43,7 @@ class ChatMessage {
     this.selectedChoiceText,
     this.routes,
     this.dataActions,
+    this.contentKey,
   }) :
        assert(
          type != MessageType.choice || text.isEmpty,
@@ -133,6 +135,7 @@ class ChatMessage {
       selectedChoiceText: json['selectedChoiceText'] as String?,
       routes: routes,
       dataActions: dataActions,
+      contentKey: json['contentKey'] as String?,
     );
   }
 
@@ -191,6 +194,10 @@ class ChatMessage {
       json['dataActions'] = dataActions!.map((action) => action.toJson()).toList();
     }
 
+    if (contentKey != null) {
+      json['contentKey'] = contentKey!;
+    }
+
     return json;
   }
 
@@ -219,6 +226,41 @@ class ChatMessage {
   
   /// Returns all delays as a list (uses same delay for all split texts)
   List<int> get allDelays => List.filled(allTexts.length, delay);
+  
+  /// Creates a copy of this message with optional field updates
+  ChatMessage copyWith({
+    int? id,
+    String? text,
+    int? delay,
+    String? sender,
+    MessageType? type,
+    List<Choice>? choices,
+    int? nextMessageId,
+    String? sequenceId,
+    String? storeKey,
+    String? placeholderText,
+    String? selectedChoiceText,
+    List<RouteCondition>? routes,
+    List<DataAction>? dataActions,
+    String? contentKey,
+  }) {
+    return ChatMessage(
+      id: id ?? this.id,
+      text: text ?? this.text,
+      delay: delay ?? this.delay,
+      sender: sender ?? this.sender,
+      type: type ?? this.type,
+      choices: choices ?? this.choices,
+      nextMessageId: nextMessageId ?? this.nextMessageId,
+      sequenceId: sequenceId ?? this.sequenceId,
+      storeKey: storeKey ?? this.storeKey,
+      placeholderText: placeholderText ?? this.placeholderText,
+      selectedChoiceText: selectedChoiceText ?? this.selectedChoiceText,
+      routes: routes ?? this.routes,
+      dataActions: dataActions ?? this.dataActions,
+      contentKey: contentKey ?? this.contentKey,
+    );
+  }
   
   /// Creates individual ChatMessage objects for each text in a multi-text message
   List<ChatMessage> expandToIndividualMessages() {
@@ -250,6 +292,7 @@ class ChatMessage {
         selectedChoiceText: selectedChoiceText,
         routes: isLast ? routes : null,
         dataActions: isLast ? dataActions : null,
+        contentKey: isLast ? contentKey : null, // Only last message has contentKey for processing
       ));
     }
     

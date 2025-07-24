@@ -1621,7 +1621,7 @@ function Flow() {
     });
   }, [getNextMessageId, extractChoicesFromEdges, extractRoutesFromEdges]);
 
-  const exportToFlutter = useCallback(() => {
+  const exportSequences = useCallback(() => {
     try {
       // Find all group nodes
       const groupNodes = nodes.filter(node => node.type === NODE_TYPES.GROUP);
@@ -1731,6 +1731,40 @@ function Flow() {
         return;
       }
 
+      // Export each sequence as a separate file with delays to prevent browser throttling
+      for (let i = 0; i < exportedSequences.length; i++) {
+        const sequence = exportedSequences[i];
+        
+        setTimeout(() => {
+          const dataStr = JSON.stringify(sequence, null, 2);
+          const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+          
+          const exportFileDefaultName = `${sequence.sequenceId}.json`;
+          const linkElement = document.createElement('a');
+          linkElement.setAttribute('href', dataUri);
+          linkElement.setAttribute('download', exportFileDefaultName);
+          linkElement.click();
+          
+          // Show final notification for last file
+          if (i === exportedSequences.length - 1) {
+            setTimeout(() => {
+              showNotification(`Exported ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'}`);
+            }, 100);
+          }
+        }, i * 500); // 500ms delay between downloads
+      }
+
+      // Show initial notification immediately
+      showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'}...`);
+      
+    } catch (error) {
+      console.error('Export error:', error);
+      showError('Export failed', [error instanceof Error ? error.message : 'Unknown error']);
+    }
+  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
+
+  const exportContent = useCallback(() => {
+    try {
       // Collect all contentKeys from nodes and edges
       const allContentKeys = new Set<string>();
       
@@ -1749,35 +1783,22 @@ function Flow() {
       });
 
       const contentKeysArray = Array.from(allContentKeys);
-      const totalFiles = exportedSequences.length + contentKeysArray.length;
-      let fileIndex = 0;
-
-      // Export each sequence as a separate file with delays to prevent browser throttling
-      for (let i = 0; i < exportedSequences.length; i++) {
-        const sequence = exportedSequences[i];
-        
-        setTimeout(() => {
-          const dataStr = JSON.stringify(sequence, null, 2);
-          const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-          
-          const exportFileDefaultName = `${sequence.sequenceId}.json`;
-          const linkElement = document.createElement('a');
-          linkElement.setAttribute('href', dataUri);
-          linkElement.setAttribute('download', exportFileDefaultName);
-          linkElement.click();
-          
-          fileIndex++;
-        }, i * 500); // 500ms delay between downloads
+      
+      if (contentKeysArray.length === 0) {
+        showError('No content variants found', ['Add content variants to nodes or edges first']);
+        return;
       }
 
-      // Export content variant files
+      // Export content variant files with proper folder structure naming
       for (let i = 0; i < contentKeysArray.length; i++) {
         const contentKey = contentKeysArray[i];
         const variants = contentVariants[contentKey];
         
         setTimeout(() => {
-          // Convert semantic key to file path: bot.request.excuse.direct -> bot_request_excuse_direct.txt
-          const fileName = contentKey.replace(/\./g, '_') + '.txt';
+          // Convert semantic key to proper folder structure filename
+          const parts = contentKey.split('.');
+          const [actor, action, ...rest] = parts;
+          const fileName = `content_${actor}_${action}_${rest.join('_')}.txt`;
           const content = variants.join('\n');
           
           const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(content);
@@ -1786,30 +1807,23 @@ function Flow() {
           linkElement.setAttribute('download', fileName);
           linkElement.click();
           
-          fileIndex++;
-          
-          // Show final notification when all files are exported
-          if (fileIndex === totalFiles) {
+          // Show final notification for last file
+          if (i === contentKeysArray.length - 1) {
             setTimeout(() => {
-              showNotification(`Exported ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} and ${contentKeysArray.length} content variant file${contentKeysArray.length === 1 ? '' : 's'}`);
+              showNotification(`Exported ${contentKeysArray.length} content file${contentKeysArray.length === 1 ? '' : 's'}`);
             }, 100);
           }
-        }, (exportedSequences.length + i) * 500); // Continue delay sequence after sequences
+        }, i * 500); // 500ms delay between downloads
       }
 
       // Show initial notification immediately
-      const hasContentVariants = contentKeysArray.length > 0;
-      if (hasContentVariants) {
-        showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} and ${contentKeysArray.length} content file${contentKeysArray.length === 1 ? '' : 's'}...`);
-      } else {
-        showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} to Flutter...`);
-      }
+      showNotification(`Exporting ${contentKeysArray.length} content file${contentKeysArray.length === 1 ? '' : 's'}...`);
       
     } catch (error) {
-      console.error('Export error:', error);
-      showError('Export failed', [error instanceof Error ? error.message : 'Unknown error']);
+      console.error('Content export error:', error);
+      showError('Content export failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [nodes, edges, contentVariants, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
+  }, [nodes, edges, contentVariants, showError, showNotification]);
 
   const nodeTemplates = [
     { category: 'bot' as NodeCategory, label: 'Welcome Message' as NodeLabel, text: 'Welcome!', icon: '💬', description: 'Bot message' },
@@ -2128,10 +2142,28 @@ function Flow() {
           </div>
           
           <button 
-            onClick={exportToFlutter}
+            onClick={exportSequences}
             style={{
               padding: '6px 12px',
-              backgroundColor: '#e91e63',
+              backgroundColor: '#2196f3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px',
+              marginBottom: '4px'
+            }}
+            title="Export sequence JSON files only"
+          >
+            📄 Export Sequences
+          </button>
+          
+          <button 
+            onClick={exportContent}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#ff9800',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
@@ -2139,9 +2171,9 @@ function Flow() {
               fontWeight: 'bold',
               fontSize: '11px'
             }}
-            title={`Export sequences and content variants (${Object.keys(contentVariants).length} content files defined)`}
+            title={`Export content variant files (${Object.keys(contentVariants).length} files defined)`}
           >
-            🚀 Export Flutter {Object.keys(contentVariants).length > 0 && `(+${Object.keys(contentVariants).length} content)`}
+            📝 Export Content ({Object.keys(contentVariants).length})
           </button>
           
           <button 

@@ -5,39 +5,68 @@ interface ContentEditorPanelProps {
   onContentChange: (contentKey: string, variants: string[]) => void;
   currentVariants: string[];
   isVisible: boolean;
+  directoryHandle: FileSystemDirectoryHandle | null;
+  onNotification: (message: string) => void;
+  onError: (title: string, messages: string[]) => void;
 }
 
 const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
   contentKey,
   onContentChange,
   currentVariants,
-  isVisible
+  isVisible,
+  directoryHandle,
+  onNotification,
+  onError
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState('');
   const [isLoadingExisting, setIsLoadingExisting] = useState(false);
   const [hasExistingContent, setHasExistingContent] = useState(false);
 
-  const convertSemanticKeyToFilePath = (key: string): string => {
-    if (!key) return '';
-    const parts = key.split('.');
-    if (parts.length < 3) return '';
-    
-    const [actor, action, ...rest] = parts;
-    const fileName = rest.join('_') + '.txt';
-    return `../assets/content/${actor}/${action}/${fileName}`;
-  };
 
   const loadExistingContent = async (key: string) => {
-    if (!key) return;
+    if (!key || !directoryHandle) {
+      setHasExistingContent(false);
+      return;
+    }
     
     setIsLoadingExisting(true);
-    // Auto-loading disabled: Files aren't accessible via HTTP in React dev server
-    // This prevents loading HTML boilerplate instead of content files
-    setTimeout(() => {
+    try {
+      // Parse semantic key: bot.request.excuse.direct
+      const parts = key.split('.');
+      if (parts.length < 3) {
+        setHasExistingContent(false);
+        return;
+      }
+      
+      const [actor, action, ...rest] = parts;
+      const fileName = `${rest.join('_')}.txt`;
+      
+      // Navigate to file: assets/content/actor/action/filename.txt
+      const assetsDir = await directoryHandle.getDirectoryHandle('assets');
+      const contentDir = await assetsDir.getDirectoryHandle('content');
+      const actorDir = await contentDir.getDirectoryHandle(actor);
+      const actionDir = await actorDir.getDirectoryHandle(action);
+      const fileHandle = await actionDir.getFileHandle(fileName);
+      
+      const file = await fileHandle.getFile();
+      const content = await file.text();
+      const variants = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      
+      if (variants.length > 0) {
+        onContentChange(key, variants);
+        setHasExistingContent(true);
+        onNotification(`Loaded ${fileName} from Flutter project`);
+      } else {
+        setHasExistingContent(false);
+      }
+    } catch (error) {
+      // File doesn't exist - that's fine for new content
       setHasExistingContent(false);
+    } finally {
       setIsLoadingExisting(false);
-    }, 100); // Brief loading state for UI feedback
+    }
   };
 
   useEffect(() => {
@@ -45,7 +74,7 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
       setEditText(currentVariants.join('\n'));
       setHasExistingContent(true);
     } else if (contentKey) {
-      // Try to load existing content
+      // Try to load existing content from filesystem
       loadExistingContent(contentKey);
       setEditText('');
       setHasExistingContent(false);
@@ -53,9 +82,39 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
       setEditText('');
       setHasExistingContent(false);
     }
-  }, [contentKey, currentVariants]);
+  }, [contentKey, currentVariants, directoryHandle]);
 
-  const handleSave = () => {
+  const saveToFileSystem = async (key: string, variants: string[]) => {
+    if (!directoryHandle || !key) return false;
+    
+    try {
+      const parts = key.split('.');
+      if (parts.length < 3) return false;
+      
+      const [actor, action, ...rest] = parts;
+      const fileName = `${rest.join('_')}.txt`;
+      
+      // Navigate/create directory structure
+      const assetsDir = await directoryHandle.getDirectoryHandle('assets', { create: true });
+      const contentDir = await assetsDir.getDirectoryHandle('content', { create: true });
+      const actorDir = await contentDir.getDirectoryHandle(actor, { create: true });
+      const actionDir = await actorDir.getDirectoryHandle(action, { create: true });
+      
+      // Create/update file
+      const fileHandle = await actionDir.getFileHandle(fileName, { create: true });
+      const writable = await (fileHandle as any).createWritable();
+      await writable.write(variants.join('\n'));
+      await writable.close();
+      
+      onNotification(`Saved ${fileName} to Flutter project`);
+      return true;
+    } catch (error: any) {
+      onError('File save failed', [error.message]);
+      return false;
+    }
+  };
+
+  const handleSave = async () => {
     if (!contentKey) return;
     
     const variants = editText
@@ -63,8 +122,14 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
       .map(line => line.trim())
       .filter(line => line.length > 0);
     
+    // Save to state
     onContentChange(contentKey, variants);
     setIsEditing(false);
+    
+    // Save to filesystem if connected
+    if (directoryHandle) {
+      await saveToFileSystem(contentKey, variants);
+    }
   };
 
   const handleCancel = () => {
@@ -119,7 +184,8 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
           </div>
           <div style={{ fontSize: '10px', color: hasExistingContent ? '#28a745' : '#6c757d', marginTop: '2px' }}>
             {isLoadingExisting ? 'Loading existing content...' :
-             hasExistingContent ? 'Loaded from existing file' : 'New content'}
+             hasExistingContent ? 'Loaded from existing file' : 
+             directoryHandle ? 'New content (will save to Flutter)' : 'New content (connect Flutter to sync)'}
           </div>
         </div>
       </div>

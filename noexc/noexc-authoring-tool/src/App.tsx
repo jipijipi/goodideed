@@ -109,6 +109,7 @@ function Flow() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showVariableManager, setShowVariableManager] = useState(false);
   const [contentVariants, setContentVariants] = useState<{ [contentKey: string]: string[] }>({});
+  const [directoryHandle, setDirectoryHandle] = useState<FileSystemDirectoryHandle | null>(null);
   const edgeReconnectSuccessful = useRef(true);
   const { getNodes, zoomTo, fitView } = useReactFlow();
   const { x: viewportX, y: viewportY, zoom } = useViewport();
@@ -483,6 +484,40 @@ function Flow() {
       [contentKey]: variants
     }));
   }, []);
+
+  // Directory picker for File System Access API
+  const selectFlutterProject = useCallback(async () => {
+    if (!('showDirectoryPicker' in window)) {
+      showError('Browser not supported', [
+        'File System Access requires Chrome 86+ or Edge 86+',
+        'Consider using a supported browser'
+      ]);
+      return;
+    }
+
+    try {
+      const handle = await (window as any).showDirectoryPicker({
+        mode: 'readwrite',
+        startIn: 'documents'
+      });
+      
+      // Basic validation - check for assets folder
+      try {
+        await handle.getDirectoryHandle('assets');
+        setDirectoryHandle(handle);
+        showNotification('Flutter project connected successfully');
+      } catch {
+        showError('Invalid directory', [
+          'Please select the Flutter project root directory',
+          'It should contain an "assets" folder'
+        ]);
+      }
+    } catch (error: any) {
+      if (error.name !== 'AbortError') {
+        showError('Directory selection failed', [error.message]);
+      }
+    }
+  }, [showError, showNotification]);
 
   // Group field editing callbacks
   const onGroupIdChange = useCallback((nodeId: string, newGroupId: string) => {
@@ -2177,6 +2212,24 @@ function Flow() {
           </button>
           
           <button 
+            onClick={selectFlutterProject}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: directoryHandle ? '#28a745' : '#6f42c1',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px',
+              marginBottom: '4px'
+            }}
+            title={directoryHandle ? 'Flutter project connected' : 'Connect to Flutter project for file sync'}
+          >
+            {directoryHandle ? '✅ Flutter Connected' : '📁 Connect Flutter'}
+          </button>
+          
+          <button 
             onClick={() => setShowVariableManager(true)}
             style={{
               padding: '6px 12px',
@@ -2371,6 +2424,9 @@ function Flow() {
           (selectedNodes.length === 1 && !!selectedNodes[0].data.contentKey) ||
           (!!selectedEdge?.data?.contentKey)
         }
+        directoryHandle={directoryHandle}
+        onNotification={showNotification}
+        onError={showError}
       />
       
       {/* Success Notification */}

@@ -30,7 +30,8 @@
       "Bash(chmod:*)",
       "Bash(./update_test_storage_keys.sh:*)",
       "Bash(flutter pub:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": []
   }

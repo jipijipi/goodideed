@@ -4,43 +4,74 @@ import '../../models/choice.dart';
 import '../text_templating_service.dart';
 import '../text_variants_service.dart';
 import '../user_data_service.dart';
+import '../semantic_content_service.dart';
 
 /// Handles message processing including templates and variants
 class MessageProcessor {
   final UserDataService? _userDataService;
   final TextTemplatingService? _templatingService;
   final TextVariantsService? _variantsService;
+  final SemanticContentService _semanticContentService;
 
   MessageProcessor({
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
     TextVariantsService? variantsService,
+    SemanticContentService? semanticContentService,
   }) : _userDataService = userDataService,
        _templatingService = templatingService,
-       _variantsService = variantsService;
+       _variantsService = variantsService,
+       _semanticContentService = semanticContentService ?? SemanticContentService.instance;
 
   /// Process a single message template and replace variables with stored values
-  /// Also applies text variants for regular messages (not choices, inputs, conditionals, or multi-texts)
+  /// Also applies semantic content resolution and text variants
   Future<ChatMessage> processMessageTemplate(ChatMessage message, ChatSequence? currentSequence) async {
     String textToProcess = message.text;
+    List<Choice>? processedChoices = message.choices;
     
-    // Apply variants only for regular messages (not choices, inputs, conditionals, or multi-texts)
-    if (_variantsService != null && 
-        currentSequence != null &&
-        !message.isChoice && 
-        !message.isTextInput && 
-        !message.isAutoRoute && 
-        !message.hasMultipleTexts) {
-      
-      // Get variant for the main text
-      textToProcess = await _variantsService.getVariant(
-        message.text, 
-        currentSequence.sequenceId, 
-        message.id
-      );
+    // 1. Apply semantic content resolution (new system)
+    if (message.contentKey != null && message.contentKey!.isNotEmpty) {
+      textToProcess = await _semanticContentService.getContent(message.contentKey!, message.text);
+    } else {
+      // 2. Fallback to legacy variant system for backward compatibility
+      if (_variantsService != null && 
+          currentSequence != null &&
+          !message.isChoice && 
+          !message.isTextInput && 
+          !message.isAutoRoute && 
+          !message.hasMultipleTexts) {
+        
+        // Get variant for the main text
+        textToProcess = await _variantsService.getVariant(
+          message.text, 
+          currentSequence.sequenceId, 
+          message.id
+        );
+      }
     }
     
-    // Apply template processing if service is available
+    // 3. Process choice options if present
+    if (message.choices != null) {
+      processedChoices = [];
+      for (Choice choice in message.choices!) {
+        String choiceText = choice.text;
+        
+        // Apply semantic content to choice if contentKey present
+        if (choice.contentKey != null && choice.contentKey!.isNotEmpty) {
+          choiceText = await _semanticContentService.getContent(choice.contentKey!, choice.text);
+        }
+        
+        processedChoices.add(Choice(
+          text: choiceText,
+          nextMessageId: choice.nextMessageId,
+          sequenceId: choice.sequenceId,
+          value: choice.value,
+          contentKey: choice.contentKey,
+        ));
+      }
+    }
+    
+    // 4. Apply template processing if service is available
     if (_templatingService != null) {
       textToProcess = await _templatingService.processTemplate(textToProcess);
     }
@@ -51,11 +82,15 @@ class MessageProcessor {
       delay: message.delay,
       sender: message.sender,
       type: message.type,
-      choices: message.choices,
+      choices: processedChoices,
       nextMessageId: message.nextMessageId,
+      sequenceId: message.sequenceId,
       storeKey: message.storeKey,
       placeholderText: message.placeholderText,
+      selectedChoiceText: message.selectedChoiceText,
       routes: message.routes,
+      dataActions: message.dataActions,
+      contentKey: message.contentKey,
     );
   }
 

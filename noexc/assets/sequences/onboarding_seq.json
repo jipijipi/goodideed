@@ -6,6 +6,7 @@
     {
       "id": 1,
       "text": "Hi|||I'm Tristopher|||But my friends call me Trist.",
+      "contentKey": "bot.introduce.character.casual",
       "nextMessageId": 7
     },
     {
@@ -14,10 +15,12 @@
       "choices": [
         {
           "text": "Hi Trist !",
+          "contentKey": "user.greet.character.friendly",
           "nextMessageId": 8
         },
         {
           "text": "Weird name...",
+          "contentKey": "user.comment.character.skeptical",
           "nextMessageId": 11
         }
       ]

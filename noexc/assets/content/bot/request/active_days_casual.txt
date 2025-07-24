@@ -1,0 +1,5 @@
+On which days of the week can you achieve your task? ({user.task})
+Which days work for you?
+What's your weekly schedule like?
+When are you available to work on this?
+Pick your active days for: {user.task}

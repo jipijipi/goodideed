@@ -1,0 +1,5 @@
+What's your daily task?
+Enter your daily goal:
+Describe your task:
+What do you want to achieve daily?
+Your daily objective:

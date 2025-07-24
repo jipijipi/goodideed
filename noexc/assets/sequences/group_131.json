@@ -6,7 +6,7 @@
     {
       "id": 1,
       "type": "autoroute",
-      "contentKey": "notice_check",
+      "contentKey": "system.check.notice_status",
       "routes": [
         {
           "condition": "user.isOnNotice == false",

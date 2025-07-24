@@ -6,7 +6,7 @@
     {
       "id": 1,
       "type": "autoroute",
-      "contentKey": "task_set_check",
+      "contentKey": "system.check.task_configured",
       "routes": [
         {
           "condition": "user.task != null",
@@ -21,7 +21,7 @@
     {
       "id": 78,
       "type": "autoroute",
-      "contentKey": "previous_task_check",
+      "contentKey": "system.check.previous_task",
       "routes": [
         {
           "default": true,
@@ -36,7 +36,7 @@
     {
       "id": 81,
       "type": "autoroute",
-      "contentKey": "current_task_check",
+      "contentKey": "system.check.task_current",
       "routes": [
         {
           "condition": "task.currentStatus == 'overdue'",

@@ -1,0 +1,5 @@
+Choose reminder intensity:
+How pushy should I be?
+Pick your motivation level:
+Select reminder preference:
+What level of encouragement?

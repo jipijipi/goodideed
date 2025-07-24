@@ -5,37 +5,37 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot_ask_reminders_frequency",
+      "contentKey": "bot.request.reminders.casual",
       "text": "How hardcore do you need me to be in reminding you?",
       "nextMessageId": 49
     },
     {
       "id": 49,
       "type": "choice",
-      "contentKey": "user_choose_notification_intensity",
+      "contentKey": "user.choose.reminder_intensity",
       "storeKey": "reminders.intensity",
       "choices": [
         {
           "text": "Don't notify me at all",
-          "contentKey": "choice_reminders_intensity_none",
+          "contentKey": "user.choose.reminder_intensity.none",
           "value": 0,
           "nextMessageId": 53
         },
         {
           "text": "Not too much, chill with that",
-          "contentKey": "choice_reminders_intensity_mild",
+          "contentKey": "user.choose.reminder_intensity.mild",
           "value": 1,
           "nextMessageId": 52
         },
         {
           "text": "Insist a little, I need it",
-          "contentKey": "choice_reminders_intensity_severe",
+          "contentKey": "user.choose.reminder_intensity.severe",
           "value": 2,
           "nextMessageId": 51
         },
         {
           "text": "Make me suffer",
-          "contentKey": "choice_reminders_intensity_extreme",
+          "contentKey": "user.choose.reminder_intensity.extreme",
           "value": 3,
           "nextMessageId": 50
         }
@@ -43,31 +43,31 @@
     },
     {
       "id": 50,
-      "contentKey": "bot_reacts_reminders_intensity_extreme",
+      "contentKey": "bot.acknowledge.reminder_intensity.extreme",
       "text": "Oh boy, that's gonna be fun.",
       "nextMessageId": 54
     },
     {
       "id": 54,
-      "contentKey": "bot_warn_reminders_intensity",
+      "contentKey": "bot.warn.reminders.serious",
       "text": "You chose, notification intensity : {reminders.intensity}",
       "sequenceId": "group_59"
     },
     {
       "id": 51,
-      "contentKey": "bot_reacts_reminders_intensity_severe",
+      "contentKey": "bot.acknowledge.reminder_intensity.severe",
       "text": "All right, now we're talking !",
       "nextMessageId": 54
     },
     {
       "id": 52,
-      "contentKey": "bot_reacts_reminders_intensity_mild",
+      "contentKey": "bot.acknowledge.reminder_intensity.mild",
       "text": "Fine, you'll get a couple, no biggie.",
       "nextMessageId": 54
     },
     {
       "id": 53,
-      "contentKey": "bot_reacts_reminders_intensity_none",
+      "contentKey": "bot.acknowledge.reminder_intensity.none",
       "text": "All right champ, you got this obviously...",
       "nextMessageId": 54
     }

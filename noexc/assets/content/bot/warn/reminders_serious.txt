@@ -1,0 +1,5 @@
+You chose, notification intensity: {reminders.intensity}
+Your reminder level is set to: {reminders.intensity}
+Selected intensity: {reminders.intensity}
+Reminder preference confirmed: {reminders.intensity}
+You'll get {reminders.intensity} level reminders

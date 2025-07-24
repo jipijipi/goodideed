@@ -5,7 +5,7 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot_acknowledge_failed",
+      "contentKey": "bot.console.failure.gentle",
       "text": "Hey, it's ok, let's regroup and nail it tomorrow",
       "nextMessageId": 152
     },

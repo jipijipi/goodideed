@@ -5,7 +5,7 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot_acknowledge_completed",
+      "contentKey": "bot.celebrate.completion.excited",
       "text": "You are clear today, congrats, come back tomorrow.",
       "nextMessageId": 151
     },

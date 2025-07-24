@@ -6,7 +6,7 @@
     {
       "id": 1,
       "type": "dataAction",
-      "contentKey": "set_notice",
+      "contentKey": "system.set.notice_status",
       "dataActions": [
         {
           "type": "set",
@@ -18,7 +18,7 @@
     },
     {
       "id": 102,
-      "contentKey": "bot_react_notice",
+      "contentKey": "bot.react.notice.stern",
       "text": "Consider yourself on notice",
       "sequenceId": "group_59"
     }

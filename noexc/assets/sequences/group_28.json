@@ -11,14 +11,14 @@
     },
     {
       "id": 6,
-      "contentKey": "bot_introduction",
+      "contentKey": "bot.introduce.self.friendly",
       "text": "I'm Tristopher|||But my friends call me Trist",
       "nextMessageId": 7
     },
     {
       "id": 7,
       "type": "choice",
-      "contentKey": "user_greeting",
+      "contentKey": "user.choose.greeting",
       "choices": [
         {
           "text": "Hi Tristopher!",
@@ -39,14 +39,14 @@
     },
     {
       "id": 9,
-      "contentKey": "bot_ask_name",
+      "contentKey": "bot.request.name.casual",
       "text": "So, what should I call you?",
       "nextMessageId": 10
     },
     {
       "id": 10,
       "type": "textInput",
-      "contentKey": "user_name_input",
+      "contentKey": "user.provide.name.input",
       "storeKey": "user.name",
       "placeholderText": "Call me...",
       "nextMessageId": 11

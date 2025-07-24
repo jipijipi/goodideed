@@ -5,7 +5,7 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "success_entrypoint",
+      "contentKey": "bot.celebrate.success.enthusiastic",
       "text": "Great stuff buddy",
       "nextMessageId": 126
     },
@@ -32,12 +32,12 @@
       "choices": [
         {
           "text": "I'm happy with this one",
-          "contentKey": "choice_task_keep",
+          "contentKey": "user.choose.task_action.keep",
           "nextMessageId": 143
         },
         {
           "text": "I want to switch something",
-          "contentKey": "choice_task_update",
+          "contentKey": "user.choose.task_action.update",
           "nextMessageId": 144
         }
       ]
@@ -50,7 +50,7 @@
     {
       "id": 144,
       "text": "Right away sir",
-      "sequenceId": "main"
+      "sequenceId": "group_31"
     }
   ]
 }

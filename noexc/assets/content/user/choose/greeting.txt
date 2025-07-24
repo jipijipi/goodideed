@@ -1,0 +1,5 @@
+Choose your greeting style:
+How would you like to respond?
+Pick your response:
+Select your greeting:
+Choose how to greet back:

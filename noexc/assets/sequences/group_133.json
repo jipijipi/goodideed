@@ -6,7 +6,7 @@
     {
       "id": 1,
       "type": "autoroute",
-      "contentKey": "system.check.previous_task",
+      "contentKey": "previous_task_check",
       "routes": [
         {
           "condition": "task.previousStatus == 'pending'",
@@ -20,14 +20,14 @@
     },
     {
       "id": 79,
-      "contentKey": "bot.react.task_failure.supportive",
+      "contentKey": "bot_react_previous_fail",
       "text": "Uh oh... Looks like you never cleared your last deadline...|||Hopefully it won't happen again",
       "nextMessageId": 80
     },
     {
       "id": 80,
       "type": "dataAction",
-      "contentKey": "system.reset.task_status",
+      "contentKey": "reset_previous_status",
       "dataActions": [
         {
           "type": "reset",
@@ -39,7 +39,7 @@
     },
     {
       "id": 87,
-      "contentKey": "bot.request.task_status.gentle",
+      "contentKey": "bot_ask_previous_pending",
       "text": "Ok, so did you manage to do your thing last time?",
       "nextMessageId": 88
     },
@@ -49,25 +49,25 @@
       "choices": [
         {
           "text": "As a matter of fact, I did!",
-          "contentKey": "user.choose.task_status.completed",
+          "contentKey": "choice_completed",
           "nextMessageId": 89
         },
         {
           "text": "I... Did not...",
-          "contentKey": "user.choose.task_status.failed",
+          "contentKey": "choice_failed",
           "nextMessageId": 90
         }
       ]
     },
     {
       "id": 89,
-      "contentKey": "bot.acknowledge.completion.positive",
+      "contentKey": "bot_react_completed",
       "text": "Atta boy",
       "sequenceId": "group_145"
     },
     {
       "id": 90,
-      "contentKey": "bot.acknowledge.failure.supportive",
+      "contentKey": "bot_react_failed",
       "text": "Well, can't say I'm surprised...",
       "sequenceId": "group_131"
     }

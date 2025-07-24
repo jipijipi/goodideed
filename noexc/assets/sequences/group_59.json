@@ -6,7 +6,7 @@
     {
       "id": 1,
       "type": "autoroute",
-      "contentKey": "system.check.visit_status",
+      "contentKey": "user_visited_check",
       "routes": [
         {
           "condition": "session.visitCount < 2",
@@ -20,13 +20,13 @@
     },
     {
       "id": 57,
-      "contentKey": "bot.inform.plot_advancement.casual",
+      "contentKey": "plot_advancement",
       "text": "I have something to confess... But it can wait.",
       "nextMessageId": 58
     },
     {
       "id": 58,
-      "contentKey": "bot.sendoff.casual",
+      "contentKey": "bot_sendoff",
       "text": "See you later, or tomorrow"
     }
   ]

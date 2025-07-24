@@ -5,14 +5,14 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot.inform.inactive_day.casual",
+      "contentKey": "bot_ask_inactive_day",
       "text": "What are you doing here? You have nothing due today.",
       "nextMessageId": 66
     },
     {
       "id": 66,
       "type": "choice",
-      "contentKey": "user.choose.inactive_day_action",
+      "contentKey": "choice_inactive_day",
       "choices": [
         {
           "text": "I want to update my task",
@@ -26,13 +26,13 @@
     },
     {
       "id": 67,
-      "contentKey": "bot.acknowledge.task_update.positive",
+      "contentKey": "bot_acknowledge_task_update",
       "text": "Alright",
       "sequenceId": "group_31"
     },
     {
       "id": 68,
-      "contentKey": "bot.acknowledge.mistake.understanding",
+      "contentKey": "bot_acknowledge_day_mistake",
       "text": "Right, come back on those days : {task.activeDays}",
       "sequenceId": "group_59"
     }

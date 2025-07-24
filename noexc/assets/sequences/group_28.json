@@ -5,20 +5,20 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot.introduce.character.casual",
+      "contentKey": "welcome_first_time",
       "text": "Hi|||You must be new here",
       "nextMessageId": 6
     },
     {
       "id": 6,
-      "contentKey": "bot.introduce.self.friendly",
+      "contentKey": "bot_introduction",
       "text": "I'm Tristopher|||But my friends call me Trist",
       "nextMessageId": 7
     },
     {
       "id": 7,
       "type": "choice",
-      "contentKey": "user.choose.greeting",
+      "contentKey": "user_greeting",
       "choices": [
         {
           "text": "Hi Tristopher!",
@@ -39,14 +39,14 @@
     },
     {
       "id": 9,
-      "contentKey": "bot.request.name.casual",
+      "contentKey": "bot_ask_name",
       "text": "So, what should I call you?",
       "nextMessageId": 10
     },
     {
       "id": 10,
       "type": "textInput",
-      "contentKey": "user.provide.name.input",
+      "contentKey": "user_name_input",
       "storeKey": "user.name",
       "placeholderText": "Call me...",
       "nextMessageId": 11

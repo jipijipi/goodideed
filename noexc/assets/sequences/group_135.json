@@ -5,7 +5,7 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot.request.task_status.direct",
+      "contentKey": "bot_task_check",
       "text": "So? You did the thing?",
       "nextMessageId": 156
     },
@@ -22,19 +22,19 @@
       "choices": [
         {
           "text": "I failed...",
-          "contentKey": "user.choose.task_status.failed",
+          "contentKey": "choice_failed",
           "value": "failed",
           "nextMessageId": 95
         },
         {
           "text": "I did it!",
-          "contentKey": "user.choose.task_status.completed",
+          "contentKey": "choice_completed",
           "value": "completed",
           "nextMessageId": 94
         },
         {
           "text": "I'm on it!",
-          "contentKey": "user.choose.task_status.started",
+          "contentKey": "choice_started",
           "value": "overdue",
           "nextMessageId": 100
         }
@@ -48,7 +48,7 @@
     {
       "id": 104,
       "type": "autoroute",
-      "contentKey": "system.check.notice_status",
+      "contentKey": "notice_check",
       "routes": [
         {
           "default": true,
@@ -74,13 +74,13 @@
     },
     {
       "id": 94,
-      "contentKey": "bot.acknowledge.completion.positive",
+      "contentKey": "bot_react_completed",
       "text": "Bang on",
       "sequenceId": "group_145"
     },
     {
       "id": 95,
-      "contentKey": "bot.acknowledge.failure.supportive",
+      "contentKey": "bot_react_failed",
       "text": "Oh well...",
       "sequenceId": "group_131"
     }

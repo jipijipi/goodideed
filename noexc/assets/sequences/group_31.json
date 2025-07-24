@@ -6,14 +6,14 @@
     {
       "id": 1,
       "type": "textInput",
-      "contentKey": "user.provide.task.input",
+      "contentKey": "user_set_task",
       "storeKey": "user.task",
       "placeholderText": "Everyday, I'll do :",
       "nextMessageId": 26
     },
     {
       "id": 26,
-      "contentKey": "bot.acknowledge.task_input.positive",
+      "contentKey": "bot_reacts_new_task",
       "text": "{user.task}? Hey, baby steps, smart I guess.",
       "sequenceId": "group_39"
     }

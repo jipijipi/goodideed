@@ -5,7 +5,7 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot.celebrate.success.enthusiastic",
+      "contentKey": "success_entrypoint",
       "text": "Great stuff buddy",
       "nextMessageId": 126
     },
@@ -32,12 +32,12 @@
       "choices": [
         {
           "text": "I'm happy with this one",
-          "contentKey": "user.choose.task_action.keep",
+          "contentKey": "choice_task_keep",
           "nextMessageId": 143
         },
         {
           "text": "I want to switch something",
-          "contentKey": "user.choose.task_action.update",
+          "contentKey": "choice_task_update",
           "nextMessageId": 144
         }
       ]

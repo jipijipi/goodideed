@@ -5,14 +5,14 @@
   "messages": [
     {
       "id": 1,
-      "contentKey": "bot.explain.concept.detailed",
+      "contentKey": "concept_introduction",
       "text": "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
       "nextMessageId": 29
     },
     {
       "id": 29,
       "type": "dataAction",
-      "contentKey": "system.set.onboarding_status",
+      "contentKey": "onboarding_complete",
       "dataActions": [
         {
           "type": "set",

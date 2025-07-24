@@ -6,7 +6,7 @@
     {
       "id": 1,
       "type": "autoroute",
-      "contentKey": "system.check.onboarding_status",
+      "contentKey": "user_onboarded_check",
       "routes": [
         {
           "condition": "user.name==null",
@@ -25,7 +25,7 @@
     {
       "id": 63,
       "type": "autoroute",
-      "contentKey": "system.check.task_active_day",
+      "contentKey": "active_day_check",
       "routes": [
         {
           "default": true,

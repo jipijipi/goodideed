@@ -1,7 +1,9 @@
 [submodule "assets/content"]
 	path = assets/content
 	url = https://github.com/jipijipi/noexp-content.git
+	branch = main
 
 [submodule "assets/sequences"]
 	path = assets/sequences
 	url = https://github.com/jipijipi/noexp-sequences.git
+	branch = main

@@ -17,21 +17,15 @@
     }
   },
   "returning_morning": {
-    "name": "☀️ Returning User - Morning",
-    "description": "Experienced user checking in during morning routine",
+    "name": "Recent User",
+    "description": "Just onboarded",
     "variables": {
-      "session.visitCount": 2,
+      "session.visitCount": 1,
       "session.totalVisitCount": 23,
-      "session.timeOfDay": 1,
-      "session.daysSinceFirstVisit": 12,
-      "session.isWeekend": false,
       "user.isOnboarded": true,
-      "user.name": "Alex",
-      "user.streak": 7,
+      "user.name": "Kyle",
       "task.deadlineTime": 1,
-      "task.currentDate": "2024-12-20",
-      "task.isActiveDay": true,
-      "task.isPastDeadline": false
+      "user.task": "Medidate for 10 minutes"
     }
   },
   "weekend_user": {

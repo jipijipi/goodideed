@@ -20,12 +20,18 @@
     "name": "Recent User",
     "description": "Just onboarded",
     "variables": {
-      "session.visitCount": 1,
-      "session.totalVisitCount": 23,
       "user.isOnboarded": true,
       "user.name": "Kyle",
       "task.deadlineTime": 1,
       "user.task": "Medidate for 10 minutes"
+    }
+  },
+  "recent_user_no_task": {
+    "name": "Recent User No Task",
+    "description": "Just onboarded no task",
+    "variables": {
+      "user.isOnboarded": true,
+      "user.name": "Kyle"
     }
   },
   "weekend_user": {

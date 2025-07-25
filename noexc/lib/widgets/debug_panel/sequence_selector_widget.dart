@@ -3,16 +3,19 @@ import '../../constants/ui_constants.dart';
 import '../../constants/app_constants.dart';
 import '../../config/chat_config.dart';
 import '../chat_screen/chat_state_manager.dart';
+import 'debug_status_area.dart';
 
 /// Widget responsible for sequence selection dropdown and related functionality
 class SequenceSelectorWidget extends StatelessWidget {
   final String? currentSequenceId;
   final ChatStateManager? stateManager;
+  final DebugStatusController? statusController;
 
   const SequenceSelectorWidget({
     super.key,
     this.currentSequenceId,
     this.stateManager,
+    this.statusController,
   });
 
   IconData _getSequenceIcon(String sequenceId) {
@@ -138,11 +141,7 @@ class SequenceSelectorWidget extends StatelessWidget {
                 onChanged: (String? newSequenceId) {
                   if (newSequenceId != null && newSequenceId != currentSequenceId) {
                     stateManager?.switchSequence(newSequenceId);
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Switched to $newSequenceId sequence')),
-                      );
-                    }
+                    statusController?.addSuccess('Switched to $newSequenceId sequence');
                   }
                 },
               ),

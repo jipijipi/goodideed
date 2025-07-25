@@ -10,6 +10,7 @@ import 'debug_panel/chat_controls_widget.dart';
 import 'debug_panel/sequence_selector_widget.dart';
 import 'debug_panel/user_data_manager.dart';
 import 'debug_panel/date_time_picker_widget.dart';
+import 'debug_panel/debug_status_area.dart';
 
 /// Main user variables panel that orchestrates the display of user data and debug controls
 class UserVariablesPanel extends StatefulWidget {
@@ -37,6 +38,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
   Map<String, dynamic> _debugData = {};
   bool _isLoading = true;
   late final UserDataManager _dataManager;
+  late final DebugStatusController _statusController;
   
   // Scenario-related state
   Map<String, dynamic> _scenarios = {};
@@ -46,6 +48,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
   @override
   void initState() {
     super.initState();
+    _statusController = DebugStatusController();
     _dataManager = UserDataManager(
       userDataService: widget.userDataService,
       chatService: widget.chatService,
@@ -54,6 +57,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
     );
     _loadUserData();
     _loadScenarios();
+  }
+
+  @override
+  void dispose() {
+    _statusController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadUserData() async {
@@ -112,25 +121,9 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       // Refresh the data to show updated values
       refreshData();
       
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Applied scenario: ${_scenarios[_selectedScenario!]['name']}'),
-            duration: const Duration(seconds: 2),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
-      }
+      _statusController.addSuccess('Applied scenario: ${_scenarios[_selectedScenario!]['name']}');
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to apply scenario: $e'),
-            duration: const Duration(seconds: 3),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
-      }
+      _statusController.addError('Failed to apply scenario: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -291,10 +284,14 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                         shrinkWrap: true,
                         padding: UIConstants.panelContentPadding,
                         children: [
+                          // Status area for recent actions
+                          DebugStatusArea(controller: _statusController),
+                          
                           // Chat Controls Section
                           ChatControlsWidget(
                             stateManager: widget.stateManager,
                             onDataRefresh: refreshData,
+                            statusController: _statusController,
                           ),
                           
                           // Test Scenarios Section
@@ -304,12 +301,14 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                           SequenceSelectorWidget(
                             currentSequenceId: widget.currentSequenceId,
                             stateManager: widget.stateManager,
+                            statusController: _statusController,
                           ),
                           
                           // Date/Time Picker Section
                           DateTimePickerWidget(
                             userDataService: widget.userDataService,
                             onDataChanged: refreshData,
+                            statusController: _statusController,
                           ),
                           
                           // Data Display Section
@@ -318,6 +317,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                             debugData: _debugData,
                             userDataService: widget.userDataService,
                             onDataChanged: refreshData,
+                            statusController: _statusController,
                           ),
                         ],
                       ),

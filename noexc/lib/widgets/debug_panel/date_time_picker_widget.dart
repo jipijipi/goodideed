@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import '../../constants/ui_constants.dart';
 import '../../constants/storage_keys.dart';
 import '../../services/user_data_service.dart';
+import 'debug_status_area.dart';
 
 /// Widget for picking date and time to test day tracking functionality
 class DateTimePickerWidget extends StatefulWidget {
   final UserDataService userDataService;
   final VoidCallback? onDataChanged;
+  final DebugStatusController? statusController;
 
   const DateTimePickerWidget({
     super.key,
     required this.userDataService,
     this.onDataChanged,
+    this.statusController,
   });
 
   @override
@@ -151,11 +154,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     
     widget.onDataChanged?.call();
     
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Task date set to $dateString')),
-      );
-    }
+    widget.statusController?.addSuccess('Task date set to $dateString');
   }
 
 
@@ -169,11 +168,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     
     widget.onDataChanged?.call();
     
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Deadline set to ${deadlineOptions[option]}')),
-      );
-    }
+    widget.statusController?.addSuccess('Deadline set to ${deadlineOptions[option]}');
   }
 
   Future<void> _setToToday() async {
@@ -189,11 +184,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     
     widget.onDataChanged?.call();
     
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Task date reset to today')),
-      );
-    }
+    widget.statusController?.addSuccess('Task date reset to today');
   }
 
   Future<void> _setToYesterday() async {
@@ -209,11 +200,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     
     widget.onDataChanged?.call();
     
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Task date set to yesterday (for testing)')),
-      );
-    }
+    widget.statusController?.addSuccess('Task date set to yesterday (for testing)');
   }
 
   @override

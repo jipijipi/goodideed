@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants/ui_constants.dart';
 import '../../services/user_data_service.dart';
+import 'debug_status_area.dart';
 
 /// Widget responsible for displaying user data and debug information in a formatted way
 class DataDisplayWidget extends StatefulWidget {
@@ -8,6 +9,7 @@ class DataDisplayWidget extends StatefulWidget {
   final Map<String, dynamic> debugData;
   final UserDataService? userDataService;
   final VoidCallback? onDataChanged;
+  final DebugStatusController? statusController;
 
   const DataDisplayWidget({
     super.key,
@@ -15,6 +17,7 @@ class DataDisplayWidget extends StatefulWidget {
     required this.debugData,
     this.userDataService,
     this.onDataChanged,
+    this.statusController,
   });
 
   @override
@@ -146,15 +149,8 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
       widget.onDataChanged!();
     }
     
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Saved $key'),
-          duration: const Duration(seconds: 2),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-        ),
-      );
-    }
+    // Add success message to status area instead of SnackBar
+    widget.statusController?.addSuccess('Saved $key', key: key);
   }
 
   Future<void> _handleSaveError(String key, dynamic error) async {
@@ -162,15 +158,8 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
       _savingStates[key] = false;
     });
     
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to save $key: $error'),
-          duration: const Duration(seconds: 3),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-    }
+    // Add error message to status area instead of SnackBar
+    widget.statusController?.addError('Failed to save $key: $error', key: key);
   }
 
   void _startEditing(String key, dynamic value) {

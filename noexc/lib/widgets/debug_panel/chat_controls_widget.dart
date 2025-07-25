@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import '../../constants/ui_constants.dart';
 import '../chat_screen/chat_state_manager.dart';
+import 'debug_status_area.dart';
 
 /// Widget responsible for chat control actions (reset, clear, reload, clear all data)
 class ChatControlsWidget extends StatelessWidget {
   final ChatStateManager? stateManager;
   final VoidCallback? onDataRefresh;
+  final DebugStatusController? statusController;
 
   const ChatControlsWidget({
     super.key,
     this.stateManager,
     this.onDataRefresh,
+    this.statusController,
   });
 
   Widget _buildSectionHeader(BuildContext context, String title) {
@@ -72,11 +75,7 @@ class ChatControlsWidget extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () async {
                     await stateManager!.resetChat();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Chat reset successfully')),
-                      );
-                    }
+                    statusController?.addSuccess('Chat reset successfully');
                   },
                   icon: const Icon(Icons.refresh, size: 16),
                   label: const Text('Reset'),
@@ -90,11 +89,7 @@ class ChatControlsWidget extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     stateManager!.clearMessages();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Messages cleared')),
-                      );
-                    }
+                    statusController?.addSuccess('Messages cleared');
                   },
                   icon: const Icon(Icons.clear_all, size: 16),
                   label: const Text('Clear'),
@@ -108,11 +103,7 @@ class ChatControlsWidget extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () async {
                     await stateManager!.reloadSequence();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Sequence reloaded')),
-                      );
-                    }
+                    statusController?.addSuccess('Sequence reloaded');
                   },
                   icon: const Icon(Icons.file_download, size: 16),
                   label: const Text('Reload'),
@@ -140,9 +131,7 @@ class ChatControlsWidget extends StatelessWidget {
                       if (context.mounted) {
                         // Refresh the panel to show empty user data
                         onDataRefresh?.call();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('All user data cleared')),
-                        );
+                        statusController?.addSuccess('All user data cleared');
                       }
                     }
                   },

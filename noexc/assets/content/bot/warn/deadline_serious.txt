@@ -1,5 +1,0 @@
-By {task.deadlineTime} everyday, I'll consider you've failed.
-Miss your {task.deadlineTime} deadline and it's game over
-{task.deadlineTime} is your hard cutoff - no exceptions
-Past {task.deadlineTime} means automatic failure
-{task.deadlineTime} deadline is non-negotiable

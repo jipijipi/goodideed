@@ -1,5 +1,0 @@
-Right, come back on those days: {task.activeDays}
-Got it, see you on your active days
-Understood - check back on your scheduled days
-No problem, return when you're supposed to work
-Makes sense, see you on the right days

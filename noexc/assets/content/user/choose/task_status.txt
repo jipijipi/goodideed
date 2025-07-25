@@ -1,5 +1,0 @@
-Completed
-In Progress
-Not Started
-Failed
-Cancelled

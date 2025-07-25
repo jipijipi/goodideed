@@ -1,5 +1,0 @@
-❌ Didn't complete the task
-❌ Task not finished
-❌ Unable to complete
-❌ Task failed
-❌ Couldn't finish today

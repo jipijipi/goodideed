@@ -3057,7 +3057,12 @@ function Flow() {
               value={selectedNodes[0].data.nodeId || ''}
               onChange={(e) => {
                 const newNodeId = e.target.value;
-                selectedNodes[0].data.onNodeIdChange(selectedNodes[0].id, newNodeId);
+                onNodeIdChange(selectedNodes[0].id, newNodeId);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, nodeId: newNodeId } }
+                    : node
+                ));
               }}
               placeholder="e.g., welcome_1, choice_menu_2..."
               style={{
@@ -3083,7 +3088,12 @@ function Flow() {
               value={selectedNodes[0].data.label || ''}
               onChange={(e) => {
                 const newLabel = e.target.value;
-                selectedNodes[0].data.onLabelChange(selectedNodes[0].id, newLabel);
+                onLabelChange(selectedNodes[0].id, newLabel);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, label: newLabel } }
+                    : node
+                ));
               }}
               placeholder="e.g., Welcome Message, User Choice..."
               style={{
@@ -3109,7 +3119,12 @@ function Flow() {
               value={selectedNodes[0].data.contentKey || ''}
               onChange={(e) => {
                 const newContentKey = e.target.value;
-                selectedNodes[0].data.onContentKeyChange(selectedNodes[0].id, newContentKey);
+                onContentKeyChange(selectedNodes[0].id, newContentKey);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, contentKey: newContentKey } }
+                    : node
+                ));
               }}
               placeholder="e.g., bot.greet.welcome, user.choose.option..."
               style={{
@@ -3135,7 +3150,12 @@ function Flow() {
               value={selectedNodes[0].data.storeKey || ''}
               onChange={(e) => {
                 const newStoreKey = e.target.value;
-                selectedNodes[0].data.onStoreKeyChange(selectedNodes[0].id, newStoreKey);
+                onStoreKeyChange(selectedNodes[0].id, newStoreKey);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, storeKey: newStoreKey } }
+                    : node
+                ));
               }}
               placeholder="e.g., user.name, task.status, preferences.theme..."
               style={{
@@ -3160,7 +3180,12 @@ function Flow() {
               value={selectedNodes[0].data.content || ''}
               onChange={(e) => {
                 const newContent = e.target.value;
-                selectedNodes[0].data.onContentChange(selectedNodes[0].id, newContent);
+                onContentChange(selectedNodes[0].id, newContent);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, content: newContent } }
+                    : node
+                ));
               }}
               placeholder="Message content... Use ||| to split into multiple messages"
               rows={4}
@@ -3189,7 +3214,12 @@ function Flow() {
               value={selectedNodes[0].data.placeholderText || ''}
               onChange={(e) => {
                 const newPlaceholder = e.target.value;
-                selectedNodes[0].data.onPlaceholderChange(selectedNodes[0].id, newPlaceholder);
+                onPlaceholderChange(selectedNodes[0].id, newPlaceholder);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, placeholderText: newPlaceholder } }
+                    : node
+                ));
               }}
               placeholder="e.g., Enter your name..., Type your message..."
               style={{

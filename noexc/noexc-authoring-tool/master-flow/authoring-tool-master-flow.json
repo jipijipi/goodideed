@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-07-26T16:57:09.993Z",
+  "lastUpdated": "2025-07-26T21:11:57.222Z",
   "gitBranch": "authoring-tool-update-5",
   "gitCommit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-update-5",
     "commit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
-    "timestamp": "2025-07-26T16:57:09.980Z"
+    "timestamp": "2025-07-26T21:11:57.214Z"
   },
   "nodes": [
     {
@@ -36,9 +36,9 @@
         "nodeLabel": "Group",
         "nodeId": "128",
         "content": "Subflow Group",
-        "groupId": "group_128",
-        "title": "Subflow 128",
-        "description": "A group of related nodes"
+        "groupId": "excuse_seq",
+        "title": "Excuse Sequence",
+        "description": "Asks the user is he had a good reason to not do his task"
       }
     },
     {
@@ -67,9 +67,9 @@
         "nodeLabel": "Group",
         "nodeId": "130",
         "content": "Subflow Group",
-        "groupId": "group_130",
-        "title": "Subflow 130",
-        "description": "A group of related nodes"
+        "groupId": "notice_seq",
+        "title": "On Notice Sequence",
+        "description": "Sets a user on notice after a near miss"
       }
     },
     {
@@ -98,9 +98,9 @@
         "nodeLabel": "Group",
         "nodeId": "131",
         "content": "Subflow Group",
-        "groupId": "group_131",
-        "title": "Subflow 131",
-        "description": "A group of related nodes"
+        "groupId": "failure_seq",
+        "title": "Failure Sequence",
+        "description": "When the user failed his task"
       }
     },
     {
@@ -129,9 +129,9 @@
         "nodeLabel": "Group",
         "nodeId": "133",
         "content": "Subflow Group",
-        "groupId": "group_133",
-        "title": "Subflow 133",
-        "description": "A group of related nodes"
+        "groupId": "previous_seq",
+        "title": "Check Previous Task Sequence",
+        "description": "Checks if previous task was completed"
       }
     },
     {
@@ -160,9 +160,9 @@
         "nodeLabel": "Group",
         "nodeId": "135",
         "content": "Subflow Group",
-        "groupId": "group_135",
-        "title": "Subflow 135",
-        "description": "A group of related nodes"
+        "groupId": "overdue_seq",
+        "title": "Overdue Task Sequence",
+        "description": "Checks task completedness when already overdue"
       }
     },
     {
@@ -192,8 +192,8 @@
         "nodeId": "140",
         "content": "Subflow Group",
         "groupId": "active_seq",
-        "title": "Active day routing",
-        "description": "A group of related nodes"
+        "title": "Active Day Routing",
+        "description": "Routes the user during his active days"
       }
     },
     {
@@ -222,30 +222,30 @@
         "nodeLabel": "Group",
         "nodeId": "145",
         "content": "Subflow Group",
-        "groupId": "group_145",
-        "title": "Subflow 145",
-        "description": "A group of related nodes"
+        "groupId": "success_seq",
+        "title": "Success Sequence",
+        "description": "Celebrates the user's success"
       }
     },
     {
       "id": "147",
       "position": {
-        "x": -5.720669807923969,
-        "y": -698.2212933383055
+        "x": 2.2793301920760314,
+        "y": -716.2212933383055
       },
       "type": "group",
       "style": {
-        "width": 699.7134335587236,
-        "height": 1196.9884537796372,
+        "width": 717.7134335587236,
+        "height": 1062.8804219870924,
         "zIndex": 999
       },
-      "width": 700,
-      "height": 1197,
+      "width": 718,
+      "height": 1063,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -5.720669807923969,
-        "y": -698.2212933383055
+        "x": 2.2793301920760314,
+        "y": -716.2212933383055
       },
       "data": {
         "label": "Group 147",
@@ -255,7 +255,7 @@
         "content": "Subflow Group",
         "groupId": "inactive_seq",
         "title": "Inactive Day",
-        "description": "A group of related nodes"
+        "description": "When a user visits on an off day"
       }
     },
     {
@@ -285,8 +285,8 @@
         "nodeId": "148",
         "content": "Subflow Group",
         "groupId": "welcome_seq",
-        "title": "Subflow 148",
-        "description": "A group of related nodes"
+        "title": "Welcome Routing",
+        "description": "First loaded sequence, routes the user "
       }
     },
     {
@@ -311,9 +311,9 @@
         "nodeLabel": "Group",
         "nodeId": "150",
         "content": "Subflow Group",
-        "groupId": "group_150",
-        "title": "Subflow 150",
-        "description": "A group of related nodes"
+        "groupId": "pending_seq",
+        "title": "Pending Task Sequence",
+        "description": "Checks for task completedness before the deadline"
       }
     },
     {
@@ -338,9 +338,9 @@
         "nodeLabel": "Group",
         "nodeId": "153",
         "content": "Subflow Group",
-        "groupId": "group_153",
-        "title": "Subflow 153",
-        "description": "A group of related nodes"
+        "groupId": "completed_seq",
+        "title": "Completed Task Sequence",
+        "description": "Celebrates the user's accomplishment when he returns after completing his task"
       }
     },
     {
@@ -365,9 +365,9 @@
         "nodeLabel": "Group",
         "nodeId": "154",
         "content": "Subflow Group",
-        "groupId": "group_154",
-        "title": "Subflow 154",
-        "description": "A group of related nodes"
+        "groupId": "failed_seq",
+        "title": "Failed Task Sequence",
+        "description": "For when the user returns after failing his task"
       }
     },
     {
@@ -398,7 +398,7 @@
         "content": "Subflow Group",
         "groupId": "intro_seq",
         "title": "Introduction Sequence",
-        "description": "A group of related nodes"
+        "description": "The bot introduces himself"
       }
     },
     {
@@ -429,14 +429,14 @@
         "content": "Subflow Group",
         "groupId": "onboarding_seq",
         "title": "Onboarding Sequence",
-        "description": "A group of related nodes"
+        "description": "The bot explains the core concept"
       }
     },
     {
       "id": "31",
       "position": {
-        "x": 143.13323841697354,
-        "y": 4295.0415444672035
+        "x": 130.82182068185108,
+        "y": 4176.031173027687
       },
       "type": "group",
       "style": {
@@ -449,8 +449,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 143.13323841697354,
-        "y": 4295.0415444672035
+        "x": 130.82182068185108,
+        "y": 4176.031173027687
       },
       "data": {
         "label": "Group 31",
@@ -458,9 +458,9 @@
         "nodeLabel": "Group",
         "nodeId": "31",
         "content": "Subflow Group",
-        "groupId": "group_31",
-        "title": "Subflow 31",
-        "description": "A group of related nodes"
+        "groupId": "settask_seq",
+        "title": "Task Setting Sequence",
+        "description": "Asks the user the name of the task he'll want to perform"
       }
     },
     {
@@ -489,9 +489,9 @@
         "nodeLabel": "Group",
         "nodeId": "39",
         "content": "Subflow Group",
-        "groupId": "group_39",
-        "title": "Subflow 39",
-        "description": "A group of related nodes"
+        "groupId": "deadline_seq",
+        "title": "Deadline Sequence",
+        "description": "Asks the user to set a daily deadline"
       }
     },
     {
@@ -520,9 +520,9 @@
         "nodeLabel": "Group",
         "nodeId": "47",
         "content": "Subflow Group",
-        "groupId": "days_choice_seq",
-        "title": "Active Days Choice Seq",
-        "description": "A group of related nodes"
+        "groupId": "weekdays_seq",
+        "title": "Active Days Choice Sequence",
+        "description": "Asks the user on which days of the week he'll perform his task"
       }
     },
     {
@@ -551,9 +551,9 @@
         "nodeLabel": "Group",
         "nodeId": "55",
         "content": "Subflow Group",
-        "groupId": "group_55",
-        "title": "Subflow 55",
-        "description": "A group of related nodes"
+        "groupId": "reminders_seq",
+        "title": "Reminders Sequence",
+        "description": "Asks the user to set the intensity of his reminders"
       }
     },
     {
@@ -582,9 +582,9 @@
         "nodeLabel": "Group",
         "nodeId": "59",
         "content": "Subflow Group",
-        "groupId": "group_59",
-        "title": "Subflow 59",
-        "description": "A group of related nodes"
+        "groupId": "sendoff_seq",
+        "title": "Sendoff Sequence",
+        "description": "Last sequence in an interaction, goodbyes"
       }
     },
     {
@@ -692,8 +692,8 @@
     {
       "id": "102",
       "position": {
-        "x": 61.813421304412486,
-        "y": 454.317931347754
+        "x": 68.7105696645533,
+        "y": 488.8036731484581
       },
       "type": "editable",
       "width": 248,
@@ -701,8 +701,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -1457.8747551481072,
-        "y": 4625.9705840870865
+        "x": -1037.6087665555374,
+        "y": 5489.299934976776
       },
       "parentId": "130",
       "extent": "parent",
@@ -718,8 +718,8 @@
     {
       "id": "103",
       "position": {
-        "x": 25,
-        "y": 25
+        "x": 98,
+        "y": 81.90147397116198
       },
       "type": "editable",
       "width": 308,
@@ -727,8 +727,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -1494.6881764525197,
-        "y": 4196.652652739333
+        "x": -1008.3193362200907,
+        "y": 5082.39773579948
       },
       "parentId": "130",
       "extent": "parent",
@@ -750,8 +750,8 @@
     {
       "id": "116",
       "position": {
-        "x": 133.60616027852075,
-        "y": 25
+        "x": 189.51058603680758,
+        "y": 108.85663863742957
       },
       "type": "editable",
       "width": 248,
@@ -759,8 +759,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -3910.703711678349,
-        "y": 4404.031635294701
+        "x": -5232.897789446364,
+        "y": 3668.7565079790556
       },
       "parentId": "131",
       "extent": "parent",
@@ -1559,8 +1559,8 @@
     {
       "id": "93",
       "position": {
-        "x": 127.01649502766304,
-        "y": 25
+        "x": 264.9140785647696,
+        "y": 30.590442575828547
       },
       "type": "editable",
       "width": 248,
@@ -1568,8 +1568,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -2663.176000016175,
-        "y": 2948.194798026947
+        "x": -2899.1932271502365,
+        "y": 3286.694552783852
       },
       "parentId": "145",
       "extent": "parent",
@@ -1585,16 +1585,16 @@
     {
       "id": "65",
       "position": {
-        "x": 207.1345086000276,
-        "y": 234.11957801290754
+        "x": 217.1345086000276,
+        "y": 142.1195780129076
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 250.41383879210363,
-        "y": -392.10171532539795
+        "x": 219.41383879210363,
+        "y": -574.1017153253979
       },
       "dragging": false,
       "parentId": "147",
@@ -1611,16 +1611,16 @@
     {
       "id": "66",
       "position": {
-        "x": 209.4303848848266,
-        "y": 611.8167114821836
+        "x": 215.4303848848266,
+        "y": 511.81671148218356
       },
       "type": "editable",
       "width": 248,
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 252.70971507690263,
-        "y": -14.404581856121933
+        "x": 217.70971507690263,
+        "y": -204.40458185612192
       },
       "dragging": false,
       "parentId": "147",
@@ -1636,16 +1636,16 @@
     {
       "id": "67",
       "position": {
-        "x": 402.71343355872364,
-        "y": 937
+        "x": 428.71343355872364,
+        "y": 803
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 497.99276375079967,
-        "y": 272.7787066616945
+        "x": 430.99276375079967,
+        "y": 136.7787066616945
       },
       "dragging": false,
       "parentId": "147",
@@ -1662,16 +1662,16 @@
     {
       "id": "68",
       "position": {
-        "x": 59,
-        "y": 939
+        "x": 41,
+        "y": 805
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 154.27933019207603,
-        "y": 274.7787066616945
+        "x": 43.27933019207603,
+        "y": 138.7787066616945
       },
       "dragging": false,
       "parentId": "147",
@@ -1866,16 +1866,16 @@
     {
       "id": "151",
       "position": {
-        "x": 30.35436049481359,
-        "y": 315.7331514320124
+        "x": 105,
+        "y": 391
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -1162.6945593111914,
-        "y": 1914.7199006241437
+        "x": -1088.048919806005,
+        "y": 1989.9867491921314
       },
       "dragging": false,
       "parentId": "153",
@@ -1891,16 +1891,16 @@
     {
       "id": "82",
       "position": {
-        "x": 25,
-        "y": 25
+        "x": 55,
+        "y": 105
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -1168.048919806005,
-        "y": 1623.9867491921314
+        "x": -1138.048919806005,
+        "y": 1703.9867491921314
       },
       "dragging": false,
       "parentId": "153",
@@ -1917,16 +1917,16 @@
     {
       "id": "152",
       "position": {
-        "x": 31.613812384701532,
-        "y": 308.7770203709715
+        "x": 105,
+        "y": 382
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -552.3929017711441,
-        "y": 1880.082706743141
+        "x": -479.00671415584566,
+        "y": 1953.3056863721695
       },
       "dragging": false,
       "parentId": "154",
@@ -1942,16 +1942,16 @@
     {
       "id": "83",
       "position": {
-        "x": 25,
-        "y": 25
+        "x": 73,
+        "y": 95
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -559.0067141558457,
-        "y": 1596.3056863721695
+        "x": -511.00671415584566,
+        "y": 1666.3056863721695
       },
       "dragging": false,
       "parentId": "154",
@@ -2404,16 +2404,16 @@
     {
       "id": "24",
       "position": {
-        "x": 28.407341945597807,
-        "y": 25
+        "x": 64.4073419455978,
+        "y": 89
       },
       "type": "editable",
       "width": 248,
       "height": 262,
       "selected": false,
       "positionAbsolute": {
-        "x": 333.26287744291454,
-        "y": 5746.1052839113145
+        "x": 207.54058036257135,
+        "y": 4384.0415444672035
       },
       "dragging": false,
       "parentId": "31",
@@ -2431,16 +2431,16 @@
     {
       "id": "26",
       "position": {
-        "x": 25,
-        "y": 316.37415732684985
+        "x": 60.36793530390247,
+        "y": 389
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 329.85553549731674,
-        "y": 6037.479441238164
+        "x": 191.18975598575355,
+        "y": 4565.031173027687
       },
       "dragging": false,
       "parentId": "31",

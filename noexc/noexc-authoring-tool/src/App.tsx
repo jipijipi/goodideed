@@ -2015,7 +2015,7 @@ function Flow() {
         </div>
 
         
-        <div style={{ 
+{/*         <div style={{ 
           fontSize: '11px', 
           color: '#888', 
           marginTop: '10px',
@@ -2029,7 +2029,7 @@ function Flow() {
           ➖ Select grouped nodes + Press 'R' to remove from group<br/>
           ➕ Select ungrouped nodes + Use dropdown to add to group<br/>
           🎨 Click edges to open style panel for color, delay, and styling options
-        </div>
+        </div> */}
       </div>
 
       {/* Status Indicators */}

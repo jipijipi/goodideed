@@ -103,36 +103,37 @@
 
 /* Neubrutalist styling for nodes */
 .react-flow__node {
-  border: 3px solid #000 !important;
+  border: 3px solid var(--border-primary) !important;
   border-radius: 0 !important;
-  box-shadow: 4px 4px 0px #000 !important;
-  background: #fff !important;
+  box-shadow: 4px 4px 0px var(--border-primary) !important;
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
   font-family: 'Courier New', monospace !important;
   font-weight: bold !important;
 }
 
 .react-flow__node.selected {
-  border-color: #ff6b35 !important;
-  box-shadow: 4px 4px 0px #ff6b35 !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 4px 4px 0px var(--accent-color) !important;
 }
 
 .react-flow__node[data-nodetype="group"] {
-  border: 3px dashed #666 !important;
+  border: 3px dashed var(--text-secondary) !important;
   border-radius: 0 !important;
-  box-shadow: 6px 6px 0px #666 !important;
-  background: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 6px 6px 0px var(--text-secondary) !important;
+  background: var(--bg-secondary) !important;
 }
 
 .react-flow__node[data-nodetype="group"].selected {
-  border-color: #ff6b35 !important;
-  box-shadow: 6px 6px 0px #ff6b35 !important;
+  border-color: var(--accent-color) !important;
+  box-shadow: 6px 6px 0px var(--accent-color) !important;
 }
 
 /* Force edge selection styling */
 .react-flow__edge.selected path {
-  stroke: #ff6b35 !important;
+  stroke: var(--accent-color) !important;
   stroke-width: 4px !important;
-  filter: drop-shadow(0 0 6px rgba(255, 107, 53, 0.6)) !important;
+  filter: drop-shadow(0 0 6px var(--accent-color)) !important;
 }
 
 /* Pulse animation for Flutter connect button */

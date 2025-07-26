@@ -20,8 +20,10 @@ import EditableNode from './components/EditableNode';
 import CustomEdge from './components/CustomEdge';
 import GroupNode from './components/GroupNode';
 import ContentEditorPanel from './components/ContentEditorPanel';
+import ThemeToggle from './components/ThemeToggle';
 import { NodeData, NodeCategory, NodeLabel, DataActionItem, NODE_TYPES } from './constants/nodeTypes';
 import { VariableManagerProvider } from './context/VariableManagerContext';
+import { ThemeProvider } from './context/ThemeContext';
 import VariableManager from './components/VariableManager';
 import HelpTooltip from './components/HelpTooltip';
 import { helpContent } from './constants/helpContent';
@@ -93,9 +95,11 @@ const initialEdges: Edge[] = [
 
 const FlowWithProvider = () => {
   return (
-    <ReactFlowProvider>
-      <Flow />
-    </ReactFlowProvider>
+    <ThemeProvider>
+      <ReactFlowProvider>
+        <Flow />
+      </ReactFlowProvider>
+    </ThemeProvider>
   );
 };
 
@@ -1952,6 +1956,7 @@ function Flow() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      <ThemeToggle />
       {/* Quick Create Panel */}
       <div style={{
         position: 'absolute',

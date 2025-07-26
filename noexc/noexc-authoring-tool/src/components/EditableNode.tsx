@@ -7,14 +7,14 @@ import VariableInput from './VariableInput';
 
 const getCategoryColor = (category: NodeCategory): string => {
   const colors: Record<NodeCategory, string> = {
-    bot: '#e3f2fd',
-    user: '#f3e5f5',
-    choice: '#fff3e0',
-    textInput: '#e8f5e8',
-    autoroute: '#fce4ec',
-    dataAction: '#f3e5f5'
+    bot: 'var(--bg-tertiary)',
+    user: 'var(--bg-secondary)',
+    choice: 'var(--bg-tertiary)',
+    textInput: 'var(--bg-secondary)',
+    autoroute: 'var(--bg-tertiary)',
+    dataAction: 'var(--bg-secondary)'
   };
-  return colors[category] || '#f5f5f5';
+  return colors[category] || 'var(--bg-secondary)';
 };
 
 const getNodeTitle = (category: NodeCategory): string => {
@@ -682,9 +682,9 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
         fontSize: '14px', 
         fontWeight: 'bold', 
         marginBottom: '10px',
-        color: '#333',
+        color: 'var(--text-primary)',
         textAlign: 'center',
-        borderBottom: '1px solid #ddd',
+        borderBottom: '1px solid var(--border-secondary)',
         paddingBottom: '6px'
       }}>
         {getNodeTitle(data.category)}

@@ -9,28 +9,29 @@ const ThemeToggle: React.FC = () => {
       onClick={toggleTheme}
       style={{
         position: 'absolute',
-        top: '10px',
-        right: '10px',
+        bottom: '20px',
+        right: '20px',
         zIndex: 1000,
-        background: 'var(--bg-panel)',
-        color: 'var(--text-primary)',
-        border: '2px solid var(--border-primary)',
-        borderRadius: '0',
-        padding: '8px 12px',
+        background: 'var(--bg-secondary)',
+        color: 'var(--text-secondary)',
+        border: '1px solid var(--border-secondary)',
+        borderRadius: '4px',
+        padding: '6px 10px',
         cursor: 'pointer',
-        fontFamily: 'Courier New, monospace',
-        fontWeight: 'bold',
-        fontSize: '12px',
-        boxShadow: '3px 3px 0px var(--border-primary)',
-        transition: 'all 0.2s ease'
+        fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+        fontWeight: 'normal',
+        fontSize: '11px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        transition: 'all 0.2s ease',
+        opacity: 0.7
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translate(-2px, -2px)';
-        e.currentTarget.style.boxShadow = '5px 5px 0px var(--border-primary)';
+        e.currentTarget.style.opacity = '1';
+        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translate(0, 0)';
-        e.currentTarget.style.boxShadow = '3px 3px 0px var(--border-primary)';
+        e.currentTarget.style.opacity = '0.7';
+        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
       }}
     >
       {theme === 'light' ? '🌙 Dark' : '☀️ Light'}

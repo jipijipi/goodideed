@@ -25,6 +25,7 @@ import { VariableManagerProvider } from './context/VariableManagerContext';
 import VariableManager from './components/VariableManager';
 import HelpTooltip from './components/HelpTooltip';
 import { helpContent } from './constants/helpContent';
+import { saveMasterFlow, loadMasterFlow, importMasterFlow, exportMasterFlow } from './utils/masterFlowPersistence';
 
 const nodeTypes = {
   [NODE_TYPES.EDITABLE]: EditableNode,
@@ -1077,119 +1078,79 @@ function Flow() {
     showNotification('JSON file exported successfully');
   }, [nodes, edges]);
 
-  const saveData = useCallback(() => {
-    const data = {
-      nodes: nodes.map(({ data, ...node }) => ({
-        ...node,
-        data: { 
-          label: data.label,
-          category: data.category,
-          nodeLabel: data.nodeLabel,
-          nodeId: data.nodeId,
-          contentKey: data.contentKey,
-          content: data.content,
-          placeholderText: data.placeholderText,
-          storeKey: data.storeKey,
-          dataActions: data.dataActions,
-          groupId: data.groupId,
-          title: data.title,
-          description: data.description
-        }
-      })),
-      edges: edges.map(edge => ({
-        id: edge.id,
-        source: edge.source,
-        target: edge.target,
-        type: edge.type || 'default',
-        label: edge.data?.label,
-        style: edge.data?.style,
-        delay: edge.data?.delay,
-        color: edge.data?.color,
-        value: edge.data?.value,
-        contentKey: edge.data?.contentKey
-      }))
-    };
-    
-    localStorage.setItem('react-flow-data', JSON.stringify(data));
-    showNotification('Data saved to browser storage');
-  }, [nodes, edges]);
-
-  const restoreData = useCallback(() => {
-    const savedData = localStorage.getItem('react-flow-data');
-    
-    if (savedData) {
-      try {
-        const importData = JSON.parse(savedData);
-        
-        if (importData.nodes && importData.edges) {
-          // Convert saved nodes to the correct format
-          const importedNodes = importData.nodes.map((node: any) => ({
-            ...node,
-            data: {
-              ...node.data,
-              // Only add group metadata if this was actually a group node
-              ...(node.type === NODE_TYPES.GROUP ? {
-                groupId: node.data.groupId || node.data.nodeId,
-                title: node.data.title || node.data.label,
-                description: node.data.description || 'Imported group',
-              } : {}),
-              onLabelChange: () => {},
-              onCategoryChange: () => {},
-              onNodeLabelChange: () => {},
-              onNodeIdChange: () => {},
-              onContentKeyChange: () => {},
-              onContentChange: () => {},
-              onPlaceholderChange: () => {},
-              onStoreKeyChange: () => {},
-              onDataActionsChange: () => {},
-              onGroupIdChange: () => {},
-              onTitleChange: () => {},
-              onDescriptionChange: () => {}
-            }
-          }));
-
-          // Convert saved edges to the correct format
-          const importedEdges = importData.edges.map((edge: any) => ({
-            ...edge,
-            type: edge.type || 'custom',
-            data: { 
-              label: edge.label,
-              style: edge.style,
-              delay: edge.delay,
-              color: edge.color,
-              value: edge.value,
-              contentKey: edge.contentKey,
-              onLabelChange: () => {},
-              onStyleChange: () => {},
-              onDelayChange: () => {},
-              onColorChange: () => {},
-              onValueChange: () => {},
-              onReset: () => {}
-            }
-          }));
-
-          setNodes(importedNodes);
-          setEdges(importedEdges);
-          
-          // Update node counter based on imported nodes
-          const maxNodeId = Math.max(
-            ...importedNodes
-              .map((n: any) => parseInt(n.id))
-              .filter((id: number) => !isNaN(id)),
-            nodeIdCounter
-          );
-          setNodeIdCounter(maxNodeId + 1);
-          showNotification('Data restored from browser storage');
-        } else {
-          showError('Invalid saved data format', ['Please check the saved data structure']);
-        }
-      } catch (error) {
-        showError('Error restoring saved data', [error instanceof Error ? error.message : 'Unknown error']);
+  const saveData = useCallback(async () => {
+    try {
+      const result = await saveMasterFlow(nodes, edges);
+      if (result.success) {
+        showNotification(result.message);
+      } else {
+        showError('Save Failed', [result.message]);
       }
-    } else {
-      showError('No saved data found', ['Save some data first before trying to restore']);
+    } catch (error) {
+      showError('Save Failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [setNodes, setEdges, nodeIdCounter, setNodeIdCounter]);
+  }, [nodes, edges, showNotification, showError]);
+
+  const restoreData = useCallback(async () => {
+    try {
+      const result = await loadMasterFlow();
+      if (result.success && result.data) {
+        // Add callback functions to the data
+        const restoredNodes = result.data.nodes.map((node: any) => ({
+          ...node,
+          data: {
+            ...node.data,
+            onLabelChange: () => {},
+            onCategoryChange: () => {},
+            onNodeLabelChange: () => {},
+            onNodeIdChange: () => {},
+            onContentKeyChange: () => {},
+            onContentChange: () => {},
+            onPlaceholderChange: () => {},
+            onStoreKeyChange: () => {},
+            onDataActionsChange: () => {},
+            onGroupIdChange: () => {},
+            onTitleChange: () => {},
+            onDescriptionChange: () => {}
+          }
+        }));
+
+        const restoredEdges = result.data.edges.map((edge: any) => ({
+          ...edge,
+          data: {
+            ...edge.data,
+            onLabelChange: () => {},
+            onStyleChange: () => {},
+            onDelayChange: () => {},
+            onColorChange: () => {},
+            onValueChange: () => {},
+            onReset: () => {}
+          }
+        }));
+
+        setNodes(restoredNodes);
+        setEdges(restoredEdges);
+        
+        // Update node counter based on restored nodes
+        const maxNodeId = Math.max(
+          ...restoredNodes
+            .map((n: any) => parseInt(n.id))
+            .filter((id: number) => !isNaN(id)),
+          nodeIdCounter
+        );
+        setNodeIdCounter(maxNodeId + 1);
+        
+        showNotification(result.message);
+        if (result.warning) {
+          setTimeout(() => showError('Version Warning', [result.warning!]), 2000);
+        }
+      } else {
+        showError('Load Failed', [result.message]);
+      }
+    } catch (error) {
+      showError('Load Failed', [error instanceof Error ? error.message : 'Unknown error']);
+    }
+  }, [setNodes, setEdges, nodeIdCounter, setNodeIdCounter, showNotification, showError]);
 
   const importFromJSON = useCallback(() => {
     const input = document.createElement('input');
@@ -1869,6 +1830,71 @@ function Flow() {
     { category: 'dataAction' as NodeCategory, label: 'Data Action' as NodeLabel, text: 'Data action', icon: '⚙️', description: 'Data action' },
   ];
 
+  // Auto-load master flow on component mount
+  useEffect(() => {
+    const autoLoadMasterFlow = async () => {
+      try {
+        const result = await loadMasterFlow();
+        if (result.success && result.data) {
+          // Add callback functions to the data
+          const loadedNodes = result.data.nodes.map((node: any) => ({
+            ...node,
+            data: {
+              ...node.data,
+              onLabelChange: () => {},
+              onCategoryChange: () => {},
+              onNodeLabelChange: () => {},
+              onNodeIdChange: () => {},
+              onContentKeyChange: () => {},
+              onContentChange: () => {},
+              onPlaceholderChange: () => {},
+              onStoreKeyChange: () => {},
+              onDataActionsChange: () => {},
+              onGroupIdChange: () => {},
+              onTitleChange: () => {},
+              onDescriptionChange: () => {}
+            }
+          }));
+
+          const loadedEdges = result.data.edges.map((edge: any) => ({
+            ...edge,
+            data: {
+              ...edge.data,
+              onLabelChange: () => {},
+              onStyleChange: () => {},
+              onDelayChange: () => {},
+              onColorChange: () => {},
+              onValueChange: () => {},
+              onReset: () => {}
+            }
+          }));
+
+          setNodes(loadedNodes);
+          setEdges(loadedEdges);
+          
+          // Update node counter
+          const maxNodeId = Math.max(
+            ...loadedNodes
+              .map((n: any) => parseInt(n.id))
+              .filter((id: number) => !isNaN(id)),
+            nodeIdCounter
+          );
+          setNodeIdCounter(maxNodeId + 1);
+          
+          showNotification(`Auto-loaded: ${result.message}`);
+          if (result.warning) {
+            setTimeout(() => showError('Version Warning', [result.warning!]), 3000);
+          }
+        }
+        // If no master flow exists, we'll just use the default initialNodes/initialEdges
+      } catch (error) {
+        console.warn('Failed to auto-load master flow:', error);
+        // Continue with default nodes/edges
+      }
+    };
+
+    autoLoadMasterFlow();
+  }, []); // Only run on mount
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
@@ -2151,6 +2177,81 @@ function Flow() {
           >
             📥 Import JSON
           </button>
+          
+          <button 
+            onClick={async () => {
+              try {
+                const result = await importMasterFlow();
+                if (result.success && result.data) {
+                  // Add callback functions to the imported data
+                  const importedNodes = result.data.nodes.map((node: any) => ({
+                    ...node,
+                    data: {
+                      ...node.data,
+                      onLabelChange: () => {},
+                      onCategoryChange: () => {},
+                      onNodeLabelChange: () => {},
+                      onNodeIdChange: () => {},
+                      onContentKeyChange: () => {},
+                      onContentChange: () => {},
+                      onPlaceholderChange: () => {},
+                      onStoreKeyChange: () => {},
+                      onDataActionsChange: () => {},
+                      onGroupIdChange: () => {},
+                      onTitleChange: () => {},
+                      onDescriptionChange: () => {}
+                    }
+                  }));
+
+                  const importedEdges = result.data.edges.map((edge: any) => ({
+                    ...edge,
+                    data: {
+                      ...edge.data,
+                      onLabelChange: () => {},
+                      onStyleChange: () => {},
+                      onDelayChange: () => {},
+                      onColorChange: () => {},
+                      onValueChange: () => {},
+                      onReset: () => {}
+                    }
+                  }));
+
+                  setNodes(importedNodes);
+                  setEdges(importedEdges);
+                  
+                  // Update node counter
+                  const maxNodeId = Math.max(
+                    ...importedNodes
+                      .map((n: any) => parseInt(n.id))
+                      .filter((id: number) => !isNaN(id)),
+                    nodeIdCounter
+                  );
+                  setNodeIdCounter(maxNodeId + 1);
+                  
+                  showNotification(result.message);
+                  if (result.warning) {
+                    setTimeout(() => showError('Version Warning', [result.warning!]), 2000);
+                  }
+                } else {
+                  showError('Import Failed', [result.message]);
+                }
+              } catch (error) {
+                showError('Import Failed', [error instanceof Error ? error.message : 'Unknown error']);
+              }
+            }}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#2196f3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+          >
+            📄 Import Master Flow
+          </button>
         </div>
 
         {/* Export & Tools */}
@@ -2194,6 +2295,34 @@ function Flow() {
             📄 Export Sequences
           </button>
           
+          <button 
+            onClick={async () => {
+              try {
+                const result = await exportMasterFlow(nodes, edges);
+                if (result.success) {
+                  showNotification(result.message);
+                } else {
+                  showError('Export Failed', [result.message]);
+                }
+              } catch (error) {
+                showError('Export Failed', [error instanceof Error ? error.message : 'Unknown error']);
+              }
+            }}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#9c27b0',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+            title="Export master flow for sharing or backup"
+          >
+            📤 Export Master Flow
+          </button>
+
           <button 
             onClick={exportContent}
             style={{

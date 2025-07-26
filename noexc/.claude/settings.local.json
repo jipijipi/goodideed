@@ -37,7 +37,8 @@
       "WebFetch(domain:localhost)",
       "Bash(git submodule:*)",
       "Bash(git add:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(npm run:*)"
     ],
     "deny": []
   }

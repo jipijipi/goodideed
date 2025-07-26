@@ -42,17 +42,8 @@ class MessageDisplayManager {
 
   /// Display a list of messages with delays and animations
   Future<void> displayMessages(List<ChatMessage> messages, MessageQueue messageQueue, VoidCallback notifyListeners) async {
-    // Filter out duplicates and empty messages
+    // Filter out empty messages only
     final filteredMessages = messages.where((message) {
-      // Skip messages that are already displayed to prevent duplicates
-      final isDuplicate = _displayedMessages.any((existing) => 
-        existing.id == message.id && 
-        existing.text == message.text &&
-        existing.sender == message.sender
-      );
-      
-      if (isDuplicate) return false;
-      
       // Skip messages with empty text that are not interactive
       if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
         return false;

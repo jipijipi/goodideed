@@ -328,7 +328,8 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
               placeholder="Enter variants, one per line..."
               style={{
                 width: '100%',
-                height: '150px',
+                height: '75vh',
+                minHeight: '200px',
                 border: '1px solid #ddd',
                 borderRadius: '4px',
                 padding: '8px',

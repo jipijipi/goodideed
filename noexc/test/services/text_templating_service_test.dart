@@ -1,10 +1,31 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart';
 import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/services/text_templating_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  const MethodChannel('flutter/assets')
+      .setMockMethodCallHandler((MethodCall methodCall) async {
+    if (methodCall.method == 'loadString') {
+      final String key = methodCall.arguments as String;
+      
+      switch (key) {
+        case 'assets/content/formatters/timeOfDay.json':
+          return '{"1": "morning", "2": "afternoon", "3": "evening", "4": "night"}';
+        case 'assets/content/formatters/intensity.json':
+          return '{"none": "off", "mild": "low", "severe": "high", "extreme": "maximum"}';
+        case 'assets/content/formatters/activeDays.json':
+          return '{"1,2,3,4,5": "weekdays", "6,7": "weekends", "1,2,3,4,5,6,7": "daily"}';
+        default:
+          throw PlatformException(code: 'FileNotFound', message: 'Asset not found');
+      }
+    }
+    return null;
+  });
+
   group('TextTemplatingService', () {
     late TextTemplatingService templatingService;
     late UserDataService userDataService;
@@ -310,6 +331,116 @@ void main() {
         // Assert
         expect(result, equals('Previous task is ${testCase['expected']}'));
       }
+    });
+
+    // New formatter tests
+    test('should format values using timeOfDay formatter', () async {
+      // Arrange
+      await userDataService.storeValue('task.deadlineTime', 1);
+      const text = 'See you by {task.deadlineTime:timeOfDay}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('See you by morning'));
+    });
+
+    test('should format values using intensity formatter', () async {
+      // Arrange
+      await userDataService.storeValue('reminders.intensity', 'severe');
+      const text = 'Notification level: {reminders.intensity:intensity}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Notification level: high'));
+    });
+
+    test('should format values using activeDays formatter', () async {
+      // Arrange
+      await userDataService.storeValue('task.activeDays', '1,2,3,4,5');
+      const text = 'Active on: {task.activeDays:activeDays}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Active on: weekdays'));
+    });
+
+    test('should fall back to raw value when formatter not found', () async {
+      // Arrange
+      await userDataService.storeValue('task.deadlineTime', 1);
+      const text = 'See you by {task.deadlineTime:nonExistentFormatter}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('See you by 1'));
+    });
+
+    test('should fall back to raw value when value not found in formatter', () async {
+      // Arrange
+      await userDataService.storeValue('task.deadlineTime', 999);
+      const text = 'See you by {task.deadlineTime:timeOfDay}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('See you by 999'));
+    });
+
+    test('should combine formatter with fallback syntax', () async {
+      // Arrange - don't store any value
+      const text = 'See you by {task.deadlineTime:timeOfDay|your deadline}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('See you by your deadline'));
+    });
+
+    test('should use formatted value over fallback when value exists', () async {
+      // Arrange
+      await userDataService.storeValue('task.deadlineTime', 2);
+      const text = 'See you by {task.deadlineTime:timeOfDay|your deadline}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('See you by afternoon'));
+    });
+
+    test('should handle multiple formatters in same text', () async {
+      // Arrange
+      await userDataService.storeValue('task.deadlineTime', 3);
+      await userDataService.storeValue('reminders.intensity', 'mild');
+      const text = 'Reminder at {task.deadlineTime:timeOfDay} with {reminders.intensity:intensity} intensity';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Reminder at evening with low intensity'));
+    });
+
+    test('should handle mixed formatted and non-formatted templates', () async {
+      // Arrange
+      await userDataService.storeValue(StorageKeys.userName, 'Alice');
+      await userDataService.storeValue('task.deadlineTime', 4);
+      const text = 'Hello {user.name}, see you by {task.deadlineTime:timeOfDay}';
+
+      // Act
+      final result = await templatingService.processTemplate(text);
+
+      // Assert
+      expect(result, equals('Hello Alice, see you by night'));
     });
   });
 }

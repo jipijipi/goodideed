@@ -64,6 +64,7 @@ flutter:
     - assets/variants/
     - assets/debug/
     - assets/content/
+    - assets/content/formatters/
     - assets/content/bot/
     - assets/content/bot/introduce/
     - assets/content/bot/inform/

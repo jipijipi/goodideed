@@ -2633,31 +2633,6 @@ function Flow() {
         <Background />
       </ReactFlow>
       
-      {/* Content Editor Panel */}
-      <ContentEditorPanel
-        contentKey={
-          selectedNodes.length === 1 && selectedNodes[0].data.contentKey 
-            ? selectedNodes[0].data.contentKey
-            : selectedEdge?.data?.contentKey
-        }
-        onContentChange={handleContentVariantChange}
-        currentVariants={
-          selectedNodes.length === 1 && selectedNodes[0].data.contentKey
-            ? contentVariants[selectedNodes[0].data.contentKey] || []
-            : selectedEdge?.data?.contentKey
-            ? contentVariants[selectedEdge.data.contentKey] || []
-            : []
-        }
-        isVisible={
-          (selectedNodes.length === 1 && !!selectedNodes[0].data.contentKey) ||
-          (!!selectedEdge?.data?.contentKey)
-        }
-        directoryHandle={directoryHandle}
-        onNotification={showNotification}
-        onError={showError}
-        nodeCategory={selectedNodes.length === 1 ? selectedNodes[0].data.category : undefined}
-        isEdge={!!selectedEdge}
-      />
       
       {/* Success Notification */}
       {notification && (
@@ -2990,6 +2965,283 @@ function Flow() {
               🎨 Reset Styling
             </button>
           </div>
+
+          {/* Content Variants Section */}
+          {selectedEdge.data?.contentKey && (
+            <ContentEditorPanel
+              contentKey={selectedEdge.data.contentKey}
+              onContentChange={handleContentVariantChange}
+              currentVariants={contentVariants[selectedEdge.data.contentKey] || []}
+              isVisible={true}
+              directoryHandle={directoryHandle}
+              onNotification={showNotification}
+              onError={showError}
+              isEdge={true}
+              inline={true}
+            />
+          )}
+
+          <div style={{ height: '40px' }} />
+        </div>
+      )}
+
+      {/* Node Properties Side Panel */}
+      {selectedNodes.length === 1 && !selectedEdge && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          width: '300px',
+          height: '100vh',
+          backgroundColor: 'white',
+          borderLeft: '1px solid #ddd',
+          boxShadow: '-2px 0 8px rgba(0,0,0,0.1)',
+          zIndex: 1500,
+          padding: '20px',
+          overflowY: 'auto',
+          animation: 'slideInFromRight 0.3s ease-out'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '20px',
+            paddingBottom: '10px',
+            borderBottom: '2px solid #f0f0f0'
+          }}>
+            <h3 style={{ margin: 0, color: '#333', fontSize: '18px' }}>🔧 Node Properties</h3>
+            <button
+              onClick={() => setSelectedNodes([])}
+              style={{
+                background: 'none',
+                border: 'none',
+                fontSize: '20px',
+                cursor: 'pointer',
+                color: '#666',
+                padding: '4px'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Node Info */}
+          <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '6px' }}>
+            <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Internal ID</div>
+            <div style={{ fontSize: '14px', fontFamily: 'monospace', color: '#333' }}>{selectedNodes[0].id}</div>
+          </div>
+
+          {/* Data Properties Header */}
+          <div style={{ marginBottom: '16px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', margin: '0 0 12px 0', borderBottom: '2px solid #e3f2fd', paddingBottom: '8px' }}>
+              📊 Node Data
+            </h3>
+          </div>
+
+          {/* External ID Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              🆔 External ID
+            </label>
+            <input
+              type="text"
+              value={selectedNodes[0].data.nodeId || ''}
+              onChange={(e) => {
+                const newNodeId = e.target.value;
+                onNodeIdChange(selectedNodes[0].id, newNodeId);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, nodeId: newNodeId } }
+                    : node
+                ));
+              }}
+              placeholder="e.g., welcome_1, choice_menu_2..."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Unique identifier for this node in exported JSON
+            </div>
+          </div>
+
+          {/* Label Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              📝 Label
+            </label>
+            <input
+              type="text"
+              value={selectedNodes[0].data.label || ''}
+              onChange={(e) => {
+                const newLabel = e.target.value;
+                onLabelChange(selectedNodes[0].id, newLabel);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, label: newLabel } }
+                    : node
+                ));
+              }}
+              placeholder="e.g., Welcome Message, User Choice..."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Display name for this node in the authoring tool
+            </div>
+          </div>
+
+          {/* Content Key Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              🔑 Content Key
+            </label>
+            <input
+              type="text"
+              value={selectedNodes[0].data.contentKey || ''}
+              onChange={(e) => {
+                const newContentKey = e.target.value;
+                onContentKeyChange(selectedNodes[0].id, newContentKey);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, contentKey: newContentKey } }
+                    : node
+                ));
+              }}
+              placeholder="e.g., bot.greet.welcome, user.choose.option..."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Semantic content key for dynamic text variants
+            </div>
+          </div>
+
+          {/* Store Key Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              🗃️ Store Key
+            </label>
+            <input
+              type="text"
+              value={selectedNodes[0].data.storeKey || ''}
+              onChange={(e) => {
+                const newStoreKey = e.target.value;
+                onStoreKeyChange(selectedNodes[0].id, newStoreKey);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, storeKey: newStoreKey } }
+                    : node
+                ));
+              }}
+              placeholder="e.g., user.name, task.status, preferences.theme..."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Key where user input will be stored (for textInput nodes)
+            </div>
+          </div>
+
+          {/* Content Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              📄 Content
+            </label>
+            <textarea
+              value={selectedNodes[0].data.content || ''}
+              onChange={(e) => {
+                const newContent = e.target.value;
+                onContentChange(selectedNodes[0].id, newContent);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, content: newContent } }
+                    : node
+                ));
+              }}
+              placeholder="Message content... Use ||| to split into multiple messages"
+              rows={4}
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px',
+                resize: 'vertical',
+                fontFamily: 'inherit'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Text content for bot messages. Use {'{key|fallback}'} for templates
+            </div>
+          </div>
+
+          {/* Placeholder Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+              💬 Placeholder
+            </label>
+            <input
+              type="text"
+              value={selectedNodes[0].data.placeholderText || ''}
+              onChange={(e) => {
+                const newPlaceholder = e.target.value;
+                onPlaceholderChange(selectedNodes[0].id, newPlaceholder);
+                setSelectedNodes(prev => prev.map(node => 
+                  node.id === selectedNodes[0].id 
+                    ? { ...node, data: { ...node.data, placeholderText: newPlaceholder } }
+                    : node
+                ));
+              }}
+              placeholder="e.g., Enter your name..., Type your message..."
+              style={{
+                width: '100%',
+                padding: '8px 12px',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                fontSize: '14px'
+              }}
+            />
+            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+              Placeholder text for textInput nodes
+            </div>
+          </div>
+
+          {/* Content Variants Section */}
+          {selectedNodes[0].data.contentKey && (
+            <ContentEditorPanel
+              contentKey={selectedNodes[0].data.contentKey}
+              onContentChange={handleContentVariantChange}
+              currentVariants={contentVariants[selectedNodes[0].data.contentKey] || []}
+              isVisible={true}
+              directoryHandle={directoryHandle}
+              onNotification={showNotification}
+              onError={showError}
+              nodeCategory={selectedNodes[0].data.category}
+              isEdge={false}
+              inline={true}
+            />
+          )}
+
           <div style={{ height: '40px' }} />
         </div>
       )}

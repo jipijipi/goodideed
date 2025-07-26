@@ -10,6 +10,7 @@ interface ContentEditorPanelProps {
   onError: (title: string, messages: string[]) => void;
   nodeCategory?: string;
   isEdge?: boolean;
+  inline?: boolean;
 }
 
 const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
@@ -21,7 +22,8 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
   onNotification,
   onError,
   nodeCategory,
-  isEdge
+  isEdge,
+  inline = false
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState('');
@@ -195,46 +197,70 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
     return null;
   }
 
+  const containerStyle = inline ? {
+    // Inline mode - integrate into config panel
+    marginBottom: '20px',
+    border: 'none',
+    borderRadius: '0',
+    padding: '0',
+    background: 'transparent',
+    width: '100%',
+    maxHeight: 'none'
+  } : {
+    // Floating mode - original positioning
+    position: 'absolute' as const,
+    top: '10px',
+    right: '530px',
+    background: 'white',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    padding: '16px',
+    width: '300px',
+    maxHeight: '400px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+    zIndex: 1000
+  };
+
   return (
-    <div style={{
-      position: 'absolute',
-      top: '10px',
-      right: '530px',
-      background: 'white',
-      border: '1px solid #ddd',
-      borderRadius: '8px',
-      padding: '16px',
-      width: '300px',
-      maxHeight: '400px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-      zIndex: 1000
-    }}>
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        marginBottom: '12px',
-        borderBottom: '1px solid #eee',
-        paddingBottom: '8px'
-      }}>
-        <span style={{ fontSize: '18px', marginRight: '8px' }}>
-          {isLoadingExisting ? '⏳' : hasExistingContent ? '📁' : contentInfo.icon}
-        </span>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
-            {contentKey}
-          </div>
-          <div style={{ fontSize: '11px', color: '#666', fontFamily: 'monospace' }}>
-            {getFilePathFromContentKey(contentKey)}
-          </div>
-          <div style={{ fontSize: '10px', color: hasExistingContent ? '#28a745' : contentInfo.canEdit ? '#6c757d' : '#ffc107', marginTop: '2px' }}>
-            {isLoadingExisting ? 'Loading existing content...' :
-             hasExistingContent ? 'Loaded from existing file' : 
-             contentInfo.canEdit ? 
-               (directoryHandle ? 'New content (will save to Flutter)' : 'New content (connect Flutter to sync)') :
-               contentInfo.message}
+    <div style={containerStyle}>
+      {/* Header Section */}
+      {inline ? (
+        <div style={{ marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', margin: '0 0 12px 0', borderBottom: '2px solid #e3f2fd', paddingBottom: '8px' }}>
+            🎨 Content Variants
+          </h3>
+          <div style={{ fontSize: '11px', color: '#666', fontFamily: 'monospace', marginBottom: '8px' }}>
+            {contentKey && getFilePathFromContentKey(contentKey)}
           </div>
         </div>
-      </div>
+      ) : (
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          marginBottom: '12px',
+          borderBottom: '1px solid #eee',
+          paddingBottom: '8px'
+        }}>
+          <span style={{ fontSize: '18px', marginRight: '8px' }}>
+            {isLoadingExisting ? '⏳' : hasExistingContent ? '📁' : contentInfo.icon}
+          </span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#333' }}>
+              {contentKey}
+            </div>
+            <div style={{ fontSize: '11px', color: '#666', fontFamily: 'monospace' }}>
+              {getFilePathFromContentKey(contentKey)}
+            </div>
+            <div style={{ fontSize: '10px', color: hasExistingContent ? '#28a745' : contentInfo.canEdit ? '#6c757d' : '#ffc107', marginTop: '2px' }}>
+              {isLoadingExisting ? 'Loading existing content...' :
+               hasExistingContent ? 'Loaded from existing file' : 
+               contentInfo.canEdit ? 
+                 (directoryHandle ? 'New content (will save to Flutter)' : 'New content (connect Flutter to sync)') :
+                 contentInfo.message}
+            </div>
+          </div>
+        </div>
+      )}
 
       {contentInfo.canEdit ? (
         !isEditing ? (
@@ -302,7 +328,8 @@ const ContentEditorPanel: React.FC<ContentEditorPanelProps> = ({
               placeholder="Enter variants, one per line..."
               style={{
                 width: '100%',
-                height: '150px',
+                height: '75vh',
+                minHeight: '200px',
                 border: '1px solid #ddd',
                 borderRadius: '4px',
                 padding: '8px',

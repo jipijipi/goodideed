@@ -238,16 +238,16 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
             ) : (
               <div
                 style={{
-                  background: isCrossSequence ? '#f3e5f5' : 'white',
+                  background: isCrossSequence ? 'var(--bg-tertiary)' : 'var(--bg-primary)',
                   padding: '2px 6px',
                   borderRadius: '4px',
-                  border: `1px solid ${isCrossSequence ? '#9c27b0' : '#ddd'}`,
+                  border: `1px solid ${isCrossSequence ? '#9c27b0' : 'var(--border-secondary)'}`,
                   cursor: 'pointer',
                   minWidth: '40px',
                   textAlign: 'center',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                   fontWeight: isCrossSequence ? 'bold' : 'normal',
-                  color: isCrossSequence ? '#6a1b9a' : 'inherit'
+                  color: isCrossSequence ? '#6a1b9a' : 'var(--text-primary)'
                 }}
                 onDoubleClick={handleDoubleClick}
                 title="Double-click to edit"
@@ -264,7 +264,7 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
                   </span>
                 )}
                 {data?.delay && data.delay > 0 && (
-                  <span style={{ fontSize: '10px', color: '#666', marginLeft: (data?.label || hasContentKey || hasValue) ? '4px' : '0px' }}>
+                  <span style={{ fontSize: '10px', color: 'var(--text-secondary)', marginLeft: (data?.label || hasContentKey || hasValue) ? '4px' : '0px' }}>
                     {(data?.label || hasContentKey || hasValue) ? `(${data.delay}ms)` : `${data.delay}ms`}
                   </span>
                 )}

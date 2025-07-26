@@ -85,11 +85,44 @@
   fill: var(--text-primary) !important;
 }
 
+/* Default edge text color */
+.react-flow__edge-textbg {
+  fill: var(--bg-tertiary) !important;
+}
+
+.react-flow__edge text {
+  fill: var(--text-primary) !important;
+}
+
 /* Edge label renderer should be on top */
 .react-flow__edge-label {
   z-index: 1002 !important;
   pointer-events: all !important;
   color: var(--text-primary) !important;
+}
+
+/* Override inline styles for edge labels - more aggressive targeting */
+.react-flow__edge-label div[style] {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-secondary) !important;
+}
+
+/* Target any div with inline background white */
+div.nodrag.nopan div[style*="background: white"],
+div.nodrag.nopan div[style*="background:white"] {
+  background: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+/* Most specific targeting for ReactFlow edge labels */
+.react-flow__edge-label div,
+.react-flow__edge-label > div,
+div[style*="transform: translate(-50%, -50%)"] div[style*="background"] {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-secondary) !important;
 }
 
 @keyframes slideInFromRight {
@@ -108,7 +141,7 @@
   border: 3px solid var(--border-primary) !important;
   border-radius: 0 !important;
   box-shadow: 4px 4px 0px var(--border-primary) !important;
-  background: var(--bg-primary) !important;
+  background: var(--bg-tertiary) !important;
   color: var(--text-primary) !important;
   font-family: 'Courier New', monospace !important;
   font-weight: bold !important;

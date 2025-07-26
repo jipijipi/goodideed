@@ -10,7 +10,7 @@ The authoring tool now uses git-tracked state management instead of browser loca
 - No version tracking or compatibility warnings
 
 ### After  
-- Master flow stored in **git-tracked file**: `public/authoring-tool-master-flow.flow`
+- Master flow stored in **git-tracked file**: `master-flow/authoring-tool-master-flow.json`
 - Includes git branch/commit metadata for version compatibility
 - Automatic warnings when loading flows from different branches
 - Never lose work when switching branches or devices
@@ -18,13 +18,13 @@ The authoring tool now uses git-tracked state management instead of browser loca
 ## New Features
 
 ### Auto-Load on Startup
-- Tool automatically loads `public/authoring-tool-master-flow.flow` on startup
+- Tool automatically loads `master-flow/authoring-tool-master-flow.json` on startup
 - Shows branch compatibility warnings if needed
 - Falls back to default flow if no master flow exists
 
 ### Git-Tracked Persistence
-- **Save**: Updates `public/authoring-tool-master-flow.flow` with current git info
-- **Restore**: Loads from `public/authoring-tool-master-flow.flow` with version warnings
+- **Save**: Updates `master-flow/authoring-tool-master-flow.json` with current git info
+- **Restore**: Loads from `master-flow/authoring-tool-master-flow.json` with version warnings
 - **Import Master Flow**: Import `.json` files from other branches/collaborators  
 - **Export Master Flow**: Export timestamped `.json` files for sharing
 
@@ -49,14 +49,14 @@ npm run build
 
 ### Button Reference
 - **💾 Save**: 
-  - When Flutter project connected: Directly saves to `public/authoring-tool-master-flow.flow` (no dialog, no page reload)
+  - When Flutter project connected: Directly saves to `master-flow/authoring-tool-master-flow.json` (no dialog, no page reload)
   - When not connected: Shows file picker or downloads file
-- **📂 Restore**: Load from `public/authoring-tool-master-flow.flow`  
+- **📂 Restore**: Load from `master-flow/authoring-tool-master-flow.json`  
 - **📄 Import Master Flow**: Import master flow from file
 - **📤 Export Master Flow**: Export master flow for sharing (always downloads)
 
 ### File Locations
-- **Master Flow**: `/noexc-authoring-tool/public/authoring-tool-master-flow.flow` (git-tracked)
+- **Master Flow**: `/noexc-authoring-tool/master-flow/authoring-tool-master-flow.json` (git-tracked)
 - **Git Info**: `/noexc-authoring-tool/public/git-info.json` (auto-generated)
 - **Scripts**: `/noexc-authoring-tool/scripts/generate-git-info.js`
 
@@ -67,7 +67,7 @@ npm run build
 ✅ **Team collaboration** - Share master flows via git  
 ✅ **Version tracking** - Know exactly which commit/branch a flow is from  
 ✅ **No file picker dialogs** - Direct save when Flutter project connected  
-✅ **No page reloads** - Saves don't trigger React dev server reloads  
+✅ **No page reloads** - Uses File System Access API to avoid React dev server reloads  
 ✅ **Prevents empty files** - Built-in data validation before save  
 ✅ **Zero setup** - Works automatically with existing workflow
 

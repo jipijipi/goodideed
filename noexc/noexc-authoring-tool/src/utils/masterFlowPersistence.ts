@@ -23,7 +23,7 @@ export interface PersistenceResult {
   warning?: string;
 }
 
-const MASTER_FLOW_PATH = './authoring-tool-master-flow.flow';
+const MASTER_FLOW_PATH = './master-flow/authoring-tool-master-flow.json';
 
 // Save master flow data to git-tracked file
 export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], directoryHandle?: FileSystemDirectoryHandle): Promise<PersistenceResult> => {
@@ -76,11 +76,11 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], dir
       try {
         // Get or create the authoring tool directory
         const authoringToolDir = await directoryHandle.getDirectoryHandle('noexc-authoring-tool', { create: true });
-        // Get the public directory
-        const publicDir = await authoringToolDir.getDirectoryHandle('public', { create: true });
+        // Get or create the master-flow directory
+        const masterFlowDir = await authoringToolDir.getDirectoryHandle('master-flow', { create: true });
         
-        // Create/update the master flow file with .flow extension (avoids dev server reloads)
-        const fileHandle = await publicDir.getFileHandle('authoring-tool-master-flow.flow', { create: true });
+        // Create/update the master flow file
+        const fileHandle = await masterFlowDir.getFileHandle('authoring-tool-master-flow.json', { create: true });
         const writable = await (fileHandle as any).createWritable();
         await writable.write(dataStr);
         await writable.close();
@@ -102,10 +102,10 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], dir
     if ('showSaveFilePicker' in window) {
       try {
         const fileHandle = await (window as any).showSaveFilePicker({
-          suggestedName: 'authoring-tool-master-flow.flow',
+          suggestedName: 'authoring-tool-master-flow.json',
           types: [{
-            description: 'Flow files',
-            accept: { 'application/json': ['.flow'] }
+            description: 'JSON files',
+            accept: { 'application/json': ['.json'] }
           }]
         });
         
@@ -133,12 +133,12 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], dir
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
-      linkElement.setAttribute('download', 'authoring-tool-master-flow.flow');
+      linkElement.setAttribute('download', 'authoring-tool-master-flow.json');
       linkElement.click();
 
       return {
         success: true,
-        message: 'Master flow downloaded - please replace the existing file in noexc-authoring-tool/public/',
+        message: 'Master flow downloaded - please replace the existing file in noexc-authoring-tool/master-flow/',
         data: masterFlowData
       };
     }
@@ -151,22 +151,47 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], dir
 };
 
 // Load master flow data from git-tracked file
-export const loadMasterFlow = async (): Promise<PersistenceResult> => {
+export const loadMasterFlow = async (directoryHandle?: FileSystemDirectoryHandle): Promise<PersistenceResult> => {
   try {
-    // Try to fetch the master flow file from the repo root
-    const response = await fetch(MASTER_FLOW_PATH);
+    let masterFlowData: MasterFlowData;
     
-    if (!response.ok) {
-      if (response.status === 404) {
+    // If directoryHandle is provided, use File System Access API
+    if (directoryHandle) {
+      try {
+        // Get the authoring tool directory
+        const authoringToolDir = await directoryHandle.getDirectoryHandle('noexc-authoring-tool', { create: false });
+        // Get the master-flow directory
+        const masterFlowDir = await authoringToolDir.getDirectoryHandle('master-flow', { create: false });
+        
+        // Read the master flow file
+        const fileHandle = await masterFlowDir.getFileHandle('authoring-tool-master-flow.json', { create: false });
+        const file = await fileHandle.getFile();
+        const text = await file.text();
+        masterFlowData = JSON.parse(text);
+        
+      } catch (error: any) {
         return {
           success: false,
-          message: 'No master flow file found. Using default flow.'
+          message: `Failed to read master flow from Flutter project: ${error.message}`
         };
       }
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    } else {
+      // Fallback: Try to fetch the master flow file from the repo root
+      const response = await fetch(MASTER_FLOW_PATH);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          return {
+            success: false,
+            message: 'No master flow file found. Using default flow.'
+          };
+        }
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      masterFlowData = await response.json();
     }
     
-    const masterFlowData: MasterFlowData = await response.json();
     const currentGitInfo = await getCurrentGitInfo();
     
     let warning = '';
@@ -176,9 +201,10 @@ export const loadMasterFlow = async (): Promise<PersistenceResult> => {
       }
     }
     
+    const loadMethod = directoryHandle ? 'Flutter project' : 'fetch';
     return {
       success: true,
-      message: `Master flow loaded successfully from ${masterFlowData.gitBranch} branch`,
+      message: `Master flow loaded successfully from ${masterFlowData.gitBranch} branch (${loadMethod})`,
       data: masterFlowData,
       warning
     };

@@ -1093,7 +1093,7 @@ function Flow() {
 
   const restoreData = useCallback(async () => {
     try {
-      const result = await loadMasterFlow();
+      const result = await loadMasterFlow(directoryHandle || undefined);
       if (result.success && result.data) {
         // Add callback functions to the data
         const restoredNodes = result.data.nodes.map((node: any) => ({
@@ -1150,7 +1150,7 @@ function Flow() {
     } catch (error) {
       showError('Load Failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [setNodes, setEdges, nodeIdCounter, setNodeIdCounter, showNotification, showError]);
+  }, [directoryHandle, setNodes, setEdges, nodeIdCounter, setNodeIdCounter, showNotification, showError]);
 
   const importFromJSON = useCallback(() => {
     const input = document.createElement('input');
@@ -1834,7 +1834,7 @@ function Flow() {
   useEffect(() => {
     const autoLoadMasterFlow = async () => {
       try {
-        const result = await loadMasterFlow();
+        const result = await loadMasterFlow(directoryHandle || undefined);
         if (result.success && result.data) {
           // Add callback functions to the data
           const loadedNodes = result.data.nodes.map((node: any) => ({
@@ -1894,7 +1894,7 @@ function Flow() {
     };
 
     autoLoadMasterFlow();
-  }, []); // Only run on mount
+  }, [directoryHandle]); // Run on mount and when directoryHandle changes
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>

@@ -2633,31 +2633,6 @@ function Flow() {
         <Background />
       </ReactFlow>
       
-      {/* Content Editor Panel */}
-      <ContentEditorPanel
-        contentKey={
-          selectedNodes.length === 1 && selectedNodes[0].data.contentKey 
-            ? selectedNodes[0].data.contentKey
-            : selectedEdge?.data?.contentKey
-        }
-        onContentChange={handleContentVariantChange}
-        currentVariants={
-          selectedNodes.length === 1 && selectedNodes[0].data.contentKey
-            ? contentVariants[selectedNodes[0].data.contentKey] || []
-            : selectedEdge?.data?.contentKey
-            ? contentVariants[selectedEdge.data.contentKey] || []
-            : []
-        }
-        isVisible={
-          (selectedNodes.length === 1 && !!selectedNodes[0].data.contentKey) ||
-          (!!selectedEdge?.data?.contentKey)
-        }
-        directoryHandle={directoryHandle}
-        onNotification={showNotification}
-        onError={showError}
-        nodeCategory={selectedNodes.length === 1 ? selectedNodes[0].data.category : undefined}
-        isEdge={!!selectedEdge}
-      />
       
       {/* Success Notification */}
       {notification && (
@@ -2990,6 +2965,22 @@ function Flow() {
               🎨 Reset Styling
             </button>
           </div>
+
+          {/* Content Variants Section */}
+          {selectedEdge.data?.contentKey && (
+            <ContentEditorPanel
+              contentKey={selectedEdge.data.contentKey}
+              onContentChange={handleContentVariantChange}
+              currentVariants={contentVariants[selectedEdge.data.contentKey] || []}
+              isVisible={true}
+              directoryHandle={directoryHandle}
+              onNotification={showNotification}
+              onError={showError}
+              isEdge={true}
+              inline={true}
+            />
+          )}
+
           <div style={{ height: '40px' }} />
         </div>
       )}
@@ -3234,6 +3225,22 @@ function Flow() {
               Placeholder text for textInput nodes
             </div>
           </div>
+
+          {/* Content Variants Section */}
+          {selectedNodes[0].data.contentKey && (
+            <ContentEditorPanel
+              contentKey={selectedNodes[0].data.contentKey}
+              onContentChange={handleContentVariantChange}
+              currentVariants={contentVariants[selectedNodes[0].data.contentKey] || []}
+              isVisible={true}
+              directoryHandle={directoryHandle}
+              onNotification={showNotification}
+              onError={showError}
+              nodeCategory={selectedNodes[0].data.category}
+              isEdge={false}
+              inline={true}
+            />
+          )}
 
           <div style={{ height: '40px' }} />
         </div>

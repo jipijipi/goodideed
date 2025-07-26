@@ -10,7 +10,7 @@ The authoring tool now uses git-tracked state management instead of browser loca
 - No version tracking or compatibility warnings
 
 ### After  
-- Master flow stored in **git-tracked file**: `authoring-tool-master-flow.json`
+- Master flow stored in **git-tracked file**: `public/authoring-tool-master-flow.json`
 - Includes git branch/commit metadata for version compatibility
 - Automatic warnings when loading flows from different branches
 - Never lose work when switching branches or devices
@@ -18,13 +18,13 @@ The authoring tool now uses git-tracked state management instead of browser loca
 ## New Features
 
 ### Auto-Load on Startup
-- Tool automatically loads `authoring-tool-master-flow.json` on startup
+- Tool automatically loads `public/authoring-tool-master-flow.json` on startup
 - Shows branch compatibility warnings if needed
 - Falls back to default flow if no master flow exists
 
 ### Git-Tracked Persistence
-- **Save**: Updates `authoring-tool-master-flow.json` with current git info
-- **Restore**: Loads from `authoring-tool-master-flow.json` with version warnings
+- **Save**: Updates `public/authoring-tool-master-flow.json` with current git info
+- **Restore**: Loads from `public/authoring-tool-master-flow.json` with version warnings
 - **Import Master Flow**: Import `.json` files from other branches/collaborators  
 - **Export Master Flow**: Export timestamped `.json` files for sharing
 
@@ -54,7 +54,7 @@ npm run build
 - **📤 Export Master Flow**: Export master flow for sharing
 
 ### File Locations
-- **Master Flow**: `/authoring-tool-master-flow.json` (git-tracked)
+- **Master Flow**: `/noexc-authoring-tool/public/authoring-tool-master-flow.json` (git-tracked)
 - **Git Info**: `/noexc-authoring-tool/public/git-info.json` (auto-generated)
 - **Scripts**: `/noexc-authoring-tool/scripts/generate-git-info.js`
 

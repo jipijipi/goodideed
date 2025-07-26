@@ -23,7 +23,7 @@ export interface PersistenceResult {
   warning?: string;
 }
 
-const MASTER_FLOW_PATH = '../authoring-tool-master-flow.json';
+const MASTER_FLOW_PATH = './authoring-tool-master-flow.json';
 
 // Save master flow data to git-tracked file
 export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[]): Promise<PersistenceResult> => {

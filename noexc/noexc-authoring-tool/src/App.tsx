@@ -112,7 +112,7 @@ function Flow() {
   const [contentVariants, setContentVariants] = useState<{ [contentKey: string]: string[] }>({});
   const [directoryHandle, setDirectoryHandle] = useState<FileSystemDirectoryHandle | null>(null);
   const edgeReconnectSuccessful = useRef(true);
-  const { getNodes, zoomTo, fitView } = useReactFlow();
+  const { getNodes, zoomTo } = useReactFlow();
   const { x: viewportX, y: viewportY, zoom } = useViewport();
 
   // Show notification briefly
@@ -1617,115 +1617,121 @@ function Flow() {
     });
   }, [getNextMessageId, extractChoicesFromEdges, extractRoutesFromEdges]);
 
-  const exportSequences = useCallback(() => {
-    try {
-      // Find all group nodes
-      const groupNodes = nodes.filter(node => node.type === NODE_TYPES.GROUP);
-      
-      if (groupNodes.length === 0) {
-        showError('No groups found', ['Create groups by selecting multiple nodes with Shift+click first']);
-        return;
-      }
+  // Shared function to generate sequences from groups
+  const generateSequencesFromGroups = useCallback(() => {
+    // Find all group nodes
+    const groupNodes = nodes.filter(node => node.type === NODE_TYPES.GROUP);
+    
+    if (groupNodes.length === 0) {
+      throw new Error('No groups found. Create groups by selecting multiple nodes with Shift+click first.');
+    }
 
-      // Filter out ungrouped nodes (nodes without parentId)
-      const groupedNodes = nodes.filter(node => 
-        node.parentId || node.type === NODE_TYPES.GROUP
-      );
+    // Filter out ungrouped nodes (nodes without parentId)
+    const groupedNodes = nodes.filter(node => 
+      node.parentId || node.type === NODE_TYPES.GROUP
+    );
 
-      if (groupedNodes.length === 0) {
-        showError('No grouped nodes found', ['Add nodes to groups before exporting']);
-        return;
-      }
+    if (groupedNodes.length === 0) {
+      throw new Error('No grouped nodes found. Add nodes to groups before exporting.');
+    }
 
-      // Collect cross-sequence delays that need to be applied to target sequences
-      const crossSequenceDelays: { [sequenceId: string]: number } = {};
-      
-      // Scan all edges for cross-sequence navigation with delays
-      edges.forEach(edge => {
-        if (edge.data?.delay && edge.data.delay > 0) {
-          const sourceNode = nodes.find(n => n.id === edge.source);
-          const targetNode = nodes.find(n => n.id === edge.target);
-          
-          if (sourceNode && targetNode && sourceNode.parentId !== targetNode.parentId) {
-            // This is cross-sequence navigation with delay
-            const targetGroup = groupNodes.find(g => g.id === targetNode.parentId);
-            if (targetGroup && targetGroup.data.groupId) {
-              const targetSequenceId = targetGroup.data.groupId;
-              // Store the maximum delay for this sequence (in case multiple edges point to it)
-              crossSequenceDelays[targetSequenceId] = Math.max(
-                crossSequenceDelays[targetSequenceId] || 0,
-                edge.data.delay
-              );
-            }
+    // Collect cross-sequence delays that need to be applied to target sequences
+    const crossSequenceDelays: { [sequenceId: string]: number } = {};
+    
+    // Scan all edges for cross-sequence navigation with delays
+    edges.forEach(edge => {
+      if (edge.data?.delay && edge.data.delay > 0) {
+        const sourceNode = nodes.find(n => n.id === edge.source);
+        const targetNode = nodes.find(n => n.id === edge.target);
+        
+        if (sourceNode && targetNode && sourceNode.parentId !== targetNode.parentId) {
+          // This is cross-sequence navigation with delay
+          const targetGroup = groupNodes.find(g => g.id === targetNode.parentId);
+          if (targetGroup && targetGroup.data.groupId) {
+            const targetSequenceId = targetGroup.data.groupId;
+            // Store the maximum delay for this sequence (in case multiple edges point to it)
+            crossSequenceDelays[targetSequenceId] = Math.max(
+              crossSequenceDelays[targetSequenceId] || 0,
+              edge.data.delay
+            );
           }
         }
-      });
+      }
+    });
 
-      const exportedSequences: any[] = [];
+    const exportedSequences: any[] = [];
+    const validationErrors: string[] = [];
 
-      // Process each group
-      groupNodes.forEach(groupNode => {
-        // Get nodes that belong to this group
-        const groupChildren = nodes.filter(node => node.parentId === groupNode.id);
-        
-        if (groupChildren.length === 0) {
-          showError(`Group ${groupNode.id} has no children`, ['Add nodes to the group before exporting']);
-          return;
-        }
-
-        // Get edges that originate from nodes in this group (including cross-sequence edges)
-        const groupChildrenIds = new Set(groupChildren.map(n => n.id));
-        const groupEdges = edges.filter(edge => 
-          groupChildrenIds.has(edge.source)
-        );
-
-        // Validate this group's flow
-        const validation = validateFlowForExport(groupChildren, groupEdges);
-        if (!validation.isValid) {
-          showError(`Group ${groupNode.id} validation failed`, validation.errors);
-          return;
-        }
-
-        // Sort nodes in this group topologically
-        const sortedGroupNodes = sortNodesTopologically(groupChildren, groupEdges);
-        if (sortedGroupNodes.length === 0) {
-          showError(`Group ${groupNode.id} could not be sorted topologically`, ['Check for circular dependencies in the flow']);
-          return;
-        }
-
-        // Convert to Flutter format (pass all nodes for cross-sequence navigation detection)
-        const messages = convertNodesToMessages(sortedGroupNodes, groupEdges, groupNodes, nodes);
-        
-        // Use group metadata or fallback values
-        const sequenceId = groupNode.data.groupId || `group_${groupNode.id}`;
-        const name = groupNode.data.title || `Group ${groupNode.id}`;
-        const description = groupNode.data.description || `Sequence exported from group ${groupNode.id}`;
-
-        // Apply cross-sequence delay to the first message if this sequence is a target
-        if (crossSequenceDelays[sequenceId] && messages.length > 0) {
-          messages[0] = {
-            ...messages[0],
-            delay: crossSequenceDelays[sequenceId]
-          };
-        }
-
-        const flutterSequence = {
-          sequenceId,
-          name,
-          description,
-          messages
-        };
-
-        exportedSequences.push(flutterSequence);
-      });
-
-      if (exportedSequences.length === 0) {
-        showError('No valid groups could be exported', [
-          'Make sure groups have connected nodes with proper flow',
-          'Check validation errors in console for details'
-        ]);
+    // Process each group
+    groupNodes.forEach(groupNode => {
+      // Get nodes that belong to this group
+      const groupChildren = nodes.filter(node => node.parentId === groupNode.id);
+      
+      if (groupChildren.length === 0) {
+        validationErrors.push(`Group ${groupNode.id} has no children`);
         return;
       }
+
+      // Get edges that originate from nodes in this group (including cross-sequence edges)
+      const groupChildrenIds = new Set(groupChildren.map(n => n.id));
+      const groupEdges = edges.filter(edge => 
+        groupChildrenIds.has(edge.source)
+      );
+
+      // Validate this group's flow
+      const validation = validateFlowForExport(groupChildren, groupEdges);
+      if (!validation.isValid) {
+        validationErrors.push(`Group ${groupNode.id} validation failed: ${validation.errors.join(', ')}`);
+        return;
+      }
+
+      // Sort nodes in this group topologically
+      const sortedGroupNodes = sortNodesTopologically(groupChildren, groupEdges);
+      if (sortedGroupNodes.length === 0) {
+        validationErrors.push(`Group ${groupNode.id} could not be sorted topologically`);
+        return;
+      }
+
+      // Convert to Flutter format (pass all nodes for cross-sequence navigation detection)
+      const messages = convertNodesToMessages(sortedGroupNodes, groupEdges, groupNodes, nodes);
+      
+      // Use group metadata or fallback values
+      const sequenceId = groupNode.data.groupId || `group_${groupNode.id}`;
+      const name = groupNode.data.title || `Group ${groupNode.id}`;
+      const description = groupNode.data.description || `Sequence exported from group ${groupNode.id}`;
+
+      // Apply cross-sequence delay to the first message if this sequence is a target
+      if (crossSequenceDelays[sequenceId] && messages.length > 0) {
+        messages[0] = {
+          ...messages[0],
+          delay: crossSequenceDelays[sequenceId]
+        };
+      }
+
+      const flutterSequence = {
+        sequenceId,
+        name,
+        description,
+        messages
+      };
+
+      exportedSequences.push(flutterSequence);
+    });
+
+    if (validationErrors.length > 0) {
+      throw new Error(`Validation errors: ${validationErrors.join('; ')}`);
+    }
+
+    if (exportedSequences.length === 0) {
+      throw new Error('No valid groups could be exported. Make sure groups have connected nodes with proper flow.');
+    }
+
+    return exportedSequences;
+  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages]);
+
+  const exportSequences = useCallback(() => {
+    try {
+      const exportedSequences = generateSequencesFromGroups();
 
       // Export each sequence as a separate file with delays to prevent browser throttling
       for (let i = 0; i < exportedSequences.length; i++) {
@@ -1754,10 +1760,58 @@ function Flow() {
       showNotification(`Exporting ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'}...`);
       
     } catch (error) {
-      console.error('Export error:', error);
+      console.error('Export error:', error);      
       showError('Export failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [nodes, edges, validateFlowForExport, sortNodesTopologically, convertNodesToMessages, showError, showNotification]);
+  }, [generateSequencesFromGroups, showError, showNotification]);
+
+  const deploySequencesToFlutter = useCallback(async () => {
+    if (!directoryHandle) {
+      showError('Flutter not connected', ['Connect to Flutter project first using the button above']);
+      return;
+    }
+
+    try {
+      const exportedSequences = generateSequencesFromGroups();
+      
+      // Show initial progress notification
+      showNotification(`Deploying ${exportedSequences.length} sequence${exportedSequences.length === 1 ? '' : 's'} to Flutter...`);
+      
+      // Get assets/sequences directory
+      const assetsDir = await directoryHandle.getDirectoryHandle('assets');
+      const sequencesDir = await assetsDir.getDirectoryHandle('sequences', { create: true });
+      
+      // Write each sequence file directly to Flutter project
+      let deployedCount = 0;
+      for (const sequence of exportedSequences) {
+        const fileName = `${sequence.sequenceId}.json`;
+        
+        try {
+          const fileHandle = await sequencesDir.getFileHandle(fileName, { create: true });
+          const writable = await (fileHandle as any).createWritable();
+          await writable.write(JSON.stringify(sequence, null, 2));
+          await writable.close();
+          deployedCount++;
+        } catch (fileError) {
+          console.error(`Failed to write ${fileName}:`, fileError);
+          showError(`Failed to deploy ${fileName}`, [
+            fileError instanceof Error ? fileError.message : 'Unknown file write error'
+          ]);
+          return; // Stop deployment on first file error
+        }
+      }
+      
+      // Success notification
+      showNotification(`✅ Successfully deployed ${deployedCount} sequence${deployedCount === 1 ? '' : 's'} to Flutter project!`);
+      
+    } catch (error) {
+      console.error('Deploy error:', error);
+      showError('Deployment failed', [
+        error instanceof Error ? error.message : 'Unknown error',
+        'Check that groups are properly configured and connected'
+      ]);
+    }
+  }, [directoryHandle, generateSequencesFromGroups, showError, showNotification]);
 
   const exportContent = useCallback(() => {
     try {
@@ -2277,20 +2331,44 @@ function Flow() {
             🛠️ TOOLS
           </div>
           
+          {/* Deploy to Flutter - Primary action when connected */}
+          {directoryHandle && (
+            <button 
+              onClick={deploySequencesToFlutter}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#ff6b35',
+                color: 'white',
+                border: '2px solid #ff4500',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '12px',
+                marginBottom: '6px',
+                boxShadow: '0 2px 6px rgba(255, 107, 53, 0.3)',
+                transform: 'scale(1.02)'
+              }}
+              title="Deploy sequences directly to Flutter project assets/sequences/"
+            >
+              🚀 Deploy to Flutter
+            </button>
+          )}
+          
           <button 
             onClick={exportSequences}
             style={{
               padding: '6px 12px',
-              backgroundColor: '#2196f3',
+              backgroundColor: directoryHandle ? '#607d8b' : '#2196f3',
               color: 'white',
               border: 'none',
               borderRadius: '4px',
               cursor: 'pointer',
               fontWeight: 'bold',
               fontSize: '11px',
-              marginBottom: '4px'
+              marginBottom: '4px',
+              opacity: directoryHandle ? 0.8 : 1
             }}
-            title="Export sequence JSON files only"
+            title={directoryHandle ? "Download sequence JSON files (alternative to deploy)" : "Export sequence JSON files only"}
           >
             📄 Export Sequences
           </button>

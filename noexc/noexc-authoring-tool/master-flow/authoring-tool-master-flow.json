@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-07-26T07:15:59.787Z",
+  "lastUpdated": "2025-07-26T07:43:08.302Z",
   "gitBranch": "authoring-tool-update-4",
-  "gitCommit": "be93224ef6b9ffe44e7cc3b3c5f5d31443532514",
+  "gitCommit": "7930023a91d15b1e759dcb5d97b2942dfcebb3e9",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-update-4",
-    "commit": "be93224ef6b9ffe44e7cc3b3c5f5d31443532514",
-    "timestamp": "2025-07-26T07:15:59.777Z"
+    "commit": "7930023a91d15b1e759dcb5d97b2942dfcebb3e9",
+    "timestamp": "2025-07-26T07:43:08.297Z"
   },
   "nodes": [
     {
@@ -230,8 +230,8 @@
     {
       "id": "147",
       "position": {
-        "x": 95.27933019207603,
-        "y": -664.2212933383055
+        "x": -5.720669807923969,
+        "y": -698.2212933383055
       },
       "type": "group",
       "style": {
@@ -244,8 +244,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 95.27933019207603,
-        "y": -664.2212933383055
+        "x": -5.720669807923969,
+        "y": -698.2212933383055
       },
       "data": {
         "label": "Group 147",

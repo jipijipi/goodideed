@@ -2200,6 +2200,14 @@ function Flow() {
             📂 Restore
           </button>
           
+          {/* Separator between Master Flow Operations and Basic JSON Operations */}
+          <div style={{
+            height: '1px',
+            backgroundColor: '#e0e0e0',
+            margin: '4px 0',
+            border: 'none'
+          }} />
+          
           <button 
             onClick={exportToJSON}
             style={{
@@ -2231,6 +2239,15 @@ function Flow() {
           >
             📥 Import JSON
           </button>
+          
+          {/* Separator between Basic JSON Operations and Advanced Master Flow Operations */}
+          <div style={{
+            height: '1px',
+            backgroundColor: '#e0e0e0',
+            margin: '4px 0',
+            border: 'none'
+          }} />
+          
           <button 
             onClick={async () => {
               try {

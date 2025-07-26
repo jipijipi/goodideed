@@ -23,7 +23,7 @@ export interface PersistenceResult {
   warning?: string;
 }
 
-const MASTER_FLOW_PATH = './authoring-tool-master-flow.json';
+const MASTER_FLOW_PATH = './authoring-tool-master-flow.flow';
 
 // Save master flow data to git-tracked file
 export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], directoryHandle?: FileSystemDirectoryHandle): Promise<PersistenceResult> => {
@@ -74,19 +74,20 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], dir
     // If directoryHandle is provided, save directly to the Flutter project
     if (directoryHandle) {
       try {
-        // Get or create the authoring tool directory in public folder
-        const publicDir = await directoryHandle.getDirectoryHandle('noexc-authoring-tool', { create: true });
-        const publicSubDir = await publicDir.getDirectoryHandle('public', { create: true });
+        // Get or create the authoring tool directory
+        const authoringToolDir = await directoryHandle.getDirectoryHandle('noexc-authoring-tool', { create: true });
+        // Get the public directory
+        const publicDir = await authoringToolDir.getDirectoryHandle('public', { create: true });
         
-        // Create/update the master flow file
-        const fileHandle = await publicSubDir.getFileHandle('authoring-tool-master-flow.json', { create: true });
+        // Create/update the master flow file with .flow extension (avoids dev server reloads)
+        const fileHandle = await publicDir.getFileHandle('authoring-tool-master-flow.flow', { create: true });
         const writable = await (fileHandle as any).createWritable();
         await writable.write(dataStr);
         await writable.close();
         
         return {
           success: true,
-          message: 'Master flow saved to Flutter project successfully',
+          message: 'Master flow saved to Flutter project successfully (no reload)',
           data: masterFlowData
         };
       } catch (error: any) {
@@ -101,10 +102,10 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], dir
     if ('showSaveFilePicker' in window) {
       try {
         const fileHandle = await (window as any).showSaveFilePicker({
-          suggestedName: 'authoring-tool-master-flow.json',
+          suggestedName: 'authoring-tool-master-flow.flow',
           types: [{
-            description: 'JSON files',
-            accept: { 'application/json': ['.json'] }
+            description: 'Flow files',
+            accept: { 'application/json': ['.flow'] }
           }]
         });
         
@@ -132,7 +133,7 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], dir
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
-      linkElement.setAttribute('download', 'authoring-tool-master-flow.json');
+      linkElement.setAttribute('download', 'authoring-tool-master-flow.flow');
       linkElement.click();
 
       return {

@@ -134,3 +134,19 @@
   stroke-width: 4px !important;
   filter: drop-shadow(0 0 6px rgba(255, 107, 53, 0.6)) !important;
 }
+
+/* Pulse animation for Flutter connect button */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    transform: scale(1.05);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.7);
+    transform: scale(1.08);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    transform: scale(1.05);
+  }
+}

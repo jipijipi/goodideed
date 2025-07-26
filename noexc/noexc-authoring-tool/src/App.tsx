@@ -2343,19 +2343,23 @@ function Flow() {
           <button 
             onClick={selectFlutterProject}
             style={{
-              padding: '6px 12px',
-              backgroundColor: directoryHandle ? '#28a745' : '#6f42c1',
+              padding: directoryHandle ? '6px 12px' : '12px 20px',
+              backgroundColor: directoryHandle ? '#28a745' : '#ff6b35',
               color: 'white',
-              border: 'none',
-              borderRadius: '4px',
+              border: directoryHandle ? 'none' : '3px solid #ff4500',
+              borderRadius: '8px',
               cursor: 'pointer',
               fontWeight: 'bold',
-              fontSize: '11px',
-              marginBottom: '4px'
+              fontSize: directoryHandle ? '11px' : '14px',
+              marginBottom: '4px',
+              boxShadow: directoryHandle ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.4)',
+              transform: directoryHandle ? 'none' : 'scale(1.05)',
+              animation: directoryHandle ? 'none' : 'pulse 2s infinite',
+              transition: 'all 0.3s ease'
             }}
             title={directoryHandle ? 'Flutter project connected' : 'Connect to Flutter project for file sync'}
           >
-            {directoryHandle ? '✅ Flutter Connected' : '📁 Connect Flutter'}
+            {directoryHandle ? '✅ Flutter Connected' : '🚀 CONNECT FLUTTER'}
           </button>
           
           <button 

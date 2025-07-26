@@ -1080,7 +1080,7 @@ function Flow() {
 
   const saveData = useCallback(async () => {
     try {
-      const result = await saveMasterFlow(nodes, edges);
+      const result = await saveMasterFlow(nodes, edges, directoryHandle || undefined);
       if (result.success) {
         showNotification(result.message);
       } else {
@@ -1089,7 +1089,7 @@ function Flow() {
     } catch (error) {
       showError('Save Failed', [error instanceof Error ? error.message : 'Unknown error']);
     }
-  }, [nodes, edges, showNotification, showError]);
+  }, [nodes, edges, directoryHandle, showNotification, showError]);
 
   const restoreData = useCallback(async () => {
     try {

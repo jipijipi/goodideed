@@ -26,8 +26,23 @@ export interface PersistenceResult {
 const MASTER_FLOW_PATH = './authoring-tool-master-flow.json';
 
 // Save master flow data to git-tracked file
-export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[]): Promise<PersistenceResult> => {
+export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[], directoryHandle?: FileSystemDirectoryHandle): Promise<PersistenceResult> => {
   try {
+    // Validate input data to prevent empty files
+    if (!nodes || !Array.isArray(nodes)) {
+      return {
+        success: false,
+        message: 'Invalid nodes data - cannot save empty or invalid flow'
+      };
+    }
+
+    if (!edges || !Array.isArray(edges)) {
+      return {
+        success: false,
+        message: 'Invalid edges data - cannot save empty or invalid flow'
+      };
+    }
+
     const gitInfo = await getCurrentGitInfo();
     
     const masterFlowData: MasterFlowData = {
@@ -47,8 +62,42 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[]): Pr
       }))
     };
 
-    // In browser environment, we'll use the File System Access API for saving
-    // This requires user permission and modern browsers
+    // Validate masterFlowData is not empty
+    const dataStr = JSON.stringify(masterFlowData, null, 2);
+    if (!dataStr || dataStr.length < 100) { // Reasonable minimum size check
+      return {
+        success: false,
+        message: 'Generated master flow data is too small or empty'
+      };
+    }
+
+    // If directoryHandle is provided, save directly to the Flutter project
+    if (directoryHandle) {
+      try {
+        // Get or create the authoring tool directory in public folder
+        const publicDir = await directoryHandle.getDirectoryHandle('noexc-authoring-tool', { create: true });
+        const publicSubDir = await publicDir.getDirectoryHandle('public', { create: true });
+        
+        // Create/update the master flow file
+        const fileHandle = await publicSubDir.getFileHandle('authoring-tool-master-flow.json', { create: true });
+        const writable = await (fileHandle as any).createWritable();
+        await writable.write(dataStr);
+        await writable.close();
+        
+        return {
+          success: true,
+          message: 'Master flow saved to Flutter project successfully',
+          data: masterFlowData
+        };
+      } catch (error: any) {
+        return {
+          success: false,
+          message: `Failed to save to Flutter project: ${error.message}`
+        };
+      }
+    }
+
+    // Fallback: Use File System Access API with file picker (for browsers that support it)
     if ('showSaveFilePicker' in window) {
       try {
         const fileHandle = await (window as any).showSaveFilePicker({
@@ -60,12 +109,12 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[]): Pr
         });
         
         const writable = await fileHandle.createWritable();
-        await writable.write(JSON.stringify(masterFlowData, null, 2));
+        await writable.write(dataStr);
         await writable.close();
         
         return {
           success: true,
-          message: 'Master flow saved to file successfully',
+          message: 'Master flow saved to selected location successfully',
           data: masterFlowData
         };
       } catch (error: any) {
@@ -78,18 +127,17 @@ export const saveMasterFlow = async (nodes: Node<NodeData>[], edges: Edge[]): Pr
         throw error;
       }
     } else {
-      // Fallback: download the file
-      const dataStr = JSON.stringify(masterFlowData, null, 2);
+      // Final fallback: download the file
       const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
       linkElement.setAttribute('download', 'authoring-tool-master-flow.json');
       linkElement.click();
-      
+
       return {
         success: true,
-        message: 'Master flow downloaded successfully - please replace the existing authoring-tool-master-flow.json in the repo root',
+        message: 'Master flow downloaded - please replace the existing file in noexc-authoring-tool/public/',
         data: masterFlowData
       };
     }

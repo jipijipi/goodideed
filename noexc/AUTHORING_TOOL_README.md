@@ -48,10 +48,12 @@ npm run build
 ```
 
 ### Button Reference
-- **💾 Save**: Save current flow to git-tracked `authoring-tool-master-flow.json`
+- **💾 Save**: 
+  - When Flutter project connected: Directly saves to `public/authoring-tool-master-flow.json` (no dialog)
+  - When not connected: Shows file picker or downloads file
 - **📂 Restore**: Load from `authoring-tool-master-flow.json`  
 - **📄 Import Master Flow**: Import master flow from file
-- **📤 Export Master Flow**: Export master flow for sharing
+- **📤 Export Master Flow**: Export master flow for sharing (always downloads)
 
 ### File Locations
 - **Master Flow**: `/noexc-authoring-tool/public/authoring-tool-master-flow.json` (git-tracked)
@@ -64,6 +66,8 @@ npm run build
 ✅ **Branch compatibility** - Automatic warnings prevent issues  
 ✅ **Team collaboration** - Share master flows via git  
 ✅ **Version tracking** - Know exactly which commit/branch a flow is from  
+✅ **No file picker dialogs** - Direct save when Flutter project connected  
+✅ **Prevents empty files** - Built-in data validation before save  
 ✅ **Zero setup** - Works automatically with existing workflow
 
 ## Migration

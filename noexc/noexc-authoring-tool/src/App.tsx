@@ -2231,7 +2231,33 @@ function Flow() {
           >
             📥 Import JSON
           </button>
-          
+          <button 
+            onClick={async () => {
+              try {
+                const result = await exportMasterFlow(nodes, edges);
+                if (result.success) {
+                  showNotification(result.message);
+                } else {
+                  showError('Export Failed', [result.message]);
+                }
+              } catch (error) {
+                showError('Export Failed', [error instanceof Error ? error.message : 'Unknown error']);
+              }
+            }}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#9c27b0',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+            title="Export master flow for sharing or backup"
+          >
+            📤 Export Master Flow
+          </button>
           <button 
             onClick={async () => {
               try {
@@ -2353,71 +2379,6 @@ function Flow() {
               🚀 Deploy to Flutter
             </button>
           )}
-          
-          <button 
-            onClick={exportSequences}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: directoryHandle ? '#607d8b' : '#2196f3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px',
-              marginBottom: '4px',
-              opacity: directoryHandle ? 0.8 : 1
-            }}
-            title={directoryHandle ? "Download sequence JSON files (alternative to deploy)" : "Export sequence JSON files only"}
-          >
-            📄 Export Sequences
-          </button>
-          
-          <button 
-            onClick={async () => {
-              try {
-                const result = await exportMasterFlow(nodes, edges);
-                if (result.success) {
-                  showNotification(result.message);
-                } else {
-                  showError('Export Failed', [result.message]);
-                }
-              } catch (error) {
-                showError('Export Failed', [error instanceof Error ? error.message : 'Unknown error']);
-              }
-            }}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#9c27b0',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
-            title="Export master flow for sharing or backup"
-          >
-            📤 Export Master Flow
-          </button>
-
-          <button 
-            onClick={exportContent}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#ff9800',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
-            title={`Export content variant files (${Object.keys(contentVariants).length} files defined)`}
-          >
-            📝 Export Content ({Object.keys(contentVariants).length})
-          </button>
-          
           <button 
             onClick={selectFlutterProject}
             style={{
@@ -2439,6 +2400,45 @@ function Flow() {
           >
             {directoryHandle ? '✅ Flutter Connected' : '🚀 CONNECT FLUTTER'}
           </button>
+          <button 
+            onClick={exportSequences}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: directoryHandle ? '#607d8b' : '#2196f3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px',
+              marginBottom: '4px',
+              opacity: directoryHandle ? 0.8 : 1
+            }}
+            title={directoryHandle ? "Download sequence JSON files (alternative to deploy)" : "Export sequence JSON files only"}
+          >
+            📄 Export Sequences
+          </button>
+          
+          
+
+          {/* <button 
+            onClick={exportContent}
+            style={{
+              padding: '6px 12px',
+              backgroundColor: '#ff9800',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '11px'
+            }}
+            title={`Export content variant files (${Object.keys(contentVariants).length} files defined)`}
+          >
+            📝 Export Content ({Object.keys(contentVariants).length})
+          </button> */}
+          
+          
           
           <button 
             onClick={() => setShowVariableManager(true)}

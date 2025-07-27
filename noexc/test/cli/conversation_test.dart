@@ -13,7 +13,7 @@ void main() {
         final result = await runConversation(
           sequenceId: 'welcome_seq',
           interactive: false,
-          verbose: true,
+          verbose: false,
         );
 
         expect(result.completed, isTrue);
@@ -31,7 +31,7 @@ void main() {
             'session.visitCount': 1,
           },
           interactive: false,
-          verbose: true,
+          verbose: false,
         );
 
         expect(result.completed, isTrue);
@@ -67,7 +67,7 @@ void main() {
           sequenceId: 'welcome_seq',
           userState: scenario,
           interactive: false,
-          verbose: true,
+          verbose: false,
         );
 
         expect(result.completed, isTrue);

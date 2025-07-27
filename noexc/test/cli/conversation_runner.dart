@@ -8,6 +8,7 @@ import 'package:noexc/services/text_variants_service.dart';
 import 'package:noexc/services/semantic_content_service.dart';
 import 'package:noexc/services/session_service.dart';
 import 'package:noexc/services/scenario_manager.dart';
+import 'package:noexc/services/logger_service.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/choice.dart';
 import 'package:noexc/constants/app_constants.dart';
@@ -129,6 +130,11 @@ class ConversationRunner {
     
     // Check if colors should be disabled (for CI/CD environments)
     TerminalFormatter.colorsEnabled = Platform.environment['NO_COLOR'] == null;
+    
+    // Configure logger based on verbose flag
+    logger.configure(
+      minLevel: verbose ? LogLevel.debug : LogLevel.warning,
+    );
     
     userDataService = UserDataService();
     final templatingService = TextTemplatingService(userDataService);
@@ -343,7 +349,8 @@ class ConversationRunner {
       if (isBot) {
         sleep(Duration(milliseconds: 500));
       }
-    } else if (verbose) {
+    } else {
+      // Always show conversation content in non-interactive mode
       _log('$prefix $text');
     }
     
@@ -356,7 +363,8 @@ class ConversationRunner {
           print('   ${TerminalFormatter.choice('${i + 1}.')} ${choice.text}');
         }
         print('');
-      } else if (verbose) {
+      } else {
+        // Always show choices in non-interactive mode
         for (int i = 0; i < message.choices!.length; i++) {
           final choice = message.choices![i];
           _log('   Choice ${i + 1}: ${choice.text}');
@@ -371,7 +379,8 @@ class ConversationRunner {
         print('');
         print('   ${TerminalFormatter.info('💬')} ${TerminalFormatter.dim(prompt)}');
         print('');
-      } else if (verbose) {
+      } else {
+        // Always show text input prompts in non-interactive mode
         _log('   💬 Text input: $prompt');
       }
     }
@@ -412,7 +421,8 @@ class ConversationRunner {
         }
       }
       
-      if (verbose) {
+      if (!interactive) {
+        // Always show auto-selections in non-interactive mode
         _log(TerminalFormatter.system('🤖 Auto-selected choice ${selectedIndex + 1}: ${message.choices![selectedIndex].text}'));
       }
     }
@@ -457,7 +467,8 @@ class ConversationRunner {
         userInput = 'Test input';
       }
       
-      if (verbose) {
+      if (!interactive) {
+        // Always show auto-inputs in non-interactive mode
         _log(TerminalFormatter.system('🤖 Auto-input: $userInput'));
       }
     }

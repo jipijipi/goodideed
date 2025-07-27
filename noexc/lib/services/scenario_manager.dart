@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'user_data_service.dart';
+import 'logger_service.dart';
 
 class ScenarioManager {
   static Map<String, dynamic>? _scenarios;
@@ -14,7 +15,7 @@ class ScenarioManager {
       _scenarios = json.decode(jsonString);
       return _scenarios!;
     } catch (e) {
-      print('Failed to load scenarios: $e');
+      logger.scenario('Failed to load scenarios: $e', level: LogLevel.error);
       return {};
     }
   }
@@ -28,24 +29,26 @@ class ScenarioManager {
     final scenario = scenarios[scenarioId];
     
     if (scenario == null) {
-      print('Scenario not found: $scenarioId');
+      logger.scenario('Scenario not found: $scenarioId', level: LogLevel.warning);
       return;
     }
     
     final variables = scenario['variables'] as Map<String, dynamic>?;
     if (variables == null) {
-      print('No variables found in scenario: $scenarioId');
+      logger.scenario('No variables found in scenario: $scenarioId', level: LogLevel.warning);
       return;
     }
     
     // Apply all variables in the scenario
+    logger.scenario('Applying scenario "$scenarioId" with ${variables.length} variables');
     for (final entry in variables.entries) {
       try {
         await userDataService.storeValue(entry.key, entry.value);
       } catch (e) {
-        print('Failed to set ${entry.key} = ${entry.value}: $e');
+        logger.scenario('Failed to set ${entry.key} = ${entry.value}: $e', level: LogLevel.error);
       }
     }
+    logger.scenario('Successfully applied scenario "$scenarioId"', level: LogLevel.info);
   }
   
   /// Get the display name for a scenario

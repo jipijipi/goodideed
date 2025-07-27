@@ -1,4 +1,5 @@
 import 'user_data_service.dart';
+import 'logger_service.dart';
 
 class ConditionEvaluator {
   final UserDataService userDataService;
@@ -9,17 +10,17 @@ class ConditionEvaluator {
   /// Supports operators: ==, !=, >, <, >=, <=
   /// Example: "user.name == 'Alice'" or "user.age >= 18"
   Future<bool> evaluate(String condition) async {
-    print('🔍 CONDITION_EVAL: Starting evaluation of: "$condition"');
+    logger.condition('Starting evaluation of: "$condition"');
     try {
       // Parse the condition using a smarter approach that handles quoted strings
       final parsedCondition = _parseCondition(condition);
       if (parsedCondition == null) {
         // No operator found, treat as boolean check
-        print('🔍 CONDITION_EVAL: No operator found, treating as boolean check');
+        logger.condition('No operator found, treating as boolean check');
         final value = await _getValue(condition);
-        print('🔍 CONDITION_EVAL: Boolean check - value: $value (type: ${value.runtimeType})');
+        logger.condition('Boolean check - value: $value (type: ${value.runtimeType})');
         final result = _isTruthy(value);
-        print('✅ CONDITION_EVAL: Boolean result: $result');
+        logger.condition('Boolean result: $result', level: LogLevel.info);
         return result;
       }
       
@@ -27,11 +28,11 @@ class ConditionEvaluator {
       final leftOperand = parsedCondition['left'] as String;
       final rightOperand = parsedCondition['right'] as String;
       
-      print('🔍 CONDITION_EVAL: Parsed - left: "$leftOperand", operator: "$operator", right: "$rightOperand"');
+      logger.condition('Parsed - left: "$leftOperand", operator: "$operator", right: "$rightOperand"');
       
       final value = await _getValue(leftOperand);
       final expected = _parseValue(rightOperand);
-      print('🔍 CONDITION_EVAL: Comparing $value $operator $expected (types: ${value.runtimeType} $operator ${expected.runtimeType})');
+      logger.condition('Comparing $value $operator $expected (types: ${value.runtimeType} $operator ${expected.runtimeType})');
       
       bool result;
       switch (operator) {
@@ -54,15 +55,15 @@ class ConditionEvaluator {
           result = _compareNumbers(value, expected, '<');
           break;
         default:
-          print('❌ CONDITION_EVAL: Unknown operator: $operator');
+          logger.condition('Unknown operator: $operator', level: LogLevel.error);
           return false;
       }
       
-      print('✅ CONDITION_EVAL: Result: $result');
+      logger.condition('Result: $result', level: LogLevel.info);
       return result;
     } catch (e) {
       // If evaluation fails, return false to be safe
-      print('❌ CONDITION_EVAL: ERROR evaluating "$condition": $e');
+      logger.condition('ERROR evaluating "$condition": $e', level: LogLevel.error);
       return false;
     }
   }
@@ -119,24 +120,24 @@ class ConditionEvaluator {
   /// Get a value from the user data service
   /// Supports "namespace.key" format (e.g., "user.name", "debug.age")
   Future<dynamic> _getValue(String key) async {
-    print('🔍 CONDITION_EVAL: Getting value for key: "$key"');
+    logger.condition('Getting value for key: "$key"');
     if (key.contains('.')) {
       // Extract namespace and key parts
       final parts = key.split('.');
       if (parts.length >= 2) {
         final namespace = parts[0];
         final actualKey = parts.sublist(1).join('.'); // Handle nested keys like "user.profile.name"
-        print('🔍 CONDITION_EVAL: Resolved namespace: "$namespace", key: "$actualKey"');
+        logger.condition('Resolved namespace: "$namespace", key: "$actualKey"');
         
         // For now, all namespaces use the same storage (UserDataService)
         // In the future, different namespaces could use different storage backends
         final storageKey = '$namespace.$actualKey';
         final value = await userDataService.getValue(storageKey);
-        print('🔍 CONDITION_EVAL: Retrieved value: $value (type: ${value.runtimeType})');
+        logger.condition('Retrieved value: $value (type: ${value.runtimeType})');
         return value;
       }
     }
-    print('🔍 CONDITION_EVAL: Key does not contain namespace, returning null');
+    logger.condition('Key does not contain namespace, returning null', level: LogLevel.warning);
     return null;
   }
 
@@ -185,15 +186,15 @@ class ConditionEvaluator {
   /// Compare two values numerically
   /// Returns false if either value is not a number
   bool _compareNumbers(dynamic left, dynamic right, String operator) {
-    print('🔍 CONDITION_EVAL: Numeric comparison - left: $left, right: $right, operator: $operator');
+    logger.condition('Numeric comparison - left: $left, right: $right, operator: $operator');
     // Convert to numbers if possible
     final leftNum = _toNumber(left);
     final rightNum = _toNumber(right);
-    print('🔍 CONDITION_EVAL: Converted to numbers - left: $leftNum, right: $rightNum');
+    logger.condition('Converted to numbers - left: $leftNum, right: $rightNum');
     
     // Return false if either value is not a number
     if (leftNum == null || rightNum == null) {
-      print('❌ CONDITION_EVAL: Cannot convert to numbers for comparison');
+      logger.condition('Cannot convert to numbers for comparison', level: LogLevel.warning);
       return false;
     }
     
@@ -213,7 +214,7 @@ class ConditionEvaluator {
 
   /// Evaluate compound conditions with && and || operators
   Future<bool> evaluateCompound(String condition) async {
-    print('🔍 CONDITION_EVAL: Evaluating compound condition: "$condition"');
+    logger.condition('Evaluating compound condition: "$condition"');
     
     // Handle OR conditions first (lower precedence)
     if (condition.contains('||')) {

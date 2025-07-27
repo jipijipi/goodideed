@@ -11,6 +11,7 @@ import 'debug_panel/sequence_selector_widget.dart';
 import 'debug_panel/user_data_manager.dart';
 import 'debug_panel/date_time_picker_widget.dart';
 import 'debug_panel/debug_status_area.dart';
+import 'debug_panel/logger_controls_widget.dart';
 
 /// Main user variables panel that orchestrates the display of user data and debug controls
 class UserVariablesPanel extends StatefulWidget {
@@ -293,6 +294,9 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                             onDataRefresh: refreshData,
                             statusController: _statusController,
                           ),
+                          
+                          // Logger Controls Section
+                          const LoggerControlsWidget(),
                           
                           // Test Scenarios Section
                           _buildScenarioSection(),

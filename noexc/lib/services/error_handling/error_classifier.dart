@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'chat_error_types.dart';
 import 'chat_exceptions.dart';
+import '../logger_service.dart';
 
 /// Classifies and handles different types of errors
 class ErrorClassifier {
@@ -96,13 +97,14 @@ class ErrorClassifier {
   
   /// Logs error with debug info
   static void _logError(String message, dynamic error) {
+    logger.error(message, component: LogComponent.errorHandler);
+    
     if (kDebugMode) {
-      print('[$_tag] ERROR: $message');
       if (error is Exception) {
-        print('[$_tag] Exception type: ${error.runtimeType}');
+        logger.debug('Exception type: ${error.runtimeType}', component: LogComponent.errorHandler);
       }
       if (error is Error) {
-        print('[$_tag] Stack trace: ${error.stackTrace}');
+        logger.debug('Stack trace: ${error.stackTrace}', component: LogComponent.errorHandler);
       }
     }
   }

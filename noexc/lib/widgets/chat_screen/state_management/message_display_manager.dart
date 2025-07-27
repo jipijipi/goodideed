@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../models/chat_message.dart';
 import '../../../services/chat_service.dart';
 import '../../../services/message_queue.dart';
+import '../../../services/logger_service.dart';
 import '../../../constants/ui_constants.dart';
 
 /// Manages message display, filtering, and queue processing
@@ -36,7 +37,7 @@ class MessageDisplayManager {
       }
     } catch (e) {
       // Handle error silently or add error handling as needed
-      debugPrint('Error loading chat script: $e');
+      logger.error('Error loading chat script: $e', component: LogComponent.ui);
     }
   }
 
@@ -87,13 +88,13 @@ class MessageDisplayManager {
   void clearMessages() {
     if (_disposed) return;
     
-    debugPrint('DEBUG: Clearing displayed messages');
+    logger.debug('Clearing displayed messages', component: LogComponent.ui);
     
     // Clear messages but keep sequence loaded
     _displayedMessages.clear();
     _currentTextInputMessage = null;
     
-    debugPrint('DEBUG: Messages cleared');
+    logger.debug('Messages cleared', component: LogComponent.ui);
   }
 
   /// Add a user response message

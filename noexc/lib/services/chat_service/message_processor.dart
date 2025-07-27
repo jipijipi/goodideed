@@ -5,7 +5,7 @@ import '../text_templating_service.dart';
 import '../text_variants_service.dart';
 import '../user_data_service.dart';
 import '../semantic_content_service.dart';
-import 'dart:developer' as developer;
+import '../logger_service.dart';
 
 /// Handles message processing including templates and variants
 class MessageProcessor {
@@ -27,19 +27,19 @@ class MessageProcessor {
   /// Process a single message template and replace variables with stored values
   /// Also applies semantic content resolution and text variants
   Future<ChatMessage> processMessageTemplate(ChatMessage message, ChatSequence? currentSequence) async {
-    developer.log('🔧 MESSAGE_PROCESSOR: Processing message ID ${message.id}, type: ${message.type}, contentKey: "${message.contentKey}", text: "${message.text}"', name: 'MessageProcessor');
+    logger.debug('Processing message ID ${message.id}, type: ${message.type}, contentKey: "${message.contentKey}", text: "${message.text}"', component: LogComponent.messageProcessor);
     
     String textToProcess = message.text;
     List<Choice>? processedChoices = message.choices;
     
     // 1. Apply semantic content resolution (new system)
     if (message.contentKey != null && message.contentKey!.isNotEmpty) {
-      developer.log('🎯 MESSAGE_PROCESSOR: Using semantic content system for contentKey: "${message.contentKey}"', name: 'MessageProcessor');
+      logger.debug('Using semantic content system for contentKey: "${message.contentKey}"', component: LogComponent.messageProcessor);
       textToProcess = await _semanticContentService.getContent(message.contentKey!, message.text);
-      developer.log('✨ MESSAGE_PROCESSOR: Semantic content resolved to: "$textToProcess"', name: 'MessageProcessor');
+      logger.debug('Semantic content resolved to: "$textToProcess"', component: LogComponent.messageProcessor);
     } else {
       // 2. Fallback to legacy variant system for backward compatibility
-      developer.log('📰 MESSAGE_PROCESSOR: No contentKey, checking legacy variants system', name: 'MessageProcessor');
+      logger.debug('No contentKey, checking legacy variants system', component: LogComponent.messageProcessor);
       if (_variantsService != null && 
           currentSequence != null &&
           !message.isChoice && 
@@ -47,33 +47,33 @@ class MessageProcessor {
           !message.isAutoRoute && 
           !message.hasMultipleTexts) {
         
-        developer.log('🗂️ MESSAGE_PROCESSOR: Using legacy variants for sequence: ${currentSequence.sequenceId}, messageId: ${message.id}', name: 'MessageProcessor');
+        logger.debug('Using legacy variants for sequence: ${currentSequence.sequenceId}, messageId: ${message.id}', component: LogComponent.messageProcessor);
         // Get variant for the main text
         textToProcess = await _variantsService.getVariant(
           message.text, 
           currentSequence.sequenceId, 
           message.id
         );
-        developer.log('📜 MESSAGE_PROCESSOR: Legacy variant resolved to: "$textToProcess"', name: 'MessageProcessor');
+        logger.debug('Legacy variant resolved to: "$textToProcess"', component: LogComponent.messageProcessor);
       } else {
-        developer.log('⚪ MESSAGE_PROCESSOR: No content processing - using original text', name: 'MessageProcessor');
+        logger.debug('No content processing - using original text', component: LogComponent.messageProcessor);
       }
     }
     
     // 3. Process choice options if present
     if (message.choices != null) {
-      developer.log('🔘 MESSAGE_PROCESSOR: Processing ${message.choices!.length} choice options', name: 'MessageProcessor');
+      logger.debug('Processing ${message.choices!.length} choice options', component: LogComponent.messageProcessor);
       processedChoices = [];
       for (int i = 0; i < message.choices!.length; i++) {
         Choice choice = message.choices![i];
-        developer.log('   Choice ${i + 1}: text="${choice.text}", contentKey="${choice.contentKey}"', name: 'MessageProcessor');
+        logger.debug('   Choice ${i + 1}: text="${choice.text}", contentKey="${choice.contentKey}"', component: LogComponent.messageProcessor);
         String choiceText = choice.text;
         
         // Apply semantic content to choice if contentKey present
         if (choice.contentKey != null && choice.contentKey!.isNotEmpty) {
-          developer.log('🎯 MESSAGE_PROCESSOR: Processing choice ${i + 1} with contentKey: "${choice.contentKey}"', name: 'MessageProcessor');
+          logger.debug('Processing choice ${i + 1} with contentKey: "${choice.contentKey}"', component: LogComponent.messageProcessor);
           choiceText = await _semanticContentService.getContent(choice.contentKey!, choice.text);
-          developer.log('✨ MESSAGE_PROCESSOR: Choice ${i + 1} resolved to: "$choiceText"', name: 'MessageProcessor');
+          logger.debug('Choice ${i + 1} resolved to: "$choiceText"', component: LogComponent.messageProcessor);
         }
         
         processedChoices.add(Choice(

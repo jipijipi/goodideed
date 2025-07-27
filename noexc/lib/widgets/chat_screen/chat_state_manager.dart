@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../models/chat_sequence.dart';
+import '../../services/logger_service.dart';
 import '../../constants/app_constants.dart';
 import 'state_management/service_manager.dart';
 import 'state_management/message_display_manager.dart';
@@ -102,7 +103,7 @@ class ChatStateManager extends ChangeNotifier {
       
       notifyListeners();
     } catch (e) {
-      debugPrint('Error switching sequence: $e');
+      logger.error('Error switching sequence: $e', component: LogComponent.ui);
     }
   }
 
@@ -111,7 +112,7 @@ class ChatStateManager extends ChangeNotifier {
     if (_disposed) return;
     
     try {
-      debugPrint('DEBUG: Resetting chat sequence: $_currentSequenceId');
+      logger.debug('Resetting chat sequence: $_currentSequenceId', component: LogComponent.ui);
       
       // Clear current state
       _messageDisplayManager.clearMessages();
@@ -125,9 +126,9 @@ class ChatStateManager extends ChangeNotifier {
       );
       
       notifyListeners();
-      debugPrint('DEBUG: Chat reset completed');
+      logger.debug('Chat reset completed', component: LogComponent.ui);
     } catch (e) {
-      debugPrint('DEBUG ERROR: Failed to reset chat: $e');
+      logger.error('Failed to reset chat: $e', component: LogComponent.ui);
     }
   }
 
@@ -144,7 +145,7 @@ class ChatStateManager extends ChangeNotifier {
     if (_disposed) return;
     
     try {
-      debugPrint('DEBUG: Reloading sequence: $_currentSequenceId');
+      logger.debug('Reloading sequence: $_currentSequenceId', component: LogComponent.ui);
       
       // Force reload sequence from JSON file
       await _serviceManager.chatService.loadSequence(_currentSequenceId);
@@ -152,9 +153,9 @@ class ChatStateManager extends ChangeNotifier {
       // Reset chat with newly loaded sequence
       await resetChat();
       
-      debugPrint('DEBUG: Sequence reloaded successfully');
+      logger.debug('Sequence reloaded successfully', component: LogComponent.ui);
     } catch (e) {
-      debugPrint('DEBUG ERROR: Failed to reload sequence: $e');
+      logger.error('Failed to reload sequence: $e', component: LogComponent.ui);
     }
   }
 
@@ -163,14 +164,14 @@ class ChatStateManager extends ChangeNotifier {
     if (_disposed) return;
     
     try {
-      debugPrint('DEBUG: Clearing all user data');
+      logger.debug('Clearing all user data', component: LogComponent.ui);
       
       // Clear all stored user variables
       await _serviceManager.userDataService.clearAllData();
       
-      debugPrint('DEBUG: All user data cleared successfully');
+      logger.debug('All user data cleared successfully', component: LogComponent.ui);
     } catch (e) {
-      debugPrint('DEBUG ERROR: Failed to clear user data: $e');
+      logger.error('Failed to clear user data: $e', component: LogComponent.ui);
     }
   }
 

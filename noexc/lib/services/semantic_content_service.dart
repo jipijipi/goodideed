@@ -1,5 +1,5 @@
 import 'package:noexc/services/content/semantic_content_resolver.dart';
-import 'dart:developer' as developer;
+import 'logger_service.dart';
 
 class SemanticContentService {
   static final SemanticContentService _instance = SemanticContentService._internal();
@@ -11,16 +11,16 @@ class SemanticContentService {
   
   /// Resolve content using semantic key with fallback to original text
   Future<String> getContent(String? semanticKey, String originalText) async {
-    developer.log('🚀 SEMANTIC_SERVICE: Request for contentKey: "$semanticKey", originalText: "$originalText"', name: 'SemanticContentService');
+    logger.semantic('Request for contentKey: "$semanticKey", originalText: "$originalText"');
     
     // Handle null or empty semantic keys
     if (semanticKey == null || semanticKey.isEmpty) {
-      developer.log('🔄 SEMANTIC_SERVICE: Empty/null semantic key, returning original text', name: 'SemanticContentService');
+      logger.semantic('Empty/null semantic key, returning original text');
       return originalText;
     }
     
     final result = await SemanticContentResolver.resolveContent(semanticKey, originalText);
-    developer.log('✨ SEMANTIC_SERVICE: Final result: "$result"', name: 'SemanticContentService');
+    logger.semantic('Final result: "$result"', level: LogLevel.info);
     return result;
   }
   

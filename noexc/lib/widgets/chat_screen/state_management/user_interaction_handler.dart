@@ -3,6 +3,7 @@ import '../../../models/chat_message.dart';
 import '../../../models/choice.dart';
 import '../../../services/chat_service.dart';
 import '../../../services/message_queue.dart';
+import '../../../services/logger_service.dart';
 import '../../../constants/app_constants.dart';
 import 'message_display_manager.dart';
 
@@ -39,13 +40,13 @@ class UserInteractionHandler {
 
     // Check if this choice switches sequences
     if (choice.sequenceId != null) {
-      debugPrint('SEQUENCE: Switching to sequence: ${choice.sequenceId}');
+      logger.info('Switching to sequence: ${choice.sequenceId}', component: LogComponent.ui);
       await _switchToSequenceFromChoice(choice.sequenceId!, 1, onSequenceChange, notifyListeners);
     } else if (choice.nextMessageId != null) {
-      debugPrint('CONTINUE: Continuing in current sequence to message: ${choice.nextMessageId}');
+      logger.debug('Continuing in current sequence to message: ${choice.nextMessageId}', component: LogComponent.ui);
       await _continueWithChoice(choice.nextMessageId!, notifyListeners);
     } else {
-      debugPrint('END: Choice has no next action - conversation may end here');
+      logger.warning('Choice has no next action - conversation may end here', component: LogComponent.ui);
     }
   }
 
@@ -106,7 +107,7 @@ class UserInteractionHandler {
       
       notifyListeners();
     } catch (e) {
-      debugPrint('SEQUENCE_SWITCH_ERROR: Error switching sequence from choice: $e');
+      logger.error('Error switching sequence from choice: $e', component: LogComponent.ui);
     }
   }
 

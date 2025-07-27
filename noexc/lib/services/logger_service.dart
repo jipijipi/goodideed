@@ -26,6 +26,7 @@ enum LogComponent {
   dataActionProcessor('DATA_ACTION'),
   errorHandler('ERROR'),
   validation('VALIDATION'),
+  semanticContent('SEMANTIC'),
   ui('UI'),
   general('GENERAL');
 
@@ -156,6 +157,11 @@ class LoggerService {
   /// Convenience method for scenario management logs
   void scenario(String message, {LogLevel level = LogLevel.warning}) {
     _log(level, LogComponent.scenarioManager, message);
+  }
+
+  /// Convenience method for semantic content logs
+  void semantic(String message, {LogLevel level = LogLevel.debug}) {
+    _log(level, LogComponent.semanticContent, message);
   }
 
   /// Get current configuration for debug panel

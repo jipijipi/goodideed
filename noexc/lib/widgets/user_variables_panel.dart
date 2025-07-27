@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/user_data_service.dart';
 import '../services/chat_service.dart';
 import '../services/scenario_manager.dart';
+import '../services/logger_service.dart';
 import '../constants/ui_constants.dart';
 import '../config/chat_config.dart';
 import 'chat_screen/chat_state_manager.dart';
@@ -105,7 +106,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
         });
       }
     } catch (e) {
-      print('Failed to load scenarios: $e');
+      logger.warning('Failed to load scenarios: $e', component: LogComponent.ui);
     }
   }
 

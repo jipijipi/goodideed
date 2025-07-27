@@ -2,24 +2,25 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/services.dart';
 import 'dart:developer' as developer;
+import '../logger_service.dart';
 
 class SemanticContentResolver {
   static final Map<String, String> _cache = {};
   
   static Future<String> resolveContent(String semanticKey, String originalText) async {
     developer.log('🔍 SEMANTIC_CONTENT: Starting resolution for key: "$semanticKey"', name: 'SemanticContent');
-    print('🔍 SEMANTIC_CONTENT: Starting resolution for key: "$semanticKey"');
+    logger.semantic('Starting resolution for key: "$semanticKey"');
     
     // Check cache first
     if (_cache.containsKey(semanticKey)) {
       developer.log('⚡ SEMANTIC_CONTENT: Cache hit for key: "$semanticKey"', name: 'SemanticContent');
-      print('⚡ SEMANTIC_CONTENT: Cache hit for key: "$semanticKey"');
+      logger.semantic('Cache hit for key: "$semanticKey"');
       return _cache[semanticKey]!;
     }
     
     final parsed = parseSemanticKey(semanticKey);
     developer.log('📝 SEMANTIC_CONTENT: Parsed key - actor: ${parsed['actor']}, action: ${parsed['action']}, subject: ${parsed['subject']}, modifiers: ${parsed['modifiers']}', name: 'SemanticContent');
-    print('📝 SEMANTIC_CONTENT: Parsed key - actor: ${parsed['actor']}, action: ${parsed['action']}, subject: ${parsed['subject']}, modifiers: ${parsed['modifiers']}');
+    logger.semantic('Parsed key - actor: ${parsed['actor']}, action: ${parsed['action']}, subject: ${parsed['subject']}, modifiers: ${parsed['modifiers']}');
     
     // Validate semantic key
     if (parsed['actor'] == null || parsed['action'] == null || parsed['subject'] == null) {
@@ -44,24 +45,24 @@ class SemanticContentResolver {
     for (int i = 0; i < fallbackPaths.length; i++) {
       String path = fallbackPaths[i];
       developer.log('🔍 SEMANTIC_CONTENT: Trying path ${i + 1}/${fallbackPaths.length}: $path', name: 'SemanticContent');
-      print('🔍 SEMANTIC_CONTENT: Trying path ${i + 1}/${fallbackPaths.length}: $path');
+      logger.semantic('Trying path ${i + 1}/${fallbackPaths.length}: $path');
       String? content = await _tryLoadFile(path);
       if (content != null) {
         developer.log('✅ SEMANTIC_CONTENT: Success! Found content at path: $path', name: 'SemanticContent');
         developer.log('📄 SEMANTIC_CONTENT: Content preview: "${content.length > 100 ? content.substring(0, 100) + '...' : content}"', name: 'SemanticContent');
-        print('✅ SEMANTIC_CONTENT: Success! Found content at path: $path');
-        print('📄 SEMANTIC_CONTENT: Content preview: "${content.length > 100 ? content.substring(0, 100) + '...' : content}"');
+        logger.semantic('Success! Found content at path: $path', level: LogLevel.info);
+        logger.semantic('Content preview: "${content.length > 100 ? content.substring(0, 100) + '...' : content}"');
         _cache[semanticKey] = content;
         return content;
       } else {
         developer.log('❌ SEMANTIC_CONTENT: Path not found: $path', name: 'SemanticContent');
-        print('❌ SEMANTIC_CONTENT: Path not found: $path');
+        logger.semantic('Path not found: $path');
       }
     }
     
     // Final fallback to original text
     developer.log('🔄 SEMANTIC_CONTENT: All paths failed, falling back to original text: "$originalText"', name: 'SemanticContent');
-    print('🔄 SEMANTIC_CONTENT: All paths failed, falling back to original text: "$originalText"');
+    logger.semantic('All paths failed, falling back to original text: "$originalText"', level: LogLevel.warning);
     _cache[semanticKey] = originalText;
     return originalText;
   }

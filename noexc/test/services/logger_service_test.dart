@@ -45,6 +45,7 @@ void main() {
       expect(() => logger.route('test message'), returnsNormally);
       expect(() => logger.condition('test condition'), returnsNormally);
       expect(() => logger.scenario('test scenario'), returnsNormally);
+      expect(() => logger.semantic('test semantic'), returnsNormally);
     });
 
     test('should handle different log levels', () {

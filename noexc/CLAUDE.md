@@ -106,6 +106,11 @@ The authoring tool supports advanced cross-sequence navigation:
   - Loads predefined scenarios from `assets/debug/scenarios.json`
   - Applies variable sets to UserDataService for testing different user personas
   - Simple API: `loadScenarios()`, `applyScenario()`, helper methods for metadata
+- **LoggerService** - Centralized logging system replacing scattered print statements
+  - Configurable log levels (debug, info, warning, error, critical)
+  - Component-based filtering for organized logging
+  - Production-safe with automatic level filtering
+  - Debug panel controls for real-time configuration
 
 #### UI Architecture (`lib/widgets/`)
 - **ChatScreen** - Main container with state management
@@ -269,6 +274,24 @@ assets/content/
 - **No Code Changes**: New content works automatically via fallback system
 - **Localization Ready**: Clean separation for multi-language support
 - **Performance Optimized**: Intelligent caching and minimal file I/O
+
+### Logging Guidelines
+- **ALWAYS use LoggerService instead of print statements**
+- Import the logger: `import '../services/logger_service.dart';`
+- Use appropriate log levels:
+  - `logger.debug()` - Development details, variable values, flow tracing
+  - `logger.info()` - Important milestones, user actions, system events
+  - `logger.warning()` - Deprecated usage, recoverable issues, fallbacks
+  - `logger.error()` - Failures, exceptions, unexpected states
+  - `logger.critical()` - System instability, data corruption, unrecoverable errors
+- Use component-specific methods when available:
+  - `logger.route()` - Auto-route evaluations and sequence switching
+  - `logger.condition()` - Variable condition checks and boolean evaluations
+  - `logger.scenario()` - Test scenario operations and debug state changes
+  - `logger.semantic()` - Content resolution and caching operations
+- Include relevant context in log messages (variable values, sequence IDs, etc.)
+- **Production Safety**: Only error/critical logs appear in release builds
+- Configure logging in debug panel for real-time filtering
 
 ### Testing (Test-Driven Development Required)
 - **ALWAYS use Test-Driven Development (TDD)** for this project
@@ -657,6 +680,23 @@ flutter analyze            # Static analysis
   - Achieved ~70% reduction in hardcoded variables across test suite
   - All updated tests verified to pass successfully
 - **Benefits**: 100% consistent camelCase naming, centralized variable management, reduced maintenance overhead
+
+### Centralized Logging System (July 2025)
+- **LoggerService Implementation**: Replaced scattered print statements with centralized logging system
+  - **Production-Safe**: Only errors/critical messages shown in release builds
+  - **Component-Based**: Organized logging by service (CHAT, ROUTE, SEMANTIC, etc.)
+  - **Configurable Levels**: debug, info, warning, error, critical with emoji indicators
+  - **Debug Panel Integration**: Real-time logging configuration in debug panel
+  - **Performance Optimized**: Singleton pattern with conditional output
+- **Comprehensive Migration**: Replaced print statements across 15+ core files
+  - `message_processor.dart`, `route_processor.dart`, `semantic_content_resolver.dart`
+  - `user_interaction_handler.dart`, `condition_evaluator.dart`, `scenario_manager.dart`
+  - Chat state management, error handling, and UI components
+- **Developer Experience**: Convenience methods for common components
+  - `logger.route()`, `logger.condition()`, `logger.scenario()`, `logger.semantic()`
+  - Component filtering and timestamp options
+  - Complete documentation in `docs/LOGGING_GUIDE.md`
+- **Benefits**: Better debugging, production stability, organized log output, centralized configuration
 
 ### Legacy Code Cleanup (July 2025)
 - **Removed Legacy Assets**: Deleted unused `chat_script.json` and related constants

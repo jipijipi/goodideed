@@ -106,6 +106,7 @@ class MessageProcessor {
       routes: message.routes,
       dataActions: message.dataActions,
       contentKey: message.contentKey,
+      imagePath: message.imagePath,
     );
   }
 

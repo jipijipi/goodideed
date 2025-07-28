@@ -25,6 +25,8 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('DEBUG: MessageBubble - Processing message ID: ${message.id}, type: ${message.type}, isImage: ${message.isImage}, imagePath: ${message.imagePath}, text: "${message.text}"');
+    
     // Route to appropriate message type based on single responsibility
     if (message.isChoice && message.choices != null) {
       return ChoiceButtons(
@@ -45,9 +47,40 @@ class MessageBubble extends StatelessWidget {
       return const SizedBox.shrink();
     }
     
-    // Image messages - display image directly with no styling
+    // Image messages - display image with text if present
     if (message.isImage && message.imagePath != null) {
-      return Image.asset(message.imagePath!);
+      print('DEBUG: Displaying image message with path: ${message.imagePath}');
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Show text if present
+          if (message.text.trim().isNotEmpty)
+            _buildRegularBubble(context),
+          // Show image
+          Padding(
+            padding: message.text.trim().isNotEmpty 
+                ? const EdgeInsets.only(top: 8.0) 
+                : EdgeInsets.zero,
+            child: Image.asset(
+              message.imagePath!,
+              errorBuilder: (context, error, stackTrace) {
+                print('DEBUG: Image loading error for ${message.imagePath}: $error');
+                return Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade100,
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Text(
+                    'Image not found: ${message.imagePath}',
+                    style: TextStyle(color: Colors.red.shade700),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
     }
     
     // Regular text messages only

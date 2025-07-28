@@ -66,6 +66,8 @@ class ChatMessage {
        );
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
+    print('DEBUG: ChatMessage.fromJson called with: ${json.toString()}');
+    
     List<Choice>? choices;
     if (json['choices'] != null) {
       choices = (json['choices'] as List)
@@ -124,6 +126,11 @@ class ChatMessage {
       messageText = '';
     }
     
+    final imagePath = json['imagePath'] as String?;
+    if (messageType == MessageType.image) {
+      print('DEBUG: Parsing image message - imagePath from JSON: $imagePath');
+    }
+    
     return ChatMessage(
       id: json['id'] as int,
       text: messageText,
@@ -139,7 +146,7 @@ class ChatMessage {
       routes: routes,
       dataActions: dataActions,
       contentKey: json['contentKey'] as String?,
-      imagePath: json['imagePath'] as String?,
+      imagePath: imagePath,
     );
   }
 
@@ -276,7 +283,14 @@ class ChatMessage {
   /// Creates individual ChatMessage objects for each text in a multi-text message
   List<ChatMessage> expandToIndividualMessages() {
     if (!hasMultipleTexts) {
+      if (type == MessageType.image) {
+        print('DEBUG: Single image message - imagePath: $imagePath');
+      }
       return [this];
+    }
+    
+    if (type == MessageType.image) {
+      print('DEBUG: Multi-text image message - imagePath: $imagePath');
     }
     
     final textList = allTexts;

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../constants/ui_constants.dart';
-import '../../constants/design_tokens.dart';
 import 'message_bubble.dart';
 
 /// A widget that displays a scrollable list of chat messages with slide-in animations
@@ -60,19 +59,32 @@ class _ChatMessageListState extends State<ChatMessageList> {
     }
   }
 
-  /// Builds an animated message item that slides in from the bottom
+  /// Builds an animated message item that grows in height and slides in
   Widget _buildAnimatedMessageItem(ChatMessage message, Animation<double> animation) {
-    return SlideTransition(
-      position: Tween<Offset>(
-        begin: const Offset(0, 1), // Start below the screen
-        end: Offset.zero, // End at normal position
-      ).animate(CurvedAnimation(
-        parent: animation,
-        curve: DesignTokens.curveStandard,
-      )),
-      child: FadeTransition(
-        opacity: animation,
-        child: _buildMessageItem(message),
+    // Create size animation that grows from 0 to 1
+    final sizeAnimation = CurvedAnimation(
+      parent: animation,
+      curve: UIConstants.messageSlideAnimationCurve,
+    );
+    
+    // Create slide animation for the content
+    final slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.3), // Start slightly below
+      end: Offset.zero, // End at normal position
+    ).animate(CurvedAnimation(
+      parent: animation,
+      curve: UIConstants.messageSlideAnimationCurve,
+    ));
+
+    return SizeTransition(
+      sizeFactor: sizeAnimation,
+      axisAlignment: -1.0, // Align to bottom (since reverse: true)
+      child: SlideTransition(
+        position: slideAnimation,
+        child: FadeTransition(
+          opacity: animation,
+          child: _buildMessageItem(message),
+        ),
       ),
     );
   }

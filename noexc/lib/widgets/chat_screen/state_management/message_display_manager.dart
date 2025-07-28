@@ -64,9 +64,9 @@ class MessageDisplayManager {
       // Add message to list
       _displayedMessages.add(message);
       
-      // Insert with animation if AnimatedList is available
+      // Only animate bot messages, skip animation for user messages
       final animatedListState = _animatedListKey.currentState;
-      if (animatedListState != null) {
+      if (animatedListState != null && message.isFromBot) {
         // Insert at index 0 since we're using reverse: true
         animatedListState.insertItem(0, duration: UIConstants.messageSlideAnimationDuration);
       }
@@ -114,12 +114,8 @@ class MessageDisplayManager {
   void addUserResponseMessage(ChatMessage message) {
     _displayedMessages.add(message);
     
-    // Insert with animation if AnimatedList is available
-    final animatedListState = _animatedListKey.currentState;
-    if (animatedListState != null) {
-      // Insert at index 0 since we're using reverse: true
-      animatedListState.insertItem(0, duration: UIConstants.messageSlideAnimationDuration);
-    }
+    // Skip animation for user messages to prevent jump
+    // User messages appear instantly, only bot messages animate
     
     _scrollToBottom();
   }

@@ -41,7 +41,15 @@ class _ChatMessageListState extends State<ChatMessageList> {
         initialItemCount: widget.messages.length,
         itemBuilder: (context, index, animation) {
           final message = widget.messages.reversed.toList()[index];
-          return _buildAnimatedMessageItem(message, animation);
+          
+          // Check if this is a user message that should appear instantly
+          if (!message.isFromBot) {
+            // User messages appear instantly without animation
+            return _buildMessageItem(message);
+          } else {
+            // Bot messages use full animation
+            return _buildAnimatedMessageItem(message, animation);
+          }
         },
       );
     } else {

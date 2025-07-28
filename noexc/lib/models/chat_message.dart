@@ -11,6 +11,7 @@ enum MessageType {
   textInput,
   autoroute,
   dataAction,
+  image,
 }
 
 class ChatMessage {
@@ -28,6 +29,7 @@ class ChatMessage {
   final List<RouteCondition>? routes;
   final List<DataAction>? dataActions;
   final String? contentKey;
+  final String? imagePath;
 
   ChatMessage({
     required this.id,
@@ -44,6 +46,7 @@ class ChatMessage {
     this.routes,
     this.dataActions,
     this.contentKey,
+    this.imagePath,
   }) :
        assert(
          type != MessageType.choice || text.isEmpty,
@@ -136,6 +139,7 @@ class ChatMessage {
       routes: routes,
       dataActions: dataActions,
       contentKey: json['contentKey'] as String?,
+      imagePath: json['imagePath'] as String?,
     );
   }
 
@@ -198,6 +202,10 @@ class ChatMessage {
       json['contentKey'] = contentKey!;
     }
 
+    if (imagePath != null) {
+      json['imagePath'] = imagePath!;
+    }
+
     return json;
   }
 
@@ -209,6 +217,7 @@ class ChatMessage {
   bool get isTextInput => type == MessageType.textInput;
   bool get isAutoRoute => type == MessageType.autoroute;
   bool get isDataAction => type == MessageType.dataAction;
+  bool get isImage => type == MessageType.image;
   
   /// Returns true if this message has multiple texts (contains separator)
   bool get hasMultipleTexts => text.contains(ChatConfig.multiTextSeparator);
@@ -243,6 +252,7 @@ class ChatMessage {
     List<RouteCondition>? routes,
     List<DataAction>? dataActions,
     String? contentKey,
+    String? imagePath,
   }) {
     return ChatMessage(
       id: id ?? this.id,
@@ -259,6 +269,7 @@ class ChatMessage {
       routes: routes ?? this.routes,
       dataActions: dataActions ?? this.dataActions,
       contentKey: contentKey ?? this.contentKey,
+      imagePath: imagePath ?? this.imagePath,
     );
   }
   
@@ -293,6 +304,7 @@ class ChatMessage {
         routes: isLast ? routes : null,
         dataActions: isLast ? dataActions : null,
         contentKey: isLast ? contentKey : null, // Only last message has contentKey for processing
+        imagePath: isLast ? imagePath : null, // Only last message has imagePath
       ));
     }
     

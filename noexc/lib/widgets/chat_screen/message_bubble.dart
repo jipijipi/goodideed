@@ -45,6 +45,11 @@ class MessageBubble extends StatelessWidget {
       return const SizedBox.shrink();
     }
     
+    // Image messages - display image directly with no styling
+    if (message.isImage && message.imagePath != null) {
+      return Image.asset(message.imagePath!);
+    }
+    
     // Regular text messages only
     return _buildRegularBubble(context);
   }

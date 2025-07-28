@@ -5,10 +5,11 @@ import '../../../services/message_queue.dart';
 import '../../../services/logger_service.dart';
 import '../../../constants/ui_constants.dart';
 
-/// Manages message display, filtering, and queue processing
+/// Manages message display, filtering, queue processing, and animations
 class MessageDisplayManager {
   final ScrollController _scrollController = ScrollController();
   final List<ChatMessage> _displayedMessages = [];
+  final GlobalKey<AnimatedListState> _animatedListKey = GlobalKey<AnimatedListState>();
   
   ChatMessage? _currentTextInputMessage;
   bool _disposed = false;
@@ -18,6 +19,9 @@ class MessageDisplayManager {
   
   /// Get the displayed messages
   List<ChatMessage> get displayedMessages => _displayedMessages;
+  
+  /// Get the animated list key
+  GlobalKey<AnimatedListState> get animatedListKey => _animatedListKey;
   
   /// Get the current text input message
   ChatMessage? get currentTextInputMessage => _currentTextInputMessage;
@@ -57,7 +61,16 @@ class MessageDisplayManager {
     await messageQueue.enqueue(filteredMessages, (message) async {
       if (_disposed) return;
       
+      // Add message to list
       _displayedMessages.add(message);
+      
+      // Insert with animation if AnimatedList is available
+      final animatedListState = _animatedListKey.currentState;
+      if (animatedListState != null) {
+        // Insert at index 0 since we're using reverse: true
+        animatedListState.insertItem(0, duration: UIConstants.messageSlideAnimationDuration);
+      }
+      
       notifyListeners();
       
       // Scroll to bottom after adding message
@@ -100,6 +113,14 @@ class MessageDisplayManager {
   /// Add a user response message
   void addUserResponseMessage(ChatMessage message) {
     _displayedMessages.add(message);
+    
+    // Insert with animation if AnimatedList is available
+    final animatedListState = _animatedListKey.currentState;
+    if (animatedListState != null) {
+      // Insert at index 0 since we're using reverse: true
+      animatedListState.insertItem(0, duration: UIConstants.messageSlideAnimationDuration);
+    }
+    
     _scrollToBottom();
   }
 

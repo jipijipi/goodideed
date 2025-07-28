@@ -10,7 +10,7 @@ class AppConstants {
   // Note: User attribute constants moved to StorageKeys for consistency
   
   // Chat Configuration
-  static const int defaultMessageDelay = 100; // milliseconds
+  static const int defaultMessageDelay = 500; // milliseconds
   static const String defaultPlaceholderText = 'Type your answer...';
   
   // Chat Sequences

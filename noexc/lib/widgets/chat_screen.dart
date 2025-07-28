@@ -63,6 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
             onChoiceSelected: _stateManager.onChoiceSelected,
             onTextSubmitted: _stateManager.onTextInputSubmitted,
             currentTextInputMessage: _stateManager.currentTextInputMessage,
+            animatedListKey: _stateManager.animatedListKey,
           ),
           
           // User panel overlay

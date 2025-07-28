@@ -27,6 +27,7 @@ class ChatStateManager extends ChangeNotifier {
   ChatMessage? get currentTextInputMessage => _messageDisplayManager.currentTextInputMessage;
   bool get isPanelVisible => _isPanelVisible;
   ScrollController get scrollController => _messageDisplayManager.scrollController;
+  GlobalKey<AnimatedListState> get animatedListKey => _messageDisplayManager.animatedListKey;
   String get currentSequenceId => _currentSequenceId;
   ChatSequence? get currentSequence => _serviceManager.chatService.currentSequence;
 

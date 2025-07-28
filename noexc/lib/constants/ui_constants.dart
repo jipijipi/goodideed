@@ -5,10 +5,12 @@ class UIConstants {
   // Animation Durations
   static const Duration panelAnimationDuration = Duration(milliseconds: 300);
   static const Duration scrollAnimationDuration = Duration(milliseconds: 300);
+  static const Duration messageSlideAnimationDuration = Duration(milliseconds: 350);
   
   // Animation Curves
   static const Curve panelAnimationCurve = Curves.easeInOut;
   static const Curve scrollAnimationCurve = Curves.easeOut;
+  static const Curve messageSlideAnimationCurve = Curves.easeOutCubic;
   
   // Border Radius
   static const double messageBubbleRadius = 12.0;

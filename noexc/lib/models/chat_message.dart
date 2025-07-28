@@ -63,11 +63,13 @@ class ChatMessage {
        assert(
          type != MessageType.dataAction || text.isEmpty,
          'DataAction messages should not have text content'
+       ),
+       assert(
+         type != MessageType.image || text.isEmpty,
+         'Image messages should not have text content'
        );
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
-    print('DEBUG: ChatMessage.fromJson called with: ${json.toString()}');
-    
     List<Choice>? choices;
     if (json['choices'] != null) {
       choices = (json['choices'] as List)
@@ -122,13 +124,14 @@ class ChatMessage {
     if (messageType == MessageType.choice || 
         messageType == MessageType.textInput || 
         messageType == MessageType.autoroute ||
-        messageType == MessageType.dataAction) {
+        messageType == MessageType.dataAction ||
+        messageType == MessageType.image) {
       messageText = '';
     }
     
     final imagePath = json['imagePath'] as String?;
     if (messageType == MessageType.image) {
-      print('DEBUG: Parsing image message - imagePath from JSON: $imagePath');
+      print('DEBUG: Creating image message - imagePath: $imagePath');
     }
     
     return ChatMessage(
@@ -289,10 +292,6 @@ class ChatMessage {
       return [this];
     }
     
-    if (type == MessageType.image) {
-      print('DEBUG: Multi-text image message - imagePath: $imagePath');
-    }
-    
     final textList = allTexts;
     final delayList = allDelays;
     final messages = <ChatMessage>[];
@@ -300,7 +299,7 @@ class ChatMessage {
     for (int i = 0; i < textList.length; i++) {
       final isLast = i == textList.length - 1;
       final messageType = isLast ? type : MessageType.bot; // Only last message keeps original type
-      final messageText = isLast && (type == MessageType.choice || type == MessageType.textInput || type == MessageType.autoroute || type == MessageType.dataAction) 
+      final messageText = isLast && (type == MessageType.choice || type == MessageType.textInput || type == MessageType.autoroute || type == MessageType.dataAction || type == MessageType.image) 
           ? '' : textList[i]; // Interactive messages have no text
       
       messages.add(ChatMessage(

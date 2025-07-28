@@ -49,8 +49,8 @@ class MessageDisplayManager {
   Future<void> displayMessages(List<ChatMessage> messages, MessageQueue messageQueue, VoidCallback notifyListeners) async {
     // Filter out empty messages only
     final filteredMessages = messages.where((message) {
-      // Skip messages with empty text that are not interactive
-      if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput) {
+      // Skip messages with empty text that are not interactive or image messages
+      if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput && !message.isImage) {
         return false;
       }
       

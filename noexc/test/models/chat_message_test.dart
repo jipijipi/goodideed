@@ -883,27 +883,27 @@ void main() {
     });
 
     group('Image message type', () {
-      test('should create image message with imagePath', () {
+      test('should create image message with imagePath and empty text', () {
         // Arrange & Act
         final message = ChatMessage(
           id: 1,
-          text: 'Check out this image!',
+          text: '', // Image messages should have empty text
           type: MessageType.image,
           imagePath: 'assets/images/sample.png',
         );
 
         // Assert
         expect(message.id, 1);
-        expect(message.text, 'Check out this image!');
+        expect(message.text, ''); // Image messages have no text
         expect(message.type, MessageType.image);
         expect(message.imagePath, 'assets/images/sample.png');
       });
 
-      test('should create image message from JSON with imagePath', () {
+      test('should create image message from JSON with imagePath and clear text', () {
         // Arrange
         final json = {
           'id': 1,
-          'text': 'Look at this!',
+          'text': 'Look at this!', // This text should be cleared
           'type': 'image',
           'imagePath': 'assets/images/test.jpg',
         };
@@ -913,16 +913,16 @@ void main() {
 
         // Assert
         expect(message.id, 1);
-        expect(message.text, 'Look at this!');
+        expect(message.text, ''); // Text should be cleared for image messages
         expect(message.type, MessageType.image);
         expect(message.imagePath, 'assets/images/test.jpg');
       });
 
-      test('should handle image message without imagePath', () {
+      test('should handle image message without imagePath and clear text', () {
         // Arrange
         final json = {
           'id': 1,
-          'text': 'Image message',
+          'text': 'Image message', // This text should be cleared
           'type': 'image',
           // No imagePath provided
         };
@@ -932,14 +932,15 @@ void main() {
 
         // Assert
         expect(message.type, MessageType.image);
+        expect(message.text, ''); // Text should be cleared for image messages
         expect(message.imagePath, isNull);
       });
 
-      test('should include imagePath in JSON serialization', () {
+      test('should include imagePath in JSON serialization with empty text', () {
         // Arrange
         final message = ChatMessage(
           id: 1,
-          text: 'Image message',
+          text: '', // Image messages have no text
           type: MessageType.image,
           imagePath: 'assets/images/example.png',
         );
@@ -949,7 +950,7 @@ void main() {
 
         // Assert
         expect(json['id'], 1);
-        expect(json['text'], 'Image message');
+        expect(json['text'], ''); // Image messages have empty text
         expect(json['type'], 'image');
         expect(json['imagePath'], 'assets/images/example.png');
       });
@@ -958,7 +959,7 @@ void main() {
         // Arrange
         final message = ChatMessage(
           id: 1,
-          text: 'Image message',
+          text: '', // Image messages have no text
           type: MessageType.image,
           // No imagePath provided
         );
@@ -968,6 +969,7 @@ void main() {
 
         // Assert
         expect(json['type'], 'image');
+        expect(json['text'], ''); // Image messages have empty text
         expect(json.containsKey('imagePath'), false);
       });
 
@@ -975,56 +977,47 @@ void main() {
         // Arrange
         final original = ChatMessage(
           id: 1,
-          text: 'Original image',
+          text: '', // Image messages have no text
           type: MessageType.image,
           imagePath: 'assets/images/original.png',
         );
 
         // Act
         final copy = original.copyWith(
-          text: 'Updated image',
           imagePath: 'assets/images/updated.png',
         );
 
         // Assert
         expect(copy.id, 1);
-        expect(copy.text, 'Updated image');
+        expect(copy.text, ''); // Image messages have empty text
         expect(copy.type, MessageType.image);
         expect(copy.imagePath, 'assets/images/updated.png');
       });
 
-      test('should support multi-text with image messages', () {
+      test('should support expanding single image message', () {
         // Arrange
         final message = ChatMessage(
           id: 1,
-          text: 'First part ||| Second part ||| Third part',
+          text: '', // Image messages have no text
           type: MessageType.image,
-          imagePath: 'assets/images/multi.png',
+          imagePath: 'assets/images/single.png',
         );
 
         // Act
         final expandedMessages = message.expandToIndividualMessages();
 
-        // Assert
-        expect(expandedMessages.length, 3);
-        expect(expandedMessages[0].text, 'First part');
-        expect(expandedMessages[0].type, MessageType.bot); // First messages become bot type
-        expect(expandedMessages[0].imagePath, isNull); // Only last message has imagePath
-        
-        expect(expandedMessages[1].text, 'Second part');
-        expect(expandedMessages[1].type, MessageType.bot);
-        expect(expandedMessages[1].imagePath, isNull);
-        
-        expect(expandedMessages[2].text, 'Third part');
-        expect(expandedMessages[2].type, MessageType.image); // Last message keeps original type
-        expect(expandedMessages[2].imagePath, 'assets/images/multi.png'); // Last message has imagePath
+        // Assert - Single image message should not expand
+        expect(expandedMessages.length, 1);
+        expect(expandedMessages[0].text, ''); // Image messages have no text
+        expect(expandedMessages[0].type, MessageType.image);
+        expect(expandedMessages[0].imagePath, 'assets/images/single.png');
       });
 
       test('should handle convenience getter isImage', () {
         // Arrange
         final message = ChatMessage(
           id: 1,
-          text: 'Image message',
+          text: '', // Image messages have no text
           type: MessageType.image,
           imagePath: 'assets/images/test.png',
         );

@@ -31,6 +31,11 @@ class ChatMessageList extends StatefulWidget {
 class _ChatMessageListState extends State<ChatMessageList> {
   @override
   Widget build(BuildContext context) {
+    print('DEBUG: ChatMessageList - Total messages: ${widget.messages.length}');
+    for (var msg in widget.messages) {
+      print('DEBUG: ChatMessageList - Message ID: ${msg.id}, type: ${msg.type}, isImage: ${msg.isImage}, imagePath: ${msg.imagePath}');
+    }
+    
     // Use AnimatedList if key is provided, otherwise fallback to ListView
     if (widget.animatedListKey != null) {
       return AnimatedList(
@@ -41,6 +46,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
         initialItemCount: widget.messages.length,
         itemBuilder: (context, index, animation) {
           final message = widget.messages.reversed.toList()[index];
+          print('DEBUG: ChatMessageList - Rendering message ID: ${message.id}, type: ${message.type}, isImage: ${message.isImage}');
           
           // Check if this is a user message that should appear instantly
           if (!message.isFromBot) {

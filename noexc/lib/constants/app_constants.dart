@@ -27,6 +27,7 @@ class AppConstants {
     'task_config_seq', 
     'task_config_test_seq', 
     'day_tracking_test_seq',
+    'richtext_demo_seq',
     // Group sequences (generated from authoring tool)
     'group_28',
     'group_30', 

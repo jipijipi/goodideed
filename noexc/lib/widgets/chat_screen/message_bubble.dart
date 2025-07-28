@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../constants/ui_constants.dart';
@@ -81,6 +82,10 @@ class MessageBubble extends StatelessWidget {
 
   /// Builds the message container with text content
   Widget _buildMessageContainer(BuildContext context, bool isBot) {
+    final textColor = isBot 
+        ? ThemeConstants.botMessageTextColor 
+        : ThemeConstants.userMessageTextColor;
+    
     return Container(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * UIConstants.messageMaxWidthFactor,
@@ -92,14 +97,51 @@ class MessageBubble extends StatelessWidget {
             : Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
       ),
-      child: Text(
-        message.text,
-        style: TextStyle(
-          fontSize: UIConstants.messageFontSize,
-          color: isBot 
-              ? ThemeConstants.botMessageTextColor 
-              : ThemeConstants.userMessageTextColor,
+      child: MarkdownBody(
+        data: message.text,
+        styleSheet: MarkdownStyleSheet(
+          // Base text style
+          p: TextStyle(
+            fontSize: UIConstants.messageFontSize,
+            color: textColor,
+            height: 1.4,
+          ),
+          // Bold text
+          strong: TextStyle(
+            fontSize: UIConstants.messageFontSize,
+            color: textColor,
+            fontWeight: FontWeight.bold,
+          ),
+          // Italic text
+          em: TextStyle(
+            fontSize: UIConstants.messageFontSize,
+            color: textColor,
+            fontStyle: FontStyle.italic,
+          ),
+          // Strikethrough text
+          del: TextStyle(
+            fontSize: UIConstants.messageFontSize,
+            color: textColor,
+            decoration: TextDecoration.lineThrough,
+          ),
+          // Disable all other markdown elements
+          h1: const TextStyle(fontSize: 0, height: 0),
+          h2: const TextStyle(fontSize: 0, height: 0),
+          h3: const TextStyle(fontSize: 0, height: 0),
+          h4: const TextStyle(fontSize: 0, height: 0),
+          h5: const TextStyle(fontSize: 0, height: 0),
+          h6: const TextStyle(fontSize: 0, height: 0),
+          blockquote: const TextStyle(fontSize: 0, height: 0),
+          code: TextStyle(
+            fontSize: UIConstants.messageFontSize,
+            color: textColor,
+          ),
+          codeblockDecoration: const BoxDecoration(),
         ),
+        // Disable physics to prevent scrolling within message bubbles
+        shrinkWrap: true,
+        // Disable selection to maintain chat UX
+        selectable: false,
       ),
     );
   }

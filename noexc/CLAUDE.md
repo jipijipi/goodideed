@@ -275,23 +275,55 @@ assets/content/
 - **Localization Ready**: Clean separation for multi-language support
 - **Performance Optimized**: Intelligent caching and minimal file I/O
 
-### Logging Guidelines
+### Logging Guidelines (MANDATORY)
+⚠️ **CRITICAL RULE: NEVER use print() statements for any logging in this project** ⚠️
+
+#### Required Logging System
 - **ALWAYS use LoggerService instead of print statements**
-- Import the logger: `import '../services/logger_service.dart';`
-- Use appropriate log levels:
-  - `logger.debug()` - Development details, variable values, flow tracing
-  - `logger.info()` - Important milestones, user actions, system events
-  - `logger.warning()` - Deprecated usage, recoverable issues, fallbacks
-  - `logger.error()` - Failures, exceptions, unexpected states
-  - `logger.critical()` - System instability, data corruption, unrecoverable errors
-- Use component-specific methods when available:
-  - `logger.route()` - Auto-route evaluations and sequence switching
-  - `logger.condition()` - Variable condition checks and boolean evaluations
-  - `logger.scenario()` - Test scenario operations and debug state changes
-  - `logger.semantic()` - Content resolution and caching operations
-- Include relevant context in log messages (variable values, sequence IDs, etc.)
+- **NEVER use print(), debugPrint(), or console.log()**
+- All logging must go through the centralized LoggerService
+- Import the logger: `import '../services/logger_service.dart';` or use `final logger = LoggerService();`
+
+#### Log Levels (Use Appropriate Level)
+- `logger.debug()` - Development details, variable values, flow tracing, temporary debugging
+- `logger.info()` - Important milestones, user actions, system events, successful operations
+- `logger.warning()` - Deprecated usage, recoverable issues, fallbacks, potential problems
+- `logger.error()` - Failures, exceptions, unexpected states, recoverable errors
+- `logger.critical()` - System instability, data corruption, unrecoverable errors
+
+#### Component-Specific Logging Methods
+- `logger.route()` - Auto-route evaluations and sequence switching
+- `logger.condition()` - Variable condition checks and boolean evaluations
+- `logger.scenario()` - Test scenario operations and debug state changes
+- `logger.semantic()` - Content resolution and caching operations
+- `logger.ui()` - UI component rendering, interaction, and state changes
+- `logger.message()` - Message processing, display, and lifecycle events
+
+#### Best Practices
+- **Include relevant context**: variable values, message IDs, sequence IDs, file paths
+- **Use descriptive messages**: "Processing image message ID: $id with path: $imagePath"
 - **Production Safety**: Only error/critical logs appear in release builds
-- Configure logging in debug panel for real-time filtering
+- **Debug Panel**: Configure logging levels in debug panel for real-time filtering
+- **Consistent Format**: Use consistent emoji prefixes (🔍 for debug, ℹ️ for info, ⚠️ for warnings, ❌ for errors)
+
+#### Migration from print() Statements
+When you see print() statements in existing code:
+1. Replace `print('DEBUG: ...')` with `logger.debug('...')`
+2. Replace `print('ERROR: ...')` with `logger.error('...')`
+3. Add appropriate context and formatting
+4. Remove any temporary/debug print statements that are no longer needed
+
+#### Examples
+```dart
+// ❌ WRONG - Never use print()
+print('DEBUG: Processing message ID: $id');
+print('Image loading error: $error');
+
+// ✅ CORRECT - Use LoggerService
+logger.debug('Processing message ID: $id, type: $type');
+logger.error('Image loading failed for path: $imagePath - $error');
+logger.ui('MessageBubble rendering message ID: $id with imagePath: $imagePath');
+```
 
 ### Testing (Test-Driven Development Required)
 - **ALWAYS use Test-Driven Development (TDD)** for this project

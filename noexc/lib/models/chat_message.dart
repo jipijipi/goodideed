@@ -3,6 +3,7 @@ import 'route_condition.dart';
 import 'data_action.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
+import '../services/logger_service.dart';
 
 enum MessageType {
   bot,
@@ -131,7 +132,7 @@ class ChatMessage {
     
     final imagePath = json['imagePath'] as String?;
     if (messageType == MessageType.image) {
-      print('DEBUG: Creating image message - imagePath: $imagePath');
+      logger.debug('Creating image message - imagePath: $imagePath', component: LogComponent.messageProcessor);
     }
     
     return ChatMessage(
@@ -287,7 +288,7 @@ class ChatMessage {
   List<ChatMessage> expandToIndividualMessages() {
     if (!hasMultipleTexts) {
       if (type == MessageType.image) {
-        print('DEBUG: Single image message - imagePath: $imagePath');
+        logger.debug('Single image message - imagePath: $imagePath', component: LogComponent.messageProcessor);
       }
       return [this];
     }

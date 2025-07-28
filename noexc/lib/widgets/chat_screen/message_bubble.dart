@@ -4,6 +4,7 @@ import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../constants/ui_constants.dart';
 import '../../constants/theme_constants.dart';
+import '../../services/logger_service.dart';
 import 'choice_buttons.dart';
 import 'text_input_bubble.dart';
 
@@ -25,7 +26,7 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('DEBUG: MessageBubble - ID: ${message.id}, type: ${message.type}, isImage: ${message.isImage}, imagePath: ${message.imagePath}, text: "${message.text}"');
+    logger.debug('MessageBubble - ID: ${message.id}, type: ${message.type}, isImage: ${message.isImage}, imagePath: ${message.imagePath}, text: "${message.text}"', component: LogComponent.ui);
     
     // Route to appropriate message type based on single responsibility
     if (message.isChoice && message.choices != null) {
@@ -49,13 +50,13 @@ class MessageBubble extends StatelessWidget {
     
     // Image messages - display image only with consistent spacing
     if (message.isImage && message.imagePath != null) {
-      print('DEBUG: Rendering image message with path: ${message.imagePath}');
+      logger.debug('Rendering image message with path: ${message.imagePath}', component: LogComponent.ui);
       return Padding(
         padding: UIConstants.messageBubbleMargin,
         child: Image.asset(
           message.imagePath!,
           errorBuilder: (context, error, stackTrace) {
-            print('DEBUG: Image loading error for ${message.imagePath}: $error');
+            logger.error('Image loading failed for path: ${message.imagePath} - $error', component: LogComponent.ui);
             return Container(
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
@@ -73,7 +74,7 @@ class MessageBubble extends StatelessWidget {
     }
     
     // Regular text messages only
-    print('DEBUG: Falling through to regular bubble');
+    logger.debug('Falling through to regular bubble for message ID: ${message.id}', component: LogComponent.ui);
     return _buildRegularBubble(context);
   }
 

@@ -46,8 +46,7 @@ class TestUtils {
     return MediaQuery(
       data: MediaQueryData(
         size: screenSize,
-        devicePixelRatio: devicePixelRatio,
-        textScaleFactor: textScaleFactor,
+        devicePixelRatio: devicePixelRatio, textScaler: TextScaler.linear(textScaleFactor),
       ),
       child: child,
     );

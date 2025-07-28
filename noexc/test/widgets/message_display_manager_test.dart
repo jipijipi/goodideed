@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/widgets/chat_screen/state_management/message_display_manager.dart';
 import 'package:noexc/services/message_queue.dart';
-import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

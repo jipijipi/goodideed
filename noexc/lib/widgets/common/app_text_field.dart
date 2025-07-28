@@ -143,7 +143,7 @@ class AppTextField extends StatelessWidget {
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : prefix,
             suffixIcon: _buildSuffixIcon(),
             filled: true,
-            fillColor: colorScheme.surfaceVariant.withOpacity(0.3),
+            fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
             contentPadding: contentPadding ?? const EdgeInsets.symmetric(
               horizontal: DesignTokens.spaceL,
               vertical: DesignTokens.spaceM,

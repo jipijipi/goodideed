@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/content/semantic_content_resolver.dart';
-import 'dart:io';
 
 void main() {
   group('SemanticContentResolver', () {

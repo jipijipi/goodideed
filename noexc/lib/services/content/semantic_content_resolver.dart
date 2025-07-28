@@ -44,7 +44,7 @@ class SemanticContentResolver {
       String? content = await _tryLoadFile(path);
       if (content != null) {
         logger.semantic('Success! Found content at path: $path', level: LogLevel.info);
-        logger.semantic('Content preview: "${content.length > 100 ? content.substring(0, 100) + '...' : content}"');
+        logger.semantic('Content preview: "${content.length > 100 ? '${content.substring(0, 100)}...' : content}"');
         _cache[semanticKey] = content;
         return content;
       } else {
@@ -84,12 +84,12 @@ class SemanticContentResolver {
     // 1. Try with all modifiers in order
     if (modifiers.isNotEmpty) {
       String fullModifierChain = modifiers.join('_');
-      paths.add('content/$actor/$action/${subject}_${fullModifierChain}.txt');
+      paths.add('content/$actor/$action/${subject}_$fullModifierChain.txt');
       
       // 2. Try reducing modifiers from the end (keep most important first)
       for (int i = modifiers.length - 1; i > 0; i--) {
         String partialChain = modifiers.take(i).join('_');
-        paths.add('content/$actor/$action/${subject}_${partialChain}.txt');
+        paths.add('content/$actor/$action/${subject}_$partialChain.txt');
       }
     }
     
@@ -102,12 +102,12 @@ class SemanticContentResolver {
       if (modifiers.isNotEmpty) {
         // Try generic subject with all modifiers
         String fullModifierChain = modifiers.join('_');
-        paths.add('content/$actor/$action/${genericSubject}_${fullModifierChain}.txt');
+        paths.add('content/$actor/$action/${genericSubject}_$fullModifierChain.txt');
         
         // Try generic subject with reduced modifiers
         for (int i = modifiers.length - 1; i > 0; i--) {
           String partialChain = modifiers.take(i).join('_');
-          paths.add('content/$actor/$action/${genericSubject}_${partialChain}.txt');
+          paths.add('content/$actor/$action/${genericSubject}_$partialChain.txt');
         }
       }
       // Try generic subject without modifiers

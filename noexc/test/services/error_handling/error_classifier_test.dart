@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/foundation.dart';
 import 'package:noexc/services/error_handling/error_classifier.dart';
 import 'package:noexc/services/error_handling/chat_exceptions.dart';
 import 'package:noexc/services/error_handling/chat_error_types.dart';

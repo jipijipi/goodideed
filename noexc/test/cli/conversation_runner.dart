@@ -5,7 +5,6 @@ import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/services/text_templating_service.dart';
 import 'package:noexc/services/text_variants_service.dart';
-import 'package:noexc/services/semantic_content_service.dart';
 import 'package:noexc/services/session_service.dart';
 import 'package:noexc/services/scenario_manager.dart';
 import 'package:noexc/services/logger_service.dart';

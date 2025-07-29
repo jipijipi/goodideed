@@ -529,7 +529,7 @@ Future<Map<String, dynamic>?> loadScenario(String scenarioName, {bool verbose = 
       'session.visitCount': 3,
       'session.totalVisitCount': 15,
       'task.currentDate': '2025-01-27',
-      'task.status': 'pending',
+      'task.currentStatus': 'pending',
     },
     'weekend_user': {
       'user.name': 'Sarah Wilson',
@@ -542,7 +542,7 @@ Future<Map<String, dynamic>?> loadScenario(String scenarioName, {bool verbose = 
       'user.name': 'Mike Johnson',
       'user.isOnboarded': true,
       'task.currentDate': '2025-01-27',
-      'task.status': 'overdue',
+      'task.currentStatus': 'overdue',
       'task.isPastDeadline': true,
     },
   };

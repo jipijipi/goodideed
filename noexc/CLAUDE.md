@@ -79,7 +79,8 @@ Visual tool in `noexc-authoring-tool/` for creating conversation sequences:
 ### Storage & Templates
 - **Local Storage**: shared_preferences for user data persistence
 - **Template System**: `{key|fallback}` syntax for dynamic text substitution
-- **Key Task Variables**: `task.currentDate`, `task.status`, `task.deadlineTime`, `task.isActiveDay`, `task.isPastDeadline`
+- **Formatter Support**: `{key:formatter}` and `{key:formatter|fallback}` syntax (timeOfDay, intensity, activeDays)
+- **Key Task Variables**: `task.currentDate`, `task.currentStatus`, `task.deadlineTime`, `task.isActiveDay`, `task.isPastDeadline`
 
 ### Message System
 - **Multi-text messages**: Use `|||` separator for multiple bubbles

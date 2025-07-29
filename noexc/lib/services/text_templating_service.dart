@@ -15,7 +15,7 @@ class TextTemplatingService {
     }
 
     // Regular expression to find template variables like {user.name}, {user.name|fallback}, or {key:formatter|fallback}
-    final RegExp templateRegex = RegExp(r'\{([^}:]+)(?::([^}|]+))?(?:\|([^}]+))?\}');
+    final RegExp templateRegex = RegExp(r'\{([^}:|]+)(?::([^}|]+))?(?:\|([^}]*))?\}');
     
     String result = text;
     final matches = templateRegex.allMatches(text);

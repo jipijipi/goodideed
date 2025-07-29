@@ -306,7 +306,7 @@ Future<Map<String, dynamic>> loadScenarios() async {
         'session.visitCount': 3,
         'session.totalVisitCount': 15,
         'task.currentDate': '2025-01-27',
-        'task.status': 'pending',
+        'task.currentStatus': 'pending',
       }
     },
     'weekend_user': {
@@ -327,7 +327,7 @@ Future<Map<String, dynamic>> loadScenarios() async {
         'user.name': 'Mike Johnson',
         'user.isOnboarded': true,
         'task.currentDate': '2025-01-27',
-        'task.status': 'overdue',
+        'task.currentStatus': 'overdue',
         'task.isPastDeadline': true,
       }
     },

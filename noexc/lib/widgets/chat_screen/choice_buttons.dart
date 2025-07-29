@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../constants/design_tokens.dart';
@@ -99,13 +100,11 @@ class ChoiceButtons extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
-            child: Text(
-              choice.text,
-              style: TextStyle(
-                fontSize: DesignTokens.messageFontSize,
-                color: _getChoiceTextColor(context, isUnselected),
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
+            child: MarkdownBody(
+              data: choice.text,
+              styleSheet: DesignTokens.getChoiceMarkdownStyle(context, isUnselected: isUnselected),
+              shrinkWrap: true,
+              selectable: false,
             ),
           ),
           if (isSelected) ...[
@@ -131,29 +130,18 @@ class ChoiceButtons extends StatelessWidget {
 
   /// Gets the appropriate color for choice button background
   Color _getChoiceColor(BuildContext context, bool isSelected, bool isUnselected) {
-    final baseColor = DesignTokens.getChoiceButtonColor(context);
     if (isSelected) {
-      return baseColor;
-    } else if (isUnselected) {
-      return baseColor.withValues(alpha: DesignTokens.unselectedChoiceOpacity);
+      return DesignTokens.getSelectedChoiceColor(context);
     } else {
-      return baseColor.withValues(alpha: DesignTokens.selectedChoiceOpacity);
+      return DesignTokens.getUnselectedChoiceColor(context);
     }
   }
 
   /// Gets the appropriate border color for choice buttons
   Color _getChoiceBorderColor(BuildContext context, bool isSelected) {
-    final borderColor = DesignTokens.getChoiceButtonBorder(context);
     return isSelected
-        ? borderColor
-        : borderColor.withValues(alpha: DesignTokens.choiceBorderOpacity);
+        ? DesignTokens.getSelectedChoiceBorder(context)
+        : DesignTokens.getUnselectedChoiceBorder(context);
   }
 
-  /// Gets the appropriate text color for choice buttons
-  Color _getChoiceTextColor(BuildContext context, bool isUnselected) {
-    final textColor = DesignTokens.getChoiceButtonText(context);
-    return isUnselected 
-        ? textColor.withValues(alpha: DesignTokens.unselectedTextOpacity)
-        : textColor;
-  }
 }

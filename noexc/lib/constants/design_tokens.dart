@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 /// Comprehensive design tokens for consistent UI styling
 /// This centralizes all design values to minimize merge conflicts
@@ -36,7 +37,8 @@ class DesignTokens {
   static const Color infoColor = Color(0xFF2196F3);
   
   /// Message Bubble Colors
-  static const Color botMessageBackgroundLight = Color(0xFFFFFFFF); // White with alpha applied in widget
+  static const Color botMessageBackgroundLight = Color.fromARGB(150, 255, 255, 255); // Full opacity white
+  static const Color botMessageBackgroundLightWithAlpha = Color.fromARGB(127, 255, 255, 255); // 80% white for alpha variant
   static const Color botMessageBackgroundDark = Color(0xFF424242);
   static const Color userMessageBackground = Colors.white;
   static const Color userMessageTextColor = Colors.black;
@@ -46,21 +48,34 @@ class DesignTokens {
   static const Color userMessageText = Colors.white; // Legacy
   static const Color avatarIconColor = Colors.white;
   
-  /// Interactive Element Colors - Light Theme
-  static const Color choiceButtonColorLight = Color.fromARGB(255, 255, 255, 255);
-  static const Color choiceButtonTextLight = Colors.black;
-  static const Color choiceButtonBorderLight = Color.fromARGB(255, 255, 255, 255);
+  /// Selected Choice Button Colors - Light Theme
+  static const Color selectedChoiceColorLight = Color(0xFFFFFFFF);     // Full opacity white
+  static const Color selectedChoiceTextLight = Colors.black;
+  static const Color selectedChoiceBorderLight = lightPrimary;          // Brand blue #484B85
   
+  /// Unselected Choice Button Colors - Light Theme (with direct alpha)
+  static const Color unselectedChoiceColorLight = Color.fromARGB(250, 255, 255, 255);    // 30% white
+  static const Color unselectedChoiceTextLight = Color(0x99000000);     // 60% black
+  static const Color unselectedChoiceBorderLight = Color.fromARGB(128, 255, 255, 255);   // 50% brand blue
+  
+  /// Selected Choice Button Colors - Dark Theme
+  static const Color selectedChoiceColorDark = darkPrimary;             // Brand blue dark #6B6FA3
+  static const Color selectedChoiceTextDark = Colors.white;
+  static const Color selectedChoiceBorderDark = darkPrimary;
+  
+  /// Unselected Choice Button Colors - Dark Theme (with direct alpha)
+  static const Color unselectedChoiceColorDark = Color(0x4D6B6FA3);     // 30% brand blue dark
+  static const Color unselectedChoiceTextDark = Color(0x99FFFFFF);      // 60% white
+  static const Color unselectedChoiceBorderDark = Color(0x806B6FA3);    // 50% brand blue dark
+
+  /// Other Interactive Element Colors - Light Theme  
   static const Color inputAvatarBackgroundLight = lightSecondary;
   static const Color primaryButtonBackgroundLight = Color.fromARGB(255, 223, 218, 57);
   static const Color primaryButtonTextLight = Colors.white;
   static const Color secondaryButtonBackgroundLight = Color.fromARGB(255, 16, 158, 183);
   static const Color secondaryButtonTextLight = lightPrimary;
   
-  /// Interactive Element Colors - Dark Theme  
-  static const Color choiceButtonColorDark = darkPrimary;
-  static const Color choiceButtonTextDark = Colors.white;
-  static const Color choiceButtonBorderDark = darkPrimary;
+  /// Other Interactive Element Colors - Dark Theme
   static const Color inputAvatarBackgroundDark = darkSecondary;
   static const Color primaryButtonBackgroundDark = darkPrimary;
   static const Color primaryButtonTextDark = Colors.white;
@@ -230,11 +245,7 @@ class DesignTokens {
   
   /// Component-specific opacity
   static const double overlayOpacity = opacityLight;
-  static const double unselectedChoiceOpacity = opacityLight;
-  static const double selectedChoiceOpacity = opacityStrong;
   static const double hintTextOpacity = opacityStrong;
-  static const double unselectedTextOpacity = 0.6;
-  static const double choiceBorderOpacity = opacityMedium;
   
   /// Additional UI Constants (from UIConstants)
   static const double messageFontSize = 16.0;
@@ -288,22 +299,40 @@ class DesignTokens {
   // ==================== THEME-AWARE GETTERS ====================
   
   /// Theme-aware color getters (from ThemeConstants)
-  static Color getChoiceButtonColor(BuildContext context) {
+  static Color getSelectedChoiceColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light 
-        ? choiceButtonColorLight 
-        : choiceButtonColorDark;
+        ? selectedChoiceColorLight 
+        : selectedChoiceColorDark;
   }
   
-  static Color getChoiceButtonText(BuildContext context) {
+  static Color getUnselectedChoiceColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light 
-        ? choiceButtonTextLight 
-        : choiceButtonTextDark;
+        ? unselectedChoiceColorLight 
+        : unselectedChoiceColorDark;
   }
   
-  static Color getChoiceButtonBorder(BuildContext context) {
+  static Color getSelectedChoiceText(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light 
-        ? choiceButtonBorderLight 
-        : choiceButtonBorderDark;
+        ? selectedChoiceTextLight 
+        : selectedChoiceTextDark;
+  }
+  
+  static Color getUnselectedChoiceText(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? unselectedChoiceTextLight 
+        : unselectedChoiceTextDark;
+  }
+  
+  static Color getSelectedChoiceBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? selectedChoiceBorderLight 
+        : selectedChoiceBorderDark;
+  }
+  
+  static Color getUnselectedChoiceBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? unselectedChoiceBorderLight 
+        : unselectedChoiceBorderDark;
   }
   
   static Color getInputAvatarBackground(BuildContext context) {
@@ -346,5 +375,101 @@ class DesignTokens {
     return Theme.of(context).brightness == Brightness.light 
         ? inputBackgroundLight 
         : inputBackgroundDark;
+  }
+
+  // ==================== MARKDOWN STYLES ====================
+  
+  /// Creates a MarkdownStyleSheet for regular messages
+  static MarkdownStyleSheet getMessageMarkdownStyle(BuildContext context, {required bool isBot}) {
+    final textColor = isBot 
+        ? botMessageTextColor 
+        : userMessageTextColor;
+        
+    return MarkdownStyleSheet(
+      // Base text style
+      p: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        height: 1.4,
+      ),
+      // Bold text
+      strong: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        fontWeight: FontWeight.bold,
+      ),
+      // Italic text
+      em: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        fontStyle: FontStyle.italic,
+      ),
+      // Strikethrough text
+      del: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        decoration: TextDecoration.lineThrough,
+      ),
+      // Disable all other markdown elements
+      h1: const TextStyle(fontSize: 0, height: 0),
+      h2: const TextStyle(fontSize: 0, height: 0),
+      h3: const TextStyle(fontSize: 0, height: 0),
+      h4: const TextStyle(fontSize: 0, height: 0),
+      h5: const TextStyle(fontSize: 0, height: 0),
+      h6: const TextStyle(fontSize: 0, height: 0),
+      blockquote: const TextStyle(fontSize: 0, height: 0),
+      code: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+      ),
+      codeblockDecoration: const BoxDecoration(),
+    );
+  }
+  
+  /// Creates a MarkdownStyleSheet for choice buttons
+  static MarkdownStyleSheet getChoiceMarkdownStyle(BuildContext context, {required bool isUnselected}) {
+    final textColor = isUnselected 
+        ? getUnselectedChoiceText(context)
+        : getSelectedChoiceText(context);
+        
+    return MarkdownStyleSheet(
+      // Base text style
+      p: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        height: 1.4,
+      ),
+      // Bold text
+      strong: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        fontWeight: FontWeight.bold,
+      ),
+      // Italic text
+      em: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        fontStyle: FontStyle.italic,
+      ),
+      // Strikethrough text
+      del: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+        decoration: TextDecoration.lineThrough,
+      ),
+      // Disable headers and blockquotes
+      h1: const TextStyle(fontSize: 0, height: 0),
+      h2: const TextStyle(fontSize: 0, height: 0),
+      h3: const TextStyle(fontSize: 0, height: 0),
+      h4: const TextStyle(fontSize: 0, height: 0),
+      h5: const TextStyle(fontSize: 0, height: 0),
+      h6: const TextStyle(fontSize: 0, height: 0),
+      blockquote: const TextStyle(fontSize: 0, height: 0),
+      code: TextStyle(
+        fontSize: messageFontSize,
+        color: textColor,
+      ),
+      codeblockDecoration: const BoxDecoration(),
+    );
   }
 }

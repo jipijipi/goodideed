@@ -107,10 +107,6 @@ class MessageBubble extends StatelessWidget {
 
   /// Builds the message container with text content
   Widget _buildMessageContainer(BuildContext context, bool isBot) {
-    final textColor = isBot 
-        ? DesignTokens.botMessageTextColor 
-        : DesignTokens.userMessageTextColor;
-    
     return Container(
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
@@ -118,51 +114,13 @@ class MessageBubble extends StatelessWidget {
       padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
         color: isBot 
-            ? DesignTokens.botMessageBackgroundLight.withValues(alpha: 0.8)
+            ? DesignTokens.botMessageBackgroundLightWithAlpha
             : DesignTokens.userMessageBackground,
         borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
       ),
       child: MarkdownBody(
         data: message.text,
-        styleSheet: MarkdownStyleSheet(
-          // Base text style
-          p: TextStyle(
-            fontSize: DesignTokens.messageFontSize,
-            color: textColor,
-            height: 1.4,
-          ),
-          // Bold text
-          strong: TextStyle(
-            fontSize: DesignTokens.messageFontSize,
-            color: textColor,
-            fontWeight: FontWeight.bold,
-          ),
-          // Italic text
-          em: TextStyle(
-            fontSize: DesignTokens.messageFontSize,
-            color: textColor,
-            fontStyle: FontStyle.italic,
-          ),
-          // Strikethrough text
-          del: TextStyle(
-            fontSize: DesignTokens.messageFontSize,
-            color: textColor,
-            decoration: TextDecoration.lineThrough,
-          ),
-          // Disable all other markdown elements
-          h1: const TextStyle(fontSize: 0, height: 0),
-          h2: const TextStyle(fontSize: 0, height: 0),
-          h3: const TextStyle(fontSize: 0, height: 0),
-          h4: const TextStyle(fontSize: 0, height: 0),
-          h5: const TextStyle(fontSize: 0, height: 0),
-          h6: const TextStyle(fontSize: 0, height: 0),
-          blockquote: const TextStyle(fontSize: 0, height: 0),
-          code: TextStyle(
-            fontSize: DesignTokens.messageFontSize,
-            color: textColor,
-          ),
-          codeblockDecoration: const BoxDecoration(),
-        ),
+        styleSheet: DesignTokens.getMessageMarkdownStyle(context, isBot: isBot),
         // Disable physics to prevent scrolling within message bubbles
         shrinkWrap: true,
         // Disable selection to maintain chat UX

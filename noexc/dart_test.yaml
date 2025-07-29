@@ -1,0 +1,40 @@
+# Dart Test Configuration for TDD
+# Reduces verbosity during test-driven development cycles
+
+# Test runner configuration
+test_on: vm
+concurrency: 4  # Limit parallel tests to reduce output noise
+
+# Override configuration for specific test patterns
+override:
+  # Quick TDD runs - minimal output
+  "*_test.dart":
+    test_on: vm
+    timeout: "30s"
+    
+  # Integration tests can be more verbose
+  "integration/**":
+    test_on: vm
+    timeout: "2m"
+    
+  # CLI tests need more time
+  "cli/**":
+    test_on: vm  
+    timeout: "2m"
+
+# Global test configuration
+tags:
+  # Tag for quick TDD tests
+  tdd:
+    timeout: "15s"
+  
+  # Tag for integration tests  
+  integration:
+    timeout: "2m"
+    
+  # Tag for slow tests
+  slow:
+    timeout: "5m"
+
+# Reporting configuration
+# Note: Additional flags should be passed via command line for maximum compatibility

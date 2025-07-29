@@ -11,6 +11,25 @@ This file provides guidance to Claude Code when working with this Flutter chat a
 - `flutter build apk/ios/web` - Build for platforms
 - `cd noexc-authoring-tool && npm start` - Run React Flow authoring tool
 
+### TDD-Optimized Test Commands
+For reduced verbosity during Test-Driven Development:
+
+#### Quick TDD Testing (Minimal Output)
+- `dart tool/tdd_runner.dart --quiet test/services/specific_test.dart` - Single file, minimal output
+- `dart tool/tdd_runner.dart -q test/models/` - Directory testing with minimal noise
+- `dart tool/tdd_runner.dart --name "specific test pattern"` - Target specific tests
+- `flutter test --reporter compact test/specific_test.dart` - Built-in compact reporter
+
+#### Focused Testing Strategies
+- `flutter test test/services/logger_service_test.dart` - Single service test
+- `flutter test test/models/ --concurrency=2` - Directory with limited concurrency
+- `flutter test --name "should handle errors"` - Pattern-based test selection
+- `flutter test --tags tdd` - Run only TDD-tagged tests
+
+#### Traditional Commands (More Verbose)
+- `flutter test` - Full test suite (high verbosity)
+- `flutter test --verbose` - Maximum output for debugging
+
 ## Architecture Overview
 
 ### Core Architecture
@@ -98,6 +117,16 @@ Dynamic content system using semantic keys like `bot.acknowledge.completion.posi
 - **290+ passing tests** across models, services, widgets, validation
 - Test files mirror `lib/` directory structure in `test/`
 - Never commit code without corresponding tests
+
+#### Test Setup for Minimal Output
+```dart
+import '../test_helpers.dart';
+
+setUp(() {
+  setupQuietTesting(); // Reduces log noise during TDD
+  // ... other test setup
+});
+```
 
 ## Authoring Tool Integration
 

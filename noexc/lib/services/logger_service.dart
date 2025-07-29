@@ -42,7 +42,7 @@ class LoggerService {
   LoggerService._();
 
   /// Current minimum log level (configurable)
-  LogLevel _minLevel = kDebugMode ? LogLevel.debug : LogLevel.error;
+  LogLevel _minLevel = _getDefaultLogLevel();
   
   /// Component filters - if empty, all components are logged
   final Set<LogComponent> _enabledComponents = {};
@@ -162,6 +162,37 @@ class LoggerService {
   /// Convenience method for semantic content logs
   void semantic(String message, {LogLevel level = LogLevel.debug}) {
     _log(level, LogComponent.semanticContent, message);
+  }
+
+  /// Configure for test environment (minimal logging)
+  void configureForTesting() {
+    configure(
+      minLevel: LogLevel.error,  // Only show errors and critical in tests
+      enabledComponents: {}, // Enable all components
+      showTimestamps: false,
+    );
+  }
+
+  /// Reset to default configuration
+  void resetToDefaults() {
+    _minLevel = _getDefaultLogLevel();
+    _enabledComponents.clear();
+    _showTimestamps = false;
+  }
+
+  /// Get default log level based on environment
+  static LogLevel _getDefaultLogLevel() {
+    // Check if we're in a test environment
+    if (isTestEnvironment()) {
+      return LogLevel.error;  // Quiet during tests
+    }
+    return kDebugMode ? LogLevel.debug : LogLevel.error;
+  }
+
+  /// Check if we're running in a test environment
+  static bool isTestEnvironment() {
+    // Flutter test sets FLUTTER_TEST environment variable
+    return const bool.fromEnvironment('FLUTTER_TEST', defaultValue: false);
   }
 
   /// Get current configuration for debug panel

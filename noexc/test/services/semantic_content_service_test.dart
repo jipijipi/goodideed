@@ -1,11 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/semantic_content_service.dart';
+import 'package:noexc/services/logger_service.dart';
 
 void main() {
   group('SemanticContentService', () {
     late SemanticContentService service;
     
     setUp(() {
+      // Configure logger for quiet test output
+      LoggerService.instance.configureForTesting();
+      
       service = SemanticContentService.instance;
       service.clearCache(); // Clear cache before each test
     });

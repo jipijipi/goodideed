@@ -130,12 +130,9 @@ app.*.symbols
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
 .DS_Store
-*.png
-.DS_Store
 
 #React
 noexc/noexc-authoring-tool/node_modules/
 noexc/noexc-authoring-tool/build/
 noexc/noexc-authoring-tool/dist/
 .env
-.DS_Store

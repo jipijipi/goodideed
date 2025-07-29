@@ -63,7 +63,7 @@ class DesignTokens {
   /// Disabled Choice Button Colors - Light Theme (with direct alpha - most muted)
   static const Color disabledChoiceColorLight = Color.fromARGB(0, 255, 255, 255);  
   static const Color disabledChoiceTextLight = Color.fromARGB(50, 10, 10, 20);       // 30% black
-  static const Color disabledChoiceBorderLight = Color.fromARGB(0, 10, 10, 20);  
+  static const Color disabledChoiceBorderLight = Color.fromARGB(30, 10, 10, 20);  
 
   /// Selected Choice Button Colors - Dark Theme
   static const Color selectedChoiceColorDark = darkPrimary;             // Brand blue dark #6B6FA3
@@ -99,11 +99,11 @@ class DesignTokens {
   static const Color inputBackgroundDark = darkPrimary;    // #6B6FA3
 
   /// Input Border Colors
-  static const Color inputBorderColorLight = lightPrimary;   // Brand blue #484B85
+  static const Color inputBorderColorLight = Color.fromARGB(0, 72, 75, 133);   // Brand blue #484B85
   static const Color inputBorderColorDark = darkPrimary;     // Brand blue dark #6B6FA3
 
   /// Input Shadow Colors
-  static const Color inputShadowColorLight = Color(0x33484B85);  // 20% brand blue
+  static const Color inputShadowColorLight = brandBluePurple;  // 20% brand blue
   static const Color inputShadowColorDark = Color(0x33000000);   // 20% black
 
   /// Input Text Colors
@@ -144,9 +144,9 @@ class DesignTokens {
   static const double disabledChoiceShadowBlurRadius = 0.0;   // Minimal elevation
 
   /// Input Styling Properties
-  static const double inputBorderWidth = 1.0;
-  static const Offset inputShadowOffset = Offset(0, 2);
-  static const double inputShadowBlurRadius = 4.0;
+  static const double inputBorderWidth = 0.0;
+  static const Offset inputShadowOffset = Offset(0, 3);
+  static const double inputShadowBlurRadius = 0.0;
   
   /// Theme Configuration
   static const bool useMaterial3 = true;

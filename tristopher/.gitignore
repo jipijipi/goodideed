@@ -84,3 +84,4 @@ logs/
 # Platform specific
 ios/Podfile.lock
 .flutter-plugins-dependencies
+*.png

@@ -106,7 +106,7 @@ class _TextInputBubbleState extends State<TextInputBubble> {
   /// Builds the user avatar
   Widget _buildUserAvatar(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
+      backgroundColor: ThemeConstants.getInputAvatarBackground(context),
       child: const Icon(Icons.person, color: ThemeConstants.avatarIconColor),
     );
   }

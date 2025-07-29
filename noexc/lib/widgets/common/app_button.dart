@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../constants/design_tokens.dart';
+import '../../constants/theme_constants.dart';
 
 /// Standard app button component with consistent styling
 /// Provides common button variants to minimize UI duplication
@@ -70,13 +71,13 @@ class AppButton extends StatelessWidget {
       case ButtonVariant.primary:
         return ElevatedButton(
           onPressed: isLoading ? null : onPressed,
-          style: _getElevatedButtonStyle(colorScheme),
+          style: _getElevatedButtonStyle(context, colorScheme),
           child: _buildContent(),
         );
       case ButtonVariant.secondary:
         return FilledButton.tonal(
           onPressed: isLoading ? null : onPressed,
-          style: _getFilledButtonStyle(colorScheme),
+          style: _getFilledButtonStyle(context, colorScheme),
           child: _buildContent(),
         );
       case ButtonVariant.outline:
@@ -116,10 +117,10 @@ class AppButton extends StatelessWidget {
     return Text(text);
   }
 
-  ButtonStyle _getElevatedButtonStyle(ColorScheme colorScheme) {
+  ButtonStyle _getElevatedButtonStyle(BuildContext context, ColorScheme colorScheme) {
     return ElevatedButton.styleFrom(
-      backgroundColor: colorScheme.primary,
-      foregroundColor: colorScheme.onPrimary,
+      backgroundColor: ThemeConstants.getPrimaryButtonBackground(context),
+      foregroundColor: ThemeConstants.getPrimaryButtonText(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DesignTokens.buttonRadius),
       ),
@@ -128,10 +129,10 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  ButtonStyle _getFilledButtonStyle(ColorScheme colorScheme) {
+  ButtonStyle _getFilledButtonStyle(BuildContext context, ColorScheme colorScheme) {
     return FilledButton.styleFrom(
-      backgroundColor: colorScheme.secondaryContainer,
-      foregroundColor: colorScheme.onSecondaryContainer,
+      backgroundColor: ThemeConstants.getSecondaryButtonBackground(context),
+      foregroundColor: ThemeConstants.getSecondaryButtonText(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DesignTokens.buttonRadius),
       ),

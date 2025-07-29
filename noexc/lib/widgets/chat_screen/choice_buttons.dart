@@ -97,7 +97,7 @@ class ChoiceButtons extends StatelessWidget {
               choice.text,
               style: TextStyle(
                 fontSize: UIConstants.messageFontSize,
-                color: _getChoiceTextColor(isUnselected),
+                color: _getChoiceTextColor(context, isUnselected),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -118,33 +118,36 @@ class ChoiceButtons extends StatelessWidget {
   /// Builds the user avatar for choice buttons
   Widget _buildUserAvatar(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: Theme.of(context).colorScheme.secondary,
+      backgroundColor: ThemeConstants.getInputAvatarBackground(context),
       child: const Icon(Icons.person, color: ThemeConstants.avatarIconColor),
     );
   }
 
   /// Gets the appropriate color for choice button background
   Color _getChoiceColor(BuildContext context, bool isSelected, bool isUnselected) {
+    final baseColor = ThemeConstants.getChoiceButtonColor(context);
     if (isSelected) {
-      return Theme.of(context).colorScheme.primary;
+      return baseColor;
     } else if (isUnselected) {
-      return Theme.of(context).colorScheme.primary.withValues(alpha: UIConstants.unselectedChoiceOpacity);
+      return baseColor.withValues(alpha: UIConstants.unselectedChoiceOpacity);
     } else {
-      return Theme.of(context).colorScheme.primary.withValues(alpha: UIConstants.selectedChoiceOpacity);
+      return baseColor.withValues(alpha: UIConstants.selectedChoiceOpacity);
     }
   }
 
   /// Gets the appropriate border color for choice buttons
   Color _getChoiceBorderColor(BuildContext context, bool isSelected) {
+    final borderColor = ThemeConstants.getChoiceButtonBorder(context);
     return isSelected
-        ? Theme.of(context).colorScheme.primary
-        : Theme.of(context).colorScheme.primary.withValues(alpha: UIConstants.choiceBorderOpacity);
+        ? borderColor
+        : borderColor.withValues(alpha: UIConstants.choiceBorderOpacity);
   }
 
   /// Gets the appropriate text color for choice buttons
-  Color _getChoiceTextColor(bool isUnselected) {
+  Color _getChoiceTextColor(BuildContext context, bool isUnselected) {
+    final textColor = ThemeConstants.getChoiceButtonText(context);
     return isUnselected 
-        ? ThemeConstants.userMessageTextColor.withValues(alpha: UIConstants.unselectedTextOpacity)
-        : ThemeConstants.userMessageTextColor;
+        ? textColor.withValues(alpha: UIConstants.unselectedTextOpacity)
+        : textColor;
   }
 }

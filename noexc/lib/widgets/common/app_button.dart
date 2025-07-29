@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../constants/design_tokens.dart';
-import '../../constants/theme_constants.dart';
 
 /// Standard app button component with consistent styling
 /// Provides common button variants to minimize UI duplication
@@ -119,8 +118,8 @@ class AppButton extends StatelessWidget {
 
   ButtonStyle _getElevatedButtonStyle(BuildContext context, ColorScheme colorScheme) {
     return ElevatedButton.styleFrom(
-      backgroundColor: ThemeConstants.getPrimaryButtonBackground(context),
-      foregroundColor: ThemeConstants.getPrimaryButtonText(context),
+      backgroundColor: DesignTokens.getPrimaryButtonBackground(context),
+      foregroundColor: DesignTokens.getPrimaryButtonText(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DesignTokens.buttonRadius),
       ),
@@ -131,8 +130,8 @@ class AppButton extends StatelessWidget {
 
   ButtonStyle _getFilledButtonStyle(BuildContext context, ColorScheme colorScheme) {
     return FilledButton.styleFrom(
-      backgroundColor: ThemeConstants.getSecondaryButtonBackground(context),
-      foregroundColor: ThemeConstants.getSecondaryButtonText(context),
+      backgroundColor: DesignTokens.getSecondaryButtonBackground(context),
+      foregroundColor: DesignTokens.getSecondaryButtonText(context),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DesignTokens.buttonRadius),
       ),

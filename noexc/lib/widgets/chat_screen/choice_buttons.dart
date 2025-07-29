@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
-import '../../constants/ui_constants.dart';
-import '../../constants/theme_constants.dart';
+import '../../constants/design_tokens.dart';
 
 /// A widget that displays choice buttons for user selection
 /// Handles choice selection state and visual feedback
@@ -45,7 +44,7 @@ class ChoiceButtons extends StatelessWidget {
     required bool hasSelection,
   }) {
     return Padding(
-      padding: UIConstants.choiceButtonMargin,
+      padding: DesignTokens.choiceButtonMargin,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -60,7 +59,7 @@ class ChoiceButtons extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: UIConstants.avatarSpacing),
+          const SizedBox(width: DesignTokens.avatarSpacing),
           _buildUserAvatar(context),
         ],
       ),
@@ -76,23 +75,23 @@ class ChoiceButtons extends StatelessWidget {
   }) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * UIConstants.messageMaxWidthFactor,
+        maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
       ),
-      padding: UIConstants.messageBubblePadding,
+      padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
         color: _getChoiceColor(context, isSelected, isUnselected),
-        borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
+        borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
         border: Border.all(
           color: _getChoiceBorderColor(context, isSelected),
           width: isSelected 
-              ? UIConstants.selectedChoiceBorderWidth 
-              : UIConstants.unselectedChoiceBorderWidth,
+              ? DesignTokens.selectedChoiceBorderWidth 
+              : DesignTokens.unselectedChoiceBorderWidth,
         ),
         boxShadow: [
           BoxShadow(
-            color: ThemeConstants.getChoiceButtonShadow(context),
-            offset: ThemeConstants.choiceButtonShadowOffset,
-            blurRadius: ThemeConstants.choiceButtonShadowBlurRadius,
+            color: DesignTokens.getChoiceButtonShadow(context),
+            offset: DesignTokens.choiceButtonShadowOffset,
+            blurRadius: DesignTokens.choiceButtonShadowBlurRadius,
           ),
         ],
       ),
@@ -103,18 +102,18 @@ class ChoiceButtons extends StatelessWidget {
             child: Text(
               choice.text,
               style: TextStyle(
-                fontSize: UIConstants.messageFontSize,
+                fontSize: DesignTokens.messageFontSize,
                 color: _getChoiceTextColor(context, isUnselected),
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
           ),
           if (isSelected) ...[
-            const SizedBox(width: UIConstants.iconSpacing),
+            const SizedBox(width: DesignTokens.iconSpacing),
             const Icon(
               Icons.check_circle,
-              color: ThemeConstants.userMessageTextColor,
-              size: UIConstants.checkIconSize,
+              color: DesignTokens.userMessageTextColor,
+              size: DesignTokens.checkIconSize,
             ),
           ],
         ],
@@ -125,36 +124,36 @@ class ChoiceButtons extends StatelessWidget {
   /// Builds the user avatar for choice buttons
   Widget _buildUserAvatar(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: ThemeConstants.getInputAvatarBackground(context),
-      child: const Icon(Icons.person, color: ThemeConstants.avatarIconColor),
+      backgroundColor: DesignTokens.getInputAvatarBackground(context),
+      child: const Icon(Icons.person, color: DesignTokens.avatarIconColor),
     );
   }
 
   /// Gets the appropriate color for choice button background
   Color _getChoiceColor(BuildContext context, bool isSelected, bool isUnselected) {
-    final baseColor = ThemeConstants.getChoiceButtonColor(context);
+    final baseColor = DesignTokens.getChoiceButtonColor(context);
     if (isSelected) {
       return baseColor;
     } else if (isUnselected) {
-      return baseColor.withValues(alpha: UIConstants.unselectedChoiceOpacity);
+      return baseColor.withValues(alpha: DesignTokens.unselectedChoiceOpacity);
     } else {
-      return baseColor.withValues(alpha: UIConstants.selectedChoiceOpacity);
+      return baseColor.withValues(alpha: DesignTokens.selectedChoiceOpacity);
     }
   }
 
   /// Gets the appropriate border color for choice buttons
   Color _getChoiceBorderColor(BuildContext context, bool isSelected) {
-    final borderColor = ThemeConstants.getChoiceButtonBorder(context);
+    final borderColor = DesignTokens.getChoiceButtonBorder(context);
     return isSelected
         ? borderColor
-        : borderColor.withValues(alpha: UIConstants.choiceBorderOpacity);
+        : borderColor.withValues(alpha: DesignTokens.choiceBorderOpacity);
   }
 
   /// Gets the appropriate text color for choice buttons
   Color _getChoiceTextColor(BuildContext context, bool isUnselected) {
-    final textColor = ThemeConstants.getChoiceButtonText(context);
+    final textColor = DesignTokens.getChoiceButtonText(context);
     return isUnselected 
-        ? textColor.withValues(alpha: UIConstants.unselectedTextOpacity)
+        ? textColor.withValues(alpha: DesignTokens.unselectedTextOpacity)
         : textColor;
   }
 }

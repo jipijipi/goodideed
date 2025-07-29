@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/user_data_service.dart';
-import '../../constants/ui_constants.dart';
+import '../../constants/design_tokens.dart';
 import '../user_variables_panel.dart';
 
 /// A widget that manages the debug panel overlay
@@ -43,7 +43,7 @@ class UserPanelOverlay extends StatelessWidget {
     return GestureDetector(
       onTap: onToggle,
       child: Container(
-        color: Colors.black.withValues(alpha: UIConstants.overlayOpacity),
+        color: Colors.black.withValues(alpha: DesignTokens.overlayOpacity),
         child: const SizedBox.expand(),
       ),
     );
@@ -52,12 +52,12 @@ class UserPanelOverlay extends StatelessWidget {
   /// Builds the animated sliding panel
   Widget _buildSlidingPanel() {
     return AnimatedPositioned(
-      duration: UIConstants.panelAnimationDuration,
-      curve: UIConstants.panelAnimationCurve,
-      bottom: isVisible ? 0 : -UIConstants.panelHeight,
+      duration: DesignTokens.panelAnimationDuration,
+      curve: DesignTokens.panelAnimationCurve,
+      bottom: isVisible ? 0 : -DesignTokens.panelHeight,
       left: 0,
       right: 0,
-      height: UIConstants.panelHeight,
+      height: DesignTokens.panelHeight,
       child: GestureDetector(
         onTap: () {}, // Prevent tap from closing panel
         child: UserVariablesPanel(

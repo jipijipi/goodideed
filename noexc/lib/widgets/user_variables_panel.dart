@@ -3,7 +3,7 @@ import '../services/user_data_service.dart';
 import '../services/chat_service.dart';
 import '../services/scenario_manager.dart';
 import '../services/logger_service.dart';
-import '../constants/ui_constants.dart';
+import '../constants/design_tokens.dart';
 import '../config/chat_config.dart';
 import 'chat_screen/chat_state_manager.dart';
 import 'debug_panel/data_display_widget.dart';
@@ -232,12 +232,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(UIConstants.panelTopRadius)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(DesignTokens.panelTopRadius)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: UIConstants.shadowOpacity),
-            blurRadius: UIConstants.shadowBlurRadius,
-            offset: UIConstants.shadowOffset,
+            color: Colors.black.withValues(alpha: DesignTokens.shadowOpacity),
+            blurRadius: DesignTokens.shadowBlurRadius,
+            offset: DesignTokens.shadowOffset,
           ),
         ],
       ),
@@ -246,10 +246,10 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
         children: [
           // Header
           Container(
-            padding: UIConstants.panelHeaderPadding,
+            padding: DesignTokens.panelHeaderPadding,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(UIConstants.panelTopRadius)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(DesignTokens.panelTopRadius)),
             ),
             child: Row(
               children: [
@@ -268,12 +268,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
           Flexible(
             child: _isLoading
                 ? const Padding(
-                    padding: UIConstants.panelEmptyStatePadding,
+                    padding: DesignTokens.panelEmptyStatePadding,
                     child: CircularProgressIndicator(),
                   )
                 : _debugData.isEmpty && _userData.isEmpty
                     ? Padding(
-                        padding: UIConstants.panelEmptyStatePadding,
+                        padding: DesignTokens.panelEmptyStatePadding,
                         child: Text(
                           ChatConfig.emptyDataMessage,
                           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -284,7 +284,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                       )
                     : ListView(
                         shrinkWrap: true,
-                        padding: UIConstants.panelContentPadding,
+                        padding: DesignTokens.panelContentPadding,
                         children: [
                           // Status area for recent actions
                           DebugStatusArea(controller: _statusController),

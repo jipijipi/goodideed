@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../constants/ui_constants.dart';
+import '../../constants/design_tokens.dart';
 import '../../constants/storage_keys.dart';
 import '../../services/user_data_service.dart';
 import 'debug_status_area.dart';
@@ -242,7 +242,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
         
         // Date Picker Section
         Padding(
-          padding: UIConstants.variableItemPadding,
+          padding: DesignTokens.variableItemPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -304,7 +304,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
         
         // Deadline Options Section
         Padding(
-          padding: UIConstants.variableItemPadding,
+          padding: DesignTokens.variableItemPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

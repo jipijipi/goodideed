@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/chat_message.dart';
-import '../../constants/ui_constants.dart';
-import '../../constants/theme_constants.dart';
+import '../../constants/design_tokens.dart';
 
 /// A widget that displays a text input field for user responses
 /// Handles text input validation and submission
@@ -37,14 +36,14 @@ class _TextInputBubbleState extends State<TextInputBubble> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: UIConstants.messageBubbleMargin,
+      padding: DesignTokens.messageBubbleMargin,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Flexible(
             child: _buildInputContainer(context),
           ),
-          const SizedBox(width: UIConstants.avatarSpacing),
+          const SizedBox(width: DesignTokens.avatarSpacing),
           _buildUserAvatar(context),
         ],
       ),
@@ -55,12 +54,12 @@ class _TextInputBubbleState extends State<TextInputBubble> {
   Widget _buildInputContainer(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * UIConstants.messageMaxWidthFactor,
+        maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
       ),
-      padding: UIConstants.messageBubblePadding,
+      padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
-        borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
+        borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -68,7 +67,7 @@ class _TextInputBubbleState extends State<TextInputBubble> {
           Expanded(
             child: _buildTextField(),
           ),
-          const SizedBox(width: UIConstants.iconSpacing),
+          const SizedBox(width: DesignTokens.iconSpacing),
           _buildSendButton(),
         ],
       ),
@@ -79,10 +78,10 @@ class _TextInputBubbleState extends State<TextInputBubble> {
   Widget _buildTextField() {
     return TextField(
       controller: _textController,
-      style: const TextStyle(color: ThemeConstants.userMessageTextColor),
+      style: const TextStyle(color: DesignTokens.userMessageTextColor),
       decoration: InputDecoration(
         hintText: widget.message.placeholderText,
-        hintStyle: const TextStyle(color: ThemeConstants.hintTextColor),
+        hintStyle: const TextStyle(color: DesignTokens.hintTextColor),
         border: InputBorder.none,
         isDense: true,
         contentPadding: EdgeInsets.zero,
@@ -97,8 +96,8 @@ class _TextInputBubbleState extends State<TextInputBubble> {
       onTap: () => _handleSubmission(_textController.text),
       child: const Icon(
         Icons.send,
-        color: ThemeConstants.userMessageTextColor,
-        size: UIConstants.sendIconSize,
+        color: DesignTokens.userMessageTextColor,
+        size: DesignTokens.sendIconSize,
       ),
     );
   }
@@ -106,8 +105,8 @@ class _TextInputBubbleState extends State<TextInputBubble> {
   /// Builds the user avatar
   Widget _buildUserAvatar(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: ThemeConstants.getInputAvatarBackground(context),
-      child: const Icon(Icons.person, color: ThemeConstants.avatarIconColor),
+      backgroundColor: DesignTokens.getInputAvatarBackground(context),
+      child: const Icon(Icons.person, color: DesignTokens.avatarIconColor),
     );
   }
 

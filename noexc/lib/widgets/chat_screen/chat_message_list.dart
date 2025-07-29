@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
-import '../../constants/ui_constants.dart';
+import '../../constants/design_tokens.dart';
 import 'message_bubble.dart';
 
 /// A widget that displays a scrollable list of chat messages with slide-in animations
@@ -38,7 +38,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
         key: widget.animatedListKey,
         reverse: true, // Show newest messages at bottom
         controller: widget.scrollController,
-        padding: UIConstants.chatListPadding,
+        padding: DesignTokens.chatListPadding,
         initialItemCount: widget.messages.length,
         itemBuilder: (context, index, animation) {
           final message = widget.messages.reversed.toList()[index];
@@ -58,7 +58,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
       return ListView.builder(
         reverse: true, // Show newest messages at bottom
         controller: widget.scrollController,
-        padding: UIConstants.chatListPadding,
+        padding: DesignTokens.chatListPadding,
         itemCount: widget.messages.length,
         itemBuilder: (context, index) {
           final message = widget.messages.reversed.toList()[index];
@@ -73,7 +73,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
     // Create size animation that grows from 0 to 1
     final sizeAnimation = CurvedAnimation(
       parent: animation,
-      curve: UIConstants.messageSlideAnimationCurve,
+      curve: DesignTokens.messageSlideAnimationCurve,
     );
     
     // Create slide animation for the content
@@ -82,7 +82,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
       end: Offset.zero, // End at normal position
     ).animate(CurvedAnimation(
       parent: animation,
-      curve: UIConstants.messageSlideAnimationCurve,
+      curve: DesignTokens.messageSlideAnimationCurve,
     ));
 
     return SizeTransition(

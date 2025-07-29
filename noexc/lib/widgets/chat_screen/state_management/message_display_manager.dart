@@ -3,7 +3,7 @@ import '../../../models/chat_message.dart';
 import '../../../services/chat_service.dart';
 import '../../../services/message_queue.dart';
 import '../../../services/logger_service.dart';
-import '../../../constants/ui_constants.dart';
+import '../../../constants/design_tokens.dart';
 
 /// Manages message display, filtering, queue processing, and animations
 class MessageDisplayManager {
@@ -62,7 +62,7 @@ class MessageDisplayManager {
       final animatedListState = _animatedListKey.currentState;
       if (animatedListState != null && message.isFromBot) {
         // Insert at index 0 since we're using reverse: true
-        animatedListState.insertItem(0, duration: UIConstants.messageSlideAnimationDuration);
+        animatedListState.insertItem(0, duration: DesignTokens.messageSlideAnimationDuration);
       }
       
       notifyListeners();
@@ -84,8 +84,8 @@ class MessageDisplayManager {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.minScrollExtent,
-          duration: UIConstants.scrollAnimationDuration,
-          curve: UIConstants.scrollAnimationCurve,
+          duration: DesignTokens.scrollAnimationDuration,
+          curve: DesignTokens.scrollAnimationCurve,
         );
       }
     });

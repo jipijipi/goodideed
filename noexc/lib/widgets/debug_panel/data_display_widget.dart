@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../constants/ui_constants.dart';
+import '../../constants/design_tokens.dart';
 import '../../services/user_data_service.dart';
 import 'debug_status_area.dart';
 
@@ -260,7 +260,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     final canEdit = _isEditableValue(entry.value) && !isReadOnly && widget.userDataService != null;
 
     return Padding(
-      padding: UIConstants.variableItemPadding,
+      padding: DesignTokens.variableItemPadding,
       child: Column(
         children: [
           Row(
@@ -276,7 +276,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
                   ),
                 ),
               ),
-              const SizedBox(width: UIConstants.variableKeySpacing),
+              const SizedBox(width: DesignTokens.variableKeySpacing),
               Expanded(
                 flex: 3,
                 child: ((isBoolValue || isTimeOfDayEnum) && canEdit)

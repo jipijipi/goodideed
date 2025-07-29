@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../constants/ui_constants.dart';
+import '../../constants/design_tokens.dart';
 import '../chat_screen/chat_state_manager.dart';
 import 'debug_status_area.dart';
 
@@ -68,7 +68,7 @@ class ChatControlsWidget extends StatelessWidget {
         
         // First row with main chat controls
         Padding(
-          padding: UIConstants.variableItemPadding,
+          padding: DesignTokens.variableItemPadding,
           child: Row(
             children: [
               Expanded(
@@ -118,7 +118,7 @@ class ChatControlsWidget extends StatelessWidget {
         
         // Second row with Clear All Data button
         Padding(
-          padding: UIConstants.variableItemPadding,
+          padding: DesignTokens.variableItemPadding,
           child: Row(
             children: [
               Expanded(

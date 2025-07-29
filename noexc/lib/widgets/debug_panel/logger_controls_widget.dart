@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/logger_service.dart';
-import '../../constants/ui_constants.dart';
+import '../../constants/design_tokens.dart';
 
 /// Logger controls widget for the debug panel
 class LoggerControlsWidget extends StatefulWidget {
@@ -59,9 +59,9 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(UIConstants.mediumSpacing),
+      margin: const EdgeInsets.all(DesignTokens.mediumSpacing),
       child: Padding(
-        padding: const EdgeInsets.all(UIConstants.mediumSpacing),
+        padding: const EdgeInsets.all(DesignTokens.mediumSpacing),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -78,7 +78,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                 ),
               ],
             ),
-            const SizedBox(height: UIConstants.mediumSpacing),
+            const SizedBox(height: DesignTokens.mediumSpacing),
             
             // Log Level Selection
             Text(
@@ -117,7 +117,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                 }
               },
             ),
-            const SizedBox(height: UIConstants.mediumSpacing),
+            const SizedBox(height: DesignTokens.mediumSpacing),
             
             // Timestamps Toggle
             CheckboxListTile(
@@ -150,7 +150,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
             
             // Component Selection (only if not all enabled)
             if (!_allComponentsEnabled) ...[
-              const SizedBox(height: UIConstants.smallSpacing),
+              const SizedBox(height: DesignTokens.smallSpacing),
               Text(
                 'Enabled Components',
                 style: TextStyle(
@@ -187,7 +187,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
               ),
             ],
             
-            const SizedBox(height: UIConstants.mediumSpacing),
+            const SizedBox(height: DesignTokens.mediumSpacing),
             
             // Apply Button
             SizedBox(
@@ -201,7 +201,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
               ),
             ),
             
-            const SizedBox(height: UIConstants.smallSpacing),
+            const SizedBox(height: DesignTokens.smallSpacing),
             
             // Quick Actions
             Row(

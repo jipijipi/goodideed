@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
-import '../constants/theme_constants.dart';
+import '../constants/design_tokens.dart';
 
 class AppThemes {
   static const String themeKey = AppConstants.themeKey;
@@ -8,34 +8,34 @@ class AppThemes {
   static ThemeData get lightTheme {
     return ThemeData(
       colorScheme: ColorScheme.light(
-        surface: ThemeConstants.lightBackground,
-        primary: ThemeConstants.lightPrimary,
-        secondary: ThemeConstants.lightSecondary,
-        tertiary: ThemeConstants.lightSecondary,
+        surface: DesignTokens.lightBackground,
+        primary: DesignTokens.lightPrimary,
+        secondary: DesignTokens.lightSecondary,
+        tertiary: DesignTokens.lightSecondary,
         onSurface: Colors.black,
         onPrimary: Colors.white,
         onSecondary: Colors.white,
         onTertiary: Colors.white,
       ),
-      scaffoldBackgroundColor: ThemeConstants.lightBackground,
-      useMaterial3: ThemeConstants.useMaterial3,
+      scaffoldBackgroundColor: DesignTokens.lightBackground,
+      useMaterial3: DesignTokens.useMaterial3,
     );
   }
   
   static ThemeData get darkTheme {
     return ThemeData(
       colorScheme: ColorScheme.dark(
-        surface: ThemeConstants.darkBackground,
-        primary: ThemeConstants.darkPrimary,
-        secondary: ThemeConstants.darkSecondary,
-        tertiary: ThemeConstants.darkSecondary,
+        surface: DesignTokens.darkBackground,
+        primary: DesignTokens.darkPrimary,
+        secondary: DesignTokens.darkSecondary,
+        tertiary: DesignTokens.darkSecondary,
         onSurface: Colors.white,
         onPrimary: Colors.white,
         onSecondary: Colors.black,
         onTertiary: Colors.black,
       ),
-      scaffoldBackgroundColor: ThemeConstants.darkBackground,
-      useMaterial3: ThemeConstants.useMaterial3,
+      scaffoldBackgroundColor: DesignTokens.darkBackground,
+      useMaterial3: DesignTokens.useMaterial3,
     );
   }
   

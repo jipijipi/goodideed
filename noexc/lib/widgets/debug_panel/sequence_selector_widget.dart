@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../constants/ui_constants.dart';
+import '../../constants/design_tokens.dart';
 import '../../constants/app_constants.dart';
 import '../../config/chat_config.dart';
 import '../chat_screen/chat_state_manager.dart';
@@ -49,7 +49,7 @@ class SequenceSelectorWidget extends StatelessWidget {
         : null;
     
     return Padding(
-      padding: UIConstants.variableItemPadding,
+      padding: DesignTokens.variableItemPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

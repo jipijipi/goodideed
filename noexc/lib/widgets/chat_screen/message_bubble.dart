@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
-import '../../constants/ui_constants.dart';
-import '../../constants/theme_constants.dart';
+import '../../constants/design_tokens.dart';
 import '../../services/logger_service.dart';
 import 'choice_buttons.dart';
 import 'text_input_bubble.dart';
@@ -50,7 +49,7 @@ class MessageBubble extends StatelessWidget {
     // Image messages - display image only with consistent spacing
     if (message.isImage && message.imagePath != null) {
       return Padding(
-        padding: UIConstants.messageBubbleMargin,
+        padding: DesignTokens.messageBubbleMargin,
         child: Image.asset(
           message.imagePath!,
           errorBuilder: (context, error, stackTrace) {
@@ -85,20 +84,20 @@ class MessageBubble extends StatelessWidget {
     final isBot = message.isFromBot;
     
     return Padding(
-      padding: UIConstants.messageBubbleMargin,
+      padding: DesignTokens.messageBubbleMargin,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: isBot ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: [
           if (isBot) ...[
             _buildAvatar(context, isBot: true),
-            const SizedBox(width: UIConstants.avatarSpacing),
+            const SizedBox(width: DesignTokens.avatarSpacing),
           ],
           Flexible(
             child: _buildMessageContainer(context, isBot),
           ),
           if (!isBot) ...[
-            const SizedBox(width: UIConstants.avatarSpacing),
+            const SizedBox(width: DesignTokens.avatarSpacing),
             _buildAvatar(context, isBot: false),
           ],
         ],
@@ -109,44 +108,44 @@ class MessageBubble extends StatelessWidget {
   /// Builds the message container with text content
   Widget _buildMessageContainer(BuildContext context, bool isBot) {
     final textColor = isBot 
-        ? ThemeConstants.botMessageTextColor 
-        : ThemeConstants.userMessageTextColor;
+        ? DesignTokens.botMessageTextColor 
+        : DesignTokens.userMessageTextColor;
     
     return Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * UIConstants.messageMaxWidthFactor,
+        maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
       ),
-      padding: UIConstants.messageBubblePadding,
+      padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
         color: isBot 
-            ? ThemeConstants.botMessageBackgroundLight.withValues(alpha: 0.8)
-            : ThemeConstants.userMessageBackground,
-        borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
+            ? DesignTokens.botMessageBackgroundLight.withValues(alpha: 0.8)
+            : DesignTokens.userMessageBackground,
+        borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
       ),
       child: MarkdownBody(
         data: message.text,
         styleSheet: MarkdownStyleSheet(
           // Base text style
           p: TextStyle(
-            fontSize: UIConstants.messageFontSize,
+            fontSize: DesignTokens.messageFontSize,
             color: textColor,
             height: 1.4,
           ),
           // Bold text
           strong: TextStyle(
-            fontSize: UIConstants.messageFontSize,
+            fontSize: DesignTokens.messageFontSize,
             color: textColor,
             fontWeight: FontWeight.bold,
           ),
           // Italic text
           em: TextStyle(
-            fontSize: UIConstants.messageFontSize,
+            fontSize: DesignTokens.messageFontSize,
             color: textColor,
             fontStyle: FontStyle.italic,
           ),
           // Strikethrough text
           del: TextStyle(
-            fontSize: UIConstants.messageFontSize,
+            fontSize: DesignTokens.messageFontSize,
             color: textColor,
             decoration: TextDecoration.lineThrough,
           ),
@@ -159,7 +158,7 @@ class MessageBubble extends StatelessWidget {
           h6: const TextStyle(fontSize: 0, height: 0),
           blockquote: const TextStyle(fontSize: 0, height: 0),
           code: TextStyle(
-            fontSize: UIConstants.messageFontSize,
+            fontSize: DesignTokens.messageFontSize,
             color: textColor,
           ),
           codeblockDecoration: const BoxDecoration(),
@@ -180,7 +179,7 @@ class MessageBubble extends StatelessWidget {
           : Theme.of(context).colorScheme.secondary,
       child: Icon(
         isBot ? Icons.smart_toy : Icons.person,
-        color: ThemeConstants.avatarIconColor,
+        color: DesignTokens.avatarIconColor,
       ),
     );
   }

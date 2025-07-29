@@ -61,8 +61,7 @@ void main() {
       });
 
       testWidgets('shows loading indicator when loading', (tester) async {
-        await TestUtils.pumpWithAnimation(
-          tester,
+        await tester.pumpWidget(
           TestUtils.createMaterialApp(
             child: const AppButton.primary(
               text: 'Test Button',
@@ -70,6 +69,8 @@ void main() {
             ),
           ),
         );
+        // Use pump() instead of pumpAndSettle() because CircularProgressIndicator never settles
+        await tester.pump();
 
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
         expect(find.text('Test Button'), findsNothing);
@@ -170,8 +171,7 @@ void main() {
       });
 
       testWidgets('is disabled when loading', (tester) async {
-        await TestUtils.pumpWithAnimation(
-          tester,
+        await tester.pumpWidget(
           TestUtils.createMaterialApp(
             child: AppButton.primary(
               text: 'Loading Button',
@@ -180,6 +180,8 @@ void main() {
             ),
           ),
         );
+        // Use pump() instead of pumpAndSettle() because CircularProgressIndicator never settles
+        await tester.pump();
 
         final button = tester.widget<ElevatedButton>(
           find.byType(ElevatedButton),
@@ -218,7 +220,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsNothing);
 
       // Tap to start loading
-      await tester.tapAndSettle(find.text('Toggle Loading'));
+      await tester.tap(find.text('Toggle Loading'));
+      await tester.pump(); // Use pump() because loading state has infinite animation
 
       // Should now show loading indicator
       expect(find.text('Toggle Loading'), findsNothing);

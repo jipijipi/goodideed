@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 /// Status message model for tracking recent debug panel actions
@@ -42,6 +43,7 @@ class DebugStatusArea extends StatefulWidget {
 }
 
 class _DebugStatusAreaState extends State<DebugStatusArea> {
+  Timer? _cleanupTimer;
   
   @override
   void initState() {
@@ -53,6 +55,7 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
   @override
   void dispose() {
     widget.controller?.removeListener(_onControllerChanged);
+    _cleanupTimer?.cancel();
     super.dispose();
   }
 
@@ -74,11 +77,12 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
   }
 
   void _startMessageCleanup() {
-    // Clean up old messages periodically
-    Future.delayed(const Duration(seconds: 1), () {
+    // Clean up old messages periodically using a proper timer
+    _cleanupTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         _cleanupOldMessages();
-        _startMessageCleanup();
+      } else {
+        timer.cancel();
       }
     });
   }

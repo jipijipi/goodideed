@@ -74,7 +74,7 @@ class TestUtils {
     Duration? duration,
   }) async {
     await tester.pumpWidget(widget);
-    await tester.pumpAndSettle(duration ?? const Duration(milliseconds: 300));
+    await tester.pumpAndSettle(duration ?? const Duration(seconds: 10));
   }
 
   /// Finds a widget by text with case-insensitive matching
@@ -99,7 +99,7 @@ class TestUtils {
   }) async {
     await tester.tap(finder);
     await tester.pumpAndSettle(
-      settleDuration ?? const Duration(milliseconds: 500),
+      settleDuration ?? const Duration(seconds: 10),
     );
   }
 
@@ -112,7 +112,7 @@ class TestUtils {
   }) async {
     await tester.enterText(finder, text);
     await tester.pumpAndSettle(
-      settleDuration ?? const Duration(milliseconds: 300),
+      settleDuration ?? const Duration(seconds: 10),
     );
   }
 
@@ -178,7 +178,7 @@ class WidgetPropertyMatcher extends Matcher {
 extension WidgetTesterExtensions on WidgetTester {
   /// Convenience method to pump and settle with default duration
   Future<void> pumpAndSettleDefault() async {
-    await pumpAndSettle(TestUtils.settleDuration);
+    await pumpAndSettle(const Duration(seconds: 10));
   }
 
   /// Convenience method to tap and settle

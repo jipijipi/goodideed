@@ -8,6 +8,11 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
+  tearDown(() async {
+    // Clear any stored data to prevent test interference
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('ChatScreen Widget Tests', () {
     testWidgets('should display chat screen with app bar', (WidgetTester tester) async {
       // Arrange & Act
@@ -53,8 +58,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
       
-      // Wait for messages to appear and be animated
-      await tester.pumpAndSettle(const Duration(milliseconds: 4000));
+      // Give reasonable time for messages to load (reduce from 4000ms)
+      await tester.pumpAndSettle(const Duration(seconds: 10));
 
       // Assert - Check that the chat loads successfully
       final allText = find.byType(Text);

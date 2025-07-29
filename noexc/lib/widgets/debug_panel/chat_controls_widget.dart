@@ -29,33 +29,6 @@ class ChatControlsWidget extends StatelessWidget {
     );
   }
 
-  Future<bool?> _showClearDataConfirmation(BuildContext context) {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Clear All Data'),
-          content: const Text(
-            'This will permanently delete all stored user information. '
-            'This action cannot be undone.\n\nAre you sure you want to continue?'
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              style: TextButton.styleFrom(
-                foregroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Clear All'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,15 +97,11 @@ class ChatControlsWidget extends StatelessWidget {
               Expanded(
                 child: ElevatedButton.icon(
                   onPressed: () async {
-                    // Show confirmation dialog
-                    final confirmed = await _showClearDataConfirmation(context);
-                    if (confirmed == true) {
-                      await stateManager!.clearAllUserData();
-                      if (context.mounted) {
-                        // Refresh the panel to show empty user data
-                        onDataRefresh?.call();
-                        statusController?.addSuccess('All user data cleared');
-                      }
+                    await stateManager!.clearAllUserData();
+                    if (context.mounted) {
+                      // Refresh the panel to show empty user data
+                      onDataRefresh?.call();
+                      statusController?.addSuccess('All user data cleared');
                     }
                   },
                   icon: const Icon(Icons.delete_forever, size: 16),

@@ -66,8 +66,10 @@ class ChoiceButtons extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: DesignTokens.avatarSpacing),
-          _buildUserAvatar(context),
+          if (DesignTokens.showAvatars) ...[
+            const SizedBox(width: DesignTokens.avatarSpacing),
+            _buildUserAvatar(context),
+          ],
         ],
       ),
     );

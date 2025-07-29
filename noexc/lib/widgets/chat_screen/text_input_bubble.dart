@@ -43,8 +43,10 @@ class _TextInputBubbleState extends State<TextInputBubble> {
           Flexible(
             child: _buildInputContainer(context),
           ),
-          const SizedBox(width: DesignTokens.avatarSpacing),
-          _buildUserAvatar(context),
+          if (DesignTokens.showAvatars) ...[
+            const SizedBox(width: DesignTokens.avatarSpacing),
+            _buildUserAvatar(context),
+          ],
         ],
       ),
     );
@@ -60,6 +62,17 @@ class _TextInputBubbleState extends State<TextInputBubble> {
       decoration: BoxDecoration(
         color: DesignTokens.getInputBackground(context),
         borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
+        border: Border.all(
+          color: DesignTokens.getInputBorderColor(context),
+          width: DesignTokens.inputBorderWidth,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: DesignTokens.getInputShadowColor(context),
+            offset: DesignTokens.inputShadowOffset,
+            blurRadius: DesignTokens.inputShadowBlurRadius,
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

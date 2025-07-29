@@ -89,14 +89,14 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: isBot ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: [
-          if (isBot) ...[
+          if (isBot && DesignTokens.showAvatars) ...[
             _buildAvatar(context, isBot: true),
             const SizedBox(width: DesignTokens.avatarSpacing),
           ],
           Flexible(
             child: _buildMessageContainer(context, isBot),
           ),
-          if (!isBot) ...[
+          if (!isBot && DesignTokens.showAvatars) ...[
             const SizedBox(width: DesignTokens.avatarSpacing),
             _buildAvatar(context, isBot: false),
           ],

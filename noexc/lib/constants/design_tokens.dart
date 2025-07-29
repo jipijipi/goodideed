@@ -97,6 +97,14 @@ class DesignTokens {
   static const Color inputBackgroundLight = Color.fromARGB(255, 255, 255, 255);  // #484B85
   static const Color inputBackgroundDark = darkPrimary;    // #6B6FA3
 
+  /// Input Border Colors
+  static const Color inputBorderColorLight = lightPrimary;   // Brand blue #484B85
+  static const Color inputBorderColorDark = darkPrimary;     // Brand blue dark #6B6FA3
+
+  /// Input Shadow Colors
+  static const Color inputShadowColorLight = Color(0x33484B85);  // 20% brand blue
+  static const Color inputShadowColorDark = Color(0x33000000);   // 20% black
+
   /// Legacy Interactive colors
   static const Color hintTextColorLegacy = Color(0xFFB3B3B3);
   static const Color hintTextColor = Colors.white70;
@@ -125,9 +133,17 @@ class DesignTokens {
   static const double selectedChoiceShadowBlurRadius = 0.0;   // Most elevated
   static const double unselectedChoiceShadowBlurRadius = 0.0; // Moderate elevation
   static const double disabledChoiceShadowBlurRadius = 1.0;   // Minimal elevation
+
+  /// Input Styling Properties
+  static const double inputBorderWidth = 1.0;
+  static const Offset inputShadowOffset = Offset(0, 2);
+  static const double inputShadowBlurRadius = 4.0;
   
   /// Theme Configuration
   static const bool useMaterial3 = true;
+
+  /// UI Configuration Flags
+  static const bool showAvatars = false; // Toggle to hide/show all avatars for testing
   
   // ==================== TYPOGRAPHY ====================
   
@@ -465,6 +481,18 @@ class DesignTokens {
     return Theme.of(context).brightness == Brightness.light 
         ? inputBackgroundLight 
         : inputBackgroundDark;
+  }
+
+  static Color getInputBorderColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? inputBorderColorLight 
+        : inputBorderColorDark;
+  }
+
+  static Color getInputShadowColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? inputShadowColorLight 
+        : inputShadowColorDark;
   }
 
   // ==================== MARKDOWN STYLES ====================

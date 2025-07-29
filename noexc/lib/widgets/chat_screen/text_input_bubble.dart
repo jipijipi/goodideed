@@ -91,10 +91,10 @@ class _TextInputBubbleState extends State<TextInputBubble> {
   Widget _buildTextField() {
     return TextField(
       controller: _textController,
-      style: const TextStyle(color: DesignTokens.userMessageTextColor),
+      style: TextStyle(color: DesignTokens.getInputTextColor(context)),
       decoration: InputDecoration(
         hintText: widget.message.placeholderText,
-        hintStyle: const TextStyle(color: DesignTokens.hintTextColor),
+        hintStyle: TextStyle(color: DesignTokens.getInputHintTextColor(context)),
         border: InputBorder.none,
         isDense: true,
         contentPadding: EdgeInsets.zero,

@@ -14,6 +14,7 @@ class DesignTokens {
   static const Color brandBeige = Color(0xFFE4D5C2);
   static const Color brandBluePurple = Color(0xFF484B85);
   static const Color brandOrangeRed = Color(0xFFE24825);
+  static const Color brandBlack = Color.fromARGB(255, 10, 10, 20);
   
   /// Light Theme Colors
   static const Color lightBackground = brandBeige;
@@ -39,26 +40,31 @@ class DesignTokens {
   
   /// Message Bubble Colors
   static const Color botMessageBackgroundLight = Color.fromARGB(150, 255, 255, 255); // Full opacity white
-  static const Color botMessageBackgroundLightWithAlpha = Color.fromARGB(127, 255, 255, 255); // 80% white for alpha variant
+  static const Color botMessageBackgroundLightWithAlpha = Color.fromARGB(80, 255, 255, 255); // 80% white for alpha variant
   static const Color botMessageBackgroundDark = Color(0xFF424242);
   static const Color userMessageBackground = Colors.white;
-  static const Color userMessageTextColor = Colors.black;
-  static const Color botMessageTextColor = Colors.black;
+  static const Color userMessageTextColor = brandBlack;
+  static const Color botMessageTextColor = brandBlack;
   static const Color botMessageTextLight = Color(0xFF1C1B1F);
   static const Color botMessageTextDark = Color(0xFFE6E1E5);
   static const Color userMessageText = Colors.white; // Legacy
   static const Color avatarIconColor = Colors.white;
   
   /// Selected Choice Button Colors - Light Theme
-  static const Color selectedChoiceColorLight = Color(0xFFFFFFFF);     // Full opacity white
-  static const Color selectedChoiceTextLight = Colors.black;
-  static const Color selectedChoiceBorderLight = Color.fromARGB(255, 255, 255, 255);          // Brand blue #484B85
+  static const Color selectedChoiceColorLight = Color.fromARGB(220, 255, 255, 255);     // Full opacity white
+  static const Color selectedChoiceTextLight = brandBlack;
+  static const Color selectedChoiceBorderLight = Color.fromARGB(30, 255, 255, 255);          // Brand blue #484B85
   
   /// Unselected Choice Button Colors - Light Theme (with direct alpha)
   static const Color unselectedChoiceColorLight = Color.fromARGB(250, 255, 255, 255);    // 30% white
-  static const Color unselectedChoiceTextLight = Color.fromARGB(200, 0, 0, 0);     // 60% black
+  static const Color unselectedChoiceTextLight = brandBlack;     // 60% black
   static const Color unselectedChoiceBorderLight = Color.fromARGB(128, 255, 255, 255);   // 50% brand blue
   
+  /// Disabled Choice Button Colors - Light Theme (with direct alpha - most muted)
+  static const Color disabledChoiceColorLight = Color.fromARGB(0, 255, 255, 255);  
+  static const Color disabledChoiceTextLight = Color.fromARGB(50, 10, 10, 20);       // 30% black
+  static const Color disabledChoiceBorderLight = Color.fromARGB(0, 10, 10, 20);  
+
   /// Selected Choice Button Colors - Dark Theme
   static const Color selectedChoiceColorDark = darkPrimary;             // Brand blue dark #6B6FA3
   static const Color selectedChoiceTextDark = Colors.white;
@@ -69,15 +75,10 @@ class DesignTokens {
   static const Color unselectedChoiceTextDark = Color(0x99FFFFFF);      // 60% white
   static const Color unselectedChoiceBorderDark = Color(0x806B6FA3);    // 50% brand blue dark
 
-  /// Disabled Choice Button Colors - Light Theme (with direct alpha - most muted)
-  static const Color disabledChoiceColorLight = Color.fromARGB(0, 255, 255, 255);      // 10% white
-  static const Color disabledChoiceTextLight = Color(0x4D000000);       // 30% black
-  static const Color disabledChoiceBorderLight = Color(0x33484B85);     // 20% brand blue
-  
   /// Disabled Choice Button Colors - Dark Theme (with direct alpha - most muted)
   static const Color disabledChoiceColorDark = Color(0x1A6B6FA3);       // 10% brand blue dark
   static const Color disabledChoiceTextDark = Color(0x4DFFFFFF);        // 30% white
-  static const Color disabledChoiceBorderDark = Color(0x336B6FA3);      // 20% brand blue dark
+  static const Color disabledChoiceBorderDark = Color.fromARGB(20, 107, 111, 163);      // 20% brand blue dark
 
   /// Other Interactive Element Colors - Light Theme  
   static const Color inputAvatarBackgroundLight = lightSecondary;
@@ -105,6 +106,14 @@ class DesignTokens {
   static const Color inputShadowColorLight = Color(0x33484B85);  // 20% brand blue
   static const Color inputShadowColorDark = Color(0x33000000);   // 20% black
 
+  /// Input Text Colors
+  static const Color inputTextColorLight = brandBlack;           // Dark text on light input
+  static const Color inputTextColorDark = Colors.white;         // Light text on dark input
+
+  /// Input Hint Text Colors
+  static const Color inputHintTextColorLight = Color(0x80000000); // 50% black
+  static const Color inputHintTextColorDark = Color(0x80FFFFFF);  // 50% white
+
   /// Legacy Interactive colors
   static const Color hintTextColorLegacy = Color(0xFFB3B3B3);
   static const Color hintTextColor = Colors.white70;
@@ -121,18 +130,18 @@ class DesignTokens {
   static const Color unselectedChoiceShadowColorDark = Color(0x33000000);  // 20% black
   
   /// Disabled Choice Shadow Properties (minimal - flat)
-  static const Color disabledChoiceShadowColorLight = Color(0x1A484B85);  // 10% brand blue
+  static const Color disabledChoiceShadowColorLight = Color.fromARGB(0, 255, 255, 255);  // 10% brand blue
   static const Color disabledChoiceShadowColorDark = Color(0x1A000000);   // 10% black
 
   /// Shadow Offset Properties
   static const Offset selectedChoiceShadowOffset = Offset(0, 0);   // Most pronounced
   static const Offset unselectedChoiceShadowOffset = Offset(0, 3); // Moderate
-  static const Offset disabledChoiceShadowOffset = Offset(0, 1);   // Minimal
+  static const Offset disabledChoiceShadowOffset = Offset(0, 0);   // Minimal
 
   /// Shadow Blur Radius Properties
   static const double selectedChoiceShadowBlurRadius = 0.0;   // Most elevated
   static const double unselectedChoiceShadowBlurRadius = 0.0; // Moderate elevation
-  static const double disabledChoiceShadowBlurRadius = 1.0;   // Minimal elevation
+  static const double disabledChoiceShadowBlurRadius = 0.0;   // Minimal elevation
 
   /// Input Styling Properties
   static const double inputBorderWidth = 1.0;
@@ -495,6 +504,18 @@ class DesignTokens {
         : inputShadowColorDark;
   }
 
+  static Color getInputTextColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? inputTextColorLight 
+        : inputTextColorDark;
+  }
+
+  static Color getInputHintTextColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? inputHintTextColorLight 
+        : inputHintTextColorDark;
+  }
+
   // ==================== MARKDOWN STYLES ====================
   
   /// Creates a MarkdownStyleSheet for regular messages
@@ -565,18 +586,24 @@ class DesignTokens {
         fontSize: messageFontSize,
         color: textColor,
         height: 1.4,
+        decoration: state == ChoiceState.disabled ? TextDecoration.lineThrough : null,
+        decorationColor: state == ChoiceState.disabled ? textColor : null,
       ),
       // Bold text
       strong: TextStyle(
         fontSize: messageFontSize,
         color: textColor,
         fontWeight: FontWeight.bold,
+        decoration: state == ChoiceState.disabled ? TextDecoration.lineThrough : null,
+        decorationColor: state == ChoiceState.disabled ? textColor : null,
       ),
       // Italic text
       em: TextStyle(
         fontSize: messageFontSize,
         color: textColor,
         fontStyle: FontStyle.italic,
+        decoration: state == ChoiceState.disabled ? TextDecoration.lineThrough : null,
+        decorationColor: state == ChoiceState.disabled ? textColor : null,
       ),
       // Strikethrough text
       del: TextStyle(
@@ -595,6 +622,8 @@ class DesignTokens {
       code: TextStyle(
         fontSize: messageFontSize,
         color: textColor,
+        decoration: state == ChoiceState.disabled ? TextDecoration.lineThrough : null,
+        decorationColor: state == ChoiceState.disabled ? textColor : null,
       ),
       codeblockDecoration: const BoxDecoration(),
     );

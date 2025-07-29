@@ -119,8 +119,8 @@ class MessageBubble extends StatelessWidget {
       padding: UIConstants.messageBubblePadding,
       decoration: BoxDecoration(
         color: isBot 
-            ? ThemeConstants.botMessageBackgroundLight 
-            : Theme.of(context).colorScheme.primary,
+            ? ThemeConstants.botMessageBackgroundLight.withValues(alpha: 0.8)
+            : ThemeConstants.userMessageBackground,
         borderRadius: BorderRadius.circular(UIConstants.messageBubbleRadius),
       ),
       child: MarkdownBody(

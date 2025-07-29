@@ -7,20 +7,34 @@ class AppThemes {
   
   static ThemeData get lightTheme {
     return ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: ThemeConstants.seedColor,
-        brightness: Brightness.light,
+      colorScheme: ColorScheme.light(
+        surface: ThemeConstants.lightBackground,
+        primary: ThemeConstants.lightPrimary,
+        secondary: ThemeConstants.lightSecondary,
+        tertiary: ThemeConstants.lightSecondary,
+        onSurface: Colors.black,
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onTertiary: Colors.white,
       ),
+      scaffoldBackgroundColor: ThemeConstants.lightBackground,
       useMaterial3: ThemeConstants.useMaterial3,
     );
   }
   
   static ThemeData get darkTheme {
     return ThemeData(
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: ThemeConstants.seedColor,
-        brightness: Brightness.dark,
+      colorScheme: ColorScheme.dark(
+        surface: ThemeConstants.darkBackground,
+        primary: ThemeConstants.darkPrimary,
+        secondary: ThemeConstants.darkSecondary,
+        tertiary: ThemeConstants.darkSecondary,
+        onSurface: Colors.white,
+        onPrimary: Colors.white,
+        onSecondary: Colors.black,
+        onTertiary: Colors.black,
       ),
+      scaffoldBackgroundColor: ThemeConstants.darkBackground,
       useMaterial3: ThemeConstants.useMaterial3,
     );
   }

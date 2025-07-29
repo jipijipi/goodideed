@@ -52,7 +52,7 @@ class DesignTokens {
   /// Selected Choice Button Colors - Light Theme
   static const Color selectedChoiceColorLight = Color(0xFFFFFFFF);     // Full opacity white
   static const Color selectedChoiceTextLight = Colors.black;
-  static const Color selectedChoiceBorderLight = lightPrimary;          // Brand blue #484B85
+  static const Color selectedChoiceBorderLight = Color.fromARGB(255, 255, 255, 255);          // Brand blue #484B85
   
   /// Unselected Choice Button Colors - Light Theme (with direct alpha)
   static const Color unselectedChoiceColorLight = Color.fromARGB(250, 255, 255, 255);    // 30% white
@@ -104,11 +104,27 @@ class DesignTokens {
   static const Color selectedColor = Color(0xFF6750A4);
   static const Color unselectedColor = Color(0xFFB0B0B0);
   
-  /// Shadow Properties for Choice Buttons
-  static const Color choiceButtonShadowLight = Color(0xFF484B85); 
-  static const Color choiceButtonShadowDark = Color(0x33000000); // Black with 20% opacity
-  static const Offset choiceButtonShadowOffset = Offset(0, 3);
-  static const double choiceButtonShadowBlurRadius = 0.0;
+  /// Selected Choice Shadow Properties (strongest - elevated)
+  static const Color selectedChoiceShadowColorLight = Color(0x66484B85); // 40% brand blue
+  static const Color selectedChoiceShadowColorDark = Color(0x4D000000);   // 30% black
+  
+  /// Unselected Choice Shadow Properties (medium - interactive)  
+  static const Color unselectedChoiceShadowColorLight = brandBluePurple; 
+  static const Color unselectedChoiceShadowColorDark = Color(0x33000000);  // 20% black
+  
+  /// Disabled Choice Shadow Properties (minimal - flat)
+  static const Color disabledChoiceShadowColorLight = Color(0x1A484B85);  // 10% brand blue
+  static const Color disabledChoiceShadowColorDark = Color(0x1A000000);   // 10% black
+
+  /// Shadow Offset Properties
+  static const Offset selectedChoiceShadowOffset = Offset(0, 0);   // Most pronounced
+  static const Offset unselectedChoiceShadowOffset = Offset(0, 3); // Moderate
+  static const Offset disabledChoiceShadowOffset = Offset(0, 1);   // Minimal
+
+  /// Shadow Blur Radius Properties
+  static const double selectedChoiceShadowBlurRadius = 0.0;   // Most elevated
+  static const double unselectedChoiceShadowBlurRadius = 0.0; // Moderate elevation
+  static const double disabledChoiceShadowBlurRadius = 1.0;   // Minimal elevation
   
   /// Theme Configuration
   static const bool useMaterial3 = true;
@@ -394,10 +410,55 @@ class DesignTokens {
         : secondaryButtonTextDark;
   }
   
-  static Color getChoiceButtonShadow(BuildContext context) {
+  static Color getSelectedChoiceShadowColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light 
-        ? choiceButtonShadowLight 
-        : choiceButtonShadowDark;
+        ? selectedChoiceShadowColorLight 
+        : selectedChoiceShadowColorDark;
+  }
+
+  static Color getUnselectedChoiceShadowColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? unselectedChoiceShadowColorLight 
+        : unselectedChoiceShadowColorDark;
+  }
+
+  static Color getDisabledChoiceShadowColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? disabledChoiceShadowColorLight 
+        : disabledChoiceShadowColorDark;
+  }
+
+  static Offset getChoiceShadowOffset(ChoiceState state) {
+    switch (state) {
+      case ChoiceState.selected:
+        return selectedChoiceShadowOffset;
+      case ChoiceState.unselected:
+        return unselectedChoiceShadowOffset;
+      case ChoiceState.disabled:
+        return disabledChoiceShadowOffset;
+    }
+  }
+
+  static double getChoiceShadowBlurRadius(ChoiceState state) {
+    switch (state) {
+      case ChoiceState.selected:
+        return selectedChoiceShadowBlurRadius;
+      case ChoiceState.unselected:
+        return unselectedChoiceShadowBlurRadius;
+      case ChoiceState.disabled:
+        return disabledChoiceShadowBlurRadius;
+    }
+  }
+
+  static Color getChoiceShadowColor(BuildContext context, ChoiceState state) {
+    switch (state) {
+      case ChoiceState.selected:
+        return getSelectedChoiceShadowColor(context);
+      case ChoiceState.unselected:
+        return getUnselectedChoiceShadowColor(context);
+      case ChoiceState.disabled:
+        return getDisabledChoiceShadowColor(context);
+    }
   }
 
   static Color getInputBackground(BuildContext context) {

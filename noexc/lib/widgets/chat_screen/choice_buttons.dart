@@ -95,9 +95,9 @@ class ChoiceButtons extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: DesignTokens.getChoiceButtonShadow(context),
-            offset: DesignTokens.choiceButtonShadowOffset,
-            blurRadius: DesignTokens.choiceButtonShadowBlurRadius,
+            color: DesignTokens.getChoiceShadowColor(context, state),
+            offset: DesignTokens.getChoiceShadowOffset(state),
+            blurRadius: DesignTokens.getChoiceShadowBlurRadius(state),
           ),
         ],
       ),

@@ -20,7 +20,7 @@ void main() {
 
       // Assert
       expect(message.delay, AppConstants.defaultMessageDelay);
-      expect(message.delay, 100); // Verify the default value matches AppConstants
+      expect(message.delay, 1000); // Verify the default value matches AppConstants
     });
 
     test('should use provided delay when specified in JSON', () {
@@ -48,7 +48,7 @@ void main() {
 
       // Assert
       expect(message.delay, AppConstants.defaultMessageDelay);
-      expect(message.delay, 100);
+      expect(message.delay, 1000);
     });
 
     test('should create ChatMessage from JSON with sender', () {

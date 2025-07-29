@@ -13,11 +13,14 @@ void main() {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that the chat screen loads
+    // Initially should show loading spinner
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    
+    // Wait for initialization to complete
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+
+    // Verify that the chat screen loads after initialization
     expect(find.text('Chat'), findsOneWidget);
     expect(find.byType(ListView), findsOneWidget);
-    
-    // Just pump once to avoid timer issues
-    await tester.pump();
   });
 }

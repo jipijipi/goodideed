@@ -120,6 +120,44 @@ class DesignTokens {
   static const Color disabledColor = Color(0xFF9E9E9E);
   static const Color selectedColor = Color(0xFF6750A4);
   static const Color unselectedColor = Color(0xFFB0B0B0);
+
+  /// Debug Panel Colors - Light Theme
+  static const Color debugCardBackgroundLight = Color(0xFFFAFAFA);
+  static const Color debugCardBorderLight = Color(0xFFE0E0E0);
+  static const Color debugTextPrimaryLight = Color(0xFF1A1A1A);
+  static const Color debugTextSecondaryLight = Color(0xFF666666);
+  static const Color debugTextMutedLight = Color(0xFF999999);
+  static const Color debugAccentLight = brandBluePurple;
+  
+  /// Debug Panel Colors - Dark Theme
+  static const Color debugCardBackgroundDark = Color(0xFF2A2A2A);
+  static const Color debugCardBorderDark = Color(0xFF404040);
+  static const Color debugTextPrimaryDark = Color(0xFFE0E0E0);
+  static const Color debugTextSecondaryDark = Color(0xFFB0B0B0);
+  static const Color debugTextMutedDark = Color(0xFF808080);
+  static const Color debugAccentDark = Color(0xFF7B7FC7);
+
+  /// Status/Error Display Colors - Light Theme
+  static const Color statusErrorBackgroundLight = Color(0xFFFFEBEE);
+  static const Color statusErrorTextLight = Color(0xFFB71C1C);
+  static const Color statusErrorBorderLight = Color(0xFFFFCDD2);
+  static const Color statusWarningBackgroundLight = Color(0xFFFFF3E0);
+  static const Color statusWarningTextLight = Color(0xFFE65100);
+  static const Color statusWarningBorderLight = Color(0xFFFFE0B2);
+  static const Color statusSuccessBackgroundLight = Color(0xFFE8F5E8);
+  static const Color statusSuccessTextLight = Color(0xFF2E7D32);
+  static const Color statusSuccessBorderLight = Color(0xFFC8E6C9);
+  
+  /// Status/Error Display Colors - Dark Theme
+  static const Color statusErrorBackgroundDark = Color(0xFF3A1E1E);
+  static const Color statusErrorTextDark = Color(0xFFEF9A9A);
+  static const Color statusErrorBorderDark = Color(0xFF5D2C2C);
+  static const Color statusWarningBackgroundDark = Color(0xFF3A2E1E);
+  static const Color statusWarningTextDark = Color(0xFFFFCC80);
+  static const Color statusWarningBorderDark = Color(0xFF5D4A2C);
+  static const Color statusSuccessBackgroundDark = Color(0xFF1E3A1E);
+  static const Color statusSuccessTextDark = Color(0xFFA5D6A7);
+  static const Color statusSuccessBorderDark = Color(0xFF2C5D2C);
   
   /// Selected Choice Shadow Properties (strongest - elevated)
   static const Color selectedChoiceShadowColorLight = Color(0x66484B85); // 40% brand blue
@@ -246,6 +284,9 @@ class DesignTokens {
   static const double panelTopRadius = radiusL;
   static const double buttonRadius = radiusS;
   static const double cardRadius = radiusM;
+  static const double debugCardRadius = radiusS;
+  static const double debugButtonRadius = radiusXS;
+  static const double statusMessageRadius = radiusXS;
   
   // ==================== ELEVATION ====================
   
@@ -260,6 +301,11 @@ class DesignTokens {
   static const double shadowBlurRadius = 10.0;
   static const Offset shadowOffset = Offset(0, -2);
   static const double shadowOpacity = 0.1;
+  
+  /// Debug Panel Shadow Properties
+  static const double debugCardShadowBlurRadius = 4.0;
+  static const Offset debugCardShadowOffset = Offset(0, 2);
+  static const double debugCardShadowOpacity = 0.08;
   
   // ==================== ANIMATION ====================
   
@@ -337,6 +383,10 @@ class DesignTokens {
   static const EdgeInsets panelContentPadding = paddingL;
   static const EdgeInsets panelEmptyStatePadding = EdgeInsets.all(spaceXXL);
   static const EdgeInsets variableItemPadding = paddingVerticalS;
+  static const EdgeInsets debugCardPadding = EdgeInsets.all(spaceM);
+  static const EdgeInsets debugCardContentPadding = EdgeInsets.symmetric(horizontal: spaceM, vertical: spaceS);
+  static const EdgeInsets debugButtonPadding = EdgeInsets.symmetric(horizontal: spaceS, vertical: spaceXS);
+  static const EdgeInsets statusMessagePadding = EdgeInsets.symmetric(horizontal: spaceS, vertical: spaceXS);
   
   /// Margin presets
   static const EdgeInsets marginXS = EdgeInsets.all(spaceXS);
@@ -347,6 +397,9 @@ class DesignTokens {
   /// Component-specific margins
   static const EdgeInsets messageBubbleMargin = EdgeInsets.only(bottom: spaceM);
   static const EdgeInsets choiceButtonMargin = EdgeInsets.only(bottom: spaceS);
+  static const EdgeInsets debugCardMargin = EdgeInsets.only(bottom: spaceL);
+  static const EdgeInsets debugSectionMargin = EdgeInsets.only(bottom: spaceM);
+  static const EdgeInsets statusMessageMargin = EdgeInsets.only(bottom: spaceXS);
   
   // ==================== THEME-AWARE GETTERS ====================
   
@@ -514,6 +567,105 @@ class DesignTokens {
     return Theme.of(context).brightness == Brightness.light 
         ? inputHintTextColorLight 
         : inputHintTextColorDark;
+  }
+
+  /// Debug Panel Theme-Aware Getters
+  static Color getDebugCardBackground(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? debugCardBackgroundLight 
+        : debugCardBackgroundDark;
+  }
+
+  static Color getDebugCardBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? debugCardBorderLight 
+        : debugCardBorderDark;
+  }
+
+  static Color getDebugTextPrimary(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? debugTextPrimaryLight 
+        : debugTextPrimaryDark;
+  }
+
+  static Color getDebugTextSecondary(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? debugTextSecondaryLight 
+        : debugTextSecondaryDark;
+  }
+
+  static Color getDebugTextMuted(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? debugTextMutedLight 
+        : debugTextMutedDark;
+  }
+
+  static Color getDebugAccent(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? debugAccentLight 
+        : debugAccentDark;
+  }
+
+  /// Status/Error Display Theme-Aware Getters
+  static Color getStatusErrorBackground(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusErrorBackgroundLight 
+        : statusErrorBackgroundDark;
+  }
+
+  static Color getStatusErrorText(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusErrorTextLight 
+        : statusErrorTextDark;
+  }
+
+  static Color getStatusErrorBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusErrorBorderLight 
+        : statusErrorBorderDark;
+  }
+
+  static Color getStatusWarningBackground(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusWarningBackgroundLight 
+        : statusWarningBackgroundDark;
+  }
+
+  static Color getStatusWarningText(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusWarningTextLight 
+        : statusWarningTextDark;
+  }
+
+  static Color getStatusWarningBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusWarningBorderLight 
+        : statusWarningBorderDark;
+  }
+
+  static Color getStatusSuccessBackground(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusSuccessBackgroundLight 
+        : statusSuccessBackgroundDark;
+  }
+
+  static Color getStatusSuccessText(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusSuccessTextLight 
+        : statusSuccessTextDark;
+  }
+
+  static Color getStatusSuccessBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? statusSuccessBorderLight 
+        : statusSuccessBorderDark;
+  }
+
+  /// Debug Card Shadow Color Getter
+  static Color getDebugCardShadowColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? brandBlack.withValues(alpha: debugCardShadowOpacity)
+        : brandBlack.withValues(alpha: debugCardShadowOpacity * 0.5);
   }
 
   // ==================== MARKDOWN STYLES ====================

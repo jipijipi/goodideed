@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../constants/design_tokens.dart';
 
 /// Status message model for tracking recent debug panel actions
 class StatusMessage {
@@ -144,11 +145,11 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
 
   Widget _buildStatusMessage(StatusMessage message) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      margin: const EdgeInsets.only(bottom: 2),
+      padding: DesignTokens.statusMessagePadding,
+      margin: DesignTokens.statusMessageMargin,
       decoration: BoxDecoration(
         color: _getStatusColor(message.type, context).withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(DesignTokens.statusMessageRadius),
         border: Border.all(
           color: _getStatusColor(message.type, context).withValues(alpha: 0.3),
           width: 1,
@@ -187,11 +188,11 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(8),
-      margin: const EdgeInsets.only(bottom: 8),
+      padding: DesignTokens.debugCardContentPadding,
+      margin: DesignTokens.debugSectionMargin,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
         border: Border.all(
           color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
           width: 1,

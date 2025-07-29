@@ -69,7 +69,7 @@ class SequenceSelectorWidget extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 8),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
                 border: Border.all(color: Theme.of(context).colorScheme.outline),
               ),
               child: Row(
@@ -107,7 +107,7 @@ class SequenceSelectorWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
               border: Border.all(color: Theme.of(context).colorScheme.outline),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(

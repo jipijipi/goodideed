@@ -59,9 +59,9 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(DesignTokens.mediumSpacing),
+      margin: DesignTokens.debugCardMargin,
       child: Padding(
-        padding: const EdgeInsets.all(DesignTokens.mediumSpacing),
+        padding: DesignTokens.debugCardPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -84,8 +84,8 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
             Text(
               'Log Level',
               style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[700],
+                fontWeight: DesignTokens.fontWeightMedium,
+                color: DesignTokens.getDebugTextSecondary(context),
               ),
             ),
             const SizedBox(height: 4),
@@ -94,7 +94,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
               isExpanded: true,
               decoration: const InputDecoration(
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding: DesignTokens.debugCardContentPadding,
                 border: OutlineInputBorder(),
               ),
               items: LogLevel.values.map((level) {
@@ -154,22 +154,22 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
               Text(
                 'Enabled Components',
                 style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[700],
+                  fontWeight: DesignTokens.fontWeightMedium,
+                  color: DesignTokens.getDebugTextSecondary(context),
                 ),
               ),
               const SizedBox(height: 4),
               Container(
                 constraints: const BoxConstraints(maxHeight: 200),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey[300]!),
-                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: DesignTokens.getDebugCardBorder(context)),
+                  borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
                 ),
                 child: ListView(
                   shrinkWrap: true,
                   children: LogComponent.values.map((component) {
                     return CheckboxListTile(
-                      title: Text(component.tag, style: const TextStyle(fontSize: 12)),
+                      title: Text(component.tag, style: TextStyle(fontSize: DesignTokens.fontSizeXS)),
                       value: _enabledComponents.contains(component),
                       dense: true,
                       onChanged: (bool? value) {
@@ -195,7 +195,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
               child: ElevatedButton(
                 onPressed: _applyConfiguration,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: DesignTokens.debugButtonPadding,
                 ),
                 child: const Text('Apply Configuration'),
               ),
@@ -217,7 +217,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                       });
                       _applyConfiguration();
                     },
-                    child: const Text('Debug All', style: TextStyle(fontSize: 12)),
+                    child: Text('Debug All', style: TextStyle(fontSize: DesignTokens.fontSizeXS)),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -232,7 +232,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                       });
                       _applyConfiguration();
                     },
-                    child: const Text('Errors Only', style: TextStyle(fontSize: 12)),
+                    child: Text('Errors Only', style: TextStyle(fontSize: DesignTokens.fontSizeXS)),
                   ),
                 ),
               ],

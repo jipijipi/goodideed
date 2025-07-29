@@ -113,7 +113,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(DesignTokens.debugButtonRadius),
             ),
             child: Text(
               value,
@@ -217,7 +217,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
             border: Border.all(
               color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
             ),

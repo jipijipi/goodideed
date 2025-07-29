@@ -1,5 +1,1 @@
-In the light theme :
-
-1) make the background : E4D5C2
-2) make the user bubbles white
-3) make the bot bubbles white with some alpha
+1) when the first input is sent, the first displayed message of the conversation disappears, try to find an explanation (intro_seq, id 1 disappears from the screen when id 11 is sent or on the subsequent sequence switch)                                                           │

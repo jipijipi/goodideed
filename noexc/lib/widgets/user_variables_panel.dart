@@ -235,7 +235,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
         borderRadius: const BorderRadius.vertical(top: Radius.circular(DesignTokens.panelTopRadius)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: DesignTokens.shadowOpacity),
+            color: DesignTokens.brandBlack.withValues(alpha: DesignTokens.shadowOpacity),
             blurRadius: DesignTokens.shadowBlurRadius,
             offset: DesignTokens.shadowOffset,
           ),

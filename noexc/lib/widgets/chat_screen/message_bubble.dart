@@ -55,14 +55,18 @@ class MessageBubble extends StatelessWidget {
           errorBuilder: (context, error, stackTrace) {
             logger.error('Image not found: ${message.imagePath}', component: LogComponent.ui);
             return Container(
-              padding: const EdgeInsets.all(8.0),
+              padding: DesignTokens.statusMessagePadding,
               decoration: BoxDecoration(
-                color: Colors.red.shade100,
-                borderRadius: BorderRadius.circular(8.0),
+                color: DesignTokens.getStatusErrorBackground(context),
+                borderRadius: BorderRadius.circular(DesignTokens.statusMessageRadius),
+                border: Border.all(
+                  color: DesignTokens.getStatusErrorBorder(context),
+                  width: DesignTokens.borderThin,
+                ),
               ),
               child: Text(
                 'Image not found: ${message.imagePath}',
-                style: TextStyle(color: Colors.red.shade700),
+                style: TextStyle(color: DesignTokens.getStatusErrorText(context)),
               ),
             );
           },

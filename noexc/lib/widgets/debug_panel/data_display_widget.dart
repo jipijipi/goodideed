@@ -221,7 +221,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
             vertical: 4,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
           ),
         ),
         onSubmitted: (newValue) {
@@ -240,7 +240,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
             vertical: 4,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
           ),
         ),
         onSubmitted: (newValue) {

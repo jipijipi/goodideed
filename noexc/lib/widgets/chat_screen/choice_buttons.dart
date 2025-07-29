@@ -4,6 +4,9 @@ import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../constants/design_tokens.dart';
 
+/// Enum representing the three states of a choice button
+enum ChoiceState { unselected, selected, disabled }
+
 /// A widget that displays choice buttons for user selection
 /// Handles choice selection state and visual feedback
 class ChoiceButtons extends StatelessWidget {
@@ -22,26 +25,30 @@ class ChoiceButtons extends StatelessWidget {
     
     return Column(
       children: message.choices!.map((choice) {
-        final bool isSelected = message.selectedChoiceText == choice.text;
-        final bool isUnselected = hasSelection && !isSelected;
+        final ChoiceState state = _getChoiceState(hasSelection, message.selectedChoiceText == choice.text);
         
         return _buildChoiceButton(
           context,
           choice,
-          isSelected: isSelected,
-          isUnselected: isUnselected,
+          state: state,
           hasSelection: hasSelection,
         );
       }).toList(),
     );
   }
 
+  /// Determines the state of a choice button
+  ChoiceState _getChoiceState(bool hasSelection, bool isSelected) {
+    if (!hasSelection) return ChoiceState.unselected;
+    if (isSelected) return ChoiceState.selected;
+    return ChoiceState.disabled;
+  }
+
   /// Builds an individual choice button
   Widget _buildChoiceButton(
     BuildContext context,
     Choice choice, {
-    required bool isSelected,
-    required bool isUnselected,
+    required ChoiceState state,
     required bool hasSelection,
   }) {
     return Padding(
@@ -55,8 +62,7 @@ class ChoiceButtons extends StatelessWidget {
               child: _buildChoiceContainer(
                 context,
                 choice,
-                isSelected: isSelected,
-                isUnselected: isUnselected,
+                state: state,
               ),
             ),
           ),
@@ -71,8 +77,7 @@ class ChoiceButtons extends StatelessWidget {
   Widget _buildChoiceContainer(
     BuildContext context,
     Choice choice, {
-    required bool isSelected,
-    required bool isUnselected,
+    required ChoiceState state,
   }) {
     return Container(
       constraints: BoxConstraints(
@@ -80,11 +85,11 @@ class ChoiceButtons extends StatelessWidget {
       ),
       padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
-        color: _getChoiceColor(context, isSelected, isUnselected),
+        color: _getChoiceColor(context, state),
         borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
         border: Border.all(
-          color: _getChoiceBorderColor(context, isSelected),
-          width: isSelected 
+          color: _getChoiceBorderColor(context, state),
+          width: state == ChoiceState.selected 
               ? DesignTokens.selectedChoiceBorderWidth 
               : DesignTokens.unselectedChoiceBorderWidth,
         ),
@@ -102,12 +107,12 @@ class ChoiceButtons extends StatelessWidget {
           Flexible(
             child: MarkdownBody(
               data: choice.text,
-              styleSheet: DesignTokens.getChoiceMarkdownStyle(context, isUnselected: isUnselected),
+              styleSheet: DesignTokens.getChoiceMarkdownStyle(context, state: state),
               shrinkWrap: true,
               selectable: false,
             ),
           ),
-          if (isSelected) ...[
+          if (state == ChoiceState.selected) ...[
             const SizedBox(width: DesignTokens.iconSpacing),
             const Icon(
               Icons.check_circle,
@@ -129,19 +134,27 @@ class ChoiceButtons extends StatelessWidget {
   }
 
   /// Gets the appropriate color for choice button background
-  Color _getChoiceColor(BuildContext context, bool isSelected, bool isUnselected) {
-    if (isSelected) {
-      return DesignTokens.getSelectedChoiceColor(context);
-    } else {
-      return DesignTokens.getUnselectedChoiceColor(context);
+  Color _getChoiceColor(BuildContext context, ChoiceState state) {
+    switch (state) {
+      case ChoiceState.selected:
+        return DesignTokens.getSelectedChoiceColor(context);
+      case ChoiceState.unselected:
+        return DesignTokens.getUnselectedChoiceColor(context);
+      case ChoiceState.disabled:
+        return DesignTokens.getDisabledChoiceColor(context);
     }
   }
 
   /// Gets the appropriate border color for choice buttons
-  Color _getChoiceBorderColor(BuildContext context, bool isSelected) {
-    return isSelected
-        ? DesignTokens.getSelectedChoiceBorder(context)
-        : DesignTokens.getUnselectedChoiceBorder(context);
+  Color _getChoiceBorderColor(BuildContext context, ChoiceState state) {
+    switch (state) {
+      case ChoiceState.selected:
+        return DesignTokens.getSelectedChoiceBorder(context);
+      case ChoiceState.unselected:
+        return DesignTokens.getUnselectedChoiceBorder(context);
+      case ChoiceState.disabled:
+        return DesignTokens.getDisabledChoiceBorder(context);
+    }
   }
 
 }

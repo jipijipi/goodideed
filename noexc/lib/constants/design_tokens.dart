@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import '../widgets/chat_screen/choice_buttons.dart';
 
 /// Comprehensive design tokens for consistent UI styling
 /// This centralizes all design values to minimize merge conflicts
@@ -55,7 +56,7 @@ class DesignTokens {
   
   /// Unselected Choice Button Colors - Light Theme (with direct alpha)
   static const Color unselectedChoiceColorLight = Color.fromARGB(250, 255, 255, 255);    // 30% white
-  static const Color unselectedChoiceTextLight = Color(0x99000000);     // 60% black
+  static const Color unselectedChoiceTextLight = Color.fromARGB(200, 0, 0, 0);     // 60% black
   static const Color unselectedChoiceBorderLight = Color.fromARGB(128, 255, 255, 255);   // 50% brand blue
   
   /// Selected Choice Button Colors - Dark Theme
@@ -67,6 +68,16 @@ class DesignTokens {
   static const Color unselectedChoiceColorDark = Color(0x4D6B6FA3);     // 30% brand blue dark
   static const Color unselectedChoiceTextDark = Color(0x99FFFFFF);      // 60% white
   static const Color unselectedChoiceBorderDark = Color(0x806B6FA3);    // 50% brand blue dark
+
+  /// Disabled Choice Button Colors - Light Theme (with direct alpha - most muted)
+  static const Color disabledChoiceColorLight = Color.fromARGB(0, 255, 255, 255);      // 10% white
+  static const Color disabledChoiceTextLight = Color(0x4D000000);       // 30% black
+  static const Color disabledChoiceBorderLight = Color(0x33484B85);     // 20% brand blue
+  
+  /// Disabled Choice Button Colors - Dark Theme (with direct alpha - most muted)
+  static const Color disabledChoiceColorDark = Color(0x1A6B6FA3);       // 10% brand blue dark
+  static const Color disabledChoiceTextDark = Color(0x4DFFFFFF);        // 30% white
+  static const Color disabledChoiceBorderDark = Color(0x336B6FA3);      // 20% brand blue dark
 
   /// Other Interactive Element Colors - Light Theme  
   static const Color inputAvatarBackgroundLight = lightSecondary;
@@ -334,6 +345,24 @@ class DesignTokens {
         ? unselectedChoiceBorderLight 
         : unselectedChoiceBorderDark;
   }
+
+  static Color getDisabledChoiceColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? disabledChoiceColorLight 
+        : disabledChoiceColorDark;
+  }
+  
+  static Color getDisabledChoiceText(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? disabledChoiceTextLight 
+        : disabledChoiceTextDark;
+  }
+  
+  static Color getDisabledChoiceBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? disabledChoiceBorderLight 
+        : disabledChoiceBorderDark;
+  }
   
   static Color getInputAvatarBackground(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light 
@@ -427,10 +456,19 @@ class DesignTokens {
   }
   
   /// Creates a MarkdownStyleSheet for choice buttons
-  static MarkdownStyleSheet getChoiceMarkdownStyle(BuildContext context, {required bool isUnselected}) {
-    final textColor = isUnselected 
-        ? getUnselectedChoiceText(context)
-        : getSelectedChoiceText(context);
+  static MarkdownStyleSheet getChoiceMarkdownStyle(BuildContext context, {required ChoiceState state}) {
+    final Color textColor;
+    switch (state) {
+      case ChoiceState.selected:
+        textColor = getSelectedChoiceText(context);
+        break;
+      case ChoiceState.unselected:
+        textColor = getUnselectedChoiceText(context);
+        break;
+      case ChoiceState.disabled:
+        textColor = getDisabledChoiceText(context);
+        break;
+    }
         
     return MarkdownStyleSheet(
       // Base text style

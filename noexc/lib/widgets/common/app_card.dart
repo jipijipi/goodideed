@@ -67,7 +67,7 @@ class AppCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(cardRadius),
         side: hasBorder
             ? BorderSide(
-                color: theme.colorScheme.outline.withOpacity(0.2),
+                color: theme.colorScheme.outline.withValues(alpha: 0.2),
                 width: DesignTokens.borderThin,
               )
             : BorderSide.none,
@@ -112,14 +112,14 @@ class ContentCard extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(height: 1, color: theme.colorScheme.outline.withOpacity(0.2)),
+            Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
           ],
           Padding(
             padding: contentPadding ?? DesignTokens.paddingL,
             child: content,
           ),
           if (actions != null && actions!.isNotEmpty) ...[
-            Divider(height: 1, color: theme.colorScheme.outline.withOpacity(0.2)),
+            Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
             Padding(
               padding: DesignTokens.paddingL,
               child: Row(

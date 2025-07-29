@@ -229,7 +229,6 @@ class TestAnalyzer {
       switch (type) {
         case 'testStart':
           analysis.totalTests++;
-          final testName = result['test']?['name'] as String? ?? 'unknown';
           final suitePath = result['test']?['root_url'] as String? ?? '';
           analysis.testsByCategory[_categorizeTest(suitePath)] = 
               (analysis.testsByCategory[_categorizeTest(suitePath)] ?? 0) + 1;

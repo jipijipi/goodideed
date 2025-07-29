@@ -2,6 +2,7 @@
 /// 
 /// This file provides common test utilities to reduce boilerplate
 /// and ensure consistent test configuration across the test suite.
+library;
 
 import 'package:noexc/services/logger_service.dart';
 

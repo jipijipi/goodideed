@@ -59,7 +59,7 @@ void main() {
       test('should update currentSequence property', () async {
         expect(sequenceLoader.currentSequence, isNull);
         
-        final sequence = await sequenceLoader.loadSequence('onboarding_seq');
+        await sequenceLoader.loadSequence('onboarding_seq');
         
         expect(sequenceLoader.currentSequence, isNotNull);
         expect(sequenceLoader.currentSequence!.sequenceId, equals('onboarding_seq'));
@@ -149,7 +149,6 @@ void main() {
       test('should not reload if same sequence already loaded', () async {
         // Load sequence first time
         await sequenceLoader.loadSequence('onboarding_seq');
-        final firstLoadTime = DateTime.now();
         
         // Small delay to ensure time difference
         await Future.delayed(const Duration(milliseconds: 10));

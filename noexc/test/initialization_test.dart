@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const MethodChannel('flutter/assets')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(const MethodChannel('flutter/assets'), (MethodCall methodCall) async {
     if (methodCall.method == 'loadString') {
       if (methodCall.arguments.toString().contains('sequences/welcome_seq.json')) {
         return '{"sequenceId": "welcome_seq", "name": "Welcome", "messages": [{"id": 1, "type": "bot", "text": "Welcome!"}]}';

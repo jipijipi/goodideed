@@ -5,8 +5,6 @@ import '../logger_service.dart';
 
 /// Classifies and handles different types of errors
 class ErrorClassifier {
-  static const String _tag = 'ErrorClassifier';
-  
   /// Handles sequence loading errors
   static Exception handleSequenceLoadError(String sequenceId, dynamic error) {
     final message = 'Failed to load sequence "$sequenceId": ${error.toString()}';

@@ -147,10 +147,10 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       margin: const EdgeInsets.only(bottom: 2),
       decoration: BoxDecoration(
-        color: _getStatusColor(message.type, context).withOpacity(0.1),
+        color: _getStatusColor(message.type, context).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: _getStatusColor(message.type, context).withOpacity(0.3),
+          color: _getStatusColor(message.type, context).withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -190,10 +190,10 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
       padding: const EdgeInsets.all(8),
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),

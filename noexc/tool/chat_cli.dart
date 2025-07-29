@@ -34,10 +34,6 @@ void main(List<String> args) async {
     Map<String, dynamic>? userState;
     if (config.scenarioName != null) {
       userState = await loadScenario(config.scenarioName!);
-      if (userState == null) {
-        print('❌ Scenario "${config.scenarioName}" not found');
-        exit(1);
-      }
       
       if (config.verbose) {
         print('✅ Loaded scenario: ${config.scenarioName}');

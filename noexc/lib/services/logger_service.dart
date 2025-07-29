@@ -115,7 +115,7 @@ class LoggerService {
     if (kDebugMode) {
       debugPrint(formattedMessage);
     } else if (level.value >= LogLevel.error.value) {
-      print(formattedMessage);
+      debugPrint(formattedMessage);
     }
   }
 

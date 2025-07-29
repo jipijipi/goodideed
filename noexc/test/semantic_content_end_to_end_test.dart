@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:noexc/services/semantic_content_service.dart';
 import 'package:noexc/services/chat_service/message_processor.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/chat_sequence.dart';
@@ -8,11 +7,9 @@ import 'package:noexc/models/choice.dart';
 void main() {
   group('Semantic Content System End-to-End', () {
     late MessageProcessor processor;
-    late SemanticContentService contentService;
     
     setUp(() {
       processor = MessageProcessor();
-      contentService = SemanticContentService.instance;
     });
     
     test('should process message with semantic contentKey through MessageProcessor', () async {

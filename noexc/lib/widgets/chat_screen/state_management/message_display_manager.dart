@@ -11,7 +11,8 @@ class MessageDisplayManager {
   final List<ChatMessage> _displayedMessages = [];
   final GlobalKey<AnimatedListState> _animatedListKey = GlobalKey<AnimatedListState>();
   
-  ChatMessage? _currentTextInputMessage;
+  /// Current text input message
+  ChatMessage? currentTextInputMessage;
   bool _disposed = false;
 
   /// Get the scroll controller
@@ -23,13 +24,6 @@ class MessageDisplayManager {
   /// Get the animated list key
   GlobalKey<AnimatedListState> get animatedListKey => _animatedListKey;
   
-  /// Get the current text input message
-  ChatMessage? get currentTextInputMessage => _currentTextInputMessage;
-  
-  /// Set the current text input message
-  set currentTextInputMessage(ChatMessage? message) {
-    _currentTextInputMessage = message;
-  }
 
   /// Load chat script and display initial messages
   Future<void> loadAndDisplayMessages(ChatService chatService, MessageQueue messageQueue, String currentSequenceId, VoidCallback notifyListeners) async {
@@ -78,7 +72,7 @@ class MessageDisplayManager {
       
       // Handle interactive messages
       if (message.isTextInput) {
-        _currentTextInputMessage = message;
+        currentTextInputMessage = message;
         notifyListeners();
       }
     });
@@ -104,7 +98,7 @@ class MessageDisplayManager {
     
     // Clear messages but keep sequence loaded
     _displayedMessages.clear();
-    _currentTextInputMessage = null;
+    currentTextInputMessage = null;
     
   }
 

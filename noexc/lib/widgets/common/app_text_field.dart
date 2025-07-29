@@ -143,7 +143,7 @@ class AppTextField extends StatelessWidget {
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : prefix,
             suffixIcon: _buildSuffixIcon(),
             filled: true,
-            fillColor: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             contentPadding: contentPadding ?? const EdgeInsets.symmetric(
               horizontal: DesignTokens.spaceL,
               vertical: DesignTokens.spaceM,
@@ -154,7 +154,7 @@ class AppTextField extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(DesignTokens.radiusS),
-              borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.5)),
+              borderSide: BorderSide(color: colorScheme.outline.withValues(alpha: 0.5)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(DesignTokens.radiusS),
@@ -170,7 +170,7 @@ class AppTextField extends StatelessWidget {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(DesignTokens.radiusS),
-              borderSide: BorderSide(color: colorScheme.outline.withOpacity(0.3)),
+              borderSide: BorderSide(color: colorScheme.outline.withValues(alpha: 0.3)),
             ),
           ),
         ),

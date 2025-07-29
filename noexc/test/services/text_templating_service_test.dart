@@ -7,8 +7,8 @@ import 'package:noexc/services/user_data_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const MethodChannel('flutter/assets')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(const MethodChannel('flutter/assets'), (MethodCall methodCall) async {
     if (methodCall.method == 'loadString') {
       final String key = methodCall.arguments as String;
       

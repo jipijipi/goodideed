@@ -49,7 +49,8 @@ class DesignTokens {
   /// Interactive Element Colors - Light Theme
   static const Color choiceButtonColorLight = Color.fromARGB(255, 255, 255, 255);
   static const Color choiceButtonTextLight = Colors.black;
-  static const Color choiceButtonBorderLight = lightPrimary;
+  static const Color choiceButtonBorderLight = Color.fromARGB(255, 255, 255, 255);
+  
   static const Color inputAvatarBackgroundLight = lightSecondary;
   static const Color primaryButtonBackgroundLight = Color.fromARGB(255, 223, 218, 57);
   static const Color primaryButtonTextLight = Colors.white;
@@ -65,6 +66,10 @@ class DesignTokens {
   static const Color primaryButtonTextDark = Colors.white;
   static const Color secondaryButtonBackgroundDark = Color(0xFF424242);
   static const Color secondaryButtonTextDark = darkPrimary;
+
+  /// Input Background Colors
+  static const Color inputBackgroundLight = Color.fromARGB(255, 255, 255, 255);  // #484B85
+  static const Color inputBackgroundDark = darkPrimary;    // #6B6FA3
 
   /// Legacy Interactive colors
   static const Color hintTextColorLegacy = Color(0xFFB3B3B3);
@@ -335,5 +340,11 @@ class DesignTokens {
     return Theme.of(context).brightness == Brightness.light 
         ? choiceButtonShadowLight 
         : choiceButtonShadowDark;
+  }
+
+  static Color getInputBackground(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? inputBackgroundLight 
+        : inputBackgroundDark;
   }
 }

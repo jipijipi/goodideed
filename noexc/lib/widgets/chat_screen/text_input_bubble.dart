@@ -58,7 +58,7 @@ class _TextInputBubbleState extends State<TextInputBubble> {
       ),
       padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: DesignTokens.getInputBackground(context),
         borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
       ),
       child: Row(

@@ -88,6 +88,13 @@ class ChoiceButtons extends StatelessWidget {
               ? UIConstants.selectedChoiceBorderWidth 
               : UIConstants.unselectedChoiceBorderWidth,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: ThemeConstants.getChoiceButtonShadow(context),
+            offset: ThemeConstants.choiceButtonShadowOffset,
+            blurRadius: ThemeConstants.choiceButtonShadowBlurRadius,
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

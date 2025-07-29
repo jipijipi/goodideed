@@ -10,7 +10,7 @@ class AppConstants {
   // Note: User attribute constants moved to StorageKeys for consistency
   
   // Chat Configuration
-  static const int defaultMessageDelay = 1000; // milliseconds
+  static const int defaultMessageDelay = 100; // milliseconds
   static const String defaultPlaceholderText = 'Type your answer...';
   
   // Chat Sequences
@@ -44,15 +44,6 @@ class AppConstants {
     'previous_seq',
     'reminders_seq',
     'weekdays_seq',
-    // Group sequences (generated from authoring tool)
-    'group_28',
-    'group_30', 
-    'group_31',
-    'group_39',
-    'group_47',
-    'group_55',
-    'group_59',
-    'group_62'
   ];
   
   // User Response ID Offset

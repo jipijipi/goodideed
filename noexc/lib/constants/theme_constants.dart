@@ -30,8 +30,8 @@ class ThemeConstants {
   static const Color hintTextColor = Colors.white70;
   
   // Interactive Element Colors - Light Theme
-  static const Color choiceButtonColorLight = lightPrimary;
-  static const Color choiceButtonTextLight = Colors.white;
+  static const Color choiceButtonColorLight = Colors.white;
+  static const Color choiceButtonTextLight = Colors.black;
   static const Color choiceButtonBorderLight = lightPrimary;
   static const Color inputAvatarBackgroundLight = lightSecondary;
   static const Color primaryButtonBackgroundLight = lightPrimary;
@@ -48,6 +48,12 @@ class ThemeConstants {
   static const Color primaryButtonTextDark = Colors.white;
   static const Color secondaryButtonBackgroundDark = Color(0xFF424242);
   static const Color secondaryButtonTextDark = darkPrimary;
+  
+  // Shadow Properties for Choice Buttons
+  static const Color choiceButtonShadowLight = Color(0xFF484B85); 
+  static const Color choiceButtonShadowDark = Color(0x33000000); // Black with 20% opacity
+  static const Offset choiceButtonShadowOffset = Offset(0, 3);
+  static const double choiceButtonShadowBlurRadius = 0.0;
   
   // Theme-aware color getters
   static Color getChoiceButtonColor(BuildContext context) {
@@ -96,6 +102,12 @@ class ThemeConstants {
     return Theme.of(context).brightness == Brightness.light 
         ? secondaryButtonTextLight 
         : secondaryButtonTextDark;
+  }
+  
+  static Color getChoiceButtonShadow(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light 
+        ? choiceButtonShadowLight 
+        : choiceButtonShadowDark;
   }
   
   // Private constructor to prevent instantiation

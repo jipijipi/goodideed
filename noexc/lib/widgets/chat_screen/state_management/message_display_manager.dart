@@ -101,13 +101,11 @@ class MessageDisplayManager {
   void clearMessages() {
     if (_disposed) return;
     
-    logger.debug('Clearing displayed messages', component: LogComponent.ui);
     
     // Clear messages but keep sequence loaded
     _displayedMessages.clear();
     _currentTextInputMessage = null;
     
-    logger.debug('Messages cleared', component: LogComponent.ui);
   }
 
   /// Add a user response message

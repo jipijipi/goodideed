@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../constants/ui_constants.dart';
-import '../../services/logger_service.dart';
 import 'message_bubble.dart';
 
 /// A widget that displays a scrollable list of chat messages with slide-in animations
@@ -32,10 +31,6 @@ class ChatMessageList extends StatefulWidget {
 class _ChatMessageListState extends State<ChatMessageList> {
   @override
   Widget build(BuildContext context) {
-    logger.debug('ChatMessageList - Total messages: ${widget.messages.length}', component: LogComponent.ui);
-    for (var msg in widget.messages) {
-      logger.debug('ChatMessageList - Message ID: ${msg.id}, type: ${msg.type}, isImage: ${msg.isImage}, imagePath: ${msg.imagePath}', component: LogComponent.ui);
-    }
     
     // Use AnimatedList if key is provided, otherwise fallback to ListView
     if (widget.animatedListKey != null) {
@@ -47,7 +42,6 @@ class _ChatMessageListState extends State<ChatMessageList> {
         initialItemCount: widget.messages.length,
         itemBuilder: (context, index, animation) {
           final message = widget.messages.reversed.toList()[index];
-          logger.debug('ChatMessageList - Rendering message ID: ${message.id}, type: ${message.type}, isImage: ${message.isImage}', component: LogComponent.ui);
           
           // Check if this is a user message that should appear instantly
           if (!message.isFromBot) {

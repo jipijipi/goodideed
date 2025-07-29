@@ -43,7 +43,6 @@ class UserInteractionHandler {
       logger.info('Switching to sequence: ${choice.sequenceId}', component: LogComponent.ui);
       await _switchToSequenceFromChoice(choice.sequenceId!, 1, onSequenceChange, notifyListeners);
     } else if (choice.nextMessageId != null) {
-      logger.debug('Continuing in current sequence to message: ${choice.nextMessageId}', component: LogComponent.ui);
       await _continueWithChoice(choice.nextMessageId!, notifyListeners);
     } else {
       logger.warning('Choice has no next action - conversation may end here', component: LogComponent.ui);

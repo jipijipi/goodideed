@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter/services.dart';
 import '../logger_service.dart';
@@ -7,20 +6,16 @@ class SemanticContentResolver {
   static final Map<String, String> _cache = {};
   
   static Future<String> resolveContent(String semanticKey, String originalText) async {
-    logger.semantic('Starting resolution for key: "$semanticKey"');
-    
     // Check cache first
     if (_cache.containsKey(semanticKey)) {
-      logger.semantic('Cache hit for key: "$semanticKey"');
       return _cache[semanticKey]!;
     }
     
     final parsed = parseSemanticKey(semanticKey);
-    logger.semantic('Parsed key - actor: ${parsed['actor']}, action: ${parsed['action']}, subject: ${parsed['subject']}, modifiers: ${parsed['modifiers']}');
     
     // Validate semantic key
     if (parsed['actor'] == null || parsed['action'] == null || parsed['subject'] == null) {
-      logger.semantic('Invalid semantic key format, using original text', level: LogLevel.warning);
+      logger.semantic('Invalid key format: "$semanticKey"', level: LogLevel.warning);
       _cache[semanticKey] = originalText;
       return originalText;
     }
@@ -32,28 +27,18 @@ class SemanticContentResolver {
     
     // Build fallback chain
     List<String> fallbackPaths = buildFallbackChain(actor, action, subject, modifiers);
-    logger.semantic('Built fallback chain with ${fallbackPaths.length} paths');
-    for (int i = 0; i < fallbackPaths.length; i++) {
-      logger.semantic('   ${i + 1}. ${fallbackPaths[i]}');
-    }
     
     // Try each path in order
-    for (int i = 0; i < fallbackPaths.length; i++) {
-      String path = fallbackPaths[i];
-      logger.semantic('Trying path ${i + 1}/${fallbackPaths.length}: $path');
+    for (String path in fallbackPaths) {
       String? content = await _tryLoadFile(path);
       if (content != null) {
-        logger.semantic('Success! Found content at path: $path', level: LogLevel.info);
-        logger.semantic('Content preview: "${content.length > 100 ? '${content.substring(0, 100)}...' : content}"');
         _cache[semanticKey] = content;
         return content;
-      } else {
-        logger.semantic('Path not found: $path');
       }
     }
     
     // Final fallback to original text
-    logger.semantic('All paths failed, falling back to original text: "$originalText"', level: LogLevel.warning);
+    logger.semantic('No content found for "$semanticKey", using fallback', level: LogLevel.warning);
     _cache[semanticKey] = originalText;
     return originalText;
   }
@@ -139,10 +124,7 @@ class SemanticContentResolver {
   
   static Future<String?> _tryLoadFile(String path) async {
     try {
-      logger.semantic('Attempting to load file: assets/$path');
-      // Try to load from assets
       String content = await rootBundle.loadString('assets/$path');
-      logger.semantic('File loaded successfully, raw content length: ${content.length}');
       
       List<String> lines = content
           .split('\n')
@@ -150,22 +132,13 @@ class SemanticContentResolver {
           .where((line) => line.isNotEmpty)
           .toList();
       
-      logger.semantic('Processed into ${lines.length} non-empty lines');
-      for (int i = 0; i < lines.length; i++) {
-        logger.semantic('   Line ${i + 1}: "${lines[i]}"');
-      }
-      
       if (lines.isNotEmpty) {
         // Return random variant
         int selectedIndex = Random().nextInt(lines.length);
-        String selectedVariant = lines[selectedIndex];
-        logger.semantic('Selected variant ${selectedIndex + 1}/${lines.length}: "$selectedVariant"', level: LogLevel.info);
-        return selectedVariant;
-      } else {
-        logger.semantic('File exists but contains no valid lines', level: LogLevel.warning);
+        return lines[selectedIndex];
       }
     } catch (e) {
-      logger.semantic('Failed to load file assets/$path - Error: $e', level: LogLevel.warning);
+      // File not found or other error - this is expected in fallback chain
     }
     return null;
   }

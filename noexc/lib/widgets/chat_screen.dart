@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'chat_screen/chat_state_manager.dart';
-import 'chat_screen/chat_app_bar.dart';
 import 'chat_screen/chat_message_list.dart';
 import 'chat_screen/user_panel_overlay.dart';
 import 'user_variables_panel.dart';
@@ -50,10 +49,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ChatAppBar(
-        onThemeToggle: widget.onThemeToggle,
-        onPanelToggle: _stateManager.togglePanel,
-      ),
       body: Stack(
         children: [
           // Main chat content
@@ -75,6 +70,30 @@ class _ChatScreenState extends State<ChatScreen> {
             currentSequenceId: _stateManager.currentSequenceId,
             totalMessages: _stateManager.displayedMessages.length,
             stateManager: _stateManager,
+          ),
+          
+          // Floating Action Buttons in top-right corner
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 16,
+            right: 16,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton.small(
+                  heroTag: "theme_toggle",
+                  onPressed: widget.onThemeToggle,
+                  tooltip: 'Toggle Theme',
+                  child: const Icon(Icons.brightness_6),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton.small(
+                  heroTag: "debug_panel",
+                  onPressed: _stateManager.togglePanel,
+                  tooltip: 'Debug Panel',
+                  child: const Icon(Icons.bug_report),
+                ),
+              ],
+            ),
           ),
         ],
       ),

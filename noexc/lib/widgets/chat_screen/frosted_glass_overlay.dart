@@ -9,11 +9,14 @@ class FrostedGlassOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final safeAreaTop = MediaQuery.paddingOf(context).top;
+    final totalHeight = DesignTokens.frostedGlassHeight + safeAreaTop;
+    
     return Positioned(
       top: 0,
       left: 0,
       right: 0,
-      height: DesignTokens.frostedGlassHeight,
+      height: totalHeight,
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(

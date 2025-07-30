@@ -271,7 +271,7 @@ class DesignTokens {
   static const double standardSpacing = spaceL;
   
   /// Frosted glass effect
-  static const double frostedGlassHeight = 100.0;
+  static const double frostedGlassHeight = 0.0;
   static const double frostedGlassBlurRadius = 10.0;
   
   // ==================== SIZING ====================

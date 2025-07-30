@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'chat_screen/chat_state_manager.dart';
 import 'chat_screen/chat_message_list.dart';
 import 'chat_screen/user_panel_overlay.dart';
+import 'chat_screen/frosted_glass_overlay.dart';
 import 'user_variables_panel.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -71,6 +72,9 @@ class _ChatScreenState extends State<ChatScreen> {
             totalMessages: _stateManager.displayedMessages.length,
             stateManager: _stateManager,
           ),
+          
+          // Frosted glass overlay in upper area
+          const FrostedGlassOverlay(),
           
           // Floating Action Buttons in top-right corner
           Positioned(

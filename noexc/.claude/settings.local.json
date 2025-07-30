@@ -39,7 +39,8 @@
       "Bash(git add:*)",
       "Bash(git config:*)",
       "Bash(npm run:*)",
-      "Bash(./tool/quick_test_summary.sh:*)"
+      "Bash(./tool/quick_test_summary.sh:*)",
+      "Bash(flutter:*)"
     ],
     "deny": []
   }

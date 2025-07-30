@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../widgets/chat_screen/choice_buttons.dart';
+
+/// Font selection for easy switching
+enum AppFont { inter, sourceSans, roboto, noto, inconsolata}
 
 /// Comprehensive design tokens for consistent UI styling
 /// This centralizes all design values to minimize merge conflicts
@@ -194,9 +198,12 @@ class DesignTokens {
   
   // ==================== TYPOGRAPHY ====================
   
-  /// Font families
-  static const String primaryFontFamily = 'Roboto';
-  static const String displayFontFamily = 'Roboto';
+/*   /// Font families
+  static const String primaryFontFamily = 'Inter';
+  static const String displayFontFamily = 'Inter'; */
+  
+  /// Current font selection
+  static const AppFont currentFont = AppFont.inter;
   
   /// Font sizes
   static const double fontSizeXS = 12.0;
@@ -218,6 +225,25 @@ class DesignTokens {
   static const FontWeight fontWeightMedium = FontWeight.w500;
   static const FontWeight fontWeightSemiBold = FontWeight.w600;
   static const FontWeight fontWeightBold = FontWeight.w700;
+  
+  /// Helper method to get TextTheme for different fonts
+  static TextTheme getAppTextTheme(AppFont font) {
+    switch (font) {
+      case AppFont.inter:
+        return GoogleFonts.interTextTheme();
+      case AppFont.sourceSans:
+        return GoogleFonts.sourceSans3TextTheme();
+      case AppFont.roboto:
+        return GoogleFonts.robotoTextTheme();
+      case AppFont.noto:
+        return GoogleFonts.notoSansTextTheme();
+      case AppFont.inconsolata:
+        return GoogleFonts.inconsolataTextTheme();
+    }
+  }
+  
+  /// Get current app text theme
+  static TextTheme get currentTextTheme => getAppTextTheme(currentFont);
   
   // ==================== SPACING ====================
   

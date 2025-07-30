@@ -18,6 +18,7 @@ class AppThemes {
         onTertiary: DesignTokens.avatarIconColor,
       ),
       scaffoldBackgroundColor: DesignTokens.lightBackground,
+      textTheme: DesignTokens.currentTextTheme,
       useMaterial3: DesignTokens.useMaterial3,
     );
   }
@@ -35,6 +36,7 @@ class AppThemes {
         onTertiary: DesignTokens.brandBlack,
       ),
       scaffoldBackgroundColor: DesignTokens.darkBackground,
+      textTheme: DesignTokens.currentTextTheme,
       useMaterial3: DesignTokens.useMaterial3,
     );
   }

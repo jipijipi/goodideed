@@ -376,7 +376,7 @@ class DesignTokens {
   static const double hintTextOpacity = opacityStrong;
   
   /// Additional UI Constants (from UIConstants)
-  static const double messageFontSize = 16.0;
+  static const double messageFontSize = 18.0;
   
   // ==================== BORDER ====================
   
@@ -408,7 +408,7 @@ class DesignTokens {
   
   /// Component-specific padding
   static const EdgeInsets chatListPadding = EdgeInsets.fromLTRB(spaceL, chatListTopPadding, spaceL, spaceL);
-  static const EdgeInsets messageBubblePadding = paddingM;
+  static const EdgeInsets messageBubblePadding = paddingL;
   static const EdgeInsets panelHeaderPadding = paddingL;
   static const EdgeInsets panelContentPadding = paddingL;
   static const EdgeInsets panelEmptyStatePadding = EdgeInsets.all(spaceXXL);

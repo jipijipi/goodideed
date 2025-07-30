@@ -93,11 +93,8 @@ flutter:
     - assets/content/system/reset/
     # UI assets (prepared for future use)
     - assets/images/
-    - assets/images/brand/
-    - assets/images/illustrations/
-    - assets/images/backgrounds/
     - assets/icons/
-    - assets/icons/brand/
+  
 
 flutter_launcher_icons:
   android: true

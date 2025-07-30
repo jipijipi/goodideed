@@ -1,7 +1,7 @@
 /// Application-wide constants
 class AppConstants {
   // App Information
-  static const String appTitle = 'noexc';
+  static const String appTitle = 'Excuse You';
   
   // Storage Keys
   static const String userDataKeyPrefix = 'noexc_user_data_';

@@ -93,6 +93,7 @@ flutter:
     - assets/content/system/reset/
     # UI assets (prepared for future use)
     - assets/images/
+    - assets/animations/
     - assets/icons/
   
 

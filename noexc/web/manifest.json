@@ -1,11 +1,11 @@
 {
-    "name": "noexc",
-    "short_name": "noexc",
+    "name": "Excuse You",
+    "short_name": "Excuse You",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A satirical habit-forming app with zero excuse.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

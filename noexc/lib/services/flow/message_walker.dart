@@ -73,6 +73,17 @@ class MessageWalker {
         );
       }
       
+      // Stop at autoroute messages - they need route processing to determine next message
+      if (message.type == MessageType.autoroute) {
+        logger.debug('Stopped at autoroute message ${message.id}');
+        return WalkResult.success(
+          messages: messages,
+          stopReason: WalkStopReason.endOfChain,
+          stopMessageId: currentId,
+          walkDepth: walkDepth,
+        );
+      }
+      
       // Stop at sequence boundaries - they need sequence transition
       if (message.sequenceId != null) {
         logger.debug('Stopped at sequence boundary, target: ${message.sequenceId}');

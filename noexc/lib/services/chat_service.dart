@@ -10,13 +10,19 @@ import 'data_action_processor.dart';
 import 'chat_service/sequence_loader.dart';
 import 'chat_service/message_processor.dart';
 import 'chat_service/route_processor.dart';
+import 'flow_control/flow_state_machine.dart';
+import 'logger_service.dart';
 
 /// Main chat service that orchestrates sequence loading, message processing, and routing
 class ChatService {
   final SequenceLoader _sequenceLoader = SequenceLoader();
   late final MessageProcessor _messageProcessor;
   late final RouteProcessor _routeProcessor;
+  late final FlowStateMachine _flowStateMachine;
+  final logger = LoggerService.instance;
   
+  // Feature flag to control new flow architecture usage
+  bool _useNewFlowArchitecture = true;
   
   // Callback for notifying UI about events from dataAction triggers
   Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
@@ -40,6 +46,13 @@ class ChatService {
           ? DataActionProcessor(userDataService) 
           : null,
       sequenceLoader: _sequenceLoader,
+    );
+    
+    // Initialize the new flow state machine
+    _flowStateMachine = FlowStateMachine(
+      sequenceLoader: _sequenceLoader,
+      messageProcessor: _messageProcessor,
+      routeProcessor: _routeProcessor,
     );
     
     // Set up event callback for dataActionProcessor
@@ -128,6 +141,18 @@ class ChatService {
   }
 
   Future<List<ChatMessage>> _getMessagesFromId(int startId) async {
+    // Use new flow architecture if enabled, otherwise fall back to legacy implementation
+    if (_useNewFlowArchitecture) {
+      logger.info('Using new flow architecture for message processing');
+      return await _flowStateMachine.processFlow(startId);
+    }
+    
+    logger.info('Using legacy flow architecture for message processing');
+    return await _getMessagesFromIdLegacy(startId);
+  }
+
+  /// Legacy implementation of message processing (for backward compatibility)
+  Future<List<ChatMessage>> _getMessagesFromIdLegacy(int startId) async {
     List<ChatMessage> messages = [];
     int? currentId = startId;
     
@@ -180,5 +205,19 @@ class ChatService {
     }
     
     return messages;
+  }
+
+  /// Enable or disable the new flow architecture (for testing and gradual rollout)
+  void setUseNewFlowArchitecture(bool enabled) {
+    _useNewFlowArchitecture = enabled;
+    logger.info('Flow architecture mode set to: ${enabled ? "new" : "legacy"}');
+  }
+
+  /// Get the current flow state (for debugging)
+  String get currentFlowState => _flowStateMachine.currentState.toString();
+
+  /// Reset the flow state machine (for error recovery)
+  Future<void> resetFlowState() async {
+    await _flowStateMachine.reset();
   }
 }

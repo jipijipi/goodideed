@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-07-26T23:49:21.708Z",
+  "lastUpdated": "2025-07-31T11:43:59.534Z",
   "gitBranch": "authoring-tool-update-5",
   "gitCommit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-update-5",
     "commit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
-    "timestamp": "2025-07-26T23:49:21.676Z"
+    "timestamp": "2025-07-31T11:43:59.524Z"
   },
   "nodes": [
     {
@@ -373,8 +373,8 @@
     {
       "id": "28",
       "position": {
-        "x": 988.212693819286,
-        "y": -868.1122447555632
+        "x": 824.3843864570058,
+        "y": -858.9090624417038
       },
       "type": "group",
       "style": {
@@ -386,8 +386,8 @@
       "height": 1978,
       "selected": false,
       "positionAbsolute": {
-        "x": 988.212693819286,
-        "y": -868.1122447555632
+        "x": 824.3843864570058,
+        "y": -858.9090624417038
       },
       "dragging": false,
       "data": {
@@ -608,7 +608,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "14",
         "contentKey": "bot.request.excuse.direct",
         "content": "Do you have a valid excuse this time ?"
       }
@@ -736,7 +736,7 @@
         "label": "Data action",
         "category": "dataAction",
         "nodeLabel": "Data Action",
-        "nodeId": "1",
+        "nodeId": "19",
         "contentKey": "system.set.notice_status",
         "dataActions": [
           {
@@ -768,7 +768,7 @@
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "1",
+        "nodeId": "13",
         "contentKey": "system.check.notice_status"
       }
     },
@@ -953,7 +953,7 @@
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "1",
+        "nodeId": "11",
         "contentKey": "system.check.previous_task"
       }
     },
@@ -1269,7 +1269,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "12",
         "contentKey": "bot.request.task_status.direct",
         "content": "So? You did the thing?"
       }
@@ -1372,7 +1372,7 @@
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "1",
+        "nodeId": "10",
         "contentKey": "system.check.task_configured"
       }
     },
@@ -1577,7 +1577,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "15",
         "contentKey": "bot.celebrate.success.enthusiastic",
         "content": "Great stuff buddy"
       }
@@ -1603,7 +1603,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "9",
         "contentKey": "bot.inform.inactive_day.casual",
         "content": "What are you doing here? You have nothing due today."
       }
@@ -1858,7 +1858,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "16",
         "contentKey": "bot.request.task_status.casual",
         "content": "Did it already?"
       }
@@ -1909,7 +1909,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "17",
         "contentKey": "bot.celebrate.completion.excited",
         "content": "You are clear today, congrats, come back tomorrow."
       }
@@ -1960,7 +1960,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "18",
         "contentKey": "bot.console.failure.gentle",
         "content": "Hey, it's ok, let's regroup and nail it tomorrow"
       }
@@ -1986,7 +1986,7 @@
         "label": "Enter text:",
         "category": "textInput",
         "nodeLabel": "Text Input",
-        "nodeId": "10",
+        "nodeId": "164",
         "contentKey": "user.provide.name.input",
         "placeholderText": "Call me...",
         "storeKey": "user.name"
@@ -2013,7 +2013,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "11",
+        "nodeId": "165",
         "content": "{user.name}? Really? |||All right {user.name}"
       }
     },
@@ -2038,7 +2038,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "2",
         "contentKey": "bot.introduce.character.casual",
         "content": "Hi|||You must be new here"
       }
@@ -2064,7 +2064,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "6",
+        "nodeId": "160",
         "contentKey": "bot.introduce.self.friendly",
         "content": "I'm Tristopher|||But my friends call me Trist"
       }
@@ -2090,7 +2090,7 @@
         "label": "Select option:",
         "category": "choice",
         "nodeLabel": "Choice Menu",
-        "nodeId": "7",
+        "nodeId": "161",
         "contentKey": ""
       }
     },
@@ -2115,7 +2115,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "8",
+        "nodeId": "162",
         "contentKey": "",
         "content": "Please, call me Tristopher."
       }
@@ -2141,7 +2141,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "9",
+        "nodeId": "163",
         "contentKey": "bot.request.name.casual",
         "content": "So, what should I call you?"
       }
@@ -2167,7 +2167,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "3",
         "contentKey": "bot.explain.concept.detailed",
         "content": "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it"
       }
@@ -2193,7 +2193,7 @@
         "label": "Select option:",
         "category": "choice",
         "nodeLabel": "Choice Menu",
-        "nodeId": "13"
+        "nodeId": "166"
       }
     },
     {
@@ -2217,7 +2217,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "14",
+        "nodeId": "167",
         "content": "Let's just say that I've a few trickies up my sleevies|||Or let's not say that|||But you'll see really soon"
       }
     },
@@ -2242,7 +2242,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "15",
+        "nodeId": "168",
         "content": "Fine."
       }
     },
@@ -2267,7 +2267,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "18",
+        "nodeId": "169",
         "content": "First thing first, think about what you want to accomplish everyday"
       }
     },
@@ -2292,7 +2292,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "19",
+        "nodeId": "170",
         "content": "It can be anything really, study, exercise, world domination you name it."
       }
     },
@@ -2317,7 +2317,7 @@
         "label": "Select option:",
         "category": "choice",
         "nodeLabel": "Choice Menu",
-        "nodeId": "20"
+        "nodeId": "171"
       }
     },
     {
@@ -2341,7 +2341,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "23",
+        "nodeId": "172",
         "content": "Well yes, I'll ask you everyday."
       }
     },
@@ -2366,7 +2366,7 @@
         "label": "Select option:",
         "category": "choice",
         "nodeLabel": "Choice Menu",
-        "nodeId": "25"
+        "nodeId": "173"
       }
     },
     {
@@ -2422,7 +2422,7 @@
         "label": "Enter text:",
         "category": "textInput",
         "nodeLabel": "Text Input",
-        "nodeId": "1",
+        "nodeId": "4",
         "contentKey": "user.provide.task.input",
         "placeholderText": "Everyday, I'll do :",
         "storeKey": "user.task"
@@ -2475,7 +2475,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "5",
         "contentKey": "bot.request.deadline.casual",
         "content": "By what time of the day should your task be completed?"
       }
@@ -2657,7 +2657,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "6",
         "contentKey": "bot.request.active_days.casual",
         "content": "On which days of the week can you achieve your task? ({user.task})"
       }
@@ -2838,7 +2838,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "1",
+        "nodeId": "7",
         "contentKey": "bot.request.reminders.casual",
         "content": "How hardcore do you need me to be in reminding you?"
       }
@@ -3020,7 +3020,7 @@
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "1",
+        "nodeId": "8",
         "contentKey": "system.check.visit_status"
       }
     },

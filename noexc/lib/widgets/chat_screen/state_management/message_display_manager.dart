@@ -61,7 +61,9 @@ class MessageDisplayManager {
       // Only animate bot messages, skip animation for user messages
       final animatedListState = _animatedListKey.currentState;
       if (animatedListState != null && message.isFromBot) {
-        // Insert at index 0 since we're using reverse: true
+        // Insert at the correct index for reverse list
+        // Since we add to end of _displayedMessages but display in reverse,
+        // the new message appears at index 0 in the reversed view
         animatedListState.insertItem(0, duration: DesignTokens.messageSlideAnimationDuration);
       }
       
@@ -106,8 +108,13 @@ class MessageDisplayManager {
   void addUserResponseMessage(ChatMessage message) {
     _displayedMessages.add(message);
     
-    // Skip animation for user messages to prevent jump
-    // User messages appear instantly, only bot messages animate
+    // Notify AnimatedList about the new user message, but without animation
+    // This keeps the data structure and AnimatedList state in sync
+    final animatedListState = _animatedListKey.currentState;
+    if (animatedListState != null) {
+      // Insert at index 0 since we're using reverse: true, but with no duration (instant)
+      animatedListState.insertItem(0, duration: Duration.zero);
+    }
     
     _scrollToBottom();
   }

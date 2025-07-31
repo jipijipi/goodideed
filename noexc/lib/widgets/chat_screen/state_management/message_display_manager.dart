@@ -97,11 +97,25 @@ class MessageDisplayManager {
   void clearMessages() {
     if (_disposed) return;
     
+    // Get the current number of messages before clearing
+    final messageCount = _displayedMessages.length;
+    
+    // Remove all items from AnimatedList state first (in reverse order)
+    final animatedListState = _animatedListKey.currentState;
+    if (animatedListState != null && messageCount > 0) {
+      // Remove items from index 0 to messageCount-1 (since we use reverse: true)
+      for (int i = 0; i < messageCount; i++) {
+        animatedListState.removeItem(
+          0, // Always remove from index 0 since each removal shifts items down
+          (context, animation) => const SizedBox.shrink(), // Empty widget during removal
+          duration: Duration.zero, // Instant removal for reset/clear operations
+        );
+      }
+    }
     
     // Clear messages but keep sequence loaded
     _displayedMessages.clear();
     currentTextInputMessage = null;
-    
   }
 
   /// Add a user response message

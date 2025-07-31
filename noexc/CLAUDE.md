@@ -179,3 +179,6 @@ JSON format for modifying user data:
 - **Cross-sequence navigation**: Use `sequenceId` field in choices
 - **Template syntax**: `{key|fallback}` for dynamic text
 - **Multi-text**: Use `|||` separator for multiple message bubbles
+
+## Development Warnings
+- Do not test a build on iphone wireless, favor chrome runtime or iPhone 16 when available 

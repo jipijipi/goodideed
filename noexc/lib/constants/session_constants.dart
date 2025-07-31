@@ -13,11 +13,11 @@ class SessionConstants {
   static const int timeOfDayNight = 4;
   
   // Deadline times aligned with time periods
-  static const String morningDeadlineTime = '11:00';     // End of morning period
-  static const String afternoonDeadlineTime = '17:00';   // Start of evening period  
-  static const String eveningDeadlineTime = '21:00';     // Start of night period
-  static const String nightDeadlineTime = '05:00';       // Start of morning period (next day)
-  static const String defaultDeadlineTime = '21:00';     // Evening default
+  static const String morningDeadlineTime = '10:00';     // End of morning period
+  static const String afternoonDeadlineTime = '14:00';   // Start of evening period  
+  static const String eveningDeadlineTime = '18:00';     // Start of night period
+  static const String nightDeadlineTime = '23:00';       // Start of morning period (next day)
+  static const String defaultDeadlineTime = '23:00';     // Evening default
   
   // Date formatting
   static const int dateFormatPadWidth = 2;

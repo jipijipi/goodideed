@@ -2,20 +2,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/services/chat_service/route_processor.dart';
 import 'package:noexc/services/chat_service/sequence_loader.dart';
+import 'package:noexc/services/flow/sequence_manager.dart';
 import 'package:noexc/services/condition_evaluator.dart';
 import 'package:noexc/services/data_action_processor.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/route_condition.dart';
 import 'package:noexc/models/data_action.dart';
-import 'package:noexc/config/chat_config.dart';
 
 void main() {
   group('RouteProcessor', () {
     late RouteProcessor routeProcessor;
     late ConditionEvaluator mockConditionEvaluator;
     late DataActionProcessor mockDataActionProcessor;
-    late SequenceLoader mockSequenceLoader;
+    late SequenceManager mockSequenceManager;
     late UserDataService mockUserDataService;
 
     setUpAll(() {
@@ -27,12 +27,13 @@ void main() {
       mockUserDataService = UserDataService();
       mockConditionEvaluator = ConditionEvaluator(mockUserDataService);
       mockDataActionProcessor = DataActionProcessor(mockUserDataService);
-      mockSequenceLoader = SequenceLoader();
+      final sequenceLoader = SequenceLoader();
+      mockSequenceManager = SequenceManager(sequenceLoader: sequenceLoader);
       
       routeProcessor = RouteProcessor(
         conditionEvaluator: mockConditionEvaluator,
         dataActionProcessor: mockDataActionProcessor,
-        sequenceLoader: mockSequenceLoader,
+        sequenceManager: mockSequenceManager,
       );
     });
 
@@ -40,7 +41,7 @@ void main() {
       test('should return nextMessageId when no condition evaluator', () async {
         // Arrange
         final routeProcessorWithoutEvaluator = RouteProcessor(
-          sequenceLoader: mockSequenceLoader,
+          sequenceManager: mockSequenceManager,
         );
         final routeMessage = ChatMessage(
           id: 1,
@@ -291,7 +292,7 @@ void main() {
       test('should return nextMessageId when no data action processor', () async {
         // Arrange
         final routeProcessorWithoutProcessor = RouteProcessor(
-          sequenceLoader: mockSequenceLoader,
+          sequenceManager: mockSequenceManager,
         );
         final dataActionMessage = ChatMessage(
           id: 1,
@@ -364,7 +365,7 @@ void main() {
       test('should return null when no processor provided', () {
         // Arrange
         final routeProcessorWithoutProcessor = RouteProcessor(
-          sequenceLoader: mockSequenceLoader,
+          sequenceManager: mockSequenceManager,
         );
 
         // Act

@@ -3,13 +3,13 @@ import '../../models/route_condition.dart';
 import '../condition_evaluator.dart';
 import '../data_action_processor.dart';
 import '../logger_service.dart';
-import 'sequence_loader.dart';
+import '../flow/sequence_manager.dart';
 
 /// Handles route processing including auto-routes and data actions
 class RouteProcessor {
   final ConditionEvaluator? _conditionEvaluator;
   final DataActionProcessor? _dataActionProcessor;
-  final SequenceLoader _sequenceLoader;
+  final SequenceManager _sequenceManager;
   
   /// Get the data action processor for callback setup
   DataActionProcessor? get dataActionProcessor => _dataActionProcessor;
@@ -17,10 +17,10 @@ class RouteProcessor {
   RouteProcessor({
     ConditionEvaluator? conditionEvaluator,
     DataActionProcessor? dataActionProcessor,
-    required SequenceLoader sequenceLoader,
+    required SequenceManager sequenceManager,
   }) : _conditionEvaluator = conditionEvaluator,
        _dataActionProcessor = dataActionProcessor,
-       _sequenceLoader = sequenceLoader;
+       _sequenceManager = sequenceManager;
 
   /// Process an autoroute message and return the next message ID
   Future<int?> processAutoRoute(ChatMessage routeMessage) async {
@@ -77,10 +77,10 @@ class RouteProcessor {
   Future<int?> _executeRoute(RouteCondition route) async {
     if (route.sequenceId != null) {
       // Always load sequence directly for message accumulation
-      await _sequenceLoader.loadSequence(route.sequenceId!);
+      await _sequenceManager.loadSequence(route.sequenceId!);
       
       // Start with the first message in the new sequence
-      final sequence = _sequenceLoader.currentSequence;
+      final sequence = _sequenceManager.currentSequence;
       if (sequence == null || sequence.messages.isEmpty) {
         throw Exception('Sequence ${route.sequenceId} has no messages');
       }

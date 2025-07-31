@@ -17,7 +17,6 @@ import 'logger_service.dart';
 
 /// Main chat service that orchestrates sequence loading, message processing, and routing
 class ChatService {
-  final SequenceLoader _sequenceLoader = SequenceLoader();
   late final MessageProcessor _messageProcessor;
   late final RouteProcessor _routeProcessor;
   late final SequenceManager _sequenceManager;
@@ -34,6 +33,10 @@ class ChatService {
     TextTemplatingService? templatingService,
     TextVariantsService? variantsService,
   }) {
+    // Initialize sequence management first (single source of truth)
+    final sequenceLoader = SequenceLoader();
+    _sequenceManager = SequenceManager(sequenceLoader: sequenceLoader);
+    
     _messageProcessor = MessageProcessor(
       userDataService: userDataService,
       templatingService: templatingService,
@@ -47,11 +50,10 @@ class ChatService {
       dataActionProcessor: userDataService != null 
           ? DataActionProcessor(userDataService) 
           : null,
-      sequenceLoader: _sequenceLoader,
+      sequenceManager: _sequenceManager,
     );
     
     // Initialize clean architecture components
-    _sequenceManager = SequenceManager(sequenceLoader: _sequenceLoader);
     _messageWalker = MessageWalker();
     _messageRenderer = MessageRenderer(messageProcessor: _messageProcessor);
     _flowOrchestrator = FlowOrchestrator(
@@ -92,7 +94,9 @@ class ChatService {
 
   /// Load the default chat script (for backward compatibility)
   Future<List<ChatMessage>> loadChatScript() async {
-    return await _sequenceLoader.loadChatScript();
+    // Use SequenceManager instead of SequenceLoader directly
+    await _sequenceManager.loadSequence('onboarding_seq');
+    return _sequenceManager.currentSequence!.messages;
   }
 
   bool hasMessage(int id) {
@@ -130,27 +134,38 @@ class ChatService {
   }
 
   ChatMessage createUserResponseMessage(int id, String userInput) {
-    return _sequenceLoader.createUserResponseMessage(id, userInput);
+    // Move user message creation logic here instead of delegating to SequenceLoader
+    return ChatMessage(
+      id: id,
+      text: userInput,
+      delay: 0,
+      sender: 'user',
+      type: MessageType.user,
+    );
   }
 
   /// Handle user text input and store it if storeKey is provided
   Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
-    await _messageProcessor.handleUserTextInput(textInputMessage, userInput);
+    // Use FlowOrchestrator for consistent processing
+    await _flowOrchestrator.handleUserTextInput(textInputMessage, userInput);
   }
 
   /// Handle user choice selection and store it if storeKey is provided
   Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
-    await _messageProcessor.handleUserChoice(choiceMessage, selectedChoice);
+    // Use FlowOrchestrator for consistent processing
+    await _flowOrchestrator.handleUserChoice(choiceMessage, selectedChoice);
   }
 
   /// Process a single message template and replace variables with stored values
   Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
-    return await _messageProcessor.processMessageTemplate(message, _sequenceLoader.currentSequence);
+    // Use FlowOrchestrator for consistent processing
+    return await _flowOrchestrator.processMessageTemplate(message);
   }
 
   /// Process a list of messages and replace template variables
   Future<List<ChatMessage>> processMessageTemplates(List<ChatMessage> messages) async {
-    return await _messageProcessor.processMessageTemplates(messages, _sequenceLoader.currentSequence);
+    // Use FlowOrchestrator for consistent processing
+    return await _flowOrchestrator.processMessageTemplates(messages);
   }
 
   Future<List<ChatMessage>> _getMessagesFromId(int startId) async {

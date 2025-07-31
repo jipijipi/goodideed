@@ -1,5 +1,6 @@
 import '../../models/chat_message.dart';
 import '../../models/chat_sequence.dart';
+import '../../models/choice.dart';
 import '../chat_service/message_processor.dart';
 import '../logger_service.dart';
 
@@ -90,5 +91,21 @@ class MessageRenderer {
     }
     
     return expandedMessages;
+  }
+
+  /// Handle user text input and store it if storeKey is provided
+  /// 
+  /// Delegates to the underlying MessageProcessor for consistency.
+  Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
+    logger.debug('Handling user text input for message: ${textInputMessage.id}');
+    await _messageProcessor.handleUserTextInput(textInputMessage, userInput);
+  }
+
+  /// Handle user choice selection and store it if storeKey is provided
+  /// 
+  /// Delegates to the underlying MessageProcessor for consistency.
+  Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
+    logger.debug('Handling user choice for message: ${choiceMessage.id}');
+    await _messageProcessor.handleUserChoice(choiceMessage, selectedChoice);
   }
 }

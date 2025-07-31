@@ -4,16 +4,15 @@ import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../models/chat_sequence.dart';
 import '../../services/logger_service.dart';
+import '../../services/service_locator.dart';
 import '../../constants/app_constants.dart';
-import 'state_management/service_manager.dart';
 import 'state_management/message_display_manager.dart';
 import 'state_management/user_interaction_handler.dart';
 
 /// Orchestrates chat state management by coordinating focused components
 /// Main controller that handles initialization, user actions, and debug controls
 class ChatStateManager extends ChangeNotifier {
-  // Component managers
-  final ServiceManager _serviceManager = ServiceManager();
+  // Component managers - use ServiceLocator for dependency injection
   late final MessageDisplayManager _messageDisplayManager;
   late final UserInteractionHandler _userInteractionHandler;
 
@@ -29,26 +28,26 @@ class ChatStateManager extends ChangeNotifier {
   ScrollController get scrollController => _messageDisplayManager.scrollController;
   GlobalKey<AnimatedListState> get animatedListKey => _messageDisplayManager.animatedListKey;
   String get currentSequenceId => _currentSequenceId;
-  ChatSequence? get currentSequence => _serviceManager.chatService.currentSequence;
+  ChatSequence? get currentSequence => ServiceLocator.instance.chatService.currentSequence;
 
   // Service access
-  get userDataService => _serviceManager.userDataService;
+  get userDataService => ServiceLocator.instance.userDataService;
 
   /// Initialize the chat state manager
   Future<void> initialize() async {
-    _serviceManager.initializeServices();
+    // Services are already initialized at app level via ServiceLocator
     
     // Initialize component managers
     _messageDisplayManager = MessageDisplayManager();
     _userInteractionHandler = UserInteractionHandler(
       messageDisplayManager: _messageDisplayManager,
-      chatService: _serviceManager.chatService,
-      messageQueue: _serviceManager.messageQueue,
+      chatService: ServiceLocator.instance.chatService,
+      messageQueue: ServiceLocator.instance.messageQueue,
     );
 
     await _messageDisplayManager.loadAndDisplayMessages(
-      _serviceManager.chatService, 
-      _serviceManager.messageQueue,
+      ServiceLocator.instance.chatService, 
+      ServiceLocator.instance.messageQueue,
       _currentSequenceId, 
       notifyListeners,
     );
@@ -96,8 +95,8 @@ class ChatStateManager extends ChangeNotifier {
       
       // Load new sequence
       await _messageDisplayManager.loadAndDisplayMessages(
-        _serviceManager.chatService,
-        _serviceManager.messageQueue,
+        ServiceLocator.instance.chatService,
+        ServiceLocator.instance.messageQueue,
         _currentSequenceId,
         notifyListeners,
       );
@@ -120,8 +119,8 @@ class ChatStateManager extends ChangeNotifier {
       
       // Reload current sequence from beginning
       await _messageDisplayManager.loadAndDisplayMessages(
-        _serviceManager.chatService,
-        _serviceManager.messageQueue,
+        ServiceLocator.instance.chatService,
+        ServiceLocator.instance.messageQueue,
         _currentSequenceId,
         notifyListeners,
       );
@@ -149,7 +148,7 @@ class ChatStateManager extends ChangeNotifier {
       logger.debug('Reloading sequence: $_currentSequenceId', component: LogComponent.ui);
       
       // Force reload sequence from JSON file
-      await _serviceManager.chatService.loadSequence(_currentSequenceId);
+      await ServiceLocator.instance.chatService.loadSequence(_currentSequenceId);
       
       // Reset chat with newly loaded sequence
       await resetChat();
@@ -168,7 +167,7 @@ class ChatStateManager extends ChangeNotifier {
       logger.debug('Clearing all user data', component: LogComponent.ui);
       
       // Clear all stored user variables
-      await _serviceManager.userDataService.clearAllData();
+      await ServiceLocator.instance.userDataService.clearAllData();
       
       logger.debug('All user data cleared successfully', component: LogComponent.ui);
     } catch (e) {
@@ -181,8 +180,7 @@ class ChatStateManager extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     
-    // Dispose component managers
-    _serviceManager.dispose();
+    // Dispose component managers (ServiceLocator disposed at app level)
     _messageDisplayManager.dispose();
     _userInteractionHandler.dispose();
     

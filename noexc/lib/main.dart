@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'widgets/chat_screen.dart';
-import 'services/user_data_service.dart';
+import 'services/service_locator.dart';
 import 'services/session_service.dart';
 import 'themes/app_themes.dart';
 import 'constants/app_constants.dart';
@@ -19,20 +19,22 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isDarkMode = false;
   bool _isInitialized = false;
-  late final UserDataService _userDataService;
   late final SessionService _sessionService;
 
   @override
   void initState() {
     super.initState();
-    _userDataService = UserDataService();
-    _sessionService = SessionService(_userDataService);
     _initializeApp();
   }
 
   Future<void> _initializeApp() async {
-    // Ensure SessionService completes BEFORE ChatScreen initializes
+    // Initialize all application services first
+    await ServiceLocator.instance.initialize();
+    
+    // Initialize session service after ServiceLocator
+    _sessionService = SessionService(ServiceLocator.instance.userDataService);
     await _sessionService.initializeSession();
+    
     await _loadThemePreference();
     
     // Mark initialization as complete
@@ -42,7 +44,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _loadThemePreference() async {
-    final isDark = await _userDataService.getValue<bool>(AppThemes.themeKey) ?? false;
+    final userDataService = ServiceLocator.instance.userDataService;
+    final isDark = await userDataService.getValue<bool>(AppThemes.themeKey) ?? false;
     setState(() {
       _isDarkMode = isDark;
     });
@@ -52,7 +55,14 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _isDarkMode = !_isDarkMode;
     });
-    await _userDataService.storeValue(AppThemes.themeKey, _isDarkMode);
+    final userDataService = ServiceLocator.instance.userDataService;
+    await userDataService.storeValue(AppThemes.themeKey, _isDarkMode);
+  }
+
+  @override
+  void dispose() {
+    ServiceLocator.instance.dispose();
+    super.dispose();
   }
 
   @override

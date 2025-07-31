@@ -1,4 +1,5 @@
 import '../../models/chat_message.dart';
+import '../../models/choice.dart';
 import '../chat_service/route_processor.dart';
 import '../logger_service.dart';
 import 'message_walker.dart';
@@ -196,6 +197,56 @@ class FlowOrchestrator {
       displayMessages: displayMessages,
       continueFromId: continueFromId,
     );
+  }
+
+  /// Process a single message template (legacy support)
+  /// 
+  /// This method provides backward compatibility for components that need
+  /// to process individual messages rather than message flows.
+  Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
+    logger.debug('Processing single message template: ${message.id}');
+    
+    // Use the renderer to process the message
+    final processedMessages = await _renderer.render([message], _sequenceManager.currentSequence);
+    
+    if (processedMessages.isEmpty) {
+      throw Exception('Message processing failed for message ${message.id}');
+    }
+    
+    return processedMessages.first;
+  }
+
+  /// Process a list of message templates (legacy support)
+  /// 
+  /// This method provides backward compatibility for components that need
+  /// to process multiple individual messages rather than message flows.
+  Future<List<ChatMessage>> processMessageTemplates(List<ChatMessage> messages) async {
+    logger.debug('Processing ${messages.length} message templates');
+    
+    // Use the renderer to process all messages
+    return await _renderer.render(messages, _sequenceManager.currentSequence);
+  }
+
+  /// Handle user text input and store it if storeKey is provided (legacy support)
+  /// 
+  /// This method provides backward compatibility for components that need
+  /// to handle user text input without going through the full flow.
+  Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
+    logger.debug('Handling user text input for message: ${textInputMessage.id}');
+    
+    // Delegate to the renderer for consistent processing
+    await _renderer.handleUserTextInput(textInputMessage, userInput);
+  }
+
+  /// Handle user choice selection and store it if storeKey is provided (legacy support)
+  /// 
+  /// This method provides backward compatibility for components that need
+  /// to handle user choice selection without going through the full flow.
+  Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
+    logger.debug('Handling user choice for message: ${choiceMessage.id}');
+    
+    // Delegate to the renderer for consistent processing
+    await _renderer.handleUserChoice(choiceMessage, selectedChoice);
   }
 }
 

@@ -297,7 +297,7 @@ class ChatMessage {
           ? '' : textList[i]; // Interactive messages have no text
       
       messages.add(ChatMessage(
-        id: id + i, // Use incremental IDs for individual messages
+        id: id, // Keep same ID for all parts of multi-text message
         text: messageText,
         delay: delayList[i],
         sender: sender,

@@ -10,7 +10,10 @@ import 'data_action_processor.dart';
 import 'chat_service/sequence_loader.dart';
 import 'chat_service/message_processor.dart';
 import 'chat_service/route_processor.dart';
-import 'flow_control/flow_state_machine.dart';
+import 'flow/message_walker.dart';
+import 'flow/message_renderer.dart';
+import 'flow/flow_orchestrator.dart';
+import 'flow/sequence_manager.dart';
 import 'logger_service.dart';
 
 /// Main chat service that orchestrates sequence loading, message processing, and routing
@@ -18,11 +21,11 @@ class ChatService {
   final SequenceLoader _sequenceLoader = SequenceLoader();
   late final MessageProcessor _messageProcessor;
   late final RouteProcessor _routeProcessor;
-  late final FlowStateMachine _flowStateMachine;
+  late final SequenceManager _sequenceManager;
+  late final MessageWalker _messageWalker;
+  late final MessageRenderer _messageRenderer;
+  late final FlowOrchestrator _flowOrchestrator;
   final logger = LoggerService.instance;
-  
-  // Feature flag to control new flow architecture usage
-  bool _useNewFlowArchitecture = true;
   
   // Callback for notifying UI about events from dataAction triggers
   Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
@@ -48,10 +51,14 @@ class ChatService {
       sequenceLoader: _sequenceLoader,
     );
     
-    // Initialize the new flow state machine
-    _flowStateMachine = FlowStateMachine(
-      sequenceLoader: _sequenceLoader,
-      messageProcessor: _messageProcessor,
+    // Initialize clean architecture components
+    _sequenceManager = SequenceManager(sequenceLoader: _sequenceLoader);
+    _messageWalker = MessageWalker();
+    _messageRenderer = MessageRenderer(messageProcessor: _messageProcessor);
+    _flowOrchestrator = FlowOrchestrator(
+      walker: _messageWalker,
+      renderer: _messageRenderer,
+      sequenceManager: _sequenceManager,
       routeProcessor: _routeProcessor,
     );
     
@@ -80,7 +87,8 @@ class ChatService {
 
   /// Load a specific chat sequence by ID
   Future<ChatSequence> loadSequence(String sequenceId) async {
-    return await _sequenceLoader.loadSequence(sequenceId);
+    await _sequenceManager.loadSequence(sequenceId);
+    return _sequenceManager.currentSequence!;
   }
 
   /// Load the default chat script (for backward compatibility)
@@ -89,16 +97,16 @@ class ChatService {
   }
 
   bool hasMessage(int id) {
-    return _sequenceLoader.hasMessage(id);
+    return _sequenceManager.hasMessage(id);
   }
 
   ChatMessage? getMessageById(int id) {
-    return _sequenceLoader.getMessageById(id);
+    return _sequenceManager.getMessage(id);
   }
 
   /// Get initial messages for a specific sequence
   Future<List<ChatMessage>> getInitialMessages({String sequenceId = 'onboarding_seq'}) async {
-    if (_sequenceLoader.currentSequence == null || _sequenceLoader.currentSequence!.sequenceId != sequenceId) {
+    if (_sequenceManager.currentSequenceId != sequenceId) {
       await loadSequence(sequenceId);
     }
     
@@ -106,7 +114,7 @@ class ChatService {
   }
 
   /// Get the current loaded sequence
-  ChatSequence? get currentSequence => _sequenceLoader.currentSequence;
+  ChatSequence? get currentSequence => _sequenceManager.currentSequence;
 
   Future<List<ChatMessage>> getMessagesAfterChoice(int startId) async {
     return await _getMessagesFromId(startId);
@@ -141,83 +149,10 @@ class ChatService {
   }
 
   Future<List<ChatMessage>> _getMessagesFromId(int startId) async {
-    // Use new flow architecture if enabled, otherwise fall back to legacy implementation
-    if (_useNewFlowArchitecture) {
-      logger.info('Using new flow architecture for message processing');
-      return await _flowStateMachine.processFlow(startId);
-    }
+    logger.info('Processing messages from ID: $startId');
     
-    logger.info('Using legacy flow architecture for message processing');
-    return await _getMessagesFromIdLegacy(startId);
+    final flowResponse = await _flowOrchestrator.processFrom(startId);
+    return flowResponse.messages;
   }
 
-  /// Legacy implementation of message processing (for backward compatibility)
-  Future<List<ChatMessage>> _getMessagesFromIdLegacy(int startId) async {
-    List<ChatMessage> messages = [];
-    int? currentId = startId;
-    
-    while (currentId != null && _sequenceLoader.hasMessage(currentId)) {
-      ChatMessage msg = _sequenceLoader.getMessageById(currentId)!;
-      
-      // Handle autoroute messages
-      if (msg.isAutoRoute) {
-        currentId = await _routeProcessor.processAutoRoute(msg);
-        continue; // Skip adding to display
-      }
-      
-      // Handle dataAction messages
-      if (msg.isDataAction) {
-        currentId = await _routeProcessor.processDataAction(msg);
-        continue; // Skip adding to display
-      }
-      
-      // Process template and variants on the original message first
-      final processedMsg = await processMessageTemplate(msg);
-      
-      // Expand multi-text messages into individual messages
-      final expandedMessages = processedMsg.expandToIndividualMessages();
-      messages.addAll(expandedMessages);
-      
-      // Stop at choice messages or text input messages - let UI handle the interaction
-      if (msg.isChoice || msg.isTextInput) break;
-      
-      // Check for universal cross-sequence navigation
-      if (msg.sequenceId != null) {
-        final startMessageId = ChatConfig.initialMessageId;
-        
-        // Always load sequence directly and continue processing
-        await loadSequence(msg.sequenceId!);
-        currentId = startMessageId;
-        
-        continue;
-      }
-      
-      // Move to next message
-      if (msg.nextMessageId != null) {
-        currentId = msg.nextMessageId;
-      } else {
-        // If no explicit next message, try sequential ID
-        currentId = currentId + 1;
-        if (!_sequenceLoader.hasMessage(currentId)) {
-          break;
-        }
-      }
-    }
-    
-    return messages;
-  }
-
-  /// Enable or disable the new flow architecture (for testing and gradual rollout)
-  void setUseNewFlowArchitecture(bool enabled) {
-    _useNewFlowArchitecture = enabled;
-    logger.info('Flow architecture mode set to: ${enabled ? "new" : "legacy"}');
-  }
-
-  /// Get the current flow state (for debugging)
-  String get currentFlowState => _flowStateMachine.currentState.toString();
-
-  /// Reset the flow state machine (for error recovery)
-  Future<void> resetFlowState() async {
-    await _flowStateMachine.reset();
-  }
 }

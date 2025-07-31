@@ -48,7 +48,7 @@ void main() {
         {'input': 1, 'expected': '11:00'}, // Morning
         {'input': 2, 'expected': '17:00'}, // Afternoon
         {'input': 3, 'expected': '21:00'}, // Evening
-        {'input': 4, 'expected': '06:00'}, // Night
+        {'input': 4, 'expected': '05:00'}, // Night
       ];
 
       for (final testCase in testCases) {

@@ -327,13 +327,13 @@ class SessionService {
     try {
       final intValue = await userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
       if (intValue != null) {
-        // Convert integer to time string based on task config sequence format
+        // Convert integer to time string using SessionConstants
         switch (intValue) {
-          case 1: return '11:00'; // Morning (before noon)
-          case 2: return '17:00'; // Afternoon (noon to 5pm) 
-          case 3: return '21:00'; // Evening (5pm to 9pm)
-          case 4: return '06:00'; // Night (9pm to 6am) - use 6am as reasonable night deadline
-          default: return '21:00'; // Default to evening
+          case SessionConstants.timeOfDayMorning: return SessionConstants.morningDeadlineTime;
+          case SessionConstants.timeOfDayAfternoon: return SessionConstants.afternoonDeadlineTime;
+          case SessionConstants.timeOfDayEvening: return SessionConstants.eveningDeadlineTime;
+          case SessionConstants.timeOfDayNight: return SessionConstants.nightDeadlineTime;
+          default: return SessionConstants.defaultDeadlineTime;
         }
       }
     } catch (e) {
@@ -341,7 +341,7 @@ class SessionService {
     }
     
     // Default if neither format found
-    return '21:00';
+    return SessionConstants.defaultDeadlineTime;
   }
 
   /// Log automatic status updates for transparency

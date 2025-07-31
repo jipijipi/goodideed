@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-07-31T17:05:09.675Z",
+  "lastUpdated": "2025-07-31T17:37:00.177Z",
   "gitBranch": "authoring-tool-update-5",
   "gitCommit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-update-5",
     "commit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
-    "timestamp": "2025-07-31T17:05:09.669Z"
+    "timestamp": "2025-07-31T17:37:00.158Z"
   },
   "nodes": [
     {
@@ -373,8 +373,8 @@
     {
       "id": "191",
       "position": {
-        "x": 5354.266673477387,
-        "y": 4992.574471503943
+        "x": 5633.241198533428,
+        "y": 4720.6425648090035
       },
       "data": {
         "label": "Group 191",
@@ -388,16 +388,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1026.1753212779881,
-        "height": 1537.3512576790845,
+        "width": 1208.2576262004159,
+        "height": 2460.9803942577964,
         "zIndex": 999
       },
-      "width": 1026,
-      "height": 1537,
+      "width": 1208,
+      "height": 2461,
       "selected": false,
       "positionAbsolute": {
-        "x": 5354.266673477387,
-        "y": 4992.574471503943
+        "x": 5633.241198533428,
+        "y": 4720.6425648090035
       },
       "dragging": false
     },
@@ -502,12 +502,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1482.660627610009,
-        "height": 1904.793793986688,
+        "width": 1226.5937511479312,
+        "height": 1943.7278484759208,
         "zIndex": 999
       },
-      "width": 1483,
-      "height": 1905,
+      "width": 1227,
+      "height": 1944,
       "selected": false,
       "positionAbsolute": {
         "x": 827.248223960383,
@@ -528,21 +528,21 @@
     {
       "id": "47",
       "position": {
-        "x": 2452.547475401317,
-        "y": 4879.388573903768
+        "x": 2512.057034556993,
+        "y": 5012.007240292928
       },
       "type": "group",
       "style": {
-        "width": 1101.4990456348119,
+        "width": 1134.3110312481676,
         "height": 1634.125400899531,
         "zIndex": 999
       },
-      "width": 1101,
+      "width": 1134,
       "height": 1634,
       "selected": false,
       "positionAbsolute": {
-        "x": 2452.547475401317,
-        "y": 4879.388573903768
+        "x": 2512.057034556993,
+        "y": 5012.007240292928
       },
       "dragging": false,
       "data": {
@@ -1999,8 +1999,8 @@
     {
       "id": "183",
       "position": {
-        "x": 232.98058733004018,
-        "y": 259.2952281821681
+        "x": 574.9887411037935,
+        "y": 516.7023971463068
       },
       "data": {
         "label": "Welcome!",
@@ -2015,8 +2015,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 3094.7386147038974,
-        "y": 7412.2492822505665
+        "x": 6094.229939637222,
+        "y": 4621.34496195531
       },
       "parentId": "191",
       "extent": "parent"
@@ -2024,8 +2024,8 @@
     {
       "id": "184",
       "position": {
-        "x": 226.14547524063937,
-        "y": 554.538731887128
+        "x": 593.1822171520907,
+        "y": 848.0242476592666
       },
       "data": {
         "label": "Select option:",
@@ -2040,8 +2040,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 3087.9035026144966,
-        "y": 7707.492785955526
+        "x": 6112.423415685519,
+        "y": 4952.66681246827
       },
       "parentId": "191",
       "extent": "parent"
@@ -2049,8 +2049,8 @@
     {
       "id": "185",
       "position": {
-        "x": 467.0664605866673,
-        "y": 25
+        "x": 540.4974647011386,
+        "y": 61.715502057235426
       },
       "data": {
         "label": "Route condition",
@@ -2063,8 +2063,8 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 3328.8244879605245,
-        "y": 7177.954054068398
+        "x": 5779.291900934521,
+        "y": 4950.661042701174
       },
       "dragging": false,
       "parentId": "191",
@@ -2073,8 +2073,8 @@
     {
       "id": "186",
       "position": {
-        "x": 703.1753212779881,
-        "y": 880.5781215979732
+        "x": 194.40336419915093,
+        "y": 1151.573493925188
       },
       "data": {
         "label": "Welcome!",
@@ -2088,8 +2088,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3610.9333486518453,
-        "y": 8165.532175666372
+        "x": 5431.449443191713,
+        "y": 5897.153740821825
       },
       "dragging": false,
       "parentId": "191",
@@ -2098,8 +2098,8 @@
     {
       "id": "187",
       "position": {
-        "x": 368.6789636211115,
-        "y": 875.1915666646573
+        "x": 755.0659138424962,
+        "y": 1149.683653473513
       },
       "data": {
         "label": "Welcome!",
@@ -2113,8 +2113,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3276.4369909949687,
-        "y": 8160.145620733056
+        "x": 5992.111992835058,
+        "y": 5895.26390037015
       },
       "dragging": false,
       "parentId": "191",
@@ -2123,8 +2123,8 @@
     {
       "id": "188",
       "position": {
-        "x": 25,
-        "y": 870.4397740375689
+        "x": 467.3343819276488,
+        "y": 1151.9252898097084
       },
       "data": {
         "label": "Welcome!",
@@ -2138,8 +2138,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 2886.758027373857,
-        "y": 8023.393828105967
+        "x": 5704.380460920211,
+        "y": 5897.505536706345
       },
       "dragging": false,
       "parentId": "191",
@@ -2148,8 +2148,8 @@
     {
       "id": "192",
       "position": {
-        "x": 306.8682572189209,
-        "y": 1204.3512576790845
+        "x": 465.96876613360837,
+        "y": 1466.6048438021953
       },
       "data": {
         "label": "Welcome!",
@@ -2164,8 +2164,88 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 3192.626284592778,
-        "y": 8367.305311747483
+        "x": 5703.01484512617,
+        "y": 6212.185090698832
+      },
+      "parentId": "191",
+      "extent": "parent"
+    },
+    {
+      "id": "195",
+      "position": {
+        "x": 724.0130592808246,
+        "y": 268.3467345918607
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "195"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6243.254257814253,
+        "y": 4372.989299400864
+      },
+      "dragging": false,
+      "parentId": "191",
+      "extent": "parent"
+    },
+    {
+      "id": "196",
+      "position": {
+        "x": 892.6609903995668,
+        "y": 508.07959338552337
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "196",
+        "content": "Today is an active day but you are already pas your deadline, so I guess you are off the hook for today..."
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 6411.902188932995,
+        "y": 4612.722158194527
+      },
+      "parentId": "191",
+      "extent": "parent"
+    },
+    {
+      "id": "197",
+      "position": {
+        "x": 212.68168717267872,
+        "y": 551.6958963150319
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "197",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "task.startTiming",
+            "value": "next_active"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 395,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 5731.922885706107,
+        "y": 4658.338461124035
       },
       "parentId": "191",
       "extent": "parent"
@@ -3040,16 +3120,16 @@
     {
       "id": "44",
       "position": {
-        "x": 753.8625714109644,
-        "y": 143.83078247936555
+        "x": 811.3110312481676,
+        "y": 267.9935827726749
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3100.8800222847053,
-        "y": 5274.147233870864
+        "x": 3011.8265538153037,
+        "y": 5253.0131957319445
       },
       "dragging": false,
       "parentId": "47",
@@ -4639,35 +4719,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "185",
-      "sourceHandle": null,
-      "target": "183",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "task.isActiveDay == true"
-      },
-      "id": "reactflow__edge-185-183",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "185",
-      "sourceHandle": null,
-      "target": "186",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-185-186"
-    },
-    {
-      "zIndex": 1001,
       "source": "184",
       "sourceHandle": null,
       "target": "188",
@@ -4688,7 +4739,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Nah",
+        "label": "I'll do it next time",
         "value": "next_active"
       },
       "id": "reactflow__edge-184-187",
@@ -4897,6 +4948,86 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-193-38",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "185",
+      "sourceHandle": null,
+      "target": "195",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "task.isActiveDay == true"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ff9800",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-185-195"
+    },
+    {
+      "zIndex": 1001,
+      "source": "195",
+      "sourceHandle": null,
+      "target": "183",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-195-183",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "195",
+      "sourceHandle": null,
+      "target": "196",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "task.isPastDeadline == true"
+      },
+      "id": "reactflow__edge-195-196",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "196",
+      "sourceHandle": null,
+      "target": "184",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-196-184",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "185",
+      "sourceHandle": null,
+      "target": "197",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-185-197"
+    },
+    {
+      "zIndex": 1001,
+      "source": "197",
+      "sourceHandle": null,
+      "target": "186",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-197-186",
       "selected": false
     }
   ]

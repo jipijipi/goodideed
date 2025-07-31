@@ -44,7 +44,7 @@ class MessageDisplayManager {
     // Filter out empty messages only
     final filteredMessages = messages.where((message) {
       // Skip messages with empty text that are not interactive or image messages
-      if (message.text.trim().isEmpty && !message.isChoice && !message.isTextInput && !message.isImage) {
+      if (message.text.trim().isEmpty && message.type != MessageType.choice && message.type != MessageType.textInput && message.type != MessageType.image) {
         return false;
       }
       
@@ -73,7 +73,7 @@ class MessageDisplayManager {
       _scrollToBottom();
       
       // Handle interactive messages
-      if (message.isTextInput) {
+      if (message.type == MessageType.textInput) {
         currentTextInputMessage = message;
         notifyListeners();
       }

@@ -37,9 +37,9 @@ class MessageProcessor {
       // 2. Fallback to legacy variant system for backward compatibility
       if (_variantsService != null && 
           currentSequence != null &&
-          !message.isChoice && 
-          !message.isTextInput && 
-          !message.isAutoRoute && 
+          message.type != MessageType.choice && 
+          message.type != MessageType.textInput && 
+          message.type != MessageType.autoroute && 
           !message.hasMultipleTexts) {
         
         // Get variant for the main text

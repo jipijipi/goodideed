@@ -27,14 +27,14 @@ class MessageBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     
     // Route to appropriate message type based on single responsibility
-    if (message.isChoice && message.choices != null) {
+    if (message.type == MessageType.choice && message.choices != null) {
       return ChoiceButtons(
         message: message,
         onChoiceSelected: onChoiceSelected,
       );
     }
     
-    if (message.isTextInput && isCurrentTextInput) {
+    if (message.type == MessageType.textInput && isCurrentTextInput) {
       return TextInputBubble(
         message: message,
         onSubmitted: onTextSubmitted,
@@ -42,12 +42,12 @@ class MessageBubble extends StatelessWidget {
     }
     
     // Skip autoroute messages - they have no visual representation
-    if (message.isAutoRoute) {
+    if (message.type == MessageType.autoroute) {
       return const SizedBox.shrink();
     }
     
     // Image messages - display image only with consistent spacing
-    if (message.isImage && message.imagePath != null) {
+    if (message.type == MessageType.image && message.imagePath != null) {
       return Padding(
         padding: DesignTokens.messageBubbleMargin,
         child: Image.asset(

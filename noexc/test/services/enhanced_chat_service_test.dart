@@ -178,8 +178,8 @@ void main() {
       expect(processedMessage.id, equals(originalMessage.id));
       expect(processedMessage.delay, equals(originalMessage.delay));
       expect(processedMessage.sender, equals(originalMessage.sender));
-      expect(processedMessage.isChoice, equals(originalMessage.isChoice));
-      expect(processedMessage.isTextInput, equals(originalMessage.isTextInput));
+      expect(processedMessage.type == MessageType.choice, equals(originalMessage.type == MessageType.choice));
+      expect(processedMessage.type == MessageType.textInput, equals(originalMessage.type == MessageType.textInput));
       expect(processedMessage.storeKey, equals(originalMessage.storeKey));
       expect(processedMessage.nextMessageId, equals(originalMessage.nextMessageId));
     });

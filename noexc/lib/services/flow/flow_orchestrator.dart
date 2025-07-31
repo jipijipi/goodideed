@@ -175,14 +175,14 @@ class FlowOrchestrator {
     int? continueFromId;
     
     for (final message in messages) {
-      if (message.isAutoRoute) {
+      if (message.type == MessageType.autoroute) {
         logger.debug('Processing autoroute message ${message.id}');
         continueFromId = await _routeProcessor.processAutoRoute(message);
         // Don't add autoroute messages to display
         continue;
       }
       
-      if (message.isDataAction) {
+      if (message.type == MessageType.dataAction) {
         logger.debug('Processing dataAction message ${message.id}');
         await _routeProcessor.processDataAction(message);
         // Don't add dataAction messages to display

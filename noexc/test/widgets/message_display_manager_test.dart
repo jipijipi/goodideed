@@ -79,8 +79,8 @@ void main() {
 
       // Assert - Interactive messages should be displayed even if empty
       expect(displayManager.displayedMessages.length, equals(3));
-      expect(displayManager.displayedMessages[0].isChoice, isTrue);
-      expect(displayManager.displayedMessages[1].isTextInput, isTrue);
+      expect(displayManager.displayedMessages[0].type == MessageType.choice, isTrue);
+      expect(displayManager.displayedMessages[1].type == MessageType.textInput, isTrue);
       expect(displayManager.displayedMessages[2].text, equals('Regular message'));
     });
 

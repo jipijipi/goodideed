@@ -186,7 +186,7 @@ void main() {
       // Assert
       expect(message.id, 2);
       expect(message.text, ''); // Choice messages have no text content
-      expect(message.isChoice, true);
+      expect(message.type == MessageType.choice, true);
       expect(message.choices, isNotNull);
       expect(message.choices!.length, 2);
       expect(message.choices![0].text, 'Red');
@@ -209,7 +209,7 @@ void main() {
       final message = ChatMessage.fromJson(json);
 
       // Assert
-      expect(message.isChoice, false);
+      expect(message.type == MessageType.choice, false);
       expect(message.choices, isNull);
       expect(message.nextMessageId, isNull);
     });
@@ -262,8 +262,8 @@ void main() {
       );
 
       // Act & Assert
-      expect(choiceMessage.isChoice, true);
-      expect(regularMessage.isChoice, false);
+      expect(choiceMessage.type == MessageType.choice, true);
+      expect(regularMessage.type == MessageType.choice, false);
     });
 
     test('should create text input message from JSON', () {
@@ -283,7 +283,7 @@ void main() {
       // Assert
       expect(message.id, 5);
       expect(message.text, ''); // Text input messages have no text content
-      expect(message.isTextInput, true);
+      expect(message.type == MessageType.textInput, true);
       expect(message.nextMessageId, 6);
     });
 
@@ -300,7 +300,7 @@ void main() {
       final message = ChatMessage.fromJson(json);
 
       // Assert
-      expect(message.isTextInput, false);
+      expect(message.type == MessageType.textInput, false);
     });
 
     test('should convert text input message to JSON', () {
@@ -342,8 +342,8 @@ void main() {
       );
 
       // Act & Assert
-      expect(textInputMessage.isTextInput, true);
-      expect(regularMessage.isTextInput, false);
+      expect(textInputMessage.type == MessageType.textInput, true);
+      expect(regularMessage.type == MessageType.textInput, false);
     });
 
     test('should create ChatMessage with storeKey from JSON', () {
@@ -364,7 +364,7 @@ void main() {
       expect(message.id, equals(1));
       expect(message.text, equals('')); // Text input messages have no text content
       expect(message.storeKey, equals(StorageKeys.userName));
-      expect(message.isTextInput, isTrue);
+      expect(message.type == MessageType.textInput, isTrue);
     });
 
     test('should create ChatMessage without storeKey from JSON', () {
@@ -598,7 +598,7 @@ void main() {
       expect(expanded[0].id, equals(10));
       expect(expanded[0].text, equals('First message'));
       expect(expanded[0].delay, equals(1500));
-      expect(expanded[0].isChoice, isFalse);
+      expect(expanded[0].type == MessageType.choice, isFalse);
       expect(expanded[0].choices, isNull);
       expect(expanded[0].nextMessageId, isNull);
       
@@ -606,7 +606,7 @@ void main() {
       expect(expanded[1].id, equals(11));
       expect(expanded[1].text, equals('Second message'));
       expect(expanded[1].delay, equals(1500));
-      expect(expanded[1].isChoice, isFalse);
+      expect(expanded[1].type == MessageType.choice, isFalse);
       expect(expanded[1].choices, isNull);
       expect(expanded[1].nextMessageId, isNull);
       
@@ -614,7 +614,7 @@ void main() {
       expect(expanded[2].id, equals(12));
       expect(expanded[2].text, equals('Third message'));
       expect(expanded[2].delay, equals(1500));
-      expect(expanded[2].isChoice, isFalse);
+      expect(expanded[2].type == MessageType.choice, isFalse);
       expect(expanded[2].choices, isNull);
       expect(expanded[2].nextMessageId, equals(20));
     });
@@ -647,7 +647,7 @@ void main() {
 
         // Assert
         expect(message.text, '');
-        expect(message.isChoice, true);
+        expect(message.type == MessageType.choice, true);
       });
 
       test('should enforce empty text for autoroute messages from JSON with text field', () {
@@ -666,7 +666,7 @@ void main() {
 
         // Assert
         expect(message.text, '');
-        expect(message.isAutoRoute, true);
+        expect(message.type == MessageType.autoroute, true);
       });
 
       test('should allow text for regular messages', () {
@@ -681,9 +681,9 @@ void main() {
 
         // Assert
         expect(message.text, 'This text should be preserved for regular messages');
-        expect(message.isChoice, false);
-        expect(message.isTextInput, false);
-        expect(message.isAutoRoute, false);
+        expect(message.type == MessageType.choice, false);
+        expect(message.type == MessageType.textInput, false);
+        expect(message.type == MessageType.autoroute, false);
       });
     });
 
@@ -706,7 +706,7 @@ void main() {
 
         // Assert
         expect(message.type, MessageType.dataAction);
-        expect(message.isDataAction, true);
+        expect(message.type == MessageType.dataAction, true);
         expect(message.dataActions, actions);
         expect(message.text, '');
         expect(message.nextMessageId, 2);
@@ -737,7 +737,7 @@ void main() {
 
         // Assert
         expect(message.type, MessageType.dataAction);
-        expect(message.isDataAction, true);
+        expect(message.type == MessageType.dataAction, true);
         expect(message.dataActions, isNotNull);
         expect(message.dataActions!.length, 2);
         expect(message.dataActions![0].type, DataActionType.set);
@@ -795,7 +795,7 @@ void main() {
         // Assert
         expect(message.text, '');
         expect(message.type, MessageType.dataAction);
-        expect(message.isDataAction, true);
+        expect(message.type == MessageType.dataAction, true);
       });
 
       test('should handle dataAction message without actions', () {
@@ -811,7 +811,7 @@ void main() {
 
         // Assert
         expect(message.type, MessageType.dataAction);
-        expect(message.isDataAction, true);
+        expect(message.type == MessageType.dataAction, true);
         expect(message.dataActions, isNull);
         expect(message.nextMessageId, 2);
       });
@@ -875,10 +875,10 @@ void main() {
         );
 
         // Act & Assert
-        expect(message.isDataAction, true);
-        expect(message.isChoice, false);
-        expect(message.isTextInput, false);
-        expect(message.isAutoRoute, false);
+        expect(message.type == MessageType.dataAction, true);
+        expect(message.type == MessageType.choice, false);
+        expect(message.type == MessageType.textInput, false);
+        expect(message.type == MessageType.autoroute, false);
       });
     });
 
@@ -1023,11 +1023,11 @@ void main() {
         );
 
         // Act & Assert
-        expect(message.isImage, true);
-        expect(message.isChoice, false);
-        expect(message.isTextInput, false);
-        expect(message.isAutoRoute, false);
-        expect(message.isDataAction, false);
+        expect(message.type == MessageType.image, true);
+        expect(message.type == MessageType.choice, false);
+        expect(message.type == MessageType.textInput, false);
+        expect(message.type == MessageType.autoroute, false);
+        expect(message.type == MessageType.dataAction, false);
       });
     });
   });

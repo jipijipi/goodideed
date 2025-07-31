@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'choice.dart';
 import 'route_condition.dart';
 import 'data_action.dart';
@@ -92,7 +91,7 @@ class ChatMessage {
           .toList();
     }
 
-    // Determine message type from either new 'type' field or legacy boolean fields
+    // Determine message type from 'type' field
     MessageType messageType;
     if (json['type'] != null) {
       final typeString = json['type'] as String;
@@ -101,34 +100,9 @@ class ChatMessage {
         orElse: () => MessageType.bot,
       );
     } else {
-      // Backward compatibility with boolean fields (DEPRECATED)
-      // TODO: Remove this legacy support in future version
-      final isChoice = json['isChoice'] as bool? ?? false;
-      final isTextInput = json['isTextInput'] as bool? ?? false;
-      final isAutoRoute = json['isAutoRoute'] as bool? ?? false;
+      // Default to bot message if no type specified
       final sender = json['sender'] as String? ?? ChatConfig.botSender;
-      
-      // Log deprecation warning for legacy format
-      if (isChoice || isTextInput || isAutoRoute) {
-        // Use debugPrint to avoid production logging issues
-        assert(() {
-          debugPrint('DEPRECATION WARNING: Legacy boolean message type fields detected in message ${json['id']}. '
-                    'Please migrate to using "type" field instead. Support will be removed in future version.');
-          return true;
-        }());
-      }
-      
-      if (isChoice) {
-        messageType = MessageType.choice;
-      } else if (isTextInput) {
-        messageType = MessageType.textInput;
-      } else if (isAutoRoute) {
-        messageType = MessageType.autoroute;
-      } else if (sender == ChatConfig.userSender) {
-        messageType = MessageType.user;
-      } else {
-        messageType = MessageType.bot;
-      }
+      messageType = sender == ChatConfig.userSender ? MessageType.user : MessageType.bot;
     }
     
     // For interactive messages, use empty text to enforce single responsibility
@@ -231,21 +205,6 @@ class ChatMessage {
   bool get isFromBot => sender == ChatConfig.botSender;
   bool get isFromUser => sender == ChatConfig.userSender;
   
-  // Legacy boolean getters (DEPRECATED - use type field instead)
-  @Deprecated('Use type == MessageType.choice instead. Will be removed in future version.')
-  bool get isChoice => type == MessageType.choice;
-  
-  @Deprecated('Use type == MessageType.textInput instead. Will be removed in future version.')
-  bool get isTextInput => type == MessageType.textInput;
-  
-  @Deprecated('Use type == MessageType.autoroute instead. Will be removed in future version.')
-  bool get isAutoRoute => type == MessageType.autoroute;
-  
-  @Deprecated('Use type == MessageType.dataAction instead. Will be removed in future version.')
-  bool get isDataAction => type == MessageType.dataAction;
-  
-  @Deprecated('Use type == MessageType.image instead. Will be removed in future version.')
-  bool get isImage => type == MessageType.image;
   
   /// Returns true if this message has multiple texts (contains separator)
   bool get hasMultipleTexts => text.contains(ChatConfig.multiTextSeparator);

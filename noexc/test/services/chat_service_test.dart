@@ -78,8 +78,8 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      final choiceMessage = messages.firstWhere((msg) => msg.isChoice);
-      expect(choiceMessage.isChoice, true);
+      final choiceMessage = messages.firstWhere((msg) => msg.type == MessageType.choice);
+      expect(choiceMessage.type == MessageType.choice, true);
       expect(choiceMessage.choices, isNotNull);
       expect(choiceMessage.choices!.length, 2);
       expect(choiceMessage.choices![0].text, 'Hi Trist !');
@@ -185,7 +185,7 @@ void main() {
 
       // Assert
       expect(processedMessage.placeholderText, 'Enter your custom name here...');
-      expect(processedMessage.isTextInput, true);
+      expect(processedMessage.type == MessageType.textInput, true);
       expect(processedMessage.storeKey, StorageKeys.userName);
       expect(processedMessage.text, ''); // Text input messages have no text content
     });
@@ -206,7 +206,7 @@ void main() {
 
       // Assert
       expect(processedMessage.placeholderText, 'Type your answer...');
-      expect(processedMessage.isTextInput, true);
+      expect(processedMessage.type == MessageType.textInput, true);
     });
   });
 }

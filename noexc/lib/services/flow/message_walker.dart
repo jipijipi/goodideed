@@ -63,7 +63,7 @@ class MessageWalker {
       messages.add(message);
       
       // Stop at interactive messages - they need user input to continue
-      if (message.isChoice || message.isTextInput) {
+      if (message.type == MessageType.choice || message.type == MessageType.textInput) {
         logger.debug('Stopped at interactive message ${message.id}');
         return WalkResult.success(
           messages: messages,

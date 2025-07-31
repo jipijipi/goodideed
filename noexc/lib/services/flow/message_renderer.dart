@@ -61,13 +61,13 @@ class MessageRenderer {
   List<ChatMessage> _filterDisplayableMessages(List<ChatMessage> messages) {
     return messages.where((message) {
       // Autoroute messages are not displayed - they're processed by orchestrator
-      if (message.isAutoRoute) {
+      if (message.type == MessageType.autoroute) {
         logger.debug('Filtering out autoroute message ${message.id}');
         return false;
       }
       
       // DataAction messages are not displayed - they're processed by orchestrator  
-      if (message.isDataAction) {
+      if (message.type == MessageType.dataAction) {
         logger.debug('Filtering out dataAction message ${message.id}');
         return false;
       }

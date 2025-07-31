@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/chat_service.dart';
+import 'package:noexc/models/chat_message.dart';
 
 import '../../test_helpers.dart';
 
@@ -31,13 +32,13 @@ void main() {
         expect(messageIds, contains(7)); // Choice message
         
         // All messages should be displayable (no autoroute/dataAction in final result)
-        final hasHiddenMessages = initialMessages.any((m) => m.isAutoRoute || m.isDataAction);
+        final hasHiddenMessages = initialMessages.any((m) => m.type == MessageType.autoroute || m.type == MessageType.dataAction);
         expect(hasHiddenMessages, isFalse, 
                reason: 'Final messages should not contain autoroute or dataAction messages');
         
         // Should end with a choice message (interactive)
         final lastMessage = initialMessages.last;
-        expect(lastMessage.isChoice, isTrue, 
+        expect(lastMessage.type == MessageType.choice, isTrue, 
                reason: 'Should end with the choice message that requires user interaction');
       });
 
@@ -46,7 +47,7 @@ void main() {
         final messages = await chatService.getInitialMessages(sequenceId: 'intro_seq');
         
         // Should stop at the first interactive message (choice or textInput)
-        final hasInteractiveMessage = messages.any((m) => m.isChoice || m.isTextInput);
+        final hasInteractiveMessage = messages.any((m) => m.type == MessageType.choice || m.type == MessageType.textInput);
         expect(hasInteractiveMessage, isTrue, 
                reason: 'Should include the interactive message that stops the flow');
         
@@ -68,7 +69,7 @@ void main() {
         
         // The message should have the processed template content
         final hasProcessedContent = continuationMessages.any((m) => 
-            m.text.isNotEmpty && !m.isAutoRoute && !m.isDataAction);
+            m.text.isNotEmpty && !(m.type == MessageType.autoroute) && !(m.type == MessageType.dataAction));
         expect(hasProcessedContent, isTrue, 
                reason: 'Should display the transitional message content before sequence change');
       });
@@ -85,7 +86,7 @@ void main() {
         // Verify messages are processed (have actual content)
         expect(messages, isNotEmpty);
         for (final message in messages) {
-          if (!message.isChoice && !message.isTextInput) {
+          if (!(message.type == MessageType.choice) && !(message.type == MessageType.textInput)) {
             expect(message.text.isNotEmpty, isTrue, 
                    reason: 'Non-interactive messages should have content');
           }

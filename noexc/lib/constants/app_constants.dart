@@ -44,6 +44,7 @@ class AppConstants {
     'previous_seq',
     'reminders_seq',
     'weekdays_seq',
+    'task_start_timing_seq',
   ];
   
   // User Response ID Offset

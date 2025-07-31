@@ -32,6 +32,7 @@ class StorageKeys {
   static const String taskAutoUpdateReason = '${taskPrefix}autoUpdateReason';
   static const String taskIsActiveDay = '${taskPrefix}isActiveDay';
   static const String taskIsPastDeadline = '${taskPrefix}isPastDeadline';
+  static const String taskStartTiming = '${taskPrefix}startTiming';
   
   // Private constructor to prevent instantiation
   StorageKeys._();

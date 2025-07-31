@@ -14,6 +14,8 @@ import 'flow/message_renderer.dart';
 import 'flow/flow_orchestrator.dart';
 import 'flow/sequence_manager.dart';
 import 'logger_service.dart';
+import 'session_service.dart';
+import 'service_locator.dart';
 
 /// Main chat service that orchestrates sequence loading, message processing, and routing
 class ChatService {
@@ -77,12 +79,32 @@ class ChatService {
 
   /// Handle events from dataActionProcessor
   Future<void> _handleEvent(String eventType, Map<String, dynamic> data) async {
-    if (_onEvent != null) {
-      try {
-        await _onEvent!(eventType, data);
-      } catch (e) {
-        // Silent error handling
-      }
+    // Handle specific event types
+    switch (eventType) {
+      case 'recalculate_active_day':
+        await _handleRecalculateActiveDay();
+        break;
+      default:
+        // Forward unknown events to UI callback
+        if (_onEvent != null) {
+          try {
+            await _onEvent!(eventType, data);
+          } catch (e) {
+            // Silent error handling
+          }
+        }
+    }
+  }
+
+  /// Handle recalculate_active_day event from dataAction trigger
+  Future<void> _handleRecalculateActiveDay() async {
+    try {
+      final userDataService = ServiceLocator.instance.userDataService;
+      final sessionService = SessionService(userDataService);
+      await sessionService.recalculateActiveDay();
+      logger.info('Successfully recalculated task.isActiveDay');
+    } catch (e) {
+      logger.error('Failed to recalculate active day: $e');
     }
   }
 

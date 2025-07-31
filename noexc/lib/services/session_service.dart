@@ -111,8 +111,8 @@ class SessionService {
       await _checkPreviousDayGracePeriod(now);
     }
     
-    // Always set current date to today
-    await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
+    // Set current date based on task start timing preference
+    await _setTaskCurrentDate(today, isNewDay);
     
     if (isNewDay) {
       // Reset task status to pending for new day
@@ -200,6 +200,66 @@ class SessionService {
     // Compute isPastDeadline
     final isPastDeadline = await _computeIsPastDeadline(now);
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+  }
+
+  /// Public method to recalculate isActiveDay (called by dataAction triggers)
+  Future<void> recalculateActiveDay() async {
+    final now = DateTime.now();
+    final isActiveDay = await _computeIsActiveDay(now);
+    await userDataService.storeValue(StorageKeys.taskIsActiveDay, isActiveDay);
+  }
+
+  /// Set task current date based on start timing preference
+  Future<void> _setTaskCurrentDate(String today, bool isNewDay) async {
+    final startTiming = await userDataService.getValue<String>(StorageKeys.taskStartTiming);
+    
+    // If no timing preference set, default to today (existing behavior)
+    if (startTiming == null) {
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
+      return;
+    }
+    
+    // If user chose to start today, or it's not a new day, use today
+    if (startTiming == 'today' || !isNewDay) {
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
+      return;
+    }
+    
+    // If user chose to wait for next active day, calculate it
+    if (startTiming == 'next_active') {
+      final nextActiveDate = await _getNextActiveDay();
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, nextActiveDate);
+      return;
+    }
+    
+    // Default fallback
+    await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
+  }
+
+  /// Get the next active day based on user's active days configuration
+  Future<String> _getNextActiveDay() async {
+    final now = DateTime.now();
+    final activeDays = await userDataService.getValue<List<dynamic>>(StorageKeys.taskActiveDays);
+    
+    // If no active days configured, default to tomorrow
+    if (activeDays == null || activeDays.isEmpty) {
+      final tomorrow = now.add(const Duration(days: 1));
+      return _formatDate(tomorrow);
+    }
+    
+    // Find the next day that matches an active day
+    for (int i = 1; i <= 7; i++) {
+      final testDate = now.add(Duration(days: i));
+      final testWeekday = testDate.weekday;
+      
+      if (activeDays.contains(testWeekday)) {
+        return _formatDate(testDate);
+      }
+    }
+    
+    // Fallback - should never reach here if activeDays is valid
+    final tomorrow = now.add(const Duration(days: 1));
+    return _formatDate(tomorrow);
   }
 
   /// Check if today is an active day based on user's active_days configuration

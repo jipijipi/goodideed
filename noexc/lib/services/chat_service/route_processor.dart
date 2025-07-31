@@ -1,6 +1,5 @@
 import '../../models/chat_message.dart';
 import '../../models/route_condition.dart';
-import '../../config/chat_config.dart';
 import '../condition_evaluator.dart';
 import '../data_action_processor.dart';
 import '../logger_service.dart';
@@ -77,10 +76,15 @@ class RouteProcessor {
   /// Execute a route condition by loading sequence or returning message ID
   Future<int?> _executeRoute(RouteCondition route) async {
     if (route.sequenceId != null) {
-      final startMessageId = ChatConfig.initialMessageId;
-      
       // Always load sequence directly for message accumulation
       await _sequenceLoader.loadSequence(route.sequenceId!);
+      
+      // Start with the first message in the new sequence
+      final sequence = _sequenceLoader.currentSequence;
+      if (sequence == null || sequence.messages.isEmpty) {
+        throw Exception('Sequence ${route.sequenceId} has no messages');
+      }
+      final startMessageId = sequence.messages.first.id;
       
       // Note: No UI notification needed - messages are accumulated seamlessly
       

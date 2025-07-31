@@ -41,7 +41,7 @@ class UserInteractionHandler {
     // Check if this choice switches sequences
     if (choice.sequenceId != null) {
       logger.info('Switching to sequence: ${choice.sequenceId}', component: LogComponent.ui);
-      await _switchToSequenceFromChoice(choice.sequenceId!, 1, onSequenceChange, notifyListeners);
+      await _switchToSequenceFromChoice(choice.sequenceId!, onSequenceChange, notifyListeners);
     } else if (choice.nextMessageId != null) {
       await _continueWithChoice(choice.nextMessageId!, notifyListeners);
     } else {
@@ -86,7 +86,6 @@ class UserInteractionHandler {
   /// Switch to a different sequence from a choice selection
   Future<void> _switchToSequenceFromChoice(
     String sequenceId, 
-    int startMessageId, 
     Function(String) onSequenceChange,
     VoidCallback notifyListeners,
   ) async {
@@ -97,9 +96,11 @@ class UserInteractionHandler {
       _messageDisplayManager.currentTextInputMessage = null;
       onSequenceChange(sequenceId);
       
-      // Load the new sequence and get messages
+      // Load the new sequence
       await _chatService.loadSequence(sequenceId);
-      final nextMessages = await _chatService.getMessagesAfterChoice(startMessageId);
+      
+      // Get initial messages for the new sequence (starts with first message)
+      final nextMessages = await _chatService.getInitialMessages(sequenceId: sequenceId);
       
       // Display the new sequence messages
       await _messageDisplayManager.displayMessages(nextMessages, _messageQueue, notifyListeners);

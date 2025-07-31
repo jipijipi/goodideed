@@ -82,6 +82,18 @@ class SequenceManager implements MessageProvider {
     };
   }
 
+  /// Get the ID of the first message in the current sequence
+  /// 
+  /// Returns null if no sequence is loaded or sequence has no messages.
+  /// This is used to determine where to start when switching sequences.
+  int? getFirstMessageId() {
+    final sequence = currentSequence;
+    if (sequence == null || sequence.messages.isEmpty) {
+      return null;
+    }
+    return sequence.messages.first.id;
+  }
+
   /// Validate that the current sequence is in a consistent state
   bool validateState() {
     final sequence = currentSequence;

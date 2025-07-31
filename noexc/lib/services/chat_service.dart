@@ -1,7 +1,6 @@
 import '../models/chat_message.dart';
 import '../models/chat_sequence.dart';
 import '../models/choice.dart';
-import '../config/chat_config.dart';
 import 'user_data_service.dart';
 import 'text_templating_service.dart';
 import 'text_variants_service.dart';
@@ -110,7 +109,13 @@ class ChatService {
       await loadSequence(sequenceId);
     }
     
-    return await _getMessagesFromId(ChatConfig.initialMessageId);
+    // Start with the first message in the sequence
+    final firstMessageId = _sequenceManager.getFirstMessageId();
+    if (firstMessageId == null) {
+      throw Exception('Sequence $sequenceId has no messages');
+    }
+    
+    return await _getMessagesFromId(firstMessageId);
   }
 
   /// Get the current loaded sequence

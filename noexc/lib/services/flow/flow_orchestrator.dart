@@ -1,5 +1,4 @@
 import '../../models/chat_message.dart';
-import '../../config/chat_config.dart';
 import '../chat_service/route_processor.dart';
 import '../logger_service.dart';
 import 'message_walker.dart';
@@ -134,7 +133,14 @@ class FlowOrchestrator {
         
         // Load new sequence and continue processing
         await _sequenceManager.loadSequence(walkResult.targetSequenceId!);
-        currentStartId = ChatConfig.initialMessageId;
+        
+        // Start with the first message in the new sequence
+        final firstMessageId = _sequenceManager.getFirstMessageId();
+        if (firstMessageId == null) {
+          throw Exception('New sequence ${walkResult.targetSequenceId} has no messages');
+        }
+        currentStartId = firstMessageId;
+        logger.debug('Starting new sequence with first message ID: $currentStartId');
         continue; // Continue in new sequence
       }
       

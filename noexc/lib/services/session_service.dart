@@ -209,6 +209,13 @@ class SessionService {
     await userDataService.storeValue(StorageKeys.taskIsActiveDay, isActiveDay);
   }
 
+  /// Public method to recalculate isPastDeadline (called by dataAction triggers)
+  Future<void> recalculatePastDeadline() async {
+    final now = DateTime.now();
+    final isPastDeadline = await _computeIsPastDeadline(now);
+    await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+  }
+
   /// Set task current date based on start timing preference
   Future<void> _setTaskCurrentDate(String today, bool isNewDay) async {
     final startTiming = await userDataService.getValue<String>(StorageKeys.taskStartTiming);

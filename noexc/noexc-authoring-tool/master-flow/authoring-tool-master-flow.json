@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-07-31T16:33:11.829Z",
+  "lastUpdated": "2025-07-31T17:05:09.675Z",
   "gitBranch": "authoring-tool-update-5",
   "gitCommit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-update-5",
     "commit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
-    "timestamp": "2025-07-31T16:33:11.820Z"
+    "timestamp": "2025-07-31T17:05:09.669Z"
   },
   "nodes": [
     {
@@ -388,12 +388,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1020.1753212779881,
-        "height": 1478.1915666646573,
+        "width": 1026.1753212779881,
+        "height": 1537.3512576790845,
         "zIndex": 999
       },
-      "width": 1020,
-      "height": 1478,
+      "width": 1026,
+      "height": 1537,
       "selected": false,
       "positionAbsolute": {
         "x": 5354.266673477387,
@@ -497,21 +497,21 @@
     {
       "id": "39",
       "position": {
-        "x": 1117.248223960383,
-        "y": 5033.2474646006285
+        "x": 827.248223960383,
+        "y": 4891.2474646006285
       },
       "type": "group",
       "style": {
-        "width": 1226.5937511479312,
-        "height": 1470.383261018972,
+        "width": 1482.660627610009,
+        "height": 1904.793793986688,
         "zIndex": 999
       },
-      "width": 1227,
-      "height": 1470,
+      "width": 1483,
+      "height": 1905,
       "selected": false,
       "positionAbsolute": {
-        "x": 1117.248223960383,
-        "y": 5033.2474646006285
+        "x": 827.248223960383,
+        "y": 4891.2474646006285
       },
       "dragging": false,
       "data": {
@@ -533,12 +533,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1143.6613124795404,
-        "height": 1630,
+        "width": 1101.4990456348119,
+        "height": 1634.125400899531,
         "zIndex": 999
       },
-      "width": 1144,
-      "height": 1630,
+      "width": 1101,
+      "height": 1634,
       "selected": false,
       "positionAbsolute": {
         "x": 2452.547475401317,
@@ -2686,6 +2686,39 @@
       }
     },
     {
+      "id": "193",
+      "position": {
+        "x": 422.0905452071124,
+        "y": 1206.4183053352172
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "193",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "recalculate_past_deadline",
+            "value": "",
+            "event": "",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 353,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1539.3387691674955,
+        "y": 6239.665769935846
+      },
+      "parentId": "39",
+      "extent": "parent"
+    },
+    {
       "id": "32",
       "position": {
         "x": 413.6952980519212,
@@ -2844,16 +2877,16 @@
     {
       "id": "38",
       "position": {
-        "x": 445.36217152522215,
-        "y": 1137.383261018972
+        "x": 460.04505217446945,
+        "y": 1610.7278484759208
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 528.9556926341987,
-        "y": 7512.000826367638
+        "x": 1577.2932761348525,
+        "y": 6643.975313076549
       },
       "dragging": false,
       "parentId": "39",
@@ -3588,38 +3621,6 @@
       "id": "reactflow__edge-32-33",
       "source": "32",
       "target": "33",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-34-38",
-      "source": "34",
-      "target": "38",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-35-38",
-      "source": "35",
-      "target": "38",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-36-38",
-      "source": "36",
-      "target": "38",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-37-38",
-      "source": "37",
-      "target": "38",
       "type": "custom",
       "data": {},
       "selected": false
@@ -4821,6 +4822,81 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-192-56",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "37",
+      "target": "193",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-37-193",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "36",
+      "target": "193",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-36-193",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "35",
+      "target": "193",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-35-193",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "34",
+      "target": "193",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-34-193",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "193",
+      "sourceHandle": null,
+      "target": "38",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-193-38",
       "selected": false
     }
   ]

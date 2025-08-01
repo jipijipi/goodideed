@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-01T17:01:23.737Z",
+  "lastUpdated": "2025-08-01T17:08:21.723Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-01T17:01:23.721Z"
+    "timestamp": "2025-08-01T17:08:21.715Z"
   },
   "nodes": [
     {
@@ -2658,7 +2658,7 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "reminders.intensity",
+            "key": "task.remindersIntensity",
             "value": null
           },
           {
@@ -2668,8 +2668,8 @@
           },
           {
             "type": "set",
-            "key": "user.property",
-            "value": ""
+            "key": "user.propertyd",
+            "value": "sqs"
           }
         ]
       },

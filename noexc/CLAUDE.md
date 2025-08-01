@@ -79,7 +79,7 @@ Visual tool in `noexc-authoring-tool/` for creating conversation sequences:
 ### Storage & Templates
 - **Local Storage**: shared_preferences for user data persistence
 - **Template System**: `{key|fallback}` syntax for dynamic text substitution
-- **Formatter Support**: `{key:formatter}` and `{key:formatter|fallback}` syntax (timeOfDay, intensity, activeDays)
+- **Formatter Support**: `{key:formatter}` and `{key:formatter|fallback}` syntax (timeOfDay, intensity, activeDays, timePeriod)
 - **Key Task Variables**: `task.currentDate`, `task.currentStatus`, `task.startTime`, `task.deadlineTime`, `task.isActiveDay`, `task.isBeforeStart`, `task.isInTimeRange`, `task.isPastDeadline`
 
 ### Message System

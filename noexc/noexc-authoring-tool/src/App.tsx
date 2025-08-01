@@ -26,6 +26,7 @@ import { VariableManagerProvider } from './context/VariableManagerContext';
 import { ThemeProvider } from './context/ThemeContext';
 import VariableManager from './components/VariableManager';
 import HelpTooltip from './components/HelpTooltip';
+import { createButtonStyle, createPanelStyle, COLORS, mergeStyles } from './styles/styleConstants';
 import { helpContent } from './constants/helpContent';
 import { saveMasterFlow, loadMasterFlow, importMasterFlow, exportMasterFlow } from './utils/masterFlowPersistence';
 
@@ -2218,7 +2219,7 @@ function Flow() {
             </div>
 
             {/* Choice Configuration Help */}
-            <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#f0f8ff', borderRadius: '6px', border: '1px solid #b3d9ff' }}>
+            <div style={createPanelStyle('info')}>
               <div style={{ fontSize: '12px', color: '#0066cc', fontWeight: 'bold', marginBottom: '4px' }}>
                 💡 Choice Configuration
               </div>
@@ -2237,7 +2238,7 @@ function Flow() {
             {renderExternalIdField()}
 
             {/* Route Configuration Help */}
-            <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#fff3cd', borderRadius: '6px', border: '1px solid #ffeaa7' }}>
+            <div style={createPanelStyle('warning')}>
               <div style={{ fontSize: '12px', color: '#856404', fontWeight: 'bold', marginBottom: '8px' }}>
                 🚦 Route Configuration
               </div>
@@ -2505,32 +2506,14 @@ function Flow() {
           
           <button 
             onClick={saveData}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#ff9800',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('warning')}
           >
             💾 Save
           </button>
           
           <button 
             onClick={restoreData}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#673ab7',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('purple')}
           >
             📂 Restore
           </button>
@@ -2561,16 +2544,7 @@ function Flow() {
           
           <button 
             onClick={importFromJSON}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#4caf50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('success')}
           >
             📥 Import JSON
           </button>
@@ -2596,16 +2570,7 @@ function Flow() {
                 showError('Export Failed', [error instanceof Error ? error.message : 'Unknown error']);
               }
             }}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#9c27b0',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('indigo')}
             title="Export master flow for sharing or backup"
           >
             📤 Export Master Flow
@@ -2671,16 +2636,7 @@ function Flow() {
                 showError('Import Failed', [error instanceof Error ? error.message : 'Unknown error']);
               }
             }}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#2196f3',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('info')}
           >
             📄 Import Master Flow
           </button>
@@ -2713,19 +2669,14 @@ function Flow() {
           {directoryHandle && (
             <button 
               onClick={deploySequencesToFlutter}
-              style={{
+              style={mergeStyles(createButtonStyle('primary'), {
                 padding: '8px 16px',
-                backgroundColor: '#ff6b35',
-                color: 'white',
                 border: '2px solid #ff4500',
                 borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '12px',
                 marginBottom: '6px',
                 boxShadow: '0 2px 6px rgba(255, 107, 53, 0.3)',
                 transform: 'scale(1.02)'
-              }}
+              })}
               title="Deploy sequences directly to Flutter project assets/sequences/"
             >
               🚀 Deploy to Flutter
@@ -2733,21 +2684,20 @@ function Flow() {
           )}
           <button 
             onClick={selectFlutterProject}
-            style={{
-              padding: directoryHandle ? '6px 12px' : '12px 20px',
-              backgroundColor: directoryHandle ? '#28a745' : '#ff6b35',
-              color: 'white',
-              border: directoryHandle ? 'none' : '3px solid #ff4500',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: directoryHandle ? '11px' : '14px',
-              marginBottom: '4px',
-              boxShadow: directoryHandle ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.4)',
-              transform: directoryHandle ? 'none' : 'scale(1.05)',
-              animation: directoryHandle ? 'none' : 'pulse 2s infinite',
-              transition: 'all 0.3s ease'
-            }}
+            style={mergeStyles(
+              createButtonStyle(directoryHandle ? 'success' : 'primary'), 
+              {
+                padding: directoryHandle ? '6px 12px' : '12px 20px',
+                border: directoryHandle ? 'none' : '3px solid #ff4500',
+                borderRadius: '8px',
+                fontSize: directoryHandle ? '11px' : '14px',
+                marginBottom: '4px',
+                boxShadow: directoryHandle ? 'none' : '0 4px 12px rgba(255, 107, 53, 0.4)',
+                transform: directoryHandle ? 'none' : 'scale(1.05)',
+                animation: directoryHandle ? 'none' : 'pulse 2s infinite',
+                transition: 'all 0.3s ease'
+              }
+            )}
             title={directoryHandle ? 'Flutter project connected' : 'Connect to Flutter project for file sync'}
           >
             {directoryHandle ? '✅ Flutter Connected' : '🚀 CONNECT FLUTTER'}
@@ -2835,17 +2785,7 @@ function Flow() {
           <button 
             onClick={createGroupFromSelectedNodes}
             disabled={selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length < 2}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? '#4caf50' : '#ccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 'pointer' : 'not-allowed',
-              fontWeight: 'bold',
-              opacity: selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length >= 2 ? 1 : 0.5,
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('success', selectedNodes.filter(node => node.type !== NODE_TYPES.GROUP).length < 2)}
           >
             🔗 Group
           </button>
@@ -2853,17 +2793,7 @@ function Flow() {
           <button 
             onClick={ungroupSelectedNodes}
             disabled={!selectedNodes.some(node => node.type === NODE_TYPES.GROUP)}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? '#ff9800' : '#ccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
-              fontWeight: 'bold',
-              opacity: selectedNodes.some(node => node.type === NODE_TYPES.GROUP) ? 1 : 0.5,
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('warning', !selectedNodes.some(node => node.type === NODE_TYPES.GROUP))}
           >
             🔓 Ungroup
           </button>
@@ -2871,33 +2801,14 @@ function Flow() {
           <button 
             onClick={removeNodesFromGroup}
             disabled={!selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP)}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? '#9c27b0' : '#ccc',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 'pointer' : 'not-allowed',
-              fontWeight: 'bold',
-              opacity: selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP) ? 1 : 0.5,
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('indigo', !selectedNodes.some(node => node.parentId && node.type !== NODE_TYPES.GROUP))}
           >
             ➖ Remove
           </button>
           
           <button 
             onClick={resizeAllGroups}
-            style={{
-              padding: '6px 12px',
-              backgroundColor: '#673ab7',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-              fontSize: '11px'
-            }}
+            style={createButtonStyle('purple')}
           >
             📏 Resize
           </button>
@@ -2975,7 +2886,7 @@ function Flow() {
           position: 'fixed',
           top: '20px',
           right: '20px',
-          backgroundColor: '#4caf50',
+          backgroundColor: COLORS.success,
           color: 'white',
           padding: '12px 20px',
           borderRadius: '6px',
@@ -2996,7 +2907,7 @@ function Flow() {
           top: '20px',
           left: '50%',
           transform: 'translateX(-50%)',
-          backgroundColor: '#f44336',
+          backgroundColor: COLORS.error,
           color: 'white',
           padding: '16px 24px',
           borderRadius: '8px',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { COLORS } from '../styles/styleConstants';
 
 interface HelpContent {
   title: string;
@@ -25,7 +26,7 @@ const HelpTooltip: React.FC<HelpTooltipProps> = ({ content, children }) => {
           display: 'inline-block',
           width: '16px',
           height: '16px',
-          backgroundColor: '#2196f3',
+          backgroundColor: COLORS.info,
           color: 'white',
           borderRadius: '50%',
           textAlign: 'center',
@@ -73,7 +74,7 @@ const HelpTooltip: React.FC<HelpTooltipProps> = ({ content, children }) => {
                 <div key={index} style={{ 
                   fontFamily: 'monospace', 
                   fontSize: '12px', 
-                  backgroundColor: '#f5f5f5',
+                  backgroundColor: COLORS.secondary,
                   padding: '2px 4px',
                   borderRadius: '3px',
                   marginBottom: '2px'

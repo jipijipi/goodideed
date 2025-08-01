@@ -4,6 +4,7 @@ import { NodeData, NodeCategory, DataActionItem } from '../constants/nodeTypes';
 import HelpTooltip from './HelpTooltip';
 import { helpContent } from '../constants/helpContent';
 import VariableInput from './VariableInput';
+import { COLORS } from '../styles/styleConstants';
 
 const getCategoryColor = (category: NodeCategory): string => {
   const colors: Record<NodeCategory, string> = {
@@ -428,7 +429,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   borderRadius: '4px', 
                   padding: '8px', 
                   marginBottom: '4px',
-                  background: '#f9f9f9'
+                  background: COLORS.lightGray
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                     <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#555' }}>Action {index + 1}</span>
@@ -501,7 +502,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                         border: '1px solid #ccc',
                         borderRadius: '3px',
                         fontSize: '10px',
-                        background: 'white'
+                        background: COLORS.white
                       }}
                     >
                       <option value="set">Set</option>
@@ -530,7 +531,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                         border: '1px solid #ccc',
                         borderRadius: '3px',
                         fontSize: '10px',
-                        background: 'white'
+                        background: COLORS.white
                       }}
                     />
                   </div>
@@ -567,7 +568,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                           border: '1px solid #ccc',
                           borderRadius: '3px',
                           fontSize: '10px',
-                          background: 'white'
+                          background: COLORS.white
                         }}
                       />
                     </div>
@@ -594,7 +595,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                           border: '1px solid #ccc',
                           borderRadius: '3px',
                           fontSize: '10px',
-                          background: 'white'
+                          background: COLORS.white
                         }}
                       />
                     </div>
@@ -626,7 +627,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                           border: '1px solid #ccc',
                           borderRadius: '3px',
                           fontSize: '10px',
-                          background: 'white',
+                          background: COLORS.white,
                           minHeight: '40px',
                           resize: 'vertical'
                         }}
@@ -646,7 +647,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                   padding: '6px',
                   border: '1px dashed #ccc',
                   borderRadius: '4px',
-                  background: '#f9f9f9',
+                  background: COLORS.lightGray,
                   cursor: 'pointer',
                   fontSize: '10px',
                   color: '#666'

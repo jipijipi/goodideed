@@ -134,7 +134,7 @@ void main() {
 
       test('should return true when current time is past deadline', () async {
         // Setup: Set deadline to early morning (should be past for most test runs)
-        await userDataService.storeValue(StorageKeys.taskDeadlineTime, 1); // Morning = 11:00
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '10:00'); // Morning deadline
         await sessionService.initializeSession();
         
         final isPastDeadline = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
@@ -147,14 +147,14 @@ void main() {
 
       test('should return false when current time is before deadline', () async {
         // Setup: Set deadline to late night (should be future for most test runs)
-        await userDataService.storeValue(StorageKeys.taskDeadlineTime, 4); // Night = 06:00 (next day)
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '23:00'); // Night deadline
         await sessionService.initializeSession();
         
         final isPastDeadline = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
         final now = DateTime.now();
         
-        // Should match whether current time is past 06:00
-        final expectedResult = now.hour >= 6;
+        // Should match whether current time is past 23:00
+        final expectedResult = now.hour >= 23;
         expect(isPastDeadline, expectedResult);
       });
 
@@ -196,13 +196,13 @@ void main() {
 
       test('should update isPastDeadline value on session initialization', () async {
         // Setup: Set a deadline
-        await userDataService.storeValue(StorageKeys.taskDeadlineTime, 3); // Evening = 21:00
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '18:00'); // Evening deadline
         await sessionService.initializeSession();
         
         final firstResult = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
         
         // Change deadline
-        await userDataService.storeValue(StorageKeys.taskDeadlineTime, 1); // Morning = 11:00
+        await userDataService.storeValue(StorageKeys.taskDeadlineTime, '10:00'); // Morning deadline
         await sessionService.initializeSession();
         
         final secondResult = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);

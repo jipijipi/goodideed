@@ -39,7 +39,7 @@ void main() {
     test('should complete SessionService initialization before ChatStateManager starts', () async {
       // Arrange - Set up basic task state 
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
-      await userDataService.storeValue(StorageKeys.taskDeadlineTime, 3); // Evening deadline
+      await userDataService.storeValue(StorageKeys.taskDeadlineTime, '18:00'); // Evening deadline
       
       // Act - Initialize SessionService first (this is the fix)
       await sessionService.initializeSession();
@@ -71,7 +71,7 @@ void main() {
       
       // Set up basic task state
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
-      await userDataService.storeValue(StorageKeys.taskDeadlineTime, 2); // Afternoon deadline
+      await userDataService.storeValue(StorageKeys.taskDeadlineTime, '14:00'); // Afternoon deadline
       
       // Act - Initialize SessionService and track completion
       await sessionService.initializeSession();

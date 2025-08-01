@@ -350,36 +350,40 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Set Deadline Option',
+                'Set Deadline Time',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 8),
-              ...deadlineOptions.entries.map((entry) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => _setDeadlineOption(entry.key),
-                    icon: Icon(
-                      _selectedDeadlineOption == entry.key 
-                          ? Icons.check_circle 
-                          : Icons.radio_button_unchecked,
-                      size: 16,
-                    ),
-                    label: Text(entry.value),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _selectedDeadlineOption == entry.key
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.surfaceContainerHighest,
-                      foregroundColor: _selectedDeadlineOption == entry.key
-                          ? Theme.of(context).colorScheme.onPrimary
-                          : Theme.of(context).colorScheme.onSurfaceVariant,
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<int>(
+                      value: _selectedDeadlineOption,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        hintText: 'Select deadline time',
+                      ),
+                      items: deadlineOptions.entries.map((entry) => DropdownMenuItem<int>(
+                        value: entry.key,
+                        child: Text(
+                          entry.value,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      )).toList(),
+                      onChanged: (int? value) {
+                        if (value != null) {
+                          _setDeadlineOption(value);
+                        }
+                      },
                     ),
                   ),
-                ),
-              )),
+                ],
+              ),
             ],
           ),
         ),

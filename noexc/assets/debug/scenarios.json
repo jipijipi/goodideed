@@ -108,20 +108,20 @@
   },
   "overdue_current_day": {
     "name": "Overdue Current Day",
-    "description": "User checking in on the same day after their task gets overdue ",
+    "description": "Checking in on the day after their task gets overdue ",
     "variables": {
+      "user.name": "River",
+      "user.isOnboarded": true,
+      "task.areParametersOk": true,
+      "task.isActiveDay": true,
       "session.visitCount": 1,
       "session.totalVisitCount": 56,
       "session.timeOfDay": 4,
       "session.daysSinceFirstVisit": 28,
-      "session.isWeekend": false,
-      "user.isOnboarded": true,
-      "user.name": "River",
       "user.streak": 12,
       "task.deadlineTime": "23:00",
-      "task.currentDate": "2024-12-20",
-      "task.isActiveDay": true,
-      "task.isPastDeadline": false
+      "task.currentDate": "2025-08-01",
+      "task.isPastDeadline": true
     }
   },
   "reset_everything": {

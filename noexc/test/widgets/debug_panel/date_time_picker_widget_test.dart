@@ -48,10 +48,10 @@ void main() {
       
       // Check that deadline options section is present
       expect(find.text('Set Deadline Option'), findsOneWidget);
-      expect(find.text('Morning (before noon)'), findsOneWidget);
-      expect(find.text('Afternoon (noon to 5pm)'), findsOneWidget);
-      expect(find.text('Evening (5pm to 9pm)'), findsOneWidget);
-      expect(find.text('Night (9pm to midnight)'), findsOneWidget);
+      expect(find.text('Morning (10:00)'), findsOneWidget);
+      expect(find.text('Afternoon (14:00)'), findsOneWidget);
+      expect(find.text('Evening (18:00)'), findsOneWidget);
+      expect(find.text('Night (23:00)'), findsOneWidget);
     });
 
     testWidgets('should show default values when no data is stored', (WidgetTester tester) async {
@@ -142,23 +142,23 @@ void main() {
 
       await tester.pumpAndSettle(const Duration(seconds: 10));
 
-      // Should show all deadline options
-      expect(find.text('Morning (before noon)'), findsOneWidget);
-      expect(find.text('Afternoon (noon to 5pm)'), findsOneWidget);
-      expect(find.text('Evening (5pm to 9pm)'), findsOneWidget);
-      expect(find.text('Night (9pm to midnight)'), findsOneWidget);
+      // Should show all deadline options (updated text)
+      expect(find.text('Morning (10:00)'), findsOneWidget);
+      expect(find.text('Afternoon (14:00)'), findsOneWidget);
+      expect(find.text('Evening (18:00)'), findsOneWidget);
+      expect(find.text('Night (23:00)'), findsOneWidget);
 
       // Tap the evening option
-      await tester.tap(find.text('Evening (5pm to 9pm)'));
+      await tester.tap(find.text('Evening (18:00)'));
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
       // Should update the display and trigger callback
-      expect(find.text('Evening (5pm to 9pm)'), findsAtLeastNWidgets(1)); // In both button and current value
+      expect(find.text('Evening (18:00)'), findsAtLeastNWidgets(1)); // In both button and current value
       expect(callbackCalled, true);
 
-      // Verify the value was stored correctly
-      final storedValue = await userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
-      expect(storedValue, 3); // Evening = option 3
+      // Verify the value was stored correctly (now as string format)
+      final storedValue = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+      expect(storedValue, '18:00'); // Evening = 18:00
     });
   });
 }

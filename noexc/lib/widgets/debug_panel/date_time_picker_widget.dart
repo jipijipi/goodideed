@@ -31,10 +31,26 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 
   // Deadline options matching the JSON sequence choices
   static const Map<int, String> deadlineOptions = {
-    1: 'Morning (before noon)',
-    2: 'Afternoon (noon to 5pm)', 
-    3: 'Evening (5pm to 9pm)',
-    4: 'Night (9pm to midnight)',
+    1: 'Morning (10:00)',
+    2: 'Afternoon (14:00)', 
+    3: 'Evening (18:00)',
+    4: 'Night (23:00)',
+  };
+
+  // Time string to option number mapping
+  static const Map<String, int> timeStringToOption = {
+    '10:00': 1,
+    '14:00': 2,
+    '18:00': 3,
+    '23:00': 4,
+  };
+
+  // Option number to time string mapping
+  static const Map<int, String> optionToTimeString = {
+    1: '10:00',
+    2: '14:00',
+    3: '18:00',
+    4: '23:00',
   };
 
   @override
@@ -45,16 +61,32 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 
   Future<void> _loadCurrentValues() async {
     final taskDate = await widget.userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    final deadlineOption = await widget.userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
     final isActiveDay = await widget.userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
     final isPastDeadline = await widget.userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
     
+    // Handle both string and integer deadline formats
+    String deadlineDisplay = 'Not set';
+    int? selectedOption;
+    
+    // Try string format first (new format)
+    final deadlineString = await widget.userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+    if (deadlineString != null) {
+      deadlineDisplay = deadlineString;
+      // Convert string time to option number for UI selection
+      selectedOption = _timeStringToOption(deadlineString);
+    } else {
+      // Try integer format (legacy format)  
+      final deadlineOption = await widget.userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
+      if (deadlineOption != null) {
+        selectedOption = deadlineOption;
+        deadlineDisplay = deadlineOptions[deadlineOption] ?? 'Unknown option';
+      }
+    }
+    
     setState(() {
       _currentTaskDate = taskDate ?? 'Not set';
-      _selectedDeadlineOption = deadlineOption;
-      _currentDeadlineTime = deadlineOption != null 
-          ? deadlineOptions[deadlineOption] ?? 'Unknown option'
-          : 'Not set';
+      _selectedDeadlineOption = selectedOption;
+      _currentDeadlineTime = deadlineDisplay;
       _currentIsActiveDay = isActiveDay?.toString() ?? 'Not computed';
       _currentIsPastDeadline = isPastDeadline?.toString() ?? 'Not computed';
     });
@@ -80,6 +112,11 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 
   String _formatDate(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  /// Convert time string to option number for UI selection
+  int? _timeStringToOption(String timeString) {
+    return timeStringToOption[timeString];
   }
 
 
@@ -159,16 +196,20 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 
 
   Future<void> _setDeadlineOption(int option) async {
-    await widget.userDataService.storeValue(StorageKeys.taskDeadlineTime, option);
-    
-    setState(() {
-      _selectedDeadlineOption = option;
-      _currentDeadlineTime = deadlineOptions[option] ?? 'Unknown option';
-    });
-    
-    widget.onDataChanged?.call();
-    
-    widget.statusController?.addSuccess('Deadline set to ${deadlineOptions[option]}');
+    // Store as string format (new format)
+    final timeString = optionToTimeString[option];
+    if (timeString != null) {
+      await widget.userDataService.storeValue(StorageKeys.taskDeadlineTime, timeString);
+      
+      setState(() {
+        _selectedDeadlineOption = option;
+        _currentDeadlineTime = timeString;
+      });
+      
+      widget.onDataChanged?.call();
+      
+      widget.statusController?.addSuccess('Deadline set to ${deadlineOptions[option]} ($timeString)');
+    }
   }
 
   Future<void> _setToToday() async {

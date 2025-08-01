@@ -34,3 +34,10 @@ Analysis and Recommendation for Task Start Timing Choice                        
      │                                                                                                 │
      │ This approach preserves the conversational UX while adding the needed functionality through the │
      │ existing, well-tested sequence system. 
+
+
+I want a smarter resizing for groups
+1) Suggest a way to calculate an appropriate size based on the group's children
+2) Would it be possible/advisable to recalculate the parent's group size on each children node move?
+
+The node colors and styling are mostly gone, suggest a simple way to centralize styling of the authoring tool

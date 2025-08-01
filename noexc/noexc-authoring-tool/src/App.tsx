@@ -226,7 +226,38 @@ function Flow() {
     showNotification(`Created group ${groupId} with ${selectedNodes.length} child nodes`);
   }, [selectedNodes, nodes, getId, setNodes, setNodeIdCounter]);
 
-  // Resize all groups to fit their children with generous padding
+  // Simple group size calculation
+  const calculateGroupSize = useCallback((childNodes: any[]) => {
+    if (childNodes.length === 0) {
+      return { width: 200, height: 120 }; // minimum empty group size
+    }
+
+    // Find bounding box of all children
+    const positions = childNodes.map(child => ({
+      x: child.position.x,
+      y: child.position.y,
+      width: child.width || 250,  // default node width
+      height: child.height || 250  // default node height
+    }));
+
+    const minX = Math.min(...positions.map(p => p.x));
+    const minY = Math.min(...positions.map(p => p.y));
+    const maxX = Math.max(...positions.map(p => p.x + p.width));
+    const maxY = Math.max(...positions.map(p => p.y + p.height));
+
+    // Add fixed padding
+    const padding = 40;
+    const width = (maxX - minX) + (padding * 2);
+    const height = (maxY - minY) + (padding * 2);
+
+    // Ensure minimum size
+    return {
+      width: Math.max(width, 200),
+      height: Math.max(height, 120)
+    };
+  }, []);
+
+  // Resize all groups to fit their children
   const resizeAllGroups = useCallback(() => {
     const groupNodes = nodes.filter(node => node.type === NODE_TYPES.GROUP);
     if (groupNodes.length === 0) {
@@ -237,37 +268,21 @@ function Flow() {
     let resizedCount = 0;
     const updatedNodes = nodes.map(node => {
       if (node.type === NODE_TYPES.GROUP) {
-        // Find all child nodes of this group
         const childNodes = nodes.filter(child => child.parentId === node.id);
+        const newSize = calculateGroupSize(childNodes);
         
-        if (childNodes.length === 0) {
-          // Empty group - keep current size or set minimum size
-          return node;
-        }
-
-        // Calculate bounding box of all children
-        const minX = Math.min(...childNodes.map(child => child.position.x));
-        const minY = Math.min(...childNodes.map(child => child.position.y));
-        const maxX = Math.max(...childNodes.map(child => child.position.x + (child.width || 150)));
-        const maxY = Math.max(...childNodes.map(child => child.position.y + (child.height || 50)));
-
-        // Add generous padding (50px on all sides)
-        const padding = 50;
-        const newWidth = maxX - minX + (padding * 2);
-        const newHeight = maxY - minY + (padding * 2);
-
         // Only resize if the new size is different
         const currentWidth = node.style?.width || 200;
         const currentHeight = node.style?.height || 100;
         
-        if (Math.abs(newWidth - Number(currentWidth)) > 5 || Math.abs(newHeight - Number(currentHeight)) > 5) {
+        if (Math.abs(newSize.width - Number(currentWidth)) > 5 || Math.abs(newSize.height - Number(currentHeight)) > 5) {
           resizedCount++;
           return {
             ...node,
             style: {
               ...node.style,
-              width: newWidth,
-              height: newHeight,
+              width: newSize.width,
+              height: newSize.height,
             }
           };
         }
@@ -281,7 +296,37 @@ function Flow() {
     } else {
       showNotification('All groups are already properly sized');
     }
-  }, [nodes, setNodes, showNotification, showError]);
+  }, [nodes, setNodes, showNotification, showError, calculateGroupSize]);
+
+  // Resize specific groups based on moved nodes
+  const resizeGroupsForNodes = useCallback((nodeIds: string[]) => {
+    // Find which groups contain these nodes
+    const affectedGroups = new Set<string>();
+    
+    nodeIds.forEach(nodeId => {
+      const node = nodes.find(n => n.id === nodeId);
+      if (node?.parentId) {
+        affectedGroups.add(node.parentId);
+      }
+    });
+
+    if (affectedGroups.size === 0) return;
+
+    // Resize each affected group
+    let updatedNodes = [...nodes];
+    affectedGroups.forEach(groupId => {
+      const childNodes = nodes.filter(n => n.parentId === groupId);
+      const newSize = calculateGroupSize(childNodes);
+      
+      updatedNodes = updatedNodes.map(node => 
+        node.id === groupId 
+          ? { ...node, style: { ...node.style, ...newSize } }
+          : node
+      );
+    });
+    
+    setNodes(updatedNodes);
+  }, [nodes, setNodes, calculateGroupSize]);
 
   // Zoom out significantly to see the entire canvas
   const zoomOutLot = useCallback(() => {
@@ -458,7 +503,7 @@ function Flow() {
     };
   }, [selectedNodes, createGroupFromSelectedNodes, ungroupSelectedNodes, removeNodesFromGroup]);
 
-  // Track selected nodes and edges
+  // Track selected nodes and edges, handle auto-resize
   const handleNodesChange = useCallback((changes: any) => {
     onNodesChange(changes);
     
@@ -466,7 +511,21 @@ function Flow() {
     const currentNodes = getNodes();
     const selected = currentNodes.filter(node => node.selected);
     setSelectedNodes(selected);
-  }, [onNodesChange, getNodes]);
+    
+    // Auto-resize groups when node positions change
+    const finishedDrags = changes.filter((change: any) => 
+      change.type === 'position' && 
+      change.dragging === false &&
+      change.id
+    );
+
+    if (finishedDrags.length > 0) {
+      // Simple timeout to batch multiple changes
+      setTimeout(() => {
+        resizeGroupsForNodes(finishedDrags.map((c: any) => c.id));
+      }, 100);
+    }
+  }, [onNodesChange, getNodes, resizeGroupsForNodes]);
 
   const handleEdgesChange = useCallback((changes: any) => {
     onEdgesChange(changes);

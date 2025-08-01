@@ -1954,6 +1954,277 @@ function Flow() {
     autoLoadMasterFlow();
   }, [directoryHandle]); // Run on mount and when directoryHandle changes
 
+  // Contextual field renderer for properties panel
+  const renderContextualFields = (node: Node<NodeData>) => {
+    const commonStyles = {
+      inputStyle: {
+        width: '100%',
+        padding: '8px 12px',
+        border: '1px solid #ddd',
+        borderRadius: '4px',
+        fontSize: '14px'
+      },
+      textareaStyle: {
+        width: '100%',
+        padding: '8px 12px',
+        border: '1px solid #ddd',
+        borderRadius: '4px',
+        fontSize: '14px',
+        resize: 'vertical' as const,
+        fontFamily: 'inherit'
+      }
+    };
+
+    const renderExternalIdField = () => (
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+          🆔 External ID
+        </label>
+        <input
+          type="text"
+          value={node.data.nodeId || ''}
+          onChange={(e) => {
+            const newNodeId = e.target.value;
+            onNodeIdChange(node.id, newNodeId);
+            setSelectedNodes(prev => prev.map(n => 
+              n.id === node.id 
+                ? { ...n, data: { ...n.data, nodeId: newNodeId } }
+                : n
+            ));
+          }}
+          placeholder="e.g., welcome_1, choice_menu_2..."
+          style={commonStyles.inputStyle}
+        />
+        <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+          Unique identifier for this node in exported JSON
+        </div>
+      </div>
+    );
+
+    const renderContentKeyField = () => (
+      <div style={{ marginBottom: '20px' }}>
+        <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+          🔑 Content Key
+        </label>
+        <input
+          type="text"
+          value={node.data.contentKey || ''}
+          onChange={(e) => {
+            const newContentKey = e.target.value;
+            onContentKeyChange(node.id, newContentKey);
+            setSelectedNodes(prev => prev.map(n => 
+              n.id === node.id 
+                ? { ...n, data: { ...n.data, contentKey: newContentKey } }
+                : n
+            ));
+          }}
+          placeholder="e.g., bot.greet.welcome, user.choose.option..."
+          style={commonStyles.inputStyle}
+        />
+        <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+          Semantic content key for dynamic text variants
+        </div>
+      </div>
+    );
+
+    switch (node.data.category) {
+      case 'bot':
+      case 'user':
+        return (
+          <>
+            {renderExternalIdField()}
+            
+            {/* Content Section */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+                📄 Content
+              </label>
+              <textarea
+                value={node.data.content || ''}
+                onChange={(e) => {
+                  const newContent = e.target.value;
+                  onContentChange(node.id, newContent);
+                  setSelectedNodes(prev => prev.map(n => 
+                    n.id === node.id 
+                      ? { ...n, data: { ...n.data, content: newContent } }
+                      : n
+                  ));
+                }}
+                placeholder={node.data.category === 'bot' 
+                  ? "Bot message content... Use {variable|fallback} for templates"
+                  : "User message or response..."
+                }
+                rows={4}
+                style={commonStyles.textareaStyle}
+              />
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                {node.data.category === 'bot' 
+                  ? "Bot message text. Use {key|fallback} for templates, ||| to split messages"
+                  : "User message text for scripted conversations"
+                }
+              </div>
+            </div>
+
+            {renderContentKeyField()}
+          </>
+        );
+
+      case 'textInput':
+        return (
+          <>
+            {renderExternalIdField()}
+
+            {/* Store Key Section */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+                🗃️ Store Key
+              </label>
+              <input
+                type="text"
+                value={node.data.storeKey || ''}
+                onChange={(e) => {
+                  const newStoreKey = e.target.value;
+                  onStoreKeyChange(node.id, newStoreKey);
+                  setSelectedNodes(prev => prev.map(n => 
+                    n.id === node.id 
+                      ? { ...n, data: { ...n.data, storeKey: newStoreKey } }
+                      : n
+                  ));
+                }}
+                placeholder="e.g., user.name, user.email..."
+                style={commonStyles.inputStyle}
+              />
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                Key where user input will be stored
+              </div>
+            </div>
+
+            {/* Placeholder Section */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+                💬 Placeholder
+              </label>
+              <input
+                type="text"
+                value={node.data.placeholderText || ''}
+                onChange={(e) => {
+                  const newPlaceholder = e.target.value;
+                  onPlaceholderChange(node.id, newPlaceholder);
+                  setSelectedNodes(prev => prev.map(n => 
+                    n.id === node.id 
+                      ? { ...n, data: { ...n.data, placeholderText: newPlaceholder } }
+                      : n
+                  ));
+                }}
+                placeholder="e.g., Enter your name..."
+                style={commonStyles.inputStyle}
+              />
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                Placeholder text shown in the input field
+              </div>
+            </div>
+
+            {renderContentKeyField()}
+          </>
+        );
+
+      case 'choice':
+        return (
+          <>
+            {renderExternalIdField()}
+
+            {/* Store Key Section */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+                🗃️ Store Key
+              </label>
+              <input
+                type="text"
+                value={node.data.storeKey || ''}
+                onChange={(e) => {
+                  const newStoreKey = e.target.value;
+                  onStoreKeyChange(node.id, newStoreKey);
+                  setSelectedNodes(prev => prev.map(n => 
+                    n.id === node.id 
+                      ? { ...n, data: { ...n.data, storeKey: newStoreKey } }
+                      : n
+                  ));
+                }}
+                placeholder="e.g., user.preference, user.selection..."
+                style={commonStyles.inputStyle}
+              />
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                Key where selected choice will be stored
+              </div>
+            </div>
+
+            {/* Choice Configuration Help */}
+            <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#f0f8ff', borderRadius: '6px', border: '1px solid #b3d9ff' }}>
+              <div style={{ fontSize: '12px', color: '#0066cc', fontWeight: 'bold', marginBottom: '4px' }}>
+                💡 Choice Configuration
+              </div>
+              <div style={{ fontSize: '11px', color: '#666', lineHeight: '1.4' }}>
+                Choice options are configured via edges. Connect this node to other nodes and set edge labels to define choices.
+              </div>
+            </div>
+
+            {renderContentKeyField()}
+          </>
+        );
+
+      case 'autoroute':
+        return (
+          <>
+            {renderExternalIdField()}
+
+            {/* Route Configuration Help */}
+            <div style={{ marginBottom: '20px', padding: '12px', backgroundColor: '#fff3cd', borderRadius: '6px', border: '1px solid #ffeaa7' }}>
+              <div style={{ fontSize: '12px', color: '#856404', fontWeight: 'bold', marginBottom: '8px' }}>
+                🚦 Route Configuration
+              </div>
+              <div style={{ fontSize: '11px', color: '#666', lineHeight: '1.4', marginBottom: '8px' }}>
+                Conditions are configured via edges. Connect to different nodes with conditional edge labels.
+              </div>
+              <div style={{ fontSize: '10px', color: '#888', lineHeight: '1.3' }}>
+                Examples:<br/>
+                • user.score {'>'} 100<br/>
+                • session.visitCount == 1<br/>
+                • task.isActiveDay == true
+              </div>
+            </div>
+
+            {renderContentKeyField()}
+          </>
+        );
+
+      case 'dataAction':
+        return (
+          <>
+            {renderExternalIdField()}
+
+            {/* Data Actions Section */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+                ⚙️ Data Actions
+              </label>
+              <div style={{ fontSize: '11px', color: '#666', marginBottom: '8px' }}>
+                Actions to modify user data. Trigger actions show event field by default.
+              </div>
+              {/* Note: Data actions are complex and handled by inline node editing */}
+              <div style={{ padding: '8px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '11px', color: '#666' }}>
+                💡 Edit data actions directly in the node. Trigger events are now visible by default.
+              </div>
+            </div>
+
+            {renderContentKeyField()}
+          </>
+        );
+
+      default:
+        return renderExternalIdField();
+    }
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <ThemeToggle />
@@ -3043,191 +3314,178 @@ function Flow() {
             </h3>
           </div>
 
-          {/* External ID Section */}
+          {/* Contextual Fields */}
+          {renderContextualFields(selectedNodes[0])}
+
+          {/* Group Management Section */}
+          <div style={{ marginTop: '32px', marginBottom: '16px', paddingTop: '24px', borderTop: '1px solid #ddd' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', margin: '0 0 12px 0', borderBottom: '2px solid #fff3e0', paddingBottom: '8px' }}>
+              👥 Group Management
+            </h3>
+          </div>
+
+          {/* Current Group Display */}
           <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              🆔 External ID
+              📋 Current Group
             </label>
-            <input
-              type="text"
-              value={selectedNodes[0].data.nodeId || ''}
-              onChange={(e) => {
-                const newNodeId = e.target.value;
-                onNodeIdChange(selectedNodes[0].id, newNodeId);
-                setSelectedNodes(prev => prev.map(node => 
-                  node.id === selectedNodes[0].id 
-                    ? { ...node, data: { ...node.data, nodeId: newNodeId } }
-                    : node
-                ));
-              }}
-              placeholder="e.g., welcome_1, choice_menu_2..."
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
+            <div style={{
+              padding: '8px 12px',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              fontSize: '14px',
+              background: '#f8f9fa',
+              color: '#333'
+            }}>
+              {selectedNodes[0].parentId ? 
+                nodes.filter(node => node.type === NODE_TYPES.GROUP).find((g: any) => g.id === selectedNodes[0].parentId)?.data?.title || selectedNodes[0].parentId
+                : 'No group assigned'
+              }
+            </div>
             <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Unique identifier for this node in exported JSON
+              The group this node currently belongs to
             </div>
           </div>
 
-          {/* Label Section */}
+          {/* Group Actions */}
           <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              📝 Label
+              🏷️ Assign to Group
             </label>
-            <input
-              type="text"
-              value={selectedNodes[0].data.label || ''}
-              onChange={(e) => {
-                const newLabel = e.target.value;
-                onLabelChange(selectedNodes[0].id, newLabel);
-                setSelectedNodes(prev => prev.map(node => 
-                  node.id === selectedNodes[0].id 
-                    ? { ...node, data: { ...node.data, label: newLabel } }
-                    : node
-                ));
-              }}
-              placeholder="e.g., Welcome Message, User Choice..."
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Display name for this node in the authoring tool
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <select
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    // Temporarily set the selection to make addNodesToGroup work with this single node
+                    const originalSelection = selectedNodes;
+                    setSelectedNodes([selectedNodes[0]]);
+                    addNodesToGroup(e.target.value);
+                    // Restore original selection
+                    setTimeout(() => setSelectedNodes(originalSelection), 0);
+                  }
+                }}
+                style={{
+                  width: '100%',
+                  padding: '8px 12px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  background: 'white'
+                }}
+              >
+                <option value="">Select a group...</option>
+                {nodes.filter(node => node.type === NODE_TYPES.GROUP).map((group: any) => (
+                  <option key={group.id} value={group.id}>
+                    {group.data?.title || group.data?.groupId || group.id}
+                  </option>
+                ))}
+              </select>
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => {
+                    if (selectedNodes[0].parentId) {
+                      // Temporarily set the selection to make removeNodesFromGroup work with this single node
+                      const originalSelection = selectedNodes;
+                      setSelectedNodes([selectedNodes[0]]);
+                      removeNodesFromGroup();
+                      // Restore original selection
+                      setTimeout(() => setSelectedNodes(originalSelection), 0);
+                    }
+                  }}
+                  disabled={!selectedNodes[0].parentId}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    border: '1px solid #f44336',
+                    borderRadius: '4px',
+                    background: selectedNodes[0].parentId ? '#ffebee' : '#f5f5f5',
+                    color: selectedNodes[0].parentId ? '#d32f2f' : '#999',
+                    cursor: selectedNodes[0].parentId ? 'pointer' : 'not-allowed',
+                    fontSize: '12px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  🗑️ Remove from Group
+                </button>
+                
+                <button
+                  onClick={() => {
+                    // Create a new group with just this node
+                    const node = selectedNodes[0];
+                    const groupId = getId();
+                    setNodeIdCounter(prev => prev + 1);
+                    
+                    const groupWidth = 200;
+                    const groupHeight = 120;
+                    
+                    const newGroup: any = {
+                      id: groupId,
+                      position: {
+                        x: node.position.x - 25,
+                        y: node.position.y - 25
+                      },
+                      data: {
+                        label: `Group ${groupId}`,
+                        category: 'bot' as NodeCategory,
+                        nodeLabel: 'Custom' as NodeLabel,
+                        nodeId: `group_${groupId}`,
+                        groupId: `group_${groupId}`,
+                        title: `Group ${groupId}`,
+                        description: 'New group',
+                        onLabelChange: () => {},
+                        onCategoryChange: () => {},
+                        onNodeLabelChange: () => {},
+                        onNodeIdChange: () => {},
+                        onContentKeyChange: () => {},
+                        onContentChange: () => {},
+                        onPlaceholderChange: () => {},
+                        onStoreKeyChange: () => {},
+                        onGroupIdChange: () => {},
+                        onTitleChange: () => {},
+                        onDescriptionChange: () => {}
+                      },
+                      type: NODE_TYPES.GROUP,
+                      style: {
+                        width: groupWidth,
+                        height: groupHeight,
+                        backgroundColor: 'rgba(245, 245, 245, 0.15)',
+                        border: '1px dashed #bbb',
+                        borderRadius: '8px'
+                      }
+                    };
+                    
+                    // Add the group and assign the node to it
+                    setNodes(prevNodes => [
+                      ...prevNodes.map(n => 
+                        n.id === node.id 
+                          ? { ...n, parentId: groupId }
+                          : n
+                      ),
+                      newGroup
+                    ]);
+                    
+                    showNotification(`Created new group and added node`);
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    border: '1px solid #4caf50',
+                    borderRadius: '4px',
+                    background: '#e8f5e8',
+                    color: '#2e7d32',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  ➕ Create New Group
+                </button>
+              </div>
             </div>
-          </div>
-
-          {/* Content Key Section */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              🔑 Content Key
-            </label>
-            <input
-              type="text"
-              value={selectedNodes[0].data.contentKey || ''}
-              onChange={(e) => {
-                const newContentKey = e.target.value;
-                onContentKeyChange(selectedNodes[0].id, newContentKey);
-                setSelectedNodes(prev => prev.map(node => 
-                  node.id === selectedNodes[0].id 
-                    ? { ...node, data: { ...node.data, contentKey: newContentKey } }
-                    : node
-                ));
-              }}
-              placeholder="e.g., bot.greet.welcome, user.choose.option..."
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
             <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Semantic content key for dynamic text variants
-            </div>
-          </div>
-
-          {/* Store Key Section */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              🗃️ Store Key
-            </label>
-            <input
-              type="text"
-              value={selectedNodes[0].data.storeKey || ''}
-              onChange={(e) => {
-                const newStoreKey = e.target.value;
-                onStoreKeyChange(selectedNodes[0].id, newStoreKey);
-                setSelectedNodes(prev => prev.map(node => 
-                  node.id === selectedNodes[0].id 
-                    ? { ...node, data: { ...node.data, storeKey: newStoreKey } }
-                    : node
-                ));
-              }}
-              placeholder="e.g., user.name, task.status, preferences.theme..."
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Key where user input will be stored (for textInput nodes)
-            </div>
-          </div>
-
-          {/* Content Section */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              📄 Content
-            </label>
-            <textarea
-              value={selectedNodes[0].data.content || ''}
-              onChange={(e) => {
-                const newContent = e.target.value;
-                onContentChange(selectedNodes[0].id, newContent);
-                setSelectedNodes(prev => prev.map(node => 
-                  node.id === selectedNodes[0].id 
-                    ? { ...node, data: { ...node.data, content: newContent } }
-                    : node
-                ));
-              }}
-              placeholder="Message content... Use ||| to split into multiple messages"
-              rows={4}
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px',
-                resize: 'vertical',
-                fontFamily: 'inherit'
-              }}
-            />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Text content for bot messages. Use {'{key|fallback}'} for templates
-            </div>
-          </div>
-
-          {/* Placeholder Section */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-              💬 Placeholder
-            </label>
-            <input
-              type="text"
-              value={selectedNodes[0].data.placeholderText || ''}
-              onChange={(e) => {
-                const newPlaceholder = e.target.value;
-                onPlaceholderChange(selectedNodes[0].id, newPlaceholder);
-                setSelectedNodes(prev => prev.map(node => 
-                  node.id === selectedNodes[0].id 
-                    ? { ...node, data: { ...node.data, placeholderText: newPlaceholder } }
-                    : node
-                ));
-              }}
-              placeholder="e.g., Enter your name..., Type your message..."
-              style={{
-                width: '100%',
-                padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                fontSize: '14px'
-              }}
-            />
-            <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
-              Placeholder text for textInput nodes
+              Add this node to an existing group or create a new group
             </div>
           </div>
 

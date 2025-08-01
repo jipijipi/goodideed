@@ -442,13 +442,15 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                           style={{
                             background: 'none',
                             border: 'none',
-                            fontSize: '10px',
+                            fontSize: '9px',
                             cursor: 'pointer',
                             color: '#666',
-                            marginRight: '4px'
+                            marginRight: '4px',
+                            padding: '2px 4px'
                           }}
+                          title={expandedAction === index ? 'Hide Data field' : 'Show Data field'}
                         >
-                          {expandedAction === index ? '▼' : '▶'}
+                          {expandedAction === index ? '▼ Data' : '▶ Data'}
                         </button>
                       )}
                       <button
@@ -571,63 +573,65 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                     </div>
                   )}
                   
-                  {/* Expanded fields for trigger actions */}
+                  {/* Event Field (always visible for trigger actions) */}
+                  {action.type === 'trigger' && (
+                    <div style={{ marginBottom: '4px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                        <span style={{ fontSize: '9px', color: '#666' }}>Event:</span>
+                        <HelpTooltip content={helpContent.triggerEvent} />
+                      </div>
+                      <input
+                        type="text"
+                        value={action.event || ''}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          updateDataAction(index, { ...action, event: e.target.value });
+                        }}
+                        placeholder="Event type (e.g., achievement_unlocked)"
+                        style={{
+                          width: '100%',
+                          padding: '2px',
+                          border: '1px solid #ccc',
+                          borderRadius: '3px',
+                          fontSize: '10px',
+                          background: 'white'
+                        }}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Expanded Data field for trigger actions */}
                   {action.type === 'trigger' && expandedAction === index && (
-                    <>
-                      <div style={{ marginBottom: '4px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                          <span style={{ fontSize: '9px', color: '#666' }}>Event:</span>
-                          <HelpTooltip content={helpContent.triggerEvent} />
-                        </div>
-                        <input
-                          type="text"
-                          value={action.event || ''}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            updateDataAction(index, { ...action, event: e.target.value });
-                          }}
-                          placeholder="Event type (e.g., achievement_unlocked)"
-                          style={{
-                            width: '100%',
-                            padding: '2px',
-                            border: '1px solid #ccc',
-                            borderRadius: '3px',
-                            fontSize: '10px',
-                            background: 'white'
-                          }}
-                        />
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                        <span style={{ fontSize: '9px', color: '#666' }}>Data:</span>
+                        <HelpTooltip content={helpContent.triggerData} />
                       </div>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                          <span style={{ fontSize: '9px', color: '#666' }}>Data:</span>
-                          <HelpTooltip content={helpContent.triggerData} />
-                        </div>
-                        <textarea
-                          value={typeof action.data === 'object' ? JSON.stringify(action.data, null, 2) : (action.data || '')}
-                          onChange={(e) => {
-                            e.stopPropagation();
-                            try {
-                              const parsedData = JSON.parse(e.target.value);
-                              updateDataAction(index, { ...action, data: parsedData });
-                            } catch {
-                              // Keep raw string if JSON parsing fails
-                              updateDataAction(index, { ...action, data: e.target.value });
-                            }
-                          }}
-                          placeholder='{"key": "value"}'
-                          style={{
-                            width: '100%',
-                            padding: '2px',
-                            border: '1px solid #ccc',
-                            borderRadius: '3px',
-                            fontSize: '10px',
-                            background: 'white',
-                            minHeight: '40px',
-                            resize: 'vertical'
-                          }}
-                        />
-                      </div>
-                    </>
+                      <textarea
+                        value={typeof action.data === 'object' ? JSON.stringify(action.data, null, 2) : (action.data || '')}
+                        onChange={(e) => {
+                          e.stopPropagation();
+                          try {
+                            const parsedData = JSON.parse(e.target.value);
+                            updateDataAction(index, { ...action, data: parsedData });
+                          } catch {
+                            // Keep raw string if JSON parsing fails
+                            updateDataAction(index, { ...action, data: e.target.value });
+                          }
+                        }}
+                        placeholder='{"key": "value"}'
+                        style={{
+                          width: '100%',
+                          padding: '2px',
+                          border: '1px solid #ccc',
+                          borderRadius: '3px',
+                          fontSize: '10px',
+                          background: 'white',
+                          minHeight: '40px',
+                          resize: 'vertical'
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
               ))}

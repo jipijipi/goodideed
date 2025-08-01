@@ -1,20 +1,20 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-07-31T19:01:47.324Z",
-  "gitBranch": "authoring-tool-update-5",
-  "gitCommit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
+  "lastUpdated": "2025-08-01T08:15:46.767Z",
+  "gitBranch": "authoring-tool-upgrade",
+  "gitCommit": "28f3c029140796133c625f833040941e18fca5c5",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
-    "branch": "authoring-tool-update-5",
-    "commit": "ba3e01e889a0018698ad30e5587e1567d17e14dc",
-    "timestamp": "2025-07-31T19:01:47.306Z"
+    "branch": "authoring-tool-upgrade",
+    "commit": "28f3c029140796133c625f833040941e18fca5c5",
+    "timestamp": "2025-08-01T08:15:46.755Z"
   },
   "nodes": [
     {
       "id": "128",
       "position": {
-        "x": -4496.333658048598,
-        "y": 3189.1983519624314
+        "x": -4558.333658048598,
+        "y": 3423.1983519624314
       },
       "type": "group",
       "style": {
@@ -26,8 +26,8 @@
       "height": 1027,
       "selected": false,
       "positionAbsolute": {
-        "x": -4496.333658048598,
-        "y": 3189.1983519624314
+        "x": -4558.333658048598,
+        "y": 3423.1983519624314
       },
       "dragging": false,
       "data": {
@@ -75,8 +75,8 @@
     {
       "id": "131",
       "position": {
-        "x": -5422.408375483172,
-        "y": 3559.899869341626
+        "x": -5498.408375483172,
+        "y": 4053.899869341626
       },
       "type": "group",
       "style": {
@@ -88,8 +88,8 @@
       "height": 2731,
       "selected": false,
       "positionAbsolute": {
-        "x": -5422.408375483172,
-        "y": 3559.899869341626
+        "x": -5498.408375483172,
+        "y": 4053.899869341626
       },
       "dragging": false,
       "data": {
@@ -111,12 +111,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1241.3503332265373,
-        "height": 1718.5517007309359,
+        "width": 1213.5698459433042,
+        "height": 1411.2300601601667,
         "zIndex": 999
       },
-      "width": 1241,
-      "height": 1719,
+      "width": 1214,
+      "height": 1411,
       "selected": false,
       "positionAbsolute": {
         "x": -4888.60450204324,
@@ -137,21 +137,21 @@
     {
       "id": "135",
       "position": {
-        "x": -3484.842215416095,
-        "y": -174.6945326159232
+        "x": -3482.842215416095,
+        "y": -130.6945326159232
       },
       "type": "group",
       "style": {
-        "width": 1108,
-        "height": 1854.2518183144368,
+        "width": 981,
+        "height": 2298,
         "zIndex": 999
       },
-      "width": 1108,
-      "height": 1854,
+      "width": 981,
+      "height": 2298,
       "selected": false,
       "positionAbsolute": {
-        "x": -3484.842215416095,
-        "y": -174.6945326159232
+        "x": -3482.842215416095,
+        "y": -130.6945326159232
       },
       "dragging": false,
       "data": {
@@ -388,12 +388,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1208.2576262004159,
-        "height": 2460.9803942577964,
+        "width": 1046.2576262004159,
+        "height": 1762.88934174496,
         "zIndex": 999
       },
-      "width": 1208,
-      "height": 2461,
+      "width": 1046,
+      "height": 1763,
       "selected": false,
       "positionAbsolute": {
         "x": 5135.822500638722,
@@ -673,16 +673,16 @@
     {
       "id": "111",
       "position": {
-        "x": 637.999997657439,
-        "y": 626.7319438168561
+        "x": 585.999997657439,
+        "y": 710.7319438168561
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2416.451536830133,
-        "y": 4685.129425347581
+        "x": -3910.3336603911594,
+        "y": 3899.9302957792875
       },
       "dragging": false,
       "parentId": "128",
@@ -966,16 +966,16 @@
     {
       "id": "132",
       "position": {
-        "x": 643.4702928461406,
-        "y": 25
+        "x": 468.1059668707294,
+        "y": 44.09908500722304
       },
       "type": "editable",
       "width": 248,
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": -2880.1159337941067,
-        "y": 397.03199772526074
+        "x": -4420.498535172511,
+        "y": -1343.6245369723672
       },
       "dragging": false,
       "parentId": "133",
@@ -1049,16 +1049,16 @@
     {
       "id": "87",
       "position": {
-        "x": 817.8619902299124,
-        "y": 536.2820113577948
+        "x": 737.9930892906168,
+        "y": 371.3353681135966
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2705.724236410335,
-        "y": 908.3140090830555
+        "x": -4150.611412752623,
+        "y": -1016.3882538659936
       },
       "dragging": false,
       "parentId": "133",
@@ -1075,16 +1075,16 @@
     {
       "id": "88",
       "position": {
-        "x": 785.5353030328206,
-        "y": 872.367494651193
+        "x": 740.3920111975667,
+        "y": 712.6296927726012
       },
       "type": "editable",
       "width": 248,
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": -2738.0509236074267,
-        "y": 1244.3994923764537
+        "x": -4148.2124908456735,
+        "y": -675.0939292069891
       },
       "dragging": false,
       "parentId": "133",
@@ -1099,16 +1099,16 @@
     {
       "id": "89",
       "position": {
-        "x": 918.3503332265373,
-        "y": 1385.5517007309359
+        "x": 890.5698459433042,
+        "y": 1097.3291451673897
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2605.23589341371,
-        "y": 1757.5836984561965
+        "x": -3998.034656099936,
+        "y": -290.39447681220054
       },
       "dragging": false,
       "parentId": "133",
@@ -1125,16 +1125,16 @@
     {
       "id": "90",
       "position": {
-        "x": 572.8109482744126,
-        "y": 1237.83598304096
+        "x": 553.7118632671891,
+        "y": 1088.5158638935804
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2950.7752783658348,
-        "y": 1609.8679807662206
+        "x": -4334.892638776051,
+        "y": -299.2077580860097
       },
       "dragging": false,
       "parentId": "133",
@@ -1151,16 +1151,16 @@
     {
       "id": "100",
       "position": {
-        "x": 756.28405123824,
-        "y": 721.1196976567335
+        "x": 768.28405123824,
+        "y": 1019.1196976567335
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -1773.2421272686424,
-        "y": 2023.0129818500013
+        "x": -2714.558164177855,
+        "y": 888.4251650408103
       },
       "dragging": false,
       "parentId": "135",
@@ -1176,16 +1176,16 @@
     {
       "id": "104",
       "position": {
-        "x": 758.0324031633043,
-        "y": 1117.4143711497923
+        "x": 772,
+        "y": 1329.4143711497923
       },
       "type": "editable",
       "width": 248,
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": -1771.4937753435781,
-        "y": 2419.30765534306
+        "x": -2710.842215416095,
+        "y": 1198.719838533869
       },
       "dragging": false,
       "parentId": "135",
@@ -1201,8 +1201,8 @@
     {
       "id": "134",
       "position": {
-        "x": 157.53134395766483,
-        "y": 1198.1307346891765
+        "x": 497.9078627076251,
+        "y": 1571.2313411197892
       },
       "type": "editable",
       "width": 308,
@@ -1210,8 +1210,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -3327.31087145843,
-        "y": 1023.4362020732533
+        "x": -2984.9343527084698,
+        "y": 1440.536808503866
       },
       "parentId": "135",
       "extent": "parent",
@@ -1232,16 +1232,16 @@
     {
       "id": "156",
       "position": {
-        "x": 785,
-        "y": 280.79480635860455
+        "x": 477,
+        "y": 320.79480635860455
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2686.3191068111473,
-        "y": 160.19270816247285
+        "x": -3005.842215416095,
+        "y": 190.10027374268134
       },
       "dragging": false,
       "parentId": "135",
@@ -1257,8 +1257,8 @@
     {
       "id": "158",
       "position": {
-        "x": 575.4514425920893,
-        "y": 1521.2518183144368
+        "x": 515,
+        "y": 2022.0000000000002
       },
       "type": "editable",
       "width": 248,
@@ -1268,8 +1268,8 @@
       "parentId": "135",
       "extent": "parent",
       "positionAbsolute": {
-        "x": -2909.3907728240056,
-        "y": 1346.5572856985136
+        "x": -2967.842215416095,
+        "y": 1891.305467384077
       },
       "data": {
         "label": "Welcome!",
@@ -1308,16 +1308,16 @@
     {
       "id": "94",
       "position": {
-        "x": 374.6927528522019,
-        "y": 817.2589113664385
+        "x": 463.1104355834145,
+        "y": 963.807693158355
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2154.8334256546805,
-        "y": 2119.1521955597063
+        "x": -3019.7317798326803,
+        "y": 833.1131605424318
       },
       "dragging": false,
       "parentId": "135",
@@ -1334,8 +1334,8 @@
     {
       "id": "95",
       "position": {
-        "x": 25,
-        "y": 728.9215042055171
+        "x": 139,
+        "y": 1012.9215042055171
       },
       "type": "editable",
       "width": 248,
@@ -1343,8 +1343,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -2504.5261785068824,
-        "y": 2030.814788398785
+        "x": -3343.842215416095,
+        "y": 882.2269715895939
       },
       "parentId": "135",
       "extent": "parent",
@@ -1360,16 +1360,16 @@
     {
       "id": "97",
       "position": {
-        "x": 442.75900906666993,
-        "y": 343.01748604146525
+        "x": 474.75900906666993,
+        "y": 625.0174860414652
       },
       "type": "editable",
       "width": 248,
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": -2993.5269206661537,
-        "y": 648.8484112166249
+        "x": -3008.083206349425,
+        "y": 494.322953425542
       },
       "dragging": false,
       "parentId": "135",
@@ -2779,16 +2779,16 @@
         "dataActions": [
           {
             "type": "trigger",
-            "key": "recalculate_past_deadline",
+            "key": "task.isPastDeadline",
             "value": "",
-            "event": "",
+            "event": "recalculate_past_deadline",
             "data": {}
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 353,
+      "height": 400,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -2983,7 +2983,7 @@
     {
       "id": "182",
       "position": {
-        "x": 376.00728943519925,
+        "x": 237.78766150539377,
         "y": 1064.077232030777
       },
       "data": {
@@ -2994,20 +2994,20 @@
         "dataActions": [
           {
             "type": "trigger",
-            "key": "recalculate_active_day",
+            "key": "task.isActiveDay",
             "value": "",
-            "event": "",
+            "event": "recalculate_active_day",
             "data": {}
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 353,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
-        "x": 2950.5547648365164,
-        "y": 6147.465805934545
+        "x": 2461.9919247190514,
+        "y": 6908.8496621721215
       },
       "dragging": false,
       "parentId": "47",

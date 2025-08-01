@@ -237,17 +237,17 @@ function Flow() {
     const positions = childNodes.map(child => ({
       x: child.position.x,
       y: child.position.y,
-      width: child.width || 250,  // default node width
-      height: child.height || 250  // default node height
+      width: child.width || 400,  // default node width
+      height: child.height || 400  // default node height
     }));
 
     const minX = Math.min(...positions.map(p => p.x));
     const minY = Math.min(...positions.map(p => p.y));
     const maxX = Math.max(...positions.map(p => p.x + p.width));
     const maxY = Math.max(...positions.map(p => p.y + p.height));
-
+    
     // Add fixed padding
-    const padding = 40;
+    const padding = 80;
     const width = (maxX - minX) + (padding * 2);
     const height = (maxY - minY) + (padding * 2);
 

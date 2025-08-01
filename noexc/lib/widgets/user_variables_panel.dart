@@ -296,18 +296,15 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                             statusController: _statusController,
                           ),
                           
-                          // Logger Controls Section
-                          const LoggerControlsWidget(),
-                          
-                          // Test Scenarios Section
-                          _buildScenarioSection(),
-                          
                           // Sequence Selector
                           SequenceSelectorWidget(
                             currentSequenceId: widget.currentSequenceId,
                             stateManager: widget.stateManager,
                             statusController: _statusController,
                           ),
+                          
+                          // Test Scenarios Section
+                          _buildScenarioSection(),
                           
                           // Date/Time Picker Section
                           DateTimePickerWidget(
@@ -324,6 +321,10 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                             onDataChanged: refreshData,
                             statusController: _statusController,
                           ),
+
+                          // Logger Controls Section
+                          const LoggerControlsWidget(),
+
                         ],
                       ),
           ),

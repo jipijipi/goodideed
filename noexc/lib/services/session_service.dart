@@ -197,7 +197,13 @@ class SessionService {
     final isActiveDay = await _computeIsActiveDay(now);
     await userDataService.storeValue(StorageKeys.taskIsActiveDay, isActiveDay);
     
-    // Compute isPastDeadline
+    // Compute time range booleans
+    final isBeforeStart = await _computeIsBeforeStart(now);
+    await userDataService.storeValue(StorageKeys.taskIsBeforeStart, isBeforeStart);
+    
+    final isInTimeRange = await _computeIsInTimeRange(now);
+    await userDataService.storeValue(StorageKeys.taskIsInTimeRange, isInTimeRange);
+    
     final isPastDeadline = await _computeIsPastDeadline(now);
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
   }
@@ -285,6 +291,39 @@ class SessionService {
     return activeDays.contains(currentWeekday);
   }
 
+  /// Check if current time is before today's start time
+  Future<bool> _computeIsBeforeStart(DateTime now) async {
+    try {
+      final startTimeString = await _getStartTimeAsString();
+      final startParts = startTimeString.split(':');
+      final startHour = int.parse(startParts[0]);
+      final startMinute = int.parse(startParts[1]);
+      
+      // Create today's start datetime
+      final todayStart = DateTime(now.year, now.month, now.day, startHour, startMinute);
+      
+      // Return true if current time is before start time
+      return now.isBefore(todayStart);
+    } catch (e) {
+      // If there's any error parsing start time, default to false (not before start)
+      return false;
+    }
+  }
+
+  /// Check if current time is within the start-deadline range
+  Future<bool> _computeIsInTimeRange(DateTime now) async {
+    try {
+      final isBeforeStart = await _computeIsBeforeStart(now);
+      final isPastDeadline = await _computeIsPastDeadline(now);
+      
+      // In range if not before start and not past deadline
+      return !isBeforeStart && !isPastDeadline;
+    } catch (e) {
+      // If there's any error, default to true (assume in range)
+      return true;
+    }
+  }
+
   /// Check if current time is past today's deadline
   Future<bool> _computeIsPastDeadline(DateTime now) async {
     try {
@@ -311,37 +350,71 @@ class SessionService {
     // No additional context-based updates needed at this time
   }
 
-  /// Get deadline time as string, handling both integer and string storage formats
+  /// Get start time as string with migration for existing deadline-only users
+  Future<String> _getStartTimeAsString() async {
+    // Try to get explicit start time first
+    final startTime = await userDataService.getValue<String>(StorageKeys.taskStartTime);
+    if (startTime != null) {
+      return startTime;
+    }
+    
+    // If no start time set, derive default from deadline time
+    final deadlineTime = await _getDeadlineTimeAsString();
+    return _getDefaultStartTimeForDeadline(deadlineTime);
+  }
+
+  /// Get deadline time as string, with migration from integer format
   Future<String> _getDeadlineTimeAsString() async {
     // Try to get as string first (new format)
-    try {
-      final stringValue = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
-      if (stringValue != null) {
+    final stringValue = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+    if (stringValue != null) {
+      // Check if it's a valid time format (HH:MM), otherwise it might be a converted integer
+      if (stringValue.contains(':')) {
         return stringValue;
-      }
-    } catch (e) {
-      // Type cast failed, value is probably an integer
-    }
-    
-    // Try to get as integer (legacy format from JSON sequences)
-    try {
-      final intValue = await userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
-      if (intValue != null) {
-        // Convert integer to time string using SessionConstants
-        switch (intValue) {
-          case SessionConstants.timeOfDayMorning: return SessionConstants.morningDeadlineTime;
-          case SessionConstants.timeOfDayAfternoon: return SessionConstants.afternoonDeadlineTime;
-          case SessionConstants.timeOfDayEvening: return SessionConstants.eveningDeadlineTime;
-          case SessionConstants.timeOfDayNight: return SessionConstants.nightDeadlineTime;
-          default: return SessionConstants.defaultDeadlineTime;
+      } else {
+        // It's a stringified integer, convert it
+        final intValue = int.tryParse(stringValue);
+        if (intValue != null) {
+          final migratedTime = _convertIntegerToTimeString(intValue);
+          await userDataService.storeValue(StorageKeys.taskDeadlineTime, migratedTime);
+          return migratedTime;
         }
       }
-    } catch (e) {
-      // Type cast failed, value is probably a string or doesn't exist
     }
     
-    // Default if neither format found
+    // Try to get as integer (legacy format) and migrate
+    final intValue = await userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
+    if (intValue != null) {
+      // Convert integer to time string and store the migrated value
+      final migratedTime = _convertIntegerToTimeString(intValue);
+      await userDataService.storeValue(StorageKeys.taskDeadlineTime, migratedTime);
+      return migratedTime;
+    }
+    
+    // Default if no deadline found
     return SessionConstants.defaultDeadlineTime;
+  }
+  
+  /// Convert legacy integer deadline to time string
+  String _convertIntegerToTimeString(int intValue) {
+    switch (intValue) {
+      case SessionConstants.timeOfDayMorning: return SessionConstants.morningDeadlineTime;
+      case SessionConstants.timeOfDayAfternoon: return SessionConstants.afternoonDeadlineTime;
+      case SessionConstants.timeOfDayEvening: return SessionConstants.eveningDeadlineTime;
+      case SessionConstants.timeOfDayNight: return SessionConstants.nightDeadlineTime;
+      default: return SessionConstants.defaultDeadlineTime;
+    }
+  }
+  
+  /// Get default start time for a given deadline time
+  String _getDefaultStartTimeForDeadline(String deadlineTime) {
+    switch (deadlineTime) {
+      case SessionConstants.morningDeadlineTime: return SessionConstants.morningStartTime;
+      case SessionConstants.afternoonDeadlineTime: return SessionConstants.afternoonStartTime;
+      case SessionConstants.eveningDeadlineTime: return SessionConstants.eveningStartTime;
+      case SessionConstants.nightDeadlineTime: return SessionConstants.nightStartTime;
+      default: return SessionConstants.defaultStartTime;
+    }
   }
 
   /// Log automatic status updates for transparency

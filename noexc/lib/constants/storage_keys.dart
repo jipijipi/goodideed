@@ -17,10 +17,10 @@ class StorageKeys {
   static const String userStreak = '${userPrefix}streak';
   static const String userIsOnboarded = '${userPrefix}isOnboarded';
   static const String userIsOnNotice = '${userPrefix}isOnNotice';
-  static const String userTaskDeadline = '${userPrefix}taskDeadline';
   
   // Task configuration keys
   static const String taskPrefix = 'task.';
+  static const String taskStartTime = '${taskPrefix}startTime';
   static const String taskDeadlineTime = '${taskPrefix}deadlineTime';
   static const String taskActiveDays = '${taskPrefix}activeDays';
   static const String taskCurrentDate = '${taskPrefix}currentDate';
@@ -31,6 +31,8 @@ class StorageKeys {
   static const String taskLastAutoUpdate = '${taskPrefix}lastAutoUpdate';
   static const String taskAutoUpdateReason = '${taskPrefix}autoUpdateReason';
   static const String taskIsActiveDay = '${taskPrefix}isActiveDay';
+  static const String taskIsBeforeStart = '${taskPrefix}isBeforeStart';
+  static const String taskIsInTimeRange = '${taskPrefix}isInTimeRange';
   static const String taskIsPastDeadline = '${taskPrefix}isPastDeadline';
   static const String taskStartTiming = '${taskPrefix}startTiming';
   

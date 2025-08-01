@@ -80,7 +80,7 @@ Visual tool in `noexc-authoring-tool/` for creating conversation sequences:
 - **Local Storage**: shared_preferences for user data persistence
 - **Template System**: `{key|fallback}` syntax for dynamic text substitution
 - **Formatter Support**: `{key:formatter}` and `{key:formatter|fallback}` syntax (timeOfDay, intensity, activeDays)
-- **Key Task Variables**: `task.currentDate`, `task.currentStatus`, `task.deadlineTime`, `task.isActiveDay`, `task.isPastDeadline`
+- **Key Task Variables**: `task.currentDate`, `task.currentStatus`, `task.startTime`, `task.deadlineTime`, `task.isActiveDay`, `task.isBeforeStart`, `task.isInTimeRange`, `task.isPastDeadline`
 
 ### Message System
 - **Multi-text messages**: Use `|||` separator for multiple bubbles
@@ -95,6 +95,8 @@ Visual tool in `noexc-authoring-tool/` for creating conversation sequences:
 - **Common Conditions**: 
   - `session.visitCount > 1` - Returning daily user
   - `task.isActiveDay == true` - Today is active day
+  - `task.isBeforeStart == true` - Before user's start time
+  - `task.isInTimeRange == true` - Within start-deadline window
   - `task.isPastDeadline == true` - Past user's deadline
 
 ### Semantic Content System

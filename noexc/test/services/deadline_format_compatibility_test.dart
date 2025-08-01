@@ -27,10 +27,19 @@ void main() {
       // Should work correctly (may be overdue due to automatic status updates)
       final status = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       expect(status, anyOf(equals('pending'), equals('overdue')));
+      
+      // Should compute new range booleans
+      final isBeforeStart = await userDataService.getValue<bool>(StorageKeys.taskIsBeforeStart);
+      final isInTimeRange = await userDataService.getValue<bool>(StorageKeys.taskIsInTimeRange);
+      final isPastDeadline = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
+      
+      expect(isBeforeStart, isNotNull);
+      expect(isInTimeRange, isNotNull);
+      expect(isPastDeadline, isNotNull);
     });
 
     test('should handle integer deadline format (legacy from JSON sequences)', () async {
-      // Setup: Store deadline as integer format (like from task_config_seq.json)
+      // Setup: Store deadline as integer format (like from old sequences)
       await userDataService.storeValue(StorageKeys.taskDeadlineTime, 2); // Afternoon
       await userDataService.storeValue(StorageKeys.userTask, 'Test task');
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
@@ -41,14 +50,18 @@ void main() {
       // Should work correctly (may be overdue due to automatic status updates)  
       final status2 = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       expect(status2, anyOf(equals('pending'), equals('overdue')));
+      
+      // Should migrate the integer value to string format
+      final migratedDeadline = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+      expect(migratedDeadline, equals('14:00')); // Afternoon deadline time
     });
 
     test('should convert integer deadline values to correct times', () async {
       final testCases = [
-        {'input': 1, 'expected': '11:00'}, // Morning
-        {'input': 2, 'expected': '17:00'}, // Afternoon
-        {'input': 3, 'expected': '21:00'}, // Evening
-        {'input': 4, 'expected': '05:00'}, // Night
+        {'input': 1, 'expected': '10:00'}, // Morning
+        {'input': 2, 'expected': '14:00'}, // Afternoon
+        {'input': 3, 'expected': '18:00'}, // Evening
+        {'input': 4, 'expected': '23:00'}, // Night
       ];
 
       for (final testCase in testCases) {

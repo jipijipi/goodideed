@@ -22,7 +22,7 @@
     "variables": {
       "user.isOnboarded": true,
       "user.name": "Kyle",
-      "task.deadlineTime": 1,
+      "task.deadlineTime": "10:00",
       "user.task": "Medidate for 10 minutes"
     }
   },
@@ -59,7 +59,7 @@
       "session.timeOfDay": 4,
       "session.daysSinceFirstVisit": 15,
       "session.isWeekend": false,
-      "task.deadlineTime": 2,
+      "task.deadlineTime": "14:00",
       "task.currentDate": "2024-12-20",
       "task.isActiveDay": true,
       "task.isPastDeadline": true,
@@ -80,7 +80,7 @@
       "user.isOnboarded": true,
       "user.name": "Casey",
       "user.streak": 23,
-      "task.deadlineTime": 3,
+      "task.deadlineTime": "18:00",
       "task.currentDate": "2024-12-20",
       "task.isActiveDay": true,
       "task.isPastDeadline": false,
@@ -100,7 +100,7 @@
       "user.name": "Taylor",
       "user.streak": 0,
       "user.isOnNotice": true,
-      "task.deadlineTime": 2,
+      "task.deadlineTime": "14:00",
       "task.currentDate": "2024-12-20",
       "task.isActiveDay": true,
       "task.isPastDeadline": true
@@ -108,17 +108,17 @@
   },
   "overdue_current_day": {
     "name": "Overdue Current Day",
-    "description": "User checking in on the same day as their overdue task",
+    "description": "User checking in on the same day after their task gets overdue ",
     "variables": {
       "session.visitCount": 1,
       "session.totalVisitCount": 56,
-      "session.timeOfDay": 3,
+      "session.timeOfDay": 4,
       "session.daysSinceFirstVisit": 28,
       "session.isWeekend": false,
       "user.isOnboarded": true,
       "user.name": "River",
       "user.streak": 12,
-      "task.deadlineTime": 4,
+      "task.deadlineTime": "23:00",
       "task.currentDate": "2024-12-20",
       "task.isActiveDay": true,
       "task.isPastDeadline": false

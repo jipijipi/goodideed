@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-01T16:15:42.902Z",
+  "lastUpdated": "2025-08-01T17:01:23.737Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-01T16:15:42.893Z"
+    "timestamp": "2025-08-01T17:01:23.721Z"
   },
   "nodes": [
     {
@@ -639,11 +639,11 @@
       "type": "group",
       "style": {
         "width": 1540.2126928785221,
-        "height": 1615.3930468755825,
+        "height": 1613.3930468755825,
         "zIndex": 999
       },
       "width": 1540,
-      "height": 1615,
+      "height": 1613,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -4318,7 +4318,7 @@
       "value": 1,
       "data": {
         "label": "By morning",
-        "value": 1
+        "value": "10:00"
       },
       "selected": false
     },
@@ -4331,7 +4331,7 @@
       "value": 2,
       "data": {
         "label": "By the afternoon",
-        "value": 2
+        "value": "14:00"
       },
       "selected": false
     },
@@ -4344,7 +4344,7 @@
       "value": 3,
       "data": {
         "label": "By the evening",
-        "value": 3
+        "value": "18:00"
       },
       "selected": false
     },
@@ -4357,7 +4357,7 @@
       "value": 4,
       "data": {
         "label": "By night time",
-        "value": 4
+        "value": "23:00"
       },
       "selected": false
     },

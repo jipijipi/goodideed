@@ -15,6 +15,14 @@
   --error-color: #f44336;
   --warning-color: #ff9800;
   --info-color: #2196f3;
+  
+  /* Node-specific colors */
+  --node-bot: #e8f5e8;        /* Light green - bot messages */
+  --node-user: #fff3e0;       /* Light orange - user messages */
+  --node-choice: #f3e5f5;     /* Light purple - user choices */
+  --node-textInput: #e3f2fd;  /* Light blue - user input */
+  --node-autoroute: #fff8e1;  /* Light yellow - logic routing */
+  --node-dataAction: #fce4ec; /* Light pink - data operations */
 }
 
 [data-theme="dark"] {
@@ -34,6 +42,14 @@
   --error-color: #ef5350;
   --warning-color: #ffb74d;
   --info-color: #42a5f5;
+  
+  /* Node-specific colors - darker variants */
+  --node-bot: #2d5016;        /* Dark green */
+  --node-user: #4a2c06;       /* Dark orange */
+  --node-choice: #4a1a4a;     /* Dark purple */
+  --node-textInput: #1a237e;  /* Dark blue */
+  --node-autoroute: #3e2723;  /* Dark yellow/brown */
+  --node-dataAction: #4a148c; /* Dark pink/purple */
 }
 
 body {

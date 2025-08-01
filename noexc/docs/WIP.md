@@ -36,8 +36,14 @@ Analysis and Recommendation for Task Start Timing Choice                        
      │ existing, well-tested sequence system. 
 
 
-I want a smarter resizing for groups
-1) Suggest a way to calculate an appropriate size based on the group's children
-2) Would it be possible/advisable to recalculate the parent's group size on each children node move?
 
-The node colors and styling are mostly gone, suggest a simple way to centralize styling of the authoring tool
+Debug panel :
+- reset clear reload clear all
+- current sequence
+- select scenario but more compact
+- set task date
+- set deadline option as a dropdown
+- Task management
+- User data
+- Debug information
+- Logger controls

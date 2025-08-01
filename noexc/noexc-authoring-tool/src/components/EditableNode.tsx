@@ -8,12 +8,12 @@ import { COLORS } from '../styles/styleConstants';
 
 const getCategoryColor = (category: NodeCategory): string => {
   const colors: Record<NodeCategory, string> = {
-    bot: 'var(--bg-tertiary)',
-    user: 'var(--bg-secondary)',
-    choice: 'var(--bg-tertiary)',
-    textInput: 'var(--bg-secondary)',
-    autoroute: 'var(--bg-tertiary)',
-    dataAction: 'var(--bg-secondary)'
+    bot: 'var(--node-bot)',           // Green - bot speaks
+    user: 'var(--node-user)',         // Orange - user speaks  
+    choice: 'var(--node-choice)',     // Purple - user chooses
+    textInput: 'var(--node-textInput)', // Blue - user types
+    autoroute: 'var(--node-autoroute)', // Yellow - logic flow
+    dataAction: 'var(--node-dataAction)' // Pink - data manipulation
   };
   return colors[category] || 'var(--bg-secondary)';
 };

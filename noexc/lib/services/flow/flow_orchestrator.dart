@@ -65,7 +65,7 @@ class FlowOrchestrator {
   final RouteProcessor _routeProcessor;
   final logger = LoggerService.instance;
   
-  static const int _maxProcessingCycles = 10;
+  static const int _maxProcessingCycles = 25;
 
   FlowOrchestrator({
     required MessageWalker walker,

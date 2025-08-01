@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-01T15:16:06.618Z",
+  "lastUpdated": "2025-08-01T16:15:42.902Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-01T15:16:06.586Z"
+    "timestamp": "2025-08-01T16:15:42.893Z"
   },
   "nodes": [
     {
@@ -106,8 +106,8 @@
     {
       "id": "133",
       "position": {
-        "x": -4842.793223997333,
-        "y": -1601.5095861938223
+        "x": -5302.923996036295,
+        "y": -982.71303069315
       },
       "type": "group",
       "style": {
@@ -119,8 +119,8 @@
       "height": 1471,
       "selected": false,
       "positionAbsolute": {
-        "x": -4842.793223997333,
-        "y": -1601.5095861938223
+        "x": -5302.923996036295,
+        "y": -982.71303069315
       },
       "dragging": false,
       "data": {
@@ -168,8 +168,8 @@
     {
       "id": "140",
       "position": {
-        "x": -2863.0528644727146,
-        "y": -2033.1355384456897
+        "x": -2355.32235739524,
+        "y": -1969.6692250610054
       },
       "type": "group",
       "style": {
@@ -181,8 +181,8 @@
       "height": 880,
       "selected": false,
       "positionAbsolute": {
-        "x": -2863.0528644727146,
-        "y": -2033.1355384456897
+        "x": -2355.32235739524,
+        "y": -1969.6692250610054
       },
       "dragging": false,
       "data": {
@@ -199,8 +199,8 @@
     {
       "id": "145",
       "position": {
-        "x": -3164.107305715006,
-        "y": 3256.1041102080235
+        "x": -3027.351964992876,
+        "y": 3219.1432073101505
       },
       "type": "group",
       "style": {
@@ -212,8 +212,8 @@
       "height": 1841,
       "selected": false,
       "positionAbsolute": {
-        "x": -3164.107305715006,
-        "y": 3256.1041102080235
+        "x": -3027.351964992876,
+        "y": 3219.1432073101505
       },
       "dragging": false,
       "data": {
@@ -385,8 +385,8 @@
     {
       "id": "191",
       "position": {
-        "x": 2613.271984039075,
-        "y": 8469.556577551706
+        "x": 3987.6103254162813,
+        "y": 8988.751062071984
       },
       "data": {
         "label": "Group 191",
@@ -408,16 +408,16 @@
       "height": 1917,
       "selected": false,
       "positionAbsolute": {
-        "x": 2613.271984039075,
-        "y": 8469.556577551706
+        "x": 3987.6103254162813,
+        "y": 8988.751062071984
       },
       "dragging": false
     },
     {
       "id": "207",
       "position": {
-        "x": -554.2403843600085,
-        "y": 3024.487995624806
+        "x": -19.775473824428218,
+        "y": 5116.53635972122
       },
       "data": {
         "label": "Group 207",
@@ -439,16 +439,16 @@
       "height": 2701,
       "selected": false,
       "positionAbsolute": {
-        "x": -554.2403843600085,
-        "y": 3024.487995624806
+        "x": -19.775473824428218,
+        "y": 5116.53635972122
       },
       "dragging": false
     },
     {
       "id": "215",
       "position": {
-        "x": 1748.7927673529284,
-        "y": 5816.050488195361
+        "x": 2771.911310378182,
+        "y": 6228.351990608523
       },
       "data": {
         "label": "Group 215",
@@ -470,16 +470,16 @@
       "height": 1960,
       "selected": false,
       "positionAbsolute": {
-        "x": 1748.7927673529284,
-        "y": 5816.050488195361
+        "x": 2771.911310378182,
+        "y": 6228.351990608523
       },
       "dragging": false
     },
     {
       "id": "28",
       "position": {
-        "x": 621.7309963557803,
-        "y": -2743.5347550839147
+        "x": 812.1299365098334,
+        "y": -2791.134490122428
       },
       "type": "group",
       "style": {
@@ -491,8 +491,8 @@
       "height": 2038,
       "selected": false,
       "positionAbsolute": {
-        "x": 621.7309963557803,
-        "y": -2743.5347550839147
+        "x": 812.1299365098334,
+        "y": -2791.134490122428
       },
       "dragging": false,
       "data": {
@@ -509,8 +509,8 @@
     {
       "id": "30",
       "position": {
-        "x": 1634.374208048991,
-        "y": -1915.2271177276407
+        "x": 1904.1060399338994,
+        "y": -1978.693431112325
       },
       "type": "group",
       "style": {
@@ -522,8 +522,8 @@
       "height": 3899,
       "selected": false,
       "positionAbsolute": {
-        "x": 1634.374208048991,
-        "y": -1915.2271177276407
+        "x": 1904.1060399338994,
+        "y": -1978.693431112325
       },
       "dragging": false,
       "data": {
@@ -540,8 +540,8 @@
     {
       "id": "31",
       "position": {
-        "x": 2463.028229581269,
-        "y": 3920.4813960903143
+        "x": 3486.1467726065225,
+        "y": 4332.782898503476
       },
       "type": "group",
       "style": {
@@ -554,8 +554,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 2463.028229581269,
-        "y": 3920.4813960903143
+        "x": 3486.1467726065225,
+        "y": 4332.782898503476
       },
       "data": {
         "label": "Group 31",
@@ -571,8 +571,8 @@
     {
       "id": "39",
       "position": {
-        "x": 3540.27685582007,
-        "y": 3161.8571670695574
+        "x": 4563.395398845323,
+        "y": 3574.1586694827192
       },
       "type": "group",
       "style": {
@@ -584,8 +584,8 @@
       "height": 2004,
       "selected": false,
       "positionAbsolute": {
-        "x": 3540.27685582007,
-        "y": 3161.8571670695574
+        "x": 4563.395398845323,
+        "y": 3574.1586694827192
       },
       "dragging": false,
       "data": {
@@ -602,8 +602,8 @@
     {
       "id": "47",
       "position": {
-        "x": 4312.461862471523,
-        "y": 5498.41951228811
+        "x": 5686.800203848729,
+        "y": 6017.613996808388
       },
       "type": "group",
       "style": {
@@ -615,8 +615,8 @@
       "height": 1694,
       "selected": false,
       "positionAbsolute": {
-        "x": 4312.461862471523,
-        "y": 5498.41951228811
+        "x": 5686.800203848729,
+        "y": 6017.613996808388
       },
       "dragging": false,
       "data": {
@@ -633,22 +633,22 @@
     {
       "id": "55",
       "position": {
-        "x": 4280.9453638412215,
-        "y": 7655.408532841141
+        "x": 5655.283705218428,
+        "y": 8174.603017361419
       },
       "type": "group",
       "style": {
         "width": 1540.2126928785221,
-        "height": 1613.3930468755825,
+        "height": 1615.3930468755825,
         "zIndex": 999
       },
       "width": 1540,
-      "height": 1613,
+      "height": 1615,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 4280.9453638412215,
-        "y": 7655.408532841141
+        "x": 5655.283705218428,
+        "y": 8174.603017361419
       },
       "data": {
         "label": "Group 55",
@@ -664,8 +664,8 @@
     {
       "id": "59",
       "position": {
-        "x": -1250.0098977504967,
-        "y": 8530.115301240014
+        "x": -944.6013774444509,
+        "y": 8896.605525607269
       },
       "type": "group",
       "style": {
@@ -677,8 +677,8 @@
       "height": 1129,
       "selected": false,
       "positionAbsolute": {
-        "x": -1250.0098977504967,
-        "y": 8530.115301240014
+        "x": -944.6013774444509,
+        "y": 8896.605525607269
       },
       "dragging": false,
       "data": {
@@ -926,14 +926,14 @@
         "nodeId": "118",
         "dataActions": [
           {
-            "type": "increment",
+            "type": "set",
             "key": "user.streak",
-            "value": 1
+            "value": "0"
           },
           {
             "type": "reset",
             "key": "user.isOnNotice",
-            "value": ""
+            "value": false
           }
         ]
       }
@@ -1115,7 +1115,7 @@
           {
             "type": "reset",
             "key": "task.previousStatus",
-            "value": ""
+            "value": null
           }
         ]
       }
@@ -2408,7 +2408,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "200",
-        "content": "Enter your message here..."
+        "content": "All right, let's start fresh"
       },
       "type": "editable",
       "width": 248,
@@ -2433,7 +2433,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "201",
-        "content": "Enter your message here..."
+        "content": "Ok, new days"
       },
       "type": "editable",
       "width": 248,
@@ -2458,7 +2458,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "202",
-        "content": "Enter your message here..."
+        "content": "New time frame"
       },
       "type": "editable",
       "width": 248,
@@ -2483,7 +2483,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "203",
-        "content": "Enter your message here..."
+        "content": "New goal, new you"
       },
       "type": "editable",
       "width": 248,
@@ -2510,12 +2510,12 @@
         "nodeId": "204",
         "dataActions": [
           {
-            "type": "reset",
+            "type": "set",
             "key": "task.deadlineTime",
             "value": null
           },
           {
-            "type": "reset",
+            "type": "set",
             "key": "task.activeDays",
             "value": null
           }
@@ -2546,7 +2546,7 @@
         "nodeId": "205",
         "dataActions": [
           {
-            "type": "reset",
+            "type": "set",
             "key": "task.deadlineTime",
             "value": null
           }
@@ -2606,7 +2606,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "208",
-        "content": "Nothing... Nevermind"
+        "content": "As you wish"
       },
       "type": "editable",
       "width": 248,
@@ -2657,12 +2657,12 @@
         "nodeId": "220",
         "dataActions": [
           {
-            "type": "reset",
+            "type": "set",
             "key": "reminders.intensity",
             "value": null
           },
           {
-            "type": "reset",
+            "type": "set",
             "key": "user.task",
             "value": null
           },
@@ -2698,7 +2698,7 @@
         "nodeId": "221",
         "dataActions": [
           {
-            "type": "reset",
+            "type": "set",
             "key": "user.task",
             "value": null
           }
@@ -4045,7 +4045,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "54",
         "contentKey": "bot.warn.reminders.serious",
-        "content": "You chose, notification intensity : {reminders.intensity}"
+        "content": "You chose, notification intensity : {task.remindersIntensity}"
       }
     },
     {

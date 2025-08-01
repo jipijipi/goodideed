@@ -106,9 +106,9 @@
       "task.isPastDeadline": true
     }
   },
-  "evening_check": {
-    "name": "🌅 Evening Check-in",
-    "description": "User doing their evening task review",
+  "overdue_current_day": {
+    "name": "Overdue Current Day",
+    "description": "User checking in on the same day as their overdue task",
     "variables": {
       "session.visitCount": 1,
       "session.totalVisitCount": 56,

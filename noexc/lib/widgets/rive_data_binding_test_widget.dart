@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
+/// Example widget demonstrating Rive 0.14.0+ Data Binding
+/// 
+/// This widget shows how to:
+/// - Load a Rive file with data binding capabilities
+/// - Access view model properties (number properties)
+/// - Update Rive animations via data binding in real-time
+/// - Properly dispose of resources
+/// 
+/// Required setup in main.dart:
+/// ```dart
+/// Future<void> main() async {
+///   WidgetsFlutterBinding.ensureInitialized();
+///   await RiveNative.init(); // Required for Rive 0.14.0+
+///   runApp(const MyApp());
+/// }
+/// ```
 class RiveDataBindingTestWidget extends StatefulWidget {
   const RiveDataBindingTestWidget({super.key});
 
@@ -9,81 +25,74 @@ class RiveDataBindingTestWidget extends StatefulWidget {
 }
 
 class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
+  // Core Rive components
   File? file;
   RiveWidgetController? controller;
+  
+  // Data binding components
   ViewModelInstance? viewModelInstance;
   ViewModelInstanceNumber? posXProperty;
   ViewModelInstanceNumber? posYProperty;
   
+  // UI state
   double posX = 0.0;
   double posY = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _init();
+    _initRive();
   }
 
-  Future<void> _init() async {
+  /// Initialize Rive file and set up data binding
+  Future<void> _initRive() async {
+    // Step 1: Load the Rive file
     file = await File.asset(
       'assets/animations/test-spere.riv',
-      riveFactory: Factory.rive,
+      riveFactory: Factory.rive, // Use Factory.rive for Rive renderer
     );
+    
+    // Step 2: Create controller
     controller = RiveWidgetController(file!);
-    _initViewModel();
+    
+    // Step 3: Set up data binding
+    _initDataBinding();
+    
+    // Step 4: Update UI
     setState(() {});
   }
 
-  void _initViewModel() {
-    try {
-      print('Initializing view model...');
+  /// Set up data binding with view model properties
+  void _initDataBinding() {
+    // Create view model instance using auto-binding
+    viewModelInstance = controller!.dataBind(DataBind.auto());
+    
+    if (viewModelInstance != null) {
+      // Access number properties from the view model
+      // These correspond to properties defined in the Rive file
+      posXProperty = viewModelInstance!.number('posx');
+      posYProperty = viewModelInstance!.number('posy');
       
-      // Use DataBind.auto() like the Rive example
-      viewModelInstance = controller!.dataBind(DataBind.auto());
-      print('View model instance: $viewModelInstance');
-      
-      if (viewModelInstance != null) {
-        // Get references to the position properties
-        posXProperty = viewModelInstance!.number('posx');
-        posYProperty = viewModelInstance!.number('posy');
-        print('Got properties - posX: $posXProperty, posY: $posYProperty');
-        
-        // Set initial values
-        if (posXProperty != null) {
-          posX = posXProperty!.value;
-          print('Initial posX: $posX');
-        }
-        if (posYProperty != null) {
-          posY = posYProperty!.value;
-          print('Initial posY: $posY');
-        }
-      } else {
-        print('No view model instance created');
-      }
-    } catch (e) {
-      print('Error in view model setup: $e');
+      // Set initial UI values from Rive properties
+      if (posXProperty != null) posX = posXProperty!.value;
+      if (posYProperty != null) posY = posYProperty!.value;
     }
   }
 
+  /// Update Rive animation properties when slider values change
   void _updatePosition() {
     if (posXProperty != null && posYProperty != null) {
-      print('Updating position - posX: $posX, posY: $posY');
-      print('Before update - Property posX: ${posXProperty!.value}, Property posY: ${posYProperty!.value}');
-      
+      // Set new values on the data binding properties
       posXProperty!.value = posX;
       posYProperty!.value = posY;
       
-      print('After setting - Property posX: ${posXProperty!.value}, Property posY: ${posYProperty!.value}');
-      
-      // Data binding should handle updates automatically, no manual advancement needed
-      print('Properties updated - data binding should handle the rest');
-    } else {
-      print('Properties are null - posX: $posXProperty, posY: $posYProperty');
+      // Data binding automatically updates the animation - no manual advancement needed
     }
   }
 
   @override
   void dispose() {
+    // Dispose of all resources in reverse order of creation
     posXProperty?.dispose();
     posYProperty?.dispose();
     viewModelInstance?.dispose();
@@ -97,60 +106,60 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
     final controller = this.controller;
     
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
       body: Column(
         children: [
+          // Rive animation display area
           Expanded(
             child: controller == null
-                ? const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  )
+                ? const Center(child: CircularProgressIndicator(color: Colors.white))
                 : RiveWidget(
                     controller: controller,
                     fit: Fit.contain,
                   ),
           ),
+          
+          // Control panel
           Container(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
+                // X Position Slider
                 Text(
                   'Position X: ${posX.toStringAsFixed(2)}',
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
                 Slider(
                   value: posX,
-                  min: -200,
-                  max: 200,
+                  min: 0,
+                  max: 500,
                   activeColor: Colors.blue,
                   inactiveColor: Colors.blue.withOpacity(0.3),
                   onChanged: (value) {
-                    print('Slider X changed to: $value');
-                    setState(() {
-                      posX = value;
-                    });
+                    setState(() => posX = value);
                     _updatePosition();
                   },
                 ),
+                
                 const SizedBox(height: 20),
+                
+                // Y Position Slider
                 Text(
                   'Position Y: ${posY.toStringAsFixed(2)}',
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
                 Slider(
                   value: posY,
-                  min: -200,
-                  max: 200,
+                  min: 0,
+                  max: 500,
                   activeColor: Colors.red,
                   inactiveColor: Colors.red.withOpacity(0.3),
                   onChanged: (value) {
-                    print('Slider Y changed to: $value');
-                    setState(() {
-                      posY = value;
-                    });
+                    setState(() => posY = value);
                     _updatePosition();
                   },
                 ),
+                
                 const SizedBox(height: 20),
               ],
             ),

@@ -3,6 +3,7 @@ import 'package:rive/rive.dart';
 import 'widgets/chat_screen.dart';
 import 'widgets/rive_test_widget.dart';
 import 'widgets/rive_data_binding_test_widget.dart';
+import 'widgets/rive_arm_test_widget.dart';
 import 'services/service_locator.dart';
 import 'services/session_service.dart';
 import 'themes/app_themes.dart';
@@ -78,7 +79,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: AppThemes.darkTheme,
       themeMode: AppThemes.getThemeMode(_isDarkMode),
       home: _isInitialized 
-        ? const RiveDataBindingTestWidget() // RiveTestWidget() // ChatScreen(onThemeToggle: _toggleTheme)
+        ? const RiveArmTestWidget() // RiveDataBindingTestWidget() // RiveTestWidget() // ChatScreen(onThemeToggle: _toggleTheme)
         : const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

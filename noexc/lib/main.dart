@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 import 'widgets/chat_screen.dart';
 import 'widgets/rive_test_widget.dart';
+import 'widgets/rive_data_binding_test_widget.dart';
 import 'services/service_locator.dart';
 import 'services/session_service.dart';
 import 'themes/app_themes.dart';
 import 'constants/app_constants.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await RiveNative.init(); // Required for Rive 0.14.0
   runApp(const MyApp());
 }
 
@@ -74,7 +78,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: AppThemes.darkTheme,
       themeMode: AppThemes.getThemeMode(_isDarkMode),
       home: _isInitialized 
-        ? const RiveTestWidget() // ChatScreen(onThemeToggle: _toggleTheme)
+        ? const RiveDataBindingTestWidget() // RiveTestWidget() // ChatScreen(onThemeToggle: _toggleTheme)
         : const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

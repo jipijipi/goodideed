@@ -11,6 +11,7 @@ class RiveTestWidget extends StatefulWidget {
 class _RiveTestWidgetState extends State<RiveTestWidget> {
   Artboard? _riveArtboard;
   StateMachineController? _controller;
+  bool _isPlaying = true;
   
   @override
   void initState() {
@@ -19,7 +20,7 @@ class _RiveTestWidgetState extends State<RiveTestWidget> {
   }
 
   void _loadRiveFile() async {
-    final file = await RiveFile.asset('assets/animations/arm_test.riv');
+    final file = await RiveFile.asset('assets/animations/arm_test_2.riv');
     final artboard = file.mainArtboard;
     
     var controller = StateMachineController.fromArtboard(artboard, 'State Machine 1');
@@ -31,18 +32,43 @@ class _RiveTestWidgetState extends State<RiveTestWidget> {
     setState(() => _riveArtboard = artboard);
   }
 
+  void _togglePlayback() {
+    if (_controller != null) {
+      setState(() {
+        _isPlaying = !_isPlaying;
+        _controller!.isActive = _isPlaying;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Rive Animation Test'),
-        backgroundColor: Colors.blue,
-      ),
+      backgroundColor: Colors.black,
       body: _riveArtboard == null
           ? const Center(child: CircularProgressIndicator())
-          : Rive(
-              artboard: _riveArtboard!,
-              fit: BoxFit.contain,
+          : Stack(
+              children: [
+                Rive(
+                  artboard: _riveArtboard!,
+                  fit: BoxFit.contain,
+                ),
+                Positioned(
+                  bottom: 50,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: FloatingActionButton(
+                      onPressed: _togglePlayback,
+                      backgroundColor: Colors.white.withOpacity(0.8),
+                      child: Icon(
+                        _isPlaying ? Icons.pause : Icons.play_arrow,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
     );
   }

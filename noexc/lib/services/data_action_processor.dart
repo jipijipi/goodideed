@@ -29,6 +29,13 @@ class DataActionProcessor {
     
     _logger.debug('Processing ${actions.length} dataAction(s): ${actions.map((a) => a.type.name).join(', ')}', 
         component: LogComponent.dataActionProcessor);
+    
+    // Debug: Log each action details
+    for (int i = 0; i < actions.length; i++) {
+      final action = actions[i];
+      _logger.debug('DataAction [$i]: ${action.type.name} ${action.key} = ${action.value}', 
+          component: LogComponent.dataActionProcessor);
+    }
         
     for (final action in actions) {
       await _processAction(action);

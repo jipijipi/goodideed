@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T19:57:00.895Z",
+  "lastUpdated": "2025-08-04T20:23:39.726Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-04T19:57:00.878Z"
+    "timestamp": "2025-08-04T20:23:39.696Z"
   },
   "nodes": [
     {
@@ -429,8 +429,8 @@
     {
       "id": "207",
       "position": {
-        "x": -117.60961973596613,
-        "y": 156.65989959176989
+        "x": -290.22672443795113,
+        "y": 113.50562341627347
       },
       "data": {
         "label": "Group 207",
@@ -453,8 +453,8 @@
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": -117.60961973596613,
-        "y": 156.65989959176989
+        "x": -290.22672443795113,
+        "y": 113.50562341627347
       },
       "dragging": false
     },
@@ -2282,9 +2282,11 @@
             "value": "NEXT_ACTIVE_WEEKDAY"
           },
           {
-            "type": "set",
+            "type": "trigger",
             "key": "task.isActiveDay",
-            "value": "recalculate_active_day"
+            "value": "recalculate_active_day",
+            "event": "recalculate_active_day",
+            "data": {}
           },
           {
             "type": "set",
@@ -2295,7 +2297,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 933,
+      "height": 938,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {

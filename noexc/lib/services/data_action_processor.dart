@@ -130,26 +130,10 @@ class DataActionProcessor {
   }
 
   /// Get the next active weekday number based on user's active days configuration
+  /// Derives from _getNextActiveDate() to avoid duplicate logic
   Future<int> _getNextActiveWeekday() async {
-    final now = DateTime.now();
-    final activeDays = await _userDataService.getValue<List<dynamic>>('task.activeDays');
-    
-    // If no active days configured, default to tomorrow
-    if (activeDays == null || activeDays.isEmpty) {
-      return now.add(const Duration(days: 1)).weekday;
-    }
-    
-    // Find the next day that matches an active day
-    for (int i = 1; i <= 7; i++) {
-      final testDate = now.add(Duration(days: i));
-      final testWeekday = testDate.weekday;
-      
-      if (activeDays.contains(testWeekday)) {
-        return testWeekday;
-      }
-    }
-    
-    // Fallback - should never reach here if activeDays is valid
-    return now.add(const Duration(days: 1)).weekday;
+    final nextActiveDateString = await _getNextActiveDate();
+    final nextActiveDate = DateTime.parse(nextActiveDateString);
+    return nextActiveDate.weekday;
   }
 }

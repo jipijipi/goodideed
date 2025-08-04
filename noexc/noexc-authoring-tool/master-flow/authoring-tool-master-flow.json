@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T16:24:50.949Z",
+  "lastUpdated": "2025-08-04T16:45:24.602Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-04T16:24:50.924Z"
+    "timestamp": "2025-08-04T16:45:24.587Z"
   },
   "nodes": [
     {
@@ -397,8 +397,8 @@
     {
       "id": "191",
       "position": {
-        "x": 6368.695581086663,
-        "y": 4472.748036118113
+        "x": 6189.4438888115965,
+        "y": 4442.872754072268
       },
       "data": {
         "label": "Group 191",
@@ -421,8 +421,8 @@
       "height": 2789,
       "selected": false,
       "positionAbsolute": {
-        "x": 6368.695581086663,
-        "y": 4472.748036118113
+        "x": 6189.4438888115965,
+        "y": 4442.872754072268
       },
       "dragging": false
     },
@@ -1610,8 +1610,8 @@
         "y": 142.1195780129076
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
         "x": 219.41383879210363,
@@ -1626,7 +1626,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "9",
         "contentKey": "bot.inform.inactive_day.casual",
-        "content": "What are you doing here? You have nothing due today."
+        "content": "What are you doing here? You have nothing due before {task.nextActiveDay:activeDays|next time}..."
       }
     },
     {

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T16:45:24.602Z",
+  "lastUpdated": "2025-08-04T17:00:41.268Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-04T16:45:24.587Z"
+    "timestamp": "2025-08-04T17:00:41.254Z"
   },
   "nodes": [
     {
@@ -173,8 +173,8 @@
     {
       "id": "140",
       "position": {
-        "x": -4500.824634797756,
-        "y": -5064.801942752456
+        "x": -4888.311408839965,
+        "y": -4930.6719055839985
       },
       "type": "group",
       "style": {
@@ -186,8 +186,8 @@
       "height": 880,
       "selected": false,
       "positionAbsolute": {
-        "x": -4500.824634797756,
-        "y": -5064.801942752456
+        "x": -4888.311408839965,
+        "y": -4930.6719055839985
       },
       "dragging": false,
       "data": {
@@ -397,8 +397,8 @@
     {
       "id": "191",
       "position": {
-        "x": 6189.4438888115965,
-        "y": 4442.872754072268
+        "x": 6653.06992063818,
+        "y": 4456.508813831874
       },
       "data": {
         "label": "Group 191",
@@ -413,16 +413,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1177.6050716903446,
+        "width": 1175.6050716903446,
         "height": 2788.718117231141,
         "zIndex": 999
       },
-      "width": 1178,
+      "width": 1176,
       "height": 2789,
       "selected": false,
       "positionAbsolute": {
-        "x": 6189.4438888115965,
-        "y": 4442.872754072268
+        "x": 6653.06992063818,
+        "y": 4456.508813831874
       },
       "dragging": false
     },
@@ -595,11 +595,11 @@
       "type": "group",
       "style": {
         "width": 1286.5937511479312,
-        "height": 2081.727848475921,
+        "height": 2079.727848475921,
         "zIndex": 999
       },
       "width": 1287,
-      "height": 2082,
+      "height": 2080,
       "selected": false,
       "positionAbsolute": {
         "x": 1634.754542679893,
@@ -627,11 +627,11 @@
       "type": "group",
       "style": {
         "width": 1194.3110312481676,
-        "height": 2029.9705216108832,
+        "height": 2027.9705216108832,
         "zIndex": 999
       },
       "width": 1194,
-      "height": 2030,
+      "height": 2028,
       "selected": false,
       "positionAbsolute": {
         "x": 3094.3876649269596,
@@ -1610,8 +1610,8 @@
         "y": 142.1195780129076
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": 219.41383879210363,
@@ -2262,8 +2262,8 @@
     {
       "id": "197",
       "position": {
-        "x": 300,
-        "y": 1566.7128469392019
+        "x": 116.50904721586812,
+        "y": 1522.8379556052296
       },
       "data": {
         "label": "Data action",
@@ -2280,17 +2280,22 @@
             "type": "set",
             "key": "task.nextActiveDay",
             "value": "NEXT_ACTIVE_WEEKDAY"
+          },
+          {
+            "type": "set",
+            "key": "task.isActiveDay",
+            "value": "recalculate_active_day"
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 574,
+      "height": 754,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 6668.695581086663,
-        "y": 6039.460883057315
+        "x": 6769.578967854048,
+        "y": 5979.346769437104
       },
       "parentId": "191",
       "extent": "parent"

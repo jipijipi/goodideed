@@ -80,5 +80,7 @@ After setting the task, if the user *FIRST* checks in on :
     Next Monday after the day deadline : previous task autofailed, current task overdue
 
 
-task autoupdate only if today > current date
-recalculate activeday broken?
+
+recalculate_active_day broken?
+     When choosing weekends, correct selection [6,7] but isActiveDay == true
+NEXT_ACTIVE_DATE calculates to the next day, not the next active day

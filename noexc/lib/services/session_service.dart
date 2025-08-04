@@ -175,9 +175,10 @@ class SessionService {
   Future<void> _checkCurrentDayDeadline(DateTime now) async {
     final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
     final userTask = await userDataService.getValue<String>(StorageKeys.userTask);
+    final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay) ?? false;
     
-    // Only check if task exists and is currently pending
-    if (currentStatus == 'pending' && userTask != null) {
+    // Only check if task exists, is currently pending, AND today is an active day
+    if (currentStatus == 'pending' && userTask != null && isActiveDay) {
       final deadlineTimeString = await _getDeadlineTimeAsString();
       final deadlineParts = deadlineTimeString.split(':');
       final deadlineHour = int.parse(deadlineParts[0]);

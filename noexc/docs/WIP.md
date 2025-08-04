@@ -84,3 +84,9 @@ After setting the task, if the user *FIRST* checks in on :
 recalculate_active_day broken?
      When choosing weekends, correct selection [6,7] but isActiveDay == true
 NEXT_ACTIVE_DATE calculates to the next day, not the next active day
+
+1) It is now monday for the tests, I set active days for saturday and sunday, task.activeDays correctly return [6,7] but recalculate_active_day computes true, as if Monday [1] was active
+
+2) I then ask to start on the next active day instead of today and NEXT_ACTIVE_DATE computes Tuesday (tomorrow, not in the list) instead of saturday.
+
+Suggest reasons and fixes

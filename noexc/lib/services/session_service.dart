@@ -175,7 +175,9 @@ class SessionService {
   Future<void> _checkCurrentDayDeadline(DateTime now) async {
     final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
     final userTask = await userDataService.getValue<String>(StorageKeys.userTask);
-    final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay) ?? false;
+    
+    // Compute isActiveDay inline to avoid race conditions with concurrent recalculations
+    final isActiveDay = await _computeIsActiveDay(now);
     
     // Only check if task exists, is currently pending, AND today is an active day
     if (currentStatus == 'pending' && userTask != null && isActiveDay) {
@@ -234,6 +236,17 @@ class SessionService {
   Future<bool> _computeIsActiveDay(DateTime now) async {
     final today = _formatDate(now);
     final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    
+    // Null safety: If no task date is set, default to false (not active)
+    if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
+      return false;
+    }
+    
+    // Validate date format: Should be YYYY-MM-DD
+    if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
+      // Log warning but don't crash - return false for invalid dates
+      return false;
+    }
     
     // Simple check: Is the task scheduled for today?
     // The script sets task.currentDate to either TODAY_DATE or NEXT_ACTIVE_DATE

@@ -106,6 +106,8 @@ class DataActionProcessor {
   /// Get the next active date based on user's active days configuration
   Future<String> _getNextActiveDate() async {
     final now = DateTime.now();
+    
+    // Snapshot all dependencies at once to avoid race conditions
     final activeDays = await _userDataService.getValue<List<dynamic>>('task.activeDays');
     
     // If no active days configured, default to tomorrow
@@ -114,12 +116,15 @@ class DataActionProcessor {
       return _formatDate(tomorrow);
     }
     
+    // Create a safe copy of active days to avoid concurrent modification issues
+    final activeDaysCopy = List<dynamic>.from(activeDays);
+    
     // Find the next day that matches an active day
     for (int i = 1; i <= 7; i++) {
       final testDate = now.add(Duration(days: i));
       final testWeekday = testDate.weekday;
       
-      if (activeDays.contains(testWeekday)) {
+      if (activeDaysCopy.contains(testWeekday)) {
         return _formatDate(testDate);
       }
     }

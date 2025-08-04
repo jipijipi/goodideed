@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T19:40:54.877Z",
+  "lastUpdated": "2025-08-04T19:57:00.895Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-04T19:40:54.868Z"
+    "timestamp": "2025-08-04T19:57:00.878Z"
   },
   "nodes": [
     {
@@ -397,8 +397,8 @@
     {
       "id": "191",
       "position": {
-        "x": 6849.06992063818,
-        "y": 4422.508813831874
+        "x": 6775.128587921294,
+        "y": 4025.2147788724324
       },
       "data": {
         "label": "Group 191",
@@ -413,24 +413,24 @@
       },
       "type": "group",
       "style": {
-        "width": 1191.6311392130083,
-        "height": 2887.2844979427646,
+        "width": 1213.111348646651,
+        "height": 2885.2844979427646,
         "zIndex": 999
       },
-      "width": 1192,
-      "height": 2887,
+      "width": 1213,
+      "height": 2885,
       "selected": false,
       "positionAbsolute": {
-        "x": 6849.06992063818,
-        "y": 4422.508813831874
+        "x": 6775.128587921294,
+        "y": 4025.2147788724324
       },
       "dragging": false
     },
     {
       "id": "207",
       "position": {
-        "x": -1287.0231505550514,
-        "y": 411.5320793856731
+        "x": -117.60961973596613,
+        "y": 156.65989959176989
       },
       "data": {
         "label": "Group 207",
@@ -453,8 +453,8 @@
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": -1287.0231505550514,
-        "y": 411.5320793856731
+        "x": -117.60961973596613,
+        "y": 156.65989959176989
       },
       "dragging": false
     },
@@ -2262,8 +2262,8 @@
     {
       "id": "197",
       "position": {
-        "x": 94.37729667648728,
-        "y": 1494.7628886241482
+        "x": 72.89708724284446,
+        "y": 1497.1495785612196
       },
       "data": {
         "label": "Data action",
@@ -2299,8 +2299,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 6943.447217314667,
-        "y": 5917.2717024560225
+        "x": 6921.967007881024,
+        "y": 5919.658392393094
       },
       "parentId": "191",
       "extent": "parent"

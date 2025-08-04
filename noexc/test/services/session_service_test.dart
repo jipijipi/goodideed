@@ -4,6 +4,10 @@ import 'package:noexc/services/session_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+String _formatDate(DateTime date) {
+  return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+}
+
 void main() {
   group('SessionService', () {
     late SessionService sessionService;
@@ -104,9 +108,10 @@ void main() {
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
       expect(await userDataService.getValue<String>(StorageKeys.taskCurrentStatus), 'completed');
       
-      // Simulate new day by setting yesterday's task date
+      // Simulate new day by setting yesterday's session date (to trigger isNewDay = true)
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue(StorageKeys.sessionLastVisitDate, yesterdayString);
       await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
       
       // Initialize today (should reset status)
@@ -153,9 +158,10 @@ void main() {
       final initialStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       expect(['pending', 'overdue'].contains(initialStatus), true);
       
-      // Simulate Day 2 by setting yesterday's date
+      // Simulate Day 2 by setting yesterday's session date (to trigger isNewDay = true)
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue(StorageKeys.sessionLastVisitDate, yesterdayString);
       await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
       
       // Initialize today (should archive previous day)
@@ -209,6 +215,7 @@ void main() {
       // Simulate Day 2
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
+      await userDataService.storeValue(StorageKeys.sessionLastVisitDate, yesterdayString);
       await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
       
       await sessionService.initializeSession();
@@ -217,6 +224,110 @@ void main() {
       expect(await userDataService.getValue<String>(StorageKeys.taskPreviousDate), isNull);
       expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), isNull);
       expect(await userDataService.getValue<String>(StorageKeys.taskPreviousTask), isNull);
+    });
+
+    test('should preserve future date for next_active users across same-day sessions', () async {
+      // Set user to next_active timing
+      await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active');
+      await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]); // Mon-Fri
+      
+      // First session - should set future date
+      await sessionService.initializeSession();
+      final firstCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+      
+      // Second session same day - should preserve future date
+      await sessionService.initializeSession();
+      final secondCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+      
+      // Both should be the same future date, not today
+      expect(firstCurrentDate, equals(secondCurrentDate));
+      expect(firstCurrentDate, isNot(equals(_formatDate(DateTime.now()))));
+    });
+
+    test('should reset to today for today timing users', () async {
+      // Set user to today timing
+      await userDataService.storeValue(StorageKeys.taskStartTiming, 'today');
+      
+      // Initialize session
+      await sessionService.initializeSession();
+      final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+      
+      // Should always be today for 'today' users  
+      expect(currentDate, equals(_formatDate(DateTime.now())));
+    });
+
+    test('should use session date for isNewDay calculation, not task date', () async {
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+      final tomorrowString = _formatDate(tomorrow);
+      
+      // Set up next_active user with future task date
+      await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active');
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString);
+      await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+      
+      // First session - should be treated as same day (no session date change)
+      await sessionService.initializeSession();
+      final currentDate1 = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+      
+      // Second session same day - should preserve future date
+      await sessionService.initializeSession();
+      final currentDate2 = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+      
+      // Task date should remain the same (not recalculated)
+      expect(currentDate1, equals(currentDate2));
+      expect(currentDate1, equals(tomorrowString));
+    });
+
+    test('should store next active weekday when calculating future dates', () async {
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+      
+      // Set user to next_active with only tomorrow as active day (forces future calculation)
+      await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active'); 
+      await userDataService.storeValue(StorageKeys.taskActiveDays, [tomorrow.weekday]); // Only tomorrow
+      
+      await sessionService.initializeSession();
+      
+      final nextActiveWeekday = await userDataService.getValue<int>(StorageKeys.taskNextActiveWeekday);
+      
+      // Should have stored tomorrow's weekday number
+      expect(nextActiveWeekday, isNotNull);
+      expect(nextActiveWeekday, equals(tomorrow.weekday));
+    });
+
+    test('should return false for isActiveDay when task scheduled for different date', () async {
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+      final tomorrowString = _formatDate(tomorrow);
+      
+      // Set up next_active user properly - this will cause task to be scheduled for future date
+      await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active');
+      await userDataService.storeValue(StorageKeys.taskActiveDays, [tomorrow.weekday]); // Only tomorrow is active
+      
+      // Initialize session - this should set task date to tomorrow
+      await sessionService.initializeSession();
+      
+      final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+      final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+      
+      // Task should be scheduled for tomorrow
+      expect(currentDate, equals(tomorrowString));
+      // isActiveDay should be false because task is scheduled for tomorrow, not today
+      expect(isActiveDay, equals(false));
+    });
+
+    test('should return true for isActiveDay when task scheduled for today and weekday matches', () async {
+      final today = DateTime.now();
+      final todayString = _formatDate(today);
+      
+      // Set task scheduled for today with today's weekday in active days
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, todayString);
+      await userDataService.storeValue(StorageKeys.taskActiveDays, [today.weekday]);
+      
+      await sessionService.initializeSession();
+      
+      final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+      
+      // Should be true because task is scheduled for today AND today's weekday is active
+      expect(isActiveDay, equals(true));
     });
   });
 }

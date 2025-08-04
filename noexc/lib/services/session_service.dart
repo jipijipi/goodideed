@@ -9,11 +9,14 @@ class SessionService {
   
   /// Initialize session data on app start
   Future<void> initializeSession() async {
+    // Capture the original session date before any updates
+    final originalLastVisitDate = await userDataService.getValue<String>(StorageKeys.sessionLastVisitDate);
+    
     await _updateVisitCount();
     await _updateTotalVisitCount();
     await _updateTimeOfDay();
     await _updateDateInfo();
-    await _updateTaskInfo();
+    await _updateTaskInfo(originalLastVisitDate);
   }
   
   /// Update visit count (daily counter that resets each day)
@@ -94,14 +97,14 @@ class SessionService {
     await userDataService.storeValue(StorageKeys.sessionIsWeekend, isWeekend);
   }
 
-  /// Update daily task information
-  Future<void> _updateTaskInfo() async {
+  /// Update daily task information  
+  Future<void> _updateTaskInfo(String? originalLastVisitDate) async {
     final now = DateTime.now();
     final today = _formatDate(now);
     
-    // Check if this is a new day for tasks
+    // Check if this is a new calendar day using the original session date
+    final isNewDay = originalLastVisitDate != today;
     final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    final isNewDay = lastTaskDate != today;
     
     if (isNewDay && lastTaskDate != null) {
       // Archive current day as previous day before updating
@@ -232,9 +235,15 @@ class SessionService {
       return;
     }
     
-    // If user chose to start today, or it's not a new day, use today
-    if (startTiming == 'today' || !isNewDay) {
+    // If user chose to start today, always use today
+    if (startTiming == 'today') {
       await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
+      return;
+    }
+    
+    // For non-new days, preserve existing currentDate if user chose next_active
+    if (!isNewDay && startTiming == 'next_active') {
+      // Don't overwrite - keep the previously calculated future date
       return;
     }
     
@@ -257,6 +266,7 @@ class SessionService {
     // If no active days configured, default to tomorrow
     if (activeDays == null || activeDays.isEmpty) {
       final tomorrow = now.add(const Duration(days: 1));
+      await userDataService.storeValue(StorageKeys.taskNextActiveWeekday, tomorrow.weekday);
       return _formatDate(tomorrow);
     }
     
@@ -266,18 +276,28 @@ class SessionService {
       final testWeekday = testDate.weekday;
       
       if (activeDays.contains(testWeekday)) {
+        await userDataService.storeValue(StorageKeys.taskNextActiveWeekday, testWeekday);
         return _formatDate(testDate);
       }
     }
     
     // Fallback - should never reach here if activeDays is valid
     final tomorrow = now.add(const Duration(days: 1));
+    await userDataService.storeValue(StorageKeys.taskNextActiveWeekday, tomorrow.weekday);
     return _formatDate(tomorrow);
   }
 
   /// Check if today is an active day based on user's active_days configuration
+  /// AND if the user's task is actually scheduled for today
   Future<bool> _computeIsActiveDay(DateTime now) async {
     final activeDays = await userDataService.getValue<List<dynamic>>(StorageKeys.taskActiveDays);
+    final today = _formatDate(now);
+    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    
+    // First check: Is the task actually scheduled for today?
+    if (taskCurrentDate != null && taskCurrentDate != today) {
+      return false; // Task is scheduled for a different date
+    }
     
     if (activeDays == null || activeDays.isEmpty) {
       // If no active days configured, default to every day being active

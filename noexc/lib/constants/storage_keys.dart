@@ -35,6 +35,7 @@ class StorageKeys {
   static const String taskIsInTimeRange = '${taskPrefix}isInTimeRange';
   static const String taskIsPastDeadline = '${taskPrefix}isPastDeadline';
   static const String taskStartTiming = '${taskPrefix}startTiming';
+  static const String taskNextActiveWeekday = '${taskPrefix}nextActiveWeekday';
   
   // Private constructor to prevent instantiation
   StorageKeys._();

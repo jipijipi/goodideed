@@ -31,8 +31,8 @@ class _MyAppState extends State<MyApp> {
     // Initialize all application services first
     await ServiceLocator.instance.initialize();
     
-    // Initialize session service after ServiceLocator
-    _sessionService = SessionService(ServiceLocator.instance.userDataService);
+    // Get session service from ServiceLocator and initialize it
+    _sessionService = ServiceLocator.instance.sessionService;
     await _sessionService.initializeSession();
     
     await _loadThemePreference();

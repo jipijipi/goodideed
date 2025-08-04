@@ -1,20 +1,20 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-01T18:51:02.208Z",
+  "lastUpdated": "2025-08-04T10:21:26.044Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-01T18:51:02.181Z"
+    "timestamp": "2025-08-04T10:21:26.037Z"
   },
   "nodes": [
     {
       "id": "128",
       "position": {
-        "x": -4637.123562939616,
-        "y": 3212.276596455394
+        "x": -6612.906630675303,
+        "y": 1605.9488991093071
       },
       "type": "group",
       "style": {
@@ -26,8 +26,8 @@
       "height": 1401,
       "selected": false,
       "positionAbsolute": {
-        "x": -4637.123562939616,
-        "y": 3212.276596455394
+        "x": -6612.906630675303,
+        "y": 1605.9488991093071
       },
       "dragging": false,
       "data": {
@@ -44,8 +44,8 @@
     {
       "id": "130",
       "position": {
-        "x": -3696.681384680785,
-        "y": 4810.836595548388
+        "x": -5608.211344522629,
+        "y": 3027.8128514942314
       },
       "type": "group",
       "style": {
@@ -57,8 +57,8 @@
       "height": 950,
       "selected": false,
       "positionAbsolute": {
-        "x": -3696.681384680785,
-        "y": 4810.836595548388
+        "x": -5608.211344522629,
+        "y": 3027.8128514942314
       },
       "dragging": false,
       "data": {
@@ -75,8 +75,8 @@
     {
       "id": "131",
       "position": {
-        "x": -5955.590884293867,
-        "y": 3522.644342037346
+        "x": -8718.474523729135,
+        "y": 3169.2522486212065
       },
       "type": "group",
       "style": {
@@ -88,8 +88,8 @@
       "height": 2530,
       "selected": false,
       "positionAbsolute": {
-        "x": -5955.590884293867,
-        "y": 3522.644342037346
+        "x": -8718.474523729135,
+        "y": 3169.2522486212065
       },
       "dragging": false,
       "data": {
@@ -106,8 +106,8 @@
     {
       "id": "133",
       "position": {
-        "x": -5304.869305931119,
-        "y": -982.71303069315
+        "x": -6397.172140126458,
+        "y": -2251.711911596559
       },
       "type": "group",
       "style": {
@@ -119,8 +119,8 @@
       "height": 2189,
       "selected": false,
       "positionAbsolute": {
-        "x": -5304.869305931119,
-        "y": -982.71303069315
+        "x": -6397.172140126458,
+        "y": -2251.711911596559
       },
       "dragging": false,
       "data": {
@@ -137,21 +137,21 @@
     {
       "id": "135",
       "position": {
-        "x": -3742.439457676234,
-        "y": 205.2548397207272
+        "x": -4240.401043853521,
+        "y": -581.8457319788554
       },
       "type": "group",
       "style": {
-        "width": 1041,
-        "height": 2415,
+        "width": 1037.28405123824,
+        "height": 2467,
         "zIndex": 999
       },
-      "width": 1041,
-      "height": 2415,
+      "width": 1037,
+      "height": 2467,
       "selected": false,
       "positionAbsolute": {
-        "x": -3742.439457676234,
-        "y": 205.2548397207272
+        "x": -4240.401043853521,
+        "y": -581.8457319788554
       },
       "dragging": false,
       "data": {
@@ -168,8 +168,8 @@
     {
       "id": "140",
       "position": {
-        "x": -2355.32235739524,
-        "y": -1969.6692250610054
+        "x": -2917.5370514663705,
+        "y": -2724.643242813666
       },
       "type": "group",
       "style": {
@@ -181,8 +181,8 @@
       "height": 880,
       "selected": false,
       "positionAbsolute": {
-        "x": -2355.32235739524,
-        "y": -1969.6692250610054
+        "x": -2917.5370514663705,
+        "y": -2724.643242813666
       },
       "dragging": false,
       "data": {
@@ -199,8 +199,8 @@
     {
       "id": "145",
       "position": {
-        "x": -3027.351964992876,
-        "y": 3219.1432073101505
+        "x": -4167.844630108599,
+        "y": 2978.1940527082375
       },
       "type": "group",
       "style": {
@@ -212,8 +212,8 @@
       "height": 1841,
       "selected": false,
       "positionAbsolute": {
-        "x": -3027.351964992876,
-        "y": 3219.1432073101505
+        "x": -4167.844630108599,
+        "y": 2978.1940527082375
       },
       "dragging": false,
       "data": {
@@ -266,12 +266,12 @@
       },
       "type": "group",
       "style": {
-        "width": 886.908173876404,
-        "height": 1007.1658371554711,
+        "width": 1097.3521782964685,
+        "height": 1102.6464114336259,
         "zIndex": 999
       },
-      "width": 887,
-      "height": 1007,
+      "width": 1097,
+      "height": 1103,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -292,8 +292,8 @@
     {
       "id": "150",
       "position": {
-        "x": -2379.099911783084,
-        "y": 1558.7329709189066
+        "x": -3037.6942676949793,
+        "y": 257.60753606857605
       },
       "type": "group",
       "style": {
@@ -316,8 +316,8 @@
         "description": "Checks for task completedness before the deadline"
       },
       "positionAbsolute": {
-        "x": -2379.099911783084,
-        "y": 1558.7329709189066
+        "x": -3037.6942676949793,
+        "y": 257.60753606857605
       }
     },
     {
@@ -385,8 +385,8 @@
     {
       "id": "191",
       "position": {
-        "x": 3987.6103254162813,
-        "y": 8988.751062071984
+        "x": 1131.5786530101286,
+        "y": 6583.3847776646
       },
       "data": {
         "label": "Group 191",
@@ -408,16 +408,16 @@
       "height": 2351,
       "selected": false,
       "positionAbsolute": {
-        "x": 3987.6103254162813,
-        "y": 8988.751062071984
+        "x": 1131.5786530101286,
+        "y": 6583.3847776646
       },
       "dragging": false
     },
     {
       "id": "207",
       "position": {
-        "x": 427.91100709861377,
-        "y": 5060.561261202653
+        "x": -439.77883410469417,
+        "y": 2687.9644396313433
       },
       "data": {
         "label": "Group 207",
@@ -439,16 +439,16 @@
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": 427.91100709861377,
-        "y": 5060.561261202653
+        "x": -439.77883410469417,
+        "y": 2687.9644396313433
       },
       "dragging": false
     },
     {
       "id": "215",
       "position": {
-        "x": 2771.911310378182,
-        "y": 6228.351990608523
+        "x": 1979.5272845919148,
+        "y": 1417.1704538716253
       },
       "data": {
         "label": "Group 215",
@@ -456,30 +456,30 @@
         "nodeLabel": "Group",
         "nodeId": "215",
         "content": "Subflow Group",
-        "groupId": "taskparam_seq",
-        "title": "Task Parametring Routing",
+        "groupId": "param_seq",
+        "title": "User Parametring Routing",
         "description": "A routing sequence that checks for existing parameters"
       },
       "type": "group",
       "style": {
-        "width": 1305.2177035860836,
-        "height": 1959.5147284424647,
+        "width": 1625.2177035860836,
+        "height": 2552.158859823583,
         "zIndex": 999
       },
-      "width": 1305,
-      "height": 1960,
+      "width": 1625,
+      "height": 2552,
       "selected": false,
       "positionAbsolute": {
-        "x": 2771.911310378182,
-        "y": 6228.351990608523
+        "x": 1979.5272845919148,
+        "y": 1417.1704538716253
       },
       "dragging": false
     },
     {
       "id": "28",
       "position": {
-        "x": 812.1299365098334,
-        "y": -2791.134490122428
+        "x": 1490.1946726028257,
+        "y": -2415.872653674992
       },
       "type": "group",
       "style": {
@@ -491,8 +491,8 @@
       "height": 2038,
       "selected": false,
       "positionAbsolute": {
-        "x": 812.1299365098334,
-        "y": -2791.134490122428
+        "x": 1490.1946726028257,
+        "y": -2415.872653674992
       },
       "dragging": false,
       "data": {
@@ -509,8 +509,8 @@
     {
       "id": "30",
       "position": {
-        "x": 1904.1060399338994,
-        "y": -1978.693431112325
+        "x": 3150.0832809748968,
+        "y": -4178.54430838202
       },
       "type": "group",
       "style": {
@@ -522,8 +522,8 @@
       "height": 3899,
       "selected": false,
       "positionAbsolute": {
-        "x": 1904.1060399338994,
-        "y": -1978.693431112325
+        "x": 3150.0832809748968,
+        "y": -4178.54430838202
       },
       "dragging": false,
       "data": {
@@ -540,8 +540,8 @@
     {
       "id": "31",
       "position": {
-        "x": 3486.1467726065225,
-        "y": 4332.782898503476
+        "x": 4787.300500149433,
+        "y": -1008.4784031594365
       },
       "type": "group",
       "style": {
@@ -554,8 +554,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 3486.1467726065225,
-        "y": 4332.782898503476
+        "x": 4787.300500149433,
+        "y": -1008.4784031594365
       },
       "data": {
         "label": "Group 31",
@@ -571,8 +571,8 @@
     {
       "id": "39",
       "position": {
-        "x": 4563.395398845323,
-        "y": 3574.1586694827192
+        "x": 4439.003474638393,
+        "y": 3075.871092391564
       },
       "type": "group",
       "style": {
@@ -584,8 +584,8 @@
       "height": 2004,
       "selected": false,
       "positionAbsolute": {
-        "x": 4563.395398845323,
-        "y": 3574.1586694827192
+        "x": 4439.003474638393,
+        "y": 3075.871092391564
       },
       "dragging": false,
       "data": {
@@ -602,8 +602,8 @@
     {
       "id": "47",
       "position": {
-        "x": 5744.196693334242,
-        "y": 5889.428503624077
+        "x": 4940.934310428473,
+        "y": 6625.067820017728
       },
       "type": "group",
       "style": {
@@ -615,8 +615,8 @@
       "height": 1982,
       "selected": false,
       "positionAbsolute": {
-        "x": 5744.196693334242,
-        "y": 5889.428503624077
+        "x": 4940.934310428473,
+        "y": 6625.067820017728
       },
       "dragging": false,
       "data": {
@@ -633,8 +633,8 @@
     {
       "id": "55",
       "position": {
-        "x": 5655.283705218428,
-        "y": 8174.603017361419
+        "x": 2703.0727863187376,
+        "y": 6658.009734498248
       },
       "type": "group",
       "style": {
@@ -647,8 +647,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 5655.283705218428,
-        "y": 8174.603017361419
+        "x": 2703.0727863187376,
+        "y": 6658.009734498248
       },
       "data": {
         "label": "Group 55",
@@ -664,8 +664,8 @@
     {
       "id": "59",
       "position": {
-        "x": -944.6013774444509,
-        "y": 8896.605525607269
+        "x": -3329.2434053537436,
+        "y": 9841.2288112586
       },
       "type": "group",
       "style": {
@@ -677,8 +677,8 @@
       "height": 1129,
       "selected": false,
       "positionAbsolute": {
-        "x": -944.6013774444509,
-        "y": 8896.605525607269
+        "x": -3329.2434053537436,
+        "y": 9841.2288112586
       },
       "dragging": false,
       "data": {
@@ -905,7 +905,7 @@
     {
       "id": "118",
       "position": {
-        "x": 147.22298592649258,
+        "x": 168.77023247340458,
         "y": 525.6502236355877
       },
       "type": "editable",
@@ -913,7 +913,7 @@
       "height": 574,
       "selected": false,
       "positionAbsolute": {
-        "x": -5808.367898367374,
+        "x": -5786.820651820462,
         "y": 4048.294565672934
       },
       "dragging": true,
@@ -1248,62 +1248,6 @@
       }
     },
     {
-      "id": "104",
-      "position": {
-        "x": 772,
-        "y": 1329.4143711497923
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": -2710.842215416095,
-        "y": 1198.719838533869
-      },
-      "dragging": false,
-      "parentId": "135",
-      "extent": "parent",
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "104",
-        "contentKey": "system.check.notice_status"
-      }
-    },
-    {
-      "id": "134",
-      "position": {
-        "x": 497.9078627076251,
-        "y": 1571.2313411197892
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "dragging": false,
-      "positionAbsolute": {
-        "x": -2984.9343527084698,
-        "y": 1440.536808503866
-      },
-      "parentId": "135",
-      "extent": "parent",
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "134",
-        "dataActions": [
-          {
-            "type": "set",
-            "key": "task.currentStatus",
-            "value": "failed"
-          }
-        ]
-      }
-    },
-    {
       "id": "156",
       "position": {
         "x": 477,
@@ -1326,31 +1270,6 @@
         "nodeLabel": "Response",
         "nodeId": "156",
         "content": "Let me see..."
-      }
-    },
-    {
-      "id": "158",
-      "position": {
-        "x": 515,
-        "y": 2022.0000000000002
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "dragging": false,
-      "parentId": "135",
-      "extent": "parent",
-      "positionAbsolute": {
-        "x": -2967.842215416095,
-        "y": 1891.305467384077
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "158",
-        "content": "And You're out of strikes"
       }
     },
     {
@@ -1768,14 +1687,15 @@
     {
       "id": "222",
       "position": {
-        "x": 295.7466960496282,
-        "y": 271.2119918755666
+        "x": 375.6958932342041,
+        "y": 39.3908912458719
       },
       "data": {
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "222"
+        "nodeId": "1",
+        "contentKey": "system.check.parameters"
       },
       "type": "editable",
       "width": 248,
@@ -1783,24 +1703,24 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": -280.19439383748863,
-        "y": -1736.0510618250564
+        "x": -167.911867812587,
+        "y": -2873.2053699838725
       },
       "parentId": "148",
       "extent": "parent"
     },
     {
-      "id": "223",
+      "id": "231",
       "position": {
-        "x": 521.5377392329688,
-        "y": 614.1658371554711
+        "x": 731.9817436530332,
+        "y": 410.9219873149168
       },
       "data": {
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "223",
-        "content": "Oops, looks like we forgot to set something"
+        "nodeId": "231",
+        "content": "Oops, looks like we forgot something..."
       },
       "type": "editable",
       "width": 248,
@@ -1808,35 +1728,34 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": -54.403350654148106,
-        "y": -1393.097216545152
+        "x": 188.37398260624207,
+        "y": -2501.6742739148276
       },
       "parentId": "148",
       "extent": "parent"
     },
     {
-      "id": "3",
+      "id": "232",
       "position": {
-        "x": 487.0483272793359,
-        "y": 25
+        "x": 370.926975735362,
+        "y": 818.0373026794978
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "232"
       },
       "type": "editable",
       "width": 248,
       "height": 162,
       "selected": false,
-      "positionAbsolute": {
-        "x": -29.754231215845152,
-        "y": -66.54560461642498
-      },
-      "dragging": false,
+      "dragging": true,
       "parentId": "148",
       "extent": "parent",
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "1",
-        "contentKey": "system.check.onboarding_status"
+      "positionAbsolute": {
+        "x": -172.68078531142908,
+        "y": -2094.5589585502466
       }
     },
     {
@@ -2655,8 +2574,8 @@
         "content": "As you wish"
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "dragging": true,
       "parentId": "207",
@@ -2729,8 +2648,8 @@
     {
       "id": "224",
       "position": {
-        "x": 729.0157675853343,
-        "y": 324.69692064254104
+        "x": 750.5310880309307,
+        "y": 325.6344854025465
       },
       "data": {
         "label": "Data action",
@@ -2740,8 +2659,8 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "task.areParametersOk",
-            "value": false
+            "key": "task.parametersStatus",
+            "value": "inProgress"
           }
         ]
       },
@@ -2751,8 +2670,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 709.2402937609061,
-        "y": 5441.233280363761
+        "x": 310.75225392623656,
+        "y": 3013.59892503389
       },
       "parentId": "207",
       "extent": "parent"
@@ -2760,22 +2679,23 @@
     {
       "id": "209",
       "position": {
-        "x": 227.06817109578378,
-        "y": 387.0851701474785
+        "x": 771.0681710957838,
+        "y": 913.0851701474785
       },
       "data": {
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "209"
+        "nodeId": "209",
+        "contentKey": "system.check.task_deadline"
       },
       "type": "editable",
       "width": 248,
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 2499.4866599047314,
-        "y": 3780.6314142896063
+        "x": 2522.9794814739657,
+        "y": 7083.4371607560015
       },
       "dragging": true,
       "parentId": "215",
@@ -2784,22 +2704,23 @@
     {
       "id": "210",
       "position": {
-        "x": 455.82428889906396,
-        "y": 697.0945316361685
+        "x": 979.824288899064,
+        "y": 1211.0945316361685
       },
       "data": {
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "210"
+        "nodeId": "210",
+        "contentKey": "system.check.task_active_days"
       },
       "type": "editable",
       "width": 248,
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 2728.2427777080115,
-        "y": 4090.6407757782963
+        "x": 2731.735599277246,
+        "y": 7381.446522244692
       },
       "dragging": true,
       "parentId": "215",
@@ -2808,14 +2729,15 @@
     {
       "id": "212",
       "position": {
-        "x": 700.3129002151027,
-        "y": 985.1955176292004
+        "x": 1176.3129002151027,
+        "y": 1501.1955176292004
       },
       "data": {
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "212"
+        "nodeId": "212",
+        "contentKey": "system.check.task_reminders_intensity"
       },
       "type": "editable",
       "width": 248,
@@ -2823,8 +2745,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 2972.7313890240503,
-        "y": 4378.741761771328
+        "x": 2928.2242105932846,
+        "y": 7671.547508237723
       },
       "parentId": "215",
       "extent": "parent"
@@ -2832,22 +2754,23 @@
     {
       "id": "214",
       "position": {
-        "x": 969.5944006211867,
-        "y": 1281
+        "x": 1307.5944006211867,
+        "y": 1807
       },
       "data": {
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "214"
+        "nodeId": "214",
+        "contentKey": "system.check.task_start_timing"
       },
       "type": "editable",
       "width": 248,
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 3242.0128894301342,
-        "y": 4674.546244142128
+        "x": 2247.570214247637,
+        "y": 2031.4247664180539
       },
       "dragging": true,
       "parentId": "215",
@@ -2856,14 +2779,15 @@
     {
       "id": "219",
       "position": {
-        "x": 72.376697035103,
-        "y": 140.84114017641696
+        "x": 90.376697035103,
+        "y": 104.84114017641696
       },
       "data": {
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "219"
+        "nodeId": "219",
+        "contentKey": "system.check.user_name"
       },
       "type": "editable",
       "width": 248,
@@ -2871,8 +2795,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 1329.7651243140294,
-        "y": 5093.211273090198
+        "x": 1842.288007413285,
+        "y": 6275.19313078494
       },
       "parentId": "215",
       "extent": "parent"
@@ -2880,8 +2804,8 @@
     {
       "id": "226",
       "position": {
-        "x": 118.19491131295263,
-        "y": 1543.3558686188817
+        "x": 242.19491131295263,
+        "y": 2102
       },
       "data": {
         "label": "Data action",
@@ -2891,10 +2815,11 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "task.areParametersOk",
-            "value": true
+            "key": "task.parametersStatus",
+            "value": "complete"
           }
-        ]
+        ],
+        "contentKey": "system.set.parameters_status"
       },
       "type": "editable",
       "width": 308,
@@ -2902,11 +2827,61 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 2105.2443283987313,
-        "y": 6585.072245182481
+        "x": 1182.170724939403,
+        "y": 2326.424766418054
       },
       "parentId": "215",
       "extent": "parent"
+    },
+    {
+      "id": "228",
+      "position": {
+        "x": 345.90784348128955,
+        "y": 397.6280862647091
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "228",
+        "contentKey": "system.check.user_onboarded"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "dragging": true,
+      "positionAbsolute": {
+        "x": 953.88365710774,
+        "y": 848.0528526827629
+      },
+      "parentId": "215",
+      "extent": "parent"
+    },
+    {
+      "id": "229",
+      "position": {
+        "x": 633.8490779795578,
+        "y": 674.8959078441196
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "229",
+        "contentKey": "system.check.user_task"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "dragging": true,
+      "parentId": "215",
+      "extent": "parent",
+      "positionAbsolute": {
+        "x": 1399.9616843104434,
+        "y": 913.3206742621735
+      }
     },
     {
       "id": "10",
@@ -3118,16 +3093,16 @@
     {
       "id": "13",
       "position": {
-        "x": 319.0624611600224,
-        "y": 882.8003352919241
+        "x": 309.21379673106685,
+        "y": 1010.8329728683457
       },
       "type": "editable",
       "width": 248,
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 2922.897297196662,
-        "y": -1124.8847230208587
+        "x": 2609.906802923243,
+        "y": -3115.7078493024874
       },
       "dragging": true,
       "parentId": "30",
@@ -3339,16 +3314,16 @@
     {
       "id": "29",
       "position": {
-        "x": 294.891949555692,
-        "y": 392.95245206423533
+        "x": 288.3762233830339,
+        "y": 339.16313663259143
       },
       "type": "editable",
       "width": 308,
-      "height": 395,
+      "height": 574,
       "selected": false,
       "positionAbsolute": {
-        "x": 2898.7267855923315,
-        "y": -1614.7326062485474
+        "x": 2589.06922957521,
+        "y": -3787.3776855382416
       },
       "dragging": true,
       "parentId": "30",
@@ -3364,6 +3339,11 @@
             "type": "set",
             "key": "user.isOnboarded",
             "value": true
+          },
+          {
+            "type": "set",
+            "key": "task.parametersStatus",
+            "value": "inProgress"
           }
         ]
       }
@@ -4138,17 +4118,6 @@
   ],
   "edges": [
     {
-      "id": "reactflow__edge-3-5",
-      "source": "3",
-      "target": "5",
-      "type": "custom",
-      "label": "user.name==null",
-      "data": {
-        "label": "user.name==null"
-      },
-      "selected": false
-    },
-    {
       "id": "reactflow__edge-5-6",
       "source": "5",
       "target": "6",
@@ -4202,14 +4171,6 @@
       "id": "reactflow__edge-10-11",
       "source": "10",
       "target": "11",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-11-12",
-      "source": "11",
-      "target": "12",
       "type": "custom",
       "data": {},
       "selected": false
@@ -4291,14 +4252,6 @@
       "id": "reactflow__edge-24-26",
       "source": "24",
       "target": "26",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-3-12",
-      "source": "3",
-      "target": "12",
       "type": "custom",
       "data": {},
       "selected": false
@@ -4784,25 +4737,6 @@
       "selected": false
     },
     {
-      "id": "reactflow__edge-100-104",
-      "source": "100",
-      "target": "104",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-104-103",
-      "source": "104",
-      "target": "103",
-      "type": "custom",
-      "label": "",
-      "data": {
-        "label": ""
-      },
-      "selected": false
-    },
-    {
       "id": "reactflow__edge-109-110",
       "source": "109",
       "target": "110",
@@ -4998,17 +4932,6 @@
       "selected": false
     },
     {
-      "id": "reactflow__edge-104-134",
-      "source": "104",
-      "target": "134",
-      "type": "custom",
-      "label": "user.isOnNotice == true",
-      "data": {
-        "label": "user.isOnNotice == true"
-      },
-      "selected": false
-    },
-    {
       "id": "reactflow__edge-101-137",
       "source": "101",
       "target": "137",
@@ -5182,14 +5105,6 @@
       "id": "reactflow__edge-75-156",
       "source": "75",
       "target": "156",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-134-158",
-      "source": "134",
-      "target": "158",
       "type": "custom",
       "data": {},
       "selected": false
@@ -5725,19 +5640,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "219",
-      "sourceHandle": null,
-      "target": "209",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "user.task != null"
-      },
-      "id": "reactflow__edge-219-209",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "217",
       "sourceHandle": null,
       "target": "219",
@@ -5767,17 +5669,6 @@
         "filter": "none"
       },
       "id": "reactflow__edge-216-219"
-    },
-    {
-      "zIndex": 1001,
-      "source": "219",
-      "sourceHandle": null,
-      "target": "178",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-219-178",
-      "selected": false
     },
     {
       "zIndex": 1001,
@@ -5902,56 +5793,13 @@
       "zIndex": 1001,
       "source": "222",
       "sourceHandle": null,
-      "target": "223",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": ""
-      },
-      "id": "reactflow__edge-222-223",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "3",
-      "target": "222",
-      "type": "custom",
-      "label": "user.isOnboarded == true",
-      "data": {
-        "label": "user.isOnboarded == true"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#ff9800",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-3-222",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "222",
-      "sourceHandle": null,
       "target": "63",
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "task.areParametersOk == true"
+        "label": "task.parametersStatus == complete"
       },
       "id": "reactflow__edge-222-63",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "223",
-      "sourceHandle": null,
-      "target": "219",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-223-219",
       "selected": false
     },
     {
@@ -6124,19 +5972,142 @@
     },
     {
       "zIndex": 1001,
-      "source": "158",
-      "target": "117",
+      "source": "219",
+      "sourceHandle": null,
+      "target": "228",
+      "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "label": "user.name != null"
+      },
       "selected": false,
       "style": {
         "strokeWidth": 2,
-        "stroke": "#999",
+        "stroke": "#ff9800",
         "filter": "none"
       },
-      "id": "reactflow__edge-158-117",
+      "id": "reactflow__edge-219-228"
+    },
+    {
+      "zIndex": 1001,
+      "source": "229",
       "sourceHandle": null,
-      "targetHandle": null
+      "target": "209",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "user.task != null"
+      },
+      "id": "reactflow__edge-229-209",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "229",
+      "sourceHandle": null,
+      "target": "178",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-229-178",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "228",
+      "sourceHandle": null,
+      "target": "12",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-228-12",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "219",
+      "sourceHandle": null,
+      "target": "5",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-219-5",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "11",
+      "sourceHandle": null,
+      "target": "219",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-11-219",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "228",
+      "sourceHandle": null,
+      "target": "229",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "user.isOnboarded == true"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ff9800",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-228-229"
+    },
+    {
+      "zIndex": 1001,
+      "source": "222",
+      "sourceHandle": null,
+      "target": "231",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "task.parametersStatus == inProgress"
+      },
+      "id": "reactflow__edge-222-231",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "222",
+      "sourceHandle": null,
+      "target": "232",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-222-232",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "231",
+      "sourceHandle": null,
+      "target": "232",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-231-232",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "232",
+      "sourceHandle": null,
+      "target": "219",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-232-219",
+      "selected": false
     }
   ]
 }

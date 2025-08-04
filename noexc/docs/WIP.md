@@ -79,3 +79,6 @@ After setting the task, if the user *FIRST* checks in on :
     Next Monday before the day deadline : previous task autofailed, current task pending
     Next Monday after the day deadline : previous task autofailed, current task overdue
 
+
+task autoupdate only if today > current date
+recalculate activeday broken?

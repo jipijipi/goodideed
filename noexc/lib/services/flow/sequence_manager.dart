@@ -65,16 +65,6 @@ class SequenceManager implements MessageProvider {
     final message = _sequenceLoader.getMessageById(id);
     if (message == null) {
       logger.debug('Message $id not found');
-    } else {
-      logger.debug('Retrieved message $id from sequence');
-      // Special debug for message 197
-      if (id == 197 && message.dataActions != null) {
-        logger.debug('Message 197 has ${message.dataActions!.length} dataActions');
-        for (int i = 0; i < message.dataActions!.length; i++) {
-          final action = message.dataActions![i];
-          logger.debug('Action [$i]: ${action.type.name} ${action.key} = ${action.value}');
-        }
-      }
     }
     return message;
   }

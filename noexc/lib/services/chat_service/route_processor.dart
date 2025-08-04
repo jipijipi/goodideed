@@ -60,11 +60,8 @@ class RouteProcessor {
   /// Process dataAction messages by executing data modifications
   Future<int?> processDataAction(ChatMessage dataActionMessage) async {
     if (_dataActionProcessor == null || dataActionMessage.dataActions == null) {
-      logger.route('DataAction processor or actions is null for message ${dataActionMessage.id}');
       return dataActionMessage.nextMessageId;
     }
-
-    logger.route('Processing dataAction message ${dataActionMessage.id} with ${dataActionMessage.dataActions!.length} actions');
     
     try {
       await _dataActionProcessor.processActions(dataActionMessage.dataActions!);

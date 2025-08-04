@@ -1,20 +1,20 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T10:21:26.044Z",
+  "lastUpdated": "2025-08-04T12:37:28.922Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-04T10:21:26.037Z"
+    "timestamp": "2025-08-04T12:37:28.914Z"
   },
   "nodes": [
     {
       "id": "128",
       "position": {
-        "x": -6612.906630675303,
-        "y": 1605.9488991093071
+        "x": -7807.57808674413,
+        "y": 496.6605624349293
       },
       "type": "group",
       "style": {
@@ -26,8 +26,8 @@
       "height": 1401,
       "selected": false,
       "positionAbsolute": {
-        "x": -6612.906630675303,
-        "y": 1605.9488991093071
+        "x": -7807.57808674413,
+        "y": 496.6605624349293
       },
       "dragging": false,
       "data": {
@@ -38,14 +38,15 @@
         "content": "Subflow Group",
         "groupId": "excuse_seq",
         "title": "Excuse Sequence",
-        "description": "Asks the user is he had a good reason to not do his task"
+        "description": "Asks the user is he had a good reason to not do his task",
+        "color": "rgba(233, 30, 99, 0.025)"
       }
     },
     {
       "id": "130",
       "position": {
-        "x": -5608.211344522629,
-        "y": 3027.8128514942314
+        "x": -6422.239265236441,
+        "y": 3234.3483393298593
       },
       "type": "group",
       "style": {
@@ -57,8 +58,8 @@
       "height": 950,
       "selected": false,
       "positionAbsolute": {
-        "x": -5608.211344522629,
-        "y": 3027.8128514942314
+        "x": -6422.239265236441,
+        "y": 3234.3483393298593
       },
       "dragging": false,
       "data": {
@@ -69,14 +70,15 @@
         "content": "Subflow Group",
         "groupId": "notice_seq",
         "title": "On Notice Sequence",
-        "description": "Sets a user on notice after a near miss"
+        "description": "Sets a user on notice after a near miss",
+        "color": "rgba(233, 30, 99, 0.025)"
       }
     },
     {
       "id": "131",
       "position": {
-        "x": -8718.474523729135,
-        "y": 3169.2522486212065
+        "x": -8172.477277676292,
+        "y": 3131.5972661348032
       },
       "type": "group",
       "style": {
@@ -88,8 +90,8 @@
       "height": 2530,
       "selected": false,
       "positionAbsolute": {
-        "x": -8718.474523729135,
-        "y": 3169.2522486212065
+        "x": -8172.477277676292,
+        "y": 3131.5972661348032
       },
       "dragging": false,
       "data": {
@@ -100,14 +102,15 @@
         "content": "Subflow Group",
         "groupId": "failure_seq",
         "title": "Failure Sequence",
-        "description": "When the user failed his task"
+        "description": "When the user failed his task",
+        "color": "rgba(233, 30, 99, 0.025)"
       }
     },
     {
       "id": "133",
       "position": {
-        "x": -6397.172140126458,
-        "y": -2251.711911596559
+        "x": -7823.645520507145,
+        "y": -3214.5814433535234
       },
       "type": "group",
       "style": {
@@ -119,8 +122,8 @@
       "height": 2189,
       "selected": false,
       "positionAbsolute": {
-        "x": -6397.172140126458,
-        "y": -2251.711911596559
+        "x": -7823.645520507145,
+        "y": -3214.5814433535234
       },
       "dragging": false,
       "data": {
@@ -131,14 +134,15 @@
         "content": "Subflow Group",
         "groupId": "previous_seq",
         "title": "Check Previous Task Sequence",
-        "description": "Checks if previous task was completed"
+        "description": "Checks if previous task was completed",
+        "color": "rgba(76, 175, 80, 0.025)"
       }
     },
     {
       "id": "135",
       "position": {
-        "x": -4240.401043853521,
-        "y": -581.8457319788554
+        "x": -6244.869452454439,
+        "y": -3191.5687532531233
       },
       "type": "group",
       "style": {
@@ -150,8 +154,8 @@
       "height": 2467,
       "selected": false,
       "positionAbsolute": {
-        "x": -4240.401043853521,
-        "y": -581.8457319788554
+        "x": -6244.869452454439,
+        "y": -3191.5687532531233
       },
       "dragging": false,
       "data": {
@@ -162,14 +166,15 @@
         "content": "Subflow Group",
         "groupId": "overdue_seq",
         "title": "Overdue Task Sequence",
-        "description": "Checks task completedness when already overdue"
+        "description": "Checks task completedness when already overdue",
+        "color": "rgba(76, 175, 80, 0.025)"
       }
     },
     {
       "id": "140",
       "position": {
-        "x": -2917.5370514663705,
-        "y": -2724.643242813666
+        "x": -4500.824634797756,
+        "y": -5064.801942752456
       },
       "type": "group",
       "style": {
@@ -181,8 +186,8 @@
       "height": 880,
       "selected": false,
       "positionAbsolute": {
-        "x": -2917.5370514663705,
-        "y": -2724.643242813666
+        "x": -4500.824634797756,
+        "y": -5064.801942752456
       },
       "dragging": false,
       "data": {
@@ -193,14 +198,15 @@
         "content": "Subflow Group",
         "groupId": "active_seq",
         "title": "Active Day Routing",
-        "description": "Routes the user during his active days"
+        "description": "Routes the user during his active days",
+        "color": "rgba(76, 175, 80, 0.025)"
       }
     },
     {
       "id": "145",
       "position": {
-        "x": -4167.844630108599,
-        "y": 2978.1940527082375
+        "x": -5623.111241616917,
+        "y": 1583.1813818088674
       },
       "type": "group",
       "style": {
@@ -212,8 +218,8 @@
       "height": 1841,
       "selected": false,
       "positionAbsolute": {
-        "x": -4167.844630108599,
-        "y": 2978.1940527082375
+        "x": -5623.111241616917,
+        "y": 1583.1813818088674
       },
       "dragging": false,
       "data": {
@@ -224,14 +230,15 @@
         "content": "Subflow Group",
         "groupId": "success_seq",
         "title": "Success Sequence",
-        "description": "Celebrates the user's success"
+        "description": "Celebrates the user's success",
+        "color": "rgba(233, 30, 99, 0.025)"
       }
     },
     {
       "id": "147",
       "position": {
-        "x": -573.2791414030825,
-        "y": -906.1555889647077
+        "x": -343.86675019208064,
+        "y": -3005.0946242156656
       },
       "type": "group",
       "style": {
@@ -244,8 +251,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -573.2791414030825,
-        "y": -906.1555889647077
+        "x": -343.86675019208064,
+        "y": -3005.0946242156656
       },
       "data": {
         "label": "Group 147",
@@ -255,28 +262,29 @@
         "content": "Subflow Group",
         "groupId": "inactive_seq",
         "title": "Inactive Day",
-        "description": "When a user visits on an off day"
+        "description": "When a user visits on an off day",
+        "color": "rgba(33, 150, 243, 0.025)"
       }
     },
     {
       "id": "148",
       "position": {
-        "x": -543.6077610467911,
-        "y": -2912.5962612297444
+        "x": -199.68205285059454,
+        "y": -4558.879125158437
       },
       "type": "group",
       "style": {
-        "width": 1097.3521782964685,
-        "height": 1102.6464114336259,
+        "width": 1142.6528192210744,
+        "height": 1187.4624240200546,
         "zIndex": 999
       },
-      "width": 1097,
-      "height": 1103,
+      "width": 1143,
+      "height": 1187,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -543.6077610467911,
-        "y": -2912.5962612297444
+        "x": -199.68205285059454,
+        "y": -4558.879125158437
       },
       "data": {
         "label": "Group 148",
@@ -286,14 +294,15 @@
         "content": "Subflow Group",
         "groupId": "welcome_seq",
         "title": "Welcome Routing",
-        "description": "First loaded sequence, routes the user "
+        "description": "First loaded sequence, routes the user ",
+        "color": "rgba(33, 150, 243, 0.025)"
       }
     },
     {
       "id": "150",
       "position": {
-        "x": -3037.6942676949793,
-        "y": 257.60753606857605
+        "x": -4926.007033348004,
+        "y": -3192.263596770709
       },
       "type": "group",
       "style": {
@@ -313,18 +322,19 @@
         "content": "Subflow Group",
         "groupId": "pending_seq",
         "title": "Pending Task Sequence",
-        "description": "Checks for task completedness before the deadline"
+        "description": "Checks for task completedness before the deadline",
+        "color": "rgba(76, 175, 80, 0.025)"
       },
       "positionAbsolute": {
-        "x": -3037.6942676949793,
-        "y": 257.60753606857605
+        "x": -4926.007033348004,
+        "y": -3192.263596770709
       }
     },
     {
       "id": "153",
       "position": {
-        "x": -1255.048919806005,
-        "y": 1962.9867491921314
+        "x": -3759.471197468037,
+        "y": -3097.1453125504945
       },
       "type": "group",
       "style": {
@@ -344,18 +354,19 @@
         "content": "Subflow Group",
         "groupId": "completed_seq",
         "title": "Completed Task Sequence",
-        "description": "Celebrates the user's accomplishment when he returns after completing his task"
+        "description": "Celebrates the user's accomplishment when he returns after completing his task",
+        "color": "rgba(76, 175, 80, 0.025)"
       },
       "positionAbsolute": {
-        "x": -1255.048919806005,
-        "y": 1962.9867491921314
+        "x": -3759.471197468037,
+        "y": -3097.1453125504945
       }
     },
     {
       "id": "154",
       "position": {
-        "x": -898.0067141558457,
-        "y": 769.3056863721695
+        "x": -3019.211537095317,
+        "y": -3007.292133831737
       },
       "type": "group",
       "style": {
@@ -375,18 +386,19 @@
         "content": "Subflow Group",
         "groupId": "failed_seq",
         "title": "Failed Task Sequence",
-        "description": "For when the user returns after failing his task"
+        "description": "For when the user returns after failing his task",
+        "color": "rgba(76, 175, 80, 0.025)"
       },
       "positionAbsolute": {
-        "x": -898.0067141558457,
-        "y": 769.3056863721695
+        "x": -3019.211537095317,
+        "y": -3007.292133831737
       }
     },
     {
       "id": "191",
       "position": {
-        "x": 1131.5786530101286,
-        "y": 6583.3847776646
+        "x": 5912.733854335048,
+        "y": 4378.386865003105
       },
       "data": {
         "label": "Group 191",
@@ -396,7 +408,8 @@
         "content": "Subflow Group",
         "groupId": "startday_seq",
         "title": "Start Day Sequence",
-        "description": "Asks the user wether he wants to start the same day"
+        "description": "Asks the user wether he wants to start the same day",
+        "color": "rgba(156, 39, 176, 0.025)"
       },
       "type": "group",
       "style": {
@@ -408,16 +421,16 @@
       "height": 2351,
       "selected": false,
       "positionAbsolute": {
-        "x": 1131.5786530101286,
-        "y": 6583.3847776646
+        "x": 5912.733854335048,
+        "y": 4378.386865003105
       },
       "dragging": false
     },
     {
       "id": "207",
       "position": {
-        "x": -439.77883410469417,
-        "y": 2687.9644396313433
+        "x": -964.764124398212,
+        "y": 417.69945243539667
       },
       "data": {
         "label": "Group 207",
@@ -427,7 +440,8 @@
         "content": "Subflow Group",
         "groupId": "updatetask_seq",
         "title": "Task Updating Sequence",
-        "description": "For when an active user may want to update his tasks"
+        "description": "For when an active user may want to update his tasks",
+        "color": "rgba(156, 39, 176, 0.025)"
       },
       "type": "group",
       "style": {
@@ -439,16 +453,16 @@
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": -439.77883410469417,
-        "y": 2687.9644396313433
+        "x": -964.764124398212,
+        "y": 417.69945243539667
       },
       "dragging": false
     },
     {
       "id": "215",
       "position": {
-        "x": 1979.5272845919148,
-        "y": 1417.1704538716253
+        "x": 1497.900606717154,
+        "y": 429.9986229722957
       },
       "data": {
         "label": "Group 215",
@@ -456,9 +470,10 @@
         "nodeLabel": "Group",
         "nodeId": "215",
         "content": "Subflow Group",
-        "groupId": "param_seq",
-        "title": "User Parametring Routing",
-        "description": "A routing sequence that checks for existing parameters"
+        "groupId": "taskParam_seq",
+        "title": "Task Parametring Routing",
+        "description": "A routing sequence that checks for existing parameters",
+        "color": "rgba(156, 39, 176, 0.025)"
       },
       "type": "group",
       "style": {
@@ -470,29 +485,29 @@
       "height": 2552,
       "selected": false,
       "positionAbsolute": {
-        "x": 1979.5272845919148,
-        "y": 1417.1704538716253
+        "x": 1497.900606717154,
+        "y": 429.9986229722957
       },
       "dragging": false
     },
     {
       "id": "28",
       "position": {
-        "x": 1490.1946726028257,
-        "y": -2415.872653674992
+        "x": 2103.6277428317135,
+        "y": -4178.965072490995
       },
       "type": "group",
       "style": {
-        "width": 809.1180938961181,
-        "height": 2038.307958985783,
+        "width": 729.4086718582266,
+        "height": 2291,
         "zIndex": 999
       },
-      "width": 809,
-      "height": 2038,
+      "width": 729,
+      "height": 2291,
       "selected": false,
       "positionAbsolute": {
-        "x": 1490.1946726028257,
-        "y": -2415.872653674992
+        "x": 2103.6277428317135,
+        "y": -4178.965072490995
       },
       "dragging": false,
       "data": {
@@ -503,14 +518,15 @@
         "content": "Subflow Group",
         "groupId": "intro_seq",
         "title": "Introduction Sequence",
-        "description": "The bot introduces himself"
+        "description": "The bot introduces himself",
+        "color": "rgba(33, 150, 243, 0.025)"
       }
     },
     {
       "id": "30",
       "position": {
-        "x": 3150.0832809748968,
-        "y": -4178.54430838202
+        "x": 3061.0061469927177,
+        "y": -5747.579327481455
       },
       "type": "group",
       "style": {
@@ -522,8 +538,8 @@
       "height": 3899,
       "selected": false,
       "positionAbsolute": {
-        "x": 3150.0832809748968,
-        "y": -4178.54430838202
+        "x": 3061.0061469927177,
+        "y": -5747.579327481455
       },
       "dragging": false,
       "data": {
@@ -534,14 +550,15 @@
         "content": "Subflow Group",
         "groupId": "onboarding_seq",
         "title": "Onboarding Sequence",
-        "description": "The bot explains the core concept"
+        "description": "The bot explains the core concept",
+        "color": "rgba(33, 150, 243, 0.025)"
       }
     },
     {
       "id": "31",
       "position": {
-        "x": 4787.300500149433,
-        "y": -1008.4784031594365
+        "x": 1059.9491764423951,
+        "y": 4438.2074108815505
       },
       "type": "group",
       "style": {
@@ -554,8 +571,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 4787.300500149433,
-        "y": -1008.4784031594365
+        "x": 1059.9491764423951,
+        "y": 4438.2074108815505
       },
       "data": {
         "label": "Group 31",
@@ -565,14 +582,15 @@
         "content": "Subflow Group",
         "groupId": "settask_seq",
         "title": "Task Setting Sequence",
-        "description": "Asks the user the name of the task he'll want to perform"
+        "description": "Asks the user the name of the task he'll want to perform",
+        "color": "rgba(156, 39, 176, 0.025)"
       }
     },
     {
       "id": "39",
       "position": {
-        "x": 4439.003474638393,
-        "y": 3075.871092391564
+        "x": 1561.3747830788661,
+        "y": 4422.059159431635
       },
       "type": "group",
       "style": {
@@ -584,8 +602,8 @@
       "height": 2004,
       "selected": false,
       "positionAbsolute": {
-        "x": 4439.003474638393,
-        "y": 3075.871092391564
+        "x": 1561.3747830788661,
+        "y": 4422.059159431635
       },
       "dragging": false,
       "data": {
@@ -596,14 +614,15 @@
         "content": "Subflow Group",
         "groupId": "deadline_seq",
         "title": "Deadline Sequence",
-        "description": "Asks the user to set a daily deadline"
+        "description": "Asks the user to set a daily deadline",
+        "color": "rgba(156, 39, 176, 0.025)"
       }
     },
     {
       "id": "47",
       "position": {
-        "x": 4940.934310428473,
-        "y": 6625.067820017728
+        "x": 2991.656001485522,
+        "y": 4408.57816894634
       },
       "type": "group",
       "style": {
@@ -615,8 +634,8 @@
       "height": 1982,
       "selected": false,
       "positionAbsolute": {
-        "x": 4940.934310428473,
-        "y": 6625.067820017728
+        "x": 2991.656001485522,
+        "y": 4408.57816894634
       },
       "dragging": false,
       "data": {
@@ -627,14 +646,15 @@
         "content": "Subflow Group",
         "groupId": "weekdays_seq",
         "title": "Active Days Choice Sequence",
-        "description": "Asks the user on which days of the week he'll perform his task"
+        "description": "Asks the user on which days of the week he'll perform his task",
+        "color": "rgba(156, 39, 176, 0.025)"
       }
     },
     {
       "id": "55",
       "position": {
-        "x": 2703.0727863187376,
-        "y": 6658.009734498248
+        "x": 4291.599832341098,
+        "y": 4382.0795289824255
       },
       "type": "group",
       "style": {
@@ -647,8 +667,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 2703.0727863187376,
-        "y": 6658.009734498248
+        "x": 4291.599832341098,
+        "y": 4382.0795289824255
       },
       "data": {
         "label": "Group 55",
@@ -658,14 +678,15 @@
         "content": "Subflow Group",
         "groupId": "reminders_seq",
         "title": "Reminders Sequence",
-        "description": "Asks the user to set the intensity of his reminders"
+        "description": "Asks the user to set the intensity of his reminders",
+        "color": "rgba(156, 39, 176, 0.025)"
       }
     },
     {
       "id": "59",
       "position": {
-        "x": -3329.2434053537436,
-        "y": 9841.2288112586
+        "x": -3629.040741385625,
+        "y": 5904.840617570142
       },
       "type": "group",
       "style": {
@@ -677,8 +698,8 @@
       "height": 1129,
       "selected": false,
       "positionAbsolute": {
-        "x": -3329.2434053537436,
-        "y": 9841.2288112586
+        "x": -3629.040741385625,
+        "y": 5904.840617570142
       },
       "dragging": false,
       "data": {
@@ -689,7 +710,8 @@
         "content": "Subflow Group",
         "groupId": "sendoff_seq",
         "title": "Sendoff Sequence",
-        "description": "Last sequence in an interaction, goodbyes"
+        "description": "Last sequence in an interaction, goodbyes",
+        "color": "rgba(33, 150, 243, 0.025)"
       }
     },
     {
@@ -1695,7 +1717,7 @@
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
         "nodeId": "1",
-        "contentKey": "system.check.parameters"
+        "contentKey": "system.check.user_profile_setup_status"
       },
       "type": "editable",
       "width": 248,
@@ -1712,8 +1734,8 @@
     {
       "id": "231",
       "position": {
-        "x": 731.9817436530332,
-        "y": 410.9219873149168
+        "x": 387.00609080866775,
+        "y": 544.7203651607174
       },
       "data": {
         "label": "Welcome!",
@@ -1728,8 +1750,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 188.37398260624207,
-        "y": -2501.6742739148276
+        "x": -156.60167023812332,
+        "y": -2367.875896069027
       },
       "parentId": "148",
       "extent": "parent"
@@ -1737,14 +1759,15 @@
     {
       "id": "232",
       "position": {
-        "x": 370.926975735362,
-        "y": 818.0373026794978
+        "x": 775.2823845776393,
+        "y": 902.8533152659265
       },
       "data": {
         "label": "Route condition",
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
-        "nodeId": "232"
+        "nodeId": "232",
+        "contentKey": "system.check.user_onboarding_status"
       },
       "type": "editable",
       "width": 248,
@@ -1754,8 +1777,8 @@
       "parentId": "148",
       "extent": "parent",
       "positionAbsolute": {
-        "x": -172.68078531142908,
-        "y": -2094.5589585502466
+        "x": 231.67462353084818,
+        "y": -2009.7429459638179
       }
     },
     {
@@ -2659,7 +2682,7 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "task.parametersStatus",
+            "key": "user.ProfileSetupStatus",
             "value": "inProgress"
           }
         ]
@@ -2679,8 +2702,8 @@
     {
       "id": "209",
       "position": {
-        "x": 771.0681710957838,
-        "y": 913.0851701474785
+        "x": 427.175209800439,
+        "y": 544.2167423893434
       },
       "data": {
         "label": "Route condition",
@@ -2694,8 +2717,8 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 2522.9794814739657,
-        "y": 7083.4371607560015
+        "x": 3324.17739769687,
+        "y": 1579.956634335904
       },
       "dragging": true,
       "parentId": "215",
@@ -2704,8 +2727,8 @@
     {
       "id": "210",
       "position": {
-        "x": 979.824288899064,
-        "y": 1211.0945316361685
+        "x": 747.3603318223227,
+        "y": 982.4729540152409
       },
       "data": {
         "label": "Route condition",
@@ -2719,8 +2742,8 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 2731.735599277246,
-        "y": 7381.446522244692
+        "x": 3644.3625197187534,
+        "y": 2018.2128459618016
       },
       "dragging": true,
       "parentId": "215",
@@ -2729,8 +2752,8 @@
     {
       "id": "212",
       "position": {
-        "x": 1176.3129002151027,
-        "y": 1501.1955176292004
+        "x": 1049.514378173244,
+        "y": 1366.7122366757137
       },
       "data": {
         "label": "Route condition",
@@ -2745,8 +2768,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 2928.2242105932846,
-        "y": 7671.547508237723
+        "x": 3946.516566069675,
+        "y": 2402.4521286222744
       },
       "parentId": "215",
       "extent": "parent"
@@ -2787,7 +2810,7 @@
         "category": "autoroute",
         "nodeLabel": "Conditional Route",
         "nodeId": "219",
-        "contentKey": "system.check.user_name"
+        "contentKey": "system.check.user_task"
       },
       "type": "editable",
       "width": 248,
@@ -2815,7 +2838,7 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "task.parametersStatus",
+            "key": "user.ProfileSetupStatus",
             "value": "complete"
           }
         ],
@@ -2834,70 +2857,20 @@
       "extent": "parent"
     },
     {
-      "id": "228",
-      "position": {
-        "x": 345.90784348128955,
-        "y": 397.6280862647091
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "228",
-        "contentKey": "system.check.user_onboarded"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "dragging": true,
-      "positionAbsolute": {
-        "x": 953.88365710774,
-        "y": 848.0528526827629
-      },
-      "parentId": "215",
-      "extent": "parent"
-    },
-    {
-      "id": "229",
-      "position": {
-        "x": 633.8490779795578,
-        "y": 674.8959078441196
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "229",
-        "contentKey": "system.check.user_task"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "dragging": true,
-      "parentId": "215",
-      "extent": "parent",
-      "positionAbsolute": {
-        "x": 1399.9616843104434,
-        "y": 913.3206742621735
-      }
-    },
-    {
       "id": "10",
       "position": {
-        "x": 424.4086718582266,
-        "y": 1370.7354020970897
+        "x": 376.4086718582266,
+        "y": 1580.7354020970897
       },
       "type": "editable",
       "width": 248,
       "height": 262,
       "selected": false,
       "positionAbsolute": {
-        "x": 1215.3192242367293,
-        "y": 630.8695492780356
+        "x": 1327.3829233965998,
+        "y": -2922.4421073112653
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "28",
       "extent": "parent",
       "data": {
@@ -2913,18 +2886,18 @@
     {
       "id": "11",
       "position": {
-        "x": 426.1180938961181,
-        "y": 1645.307958985783
+        "x": 376.1180938961181,
+        "y": 1898
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 396.42137325121087,
-        "y": 1890.251386491242
+        "x": 1327.0923454344913,
+        "y": -2605.177509408355
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "28",
       "extent": "parent",
       "data": {
@@ -3015,18 +2988,18 @@
     {
       "id": "8",
       "position": {
-        "x": 25,
-        "y": 928.3889222201708
+        "x": 55,
+        "y": 1002.3889222201706
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 815.9105523785026,
-        "y": 188.5230694011168
+        "x": 1005.9742515383732,
+        "y": -3500.7885871881845
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "28",
       "extent": "parent",
       "data": {
@@ -3041,18 +3014,18 @@
     {
       "id": "9",
       "position": {
-        "x": 422.0240080163426,
-        "y": 1091.5478688371627
+        "x": 372.0240080163426,
+        "y": 1279.5478688371627
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1212.9345603948452,
-        "y": 351.68201601810875
+        "x": 1322.9982595547158,
+        "y": -3223.6296405711923
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "28",
       "extent": "parent",
       "data": {
@@ -3342,7 +3315,7 @@
           },
           {
             "type": "set",
-            "key": "task.parametersStatus",
+            "key": "user.ProfileSetupStatus",
             "value": "inProgress"
           }
         ]
@@ -4579,7 +4552,9 @@
       "source": "68",
       "target": "56",
       "type": "custom",
-      "data": {},
+      "data": {
+        "style": "solid"
+      },
       "selected": false
     },
     {
@@ -5656,22 +5631,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "216",
-      "sourceHandle": null,
-      "target": "219",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-216-219"
-    },
-    {
-      "zIndex": 1001,
       "source": "210",
       "sourceHandle": null,
       "target": "40",
@@ -5797,7 +5756,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "task.parametersStatus == complete"
+        "label": "user.ProfileSetupStatus == complete"
       },
       "id": "reactflow__edge-222-63",
       "selected": false
@@ -5972,106 +5931,13 @@
     },
     {
       "zIndex": 1001,
-      "source": "219",
-      "sourceHandle": null,
-      "target": "228",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "user.name != null"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#ff9800",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-219-228"
-    },
-    {
-      "zIndex": 1001,
-      "source": "229",
-      "sourceHandle": null,
-      "target": "209",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "user.task != null"
-      },
-      "id": "reactflow__edge-229-209",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "229",
-      "sourceHandle": null,
-      "target": "178",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-229-178",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "228",
-      "sourceHandle": null,
-      "target": "12",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-228-12",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "219",
-      "sourceHandle": null,
-      "target": "5",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-219-5",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "11",
-      "sourceHandle": null,
-      "target": "219",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-11-219",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "228",
-      "sourceHandle": null,
-      "target": "229",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "user.isOnboarded == true"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#ff9800",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-228-229"
-    },
-    {
-      "zIndex": 1001,
       "source": "222",
       "sourceHandle": null,
       "target": "231",
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "task.parametersStatus == inProgress"
+        "label": "user.ProfileSetupStatus == inProgress"
       },
       "id": "reactflow__edge-222-231",
       "selected": false
@@ -6108,6 +5974,88 @@
       "data": {},
       "id": "reactflow__edge-232-219",
       "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "232",
+      "sourceHandle": null,
+      "target": "5",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "user.name == null"
+      },
+      "id": "reactflow__edge-232-5",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "232",
+      "sourceHandle": null,
+      "target": "12",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "user.isOnboarded != true"
+      },
+      "id": "reactflow__edge-232-12",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "11",
+      "sourceHandle": null,
+      "target": "12",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-11-12",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "216",
+      "sourceHandle": null,
+      "target": "219",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-216-219",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "219",
+      "sourceHandle": null,
+      "target": "178",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-219-178"
+    },
+    {
+      "zIndex": 1001,
+      "source": "219",
+      "sourceHandle": null,
+      "target": "209",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "user.task != null"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ff9800",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-219-209"
     }
   ]
 }

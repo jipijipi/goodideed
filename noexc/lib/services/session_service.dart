@@ -114,8 +114,8 @@ class SessionService {
       await _checkPreviousDayGracePeriod(now);
     }
     
-    // Set current date based on task start timing preference
-    await _setTaskCurrentDate(today, isNewDay);
+    // Note: task.currentDate is now set by the script via template functions
+    // No need for complex date management logic here
     
     if (isNewDay) {
       // Reset task status to pending for new day
@@ -225,90 +225,18 @@ class SessionService {
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
   }
 
-  /// Set task current date based on start timing preference
-  Future<void> _setTaskCurrentDate(String today, bool isNewDay) async {
-    final startTiming = await userDataService.getValue<String>(StorageKeys.taskStartTiming);
-    
-    // If no timing preference set, default to today (existing behavior)
-    if (startTiming == null) {
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
-      return;
-    }
-    
-    // If user chose to start today, always use today
-    if (startTiming == 'today') {
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
-      return;
-    }
-    
-    // For non-new days, preserve existing currentDate if user chose next_active
-    if (!isNewDay && startTiming == 'next_active') {
-      // Don't overwrite - keep the previously calculated future date
-      return;
-    }
-    
-    // If user chose to wait for next active day, calculate it
-    if (startTiming == 'next_active') {
-      final nextActiveDate = await _getNextActiveDay();
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, nextActiveDate);
-      return;
-    }
-    
-    // Default fallback
-    await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
-  }
+  // Note: _setTaskCurrentDate and _getNextActiveDay methods removed
+  // These are now handled by script template functions in DataActionProcessor
 
-  /// Get the next active day based on user's active days configuration
-  Future<String> _getNextActiveDay() async {
-    final now = DateTime.now();
-    final activeDays = await userDataService.getValue<List<dynamic>>(StorageKeys.taskActiveDays);
-    
-    // If no active days configured, default to tomorrow
-    if (activeDays == null || activeDays.isEmpty) {
-      final tomorrow = now.add(const Duration(days: 1));
-      await userDataService.storeValue(StorageKeys.taskNextActiveWeekday, tomorrow.weekday);
-      return _formatDate(tomorrow);
-    }
-    
-    // Find the next day that matches an active day
-    for (int i = 1; i <= 7; i++) {
-      final testDate = now.add(Duration(days: i));
-      final testWeekday = testDate.weekday;
-      
-      if (activeDays.contains(testWeekday)) {
-        await userDataService.storeValue(StorageKeys.taskNextActiveWeekday, testWeekday);
-        return _formatDate(testDate);
-      }
-    }
-    
-    // Fallback - should never reach here if activeDays is valid
-    final tomorrow = now.add(const Duration(days: 1));
-    await userDataService.storeValue(StorageKeys.taskNextActiveWeekday, tomorrow.weekday);
-    return _formatDate(tomorrow);
-  }
-
-  /// Check if today is an active day based on user's active_days configuration
-  /// AND if the user's task is actually scheduled for today
+  /// Check if today is the scheduled task day (simplified logic)
+  /// Now uses task.currentDate as the single source of truth
   Future<bool> _computeIsActiveDay(DateTime now) async {
-    final activeDays = await userDataService.getValue<List<dynamic>>(StorageKeys.taskActiveDays);
     final today = _formatDate(now);
     final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
     
-    // First check: Is the task actually scheduled for today?
-    if (taskCurrentDate != null && taskCurrentDate != today) {
-      return false; // Task is scheduled for a different date
-    }
-    
-    if (activeDays == null || activeDays.isEmpty) {
-      // If no active days configured, default to every day being active
-      return true;
-    }
-    
-    // Convert current day to weekday number (1=Monday, 7=Sunday)
-    final currentWeekday = now.weekday;
-    
-    // Check if current weekday is in the active days list
-    return activeDays.contains(currentWeekday);
+    // Simple check: Is the task scheduled for today?
+    // The script sets task.currentDate to either TODAY_DATE or NEXT_ACTIVE_DATE
+    return taskCurrentDate == today;
   }
 
   /// Check if current time is before today's start time

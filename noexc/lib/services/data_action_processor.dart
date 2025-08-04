@@ -1,14 +1,17 @@
 import '../models/data_action.dart';
 import 'user_data_service.dart';
 import '../constants/data_action_constants.dart';
+import 'session_service.dart';
 
 class DataActionProcessor {
   final UserDataService _userDataService;
+  final SessionService? _sessionService;
   
   // Event callback for UI notifications
   Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
 
-  DataActionProcessor(this._userDataService);
+  DataActionProcessor(this._userDataService, {SessionService? sessionService})
+      : _sessionService = sessionService;
 
   /// Set callback for event notifications
   void setEventCallback(Future<void> Function(String eventType, Map<String, dynamic> data) callback) {
@@ -24,7 +27,8 @@ class DataActionProcessor {
   Future<void> _processAction(DataAction action) async {
     switch (action.type) {
       case DataActionType.set:
-        await _userDataService.storeValue(action.key, action.value);
+        final resolvedValue = await _resolveTemplateFunction(action.value);
+        await _userDataService.storeValue(action.key, resolvedValue);
         break;
       case DataActionType.increment:
         await _incrementValue(action.key, action.value ?? DataActionConstants.defaultIncrementValue);
@@ -65,5 +69,87 @@ class DataActionProcessor {
         // Silent error handling - events should not fail the message flow
       }
     }
+  }
+
+  /// Resolve template functions like TODAY_DATE, NEXT_ACTIVE_DATE
+  Future<dynamic> _resolveTemplateFunction(dynamic value) async {
+    if (value is! String) {
+      return value; // Not a string, return as-is
+    }
+
+    switch (value) {
+      case 'TODAY_DATE':
+        return _formatDate(DateTime.now());
+      
+      case 'NEXT_ACTIVE_DATE':
+        if (_sessionService != null) {
+          return await _getNextActiveDate();
+        }
+        return _formatDate(DateTime.now().add(const Duration(days: 1))); // Fallback
+      
+      case 'NEXT_ACTIVE_WEEKDAY':
+        if (_sessionService != null) {
+          return await _getNextActiveWeekday();
+        }
+        return DateTime.now().add(const Duration(days: 1)).weekday; // Fallback
+      
+      default:
+        return value; // Not a template function, return as-is
+    }
+  }
+
+  /// Format date as YYYY-MM-DD string
+  String _formatDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  /// Get the next active date based on user's active days configuration
+  Future<String> _getNextActiveDate() async {
+    final now = DateTime.now();
+    final activeDays = await _userDataService.getValue<List<dynamic>>('task.activeDays');
+    
+    // If no active days configured, default to tomorrow
+    if (activeDays == null || activeDays.isEmpty) {
+      final tomorrow = now.add(const Duration(days: 1));
+      return _formatDate(tomorrow);
+    }
+    
+    // Find the next day that matches an active day
+    for (int i = 1; i <= 7; i++) {
+      final testDate = now.add(Duration(days: i));
+      final testWeekday = testDate.weekday;
+      
+      if (activeDays.contains(testWeekday)) {
+        return _formatDate(testDate);
+      }
+    }
+    
+    // Fallback - should never reach here if activeDays is valid
+    final tomorrow = now.add(const Duration(days: 1));
+    return _formatDate(tomorrow);
+  }
+
+  /// Get the next active weekday number based on user's active days configuration
+  Future<int> _getNextActiveWeekday() async {
+    final now = DateTime.now();
+    final activeDays = await _userDataService.getValue<List<dynamic>>('task.activeDays');
+    
+    // If no active days configured, default to tomorrow
+    if (activeDays == null || activeDays.isEmpty) {
+      return now.add(const Duration(days: 1)).weekday;
+    }
+    
+    // Find the next day that matches an active day
+    for (int i = 1; i <= 7; i++) {
+      final testDate = now.add(Duration(days: i));
+      final testWeekday = testDate.weekday;
+      
+      if (activeDays.contains(testWeekday)) {
+        return testWeekday;
+      }
+    }
+    
+    // Fallback - should never reach here if activeDays is valid
+    return now.add(const Duration(days: 1)).weekday;
   }
 }

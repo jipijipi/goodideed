@@ -6,6 +6,7 @@ import 'text_templating_service.dart';
 import 'text_variants_service.dart';
 import 'condition_evaluator.dart';
 import 'data_action_processor.dart';
+import 'session_service.dart';
 import 'chat_service/sequence_loader.dart';
 import 'chat_service/message_processor.dart';
 import 'chat_service/route_processor.dart';
@@ -14,7 +15,6 @@ import 'flow/message_renderer.dart';
 import 'flow/flow_orchestrator.dart';
 import 'flow/sequence_manager.dart';
 import 'logger_service.dart';
-import 'session_service.dart';
 import 'service_locator.dart';
 
 /// Main chat service that orchestrates sequence loading, message processing, and routing
@@ -34,6 +34,7 @@ class ChatService {
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
     TextVariantsService? variantsService,
+    SessionService? sessionService,
   }) {
     // Initialize sequence management first (single source of truth)
     final sequenceLoader = SequenceLoader();
@@ -50,7 +51,7 @@ class ChatService {
           ? ConditionEvaluator(userDataService) 
           : null,
       dataActionProcessor: userDataService != null 
-          ? DataActionProcessor(userDataService) 
+          ? DataActionProcessor(userDataService, sessionService: sessionService) 
           : null,
       sequenceManager: _sequenceManager,
     );

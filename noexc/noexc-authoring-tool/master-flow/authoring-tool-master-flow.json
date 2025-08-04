@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T12:39:34.044Z",
+  "lastUpdated": "2025-08-04T16:20:00.206Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-04T12:39:34.024Z"
+    "timestamp": "2025-08-04T16:20:00.176Z"
   },
   "nodes": [
     {
@@ -269,22 +269,22 @@
     {
       "id": "148",
       "position": {
-        "x": -199.68205285059454,
-        "y": -4558.879125158437
+        "x": -199.68205285059452,
+        "y": -4625.572097429658
       },
       "type": "group",
       "style": {
-        "width": 1142.6528192210744,
-        "height": 1187.4624240200546,
+        "width": 1136.7297032051204,
+        "height": 1256.07851230723,
         "zIndex": 999
       },
-      "width": 1143,
-      "height": 1187,
+      "width": 1137,
+      "height": 1256,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -199.68205285059454,
-        "y": -4558.879125158437
+        "x": -199.68205285059452,
+        "y": -4625.572097429658
       },
       "data": {
         "label": "Group 148",
@@ -366,7 +366,7 @@
       "id": "154",
       "position": {
         "x": -3019.211537095317,
-        "y": -3007.292133831737
+        "y": -3124.6997491933803
       },
       "type": "group",
       "style": {
@@ -391,14 +391,14 @@
       },
       "positionAbsolute": {
         "x": -3019.211537095317,
-        "y": -3007.292133831737
+        "y": -3124.6997491933803
       }
     },
     {
       "id": "191",
       "position": {
-        "x": 5912.733854335048,
-        "y": 4378.386865003105
+        "x": 6280.695581086663,
+        "y": 4354.748036118113
       },
       "data": {
         "label": "Group 191",
@@ -413,24 +413,24 @@
       },
       "type": "group",
       "style": {
-        "width": 1223.9649541435006,
-        "height": 2350.718117231141,
+        "width": 1217.6050716903446,
+        "height": 2508.718117231141,
         "zIndex": 999
       },
-      "width": 1224,
-      "height": 2351,
+      "width": 1218,
+      "height": 2509,
       "selected": false,
       "positionAbsolute": {
-        "x": 5912.733854335048,
-        "y": 4378.386865003105
+        "x": 6280.695581086663,
+        "y": 4354.748036118113
       },
       "dragging": false
     },
     {
       "id": "207",
       "position": {
-        "x": -964.764124398212,
-        "y": 417.69945243539667
+        "x": -1287.0231505550514,
+        "y": 411.5320793856731
       },
       "data": {
         "label": "Group 207",
@@ -445,24 +445,24 @@
       },
       "type": "group",
       "style": {
-        "width": 2003.520841583757,
+        "width": 1983.7848235094116,
         "height": 3171.2101335904176,
         "zIndex": 999
       },
-      "width": 2004,
+      "width": 1984,
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": -964.764124398212,
-        "y": 417.69945243539667
+        "x": -1287.0231505550514,
+        "y": 411.5320793856731
       },
       "dragging": false
     },
     {
       "id": "215",
       "position": {
-        "x": 1497.900606717154,
-        "y": 429.9986229722957
+        "x": 3126.931269859951,
+        "y": 474.02647873291187
       },
       "data": {
         "label": "Group 215",
@@ -485,15 +485,15 @@
       "height": 2552,
       "selected": false,
       "positionAbsolute": {
-        "x": 1497.900606717154,
-        "y": 429.9986229722957
+        "x": 3126.931269859951,
+        "y": 474.02647873291187
       },
       "dragging": false
     },
     {
       "id": "28",
       "position": {
-        "x": 2103.6277428317135,
+        "x": 1854.136560188222,
         "y": -4178.965072490995
       },
       "type": "group",
@@ -506,7 +506,7 @@
       "height": 2291,
       "selected": false,
       "positionAbsolute": {
-        "x": 2103.6277428317135,
+        "x": 1854.136560188222,
         "y": -4178.965072490995
       },
       "dragging": false,
@@ -557,22 +557,22 @@
     {
       "id": "31",
       "position": {
-        "x": 1059.9491764423951,
-        "y": 4438.2074108815505
+        "x": 927.4961255449311,
+        "y": 4459.311331950869
       },
       "type": "group",
       "style": {
-        "width": 413.46224272515053,
-        "height": 1058.8556195927677,
+        "width": 468,
+        "height": 1738.6646912814895,
         "zIndex": 999
       },
-      "width": 413,
-      "height": 1059,
+      "width": 468,
+      "height": 1739,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 1059.9491764423951,
-        "y": 4438.2074108815505
+        "x": 927.4961255449311,
+        "y": 4459.311331950869
       },
       "data": {
         "label": "Group 31",
@@ -589,20 +589,20 @@
     {
       "id": "39",
       "position": {
-        "x": 1561.3747830788661,
+        "x": 1634.754542679893,
         "y": 4422.059159431635
       },
       "type": "group",
       "style": {
         "width": 1286.5937511479312,
-        "height": 2003.7278484759208,
+        "height": 2081.727848475921,
         "zIndex": 999
       },
       "width": 1287,
-      "height": 2004,
+      "height": 2082,
       "selected": false,
       "positionAbsolute": {
-        "x": 1561.3747830788661,
+        "x": 1634.754542679893,
         "y": 4422.059159431635
       },
       "dragging": false,
@@ -621,20 +621,20 @@
     {
       "id": "47",
       "position": {
-        "x": 2991.656001485522,
+        "x": 3094.3876649269596,
         "y": 4408.57816894634
       },
       "type": "group",
       "style": {
         "width": 1194.3110312481676,
-        "height": 1981.9705216108832,
+        "height": 2029.9705216108832,
         "zIndex": 999
       },
       "width": 1194,
-      "height": 1982,
+      "height": 2030,
       "selected": false,
       "positionAbsolute": {
-        "x": 2991.656001485522,
+        "x": 3094.3876649269596,
         "y": 4408.57816894634
       },
       "dragging": false,
@@ -653,8 +653,8 @@
     {
       "id": "55",
       "position": {
-        "x": 4291.599832341098,
-        "y": 4382.0795289824255
+        "x": 4453.035303463356,
+        "y": 4426.107384743042
       },
       "type": "group",
       "style": {
@@ -667,8 +667,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 4291.599832341098,
-        "y": 4382.0795289824255
+        "x": 4453.035303463356,
+        "y": 4426.107384743042
       },
       "data": {
         "label": "Group 55",
@@ -1734,8 +1734,8 @@
     {
       "id": "231",
       "position": {
-        "x": 387.00609080866775,
-        "y": 544.7203651607174
+        "x": 385.04181161814097,
+        "y": 621.3843984248051
       },
       "data": {
         "label": "Welcome!",
@@ -1750,8 +1750,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": -156.60167023812332,
-        "y": -2367.875896069027
+        "x": 185.35975876754645,
+        "y": -4004.187699004853
       },
       "parentId": "148",
       "extent": "parent"
@@ -1759,8 +1759,8 @@
     {
       "id": "232",
       "position": {
-        "x": 775.2823845776393,
-        "y": 902.8533152659265
+        "x": 771.3592685616851,
+        "y": 973.469403553102
       },
       "data": {
         "label": "Route condition",
@@ -1777,8 +1777,8 @@
       "parentId": "148",
       "extent": "parent",
       "positionAbsolute": {
-        "x": 231.67462353084818,
-        "y": -2009.7429459638179
+        "x": 571.6772157110905,
+        "y": -3585.409721605335
       }
     },
     {
@@ -2064,8 +2064,8 @@
     {
       "id": "184",
       "position": {
-        "x": 593.1822171520907,
-        "y": 848.0242476592666
+        "x": 687.8439773867249,
+        "y": 844.1605023435677
       },
       "data": {
         "label": "Select option:",
@@ -2078,10 +2078,10 @@
       "width": 248,
       "height": 212,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 6112.423415685519,
-        "y": 4952.66681246827
+        "x": 6600.577831721773,
+        "y": 5222.547367346673
       },
       "parentId": "191",
       "extent": "parent"
@@ -2188,8 +2188,8 @@
     {
       "id": "192",
       "position": {
-        "x": 507.8450357730303,
-        "y": 1994.4336192883766
+        "x": 537.8450357730298,
+        "y": 2152.4336192883766
       },
       "data": {
         "label": "Welcome!",
@@ -2204,8 +2204,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 4495.455361189312,
-        "y": 10983.18468136036
+        "x": 6862.568472620309,
+        "y": 6536.5335592469
       },
       "parentId": "191",
       "extent": "parent"
@@ -2262,8 +2262,8 @@
     {
       "id": "197",
       "position": {
-        "x": 212.68168717267872,
-        "y": 551.6958963150319
+        "x": 76,
+        "y": 436.7128469392019
       },
       "data": {
         "label": "Data action",
@@ -2273,19 +2273,24 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "task.startTiming",
-            "value": "next_active"
+            "key": "task.currentDate",
+            "value": "NEXT_ACTIVE_DATE"
+          },
+          {
+            "type": "set",
+            "key": "task.nextActiveDay",
+            "value": "NEXT_ACTIVE_WEEKDAY"
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 395,
+      "height": 574,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 5731.922885706107,
-        "y": 4658.338461124035
+        "x": 6400.723436847279,
+        "y": 4820.812786897725
       },
       "parentId": "191",
       "extent": "parent"
@@ -2293,8 +2298,8 @@
     {
       "id": "227",
       "position": {
-        "x": 828.3683183426515,
-        "y": 1496.7580953325942
+        "x": 822.0084358894956,
+        "y": 1487.4621927927628
       },
       "data": {
         "label": "Data action",
@@ -2306,17 +2311,22 @@
             "type": "set",
             "key": "task.currentStatus",
             "value": "pending"
+          },
+          {
+            "type": "set",
+            "key": "task.currentDate",
+            "value": "TODAY_DATE"
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 395,
+      "height": 574,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 4815.978643758933,
-        "y": 10485.509157404578
+        "x": 7146.731872736775,
+        "y": 5871.562132751286
       },
       "parentId": "191",
       "extent": "parent"
@@ -2635,8 +2645,8 @@
     {
       "id": "221",
       "position": {
-        "x": 1617.6961830013774,
-        "y": 1688.1813299271744
+        "x": 1595.960164927032,
+        "y": 1685.409280986662
       },
       "data": {
         "label": "Data action",
@@ -2648,22 +2658,17 @@
             "type": "set",
             "key": "user.task",
             "value": null
-          },
-          {
-            "type": "set",
-            "key": "task.startTiming",
-            "value": null
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 574,
+      "height": 395,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 1496.5202444192105,
-        "y": 6804.717689648394
+        "x": 308.9370143719808,
+        "y": 2096.941360372335
       },
       "parentId": "207",
       "extent": "parent"
@@ -3324,8 +3329,8 @@
     {
       "id": "178",
       "position": {
-        "x": 67.70934307297523,
-        "y": 129.2281176364222
+        "x": 84.88051215553196,
+        "y": 94
       },
       "data": {
         "label": "Welcome!",
@@ -3340,8 +3345,44 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 190.41496542430508,
-        "y": 4266.8918076471
+        "x": 953.6728300196417,
+        "y": 4523.959428110458
+      },
+      "dragging": true,
+      "parentId": "31",
+      "extent": "parent"
+    },
+    {
+      "id": "235",
+      "position": {
+        "x": 41.85589418164545,
+        "y": 751.7329938059484
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "235",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "task.currentDate",
+            "value": "TODAY_DATE"
+          },
+          {
+            "type": "set",
+            "key": "task.startTiming",
+            "value": null
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 574,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1034.6482120457551,
+        "y": 5209.692421916407
       },
       "dragging": true,
       "parentId": "31",
@@ -3350,16 +3391,16 @@
     {
       "id": "24",
       "position": {
-        "x": 62.2471003478247,
-        "y": 441.63062314996205
+        "x": 78.56225418925942,
+        "y": 414.9050612296069
       },
       "type": "editable",
       "width": 248,
       "height": 262,
       "selected": false,
       "positionAbsolute": {
-        "x": 184.95272269915455,
-        "y": 4579.29431316064
+        "x": 1071.354572053369,
+        "y": 4872.864489340065
       },
       "dragging": true,
       "parentId": "31",
@@ -3377,16 +3418,16 @@
     {
       "id": "26",
       "position": {
-        "x": 62.59960374246742,
-        "y": 770.0837372291899
+        "x": 68.7355799131667,
+        "y": 1414.6646912814895
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 185.30522609379727,
-        "y": 4907.747427239868
+        "x": 1061.5278977772764,
+        "y": 5872.624119391948
       },
       "dragging": true,
       "parentId": "31",
@@ -3592,18 +3633,18 @@
     {
       "id": "38",
       "position": {
-        "x": 460.04505217446945,
-        "y": 1610.7278484759208
+        "x": 462.04505217446945,
+        "y": 1686.7278484759208
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1577.2932761348525,
-        "y": 6643.975313076549
+        "x": 2023.4198352533356,
+        "y": 6108.787007907556
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "39",
       "extent": "parent",
       "data": {
@@ -3618,8 +3659,8 @@
     {
       "id": "182",
       "position": {
-        "x": 285.6180694099867,
-        "y": 1092.7754767735332
+        "x": 387.6180694099867,
+        "y": 1110.7754767735332
       },
       "data": {
         "label": "Data action",
@@ -3641,8 +3682,8 @@
       "height": 400,
       "selected": false,
       "positionAbsolute": {
-        "x": 5972.418273258716,
-        "y": 7110.389473581921
+        "x": 3379.274070895509,
+        "y": 5519.353645719873
       },
       "dragging": true,
       "parentId": "47",
@@ -3807,16 +3848,16 @@
     {
       "id": "46",
       "position": {
-        "x": 267.67028921375186,
-        "y": 1588.9705216108832
+        "x": 393.67028921375186,
+        "y": 1634.9705216108832
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 5954.470493062481,
-        "y": 7606.584518419271
+        "x": 3385.326290699274,
+        "y": 6043.548690557223
       },
       "dragging": true,
       "parentId": "47",
@@ -4217,14 +4258,6 @@
       "id": "reactflow__edge-23-25",
       "source": "23",
       "target": "25",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-24-26",
-      "source": "24",
-      "target": "26",
       "type": "custom",
       "data": {},
       "selected": false
@@ -6056,6 +6089,33 @@
         "filter": "none"
       },
       "id": "reactflow__edge-219-209"
+    },
+    {
+      "zIndex": 1001,
+      "source": "24",
+      "target": "235",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-24-235"
+    },
+    {
+      "zIndex": 1001,
+      "source": "235",
+      "sourceHandle": null,
+      "target": "26",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-235-26",
+      "selected": false
     }
   ]
 }

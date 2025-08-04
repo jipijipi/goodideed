@@ -85,19 +85,13 @@ void main() {
       expect(isWeekend, isA<bool>());
     });
 
-    test('should initialize task current date and status', () async {
+    test('should initialize task status', () async {
       await sessionService.initializeSession();
       
-      final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
       
-      expect(currentDate, isNotNull);
+      // Should initialize task status (date is now set by script)
       expect(currentStatus, 'pending');
-      
-      // Verify date format matches today
-      final today = DateTime.now();
-      final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-      expect(currentDate, expectedDate);
     });
 
     test('should reset task status to pending on new day', () async {
@@ -137,17 +131,16 @@ void main() {
       expect(currentStatus, 'completed');
     });
 
-    test('should always update current date to today', () async {
-      // Set an old date
+    test('should preserve current date set by script', () async {
+      // Simulate script setting an old date (e.g., for next_active users)
       await userDataService.storeValue(StorageKeys.taskCurrentDate, '2024-01-01');
       
       await sessionService.initializeSession();
       
       final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-      final today = DateTime.now();
-      final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
       
-      expect(currentDate, expectedDate);
+      // Should preserve the date set by the script, not override it
+      expect(currentDate, '2024-01-01');
     });
 
     test('should archive previous day task when moving to new day', () async {
@@ -227,32 +220,37 @@ void main() {
     });
 
     test('should preserve future date for next_active users across same-day sessions', () async {
-      // Set user to next_active timing
+      final tomorrow = DateTime.now().add(const Duration(days: 1));
+      final tomorrowString = _formatDate(tomorrow);
+      
+      // Simulate script setting next_active timing with future date
       await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active');
       await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]); // Mon-Fri
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString); // Script sets future date
       
-      // First session - should set future date
+      // First session
       await sessionService.initializeSession();
       final firstCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       
-      // Second session same day - should preserve future date
+      // Second session same day - should preserve the date set by script
       await sessionService.initializeSession();
       final secondCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       
-      // Both should be the same future date, not today
+      // Both should be the same future date (as set by script)
       expect(firstCurrentDate, equals(secondCurrentDate));
-      expect(firstCurrentDate, isNot(equals(_formatDate(DateTime.now()))));
+      expect(firstCurrentDate, equals(tomorrowString));
     });
 
     test('should reset to today for today timing users', () async {
-      // Set user to today timing
+      // Simulate script setting today timing (this would be done by dataAction in real scenario)
       await userDataService.storeValue(StorageKeys.taskStartTiming, 'today');
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, _formatDate(DateTime.now()));
       
       // Initialize session
       await sessionService.initializeSession();
       final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       
-      // Should always be today for 'today' users  
+      // Should be today (as set by the script)
       expect(currentDate, equals(_formatDate(DateTime.now())));
     });
 
@@ -260,20 +258,20 @@ void main() {
       final tomorrow = DateTime.now().add(const Duration(days: 1));
       final tomorrowString = _formatDate(tomorrow);
       
-      // Set up next_active user with future task date
+      // Simulate script setting next_active user with future task date  
       await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active');
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString);
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString); // Script sets future date
       await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
       
-      // First session - should be treated as same day (no session date change)
+      // First session
       await sessionService.initializeSession();
       final currentDate1 = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       
-      // Second session same day - should preserve future date
+      // Second session same day - should preserve the script-set date
       await sessionService.initializeSession();
       final currentDate2 = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       
-      // Task date should remain the same (not recalculated)
+      // Task date should remain the same (as set by script)
       expect(currentDate1, equals(currentDate2));
       expect(currentDate1, equals(tomorrowString));
     });
@@ -281,15 +279,17 @@ void main() {
     test('should store next active weekday when calculating future dates', () async {
       final tomorrow = DateTime.now().add(const Duration(days: 1));
       
-      // Set user to next_active with only tomorrow as active day (forces future calculation)
+      // Simulate script setting next_active timing (this would be done by dataAction in real scenario)
       await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active'); 
       await userDataService.storeValue(StorageKeys.taskActiveDays, [tomorrow.weekday]); // Only tomorrow
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, _formatDate(tomorrow));
+      await userDataService.storeValue(StorageKeys.taskNextActiveWeekday, tomorrow.weekday);
       
       await sessionService.initializeSession();
       
       final nextActiveWeekday = await userDataService.getValue<int>(StorageKeys.taskNextActiveWeekday);
       
-      // Should have stored tomorrow's weekday number
+      // Should have the weekday number set by the script
       expect(nextActiveWeekday, isNotNull);
       expect(nextActiveWeekday, equals(tomorrow.weekday));
     });
@@ -298,17 +298,18 @@ void main() {
       final tomorrow = DateTime.now().add(const Duration(days: 1));
       final tomorrowString = _formatDate(tomorrow);
       
-      // Set up next_active user properly - this will cause task to be scheduled for future date
+      // Simulate script setting next_active user with future date  
       await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active');
       await userDataService.storeValue(StorageKeys.taskActiveDays, [tomorrow.weekday]); // Only tomorrow is active
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString); // Script sets future date
       
-      // Initialize session - this should set task date to tomorrow
+      // Initialize session
       await sessionService.initializeSession();
       
       final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
       
-      // Task should be scheduled for tomorrow
+      // Task should be scheduled for tomorrow (as set by script)
       expect(currentDate, equals(tomorrowString));
       // isActiveDay should be false because task is scheduled for tomorrow, not today
       expect(isActiveDay, equals(false));

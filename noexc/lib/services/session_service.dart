@@ -231,8 +231,8 @@ class SessionService {
   // Note: _setTaskCurrentDate and _getNextActiveDay methods removed
   // These are now handled by script template functions in DataActionProcessor
 
-  /// Check if today is the scheduled task day (simplified logic)
-  /// Now uses task.currentDate as the single source of truth
+  /// Check if today is the scheduled task day (hybrid logic)
+  /// Uses both task.currentDate scheduling AND activeDays weekday rules
   Future<bool> _computeIsActiveDay(DateTime now) async {
     final today = _formatDate(now);
     final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
@@ -248,9 +248,22 @@ class SessionService {
       return false;
     }
     
-    // Simple check: Is the task scheduled for today?
+    // Step 1: Check if task is scheduled for today's date
     // The script sets task.currentDate to either TODAY_DATE or NEXT_ACTIVE_DATE
-    return taskCurrentDate == today;
+    if (taskCurrentDate != today) {
+      return false;  // Task not scheduled for today
+    }
+    
+    // Step 2: Check if today's weekday is in the user's activeDays configuration
+    final activeDays = await userDataService.getValue<List<dynamic>>('task.activeDays');
+    
+    // If no activeDays configured, default to active (maintain backward compatibility)
+    if (activeDays == null || activeDays.isEmpty) {
+      return true;
+    }
+    
+    // Check if today's weekday (1=Monday, 7=Sunday) is in the activeDays list
+    return activeDays.contains(now.weekday);
   }
 
   /// Check if current time is before today's start time

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-04T17:00:41.268Z",
+  "lastUpdated": "2025-08-04T19:40:54.877Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-04T17:00:41.254Z"
+    "timestamp": "2025-08-04T19:40:54.868Z"
   },
   "nodes": [
     {
@@ -142,20 +142,20 @@
       "id": "135",
       "position": {
         "x": -6244.869452454439,
-        "y": -3191.5687532531233
+        "y": -3179.5687532531233
       },
       "type": "group",
       "style": {
-        "width": 1037.28405123824,
-        "height": 2467,
+        "width": 1039.28405123824,
+        "height": 1424.1196976567335,
         "zIndex": 999
       },
-      "width": 1037,
-      "height": 2467,
+      "width": 1039,
+      "height": 1424,
       "selected": false,
       "positionAbsolute": {
         "x": -6244.869452454439,
-        "y": -3191.5687532531233
+        "y": -3179.5687532531233
       },
       "dragging": false,
       "data": {
@@ -397,8 +397,8 @@
     {
       "id": "191",
       "position": {
-        "x": 6653.06992063818,
-        "y": 4456.508813831874
+        "x": 6849.06992063818,
+        "y": 4422.508813831874
       },
       "data": {
         "label": "Group 191",
@@ -413,16 +413,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1175.6050716903446,
-        "height": 2788.718117231141,
+        "width": 1191.6311392130083,
+        "height": 2887.2844979427646,
         "zIndex": 999
       },
-      "width": 1176,
-      "height": 2789,
+      "width": 1192,
+      "height": 2887,
       "selected": false,
       "positionAbsolute": {
-        "x": 6653.06992063818,
-        "y": 4456.508813831874
+        "x": 6849.06992063818,
+        "y": 4422.508813831874
       },
       "dragging": false
     },
@@ -1248,17 +1248,17 @@
       "id": "100",
       "position": {
         "x": 768.28405123824,
-        "y": 1019.1196976567335
+        "y": 1029.1196976567335
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2714.558164177855,
-        "y": 888.4251650408103
+        "x": -5476.585401216199,
+        "y": -2150.44905559639
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "135",
       "extent": "parent",
       "data": {
@@ -2188,8 +2188,8 @@
     {
       "id": "192",
       "position": {
-        "x": 529.8450357730298,
-        "y": 2432.4336192883766
+        "x": 263.84503577302985,
+        "y": 2529
       },
       "data": {
         "label": "Welcome!",
@@ -2204,8 +2204,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 6898.540616859693,
-        "y": 6905.18165540649
+        "x": 7112.9149564112095,
+        "y": 6951.508813831874
       },
       "parentId": "191",
       "extent": "parent"
@@ -2262,8 +2262,8 @@
     {
       "id": "197",
       "position": {
-        "x": 116.50904721586812,
-        "y": 1522.8379556052296
+        "x": 94.37729667648728,
+        "y": 1494.7628886241482
       },
       "data": {
         "label": "Data action",
@@ -2285,17 +2285,22 @@
             "type": "set",
             "key": "task.isActiveDay",
             "value": "recalculate_active_day"
+          },
+          {
+            "type": "set",
+            "key": "task.startTiming",
+            "value": "next_active"
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 754,
+      "height": 933,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 6769.578967854048,
-        "y": 5979.346769437104
+        "x": 6943.447217314667,
+        "y": 5917.2717024560225
       },
       "parentId": "191",
       "extent": "parent"
@@ -6125,6 +6130,17 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-186-197",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "100",
+      "sourceHandle": null,
+      "target": "56",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-100-56",
       "selected": false
     }
   ]

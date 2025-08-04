@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../models/data_action.dart';
 import 'user_data_service.dart';
 import '../constants/data_action_constants.dart';
@@ -108,7 +109,10 @@ class DataActionProcessor {
     final now = DateTime.now();
     
     // Snapshot all dependencies at once to avoid race conditions
-    final activeDays = await _userDataService.getValue<List<dynamic>>('task.activeDays');
+    final rawActiveDays = await _userDataService.getValue<dynamic>('task.activeDays');
+    
+    // Parse activeDays to handle both array and string formats
+    final activeDays = _parseActiveDays(rawActiveDays);
     
     // If no active days configured, default to tomorrow
     if (activeDays == null || activeDays.isEmpty) {
@@ -116,15 +120,12 @@ class DataActionProcessor {
       return _formatDate(tomorrow);
     }
     
-    // Create a safe copy of active days to avoid concurrent modification issues
-    final activeDaysCopy = List<dynamic>.from(activeDays);
-    
     // Find the next day that matches an active day
     for (int i = 1; i <= 7; i++) {
       final testDate = now.add(Duration(days: i));
       final testWeekday = testDate.weekday;
       
-      if (activeDaysCopy.contains(testWeekday)) {
+      if (activeDays.contains(testWeekday)) {
         return _formatDate(testDate);
       }
     }
@@ -132,6 +133,44 @@ class DataActionProcessor {
     // Fallback - should never reach here if activeDays is valid
     final tomorrow = now.add(const Duration(days: 1));
     return _formatDate(tomorrow);
+  }
+  
+  /// Parse activeDays to handle both List and JSON string formats
+  List<int>? _parseActiveDays(dynamic rawActiveDays) {
+    if (rawActiveDays == null) {
+      return null;
+    }
+    
+    // If it's already a list, convert to List<int>
+    if (rawActiveDays is List) {
+      return rawActiveDays
+          .map((e) => e is int ? e : int.tryParse(e.toString()))
+          .where((e) => e != null)
+          .cast<int>()
+          .toList();
+    }
+    
+    // If it's a string that looks like JSON, try to parse it
+    if (rawActiveDays is String) {
+      final stringValue = rawActiveDays.trim();
+      if (stringValue.startsWith('[') && stringValue.endsWith(']')) {
+        try {
+          final parsed = json.decode(stringValue);
+          if (parsed is List) {
+            return parsed
+                .map((e) => e is int ? e : int.tryParse(e.toString()))
+                .where((e) => e != null)
+                .cast<int>()
+                .toList();
+          }
+        } catch (e) {
+          // JSON parsing failed, return null
+          return null;
+        }
+      }
+    }
+    
+    return null;
   }
 
   /// Get the next active weekday number based on user's active days configuration

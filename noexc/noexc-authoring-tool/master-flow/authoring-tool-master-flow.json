@@ -1,20 +1,20 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-05T15:09:05.719Z",
+  "lastUpdated": "2025-08-05T15:40:29.826Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-05T15:09:05.707Z"
+    "timestamp": "2025-08-05T15:40:29.807Z"
   },
   "nodes": [
     {
       "id": "128",
       "position": {
-        "x": -11372.170595874788,
-        "y": 5207.014949500442
+        "x": -11498.408382049938,
+        "y": 5049.217716781504
       },
       "type": "group",
       "style": {
@@ -26,8 +26,8 @@
       "height": 1401,
       "selected": false,
       "positionAbsolute": {
-        "x": -11372.170595874788,
-        "y": 5207.014949500442
+        "x": -11498.408382049938,
+        "y": 5049.217716781504
       },
       "dragging": false,
       "data": {
@@ -141,21 +141,21 @@
     {
       "id": "145",
       "position": {
-        "x": -9187.703750747576,
-        "y": 6293.53576887438
+        "x": -7897.5330456981255,
+        "y": 3450.143554054506
       },
       "type": "group",
       "style": {
-        "width": 780.259122964462,
-        "height": 1840.6639869054825,
+        "width": 869.9313207159321,
+        "height": 2712.6213506811177,
         "zIndex": 999
       },
-      "width": 780,
-      "height": 1841,
+      "width": 870,
+      "height": 2713,
       "selected": false,
       "positionAbsolute": {
-        "x": -9187.703750747576,
-        "y": 6293.53576887438
+        "x": -7897.5330456981255,
+        "y": 3450.143554054506
       },
       "dragging": false,
       "data": {
@@ -457,8 +457,8 @@
     {
       "id": "266",
       "position": {
-        "x": -10962.131700334967,
-        "y": -665.6786178208779
+        "x": -10978.597853189687,
+        "y": -710.5863074246586
       },
       "data": {
         "label": "Group 266",
@@ -473,16 +473,16 @@
       },
       "type": "group",
       "style": {
-        "width": 468,
-        "height": 1088.2746887442174
+        "width": 470,
+        "height": 1185.6177610706445
       },
-      "width": 468,
-      "height": 1088,
+      "width": 470,
+      "height": 1186,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -10962.131700334967,
-        "y": -665.6786178208779
+        "x": -10978.597853189687,
+        "y": -710.5863074246586
       }
     },
     {
@@ -1210,16 +1210,16 @@
     {
       "id": "126",
       "position": {
-        "x": 202.18958928049778,
-        "y": 356.394505064497
+        "x": 244.95762696968268,
+        "y": 419.4370269568026
       },
       "type": "editable",
       "width": 308,
-      "height": 395,
+      "height": 938,
       "selected": false,
       "positionAbsolute": {
-        "x": -2825.1623757123784,
-        "y": 3575.5377123746475
+        "x": -9394.051034799944,
+        "y": 5781.417942133282
       },
       "dragging": true,
       "parentId": "145",
@@ -1234,6 +1234,23 @@
             "type": "increment",
             "key": "user.streak",
             "value": 1
+          },
+          {
+            "type": "set",
+            "key": "task.lastStatus",
+            "value": "completed"
+          },
+          {
+            "type": "set",
+            "key": "task.currentDate",
+            "value": "NEXT_ACTIVE_DATE"
+          },
+          {
+            "type": "trigger",
+            "key": "task.endDate",
+            "value": "NEXT_ACTIVE_DATE_2",
+            "event": "recalculate_end_date",
+            "data": {}
           }
         ]
       }
@@ -1241,16 +1258,16 @@
     {
       "id": "141",
       "position": {
-        "x": 221.67600190108078,
-        "y": 802.2828055304453
+        "x": 280.8214940350299,
+        "y": 1552.0950122608256
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2805.6759630917954,
-        "y": 4021.426012840596
+        "x": -9318.120866611598,
+        "y": 6908.35217013402
       },
       "dragging": true,
       "parentId": "145",
@@ -1266,16 +1283,16 @@
     {
       "id": "142",
       "position": {
-        "x": 222.33071531031237,
-        "y": 1136.0206309492942
+        "x": 277.6603692420722,
+        "y": 1988.8604691388118
       },
       "type": "editable",
       "width": 248,
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": -2805.021249682564,
-        "y": 4355.163838259445
+        "x": -9321.281991404556,
+        "y": 7345.117627012006
       },
       "dragging": true,
       "parentId": "145",
@@ -1290,18 +1307,18 @@
     {
       "id": "143",
       "position": {
-        "x": 25,
-        "y": 1453.254429481311
+        "x": 57.43462471861676,
+        "y": 2319.449701378494
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -2313.192495043838,
-        "y": 4876.507965658499
+        "x": -9541.507735928011,
+        "y": 7675.706859251688
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "145",
       "extent": "parent",
       "data": {
@@ -1315,18 +1332,18 @@
     {
       "id": "144",
       "position": {
-        "x": 397.259122964462,
-        "y": 1451.6666262374197
+        "x": 519.3659454345488,
+        "y": 2325.2117932569463
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -1940.9333720793759,
-        "y": 4874.920162414608
+        "x": -9079.57641521208,
+        "y": 7681.46895113014
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "145",
       "extent": "parent",
       "data": {
@@ -1544,18 +1561,18 @@
     {
       "id": "101",
       "position": {
-        "x": 337.9755642684379,
-        "y": 421.5335881856754
+        "x": 230.98352005308607,
+        "y": 347.61181218234174
       },
       "type": "editable",
       "width": 248,
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": -1387.4008085227917,
-        "y": 1663.453378934602
+        "x": -6186.742147542666,
+        "y": -1499.3478746988837
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "150",
       "extent": "parent",
       "data": {
@@ -2981,16 +2998,16 @@
     {
       "id": "79",
       "position": {
-        "x": 47.810733271842764,
-        "y": 109
+        "x": 107.81073327184276,
+        "y": 91
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -9816.434165626742,
-        "y": -1257.0546808061556
+        "x": -10854.320967063124,
+        "y": -574.6786178208779
       },
       "dragging": true,
       "parentId": "266",
@@ -3007,18 +3024,18 @@
     {
       "id": "80",
       "position": {
-        "x": 25,
-        "y": 642.2746887442174
+        "x": 73.05538623773282,
+        "y": 535.6177610706446
       },
       "type": "editable",
       "width": 308,
-      "height": 395,
+      "height": 579,
       "selected": false,
       "positionAbsolute": {
-        "x": -5225.010937208163,
-        "y": 695.1033278644821
+        "x": -10905.542466951954,
+        "y": -174.9685463540139
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "266",
       "extent": "parent",
       "data": {
@@ -3030,8 +3047,15 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "task.previousStatus",
-            "value": null
+            "key": "task.currentDate",
+            "value": "NEX_ACTIVE_DATE"
+          },
+          {
+            "type": "trigger",
+            "key": "task.endDate",
+            "value": "",
+            "event": "recalculate_end_date",
+            "data": {}
           }
         ]
       }
@@ -6452,6 +6476,17 @@
         "filter": "none"
       },
       "id": "reactflow__edge-237-75"
+    },
+    {
+      "zIndex": 1001,
+      "source": "90",
+      "sourceHandle": null,
+      "target": "116",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-90-116",
+      "selected": false
     }
   ]
 }

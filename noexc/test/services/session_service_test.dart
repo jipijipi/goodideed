@@ -625,5 +625,203 @@ void main() {
         expect(isPastDeadline, isNotNull);
       });
     });
+
+    group('Task End Date Computation', () {
+      test('should compute task.endDate as next day when active days are everyday', () async {
+        final friday = DateTime(2024, 1, 5); // Friday
+        final saturday = DateTime(2024, 1, 6); // Saturday
+        final fridayString = _formatDate(friday);
+        final saturdayString = _formatDate(saturday);
+        
+        // Set task date to Friday with everyday active
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, fridayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5, 6, 7]);
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, saturdayString);
+      });
+
+      test('should compute task.endDate as next Monday when active days are weekdays and task is Friday', () async {
+        final friday = DateTime(2024, 1, 5); // Friday
+        final monday = DateTime(2024, 1, 8); // Next Monday
+        final fridayString = _formatDate(friday);
+        final mondayString = _formatDate(monday);
+        
+        // Set task date to Friday with weekdays only
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, fridayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]); // Weekdays
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, mondayString);
+      });
+
+      test('should compute task.endDate as next Saturday when active days are weekends and task is Sunday', () async {
+        final sunday = DateTime(2024, 1, 7); // Sunday
+        final saturday = DateTime(2024, 1, 13); // Next Saturday
+        final sundayString = _formatDate(sunday);
+        final saturdayString = _formatDate(saturday);
+        
+        // Set task date to Sunday with weekends only
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, sundayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [6, 7]); // Weekends
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, saturdayString);
+      });
+
+      test('should compute task.endDate correctly with single active day', () async {
+        final tuesday = DateTime(2024, 1, 2); // Tuesday
+        final thursday = DateTime(2024, 1, 4); // Thursday
+        final tuesdayString = _formatDate(tuesday);
+        final thursdayString = _formatDate(thursday);
+        
+        // Set task date to Tuesday with only Thursday active
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, tuesdayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [4]); // Thursday only
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, thursdayString);
+      });
+
+      test('should default to empty string when no task.currentDate is set', () async {
+        // Don't set any task date
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, '');
+      });
+
+      test('should default to empty string when task.currentDate is empty', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, '');
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, '');
+      });
+
+      test('should default to empty string when task.currentDate has invalid format', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, 'invalid-date');
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, '');
+      });
+
+      test('should default to next day when no activeDays configured', () async {
+        final friday = DateTime(2024, 1, 5); // Friday
+        final saturday = DateTime(2024, 1, 6); // Saturday
+        final fridayString = _formatDate(friday);
+        final saturdayString = _formatDate(saturday);
+        
+        // Set task date but no active days
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, fridayString);
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, saturdayString);
+      });
+
+      test('should default to next day when activeDays is empty array', () async {
+        final friday = DateTime(2024, 1, 5); // Friday
+        final saturday = DateTime(2024, 1, 6); // Saturday
+        final fridayString = _formatDate(friday);
+        final saturdayString = _formatDate(saturday);
+        
+        // Set task date with empty active days
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, fridayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, []);
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, saturdayString);
+      });
+
+      test('should handle same weekday correctly (next week)', () async {
+        final monday = DateTime(2024, 1, 1); // Monday
+        final nextMonday = DateTime(2024, 1, 8); // Next Monday
+        final mondayString = _formatDate(monday);
+        final nextMondayString = _formatDate(nextMonday);
+        
+        // Set task date to Monday with only Monday active
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, mondayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1]); // Monday only
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, nextMondayString);
+      });
+
+      test('should handle cross-month boundary correctly', () async {
+        final january31 = DateTime(2024, 1, 31); // Wednesday, January 31
+        final february1 = DateTime(2024, 2, 1); // Thursday, February 1
+        final jan31String = _formatDate(january31);
+        final feb1String = _formatDate(february1);
+        
+        // Set task date to January 31 with Thursday active
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, jan31String);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [4]); // Thursday
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, feb1String);
+      });
+
+      test('should handle date parsing exceptions gracefully', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, 'completely-invalid-date'); // Invalid format
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(endDate, '');
+      });
+
+      test('should not interfere with other computations', () async {
+        final friday = DateTime(2024, 1, 5); // Friday
+        final fridayString = _formatDate(friday);
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, fridayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        // All computations should work independently
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        
+        expect(endDate, isNotNull);
+        expect(status, isNotNull);
+        expect(isActiveDay, isNotNull);
+      });
+
+      test('should be recalculable via DataAction trigger', () async {
+        final friday = DateTime(2024, 1, 5); // Friday
+        final monday = DateTime(2024, 1, 8); // Monday
+        final fridayString = _formatDate(friday);
+        final mondayString = _formatDate(monday);
+        
+        // Initial setup - weekdays only
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, fridayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        final initialEndDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        expect(initialEndDate, mondayString);
+        
+        // Change to everyday and recalculate
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5, 6, 7]);
+        await sessionService.recalculateTaskEndDate();
+        
+        final newEndDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        final saturdayString = _formatDate(DateTime(2024, 1, 6)); // Saturday
+        expect(newEndDate, saturdayString);
+      });
+    });
   });
 }

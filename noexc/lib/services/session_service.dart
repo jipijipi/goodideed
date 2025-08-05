@@ -134,6 +134,9 @@ class SessionService {
     // Compute scheduling-based task status
     await _computeTaskStatus(now);
     
+    // Compute task end date based on current date + active days
+    await _computeTaskEndDate(now);
+    
     // Phase 1: Enhanced automatic status updates (run after status initialization)
     await _checkCurrentDayDeadline(now);
     await _updateStatusBasedOnContext(now);
@@ -259,6 +262,54 @@ class SessionService {
     }
   }
 
+  /// Compute task end date as the next active day after task.currentDate
+  Future<void> _computeTaskEndDate(DateTime now) async {
+    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    
+    // Default to empty if no task date is set
+    if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
+      await userDataService.storeValue(StorageKeys.taskEndDate, '');
+      return;
+    }
+    
+    // Validate and parse the task date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
+        // Invalid date format, default to empty
+        await userDataService.storeValue(StorageKeys.taskEndDate, '');
+        return;
+      }
+      
+      final startDate = DateTime.parse(taskCurrentDate);
+      final activeDays = await userDataService.getValue<List<dynamic>>('task.activeDays');
+      
+      // If no active days configured, default to next day
+      if (activeDays == null || activeDays.isEmpty) {
+        final endDate = startDate.add(const Duration(days: 1));
+        await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(endDate));
+        return;
+      }
+      
+      // Find the next active day after task.currentDate (exclusive)
+      for (int i = 1; i <= 365; i++) { // Max 1 year lookahead
+        final testDate = startDate.add(Duration(days: i));
+        final testWeekday = testDate.weekday;
+        
+        if (activeDays.contains(testWeekday)) {
+          await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(testDate));
+          return;
+        }
+      }
+      
+      // Fallback - should never reach here if activeDays is valid
+      final fallbackEndDate = startDate.add(const Duration(days: 1));
+      await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(fallbackEndDate));
+    } catch (e) {
+      // Date parsing failed, default to empty
+      await userDataService.storeValue(StorageKeys.taskEndDate, '');
+    }
+  }
+
   /// Public method to recalculate isActiveDay (called by dataAction triggers)
   Future<void> recalculateActiveDay() async {
     final now = DateTime.now();
@@ -271,6 +322,12 @@ class SessionService {
     final now = DateTime.now();
     final isPastDeadline = await _computeIsPastDeadline(now);
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+  }
+
+  /// Public method to recalculate task.endDate (called by dataAction triggers)
+  Future<void> recalculateTaskEndDate() async {
+    final now = DateTime.now();
+    await _computeTaskEndDate(now);
   }
 
   // Note: _setTaskCurrentDate and _getNextActiveDay methods removed

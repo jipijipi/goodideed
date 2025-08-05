@@ -215,6 +215,9 @@ class SessionService {
     
     final isPastDeadline = await _computeIsPastDeadline(now);
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+    
+    final isPastEndDate = await _computeIsPastEndDate(now);
+    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
   }
 
   /// Compute scheduling-based task status (overdue/upcoming/pending)
@@ -356,6 +359,34 @@ class SessionService {
       return now.isAfter(todayDeadline);
     } catch (e) {
       // If there's any error parsing deadline, default to false (not past deadline)
+      return false;
+    }
+  }
+
+  /// Check if current date is past the task's end date
+  Future<bool> _computeIsPastEndDate(DateTime now) async {
+    final taskEndDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+    
+    // Default to false if no end date is set or if date is invalid
+    if (taskEndDate == null || taskEndDate.isEmpty) {
+      return false;
+    }
+    
+    // Validate and parse the end date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskEndDate)) {
+        // Invalid date format, default to false
+        return false;
+      }
+      
+      final endDate = DateTime.parse(taskEndDate);
+      final today = DateTime(now.year, now.month, now.day);
+      final endDateOnly = DateTime(endDate.year, endDate.month, endDate.day);
+      
+      // Return true if end date is before today
+      return endDateOnly.isBefore(today);
+    } catch (e) {
+      // Date parsing failed, default to false
       return false;
     }
   }

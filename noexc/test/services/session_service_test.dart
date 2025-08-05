@@ -438,5 +438,116 @@ void main() {
         expect(currentStatus, 'pending'); // execution status (default)
       });
     });
+
+    group('Task End Date Computation', () {
+      test('should compute isPastEndDate as false when end date equals today', () async {
+        final today = DateTime.now();
+        final todayString = _formatDate(today);
+        
+        await userDataService.storeValue(StorageKeys.taskEndDate, todayString);
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should compute isPastEndDate as true when end date is before today', () async {
+        final today = DateTime.now();
+        final yesterday = today.subtract(const Duration(days: 1));
+        final yesterdayString = _formatDate(yesterday);
+        
+        await userDataService.storeValue(StorageKeys.taskEndDate, yesterdayString);
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, true);
+      });
+
+      test('should compute isPastEndDate as false when end date is after today', () async {
+        final today = DateTime.now();
+        final tomorrow = today.add(const Duration(days: 1));
+        final tomorrowString = _formatDate(tomorrow);
+        
+        await userDataService.storeValue(StorageKeys.taskEndDate, tomorrowString);
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should default to false when task end date is null', () async {
+        // Don't set any end date
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should default to false when task end date is empty', () async {
+        await userDataService.storeValue(StorageKeys.taskEndDate, '');
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should default to false when task end date has invalid format', () async {
+        await userDataService.storeValue(StorageKeys.taskEndDate, 'invalid-date');
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should default to false when task end date has partial format', () async {
+        await userDataService.storeValue(StorageKeys.taskEndDate, '2024-12');
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should handle date parsing exceptions gracefully', () async {
+        await userDataService.storeValue(StorageKeys.taskEndDate, 'completely-invalid-date');
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should compute correctly for dates far in the past', () async {
+        await userDataService.storeValue(StorageKeys.taskEndDate, '2020-01-01');
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, true);
+      });
+
+      test('should compute correctly for dates far in the future', () async {
+        await userDataService.storeValue(StorageKeys.taskEndDate, '2030-12-31');
+        await sessionService.initializeSession();
+        
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(isPastEndDate, false);
+      });
+
+      test('should not interfere with existing boolean computations', () async {
+        final today = DateTime.now();
+        final yesterdayString = _formatDate(today.subtract(const Duration(days: 1)));
+        
+        await userDataService.storeValue(StorageKeys.taskEndDate, yesterdayString);
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        await sessionService.initializeSession();
+        
+        // All boolean fields should be computed independently
+        final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        final isPastDeadline = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
+        
+        expect(isPastEndDate, true); // end date computation
+        expect(isActiveDay, isNotNull); // other computations should still work
+        expect(isPastDeadline, isNotNull);
+      });
+    });
   });
 }

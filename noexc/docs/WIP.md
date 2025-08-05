@@ -149,14 +149,9 @@ task.isActiveDay
 
 Create :
 
-
-Add a new launch computation for task.status where : 
-    overdue : if task.currentDate < today
-    upcoming : if task.currentDate > today
-    pending : default
     
 
-task.endDate : set in script
+
 
 Add a new launch computation for task.isPastEndDate where :
     true : task.endDate < today

@@ -24,6 +24,7 @@ class StorageKeys {
   static const String taskDeadlineTime = '${taskPrefix}deadlineTime';
   static const String taskActiveDays = '${taskPrefix}activeDays';
   static const String taskCurrentDate = '${taskPrefix}currentDate';
+  static const String taskEndDate = '${taskPrefix}endDate';
   static const String taskCurrentStatus = '${taskPrefix}currentStatus';
   static const String taskStatus = '${taskPrefix}status';
   static const String taskPreviousDate = '${taskPrefix}previousDate';
@@ -35,6 +36,7 @@ class StorageKeys {
   static const String taskIsBeforeStart = '${taskPrefix}isBeforeStart';
   static const String taskIsInTimeRange = '${taskPrefix}isInTimeRange';
   static const String taskIsPastDeadline = '${taskPrefix}isPastDeadline';
+  static const String taskIsPastEndDate = '${taskPrefix}isPastEndDate';
   static const String taskStartTiming = '${taskPrefix}startTiming';
   static const String taskNextActiveWeekday = '${taskPrefix}nextActiveWeekday';
   

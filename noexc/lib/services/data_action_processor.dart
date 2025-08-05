@@ -158,9 +158,9 @@ class DataActionProcessor {
       return _formatDate(targetDate);
     }
     
-    // Find the Nth active day, starting from today (inclusive)
+    // Find the Nth active day, starting from tomorrow (excluding today)
     int foundCount = 0;
-    for (int i = 0; i <= 365; i++) { // Max 1 year lookahead
+    for (int i = 1; i <= 365; i++) { // Max 1 year lookahead
       final testDate = now.add(Duration(days: i));
       final testWeekday = testDate.weekday;
       

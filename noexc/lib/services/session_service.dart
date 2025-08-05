@@ -128,9 +128,6 @@ class SessionService {
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
     }
     
-    // Compute derived task boolean values
-    await _computeTaskBooleans(now);
-    
     // Compute scheduling-based task status
     await _computeTaskStatus(now);
     
@@ -139,6 +136,9 @@ class SessionService {
     
     // Compute task due day (weekday integer of task.currentDate)
     await _computeTaskDueDay();
+    
+    // Compute derived task boolean values (after endDate is calculated)
+    await _computeTaskBooleans(now);
     
     // Phase 1: Enhanced automatic status updates (run after status initialization)
     await _checkCurrentDayDeadline(now);

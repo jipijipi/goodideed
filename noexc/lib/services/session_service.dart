@@ -331,6 +331,10 @@ class SessionService {
   Future<void> recalculateTaskEndDate() async {
     final now = DateTime.now();
     await _computeTaskEndDate(now);
+    
+    // Also recalculate isPastEndDate since it depends on endDate
+    final isPastEndDate = await _computeIsPastEndDate(now);
+    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
   }
 
   /// Public method to recalculate task.dueDay (called by dataAction triggers)

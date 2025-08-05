@@ -136,9 +136,9 @@ class ChatService {
       final userDataService = ServiceLocator.instance.userDataService;
       final sessionService = SessionService(userDataService);
       await sessionService.recalculateTaskEndDate();
-      logger.info('Successfully recalculated task.endDate');
+      logger.info('Successfully recalculated task.endDate and task.isPastEndDate');
     } catch (e) {
-      logger.error('Failed to recalculate end date: $e');
+      logger.error('Failed to recalculate task.endDate and task.isPastEndDate: $e');
     }
   }
 
@@ -147,12 +147,12 @@ class ChatService {
     final userDataService = ServiceLocator.instance.userDataService;
     final sessionService = SessionService(userDataService);
     
-    // Recalculate task.endDate
+    // Recalculate task.endDate and task.isPastEndDate
     try {
       await sessionService.recalculateTaskEndDate();
-      logger.info('Successfully recalculated task.endDate');
+      logger.info('Successfully recalculated task.endDate and task.isPastEndDate');
     } catch (e) {
-      logger.error('Failed to recalculate task.endDate: $e');
+      logger.error('Failed to recalculate task.endDate and task.isPastEndDate: $e');
     }
     
     // Recalculate task.dueDay

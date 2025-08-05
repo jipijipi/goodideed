@@ -822,6 +822,35 @@ void main() {
         final saturdayString = _formatDate(DateTime(2024, 1, 6)); // Saturday
         expect(newEndDate, saturdayString);
       });
+
+      test('should recalculate task.isPastEndDate when recalculateTaskEndDate is called', () async {
+        final yesterday = DateTime.now().subtract(const Duration(days: 1));
+        final yesterdayString = _formatDate(yesterday);
+        
+        // Set task date to yesterday
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5, 6, 7]);
+        await sessionService.initializeSession();
+        
+        // Initial state - endDate should be today, isPastEndDate should be false
+        final initialEndDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        final initialIsPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        expect(initialEndDate, _formatDate(DateTime.now()));
+        expect(initialIsPastEndDate, false);
+        
+        // Manually set endDate to yesterday to simulate past end date
+        await userDataService.storeValue(StorageKeys.taskEndDate, yesterdayString);
+        
+        // Recalculate - this should update both endDate and isPastEndDate
+        await sessionService.recalculateTaskEndDate();
+        
+        // Verify both values were recalculated
+        final newEndDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        final newIsPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
+        
+        expect(newEndDate, _formatDate(DateTime.now())); // Should be recalculated to today
+        expect(newIsPastEndDate, false); // Should be false since endDate is now today
+      });
     });
 
     group('Task Due Day Computation', () {

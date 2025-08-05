@@ -151,3 +151,8 @@ If the active days are weekends only and the task.currentDate is sunday, the tas
 It's the same underlying logic as NEXT_ACTIVE_DATE_1 and NEXT_ACTIVE_DATE_2 if NEXT_ACTIVE_DATE_1 was the task.currentDate instead of today
 
 2) give the ability to recalculate it from a data action trigger
+
+1) Rename it FIRST_ACTIVE_DATE
+2) Create a new launch calculation called task.dueDay that returns the integers associated with the day of the week of task.currentDate. Make sure it is in the correct order at launch
+2) Create a new trigger called update_task that would group the recalculation of task related variables:
+    

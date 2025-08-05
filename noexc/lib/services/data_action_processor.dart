@@ -86,7 +86,7 @@ class DataActionProcessor {
     }
   }
 
-  /// Resolve template functions like TODAY_DATE, NEXT_ACTIVE_DATE
+  /// Resolve template functions like TODAY_DATE, NEXT_ACTIVE_DATE, FIRST_ACTIVE_DAY
   Future<dynamic> _resolveTemplateFunction(dynamic value) async {
     if (value is! String) {
       return value; // Not a string, return as-is
@@ -123,6 +123,14 @@ class DataActionProcessor {
         _logger.warning('NEXT_ACTIVE_WEEKDAY using fallback - no session service', 
             component: LogComponent.dataActionProcessor);
         return DateTime.now().add(const Duration(days: 1)).weekday;
+      
+      case 'FIRST_ACTIVE_DAY':
+        if (_sessionService != null) {
+          return await _getFirstActiveDate();
+        }
+        _logger.warning('FIRST_ACTIVE_DAY using fallback - no session service', 
+            component: LogComponent.dataActionProcessor);
+        return _formatDate(DateTime.now());
       
       default:
         return value; // Not a template function, return as-is
@@ -215,6 +223,42 @@ class DataActionProcessor {
     }
     
     return null;
+  }
+
+  /// Get the first active date starting from today (inclusive) based on user's active days configuration
+  Future<String> _getFirstActiveDate() async {
+    final now = DateTime.now();
+    
+    // Snapshot all dependencies at once to avoid race conditions
+    final rawActiveDays = await _userDataService.getValue<dynamic>('task.activeDays');
+    
+    // Parse activeDays to handle both array and string formats
+    final activeDays = _parseActiveDays(rawActiveDays);
+    
+    // If no active days configured, default to today
+    if (activeDays == null || activeDays.isEmpty) {
+      return _formatDate(now);
+    }
+    
+    // Check if today is an active day first
+    if (activeDays.contains(now.weekday)) {
+      return _formatDate(now);
+    }
+    
+    // Find the first active day, starting from tomorrow
+    for (int i = 1; i <= 365; i++) { // Max 1 year lookahead
+      final testDate = now.add(Duration(days: i));
+      final testWeekday = testDate.weekday;
+      
+      if (activeDays.contains(testWeekday)) {
+        return _formatDate(testDate);
+      }
+    }
+    
+    // Fallback - should never reach here if activeDays is valid
+    _logger.warning('No first active date found, using today as fallback', 
+        component: LogComponent.dataActionProcessor);
+    return _formatDate(now);
   }
 
   /// Get the next active weekday number based on user's active days configuration

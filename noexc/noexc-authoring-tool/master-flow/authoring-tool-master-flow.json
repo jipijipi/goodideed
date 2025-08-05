@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-05T16:17:55.002Z",
+  "lastUpdated": "2025-08-05T16:29:56.392Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-05T16:17:54.973Z"
+    "timestamp": "2025-08-05T16:29:56.366Z"
   },
   "nodes": [
     {
@@ -3009,7 +3009,7 @@
           {
             "type": "set",
             "key": "task.currentDate",
-            "value": "NEXT_ACTIVE_DATE_1"
+            "value": "FIRST_ACTIVE_DAY"
           },
           {
             "type": "trigger",

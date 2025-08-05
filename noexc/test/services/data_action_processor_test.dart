@@ -500,6 +500,98 @@ void main() {
         final expectedDateString = '${expectedDate.year}-${expectedDate.month.toString().padLeft(2, '0')}-${expectedDate.day.toString().padLeft(2, '0')}';
         expect(result, expectedDateString);
       });
+
+      test('should resolve FIRST_ACTIVE_DAY when today is active', () async {
+        // Set active days to include today
+        final today = DateTime.now();
+        await userDataService.storeValue('task.activeDays', [today.weekday]);
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.firstActiveDay',
+          value: 'FIRST_ACTIVE_DAY',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDate);
+      });
+
+      test('should resolve FIRST_ACTIVE_DAY when today is not active', () async {
+        // Set active days to exclude today but include tomorrow
+        final today = DateTime.now();
+        final tomorrow = today.add(const Duration(days: 1));
+        await userDataService.storeValue('task.activeDays', [tomorrow.weekday]);
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.firstActiveDay',
+          value: 'FIRST_ACTIVE_DAY',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final expectedDate = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDate);
+      });
+
+      test('should resolve FIRST_ACTIVE_DAY with no active days configured', () async {
+        // Don't set any active days - should default to today
+        final today = DateTime.now();
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.firstActiveDay',
+          value: 'FIRST_ACTIVE_DAY',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDate);
+      });
+
+      test('should resolve FIRST_ACTIVE_DAY with weekdays only', () async {
+        // Set active days to weekdays only (1-5)
+        await userDataService.storeValue('task.activeDays', [1, 2, 3, 4, 5]);
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.firstActiveDay',
+          value: 'FIRST_ACTIVE_DAY',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        expect(result, isNotNull);
+        // Should be a valid date string
+        expect(RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(result!), true);
+        
+        // Parse the result date and verify it's a weekday
+        final resultDate = DateTime.parse(result);
+        expect([1, 2, 3, 4, 5].contains(resultDate.weekday), true);
+      });
+
+      test('should resolve FIRST_ACTIVE_DAY without session service (fallback)', () async {
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.firstActiveDay',
+          value: 'FIRST_ACTIVE_DAY',
+        );
+
+        // Use processor without session service
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final today = DateTime.now();
+        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDate);
+      });
     });
 
     group('Recalculate Triggers', () {

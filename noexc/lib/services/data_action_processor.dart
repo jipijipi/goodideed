@@ -86,7 +86,7 @@ class DataActionProcessor {
     }
   }
 
-  /// Resolve template functions like TODAY_DATE, NEXT_ACTIVE_DATE, FIRST_ACTIVE_DAY
+  /// Resolve template functions like TODAY_DATE, NEXT_ACTIVE_DATE, FIRST_ACTIVE_DATE
   Future<dynamic> _resolveTemplateFunction(dynamic value) async {
     if (value is! String) {
       return value; // Not a string, return as-is
@@ -124,11 +124,11 @@ class DataActionProcessor {
             component: LogComponent.dataActionProcessor);
         return DateTime.now().add(const Duration(days: 1)).weekday;
       
-      case 'FIRST_ACTIVE_DAY':
+      case 'FIRST_ACTIVE_DATE':
         if (_sessionService != null) {
           return await _getFirstActiveDate();
         }
-        _logger.warning('FIRST_ACTIVE_DAY using fallback - no session service', 
+        _logger.warning('FIRST_ACTIVE_DATE using fallback - no session service', 
             component: LogComponent.dataActionProcessor);
         return _formatDate(DateTime.now());
       

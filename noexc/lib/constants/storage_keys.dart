@@ -25,6 +25,7 @@ class StorageKeys {
   static const String taskActiveDays = '${taskPrefix}activeDays';
   static const String taskCurrentDate = '${taskPrefix}currentDate';
   static const String taskEndDate = '${taskPrefix}endDate';
+  static const String taskDueDay = '${taskPrefix}dueDay';
   static const String taskCurrentStatus = '${taskPrefix}currentStatus';
   static const String taskStatus = '${taskPrefix}status';
   static const String taskPreviousDate = '${taskPrefix}previousDate';

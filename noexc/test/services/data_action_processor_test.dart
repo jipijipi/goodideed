@@ -501,25 +501,25 @@ void main() {
         expect(result, expectedDateString);
       });
 
-      test('should resolve FIRST_ACTIVE_DAY when today is active', () async {
+      test('should resolve FIRST_ACTIVE_DATE when today is active', () async {
         // Set active days to include today
         final today = DateTime.now();
         await userDataService.storeValue('task.activeDays', [today.weekday]);
 
         final action = DataAction(
           type: DataActionType.set,
-          key: 'task.firstActiveDay',
-          value: 'FIRST_ACTIVE_DAY',
+          key: 'task.firstActiveDate',
+          value: 'FIRST_ACTIVE_DATE',
         );
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final result = await userDataService.getValue<String>('task.firstActiveDate');
         final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
         expect(result, expectedDate);
       });
 
-      test('should resolve FIRST_ACTIVE_DAY when today is not active', () async {
+      test('should resolve FIRST_ACTIVE_DATE when today is not active', () async {
         // Set active days to exclude today but include tomorrow
         final today = DateTime.now();
         final tomorrow = today.add(const Duration(days: 1));
@@ -527,47 +527,47 @@ void main() {
 
         final action = DataAction(
           type: DataActionType.set,
-          key: 'task.firstActiveDay',
-          value: 'FIRST_ACTIVE_DAY',
+          key: 'task.firstActiveDate',
+          value: 'FIRST_ACTIVE_DATE',
         );
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final result = await userDataService.getValue<String>('task.firstActiveDate');
         final expectedDate = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
         expect(result, expectedDate);
       });
 
-      test('should resolve FIRST_ACTIVE_DAY with no active days configured', () async {
+      test('should resolve FIRST_ACTIVE_DATE with no active days configured', () async {
         // Don't set any active days - should default to today
         final today = DateTime.now();
 
         final action = DataAction(
           type: DataActionType.set,
-          key: 'task.firstActiveDay',
-          value: 'FIRST_ACTIVE_DAY',
+          key: 'task.firstActiveDate',
+          value: 'FIRST_ACTIVE_DATE',
         );
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final result = await userDataService.getValue<String>('task.firstActiveDate');
         final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
         expect(result, expectedDate);
       });
 
-      test('should resolve FIRST_ACTIVE_DAY with weekdays only', () async {
+      test('should resolve FIRST_ACTIVE_DATE with weekdays only', () async {
         // Set active days to weekdays only (1-5)
         await userDataService.storeValue('task.activeDays', [1, 2, 3, 4, 5]);
 
         final action = DataAction(
           type: DataActionType.set,
-          key: 'task.firstActiveDay',
-          value: 'FIRST_ACTIVE_DAY',
+          key: 'task.firstActiveDate',
+          value: 'FIRST_ACTIVE_DATE',
         );
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final result = await userDataService.getValue<String>('task.firstActiveDate');
         expect(result, isNotNull);
         // Should be a valid date string
         expect(RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(result!), true);
@@ -577,17 +577,17 @@ void main() {
         expect([1, 2, 3, 4, 5].contains(resultDate.weekday), true);
       });
 
-      test('should resolve FIRST_ACTIVE_DAY without session service (fallback)', () async {
+      test('should resolve FIRST_ACTIVE_DATE without session service (fallback)', () async {
         final action = DataAction(
           type: DataActionType.set,
-          key: 'task.firstActiveDay',
-          value: 'FIRST_ACTIVE_DAY',
+          key: 'task.firstActiveDate',
+          value: 'FIRST_ACTIVE_DATE',
         );
 
         // Use processor without session service
         await processor.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDay');
+        final result = await userDataService.getValue<String>('task.firstActiveDate');
         final today = DateTime.now();
         final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
         expect(result, expectedDate);

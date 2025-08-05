@@ -154,5 +154,8 @@ It's the same underlying logic as NEXT_ACTIVE_DATE_1 and NEXT_ACTIVE_DATE_2 if N
 
 1) Rename it FIRST_ACTIVE_DATE
 2) Create a new launch calculation called task.dueDay that returns the integers associated with the day of the week of task.currentDate. Make sure it is in the correct order at launch
-2) Create a new trigger called update_task that would group the recalculation of task related variables:
-    
+4) Create a new trigger called update_task_info that would group the recalculation of task related variables:
+    - task.endDate
+    - task.dueDay
+    - 
+    Use the existing logic functions and methods whenever possible, discuss and await validation before coding.

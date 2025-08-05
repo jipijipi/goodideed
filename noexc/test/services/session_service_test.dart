@@ -823,5 +823,136 @@ void main() {
         expect(newEndDate, saturdayString);
       });
     });
+
+    group('Task Due Day Computation', () {
+      test('should compute task.dueDay as weekday integer of task.currentDate', () async {
+        final monday = DateTime(2024, 1, 1); // Monday = 1
+        final mondayString = _formatDate(monday);
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, mondayString);
+        await sessionService.initializeSession();
+        
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        expect(dueDay, 1); // Monday
+      });
+
+      test('should compute task.dueDay correctly for different weekdays', () async {
+        final testCases = [
+          (DateTime(2024, 1, 1), 1), // Monday
+          (DateTime(2024, 1, 2), 2), // Tuesday
+          (DateTime(2024, 1, 3), 3), // Wednesday
+          (DateTime(2024, 1, 4), 4), // Thursday
+          (DateTime(2024, 1, 5), 5), // Friday
+          (DateTime(2024, 1, 6), 6), // Saturday
+          (DateTime(2024, 1, 7), 7), // Sunday
+        ];
+
+        for (final (date, expectedWeekday) in testCases) {
+          await userDataService.clearAllData();
+          await userDataService.storeValue(StorageKeys.taskCurrentDate, _formatDate(date));
+          await sessionService.initializeSession();
+          
+          final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+          expect(dueDay, expectedWeekday, reason: 'Failed for ${date.toString()}');
+        }
+      });
+
+      test('should default to 0 when no task.currentDate is set', () async {
+        // Don't set any task date
+        await sessionService.initializeSession();
+        
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        expect(dueDay, 0);
+      });
+
+      test('should default to 0 when task.currentDate is empty', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, '');
+        await sessionService.initializeSession();
+        
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        expect(dueDay, 0);
+      });
+
+      test('should default to 0 when task.currentDate has invalid format', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, 'invalid-date');
+        await sessionService.initializeSession();
+        
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        expect(dueDay, 0);
+      });
+
+      test('should default to 0 when task.currentDate has partial format', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, '2024-12');
+        await sessionService.initializeSession();
+        
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        expect(dueDay, 0);
+      });
+
+      test('should handle date parsing exceptions gracefully', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, 'completely-invalid-date');
+        await sessionService.initializeSession();
+        
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        expect(dueDay, 0);
+      });
+
+      test('should compute correctly for dates in different months and years', () async {
+        final testCases = [
+          (DateTime(2024, 2, 5), 1), // Monday in February
+          (DateTime(2023, 12, 31), 7), // Sunday in December 2023
+          (DateTime(2025, 6, 15), 7), // Sunday in June 2025
+          (DateTime(2024, 7, 4), 4), // Thursday (July 4th)
+        ];
+
+        for (final (date, expectedWeekday) in testCases) {
+          await userDataService.clearAllData();
+          await userDataService.storeValue(StorageKeys.taskCurrentDate, _formatDate(date));
+          await sessionService.initializeSession();
+          
+          final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+          expect(dueDay, expectedWeekday, reason: 'Failed for ${date.toString()}');
+        }
+      });
+
+      test('should not interfere with other computations', () async {
+        final friday = DateTime(2024, 1, 5); // Friday
+        final fridayString = _formatDate(friday);
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, fridayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        // All computations should work independently
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        
+        expect(dueDay, 5); // Friday
+        expect(endDate, isNotNull);
+        expect(status, isNotNull);
+        expect(isActiveDay, isNotNull);
+      });
+
+      test('should be computed at launch in correct order', () async {
+        final wednesday = DateTime(2024, 1, 3); // Wednesday = 3
+        final wednesdayString = _formatDate(wednesday);
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, wednesdayString);
+        await sessionService.initializeSession();
+        
+        // Verify that task.dueDay is computed and available after initialization
+        final dueDay = await userDataService.getValue<int>(StorageKeys.taskDueDay);
+        expect(dueDay, 3); // Wednesday
+        
+        // Verify it's computed alongside other task calculations
+        final endDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        
+        expect(endDate, isNotNull); // Should be computed
+        expect(status, isNotNull); // Should be computed
+      });
+    });
   });
 }

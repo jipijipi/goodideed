@@ -137,6 +137,9 @@ class SessionService {
     // Compute task end date based on current date + active days
     await _computeTaskEndDate(now);
     
+    // Compute task due day (weekday integer of task.currentDate)
+    await _computeTaskDueDay();
+    
     // Phase 1: Enhanced automatic status updates (run after status initialization)
     await _checkCurrentDayDeadline(now);
     await _updateStatusBasedOnContext(now);
@@ -328,6 +331,33 @@ class SessionService {
   Future<void> recalculateTaskEndDate() async {
     final now = DateTime.now();
     await _computeTaskEndDate(now);
+  }
+
+  /// Compute task due day as the weekday integer of task.currentDate
+  Future<void> _computeTaskDueDay() async {
+    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    
+    // Default to 0 if no task date is set
+    if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
+      await userDataService.storeValue(StorageKeys.taskDueDay, 0);
+      return;
+    }
+    
+    // Validate and parse the task date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
+        // Invalid date format, default to 0
+        await userDataService.storeValue(StorageKeys.taskDueDay, 0);
+        return;
+      }
+      
+      final taskDate = DateTime.parse(taskCurrentDate);
+      // DateTime.weekday returns 1-7 (Monday=1, Sunday=7)
+      await userDataService.storeValue(StorageKeys.taskDueDay, taskDate.weekday);
+    } catch (e) {
+      // Date parsing failed, default to 0
+      await userDataService.storeValue(StorageKeys.taskDueDay, 0);
+    }
   }
 
   // Note: _setTaskCurrentDate and _getNextActiveDay methods removed

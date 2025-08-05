@@ -88,6 +88,9 @@ class ChatService {
       case 'recalculate_past_deadline':
         await _handleRecalculatePastDeadline();
         break;
+      case 'recalculate_end_date':
+        await _handleRecalculateEndDate();
+        break;
       default:
         // Forward unknown events to UI callback
         if (_onEvent != null) {
@@ -121,6 +124,18 @@ class ChatService {
       logger.info('Successfully recalculated task.isPastDeadline');
     } catch (e) {
       logger.error('Failed to recalculate past deadline: $e');
+    }
+  }
+
+  /// Handle recalculate_end_date event from dataAction trigger
+  Future<void> _handleRecalculateEndDate() async {
+    try {
+      final userDataService = ServiceLocator.instance.userDataService;
+      final sessionService = SessionService(userDataService);
+      await sessionService.recalculateTaskEndDate();
+      logger.info('Successfully recalculated task.endDate');
+    } catch (e) {
+      logger.error('Failed to recalculate end date: $e');
     }
   }
 

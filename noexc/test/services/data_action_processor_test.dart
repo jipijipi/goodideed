@@ -501,5 +501,78 @@ void main() {
         expect(result, expectedDateString);
       });
     });
+
+    group('Recalculate Triggers', () {
+      late SessionService sessionService;
+      late DataActionProcessor processorWithSession;
+      
+      setUp(() async {
+        sessionService = SessionService(userDataService);
+        processorWithSession = DataActionProcessor(userDataService, sessionService: sessionService);
+      });
+
+      test('should handle recalculate_end_date trigger', () async {
+        bool triggerCalled = false;
+        String? capturedEvent;
+        Map<String, dynamic>? capturedData;
+        
+        processorWithSession.setEventCallback((eventType, data) async {
+          triggerCalled = true;
+          capturedEvent = eventType;
+          capturedData = data;
+        });
+
+        final action = DataAction(
+          type: DataActionType.trigger,
+          key: 'test.key',
+          event: 'recalculate_end_date',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        // Verify trigger was called with correct event type
+        expect(triggerCalled, true);
+        expect(capturedEvent, 'recalculate_end_date');
+        expect(capturedData, {});
+      });
+
+      test('should handle recalculate_end_date trigger with data payload', () async {
+        bool triggerCalled = false;
+        String? capturedEvent;
+        Map<String, dynamic>? capturedData;
+        
+        processorWithSession.setEventCallback((eventType, data) async {
+          triggerCalled = true;
+          capturedEvent = eventType;
+          capturedData = data;
+        });
+
+        final action = DataAction(
+          type: DataActionType.trigger,
+          key: 'test.key',
+          event: 'recalculate_end_date',
+          data: {'reason': 'task_updated'},
+        );
+
+        await processorWithSession.processActions([action]);
+
+        expect(triggerCalled, true);
+        expect(capturedEvent, 'recalculate_end_date');
+        expect(capturedData, {'reason': 'task_updated'});
+      });
+
+      test('should handle recalculate_end_date trigger without callback set', () async {
+        final action = DataAction(
+          type: DataActionType.trigger,
+          key: 'test.key',
+          event: 'recalculate_end_date',
+        );
+
+        // Should not throw error even without callback
+        await processorWithSession.processActions([action]);
+        
+        expect(true, true); // Test passes if no exception thrown
+      });
+    });
   });
 }

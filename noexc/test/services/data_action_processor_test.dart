@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/models/data_action.dart';
 import 'package:noexc/services/data_action_processor.dart';
 import 'package:noexc/services/user_data_service.dart';
+import 'package:noexc/services/session_service.dart';
 
 void main() {
   group('DataActionProcessor', () {
@@ -338,6 +339,167 @@ void main() {
       final score = await userDataService.getValue<int>('user.score');
       expect(score, 100);
       expect(events, ['score_updated', 'achievement_unlocked']);
+    });
+
+    group('Template Functions', () {
+      late SessionService sessionService;
+      late DataActionProcessor processorWithSession;
+
+      setUp(() async {
+        sessionService = SessionService(userDataService);
+        processorWithSession = DataActionProcessor(userDataService, sessionService: sessionService);
+      });
+
+      test('should resolve TODAY_DATE template function', () async {
+        final today = DateTime.now();
+        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.date',
+          value: 'TODAY_DATE',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.date');
+        expect(result, expectedDate);
+      });
+
+      test('should resolve NEXT_ACTIVE_DATE_1 when today is active', () async {
+        // Set active days to include today
+        final today = DateTime.now();
+        await userDataService.storeValue('task.activeDays', [today.weekday]);
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.nextDate',
+          value: 'NEXT_ACTIVE_DATE_1',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.nextDate');
+        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDate);
+      });
+
+      test('should resolve NEXT_ACTIVE_DATE_1 when today is not active', () async {
+        // Set active days to exclude today but include tomorrow
+        final today = DateTime.now();
+        final tomorrow = today.add(const Duration(days: 1));
+        await userDataService.storeValue('task.activeDays', [tomorrow.weekday]);
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.nextDate',
+          value: 'NEXT_ACTIVE_DATE_1',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.nextDate');
+        final expectedDate = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDate);
+      });
+
+      test('should resolve NEXT_ACTIVE_DATE_2 correctly', () async {
+        // Set active days to Monday and Wednesday (1 and 3)
+        await userDataService.storeValue('task.activeDays', [1, 3]);
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.secondNextDate',
+          value: 'NEXT_ACTIVE_DATE_2',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.secondNextDate');
+        expect(result, isNotNull);
+        // Should be a valid date string
+        expect(RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(result!), true);
+      });
+
+      test('should resolve NEXT_ACTIVE_DATE_3 with weekdays only', () async {
+        // Set active days to weekdays only (1-5)
+        await userDataService.storeValue('task.activeDays', [1, 2, 3, 4, 5]);
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.thirdNextDate',
+          value: 'NEXT_ACTIVE_DATE_3',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.thirdNextDate');
+        expect(result, isNotNull);
+        expect(RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(result!), true);
+      });
+
+      test('should handle NEXT_ACTIVE_DATE_X with no active days configured', () async {
+        // Don't set any active days
+        final today = DateTime.now();
+
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.nextDate',
+          value: 'NEXT_ACTIVE_DATE_2',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.nextDate');
+        final tomorrow = today.add(const Duration(days: 1));
+        final expectedDate = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDate);
+      });
+
+      test('should handle invalid NEXT_ACTIVE_DATE index gracefully', () async {
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.nextDate',
+          value: 'NEXT_ACTIVE_DATE_0',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.nextDate');
+        expect(result, isNotNull);
+        // Should still return a valid date (fallback to index 1)
+        expect(RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(result!), true);
+      });
+
+      test('should handle non-template string values unchanged', () async {
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.customDate',
+          value: '2024-12-25',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.customDate');
+        expect(result, '2024-12-25');
+      });
+
+      test('should work without session service (fallback mode)', () async {
+        final action = DataAction(
+          type: DataActionType.set,
+          key: 'task.nextDate',
+          value: 'NEXT_ACTIVE_DATE_2',
+        );
+
+        // Use processor without session service
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<String>('task.nextDate');
+        final today = DateTime.now();
+        final expectedDate = today.add(const Duration(days: 1));
+        final expectedDateString = '${expectedDate.year}-${expectedDate.month.toString().padLeft(2, '0')}-${expectedDate.day.toString().padLeft(2, '0')}';
+        expect(result, expectedDateString);
+      });
     });
   });
 }

@@ -79,7 +79,30 @@ After setting the task, if the user *FIRST* checks in on :
     Next Monday before the day deadline : previous task autofailed, current task pending
     Next Monday after the day deadline : previous task autofailed, current task overdue
 
-1) Everythink works when no task is being carried over to the next day (same day completion)
-2) On day change the system will automatically assume an off day even when it's not
 
-The isactiveday calculation is problematic, a day should be considered active if it is part of task.activeDays and a new concept should be introduced to track if a task is due that day
+Change rule : 
+
+task.isActiveDay
+    true : if today part of task.activeDays
+    false : everything else
+
+
+Create :
+
+NEXT_ACTIVE_DATE_0 = the Xth active date following the task.currentDate
+
+task.status
+    overdue : if task.currentDate < today
+    pending : if task.currentDate == today
+    upcoming : if task.currentDate > today
+    
+
+task.endDate : set in script
+
+task.isPastEndDate
+    true : task.endDate < today
+    false : task.endDate >= today
+
+task.wasCompleted :
+    true : set in script
+    false : set in script

@@ -982,6 +982,30 @@ void main() {
         expect(endDate, isNotNull); // Should be computed
         expect(status, isNotNull); // Should be computed
       });
+
+      test('should recalculate task.status when recalculateTaskStatus is called', () async {
+        final yesterday = DateTime.now().subtract(const Duration(days: 1));
+        final yesterdayString = _formatDate(yesterday);
+        
+        // Set task date to yesterday (should be overdue)
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        await sessionService.initializeSession();
+        
+        // Initial state should be overdue
+        final initialStatus = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(initialStatus, 'overdue');
+        
+        // Change task date to today
+        final todayString = _formatDate(DateTime.now());
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, todayString);
+        
+        // Recalculate status
+        await sessionService.recalculateTaskStatus();
+        
+        // Status should now be pending
+        final newStatus = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(newStatus, 'pending');
+      });
     });
   });
 }

@@ -342,6 +342,12 @@ class SessionService {
     await _computeTaskDueDay();
   }
 
+  /// Public method to recalculate task.status (called by dataAction triggers)
+  Future<void> recalculateTaskStatus() async {
+    final now = DateTime.now();
+    await _computeTaskStatus(now);
+  }
+
   /// Compute task due day as the weekday integer of task.currentDate
   Future<void> _computeTaskDueDay() async {
     final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);

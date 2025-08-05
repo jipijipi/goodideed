@@ -162,6 +162,14 @@ class ChatService {
     } catch (e) {
       logger.error('Failed to recalculate task.dueDay: $e');
     }
+    
+    // Recalculate task.status
+    try {
+      await sessionService.recalculateTaskStatus();
+      logger.info('Successfully recalculated task.status');
+    } catch (e) {
+      logger.error('Failed to recalculate task.status: $e');
+    }
   }
 
   /// Load a specific chat sequence by ID

@@ -716,6 +716,32 @@ void main() {
         expect(capturedData, {'reason': 'active_days_updated'});
       });
 
+      test('should handle refresh_task_calculations trigger for comprehensive recalculation', () async {
+        bool triggerCalled = false;
+        String? capturedEvent;
+        
+        processorWithSession.setEventCallback((eventType, data) async {
+          triggerCalled = true;
+          capturedEvent = eventType;
+        });
+
+        final action = DataAction(
+          type: DataActionType.trigger,
+          key: 'test.key',
+          event: 'refresh_task_calculations',
+          data: {'reason': 'task_configuration_changed'},
+        );
+
+        await processorWithSession.processActions([action]);
+
+        // Verify trigger was called - this would recalculate:
+        // - task.endDate + task.isPastEndDate
+        // - task.dueDay  
+        // - task.status
+        expect(triggerCalled, true);
+        expect(capturedEvent, 'refresh_task_calculations');
+      });
+
       test('should handle refresh_task_calculations trigger without callback set', () async {
         final action = DataAction(
           type: DataActionType.trigger,

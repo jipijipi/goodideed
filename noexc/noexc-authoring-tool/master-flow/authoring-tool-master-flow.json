@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-05T16:29:56.392Z",
+  "lastUpdated": "2025-08-05T17:13:10.307Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-05T16:29:56.366Z"
+    "timestamp": "2025-08-05T17:13:10.300Z"
   },
   "nodes": [
     {
@@ -269,8 +269,8 @@
     {
       "id": "191",
       "position": {
-        "x": 5573.809777835757,
-        "y": 718.1883311175354
+        "x": 5626.449904049072,
+        "y": 663.195162321271
       },
       "data": {
         "label": "Group 191",
@@ -285,16 +285,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1232.9733702697076,
+        "width": 1219.6925480399723,
         "height": 3458.895767928913,
         "zIndex": 999
       },
-      "width": 1233,
+      "width": 1220,
       "height": 3459,
       "selected": false,
       "positionAbsolute": {
-        "x": 5573.809777835757,
-        "y": 718.1883311175354
+        "x": 5626.449904049072,
+        "y": 663.195162321271
       },
       "dragging": false
     },
@@ -411,11 +411,11 @@
       },
       "type": "group",
       "style": {
-        "width": 636.8579826761161,
-        "height": 1035.993777053793
+        "width": 744.8579826761161,
+        "height": 1143.993777053793
       },
-      "width": 637,
-      "height": 1036,
+      "width": 745,
+      "height": 1144,
       "selected": false,
       "positionAbsolute": {
         "x": -7957.927545006309,
@@ -473,8 +473,8 @@
       },
       "type": "group",
       "style": {
-        "width": 468,
-        "height": 1183.6177610706445
+        "width": 470,
+        "height": 1185.6177610706445
       },
       "width": 468,
       "height": 1184,
@@ -616,21 +616,21 @@
     {
       "id": "47",
       "position": {
-        "x": 3094.3876649269596,
-        "y": 4408.57816894634
+        "x": 2514.3876649269596,
+        "y": 4388.57816894634
       },
       "type": "group",
       "style": {
         "width": 1194.3110312481676,
-        "height": 2027.9705216108832,
+        "height": 2119.970521610883,
         "zIndex": 999
       },
       "width": 1194,
-      "height": 2028,
+      "height": 2120,
       "selected": false,
       "positionAbsolute": {
-        "x": 3094.3876649269596,
-        "y": 4408.57816894634
+        "x": 2514.3876649269596,
+        "y": 4388.57816894634
       },
       "dragging": false,
       "data": {
@@ -1943,8 +1943,8 @@
     {
       "id": "227",
       "position": {
-        "x": 825.5444945759928,
-        "y": 1550.000852242213
+        "x": 801.4425266686994,
+        "y": 1654.319415784765
       },
       "data": {
         "label": "Data action",
@@ -1954,31 +1954,26 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "task.currentStatus",
-            "value": "pending"
-          },
-          {
-            "type": "set",
             "key": "task.currentDate",
             "value": "TODAY_DATE"
           },
           {
             "type": "trigger",
-            "key": "task.endDate",
+            "key": "task.info",
             "value": "",
-            "event": "recalculate_end_date",
+            "event": "refresh_task_calculations",
             "data": {}
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 759,
+      "width": 310,
+      "height": 581,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 7320.90598659634,
-        "y": 5555.7017818847735
+        "x": 6427.892430717771,
+        "y": 2317.514578106036
       },
       "parentId": "191",
       "extent": "parent"
@@ -1986,8 +1981,8 @@
     {
       "id": "260",
       "position": {
-        "x": 63.24075542659011,
-        "y": 1594.9363330473361
+        "x": 51.74997862872715,
+        "y": 1671.043864702893
       },
       "data": {
         "label": "Data action",
@@ -1998,29 +1993,24 @@
           {
             "type": "set",
             "key": "task.currentDate",
-            "value": "NEXT_ACTIVE_DATE_1"
+            "value": "NEXT_ACTIVE_DATE"
           },
           {
             "type": "trigger",
-            "key": "task.endDate",
+            "key": "task.info",
             "value": "",
-            "event": "recalculate_end_date",
+            "event": "refresh_task_calculations",
             "data": {}
-          },
-          {
-            "type": "set",
-            "key": "task.nextActiveDay",
-            "value": "NEXT_ACTIVE_WEEKDAY"
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 759,
+      "width": 310,
+      "height": 581,
       "selected": false,
       "positionAbsolute": {
-        "x": 8230.334874586213,
-        "y": 3941.0257835360576
+        "x": 5848.168233126125,
+        "y": 2358.790010977811
       },
       "dragging": true,
       "parentId": "191",
@@ -2996,7 +2986,7 @@
         "x": -10905.542466951954,
         "y": -174.9685463540139
       },
-      "dragging": true,
+      "dragging": false,
       "parentId": "266",
       "extent": "parent",
       "data": {
@@ -3009,13 +2999,13 @@
           {
             "type": "set",
             "key": "task.currentDate",
-            "value": "FIRST_ACTIVE_DAY"
+            "value": "FIRST_ACTIVE_DATE"
           },
           {
             "type": "trigger",
-            "key": "task.endDate",
+            "key": "task.info",
             "value": "",
-            "event": "recalculate_end_date",
+            "event": "refresh_task_calculations",
             "data": {}
           }
         ]
@@ -3536,9 +3526,9 @@
           },
           {
             "type": "trigger",
-            "key": "task.endDate",
+            "key": "task.info",
             "value": "",
-            "event": "recalculate_end_date",
+            "event": "recalculate_task_info",
             "data": {}
           }
         ]
@@ -3826,8 +3816,8 @@
     {
       "id": "182",
       "position": {
-        "x": 387.6180694099867,
-        "y": 1110.7754767735332
+        "x": 372.6180694099867,
+        "y": 1073.7754767735332
       },
       "data": {
         "label": "Data action",
@@ -3841,16 +3831,23 @@
             "value": "",
             "event": "recalculate_active_day",
             "data": {}
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 400,
+      "height": 584,
       "selected": false,
       "positionAbsolute": {
-        "x": 3379.274070895509,
-        "y": 5519.353645719873
+        "x": 2887.0057343369463,
+        "y": 5462.353645719873
       },
       "dragging": true,
       "parentId": "47",
@@ -4015,16 +4012,16 @@
     {
       "id": "46",
       "position": {
-        "x": 393.67028921375186,
-        "y": 1634.9705216108832
+        "x": 391.67028921375186,
+        "y": 1726.9705216108832
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3385.326290699274,
-        "y": 6043.548690557223
+        "x": 2906.0579541407114,
+        "y": 6115.548690557223
       },
       "dragging": true,
       "parentId": "47",

@@ -333,6 +333,11 @@ class SessionService {
     await _computeTaskEndDate(now);
   }
 
+  /// Public method to recalculate task.dueDay (called by dataAction triggers)
+  Future<void> recalculateTaskDueDay() async {
+    await _computeTaskDueDay();
+  }
+
   /// Compute task due day as the weekday integer of task.currentDate
   Future<void> _computeTaskDueDay() async {
     final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);

@@ -665,6 +665,69 @@ void main() {
         
         expect(true, true); // Test passes if no exception thrown
       });
+
+      test('should handle refresh_task_calculations trigger', () async {
+        bool triggerCalled = false;
+        String? capturedEvent;
+        Map<String, dynamic>? capturedData;
+        
+        processorWithSession.setEventCallback((eventType, data) async {
+          triggerCalled = true;
+          capturedEvent = eventType;
+          capturedData = data;
+        });
+
+        final action = DataAction(
+          type: DataActionType.trigger,
+          key: 'test.key',
+          event: 'refresh_task_calculations',
+        );
+
+        await processorWithSession.processActions([action]);
+
+        // Verify trigger was called with correct event type
+        expect(triggerCalled, true);
+        expect(capturedEvent, 'refresh_task_calculations');
+        expect(capturedData, {});
+      });
+
+      test('should handle refresh_task_calculations trigger with data payload', () async {
+        bool triggerCalled = false;
+        String? capturedEvent;
+        Map<String, dynamic>? capturedData;
+        
+        processorWithSession.setEventCallback((eventType, data) async {
+          triggerCalled = true;
+          capturedEvent = eventType;
+          capturedData = data;
+        });
+
+        final action = DataAction(
+          type: DataActionType.trigger,
+          key: 'test.key',
+          event: 'refresh_task_calculations',
+          data: {'reason': 'active_days_updated'},
+        );
+
+        await processorWithSession.processActions([action]);
+
+        expect(triggerCalled, true);
+        expect(capturedEvent, 'refresh_task_calculations');
+        expect(capturedData, {'reason': 'active_days_updated'});
+      });
+
+      test('should handle refresh_task_calculations trigger without callback set', () async {
+        final action = DataAction(
+          type: DataActionType.trigger,
+          key: 'test.key',
+          event: 'refresh_task_calculations',
+        );
+
+        // Should not throw error even without callback
+        await processorWithSession.processActions([action]);
+        
+        expect(true, true); // Test passes if no exception thrown
+      });
     });
   });
 }

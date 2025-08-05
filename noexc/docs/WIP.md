@@ -140,25 +140,14 @@ After setting the task, if the user *FIRST* checks in on :
   - Task: task.startTime, task.deadlineTime, task.activeDays,
   task.currentStatus, etc.
 
-Change rule : 
-
-task.isActiveDay
-    true : if today part of task.activeDays
-    false : everything else
 
 
 Create :
 
-    
+1) Create a launch calculation called task.endDate, it will be set as the task.currentDate's following active day. examples: 
+If the active days are everyday and the task.currentDate is friday, the task.endDate will be the next saturday
+If the active days are week days only and the task.currentDate is friday, the task.endDate will be the next monday
+If the active days are weekends only and the task.currentDate is sunday, the task.endDate will be the next saturday
+It's the same underlying logic as NEXT_ACTIVE_DATE_1 and NEXT_ACTIVE_DATE_2 if NEXT_ACTIVE_DATE_1 was the task.currentDate instead of today
 
-
-
-Add a new launch computation for task.isPastEndDate where :
-    true : task.endDate < today
-    false : default
-
-task.endDate will be set in the script during task setting
-
-task.wasCompleted :
-    true : set in script
-    false : set in script
+2) give the ability to recalculate it from a data action trigger

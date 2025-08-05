@@ -294,41 +294,117 @@ void main() {
       expect(nextActiveWeekday, equals(tomorrow.weekday));
     });
 
-    test('should return false for isActiveDay when task scheduled for different date', () async {
+    test('should return false for isActiveDay when today is not in activeDays', () async {
       final tomorrow = DateTime.now().add(const Duration(days: 1));
       final tomorrowString = _formatDate(tomorrow);
       
-      // Simulate script setting next_active user with future date  
-      await userDataService.storeValue(StorageKeys.taskStartTiming, 'next_active');
-      await userDataService.storeValue(StorageKeys.taskActiveDays, [tomorrow.weekday]); // Only tomorrow is active
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString); // Script sets future date
+      // Set active days to only include tomorrow's weekday (not today)
+      await userDataService.storeValue(StorageKeys.taskActiveDays, [tomorrow.weekday]);
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString);
       
       // Initialize session
       await sessionService.initializeSession();
       
-      final currentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
       final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
       
-      // Task should be scheduled for tomorrow (as set by script)
-      expect(currentDate, equals(tomorrowString));
-      // isActiveDay should be false because task is scheduled for tomorrow, not today
+      // isActiveDay should be false because today's weekday is not in activeDays
       expect(isActiveDay, equals(false));
     });
 
-    test('should return true for isActiveDay when task scheduled for today and weekday matches', () async {
+    test('should return true for isActiveDay when today is in activeDays', () async {
       final today = DateTime.now();
       final todayString = _formatDate(today);
       
-      // Set task scheduled for today with today's weekday in active days
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, todayString);
+      // Set today's weekday in active days (task date is irrelevant now)
       await userDataService.storeValue(StorageKeys.taskActiveDays, [today.weekday]);
+      await userDataService.storeValue(StorageKeys.taskCurrentDate, todayString);
       
       await sessionService.initializeSession();
       
       final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
       
-      // Should be true because task is scheduled for today AND today's weekday is active
+      // Should be true because today's weekday is in activeDays
       expect(isActiveDay, equals(true));
+    });
+
+    group('Active Day Pure Weekday Logic', () {
+      test('should return false when no activeDays configured', () async {
+        // Don't set any activeDays
+        await sessionService.initializeSession();
+        
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        expect(isActiveDay, false);
+      });
+
+      test('should return false when activeDays is empty array', () async {
+        await userDataService.storeValue(StorageKeys.taskActiveDays, []);
+        await sessionService.initializeSession();
+        
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        expect(isActiveDay, false);
+      });
+
+      test('should return true for weekdays when activeDays includes weekdays', () async {
+        // Set activeDays to weekdays (Monday=1 to Friday=5)
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5]);
+        await sessionService.initializeSession();
+        
+        final today = DateTime.now();
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        
+        // Should be true if today is a weekday, false if weekend
+        final expectedResult = today.weekday >= 1 && today.weekday <= 5;
+        expect(isActiveDay, expectedResult);
+      });
+
+      test('should return true for weekends when activeDays includes weekends', () async {
+        // Set activeDays to weekends (Saturday=6, Sunday=7)
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [6, 7]);
+        await sessionService.initializeSession();
+        
+        final today = DateTime.now();
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        
+        // Should be true if today is weekend, false if weekday
+        final expectedResult = today.weekday == 6 || today.weekday == 7;
+        expect(isActiveDay, expectedResult);
+      });
+
+      test('should ignore task.currentDate and only check weekday', () async {
+        final today = DateTime.now();
+        final yesterday = today.subtract(const Duration(days: 1));
+        final yesterdayString = _formatDate(yesterday);
+        
+        // Set task date to yesterday but activeDays to include today
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [today.weekday]);
+        await sessionService.initializeSession();
+        
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        
+        // Should be true because today's weekday is in activeDays, regardless of task date
+        expect(isActiveDay, true);
+      });
+
+      test('should work with single weekday in activeDays', () async {
+        final today = DateTime.now();
+        
+        // Set activeDays to only include today's weekday
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [today.weekday]);
+        await sessionService.initializeSession();
+        
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        expect(isActiveDay, true);
+      });
+
+      test('should work with all weekdays in activeDays', () async {
+        // Set activeDays to include all days of week
+        await userDataService.storeValue(StorageKeys.taskActiveDays, [1, 2, 3, 4, 5, 6, 7]);
+        await sessionService.initializeSession();
+        
+        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
+        expect(isActiveDay, true); // Should always be true
+      });
     });
 
     group('Task Status Computation', () {

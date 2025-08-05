@@ -1,4 +1,4 @@
-
+Let's rethink how everything is calculated to make the following behaviors possible : 
 
 1) IMMEDIATE
 The user sets his task on Monday, active for *week days only*, starting the *SAME* day.
@@ -79,14 +79,7 @@ After setting the task, if the user *FIRST* checks in on :
     Next Monday before the day deadline : previous task autofailed, current task pending
     Next Monday after the day deadline : previous task autofailed, current task overdue
 
+1) Everythink works when no task is being carried over to the next day (same day completion)
+2) On day change the system will automatically assume an off day even when it's not
 
-
-recalculate_active_day broken?
-     When choosing weekends, correct selection [6,7] but isActiveDay == true
-NEXT_ACTIVE_DATE calculates to the next day, not the next active day
-
-1) It is now monday for the tests, I set active days for saturday and sunday, task.activeDays correctly return [6,7] but recalculate_active_day computes true, as if Monday [1] was active
-
-2) I then ask to start on the next active day instead of today and NEXT_ACTIVE_DATE computes Tuesday (tomorrow, not in the list) instead of saturday.
-
-Suggest reasons and fixes
+The isactiveday calculation is problematic, a day should be considered active if it is part of task.activeDays and a new concept should be introduced to track if a task is due that day

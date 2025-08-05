@@ -330,5 +330,113 @@ void main() {
       // Should be true because task is scheduled for today AND today's weekday is active
       expect(isActiveDay, equals(true));
     });
+
+    group('Task Status Computation', () {
+      test('should compute task status as pending when task date equals today', () async {
+        final today = DateTime.now();
+        final todayString = _formatDate(today);
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, todayString);
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'pending');
+      });
+
+      test('should compute task status as overdue when task date is before today', () async {
+        final today = DateTime.now();
+        final yesterday = today.subtract(const Duration(days: 1));
+        final yesterdayString = _formatDate(yesterday);
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'overdue');
+      });
+
+      test('should compute task status as upcoming when task date is after today', () async {
+        final today = DateTime.now();
+        final tomorrow = today.add(const Duration(days: 1));
+        final tomorrowString = _formatDate(tomorrow);
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString);
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'upcoming');
+      });
+
+      test('should default to pending when task current date is null', () async {
+        // Don't set any task date
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'pending');
+      });
+
+      test('should default to pending when task current date is empty', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, '');
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'pending');
+      });
+
+      test('should default to pending when task current date has invalid format', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, 'invalid-date');
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'pending');
+      });
+
+      test('should default to pending when task current date has partial format', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, '2024-12');
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'pending');
+      });
+
+      test('should handle date parsing exceptions gracefully', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, 'not-a-date-at-all'); // Completely invalid format
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'pending');
+      });
+
+      test('should compute status correctly for dates far in the past', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, '2020-01-01');
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'overdue');
+      });
+
+      test('should compute status correctly for dates far in the future', () async {
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, '2030-12-31');
+        await sessionService.initializeSession();
+        
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        expect(status, 'upcoming');
+      });
+
+      test('should not interfere with existing task.currentStatus computation', () async {
+        final today = DateTime.now();
+        final yesterdayString = _formatDate(today.subtract(const Duration(days: 1)));
+        
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        await sessionService.initializeSession();
+        
+        // Both status fields should be set independently
+        final status = await userDataService.getValue<String>(StorageKeys.taskStatus);
+        final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
+        
+        expect(status, 'overdue'); // scheduling status
+        expect(currentStatus, 'pending'); // execution status (default)
+      });
+    });
   });
 }

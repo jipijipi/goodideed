@@ -131,6 +131,9 @@ class SessionService {
     // Compute derived task boolean values
     await _computeTaskBooleans(now);
     
+    // Compute scheduling-based task status
+    await _computeTaskStatus(now);
+    
     // Phase 1: Enhanced automatic status updates (run after status initialization)
     await _checkCurrentDayDeadline(now);
     await _updateStatusBasedOnContext(now);
@@ -212,6 +215,45 @@ class SessionService {
     
     final isPastDeadline = await _computeIsPastDeadline(now);
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+  }
+
+  /// Compute scheduling-based task status (overdue/upcoming/pending)
+  Future<void> _computeTaskStatus(DateTime now) async {
+    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    
+    // Default to pending if no task date is set or if date is invalid
+    if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
+      await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
+      return;
+    }
+    
+    // Validate and parse the task date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
+        // Invalid date format, default to pending
+        await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
+        return;
+      }
+      
+      final taskDate = DateTime.parse(taskCurrentDate);
+      final today = DateTime(now.year, now.month, now.day);
+      final taskDateOnly = DateTime(taskDate.year, taskDate.month, taskDate.day);
+      
+      String status;
+      if (taskDateOnly.isBefore(today)) {
+        status = 'overdue';
+      } else if (taskDateOnly.isAfter(today)) {
+        status = 'upcoming';
+      } else {
+        status = 'pending'; // taskDate equals today
+      }
+      
+      await userDataService.storeValue(StorageKeys.taskStatus, status);
+    } catch (e) {
+      // Date parsing failed, default to pending and log warning
+      await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
+      // Note: We could add logging here if needed, but keeping it simple for now
+    }
   }
 
   /// Public method to recalculate isActiveDay (called by dataAction triggers)

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-05T13:38:59.038Z",
+  "lastUpdated": "2025-08-05T14:10:58.878Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-05T13:38:59.033Z"
+    "timestamp": "2025-08-05T14:10:58.868Z"
   },
   "nodes": [
     {
@@ -397,8 +397,8 @@
     {
       "id": "191",
       "position": {
-        "x": 6775.128587921294,
-        "y": 4025.2147788724324
+        "x": 6286.499668152196,
+        "y": 2419.7020619459163
       },
       "data": {
         "label": "Group 191",
@@ -413,16 +413,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1260.1942948046735,
-        "height": 3025.813503091621,
+        "width": 1217.9824345293928,
+        "height": 3817.2844979427646,
         "zIndex": 999
       },
-      "width": 1260,
-      "height": 3026,
+      "width": 1218,
+      "height": 3817,
       "selected": false,
       "positionAbsolute": {
-        "x": 6775.128587921294,
-        "y": 4025.2147788724324
+        "x": 6286.499668152196,
+        "y": 2419.7020619459163
       },
       "dragging": false
     },
@@ -587,21 +587,21 @@
     {
       "id": "31",
       "position": {
-        "x": 927.4961255449311,
+        "x": 1099.8157852612776,
         "y": 4459.311331950869
       },
       "type": "group",
       "style": {
-        "width": 468,
-        "height": 1738.6646912814895,
+        "width": 470,
+        "height": 1862.4543612957523,
         "zIndex": 999
       },
-      "width": 468,
-      "height": 1739,
+      "width": 470,
+      "height": 1862,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 927.4961255449311,
+        "x": 1099.8157852612776,
         "y": 4459.311331950869
       },
       "data": {
@@ -2193,8 +2193,8 @@
     {
       "id": "192",
       "position": {
-        "x": 263.84503577302985,
-        "y": 2529
+        "x": 400.0000000000009,
+        "y": 3461
       },
       "data": {
         "label": "Welcome!",
@@ -2209,8 +2209,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 7112.9149564112095,
-        "y": 6951.508813831874
+        "x": 8154.375134284281,
+        "y": 7596.5291482390885
       },
       "parentId": "191",
       "extent": "parent"
@@ -2267,8 +2267,8 @@
     {
       "id": "197",
       "position": {
-        "x": 72.89708724284446,
-        "y": 1497.1495785612196
+        "x": 261.59657278480245,
+        "y": 2246
       },
       "data": {
         "label": "Data action",
@@ -2276,11 +2276,6 @@
         "nodeLabel": "Data Action",
         "nodeId": "197",
         "dataActions": [
-          {
-            "type": "set",
-            "key": "task.currentDate",
-            "value": "NEXT_ACTIVE_DATE"
-          },
           {
             "type": "set",
             "key": "task.nextActiveDay",
@@ -2302,12 +2297,12 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 938,
+      "height": 759,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 6921.967007881024,
-        "y": 5919.658392393094
+        "x": 8365.971707069082,
+        "y": 6363.5291482390885
       },
       "parentId": "191",
       "extent": "parent"
@@ -2315,8 +2310,8 @@
     {
       "id": "227",
       "position": {
-        "x": 819.9456722679488,
-        "y": 1505.6589195468987
+        "x": 825.5444945759928,
+        "y": 1550.000852242213
       },
       "data": {
         "label": "Data action",
@@ -2332,7 +2327,48 @@
           {
             "type": "set",
             "key": "task.currentDate",
-            "value": "TODAY_DATE"
+            "value": "NEXT_ACTIVE_DATE_1"
+          },
+          {
+            "type": "set",
+            "key": "task.endDate",
+            "value": "NEXT_ACTIVE_DATE_2"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 754,
+      "selected": false,
+      "dragging": true,
+      "positionAbsolute": {
+        "x": 7320.90598659634,
+        "y": 5555.7017818847735
+      },
+      "parentId": "191",
+      "extent": "parent"
+    },
+    {
+      "id": "259",
+      "position": {
+        "x": 440.4192930880754,
+        "y": 1471.2639639647905
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "259",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "task.currentDate",
+            "value": "NEXT_ACTIVE_DATE_2"
+          },
+          {
+            "type": "set",
+            "key": "task.endDate",
+            "value": "NEXT_ACTIVE_DATE_3"
           }
         ]
       },
@@ -2342,48 +2378,43 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 7595.0742601892425,
-        "y": 5530.873698419331
+        "x": 8194.794427372355,
+        "y": 5606.793112203879
       },
       "parentId": "191",
       "extent": "parent"
     },
     {
-      "id": "258",
+      "id": "260",
       "position": {
-        "x": 863.091382047518,
-        "y": 2171.5290051488564
+        "x": 75.56206004659998,
+        "y": 1471.7223735209982
       },
       "data": {
         "label": "Data action",
         "category": "dataAction",
         "nodeLabel": "Data Action",
-        "nodeId": "258",
+        "nodeId": "260",
         "dataActions": [
           {
             "type": "set",
-            "key": "test.j1",
+            "key": "task.currentDate",
             "value": "NEXT_ACTIVE_DATE_1"
           },
           {
             "type": "set",
-            "key": "test.j2",
+            "key": "task.endDate",
             "value": "NEXT_ACTIVE_DATE_2"
-          },
-          {
-            "type": "set",
-            "key": "test.j3",
-            "value": "NEXT_ACTIVE_DATE_3"
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 754,
+      "height": 574,
       "selected": false,
       "positionAbsolute": {
-        "x": 7638.219969968812,
-        "y": 6196.743784021289
+        "x": 7829.93719433088,
+        "y": 5607.251521760087
       },
       "dragging": true,
       "parentId": "191",
@@ -3857,8 +3888,8 @@
     {
       "id": "235",
       "position": {
-        "x": 41.85589418164545,
-        "y": 751.7329938059484
+        "x": 43.79924275196731,
+        "y": 734.6373278406309
       },
       "data": {
         "label": "Data action",
@@ -3875,16 +3906,21 @@
             "type": "set",
             "key": "task.startTiming",
             "value": null
+          },
+          {
+            "type": "set",
+            "key": "task.endDate",
+            "value": "TODAY_DATE"
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 574,
+      "height": 754,
       "selected": false,
       "positionAbsolute": {
-        "x": 1034.6482120457551,
-        "y": 5209.692421916407
+        "x": 1143.615028013245,
+        "y": 5193.9486597915
       },
       "dragging": true,
       "parentId": "31",
@@ -3920,16 +3956,16 @@
     {
       "id": "26",
       "position": {
-        "x": 68.7355799131667,
-        "y": 1414.6646912814895
+        "x": 56.53096455964783,
+        "y": 1538.4543612957523
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1061.5278977772764,
-        "y": 5872.624119391948
+        "x": 1156.3467498209254,
+        "y": 5997.765693246622
       },
       "dragging": true,
       "parentId": "31",
@@ -6526,22 +6562,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "187",
-      "sourceHandle": null,
-      "target": "197",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-187-197"
-    },
-    {
-      "zIndex": 1001,
       "source": "185",
       "sourceHandle": null,
       "target": "186",
@@ -6549,17 +6569,6 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-185-186",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "186",
-      "sourceHandle": null,
-      "target": "197",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-186-197",
       "selected": false
     },
     {
@@ -6832,7 +6841,7 @@
     },
     {
       "zIndex": 1001,
-      "source": "258",
+      "source": "192",
       "sourceHandle": null,
       "target": "219",
       "targetHandle": null,
@@ -6844,17 +6853,50 @@
         "stroke": "#999",
         "filter": "none"
       },
-      "id": "reactflow__edge-258-219"
+      "id": "reactflow__edge-192-219"
     },
     {
       "zIndex": 1001,
-      "source": "192",
+      "source": "187",
       "sourceHandle": null,
-      "target": "258",
+      "target": "259",
       "targetHandle": null,
       "type": "custom",
       "data": {},
-      "id": "reactflow__edge-192-258",
+      "id": "reactflow__edge-187-259",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "259",
+      "sourceHandle": null,
+      "target": "197",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-259-197",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "186",
+      "sourceHandle": null,
+      "target": "260",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-186-260",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "260",
+      "sourceHandle": null,
+      "target": "197",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-260-197",
       "selected": false
     }
   ]

@@ -80,6 +80,66 @@ After setting the task, if the user *FIRST* checks in on :
     Next Monday after the day deadline : previous task autofailed, current task overdue
 
 
+1) Variables computed at launch (SessionService:11-20)
+
+  Session Variables:
+  - session.visitCount - Daily visit counter (resets each day)
+  - session.totalVisitCount - Total visits (never resets)
+  - session.timeOfDay - Time period (1=morning, 2=afternoon, 3=evening,
+  4=night)
+  - session.lastVisitDate - Last visit date (YYYY-MM-DD format)
+  - session.firstVisitDate - First app visit date
+  - session.daysSinceFirstVisit - Days since first visit
+  - session.isWeekend - Boolean for Saturday/Sunday
+
+  Task Variables:
+  - task.currentStatus - Task status (pending/completed/failed/overdue)
+  - task.isActiveDay - Boolean if today matches scheduled task date +
+  active weekdays
+  - task.isBeforeStart - Boolean if current time < start time
+  - task.isInTimeRange - Boolean if between start and deadline times
+  - task.isPastDeadline - Boolean if current time > deadline
+
+  2) Variables that can be computed from script triggers (DataAction)
+
+  DataAction Types:
+  - set - Set any key to a value or template function
+  - increment - Add to numeric values
+  - decrement - Subtract from numeric values
+  - reset - Reset to default value
+  - trigger - Fire events with custom data
+
+  Template Functions Available:
+  - TODAY_DATE - Current date as YYYY-MM-DD
+  - NEXT_ACTIVE_DATE - Next date matching user's active days configuration
+  - NEXT_ACTIVE_WEEKDAY - Weekday number of next active date
+
+  Recalculable Variables:
+  - task.isActiveDay - Via sessionService.recalculateActiveDay()
+  - task.isPastDeadline - Via sessionService.recalculatePastDeadline()
+
+  3) Templated functions available from script
+
+  Template Syntax:
+  - {key|fallback} - Basic template with fallback
+  - {key:formatter|fallback} - Template with formatter and fallback
+
+  Available Formatters:
+  - timeOfDay - Format time periods (1→"morning", 2→"afternoon",
+  3→"evening", 4→"night")
+  - activeDays - Format weekday lists ([1,2,3,4,5]→"weekdays",
+  [6,7]→"weekends")
+  - intensity - Format intensity levels (0→"off", 1→"low", 2→"high",
+  3→"maximum")
+  - timePeriod - Format time strings ("10:00"→"morning deadline",
+  "14:00"→"afternoon deadline")
+
+  All User Storage Keys Available for Templates:
+  - Session: session.visitCount, session.timeOfDay, session.isWeekend, etc.
+  - User: user.name, user.task, user.streak, user.isOnboarded, etc.
+  - Task: task.startTime, task.deadlineTime, task.activeDays,
+  task.currentStatus, etc.
+
 Change rule : 
 
 task.isActiveDay
@@ -89,19 +149,20 @@ task.isActiveDay
 
 Create :
 
-NEXT_ACTIVE_DATE_0 = the Xth active date following the task.currentDate
 
-task.status
+Add a new launch computation for task.status where : 
     overdue : if task.currentDate < today
-    pending : if task.currentDate == today
     upcoming : if task.currentDate > today
+    pending : default
     
 
 task.endDate : set in script
 
-task.isPastEndDate
+Add a new launch computation for task.isPastEndDate where :
     true : task.endDate < today
-    false : task.endDate >= today
+    false : default
+
+task.endDate will be set in the script during task setting
 
 task.wasCompleted :
     true : set in script

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:rive/rive.dart';
 import '../../models/chat_message.dart';
 import '../../models/choice.dart';
 import '../../constants/design_tokens.dart';
@@ -46,31 +47,11 @@ class MessageBubble extends StatelessWidget {
       return const SizedBox.shrink();
     }
     
-    // Image messages - display image only with consistent spacing
+    // Image messages - display image or Rive animation with consistent spacing
     if (message.type == MessageType.image && message.imagePath != null) {
       return Padding(
         padding: DesignTokens.messageBubbleMargin,
-        child: Image.asset(
-          message.imagePath!,
-          errorBuilder: (context, error, stackTrace) {
-            logger.error('Image not found: ${message.imagePath}', component: LogComponent.ui);
-            return Container(
-              padding: DesignTokens.statusMessagePadding,
-              decoration: BoxDecoration(
-                color: DesignTokens.getStatusErrorBackground(context),
-                borderRadius: BorderRadius.circular(DesignTokens.statusMessageRadius),
-                border: Border.all(
-                  color: DesignTokens.getStatusErrorBorder(context),
-                  width: DesignTokens.borderThin,
-                ),
-              ),
-              child: Text(
-                'Image not found: ${message.imagePath}',
-                style: TextStyle(color: DesignTokens.getStatusErrorText(context)),
-              ),
-            );
-          },
-        ),
+        child: _buildImageOrAnimation(context, message.imagePath!),
       );
     }
     
@@ -143,6 +124,151 @@ class MessageBubble extends StatelessWidget {
         isBot ? Icons.smart_toy : Icons.person,
         color: DesignTokens.avatarIconColor,
       ),
+    );
+  }
+
+  /// Builds either a static image or Rive animation based on file extension
+  Widget _buildImageOrAnimation(BuildContext context, String imagePath) {
+    final isRiveAnimation = imagePath.toLowerCase().endsWith('.riv');
+    
+    if (isRiveAnimation) {
+      return _buildRiveAnimation(context, imagePath);
+    } else {
+      return _buildStaticImage(context, imagePath);
+    }
+  }
+
+  /// Builds a Rive animation widget with error handling
+  Widget _buildRiveAnimation(BuildContext context, String animationPath) {
+    return SizedBox(
+      height: 200, // Fixed height for consistent chat bubble sizing
+      child: _RiveAnimationWrapper(
+        animationPath: animationPath,
+        onError: (error) {
+          logger.error('Rive animation failed to load: $animationPath - $error', component: LogComponent.ui);
+        },
+      ),
+    );
+  }
+
+  /// Builds a static image widget with error handling
+  Widget _buildStaticImage(BuildContext context, String imagePath) {
+    return Image.asset(
+      imagePath,
+      errorBuilder: (context, error, stackTrace) {
+        logger.error('Image not found: $imagePath', component: LogComponent.ui);
+        return _buildErrorContainer(context, 'Image not found: $imagePath');
+      },
+    );
+  }
+
+  /// Builds error container for both images and animations
+  Widget _buildErrorContainer(BuildContext context, String errorMessage) {
+    return Container(
+      padding: DesignTokens.statusMessagePadding,
+      decoration: BoxDecoration(
+        color: DesignTokens.getStatusErrorBackground(context),
+        borderRadius: BorderRadius.circular(DesignTokens.statusMessageRadius),
+        border: Border.all(
+          color: DesignTokens.getStatusErrorBorder(context),
+          width: DesignTokens.borderThin,
+        ),
+      ),
+      child: Text(
+        errorMessage,
+        style: TextStyle(color: DesignTokens.getStatusErrorText(context)),
+      ),
+    );
+  }
+}
+
+/// Wrapper widget for Rive animations with error handling
+class _RiveAnimationWrapper extends StatefulWidget {
+  final String animationPath;
+  final Function(String error)? onError;
+
+  const _RiveAnimationWrapper({
+    required this.animationPath,
+    this.onError,
+  });
+
+  @override
+  State<_RiveAnimationWrapper> createState() => _RiveAnimationWrapperState();
+}
+
+class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper> {
+  bool _hasError = false;
+  File? _file;
+  RiveWidgetController? _controller;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRiveFile();
+  }
+
+  void _loadRiveFile() async {
+    try {
+      _file = await File.asset(
+        widget.animationPath,
+        riveFactory: Factory.rive,
+      );
+      
+      _controller = RiveWidgetController(_file!);
+      
+      setState(() {
+        _isLoading = false;
+      });
+      
+      logger.info('Rive animation loaded: ${widget.animationPath}', component: LogComponent.ui);
+    } catch (e) {
+      setState(() {
+        _hasError = true;
+        _isLoading = false;
+      });
+      
+      logger.error('Rive animation failed to load: ${widget.animationPath} - $e', component: LogComponent.ui);
+      widget.onError?.call(e.toString());
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    _file?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_hasError) {
+      return Container(
+        padding: DesignTokens.statusMessagePadding,
+        decoration: BoxDecoration(
+          color: DesignTokens.getStatusErrorBackground(context),
+          borderRadius: BorderRadius.circular(DesignTokens.statusMessageRadius),
+          border: Border.all(
+            color: DesignTokens.getStatusErrorBorder(context),
+            width: DesignTokens.borderThin,
+          ),
+        ),
+        child: Text(
+          'Animation not found: ${widget.animationPath}',
+          style: TextStyle(color: DesignTokens.getStatusErrorText(context)),
+        ),
+      );
+    }
+
+    if (_isLoading || _controller == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return RiveWidget(
+      controller: _controller!,
+      fit: Fit.contain,
     );
   }
 }

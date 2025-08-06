@@ -183,7 +183,17 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
 
   Future<void> _setTaskDate() async {
     final dateString = _formatDate(_selectedDate);
+    
+    // Validate date format before storing
+    if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(dateString)) {
+      widget.statusController?.addError('Error: Invalid date format');
+      return;
+    }
+    
     await widget.userDataService.storeValue(StorageKeys.taskCurrentDate, dateString);
+    
+    // Note: isActiveDay will be recalculated on next session initialization
+    // The inline computation in _checkCurrentDayDeadline prevents race conditions
     
     setState(() {
       _currentTaskDate = dateString;
@@ -216,6 +226,12 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     final today = DateTime.now();
     final todayString = _formatDate(today);
     
+    // Date validation (should always pass for DateTime.now())
+    if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(todayString)) {
+      widget.statusController?.addError('Error: Invalid date format');
+      return;
+    }
+    
     await widget.userDataService.storeValue(StorageKeys.taskCurrentDate, todayString);
     
     setState(() {
@@ -231,6 +247,12 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
   Future<void> _setToYesterday() async {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     final yesterdayString = _formatDate(yesterday);
+    
+    // Date validation (should always pass for DateTime operations)
+    if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(yesterdayString)) {
+      widget.statusController?.addError('Error: Invalid date format');
+      return;
+    }
     
     await widget.userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
     

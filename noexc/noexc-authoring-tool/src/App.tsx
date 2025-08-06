@@ -174,13 +174,13 @@ function Flow() {
         onStoreKeyChange: () => {},
         onGroupIdChange: () => {},
         onTitleChange: () => {},
-        onDescriptionChange: () => {}
+        onDescriptionChange: () => {},
+        onColorChange: () => {}
       },
       type: NODE_TYPES.GROUP,
       style: {
         width: groupWidth,
-        height: groupHeight,
-        zIndex: 999
+        height: groupHeight
       }
     };
 
@@ -636,6 +636,23 @@ function Flow() {
     );
   }, [setNodes]);
 
+  const onGroupColorChange = useCallback((nodeId: string, newColor: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              color: newColor,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, [setNodes]);
+
   const onConnect = useCallback(
     (params: Connection) => {
       const newEdge = {
@@ -1039,6 +1056,7 @@ function Flow() {
       onGroupIdChange,
       onTitleChange,
       onDescriptionChange,
+      onColorChange: onGroupColorChange,
     },
   }));
 
@@ -1114,7 +1132,8 @@ function Flow() {
           dataActions: data.dataActions,
           groupId: data.groupId,
           title: data.title,
-          description: data.description
+          description: data.description,
+          color: data.color
         }
       })),
       edges: edges.map(edge => ({
@@ -1240,6 +1259,7 @@ function Flow() {
                     groupId: node.data.groupId || node.data.nodeId,
                     title: node.data.title || node.data.label,
                     description: node.data.description || 'Imported group',
+                    color: node.data.color,
                   } : {}),
                   onLabelChange: () => {},
                   onCategoryChange: () => {},

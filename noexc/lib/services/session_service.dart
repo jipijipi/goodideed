@@ -9,11 +9,14 @@ class SessionService {
   
   /// Initialize session data on app start
   Future<void> initializeSession() async {
+    // Capture the original session date before any updates
+    final originalLastVisitDate = await userDataService.getValue<String>(StorageKeys.sessionLastVisitDate);
+    
     await _updateVisitCount();
     await _updateTotalVisitCount();
     await _updateTimeOfDay();
     await _updateDateInfo();
-    await _updateTaskInfo();
+    await _updateTaskInfo(originalLastVisitDate);
   }
   
   /// Update visit count (daily counter that resets each day)
@@ -94,14 +97,14 @@ class SessionService {
     await userDataService.storeValue(StorageKeys.sessionIsWeekend, isWeekend);
   }
 
-  /// Update daily task information
-  Future<void> _updateTaskInfo() async {
+  /// Update daily task information  
+  Future<void> _updateTaskInfo(String? originalLastVisitDate) async {
     final now = DateTime.now();
     final today = _formatDate(now);
     
-    // Check if this is a new day for tasks
+    // Check if this is a new calendar day using the original session date
+    final isNewDay = originalLastVisitDate != today;
     final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    final isNewDay = lastTaskDate != today;
     
     if (isNewDay && lastTaskDate != null) {
       // Archive current day as previous day before updating
@@ -111,8 +114,8 @@ class SessionService {
       await _checkPreviousDayGracePeriod(now);
     }
     
-    // Set current date based on task start timing preference
-    await _setTaskCurrentDate(today, isNewDay);
+    // Note: task.currentDate is now set by the script via template functions
+    // No need for complex date management logic here
     
     if (isNewDay) {
       // Reset task status to pending for new day
@@ -125,7 +128,16 @@ class SessionService {
       await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
     }
     
-    // Compute derived task boolean values
+    // Compute scheduling-based task status
+    await _computeTaskStatus(now);
+    
+    // Compute task end date based on current date + active days
+    await _computeTaskEndDate(now);
+    
+    // Compute task due day (weekday integer of task.currentDate)
+    await _computeTaskDueDay();
+    
+    // Compute derived task boolean values (after endDate is calculated)
     await _computeTaskBooleans(now);
     
     // Phase 1: Enhanced automatic status updates (run after status initialization)
@@ -173,8 +185,11 @@ class SessionService {
     final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
     final userTask = await userDataService.getValue<String>(StorageKeys.userTask);
     
-    // Only check if task exists and is currently pending
-    if (currentStatus == 'pending' && userTask != null) {
+    // Compute isActiveDay inline to avoid race conditions with concurrent recalculations
+    final isActiveDay = await _computeIsActiveDay(now);
+    
+    // Only check if task exists, is currently pending, AND today is an active day
+    if (currentStatus == 'pending' && userTask != null && isActiveDay) {
       final deadlineTimeString = await _getDeadlineTimeAsString();
       final deadlineParts = deadlineTimeString.split(':');
       final deadlineHour = int.parse(deadlineParts[0]);
@@ -206,6 +221,96 @@ class SessionService {
     
     final isPastDeadline = await _computeIsPastDeadline(now);
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+    
+    final isPastEndDate = await _computeIsPastEndDate(now);
+    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
+  }
+
+  /// Compute scheduling-based task status (overdue/upcoming/pending)
+  Future<void> _computeTaskStatus(DateTime now) async {
+    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    
+    // Default to pending if no task date is set or if date is invalid
+    if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
+      await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
+      return;
+    }
+    
+    // Validate and parse the task date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
+        // Invalid date format, default to pending
+        await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
+        return;
+      }
+      
+      final taskDate = DateTime.parse(taskCurrentDate);
+      final today = DateTime(now.year, now.month, now.day);
+      final taskDateOnly = DateTime(taskDate.year, taskDate.month, taskDate.day);
+      
+      String status;
+      if (taskDateOnly.isBefore(today)) {
+        status = 'overdue';
+      } else if (taskDateOnly.isAfter(today)) {
+        status = 'upcoming';
+      } else {
+        status = 'pending'; // taskDate equals today
+      }
+      
+      await userDataService.storeValue(StorageKeys.taskStatus, status);
+    } catch (e) {
+      // Date parsing failed, default to pending and log warning
+      await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
+      // Note: We could add logging here if needed, but keeping it simple for now
+    }
+  }
+
+  /// Compute task end date as the next active day after task.currentDate
+  Future<void> _computeTaskEndDate(DateTime now) async {
+    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    
+    // Default to empty if no task date is set
+    if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
+      await userDataService.storeValue(StorageKeys.taskEndDate, '');
+      return;
+    }
+    
+    // Validate and parse the task date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
+        // Invalid date format, default to empty
+        await userDataService.storeValue(StorageKeys.taskEndDate, '');
+        return;
+      }
+      
+      final startDate = DateTime.parse(taskCurrentDate);
+      final activeDays = await userDataService.getValue<List<dynamic>>('task.activeDays');
+      
+      // If no active days configured, default to next day
+      if (activeDays == null || activeDays.isEmpty) {
+        final endDate = startDate.add(const Duration(days: 1));
+        await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(endDate));
+        return;
+      }
+      
+      // Find the next active day after task.currentDate (exclusive)
+      for (int i = 1; i <= 365; i++) { // Max 1 year lookahead
+        final testDate = startDate.add(Duration(days: i));
+        final testWeekday = testDate.weekday;
+        
+        if (activeDays.contains(testWeekday)) {
+          await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(testDate));
+          return;
+        }
+      }
+      
+      // Fallback - should never reach here if activeDays is valid
+      final fallbackEndDate = startDate.add(const Duration(days: 1));
+      await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(fallbackEndDate));
+    } catch (e) {
+      // Date parsing failed, default to empty
+      await userDataService.storeValue(StorageKeys.taskEndDate, '');
+    }
   }
 
   /// Public method to recalculate isActiveDay (called by dataAction triggers)
@@ -222,73 +327,70 @@ class SessionService {
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
   }
 
-  /// Set task current date based on start timing preference
-  Future<void> _setTaskCurrentDate(String today, bool isNewDay) async {
-    final startTiming = await userDataService.getValue<String>(StorageKeys.taskStartTiming);
-    
-    // If no timing preference set, default to today (existing behavior)
-    if (startTiming == null) {
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
-      return;
-    }
-    
-    // If user chose to start today, or it's not a new day, use today
-    if (startTiming == 'today' || !isNewDay) {
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
-      return;
-    }
-    
-    // If user chose to wait for next active day, calculate it
-    if (startTiming == 'next_active') {
-      final nextActiveDate = await _getNextActiveDay();
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, nextActiveDate);
-      return;
-    }
-    
-    // Default fallback
-    await userDataService.storeValue(StorageKeys.taskCurrentDate, today);
-  }
-
-  /// Get the next active day based on user's active days configuration
-  Future<String> _getNextActiveDay() async {
+  /// Public method to recalculate task.endDate (called by dataAction triggers)
+  Future<void> recalculateTaskEndDate() async {
     final now = DateTime.now();
-    final activeDays = await userDataService.getValue<List<dynamic>>(StorageKeys.taskActiveDays);
+    await _computeTaskEndDate(now);
     
-    // If no active days configured, default to tomorrow
-    if (activeDays == null || activeDays.isEmpty) {
-      final tomorrow = now.add(const Duration(days: 1));
-      return _formatDate(tomorrow);
-    }
-    
-    // Find the next day that matches an active day
-    for (int i = 1; i <= 7; i++) {
-      final testDate = now.add(Duration(days: i));
-      final testWeekday = testDate.weekday;
-      
-      if (activeDays.contains(testWeekday)) {
-        return _formatDate(testDate);
-      }
-    }
-    
-    // Fallback - should never reach here if activeDays is valid
-    final tomorrow = now.add(const Duration(days: 1));
-    return _formatDate(tomorrow);
+    // Also recalculate isPastEndDate since it depends on endDate
+    final isPastEndDate = await _computeIsPastEndDate(now);
+    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
   }
 
-  /// Check if today is an active day based on user's active_days configuration
-  Future<bool> _computeIsActiveDay(DateTime now) async {
-    final activeDays = await userDataService.getValue<List<dynamic>>(StorageKeys.taskActiveDays);
+  /// Public method to recalculate task.dueDay (called by dataAction triggers)
+  Future<void> recalculateTaskDueDay() async {
+    await _computeTaskDueDay();
+  }
+
+  /// Public method to recalculate task.status (called by dataAction triggers)
+  Future<void> recalculateTaskStatus() async {
+    final now = DateTime.now();
+    await _computeTaskStatus(now);
+  }
+
+  /// Compute task due day as the weekday integer of task.currentDate
+  Future<void> _computeTaskDueDay() async {
+    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
     
-    if (activeDays == null || activeDays.isEmpty) {
-      // If no active days configured, default to every day being active
-      return true;
+    // Default to 0 if no task date is set
+    if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
+      await userDataService.storeValue(StorageKeys.taskDueDay, 0);
+      return;
     }
     
-    // Convert current day to weekday number (1=Monday, 7=Sunday)
-    final currentWeekday = now.weekday;
+    // Validate and parse the task date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
+        // Invalid date format, default to 0
+        await userDataService.storeValue(StorageKeys.taskDueDay, 0);
+        return;
+      }
+      
+      final taskDate = DateTime.parse(taskCurrentDate);
+      // DateTime.weekday returns 1-7 (Monday=1, Sunday=7)
+      await userDataService.storeValue(StorageKeys.taskDueDay, taskDate.weekday);
+    } catch (e) {
+      // Date parsing failed, default to 0
+      await userDataService.storeValue(StorageKeys.taskDueDay, 0);
+    }
+  }
+
+  // Note: _setTaskCurrentDate and _getNextActiveDay methods removed
+  // These are now handled by script template functions in DataActionProcessor
+
+  /// Check if today is an active day based on weekday configuration
+  /// Returns true if today's weekday is in the user's activeDays configuration
+  Future<bool> _computeIsActiveDay(DateTime now) async {
+    // Get user's configured active days
+    final activeDays = await userDataService.getValue<List<dynamic>>('task.activeDays');
     
-    // Check if current weekday is in the active days list
-    return activeDays.contains(currentWeekday);
+    // If no activeDays configured, default to false
+    if (activeDays == null || activeDays.isEmpty) {
+      return false;
+    }
+    
+    // Return true if today's weekday (1=Monday, 7=Sunday) is in the activeDays list
+    return activeDays.contains(now.weekday);
   }
 
   /// Check if current time is before today's start time
@@ -339,6 +441,34 @@ class SessionService {
       return now.isAfter(todayDeadline);
     } catch (e) {
       // If there's any error parsing deadline, default to false (not past deadline)
+      return false;
+    }
+  }
+
+  /// Check if current date is past the task's end date
+  Future<bool> _computeIsPastEndDate(DateTime now) async {
+    final taskEndDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
+    
+    // Default to false if no end date is set or if date is invalid
+    if (taskEndDate == null || taskEndDate.isEmpty) {
+      return false;
+    }
+    
+    // Validate and parse the end date
+    try {
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskEndDate)) {
+        // Invalid date format, default to false
+        return false;
+      }
+      
+      final endDate = DateTime.parse(taskEndDate);
+      final today = DateTime(now.year, now.month, now.day);
+      final endDateOnly = DateTime(endDate.year, endDate.month, endDate.day);
+      
+      // Return true if end date is before today
+      return endDateOnly.isBefore(today);
+    } catch (e) {
+      // Date parsing failed, default to false
       return false;
     }
   }

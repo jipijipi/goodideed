@@ -1,21 +1,21 @@
 import React, { memo, useCallback, useState } from 'react';
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, NodeProps } from 'reactflow';
 import { NodeData } from '../constants/nodeTypes';
 
-interface GroupNodeProps {
+interface GroupNodeProps extends NodeProps {
   data: NodeData & {
     groupId?: string;
     title?: string;
     description?: string;
+    color?: string;
     onGroupIdChange?: (nodeId: string, newGroupId: string) => void;
     onTitleChange?: (nodeId: string, newTitle: string) => void;
     onDescriptionChange?: (nodeId: string, newDescription: string) => void;
+    onColorChange?: (nodeId: string, newColor: string) => void;
   };
-  selected: boolean;
-  id: string;
 }
 
-const GroupNode = ({ data, selected, id }: GroupNodeProps) => {
+const GroupNode = ({ data, selected, id, zIndex }: GroupNodeProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editField, setEditField] = useState<'groupId' | 'title' | 'description' | null>(null);
 
@@ -52,6 +52,10 @@ const GroupNode = ({ data, selected, id }: GroupNodeProps) => {
         data.onDescriptionChange?.(id, value);
         break;
     }
+  }, [data, id]);
+
+  const handleColorChange = useCallback((newColor: string) => {
+    data.onColorChange?.(id, newColor);
   }, [data, id]);
 
   return (
@@ -191,14 +195,62 @@ const GroupNode = ({ data, selected, id }: GroupNodeProps) => {
         </div>
       </div>
       
+      {/* Color Selection Panel - Shows when selected */}
+      {selected && (
+        <div style={{
+          position: 'absolute',
+          top: '8px',
+          right: '8px',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          border: '1px solid #ccc',
+          borderRadius: '6px',
+          padding: '8px',
+          fontSize: '10px',
+          color: '#333',
+          zIndex: 11,
+          boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+        }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '6px', color: '#666' }}>
+            🎨 Color
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxWidth: '100px' }}>
+            {[
+              { color: 'rgba(33, 150, 243, 0.025)', name: 'Light Blue' },
+              { color: 'rgba(76, 175, 80, 0.025)', name: 'Soft Green' },
+              { color: 'rgba(255, 235, 59, 0.025)', name: 'Pale Yellow' },
+              { color: 'rgba(156, 39, 176, 0.025)', name: 'Light Purple' },
+              { color: 'rgba(255, 152, 0, 0.025)', name: 'Soft Orange' },
+              { color: 'rgba(233, 30, 99, 0.025)', name: 'Muted Pink' }
+            ].map(({ color, name }) => (
+              <button
+                key={color}
+                onClick={() => handleColorChange(color)}
+                style={{
+                  width: '16px',
+                  height: '16px',
+                  backgroundColor: color,
+                  border: data.color === color ? '2px solid #333' : '1px solid #ccc',
+                  borderRadius: '3px',
+                  cursor: 'pointer',
+                  padding: 0
+                }}
+                title={name}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Main Group Container */}
       <div style={{
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(245, 245, 245, 0.15)',
-        border: '1px dashed #bbb',
+        backgroundColor: data.color || 'rgba(245, 245, 245, 0.15)',
+        border: `1px dashed ${data.color ? data.color.replace('0.15)', '0.6)').replace('0.2)', '0.7)') : '#bbb'}`,
         borderRadius: '8px',
-        position: 'relative'
+        position: 'relative',
+        zIndex: (zIndex || 0) - 100,
+        pointerEvents: 'none'
       }}>
       </div>
     </>

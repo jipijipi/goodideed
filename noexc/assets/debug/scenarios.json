@@ -16,6 +16,24 @@
       "task.isPastDeadline": false
     }
   },
+  "returning_user_no_previous": {
+    "name": "Returning User",
+    "description": "User who returns on day of task before deadline, no previous task",
+    "variables": {
+      "session.visitCount": 2,
+      "session.totalVisitCount": 12,
+      "session.daysSinceFirstVisit": 10,
+      "user.ProfileSetupStatus": "complete",
+      "user.task": "Medidate for 10 minutes",
+      "user.isOnboarded": true,
+      "user.name": "Taylor",
+      "task.isActiveDay": true,
+      "task.activeDays": [1,2,3,4,5,6,7],
+      "user.streak": 0,
+      "task.deadlineTime": "19:00",
+      "task.currentDate": "2025-08-05"
+    }
+  },
   "returning_morning": {
     "name": "Recent User",
     "description": "Just onboarded",
@@ -87,27 +105,8 @@
       "user.isOnNotice": false
     }
   },
-  "struggling_user": {
-    "name": "😓 Struggling User",
-    "description": "User who keeps failing tasks and is on notice",
-    "variables": {
-      "session.visitCount": 2,
-      "session.totalVisitCount": 12,
-      "session.timeOfDay": 3,
-      "session.daysSinceFirstVisit": 10,
-      "session.isWeekend": false,
-      "user.isOnboarded": true,
-      "user.name": "Taylor",
-      "user.streak": 0,
-      "user.isOnNotice": true,
-      "task.deadlineTime": "14:00",
-      "task.currentDate": "2024-12-20",
-      "task.isActiveDay": true,
-      "task.isPastDeadline": true
-    }
-  },
   "overdue_current_day": {
-    "name": "Overdue Current Day",
+      "name": "Overdue Current Day",
     "description": "Checking in on the day after their task gets overdue ",
     "variables": {
       "user.name": "River",

@@ -55,6 +55,7 @@ export interface NodeData {
   groupId?: string;
   title?: string;
   description?: string;
+  color?: string;
   // Callbacks
   onLabelChange: (id: string, newLabel: string) => void;
   onCategoryChange: (id: string, newCategory: NodeCategory) => void;
@@ -68,4 +69,5 @@ export interface NodeData {
   onGroupIdChange?: (id: string, newGroupId: string) => void;
   onTitleChange?: (id: string, newTitle: string) => void;
   onDescriptionChange?: (id: string, newDescription: string) => void;
+  onColorChange?: (id: string, newColor: string) => void;
 }

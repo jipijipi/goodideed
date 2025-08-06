@@ -65,8 +65,6 @@ class SequenceManager implements MessageProvider {
     final message = _sequenceLoader.getMessageById(id);
     if (message == null) {
       logger.debug('Message $id not found');
-    } else {
-      logger.debug('Retrieved message $id from sequence');
     }
     return message;
   }

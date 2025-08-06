@@ -69,10 +69,7 @@
   z-index: 1001 !important;
 }
 
-/* Group nodes should be below edge labels */
-.react-flow__node[data-nodetype="group"] {
-  z-index: 999 !important;
-}
+/* Let React Flow handle group z-index naturally - removed forced override */
 
 /* Regular nodes */
 .react-flow__node {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../../models/chat_message.dart';
 import '../../models/chat_sequence.dart';
 import '../../models/choice.dart';
@@ -119,8 +120,38 @@ class MessageProcessor {
   Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
     if (_userDataService != null && choiceMessage.storeKey != null) {
       // Use custom value if provided, fallback to choice text
-      final valueToStore = selectedChoice.value ?? selectedChoice.text;
+      final rawValue = selectedChoice.value ?? selectedChoice.text;
+      
+      // Parse JSON arrays for activeDays and similar array-based configurations
+      final valueToStore = _parseChoiceValue(rawValue);
+      
       await _userDataService.storeValue(choiceMessage.storeKey!, valueToStore);
     }
+  }
+  
+  /// Parse choice values, converting JSON arrays to proper List objects
+  dynamic _parseChoiceValue(dynamic rawValue) {
+    if (rawValue is! String) {
+      return rawValue; // Not a string, return as-is
+    }
+    
+    final stringValue = rawValue;
+    
+    // Check if it looks like a JSON array: starts with [ and ends with ]
+    if (stringValue.trim().startsWith('[') && stringValue.trim().endsWith(']')) {
+      try {
+        // Parse as JSON and convert to List<int> for activeDays
+        final parsed = json.decode(stringValue);
+        if (parsed is List) {
+          // Convert all elements to int for weekday numbers
+          return parsed.map((e) => e is int ? e : int.tryParse(e.toString()) ?? e).toList();
+        }
+      } catch (e) {
+        // If JSON parsing fails, fall back to original string value
+        return rawValue;
+      }
+    }
+    
+    return rawValue; // Not a JSON array, return as-is
   }
 }

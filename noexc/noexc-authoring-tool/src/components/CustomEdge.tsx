@@ -196,10 +196,11 @@ const CustomEdge: React.FC<EdgeProps<CustomEdgeData>> = ({
         markerEnd={markerEnd}
         style={{ 
           stroke: data?.color || (isCrossSequence ? '#9c27b0' : isCondition ? '#ff9800' : '#999'), 
-          strokeWidth: isCrossSequence ? 3 : 2,
+          strokeWidth: 3,
           strokeDasharray: getStrokeDashArray(),
           cursor: 'pointer',
-          pointerEvents: 'all'
+          pointerEvents: 'stroke',
+          
         }}
       />
       {(hasCustomizations || isEditing) && (

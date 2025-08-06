@@ -6,6 +6,7 @@ import 'text_templating_service.dart';
 import 'text_variants_service.dart';
 import 'condition_evaluator.dart';
 import 'data_action_processor.dart';
+import 'session_service.dart';
 import 'chat_service/sequence_loader.dart';
 import 'chat_service/message_processor.dart';
 import 'chat_service/route_processor.dart';
@@ -14,7 +15,6 @@ import 'flow/message_renderer.dart';
 import 'flow/flow_orchestrator.dart';
 import 'flow/sequence_manager.dart';
 import 'logger_service.dart';
-import 'session_service.dart';
 import 'service_locator.dart';
 
 /// Main chat service that orchestrates sequence loading, message processing, and routing
@@ -34,6 +34,7 @@ class ChatService {
     UserDataService? userDataService,
     TextTemplatingService? templatingService,
     TextVariantsService? variantsService,
+    SessionService? sessionService,
   }) {
     // Initialize sequence management first (single source of truth)
     final sequenceLoader = SequenceLoader();
@@ -50,7 +51,7 @@ class ChatService {
           ? ConditionEvaluator(userDataService) 
           : null,
       dataActionProcessor: userDataService != null 
-          ? DataActionProcessor(userDataService) 
+          ? DataActionProcessor(userDataService, sessionService: sessionService) 
           : null,
       sequenceManager: _sequenceManager,
     );
@@ -87,6 +88,12 @@ class ChatService {
       case 'recalculate_past_deadline':
         await _handleRecalculatePastDeadline();
         break;
+      case 'recalculate_end_date':
+        await _handleRecalculateEndDate();
+        break;
+      case 'refresh_task_calculations':
+        await _handleRefreshTaskCalculations();
+        break;
       default:
         // Forward unknown events to UI callback
         if (_onEvent != null) {
@@ -120,6 +127,48 @@ class ChatService {
       logger.info('Successfully recalculated task.isPastDeadline');
     } catch (e) {
       logger.error('Failed to recalculate past deadline: $e');
+    }
+  }
+
+  /// Handle recalculate_end_date event from dataAction trigger
+  Future<void> _handleRecalculateEndDate() async {
+    try {
+      final userDataService = ServiceLocator.instance.userDataService;
+      final sessionService = SessionService(userDataService);
+      await sessionService.recalculateTaskEndDate();
+      logger.info('Successfully recalculated task.endDate and task.isPastEndDate');
+    } catch (e) {
+      logger.error('Failed to recalculate task.endDate and task.isPastEndDate: $e');
+    }
+  }
+
+  /// Handle refresh_task_calculations event from dataAction trigger
+  Future<void> _handleRefreshTaskCalculations() async {
+    final userDataService = ServiceLocator.instance.userDataService;
+    final sessionService = SessionService(userDataService);
+    
+    // Recalculate task.endDate and task.isPastEndDate
+    try {
+      await sessionService.recalculateTaskEndDate();
+      logger.info('Successfully recalculated task.endDate and task.isPastEndDate');
+    } catch (e) {
+      logger.error('Failed to recalculate task.endDate and task.isPastEndDate: $e');
+    }
+    
+    // Recalculate task.dueDay
+    try {
+      await sessionService.recalculateTaskDueDay();
+      logger.info('Successfully recalculated task.dueDay');
+    } catch (e) {
+      logger.error('Failed to recalculate task.dueDay: $e');
+    }
+    
+    // Recalculate task.status
+    try {
+      await sessionService.recalculateTaskStatus();
+      logger.info('Successfully recalculated task.status');
+    } catch (e) {
+      logger.error('Failed to recalculate task.status: $e');
     }
   }
 

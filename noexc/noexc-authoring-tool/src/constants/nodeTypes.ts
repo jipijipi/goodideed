@@ -4,7 +4,8 @@ export const NODE_CATEGORIES = [
   'choice',
   'textInput',
   'autoroute',
-  'dataAction'
+  'dataAction',
+  'image'
 ] as const;
 
 export const NODE_LABELS = [
@@ -49,6 +50,8 @@ export interface NodeData {
   // Input specific fields
   placeholderText?: string;
   storeKey?: string;
+  // Image specific fields
+  imagePath?: string;
   // DataAction specific fields
   dataActions?: DataActionItem[];
   // Group specific fields
@@ -65,6 +68,7 @@ export interface NodeData {
   onContentChange: (id: string, newContent: string) => void;
   onPlaceholderChange: (id: string, newPlaceholder: string) => void;
   onStoreKeyChange: (id: string, newStoreKey: string) => void;
+  onImagePathChange?: (id: string, newImagePath: string) => void;
   onDataActionsChange?: (id: string, newDataActions: DataActionItem[]) => void;
   onGroupIdChange?: (id: string, newGroupId: string) => void;
   onTitleChange?: (id: string, newTitle: string) => void;

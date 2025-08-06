@@ -13,7 +13,8 @@ const getCategoryColor = (category: NodeCategory): string => {
     choice: 'var(--node-choice)',     // Purple - user chooses
     textInput: 'var(--node-textInput)', // Blue - user types
     autoroute: 'var(--node-autoroute)', // Yellow - logic flow
-    dataAction: 'var(--node-dataAction)' // Pink - data manipulation
+    dataAction: 'var(--node-dataAction)', // Pink - data manipulation
+    image: 'var(--node-image)'        // Teal - image display
   };
   return colors[category] || 'var(--bg-secondary)';
 };
@@ -25,7 +26,8 @@ const getNodeTitle = (category: NodeCategory): string => {
     choice: 'Choices',
     textInput: 'Input',
     autoroute: 'Auto-Route',
-    dataAction: 'Data Action'
+    dataAction: 'Data Action',
+    image: 'Image'
   };
   return titles[category] || 'Node';
 };
@@ -43,6 +45,12 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
 
   const handlePlaceholderChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     data.onPlaceholderChange(id, e.target.value);
+  }, [id, data]);
+
+  const handleImagePathChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (data.onImagePathChange) {
+      data.onImagePathChange(id, e.target.value);
+    }
   }, [id, data]);
 
   const handleDataActionsChange = useCallback((newDataActions: DataActionItem[]) => {
@@ -363,6 +371,78 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                 }}
                 onClick={(e) => e.stopPropagation()}
                 placeholder="e.g., user_type_check, time_based_route..."
+              />
+            </div>
+          </>
+        );
+        
+      case 'image':
+        return (
+          <>
+            {/* ID Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                ID:
+                <HelpTooltip content={helpContent.nodeId} />
+              </label>
+              <input
+                type="text"
+                value={data.nodeId}
+                onChange={handleNodeIdChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
+
+            {/* Content Key Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                Content Key:
+                <HelpTooltip content={helpContent.contentKey} />
+              </label>
+              <input
+                type="text"
+                value={data.contentKey || ''}
+                onChange={handleContentKeyChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="e.g., welcome_image, instruction_diagram..."
+              />
+            </div>
+
+            {/* Image Path Field */}
+            <div style={{ marginBottom: '8px' }}>
+              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
+                Image Path:
+              </label>
+              <input
+                type="text"
+                value={data.imagePath || ''}
+                onChange={handleImagePathChange}
+                style={{
+                  width: '100%',
+                  padding: '4px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  background: 'white',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                placeholder="e.g., assets/images/sample_image.png"
               />
             </div>
           </>

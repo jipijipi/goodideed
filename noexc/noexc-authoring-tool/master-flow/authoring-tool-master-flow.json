@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-06T13:07:17.349Z",
+  "lastUpdated": "2025-08-06T13:49:09.699Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-06T13:07:17.325Z"
+    "timestamp": "2025-08-06T13:49:09.678Z"
   },
   "nodes": [
     {
@@ -1583,7 +1583,7 @@
         "category": "image",
         "nodeLabel": "Image",
         "nodeId": "292",
-        "imagePath": "assets/animations/intro_logo.riv"
+        "imagePath": "assets/animations/intro_logo_animated.riv"
       },
       "type": "editable",
       "width": 248,

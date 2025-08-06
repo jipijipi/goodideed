@@ -196,7 +196,12 @@ class _RiveAnimationWrapper extends StatefulWidget {
   State<_RiveAnimationWrapper> createState() => _RiveAnimationWrapperState();
 }
 
-class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper> {
+class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper> 
+    with AutomaticKeepAliveClientMixin {
+  
+  @override
+  bool get wantKeepAlive => true;
+  
   bool _hasError = false;
   File? _file;
   RiveWidgetController? _controller;
@@ -209,6 +214,10 @@ class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper> {
   }
 
   void _loadRiveFile() async {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
     try {
       _file = await File.asset(
         widget.animationPath,
@@ -242,6 +251,8 @@ class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
+    
     if (_hasError) {
       return Container(
         padding: DesignTokens.statusMessagePadding,
@@ -266,9 +277,11 @@ class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper> {
       );
     }
 
-    return RiveWidget(
-      controller: _controller!,
-      fit: Fit.contain,
+    return RepaintBoundary(
+      child: RiveWidget(
+        controller: _controller!,
+        fit: Fit.contain,
+      ),
     );
   }
 }

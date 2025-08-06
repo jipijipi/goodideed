@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: AppThemes.darkTheme,
       themeMode: AppThemes.getThemeMode(_isDarkMode),
       home: _isInitialized 
-        ? const RiveArmTestWidget() // RiveDataBindingTestWidget() // RiveTestWidget() // ChatScreen(onThemeToggle: _toggleTheme)
+        ? ChatScreen(onThemeToggle: _toggleTheme) // const RiveArmTestWidget() // const RiveDataBindingTestWidget() // const RiveTestWidget()
         : const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

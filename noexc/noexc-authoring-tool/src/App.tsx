@@ -719,6 +719,7 @@ function Flow() {
         onContentChange: () => {},
         onPlaceholderChange: () => {},
         onStoreKeyChange: () => {},
+        onImagePathChange: () => {},
         onDataActionsChange: () => {}
       };
 
@@ -743,6 +744,11 @@ function Flow() {
               key: 'user.property',
               value: ''
             }]
+          };
+        case 'image':
+          return {
+            ...baseData,
+            imagePath: 'assets/images/sample_image.png'
           };
         default:
           return baseData;
@@ -888,6 +894,23 @@ function Flow() {
             data: {
               ...node.data,
               storeKey: newStoreKey,
+            },
+          };
+        }
+        return node;
+      })
+    );
+  }, []);
+
+  const onImagePathChange = useCallback((nodeId: string, newImagePath: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              imagePath: newImagePath,
             },
           };
         }
@@ -1052,6 +1075,7 @@ function Flow() {
       onContentChange,
       onPlaceholderChange,
       onStoreKeyChange,
+      onImagePathChange,
       onDataActionsChange,
       onGroupIdChange,
       onTitleChange,
@@ -1359,6 +1383,9 @@ function Flow() {
           if (hasChoiceValues && !node.data.storeKey?.trim()) {
             errors.push(`Choice node ${node.id} missing storeKey (required when choices have values)`);
           }
+          break;
+        case 'image':
+          if (!node.data.imagePath?.trim()) errors.push(`Image node ${node.id} missing imagePath`);
           break;
       }
     });
@@ -1695,6 +1722,22 @@ function Flow() {
             }
           }
           break;
+          
+        case 'image':
+          if (node.data.imagePath) {
+            message.imagePath = node.data.imagePath;
+          }
+          const nextImageId = getNextMessageId(node.id, edges, groupNodes);
+          if (nextImageId) {
+            if (typeof nextImageId === 'object') {
+              // Cross-sequence navigation - don't set nextMessageId, Flutter app assumes first node
+              message.sequenceId = nextImageId.sequenceId;
+            } else {
+              // Same sequence navigation
+              message.nextMessageId = nextImageId;
+            }
+          }
+          break;
       }
       
       return message;
@@ -1966,6 +2009,7 @@ function Flow() {
     { category: 'textInput' as NodeCategory, label: 'Text Input' as NodeLabel, text: 'Enter text:', icon: '⌨️', description: 'Text input' },
     { category: 'autoroute' as NodeCategory, label: 'Conditional Route' as NodeLabel, text: 'Route condition', icon: '🔀', description: 'Auto-route' },
     { category: 'dataAction' as NodeCategory, label: 'Data Action' as NodeLabel, text: 'Data action', icon: '⚙️', description: 'Data action' },
+    { category: 'image' as NodeCategory, label: 'Image' as NodeLabel, text: 'Image display', icon: '🖼️', description: 'Image' },
   ];
 
   // Auto-load master flow on component mount
@@ -2296,6 +2340,40 @@ function Flow() {
               </div>
             </div>
 
+            {renderContentKeyField()}
+          </>
+        );
+
+      case 'image':
+        return (
+          <>
+            {renderExternalIdField()}
+            
+            {/* Image Path Section */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
+                🖼️ Image Path
+              </label>
+              <input
+                type="text"
+                value={node.data.imagePath || ''}
+                onChange={(e) => {
+                  const newImagePath = e.target.value;
+                  onImagePathChange(node.id, newImagePath);
+                  setSelectedNodes(prev => prev.map(n => 
+                    n.id === node.id 
+                      ? { ...n, data: { ...n.data, imagePath: newImagePath } }
+                      : n
+                  ));
+                }}
+                placeholder="e.g., assets/images/sample_image.png"
+                style={commonStyles.inputStyle}
+              />
+              <div style={{ fontSize: '11px', color: '#666', marginTop: '4px' }}>
+                Path to image file relative to Flutter assets folder
+              </div>
+            </div>
+            
             {renderContentKeyField()}
           </>
         );

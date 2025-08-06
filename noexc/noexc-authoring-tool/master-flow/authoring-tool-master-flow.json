@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-06T09:24:29.029Z",
+  "lastUpdated": "2025-08-06T12:56:17.364Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-06T09:24:29.009Z"
+    "timestamp": "2025-08-06T12:56:17.354Z"
   },
   "nodes": [
     {
@@ -173,21 +173,21 @@
     {
       "id": "148",
       "position": {
-        "x": -2043.9903140554404,
+        "x": -2152.9276681656165,
         "y": -6016.691871993871
       },
       "type": "group",
       "style": {
-        "width": 747.2099169045869,
-        "height": 2146.4270375660826,
+        "width": 751.1005366942363,
+        "height": 2174.2500223139023,
         "zIndex": 999
       },
-      "width": 747,
-      "height": 2146,
+      "width": 751,
+      "height": 2174,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -2043.9903140554404,
+        "x": -2152.9276681656165,
         "y": -6016.691871993871
       },
       "data": {
@@ -444,8 +444,8 @@
         "width": 472.6900604689963,
         "height": 1530
       },
-      "width": 474,
-      "height": 1531,
+      "width": 473,
+      "height": 1530,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -1446,7 +1446,7 @@
       "id": "222",
       "position": {
         "x": 337.6441703024491,
-        "y": 827.4574515071617
+        "y": 1002.535342041373
       },
       "data": {
         "label": "Route condition",
@@ -1456,13 +1456,13 @@
         "contentKey": "system.check.user_profile_setup_status"
       },
       "type": "editable",
-      "width": 249,
-      "height": 163,
+      "width": 248,
+      "height": 162,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": -1557.3855889924457,
-        "y": -5123.459630072962
+        "x": -1815.2834978631674,
+        "y": -5014.156529952498
       },
       "parentId": "148",
       "extent": "parent"
@@ -1520,8 +1520,8 @@
     {
       "id": "290",
       "position": {
-        "x": 339.20991690458686,
-        "y": 27.822984747819646
+        "x": 368.38956532695556,
+        "y": 243.75238307334712
       },
       "data": {
         "label": "Route condition",
@@ -1534,8 +1534,8 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": -1555.819842390308,
-        "y": -5923.094096832304
+        "x": -1784.538102838661,
+        "y": -5772.939488920524
       },
       "dragging": true,
       "parentId": "148",
@@ -1544,8 +1544,8 @@
     {
       "id": "291",
       "position": {
-        "x": 0,
-        "y": 320.5364220532183
+        "x": 25.289028632719237,
+        "y": 452.81749490128914
       },
       "data": {
         "label": "Data action",
@@ -1566,9 +1566,34 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": -1777.0220470819952,
-        "y": -5638.118870163817
+        "x": -2127.6386395328973,
+        "y": -5563.874377092582
       },
+      "parentId": "148",
+      "extent": "parent"
+    },
+    {
+      "id": "292",
+      "position": {
+        "x": 355.66877313456735,
+        "y": 0
+      },
+      "data": {
+        "label": "Image display",
+        "category": "image",
+        "nodeLabel": "Image",
+        "nodeId": "292",
+        "imagePath": "assets/images/logo_intro.png"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 209,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -1797.2588950310492,
+        "y": -6016.691871993871
+      },
+      "dragging": true,
       "parentId": "148",
       "extent": "parent"
     },
@@ -3111,8 +3136,8 @@
         "nodeId": "238"
       },
       "type": "editable",
-      "width": 250,
-      "height": 164,
+      "width": 248,
+      "height": 162,
       "selected": false,
       "positionAbsolute": {
         "x": -6064.419760191292,
@@ -4263,8 +4288,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 766,
+      "width": 308,
+      "height": 764,
       "selected": false,
       "positionAbsolute": {
         "x": 3859.3240325436477,
@@ -7075,6 +7100,17 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-291-222",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "292",
+      "sourceHandle": null,
+      "target": "290",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-292-290",
       "selected": false
     }
   ]

@@ -144,3 +144,6 @@ After setting the task, if the user *FIRST* checks in on :
 2) list all failing tests
 3) group tests with a common cause
 4) output a machine readable document that list the failures with the appropriate info for prioritizing fixes later (id, name, cause + whatever you feel useful)
+
+start fixing the tests in test_failure_analysis.json one by one in the     │
+│ order you feel optimal and update the file as you do

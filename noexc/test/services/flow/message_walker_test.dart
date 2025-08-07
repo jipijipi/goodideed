@@ -155,7 +155,7 @@ void main() {
     });
 
     group('Special Messages', () {
-      test('should collect autoroute messages without stopping', () {
+      test('should stop at autoroute messages for route processing', () {
         // Arrange
         final botMessage = ChatMessage(id: 1, text: 'Before autoroute', nextMessageId: 2);
         final autorouteMessage = ChatMessage(id: 2, text: '', type: MessageType.autoroute, nextMessageId: 3);
@@ -168,11 +168,11 @@ void main() {
         final result = walker.walkFrom(1, provider);
 
         // Assert
-        expect(result.messages, hasLength(3));
+        expect(result.messages, hasLength(2)); // Only collects bot + autoroute
         expect(result.messages[0].id, equals(1));
         expect(result.messages[1].id, equals(2));
-        expect(result.messages[2].id, equals(3));
         expect(result.stopReason, equals(WalkStopReason.endOfChain));
+        expect(result.stopMessageId, equals(2)); // Stops at autoroute message
       });
 
       test('should collect dataAction messages without stopping', () {
@@ -232,9 +232,9 @@ void main() {
         final result = walker.walkFrom(1, provider);
 
         // Assert
-        expect(result.messages, hasLength(4));
-        expect(result.stopReason, equals(WalkStopReason.interactiveMessage));
-        expect(result.stopMessageId, equals(4));
+        expect(result.messages, hasLength(3)); // Stops at autoroute, doesn't reach choice
+        expect(result.stopReason, equals(WalkStopReason.endOfChain));
+        expect(result.stopMessageId, equals(3)); // Stops at autoroute message
       });
 
       test('should handle sequence transition with content', () {

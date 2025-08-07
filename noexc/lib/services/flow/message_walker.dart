@@ -89,8 +89,9 @@ class MessageWalker {
         );
       }
       
-      // Note: autoroute and dataAction messages are collected but don't stop the walk
-      // The orchestrator will handle them during processing
+      // Note: dataAction messages are collected and don't stop the walk
+      // autoroute messages are collected but DO stop the walk for route processing
+      // The orchestrator will handle both during processing
       
       // Move to next message
       currentId = _getNextMessageId(message, currentId);

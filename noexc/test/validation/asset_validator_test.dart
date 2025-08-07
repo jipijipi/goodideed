@@ -126,7 +126,10 @@ bool _isDemoSequence(String message) {
     'richtext_demo_seq', 'image_demo_seq', 'sendoff_seq', 'success_seq', 
     'failure_seq', 'intro_seq', 'inactive_seq', 'active_seq', 'settask_seq', 
     'excuse_seq', 'completed_seq', 'deadline_seq', 'failed_seq', 'notice_seq', 
-    'overdue_seq', 'pending_seq', 'previous_seq', 'reminders_seq', 'weekdays_seq'
+    'overdue_seq', 'pending_seq', 'previous_seq', 'reminders_seq', 'weekdays_seq',
+    // Additional terminal sequences that naturally end 
+    'taskparam_seq', 'autoFailed_seq', 'catchup_seq', 'due_seq', 'startday_seq', 
+    'updateChoice_seq', 'updatetask_seq'
   ];
   
   return terminalSequences.any((seq) => message.contains(seq));

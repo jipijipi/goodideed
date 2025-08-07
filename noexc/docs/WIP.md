@@ -148,6 +148,7 @@ After setting the task, if the user *FIRST* checks in on :
 start fixing the tests in test_failure_analysis.json one by one in the     │
 │ order you feel optimal and update the file as you do
 
-1) Read docs/TESTING_BEST_PRACTICES.md
-2) Read test_failure_analysis.json
+1) Read AGENTS.md
+2) Run the flutter tests as quietly as possible
+3) Update test_failure_analysis.json with the failing tests
 3) fix the tests listed in test_failure_analysis.json one by one and update the document after.

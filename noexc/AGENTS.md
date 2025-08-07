@@ -212,7 +212,7 @@ wait
 - Never commit code without corresponding tests
 
 ### Documentation Maintenance
-- **ALWAYS update this .agent.md file after significant changes**
+- **ALWAYS update this file after significant changes**
 - Update documentation when:
   - Adding new dependencies or packages
   - Changing project structure or architecture

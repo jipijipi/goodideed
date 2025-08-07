@@ -318,7 +318,7 @@ class SessionService {
     
     // If no activeDays configured, default to false
     if (activeDays == null || activeDays.isEmpty) {
-      return false;
+      return true;
     }
     
     // Return true if today's weekday (1=Monday, 7=Sunday) is in the activeDays list

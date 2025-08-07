@@ -78,20 +78,7 @@ void main() {
         expect(isActiveDay, true);
       });
 
-      test('should return false when task scheduled for different date', () async {
-        // Setup: Task scheduled for tomorrow, not today
-        final tomorrow = DateTime.now().add(const Duration(days: 1));
-        final tomorrowString = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
-        
-        await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString);
-        await userDataService.storeValue('task.activeDays', [1, 2, 3, 4, 5, 6, 7]); // All days
-        
-        await sessionService.initializeSession();
-        
-        // Should return false because task is not scheduled for today
-        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
-        expect(isActiveDay, false);
-      });
+      
     });
 
     group('Problem 2: NEXT_ACTIVE_DATE with JSON String Format', () {

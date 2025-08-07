@@ -147,3 +147,7 @@ After setting the task, if the user *FIRST* checks in on :
 
 start fixing the tests in test_failure_analysis.json one by one in the     │
 │ order you feel optimal and update the file as you do
+
+1) Read docs/TESTING_BEST_PRACTICES.md
+2) Read test_failure_analysis.json
+3) fix the tests listed in test_failure_analysis.json one by one and update the document after.

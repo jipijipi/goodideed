@@ -107,12 +107,17 @@ class ChatMessage {
     
     // For interactive messages, use empty text to enforce single responsibility
     String messageText = json['text'] as String? ?? '';
-    if (messageType == MessageType.choice || 
-        messageType == MessageType.textInput || 
-        messageType == MessageType.autoroute ||
-        messageType == MessageType.dataAction ||
-        messageType == MessageType.image) {
-      messageText = '';
+    switch (messageType) {
+      case MessageType.choice:
+      case MessageType.textInput:
+      case MessageType.autoroute:
+      case MessageType.dataAction:
+      case MessageType.image:
+        messageText = '';
+        break;
+      default:
+        // Do nothing
+        break;
     }
     
     final imagePath = json['imagePath'] as String?;

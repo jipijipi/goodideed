@@ -575,7 +575,7 @@ void main() {
 
       final expanded = message.expandToIndividualMessages();
 
-      expect(expanded.length, equals(10));
+      expect(expanded.length, equals(1));
       expect(expanded[0].id, equals(1));
       expect(expanded[0].text, equals('Single message'));
       expect(expanded[0].nextMessageId, equals(2));

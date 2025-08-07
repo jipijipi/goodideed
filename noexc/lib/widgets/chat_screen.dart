@@ -51,6 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        key: const ValueKey('chat_screen_stack'),
         children: [
           // Main chat content
           ChatMessageList(

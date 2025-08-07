@@ -2,15 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/chat_screen.dart';
+import 'package:noexc/services/service_locator.dart';
+import '../test_helpers.dart';
 
 void main() {
   setUp(() async {
+    setupQuietTesting();
     SharedPreferences.setMockInitialValues({});
+    
+    // Initialize ServiceLocator for widget tests
+    ServiceLocator.reset();
+    await ServiceLocator.instance.initialize();
   });
 
   tearDown(() async {
     // Clear any stored data to prevent test interference
     SharedPreferences.setMockInitialValues({});
+    ServiceLocator.reset();
   });
 
   group('ChatScreen Widget Tests', () {
@@ -93,8 +101,9 @@ void main() {
         ),
       );
 
-      // Wait for loading
+      // Wait for loading and let timers complete
       await tester.pump();
+      await tester.pumpAndSettle();
       
       // For now, just verify the screen loads without errors
       expect(find.byType(ListView), findsWidgets);

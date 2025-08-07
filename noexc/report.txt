@@ -1,101 +1,16 @@
-+0: /Users/jpl/Dev/Apps/noexc/test/initialization_test.dart: App Initialization Sequence should complete SessionService initialization before ChatStateManager starts
-🔍 GENERAL: storeValue: key="task.currentStatus", value=pending, valueType=String
-🔍 GENERAL: storeValue: key="task.deadlineTime", value=18:00, valueType=String
-🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
-🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
-🔍 GENERAL: storeValue: key="session.visitCount", value=1, valueType=int
-🔍 GENERAL: getValue: key "session.totalVisitCount" not found in storage
-🔍 GENERAL: storeValue: key="session.totalVisitCount", value=1, valueType=int
-🔍 GENERAL: storeValue: key="session.timeOfDay", value=1, valueType=int
-🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
-🔍 GENERAL: storeValue: key="session.lastVisitDate", value=2025-08-07, valueType=String
-🔍 GENERAL: getValue: key "session.firstVisitDate" not found in storage
-🔍 GENERAL: storeValue: key="session.firstVisitDate", value=2025-08-07, valueType=String
-🔍 GENERAL: getValue: key="session.firstVisitDate", value=2025-08-07, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="session.daysSinceFirstVisit", value=0, valueType=int
-🔍 GENERAL: storeValue: key="session.isWeekend", value=false, valueType=bool
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.currentStatus", value=pending, valueType=String
-🔍 GENERAL: getValue: key="task.currentStatus", value=pending, valueType=String, expectedType=String
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.status", value=pending, valueType=String
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.endDate", value=, valueType=String
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.dueDay", value=0, valueType=int
-🔍 GENERAL: getValue: key "task.activeDays" not found in storage
-🔍 GENERAL: storeValue: key="task.isActiveDay", value=false, valueType=bool
-🔍 GENERAL: getValue: key "task.startTime" not found in storage
-🔍 GENERAL: getValue: key="task.deadlineTime", value=18:00, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isBeforeStart", value=true, valueType=bool
-🔍 GENERAL: getValue: key "task.startTime" not found in storage
-🔍 GENERAL: getValue: key="task.deadlineTime", value=18:00, valueType=String, expectedType=String
-🔍 GENERAL: getValue: key="task.deadlineTime", value=18:00, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isInTimeRange", value=false, valueType=bool
-🔍 GENERAL: getValue: key="task.deadlineTime", value=18:00, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isPastDeadline", value=false, valueType=bool
-🔍 GENERAL: getValue: key="task.endDate", value=, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isPastEndDate", value=false, valueType=bool
-🔍 GENERAL: getValue: key="task.currentStatus", value=pending, valueType=String, expectedType=String
-🔍 GENERAL: getValue: key "user.task" not found in storage
-🔍 GENERAL: getValue: key "task.activeDays" not found in storage
-🔍 GENERAL: getValue: key="task.isPastDeadline", value=false, valueType=bool, expectedType=bool
-🔍 GENERAL: getValue: key="task.isActiveDay", value=false, valueType=bool, expectedType=bool
 +0 -1: /Users/jpl/Dev/Apps/noexc/test/initialization_test.dart: App Initialization Sequence should complete SessionService initialization before ChatStateManager starts [E]
   Bad state: ServiceLocator not initialized. Call initialize() first.
   package:noexc/services/service_locator.dart 123:7                ServiceLocator._ensureInitialized
   package:noexc/services/service_locator.dart 83:5                 ServiceLocator.chatService
   package:noexc/widgets/chat_screen/chat_state_manager.dart 44:44  ChatStateManager.initialize
-  test/initialization_test.dart 55:30                              main.<fn>.<fn>
+  test/initialization_test.dart 57:30                              main.<fn>.<fn>
   
-+0 -1: /Users/jpl/Dev/Apps/noexc/test/initialization_test.dart: App Initialization Sequence should not start ChatStateManager until SessionService variables are computed
-🔍 GENERAL: storeValue: key="task.currentStatus", value=pending, valueType=String
-🔍 GENERAL: storeValue: key="task.deadlineTime", value=14:00, valueType=String
-🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
-🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
-🔍 GENERAL: storeValue: key="session.visitCount", value=1, valueType=int
-🔍 GENERAL: getValue: key "session.totalVisitCount" not found in storage
-🔍 GENERAL: storeValue: key="session.totalVisitCount", value=1, valueType=int
-🔍 GENERAL: storeValue: key="session.timeOfDay", value=1, valueType=int
-🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
-🔍 GENERAL: storeValue: key="session.lastVisitDate", value=2025-08-07, valueType=String
-🔍 GENERAL: getValue: key "session.firstVisitDate" not found in storage
-🔍 GENERAL: storeValue: key="session.firstVisitDate", value=2025-08-07, valueType=String
-🔍 GENERAL: getValue: key="session.firstVisitDate", value=2025-08-07, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="session.daysSinceFirstVisit", value=0, valueType=int
-🔍 GENERAL: storeValue: key="session.isWeekend", value=false, valueType=bool
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.currentStatus", value=pending, valueType=String
-🔍 GENERAL: getValue: key="task.currentStatus", value=pending, valueType=String, expectedType=String
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.status", value=pending, valueType=String
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.endDate", value=, valueType=String
-🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-🔍 GENERAL: storeValue: key="task.dueDay", value=0, valueType=int
-🔍 GENERAL: getValue: key "task.activeDays" not found in storage
-🔍 GENERAL: storeValue: key="task.isActiveDay", value=false, valueType=bool
-🔍 GENERAL: getValue: key "task.startTime" not found in storage
-🔍 GENERAL: getValue: key="task.deadlineTime", value=14:00, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isBeforeStart", value=true, valueType=bool
-🔍 GENERAL: getValue: key "task.startTime" not found in storage
-🔍 GENERAL: getValue: key="task.deadlineTime", value=14:00, valueType=String, expectedType=String
-🔍 GENERAL: getValue: key="task.deadlineTime", value=14:00, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isInTimeRange", value=false, valueType=bool
-🔍 GENERAL: getValue: key="task.deadlineTime", value=14:00, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isPastDeadline", value=false, valueType=bool
-🔍 GENERAL: getValue: key="task.endDate", value=, valueType=String, expectedType=String
-🔍 GENERAL: storeValue: key="task.isPastEndDate", value=false, valueType=bool
-🔍 GENERAL: getValue: key="task.currentStatus", value=pending, valueType=String, expectedType=String
-🔍 GENERAL: getValue: key "user.task" not found in storage
-🔍 GENERAL: getValue: key "task.activeDays" not found in storage
-🔍 GENERAL: getValue: key="task.isPastDeadline", value=false, valueType=bool, expectedType=bool
 +0 -2: /Users/jpl/Dev/Apps/noexc/test/initialization_test.dart: App Initialization Sequence should not start ChatStateManager until SessionService variables are computed [E]
   Bad state: ServiceLocator not initialized. Call initialize() first.
   package:noexc/services/service_locator.dart 123:7                ServiceLocator._ensureInitialized
   package:noexc/services/service_locator.dart 83:5                 ServiceLocator.chatService
   package:noexc/widgets/chat_screen/chat_state_manager.dart 44:44  ChatStateManager.initialize
-  test/initialization_test.dart 85:30                              main.<fn>.<fn>
+  test/initialization_test.dart 87:30                              main.<fn>.<fn>
   
 +0 -2: /Users/jpl/Dev/Apps/noexc/test/semantic_content_end_to_end_test.dart: Semantic Content System End-to-End should process message with semantic contentKey through MessageProcessor
 ⚠️ SEMANTIC: No content found for "bot.introduce.character.casual", using fallback
@@ -178,14 +93,15 @@
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/models/chat_message_test.dart 668:9            main.<fn>.<fn>.<fn>
   
-+102 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
-ℹ️ GENERAL: Initializing application services
-ℹ️ GENERAL: All services initialized successfully
 +102 -10: /Users/jpl/Dev/Apps/noexc/test/debug_logging_test.dart: Debug Logging Test should show debug logs for semantic content resolution
 
 === TESTING SEMANTIC CONTENT SYSTEM DEBUG LOGGING ===
 
 --- Test 1: Direct service call ---
++102 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
+ℹ️ GENERAL: Initializing application services
+ℹ️ GENERAL: All services initialized successfully
++102 -10: /Users/jpl/Dev/Apps/noexc/test/debug_logging_test.dart: Debug Logging Test should show debug logs for semantic content resolution
 ⚠️ SEMANTIC: No content found for "bot.introduce.character.casual", using fallback
 Result: "Original introduction text"
 
@@ -250,6 +166,7 @@ Choice 2: "Hello..." (contentKey: "user.greet.character.skeptical")
 🔍 GENERAL: getValue: key "task.activeDays" not found in storage
 🔍 GENERAL: getValue: key "theme.isDark" not found in storage
 ℹ️ GENERAL: Loading sequence: welcome_seq
++109 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
 ℹ️ GENERAL: Successfully loaded sequence: welcome_seq with 6 messages
 ℹ️ GENERAL: Processing messages from ID: 292
 ℹ️ GENERAL: Starting flow processing from message ID: 292
@@ -257,7 +174,6 @@ Choice 2: "Hello..." (contentKey: "user.greet.character.skeptical")
 🔍 ROUTE: Route matched: "session.visitCount == 1"
 🔍 DATA_ACTION: Processing 1 dataActions: set(task.hasResolvedToday)
 🔍 GENERAL: storeValue: key="task.hasResolvedToday", value=false, valueType=bool
-+104 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
 🔍 GENERAL: getValue: key "user.ProfileSetupStatus" not found in storage
 🔍 GENERAL: getValue: key "user.ProfileSetupStatus" not found in storage
 🔍 ROUTE: Using default route
@@ -265,12 +181,9 @@ Choice 2: "Hello..." (contentKey: "user.greet.character.skeptical")
 🔍 ROUTE: Route matched: "user.name == null"
 ℹ️ GENERAL: Loading sequence: intro_seq
 ℹ️ GENERAL: Successfully loaded sequence: intro_seq with 7 messages
-+105 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
 ℹ️ GENERAL: Flow requires user interaction at message 161
-+107 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
 ⚠️ SEMANTIC: No content found for "user.greet.character.snarky", using fallback
 🔍 GENERAL: Rendered 4 → 4 → 5 messages
-+109 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
 🔍 GENERAL: getValue: key="task.isActiveDay", value=false, valueType=bool, expectedType=bool
 🔍 GENERAL: getValue: key="task.isPastDeadline", value=false, valueType=bool, expectedType=bool
@@ -316,50 +229,21 @@ Choice 2: "Hello..." (contentKey: "user.greet.character.skeptical")
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: storeValue: key="task.isBeforeStart", value=true, valueType=bool
 🔍 GENERAL: getValue: key "task.startTime" not found in storage
-+112 -10: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
-══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
-The following TestFailure was thrown running a test:
-Expected: exactly one matching candidate
-  Actual: _TextWidgetFinder:<Found 0 widgets with text "Chat": []>
-   Which: means none were found but one was expected
-
-When the exception was thrown, this was the stack:
-#4      main.<anonymous closure> (file:///Users/jpl/Dev/Apps/noexc/test/widget_test.dart:23:5)
-<asynchronous suspension>
-#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
-<asynchronous suspension>
-#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
-<asynchronous suspension>
-<asynchronous suspension>
-(elided one frame from package:stack_trace)
-
-This was caught by the test expectation on the following line:
-  file:///Users/jpl/Dev/Apps/noexc/test/widget_test.dart line 23
-The test description was:
-  App loads chat screen
-════════════════════════════════════════════════════════════════════════════════════════════════════
-+112 -10: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should initialize with automatic status update functionality
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
-+112 -11: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should initialize with automatic status update functionality
 🔍 GENERAL: storeValue: key="task.isInTimeRange", value=false, valueType=bool
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: storeValue: key="task.isPastDeadline", value=false, valueType=bool
-+112 -11: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen [E]
-  Test failed. See exception logs above.
-  The test description was: App loads chat screen
-  
-+112 -11: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should initialize with automatic status update functionality
 🔍 GENERAL: getValue: key="task.endDate", value=, valueType=String, expectedType=String
 🔍 GENERAL: storeValue: key="task.isPastEndDate", value=false, valueType=bool
 🔍 GENERAL: getValue: key="task.currentStatus", value=pending, valueType=String, expectedType=String
 🔍 GENERAL: getValue: key "user.task" not found in storage
 🔍 GENERAL: getValue: key "task.activeDays" not found in storage
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
-+112 -12: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should initialize with automatic status update functionality [E]
++112 -11: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should initialize with automatic status update functionality [E]
   Expected: not null
     Actual: <null>
   
@@ -367,7 +251,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18            expect
   test/services/automatic_status_updates_simple_test.dart 24:7  main.<fn>.<fn>
   
-+112 -12: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should add auto-update logging storage keys
++112 -11: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should add auto-update logging storage keys
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: storeValue: key="session.visitCount", value=1, valueType=int
@@ -414,7 +298,7 @@ The test description was:
 🔍 GENERAL: getValue: key "task.autoUpdateReason" not found in storage
 🔍 GENERAL: storeValue: key="task.lastAutoUpdate", value=test, valueType=String
 🔍 GENERAL: getValue: key="task.lastAutoUpdate", value=test, valueType=String, expectedType=String
-+113 -12: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should preserve overdue status on same day (no morning recovery)
++113 -11: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should preserve overdue status on same day (no morning recovery)
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: storeValue: key="session.visitCount", value=1, valueType=int
@@ -493,7 +377,7 @@ The test description was:
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: storeValue: key="task.isInTimeRange", value=false, valueType=bool
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
-+115 -13: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should log deadline-based status updates with proper format [E]
++115 -12: /Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart: Automatic Status Updates - Simple Tests should log deadline-based status updates with proper format [E]
   Expected: contains 'current_day: pending → overdue (deadline_passed)'
     Actual: <null>
      Which: is not a string, map or iterable
@@ -501,6 +385,32 @@ The test description was:
   package:matcher                                               expect
   package:flutter_test/src/widget_tester.dart 474:18            expect
   test/services/automatic_status_updates_simple_test.dart 85:9  main.<fn>.<fn>
+  
++117 -12: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "Chat": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/jpl/Dev/Apps/noexc/test/widget_test.dart:23:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:193:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1064:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/jpl/Dev/Apps/noexc/test/widget_test.dart line 23
+The test description was:
+  App loads chat screen
+════════════════════════════════════════════════════════════════════════════════════════════════════
++117 -13: /Users/jpl/Dev/Apps/noexc/test/widget_test.dart: App loads chat screen [E]
+  Test failed. See exception logs above.
+  The test description was: App loads chat screen
   
 +121 -13: /Users/jpl/Dev/Apps/noexc/test/services/daily_reset_integration_test.dart: Daily Reset Integration Test should demonstrate daily visit count reset behavior
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
@@ -760,7 +670,7 @@ The test description was:
 🔍 GENERAL: getValue: key "user.visits" not found in storage
 🔍 GENERAL: storeValue: key="user.visits", value=1, valueType=int
 🔍 GENERAL: getValue: key="user.score", value=100, valueType=int, expectedType=dynamic
-+145 -18: /Users/jpl/Dev/Apps/noexc/test/services/chat_service/route_processor_test.dart: RouteProcessor processDataAction should handle data action processing errors gracefully
++144 -18: /Users/jpl/Dev/Apps/noexc/test/services/chat_service/route_processor_test.dart: RouteProcessor processDataAction should handle data action processing errors gracefully
 🔍 DATA_ACTION: Processing 1 dataActions: set()
 🔍 GENERAL: storeValue: key="", value=test, valueType=String
 +148 -18: /Users/jpl/Dev/Apps/noexc/test/services/chat_service/message_processor_simple_test.dart: MessageProcessor Simple Integration should preserve contentKey field in processed message
@@ -2213,45 +2123,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18      expect
   test/services/task_boolean_computation_test.dart 102:9  main.<fn>.<fn>.<fn>
   
-+452 -34: /Users/jpl/Dev/Apps/noexc/test/services/task_boolean_computation_test.dart: Task Boolean Computation Tests isPastDeadline Computation should return true when current time is past deadline [E]
-  Expected: <false>
-    Actual: <true>
-  
-  package:matcher                                         expect
-  package:flutter_test/src/widget_tester.dart 474:18      expect
-  test/services/task_boolean_computation_test.dart 145:9  main.<fn>.<fn>.<fn>
-  
-+465 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should store and retrieve string values
-🔍 GENERAL: storeValue: key="user.name", value=John Doe, valueType=String
-🔍 GENERAL: getValue: key="user.name", value=John Doe, valueType=String, expectedType=String
-+466 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should store and retrieve int values
-🔍 GENERAL: storeValue: key="user.age", value=25, valueType=int
-🔍 GENERAL: getValue: key="user.age", value=25, valueType=int, expectedType=int
-+467 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should store and retrieve bool values
-🔍 GENERAL: storeValue: key="user.isActive", value=true, valueType=bool
-🔍 GENERAL: getValue: key="user.isActive", value=true, valueType=bool, expectedType=bool
-+468 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should store and retrieve list of strings
-🔍 GENERAL: storeValue: key="user.interests", value=[Flutter, Dart, Mobile Development], valueType=List<String>
-🔍 GENERAL: getValue: key="user.interests", value=[Flutter, Dart, Mobile Development], valueType=List<String>, expectedType=List<String>
-+469 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should return null for non-existent keys
-🔍 GENERAL: getValue: key "non.existent.key" not found in storage
-+470 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should check if value exists
-🔍 GENERAL: storeValue: key="user.name", value=John Doe, valueType=String
-+471 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should remove specific values
-🔍 GENERAL: storeValue: key="user.name", value=John Doe, valueType=String
-🔍 GENERAL: getValue: key "user.name" not found in storage
-+472 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should clear all data
-🔍 GENERAL: storeValue: key="user.name", value=John Doe, valueType=String
-🔍 GENERAL: storeValue: key="user.age", value=25, valueType=int
-🔍 GENERAL: storeValue: key="user.isActive", value=true, valueType=bool
-+473 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should get all data as map
-🔍 GENERAL: storeValue: key="user.name", value=John Doe, valueType=String
-🔍 GENERAL: storeValue: key="user.age", value=25, valueType=int
-🔍 GENERAL: storeValue: key="user.isActive", value=true, valueType=bool
-+474 -34: /Users/jpl/Dev/Apps/noexc/test/services/user_data_service_test.dart: UserDataService should handle storing null values by removing the key
-🔍 GENERAL: storeValue: key="user.name", value=John Doe, valueType=String
-🔍 GENERAL: storeValue: removing key "user.name"
-+475 -35: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format timeOfDay values correctly [E]
++476 -34: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format timeOfDay values correctly [E]
   Expected: 'morning'
     Actual: <null>
      Which: not an <Instance of 'String'>
@@ -2260,7 +2132,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/formatter_service_test.dart 41:7      main.<fn>.<fn>
   
-+475 -36: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format intensity values correctly [E]
++476 -35: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format intensity values correctly [E]
   Expected: 'off'
     Actual: <null>
      Which: not an <Instance of 'String'>
@@ -2269,7 +2141,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/formatter_service_test.dart 48:7      main.<fn>.<fn>
   
-+475 -37: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format activeDays values correctly [E]
++476 -36: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format activeDays values correctly [E]
   Expected: 'weekdays'
     Actual: <null>
      Which: not an <Instance of 'String'>
@@ -2278,7 +2150,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/formatter_service_test.dart 55:7      main.<fn>.<fn>
   
-+475 -38: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format timePeriod values correctly [E]
++476 -37: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should format timePeriod values correctly [E]
   Expected: 'morning deadline'
     Actual: <null>
      Which: not an <Instance of 'String'>
@@ -2287,7 +2159,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/formatter_service_test.dart 61:7      main.<fn>.<fn>
   
-+477 -39: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should cache formatters after first load [E]
++478 -38: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should cache formatters after first load [E]
   Expected: 'afternoon'
     Actual: <null>
      Which: not an <Instance of 'String'>
@@ -2296,7 +2168,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/formatter_service_test.dart 84:7      main.<fn>.<fn>
   
-+477 -40: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should convert numeric values to strings for lookup [E]
++478 -39: /Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart: FormatterService should convert numeric values to strings for lookup [E]
   Expected: 'morning'
     Actual: <null>
      Which: not an <Instance of 'String'>
@@ -2305,7 +2177,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/formatter_service_test.dart 89:7      main.<fn>.<fn>
   
-+492 -40: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService should initialize session with visit count
++493 -39: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService should initialize session with visit count
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: storeValue: key="session.visitCount", value=1, valueType=int
@@ -2349,7 +2221,7 @@ The test description was:
 🔍 GENERAL: getValue: key "user.task" not found in storage
 🔍 GENERAL: getValue: key "task.activeDays" not found in storage
 🔍 GENERAL: getValue: key="session.visitCount", value=1, valueType=int, expectedType=int
-+493 -40: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService should increment daily visit count on multiple initializations same day
++494 -39: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService should increment daily visit count on multiple initializations same day
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: storeValue: key="session.visitCount", value=1, valueType=int
@@ -2433,7 +2305,7 @@ The test description was:
 🔍 GENERAL: getValue: key "user.task" not found in storage
 🔍 GENERAL: getValue: key "task.activeDays" not found in storage
 🔍 GENERAL: getValue: key="session.visitCount", value=2, valueType=int, expectedType=int
-+494 -40: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService should always increment total visit count
++495 -39: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService should always increment total visit count
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: getValue: key "session.lastVisitDate" not found in storage
 🔍 GENERAL: storeValue: key="session.visitCount", value=1, valueType=int
@@ -2474,7 +2346,7 @@ The test description was:
 🔍 GENERAL: getValue: key="task.endDate", value=, valueType=String, expectedType=String
 🔍 GENERAL: storeValue: key="task.isPastEndDate", value=false, valueType=bool
 🔍 GENERAL: getValue: key="task.currentStatus", value=pending, valueType=String, expectedType=String
-+530 -41: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService Task End Date Computation should compute isPastEndDate as true when end date is before today [E]
++531 -40: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService Task End Date Computation should compute isPastEndDate as true when end date is before today [E]
   Expected: <true>
     Actual: <false>
   
@@ -2482,7 +2354,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/session_service_test.dart 539:9       main.<fn>.<fn>.<fn>
   
-+536 -42: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService Task End Date Computation should compute correctly for dates far in the past [E]
++537 -41: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService Task End Date Computation should compute correctly for dates far in the past [E]
   Expected: <true>
     Actual: <false>
   
@@ -2490,7 +2362,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/session_service_test.dart 599:9       main.<fn>.<fn>.<fn>
   
-+537 -43: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService Task End Date Computation should not interfere with existing boolean computations [E]
++538 -42: /Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart: SessionService Task End Date Computation should not interfere with existing boolean computations [E]
   Expected: <true>
     Actual: <false>
   
@@ -2498,7 +2370,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/session_service_test.dart 623:9       main.<fn>.<fn>.<fn>
   
-+563 -44: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Basic Message Flow should process messages without duplication [E]
++560 -43: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Basic Message Flow should process messages without duplication [E]
   Expected: contains <1>
     Actual: [2, 160, 160, 161]
      Which: does not contain <1>
@@ -2507,7 +2379,7 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18                expect
   test/services/flow/clean_architecture_integration_test.dart 30:9  main.<fn>.<fn>.<fn>
   
-+565 -45: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Message Processing should process templates correctly [E]
++566 -44: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Message Processing should process templates correctly [E]
   Expected: non-empty
     Actual: []
   
@@ -2515,10 +2387,10 @@ The test description was:
   package:flutter_test/src/widget_tester.dart 474:18                expect
   test/services/flow/clean_architecture_integration_test.dart 87:9  main.<fn>.<fn>.<fn>
   
-+566 -45: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Error Handling should handle non-existent sequence gracefully
++567 -44: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Error Handling should handle non-existent sequence gracefully
 ❌ GENERAL: Failed to load sequence nonexistent_seq: Exception: Failed to load chat script for sequence nonexistent_seq: Unable to load asset: "assets/sequences/nonexistent_seq.json".
 The asset does not exist or has empty data.
-+569 -46: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests State Management should handle message availability correctly [E]
++570 -45: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests State Management should handle message availability correctly [E]
   Expected: true
     Actual: <false>
   
@@ -2526,7 +2398,7 @@ The asset does not exist or has empty data.
   package:flutter_test/src/widget_tester.dart 474:18                 expect
   test/services/flow/clean_architecture_integration_test.dart 146:9  main.<fn>.<fn>.<fn>
   
-+569 -47: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Backward Compatibility should maintain existing API compatibility [E]
++570 -46: /Users/jpl/Dev/Apps/noexc/test/services/flow/clean_architecture_integration_test.dart: Clean Architecture Integration Tests Backward Compatibility should maintain existing API compatibility [E]
   Expected: true
     Actual: <false>
   
@@ -2534,7 +2406,7 @@ The asset does not exist or has empty data.
   package:flutter_test/src/widget_tester.dart 474:18                 expect
   test/services/flow/clean_architecture_integration_test.dart 166:9  main.<fn>.<fn>.<fn>
   
-+576 -48: /Users/jpl/Dev/Apps/noexc/test/services/flow/message_walker_test.dart: MessageWalker Special Messages should collect autoroute messages without stopping [E]
++577 -47: /Users/jpl/Dev/Apps/noexc/test/services/flow/message_walker_test.dart: MessageWalker Special Messages should collect autoroute messages without stopping [E]
   Expected: an object with length of <3>
     Actual: [Instance of 'ChatMessage', Instance of 'ChatMessage']
      Which: has length of <2>
@@ -2543,7 +2415,7 @@ The asset does not exist or has empty data.
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/flow/message_walker_test.dart 171:9   main.<fn>.<fn>.<fn>
   
-+578 -49: /Users/jpl/Dev/Apps/noexc/test/services/flow/message_walker_test.dart: MessageWalker Complex Scenarios should handle mixed message types correctly [E]
++579 -48: /Users/jpl/Dev/Apps/noexc/test/services/flow/message_walker_test.dart: MessageWalker Complex Scenarios should handle mixed message types correctly [E]
   Expected: an object with length of <4>
     Actual: [
               Instance of 'ChatMessage',
@@ -2556,9 +2428,9 @@ The asset does not exist or has empty data.
   package:flutter_test/src/widget_tester.dart 474:18  expect
   test/services/flow/message_walker_test.dart 235:9   main.<fn>.<fn>.<fn>
   
-+579 -49: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display chat screen with app bar
++580 -48: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display chat screen with app bar
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
-The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#511f8):
+The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#37b12):
 Bad state: ServiceLocator not initialized. Call initialize() first.
 
 The relevant error-causing widget was:
@@ -2768,7 +2640,7 @@ The following message was thrown:
 Multiple exceptions (2) were detected during the running of the current test, and at least one was
 unexpected.
 ════════════════════════════════════════════════════════════════════════════════════════════════════
-+579 -50: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display chat screen with app bar [E]
++580 -49: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display chat screen with app bar [E]
   Test failed. See exception logs above.
   The test description was: should display chat screen with app bar
   
@@ -2795,10 +2667,10 @@ When the exception was thrown, this was the stack:
   Test failed. See exception logs above.
   The test description was: should display chat screen with app bar
   
-+579 -50: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should load chat content after initialization
++580 -49: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should load chat content after initialization
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
 The following LateError was thrown while finalizing the widget tree:
-LateInitializationError: Field '_userInteractionHandler@170210508' has not been initialized.
+LateInitializationError: Field '_userInteractionHandler@196210508' has not been initialized.
 
 When the exception was thrown, this was the stack:
 #0      ChatStateManager._userInteractionHandler (package:noexc/widgets/chat_screen/chat_state_manager.dart)
@@ -3168,7 +3040,7 @@ When the exception was thrown, this was the stack:
 (elided 10 frames from dart:async)
 ════════════════════════════════════════════════════════════════════════════════════════════════════
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
-The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#189a5):
+The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#8f500):
 Bad state: ServiceLocator not initialized. Call initialize() first.
 
 The relevant error-causing widget was:
@@ -3378,7 +3250,7 @@ The following message was thrown:
 Multiple exceptions (3) were detected during the running of the current test, and at least one was
 unexpected.
 ════════════════════════════════════════════════════════════════════════════════════════════════════
-+579 -51: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should load chat content after initialization [E]
++580 -50: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should load chat content after initialization [E]
   Test failed. See exception logs above.
   The test description was: should load chat content after initialization
   
@@ -3405,10 +3277,10 @@ When the exception was thrown, this was the stack:
   Test failed. See exception logs above.
   The test description was: should load chat content after initialization
   
-+579 -51: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should allow legitimate message repetition in conversation loops
++580 -50: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should allow legitimate message repetition in conversation loops
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
 The following LateError was thrown while finalizing the widget tree:
-LateInitializationError: Field '_userInteractionHandler@170210508' has not been initialized.
+LateInitializationError: Field '_userInteractionHandler@196210508' has not been initialized.
 
 When the exception was thrown, this was the stack:
 #0      ChatStateManager._userInteractionHandler (package:noexc/widgets/chat_screen/chat_state_manager.dart)
@@ -3778,7 +3650,7 @@ When the exception was thrown, this was the stack:
 (elided 10 frames from dart:async)
 ════════════════════════════════════════════════════════════════════════════════════════════════════
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
-The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#b7375):
+The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#d2f29):
 Bad state: ServiceLocator not initialized. Call initialize() first.
 
 The relevant error-causing widget was:
@@ -3988,7 +3860,7 @@ The following message was thrown:
 Multiple exceptions (3) were detected during the running of the current test, and at least one was
 unexpected.
 ════════════════════════════════════════════════════════════════════════════════════════════════════
-+579 -52: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should allow legitimate message repetition in conversation loops [E]
++580 -51: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should allow legitimate message repetition in conversation loops [E]
   Test failed. See exception logs above.
   The test description was: should allow legitimate message repetition in conversation loops
   
@@ -4016,10 +3888,10 @@ When the exception was thrown, this was the stack:
   Test failed. See exception logs above.
   The test description was: should allow legitimate message repetition in conversation loops
   
-+579 -52: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display text input field for text input messages
++580 -51: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display text input field for text input messages
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
 The following LateError was thrown while finalizing the widget tree:
-LateInitializationError: Field '_userInteractionHandler@170210508' has not been initialized.
+LateInitializationError: Field '_userInteractionHandler@196210508' has not been initialized.
 
 When the exception was thrown, this was the stack:
 #0      ChatStateManager._userInteractionHandler (package:noexc/widgets/chat_screen/chat_state_manager.dart)
@@ -4389,7 +4261,7 @@ When the exception was thrown, this was the stack:
 (elided 10 frames from dart:async)
 ════════════════════════════════════════════════════════════════════════════════════════════════════
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
-The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#6c82a):
+The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#deec0):
 Bad state: ServiceLocator not initialized. Call initialize() first.
 
 The relevant error-causing widget was:
@@ -4599,7 +4471,7 @@ The following message was thrown:
 Multiple exceptions (3) were detected during the running of the current test, and at least one was
 unexpected.
 ════════════════════════════════════════════════════════════════════════════════════════════════════
-+579 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display text input field for text input messages [E]
++580 -52: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should display text input field for text input messages [E]
   Test failed. See exception logs above.
   The test description was: should display text input field for text input messages
   
@@ -4626,10 +4498,10 @@ When the exception was thrown, this was the stack:
   Test failed. See exception logs above.
   The test description was: should display text input field for text input messages
   
-+579 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should handle text input submission
++580 -52: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should handle text input submission
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
 The following LateError was thrown while finalizing the widget tree:
-LateInitializationError: Field '_userInteractionHandler@170210508' has not been initialized.
+LateInitializationError: Field '_userInteractionHandler@196210508' has not been initialized.
 
 When the exception was thrown, this was the stack:
 #0      ChatStateManager._userInteractionHandler (package:noexc/widgets/chat_screen/chat_state_manager.dart)
@@ -4999,7 +4871,7 @@ When the exception was thrown, this was the stack:
 (elided 10 frames from dart:async)
 ════════════════════════════════════════════════════════════════════════════════════════════════════
 ══╡ EXCEPTION CAUGHT BY WIDGETS LIBRARY ╞═══════════════════════════════════════════════════════════
-The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#33951):
+The following StateError was thrown building ChatScreen(dirty, state: _ChatScreenState#650fa):
 Bad state: ServiceLocator not initialized. Call initialize() first.
 
 The relevant error-causing widget was:
@@ -5209,7 +5081,7 @@ The following message was thrown:
 Multiple exceptions (3) were detected during the running of the current test, and at least one was
 unexpected.
 ════════════════════════════════════════════════════════════════════════════════════════════════════
-+579 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should handle text input submission [E]
++580 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/chat_screen_test.dart: ChatScreen Widget Tests should handle text input submission [E]
   Test failed. See exception logs above.
   The test description was: should handle text input submission
   
@@ -5236,35 +5108,34 @@ When the exception was thrown, this was the stack:
   Test failed. See exception logs above.
   The test description was: should handle text input submission
   
-+595 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should display date and time picker section
++596 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should display date and time picker section
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
 🔍 GENERAL: getValue: key "task.isActiveDay" not found in storage
 🔍 GENERAL: getValue: key "task.isPastDeadline" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
-+596 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should show default values when no data is stored
++597 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should show default values when no data is stored
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
 🔍 GENERAL: getValue: key "task.isActiveDay" not found in storage
 🔍 GENERAL: getValue: key "task.isPastDeadline" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
-+597 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should have functional today and yesterday buttons
++598 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should have functional today and yesterday buttons
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
 🔍 GENERAL: getValue: key "task.isActiveDay" not found in storage
 🔍 GENERAL: getValue: key "task.isPastDeadline" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: storeValue: key="task.currentDate", value=2025-08-07, valueType=String
-+600 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should have functional today and yesterday buttons
 🔍 GENERAL: storeValue: key="task.currentDate", value=2025-08-06, valueType=String
-+618 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should handle data refresh callback
++619 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should handle data refresh callback
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
 🔍 GENERAL: getValue: key "task.isActiveDay" not found in storage
 🔍 GENERAL: getValue: key "task.isPastDeadline" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: storeValue: key="task.currentDate", value=2025-08-07, valueType=String
-+619 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should allow selecting deadline options
++620 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should allow selecting deadline options
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
 🔍 GENERAL: getValue: key "task.isActiveDay" not found in storage
 🔍 GENERAL: getValue: key "task.isPastDeadline" not found in storage
@@ -5275,8 +5146,8 @@ Warning: A call to tap() with finder "Found 1 widget with text "Select deadline 
   Text("Select deadline time", dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),
 ]" derived an Offset (Offset(173.5, 464.0)) that would not hit test on the specified widget.
 Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot receive pointer events.
-The finder corresponds to this RenderBox: RenderParagraph#91fb9 relayoutBoundary=up8
-The hit test result at that offset is: HitTestResult(RenderParagraph#2a19c@Offset(161.5, 14.0), RenderAnimatedOpacity#baef4@Offset(161.5, 14.0), _RenderDecoration#06fb6@Offset(173.5, 26.0), RenderPointerListener#7bb6a@Offset(173.5, 26.0), RenderSemanticsGestureHandler#c9c38@Offset(173.5, 26.0), RenderMouseRegion#e7b8c@Offset(173.5, 26.0), RenderSemanticsAnnotations#29f9f@Offset(173.5, 26.0), RenderSemanticsAnnotations#b45d2@Offset(173.5, 26.0), RenderSemanticsAnnotations#acde3@Offset(173.5, 26.0), RenderSemanticsAnnotations#b37f4@Offset(173.5, 26.0), RenderFlex#394fb@Offset(173.5, 26.0), RenderFlex#8eee7@Offset(173.5, 54.0), RenderPadding#fc51b@Offset(173.5, 62.0), RenderFlex#079b4@Offset(173.5, 464.0), _RenderSingleChildViewport#d20f1@Offset(173.5, 464.0), RenderIgnorePointer#61849@Offset(173.5, 464.0), RenderSemanticsAnnotations#1658a@Offset(173.5, 464.0), RenderPointerListener#b0b1a@Offset(173.5, 464.0), RenderSemanticsGestureHandler#ab453@Offset(173.5, 464.0), RenderPointerListener#50b7d@Offset(173.5, 464.0), _RenderScrollSemantics#fef47@Offset(173.5, 464.0), RenderClipRect#045f7@Offset(173.5, 464.0), RenderCustomMultiChildLayoutBox#f778a@Offset(173.5, 464.0), _RenderInkFeatures#2b92b@Offset(173.5, 464.0), RenderPhysicalModel#b3dc9@Offset(173.5, 464.0), RenderSemanticsAnnotations#929a9@Offset(173.5, 464.0), RenderRepaintBoundary#4d487@Offset(173.5, 464.0), RenderIgnorePointer#19ef5@Offset(173.5, 464.0), _RenderSnapshotWidget#9b04a@Offset(173.5, 464.0), _RenderSnapshotWidget#252ed@Offset(173.5, 464.0), _RenderSnapshotWidget#be806@Offset(173.5, 464.0), _RenderSnapshotWidget#44830@Offset(173.5, 464.0), RenderRepaintBoundary#41b82@Offset(173.5, 464.0), RenderSemanticsAnnotations#d5232@Offset(173.5, 464.0), RenderOffstage#cbbc8@Offset(173.5, 464.0), RenderSemanticsAnnotations#0bbf0@Offset(173.5, 464.0), _RenderTheater#e4b0b@Offset(173.5, 464.0), RenderAbsorbPointer#7795f@Offset(173.5, 464.0), RenderPointerListener#f2436@Offset(173.5, 464.0), RenderSemanticsAnnotations#4114c@Offset(173.5, 464.0), RenderCustomPaint#4d87a@Offset(173.5, 464.0), RenderSemanticsAnnotations#84597@Offset(173.5, 464.0), RenderSemanticsAnnotations#1e361@Offset(173.5, 464.0), RenderTapRegionSurface#ee692@Offset(173.5, 464.0), RenderSemanticsAnnotations#d8da3@Offset(173.5, 464.0), RenderSemanticsAnnotations#b4f28@Offset(173.5, 464.0), RenderSemanticsAnnotations#6824c@Offset(173.5, 464.0), HitTestEntry<HitTestTarget>#b5207(_ReusableRenderView#0331a), HitTestEntry<HitTestTarget>#38cb7(<AutomatedTestWidgetsFlutterBinding>))
+The finder corresponds to this RenderBox: RenderParagraph#5faac relayoutBoundary=up8
+The hit test result at that offset is: HitTestResult(RenderParagraph#d336a@Offset(161.5, 14.0), RenderAnimatedOpacity#25028@Offset(161.5, 14.0), _RenderDecoration#80234@Offset(173.5, 26.0), RenderPointerListener#a59f3@Offset(173.5, 26.0), RenderSemanticsGestureHandler#9fcd4@Offset(173.5, 26.0), RenderMouseRegion#b88b4@Offset(173.5, 26.0), RenderSemanticsAnnotations#df284@Offset(173.5, 26.0), RenderSemanticsAnnotations#4c3bd@Offset(173.5, 26.0), RenderSemanticsAnnotations#dee07@Offset(173.5, 26.0), RenderSemanticsAnnotations#d5055@Offset(173.5, 26.0), RenderFlex#6d3c2@Offset(173.5, 26.0), RenderFlex#54a8d@Offset(173.5, 54.0), RenderPadding#714bd@Offset(173.5, 62.0), RenderFlex#fff08@Offset(173.5, 464.0), _RenderSingleChildViewport#b75bf@Offset(173.5, 464.0), RenderIgnorePointer#d2a88@Offset(173.5, 464.0), RenderSemanticsAnnotations#8551c@Offset(173.5, 464.0), RenderPointerListener#339f5@Offset(173.5, 464.0), RenderSemanticsGestureHandler#6d008@Offset(173.5, 464.0), RenderPointerListener#6ce2a@Offset(173.5, 464.0), _RenderScrollSemantics#6b6e1@Offset(173.5, 464.0), RenderClipRect#34004@Offset(173.5, 464.0), RenderCustomMultiChildLayoutBox#0a7ec@Offset(173.5, 464.0), _RenderInkFeatures#962a6@Offset(173.5, 464.0), RenderPhysicalModel#a42e1@Offset(173.5, 464.0), RenderSemanticsAnnotations#f328a@Offset(173.5, 464.0), RenderRepaintBoundary#bd90f@Offset(173.5, 464.0), RenderIgnorePointer#42a52@Offset(173.5, 464.0), _RenderSnapshotWidget#7b43d@Offset(173.5, 464.0), _RenderSnapshotWidget#e518d@Offset(173.5, 464.0), _RenderSnapshotWidget#9962d@Offset(173.5, 464.0), _RenderSnapshotWidget#57ab9@Offset(173.5, 464.0), RenderRepaintBoundary#590a5@Offset(173.5, 464.0), RenderSemanticsAnnotations#8bb6a@Offset(173.5, 464.0), RenderOffstage#2ccf3@Offset(173.5, 464.0), RenderSemanticsAnnotations#c4486@Offset(173.5, 464.0), _RenderTheater#cd49e@Offset(173.5, 464.0), RenderAbsorbPointer#95946@Offset(173.5, 464.0), RenderPointerListener#72e9f@Offset(173.5, 464.0), RenderSemanticsAnnotations#6561b@Offset(173.5, 464.0), RenderCustomPaint#b0154@Offset(173.5, 464.0), RenderSemanticsAnnotations#5ac68@Offset(173.5, 464.0), RenderSemanticsAnnotations#522c9@Offset(173.5, 464.0), RenderTapRegionSurface#de79d@Offset(173.5, 464.0), RenderSemanticsAnnotations#887ab@Offset(173.5, 464.0), RenderSemanticsAnnotations#5e8b4@Offset(173.5, 464.0), RenderSemanticsAnnotations#adbfa@Offset(173.5, 464.0), HitTestEntry<HitTestTarget>#c22e4(_ReusableRenderView#d302f), HitTestEntry<HitTestTarget>#62136(<AutomatedTestWidgetsFlutterBinding>))
 #0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2077:25)
 #1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1861:12)
 #2      WidgetController.tap (package:flutter_test/src/controller.dart:1041:7)
@@ -5292,8 +5163,9 @@ To silence this warning, pass "warnIfMissed: false" to "tap()".
 To make this warning fatal, set WidgetController.hitTestWarningShouldBeFatal to true.
 
 🔍 GENERAL: storeValue: key="task.deadlineTime", value=18:00, valueType=String
++621 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/debug_panel/date_time_picker_widget_test.dart: DateTimePickerWidget should allow selecting deadline options
 🔍 GENERAL: getValue: key="task.deadlineTime", value=18:00, valueType=String, expectedType=String
-+626 -54: /Users/jpl/Dev/Apps/noexc/test/validation/asset_validator_test.dart: AssetValidator Comprehensive Validation should validate all sequences without critical errors
++627 -53: /Users/jpl/Dev/Apps/noexc/test/validation/asset_validator_test.dart: AssetValidator Comprehensive Validation should validate all sequences without critical errors
 Validation completed:
 Errors: 25
 Warnings: 91
@@ -5416,10 +5288,10 @@ Info: 0
   [info] MISSING_VARIANT_FILE: No variant file found at: assets/variants/updatetask_seq_message_202.txt (Message ID: 202) in sequence "updatetask_seq"
   [info] MISSING_VARIANT_FILE: No variant file found at: assets/variants/updatetask_seq_message_203.txt (Message ID: 203) in sequence "updatetask_seq"
   [info] MISSING_VARIANT_FILE: No variant file found at: assets/variants/updatetask_seq_message_208.txt (Message ID: 208) in sequence "updatetask_seq"
-+628 -54: /Users/jpl/Dev/Apps/noexc/test/widgets/user_variables_panel_test.dart: UserVariablesPanel shows debug information initially
++629 -53: /Users/jpl/Dev/Apps/noexc/test/widgets/user_variables_panel_test.dart: UserVariablesPanel shows debug information initially
 🔍 GENERAL: getValue: key "task.currentDate" not found in storage
 🔍 GENERAL: getValue: key "task.isActiveDay" not found in storage
 🔍 GENERAL: getValue: key "task.isPastDeadline" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
 🔍 GENERAL: getValue: key "task.deadlineTime" not found in storage
-+630 -54: Some tests failed.
++631 -53: Some tests failed.

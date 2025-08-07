@@ -5,6 +5,7 @@ import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/widgets/chat_screen/chat_state_manager.dart';
 import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'test_helpers.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ void main() {
     late ChatStateManager chatStateManager;
 
     setUp(() async {
+      setupSilentTesting();
       SharedPreferences.setMockInitialValues({});
       userDataService = UserDataService();
       sessionService = SessionService(userDataService);

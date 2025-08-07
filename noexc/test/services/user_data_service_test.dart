@@ -2,12 +2,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/services/user_data_service.dart';
+import '../test_helpers.dart';
 
 void main() {
   group('UserDataService', () {
     late UserDataService userDataService;
 
     setUp(() async {
+      setupQuietTesting();
       // Clear any existing preferences before each test
       SharedPreferences.setMockInitialValues({});
       userDataService = UserDataService();

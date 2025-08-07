@@ -152,3 +152,18 @@ start fixing the tests in test_failure_analysis.json one by one in the     │
 2) Run the flutter tests as quietly as possible
 3) Update test_failure_analysis.json with the failing tests
 3) fix the tests listed in test_failure_analysis.json one by one and update the document after.
+
+dart tool/test_analyzer.dart --failures-only --export-analysis test_failure_analysis.json
+
+Make a script to turn 'flutter test --machine' into a json with only failures with these data : 
+
+{
+    "name":
+    "file": 
+    "suite":
+    "group"
+    "error": 
+}
+  
+
+flutter test --machine | dart tool/test_failure_extractor.dart > failures.json

@@ -106,13 +106,7 @@ class SessionService {
     final isNewDay = originalLastVisitDate != today;
     final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
     
-    if (isNewDay && lastTaskDate != null) {
-      // Archive current day as previous day before updating
-      await _archivePreviousDay(lastTaskDate);
-      
-      // Check if previous day grace period expired
-      await _checkPreviousDayGracePeriod(now);
-    }
+    // Note: Previous day archiving and grace period logic moved to script
     
     // Note: task.currentDate is now set by the script via template functions
     // No need for complex date management logic here
@@ -139,72 +133,10 @@ class SessionService {
     
     // Compute derived task boolean values (after endDate is calculated)
     await _computeTaskBooleans(now);
-    
-    // Phase 1: Enhanced automatic status updates (run after status initialization)
-    await _checkCurrentDayDeadline(now);
-    await _updateStatusBasedOnContext(now);
   }
 
-  /// Archive current day task as previous day
-  Future<void> _archivePreviousDay(String lastTaskDate) async {
-    final lastStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
-    final lastTask = await userDataService.getValue<String>(StorageKeys.userTask);
-    
-    // Only archive if there was an actual task and it was pending
-    if (lastTask != null && lastStatus == 'pending') {
-      await userDataService.storeValue(StorageKeys.taskPreviousDate, lastTaskDate);
-      await userDataService.storeValue(StorageKeys.taskPreviousStatus, 'pending');
-      await userDataService.storeValue(StorageKeys.taskPreviousTask, lastTask);
-    }
-  }
 
-  /// Check if previous day grace period has expired
-  Future<void> _checkPreviousDayGracePeriod(DateTime now) async {
-    final previousStatus = await userDataService.getValue<String>(StorageKeys.taskPreviousStatus);
-    
-    if (previousStatus == 'pending') {
-      // Get deadline time using helper that handles both int and string formats
-      final deadlineTimeString = await _getDeadlineTimeAsString();
-      final deadlineParts = deadlineTimeString.split(':');
-      final deadlineHour = int.parse(deadlineParts[0]);
-      final deadlineMinute = int.parse(deadlineParts[1]);
-      
-      // Create today's deadline datetime
-      final todayDeadline = DateTime(now.year, now.month, now.day, deadlineHour, deadlineMinute);
-      
-      if (now.isAfter(todayDeadline)) {
-        // Grace period expired - mark previous day as failed
-        await userDataService.storeValue(StorageKeys.taskPreviousStatus, 'failed');
-        await _logStatusUpdate('previous_day', 'pending', 'failed', 'grace_period_expired');
-      }
-    }
-  }
 
-  /// Check if current day task is past deadline and update status
-  Future<void> _checkCurrentDayDeadline(DateTime now) async {
-    final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
-    final userTask = await userDataService.getValue<String>(StorageKeys.userTask);
-    
-    // Compute isActiveDay inline to avoid race conditions with concurrent recalculations
-    final isActiveDay = await _computeIsActiveDay(now);
-    
-    // Only check if task exists, is currently pending, AND today is an active day
-    if (currentStatus == 'pending' && userTask != null && isActiveDay) {
-      final deadlineTimeString = await _getDeadlineTimeAsString();
-      final deadlineParts = deadlineTimeString.split(':');
-      final deadlineHour = int.parse(deadlineParts[0]);
-      final deadlineMinute = int.parse(deadlineParts[1]);
-      
-      // Create today's deadline datetime
-      final todayDeadline = DateTime(now.year, now.month, now.day, deadlineHour, deadlineMinute);
-      
-      if (now.isAfter(todayDeadline)) {
-        // Past deadline - mark as overdue (allows recovery unlike "failed")
-        await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'overdue');
-        await _logStatusUpdate('current_day', 'pending', 'overdue', 'deadline_passed');
-      }
-    }
-  }
 
   /// Compute derived task boolean values for easier conditional routing
   Future<void> _computeTaskBooleans(DateTime now) async {
@@ -473,12 +405,6 @@ class SessionService {
     }
   }
 
-  /// Update task status based on contextual factors like time of day
-  Future<void> _updateStatusBasedOnContext(DateTime now) async {
-    // Note: Morning recovery logic removed - new days start as pending 
-    // and are immediately checked against deadline, which is the correct behavior
-    // No additional context-based updates needed at this time
-  }
 
   /// Get start time as string with migration for existing deadline-only users
   Future<String> _getStartTimeAsString() async {
@@ -547,14 +473,6 @@ class SessionService {
     }
   }
 
-  /// Log automatic status updates for transparency
-  Future<void> _logStatusUpdate(String scope, String oldStatus, String newStatus, String reason) async {
-    final now = DateTime.now();
-    final timestamp = '${_formatDate(now)} ${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
-    
-    await userDataService.storeValue(StorageKeys.taskLastAutoUpdate, timestamp);
-    await userDataService.storeValue(StorageKeys.taskAutoUpdateReason, '$scope: $oldStatus → $newStatus ($reason)');
-  }
   
   /// Helper method to format date consistently
   String _formatDate(DateTime date) {

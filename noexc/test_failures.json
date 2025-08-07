@@ -1,24 +1,10 @@
 {
     "metadata": {
-        "extracted_at": "2025-08-07T15:40:36.859151",
-        "total_failures": 20,
+        "extracted_at": "2025-08-07T16:12:29.582107",
+        "total_failures": 15,
         "extractor_version": "1.0.0"
     },
     "failures": [
-        {
-            "name": "Automatic Status Updates - Simple Tests should log deadline-based status updates with proper format",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_simple_test.dart",
-            "suite": "automatic_status_updates_simple",
-            "group": "Automatic Status Updates - Simple Tests",
-            "error": "Expected: contains 'current_day: pending → overdue (deadline_passed)'\n  Actual: <null>\n   Which: is not a string, map or iterable\n",
-            "testId": 193,
-            "line": 72,
-            "column": 5,
-            "stackTrace": "package:matcher                                               expect\npackage:flutter_test/src/widget_tester.dart 474:18            expect\ntest/services/automatic_status_updates_simple_test.dart 88:9  main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 5103,
-            "category": "assertion"
-        },
         {
             "name": "App loads chat screen",
             "file": "package:flutter_test/src/widget_tester.dart",
@@ -30,36 +16,8 @@
             "column": 5,
             "stackTrace": "",
             "isFailure": false,
-            "timestamp": 5216,
+            "timestamp": 5441,
             "category": "unknown"
-        },
-        {
-            "name": "Previous Day Grace Period Tests should archive task on new day",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/previous_day_grace_period_test.dart",
-            "suite": "previous_day_grace_period",
-            "group": "Previous Day Grace Period Tests",
-            "error": "Expected: ('2025-08-07' or null)\n  Actual: '2025-08-06'\n",
-            "testId": 373,
-            "line": 33,
-            "column": 5,
-            "stackTrace": "package:matcher                                         expect\npackage:flutter_test/src/widget_tester.dart 474:18      expect\ntest/services/previous_day_grace_period_test.dart 51:7  main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 8074,
-            "category": "assertion"
-        },
-        {
-            "name": "DataActionProcessor Template Functions should resolve NEXT_ACTIVE_DATE_1 when today is active",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/data_action_processor_test.dart",
-            "suite": "data_action_processor",
-            "group": "DataActionProcessor > DataActionProcessor Template Functions",
-            "error": "Expected: '2025-08-07'\n  Actual: '2025-08-14'\n   Which: is different.\n          Expected: 2025-08-07\n            Actual: 2025-08-14\n                            ^\n           Differ at offset 8\n",
-            "testId": 432,
-            "line": 369,
-            "column": 7,
-            "stackTrace": "package:matcher                                      expect\npackage:flutter_test/src/widget_tester.dart 474:18   expect\ntest/services/data_action_processor_test.dart 384:9  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 8926,
-            "category": "assertion"
         },
         {
             "name": "Active Day Logic Fixes Problem 1: isActiveDay Logic with activeDays should return true when no activeDays configured (backward compatibility)",
@@ -67,12 +25,12 @@
             "suite": "active_day_logic_fixes",
             "group": "Active Day Logic Fixes > Active Day Logic Fixes Problem 1: isActiveDay Logic with activeDays",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 647,
+            "testId": 619,
             "line": 66,
             "column": 7,
             "stackTrace": "package:matcher                                      expect\npackage:flutter_test/src/widget_tester.dart 474:18   expect\ntest/services/active_day_logic_fixes_test.dart 78:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 10940,
+            "timestamp": 10565,
             "category": "assertion"
         },
         {
@@ -81,54 +39,12 @@
             "suite": "active_day_logic_fixes",
             "group": "Active Day Logic Fixes > Active Day Logic Fixes Problem 1: isActiveDay Logic with activeDays",
             "error": "Expected: <false>\n  Actual: <true>\n",
-            "testId": 648,
+            "testId": 620,
             "line": 81,
             "column": 7,
             "stackTrace": "package:matcher                                      expect\npackage:flutter_test/src/widget_tester.dart 474:18   expect\ntest/services/active_day_logic_fixes_test.dart 93:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 10960,
-            "category": "assertion"
-        },
-        {
-            "name": "Automatic Status Updates (Phase 1) Current Day Deadline Checks should mark pending task as overdue after deadline",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_test.dart",
-            "suite": "automatic_status_updates",
-            "group": "Automatic Status Updates (Phase 1) > Automatic Status Updates (Phase 1) Current Day Deadline Checks",
-            "error": "Expected: 'overdue'\n  Actual: 'pending'\n   Which: is different.\n          Expected: overdue\n            Actual: pending\n                    ^\n           Differ at offset 0\n",
-            "testId": 688,
-            "line": 20,
-            "column": 7,
-            "stackTrace": "package:matcher                                         expect\npackage:flutter_test/src/widget_tester.dart 474:18      expect\ntest/services/automatic_status_updates_test.dart 40:11  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11456,
-            "category": "assertion"
-        },
-        {
-            "name": "Automatic Status Updates (Phase 1) Current Day Deadline Checks should mark as overdue only when active day and past deadline",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_test.dart",
-            "suite": "automatic_status_updates",
-            "group": "Automatic Status Updates (Phase 1) > Automatic Status Updates (Phase 1) Current Day Deadline Checks",
-            "error": "Expected: 'overdue'\n  Actual: 'pending'\n   Which: is different.\n          Expected: overdue\n            Actual: pending\n                    ^\n           Differ at offset 0\n",
-            "testId": 692,
-            "line": 94,
-            "column": 7,
-            "stackTrace": "package:matcher                                          expect\npackage:flutter_test/src/widget_tester.dart 474:18       expect\ntest/services/automatic_status_updates_test.dart 112:11  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11498,
-            "category": "assertion"
-        },
-        {
-            "name": "Automatic Status Updates (Phase 1) Status Update Logging should log automatic status updates with timestamp when deadline passes",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/automatic_status_updates_test.dart",
-            "suite": "automatic_status_updates",
-            "group": "Automatic Status Updates (Phase 1) > Automatic Status Updates (Phase 1) Status Update Logging",
-            "error": "Expected: not null\n  Actual: <null>\n",
-            "testId": 698,
-            "line": 174,
-            "column": 7,
-            "stackTrace": "package:matcher                                          expect\npackage:flutter_test/src/widget_tester.dart 474:18       expect\ntest/services/automatic_status_updates_test.dart 195:11  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11527,
+            "timestamp": 10584,
             "category": "assertion"
         },
         {
@@ -137,12 +53,12 @@
             "suite": "task_boolean_computation",
             "group": "Task Boolean Computation Tests > Task Boolean Computation Tests isActiveDay Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 709,
+            "testId": 660,
             "line": 19,
             "column": 7,
             "stackTrace": "package:matcher                                        expect\npackage:flutter_test/src/widget_tester.dart 474:18     expect\ntest/services/task_boolean_computation_test.dart 25:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 11687,
+            "timestamp": 11107,
             "category": "assertion"
         },
         {
@@ -151,12 +67,26 @@
             "suite": "task_boolean_computation",
             "group": "Task Boolean Computation Tests > Task Boolean Computation Tests isActiveDay Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 715,
+            "testId": 666,
             "line": 94,
             "column": 7,
             "stackTrace": "package:matcher                                         expect\npackage:flutter_test/src/widget_tester.dart 474:18      expect\ntest/services/task_boolean_computation_test.dart 102:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 11729,
+            "timestamp": 11154,
+            "category": "assertion"
+        },
+        {
+            "name": "SessionService should archive previous day task when moving to new day",
+            "file": "/Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart",
+            "suite": "session_service",
+            "group": "SessionService",
+            "error": "Expected: '2025-08-06'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
+            "testId": 750,
+            "line": 146,
+            "column": 5,
+            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 170:9       main.<fn>.<fn>\n",
+            "isFailure": true,
+            "timestamp": 12537,
             "category": "assertion"
         },
         {
@@ -165,12 +95,12 @@
             "suite": "session_service",
             "group": "SessionService > SessionService Task End Date Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 830,
+            "testId": 781,
             "line": 530,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 539:9       main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13088,
+            "timestamp": 12637,
             "category": "assertion"
         },
         {
@@ -179,12 +109,12 @@
             "suite": "session_service",
             "group": "SessionService > SessionService Task End Date Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 841,
+            "testId": 792,
             "line": 594,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 599:9       main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13111,
+            "timestamp": 12662,
             "category": "assertion"
         },
         {
@@ -193,12 +123,12 @@
             "suite": "session_service",
             "group": "SessionService > SessionService Task End Date Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 843,
+            "testId": 794,
             "line": 610,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 623:9       main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13118,
+            "timestamp": 12670,
             "category": "assertion"
         },
         {
@@ -207,12 +137,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Basic Message Flow",
             "error": "Expected: contains <1>\n  Actual: [2, 160, 160, 161]\n   Which: does not contain <1>\n",
-            "testId": 839,
+            "testId": 785,
             "line": 18,
             "column": 7,
             "stackTrace": "package:matcher                                                   expect\npackage:flutter_test/src/widget_tester.dart 474:18                expect\ntest/services/flow/clean_architecture_integration_test.dart 30:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13146,
+            "timestamp": 12688,
             "category": "assertion"
         },
         {
@@ -221,12 +151,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Message Processing",
             "error": "Expected: non-empty\n  Actual: []\n",
-            "testId": 862,
+            "testId": 809,
             "line": 79,
             "column": 7,
             "stackTrace": "package:matcher                                                   expect\npackage:flutter_test/src/widget_tester.dart 474:18                expect\ntest/services/flow/clean_architecture_integration_test.dart 87:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13156,
+            "timestamp": 12701,
             "category": "assertion"
         },
         {
@@ -235,12 +165,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests State Management",
             "error": "Expected: true\n  Actual: <false>\n",
-            "testId": 875,
+            "testId": 824,
             "line": 142,
             "column": 7,
             "stackTrace": "package:matcher                                                    expect\npackage:flutter_test/src/widget_tester.dart 474:18                 expect\ntest/services/flow/clean_architecture_integration_test.dart 146:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13175,
+            "timestamp": 12722,
             "category": "assertion"
         },
         {
@@ -249,12 +179,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Backward Compatibility",
             "error": "Expected: true\n  Actual: <false>\n",
-            "testId": 879,
+            "testId": 827,
             "line": 156,
             "column": 7,
             "stackTrace": "package:matcher                                                    expect\npackage:flutter_test/src/widget_tester.dart 474:18                 expect\ntest/services/flow/clean_architecture_integration_test.dart 166:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13180,
+            "timestamp": 12728,
             "category": "assertion"
         },
         {
@@ -263,12 +193,12 @@
             "suite": "message_walker",
             "group": "MessageWalker > MessageWalker Special Messages",
             "error": "Expected: an object with length of <3>\n  Actual: [Instance of 'ChatMessage', Instance of 'ChatMessage']\n   Which: has length of <2>\n",
-            "testId": 902,
+            "testId": 853,
             "line": 158,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/flow/message_walker_test.dart 171:9   main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13355,
+            "timestamp": 12919,
             "category": "assertion"
         },
         {
@@ -277,12 +207,12 @@
             "suite": "message_walker",
             "group": "MessageWalker > MessageWalker Complex Scenarios",
             "error": "Expected: an object with length of <4>\n  Actual: [\n            Instance of 'ChatMessage',\n            Instance of 'ChatMessage',\n            Instance of 'ChatMessage'\n          ]\n   Which: has length of <3>\n",
-            "testId": 907,
+            "testId": 858,
             "line": 218,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/flow/message_walker_test.dart 235:9   main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13363,
+            "timestamp": 12928,
             "category": "assertion"
         }
     ]

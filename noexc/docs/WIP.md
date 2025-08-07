@@ -140,30 +140,7 @@ After setting the task, if the user *FIRST* checks in on :
   - Task: task.startTime, task.deadlineTime, task.activeDays,
   task.currentStatus, etc.
 
-1) run the tests as quietly as possible
-2) list all failing tests
-3) group tests with a common cause
-4) output a machine readable document that list the failures with the appropriate info for prioritizing fixes later (id, name, cause + whatever you feel useful)
-
-start fixing the tests in test_failure_analysis.json one by one in the     │
-│ order you feel optimal and update the file as you do
-
-1) Read AGENTS.md
-2) Run the flutter tests as quietly as possible
-3) Update test_failure_analysis.json with the failing tests
-3) fix the tests listed in test_failure_analysis.json one by one and update the document after.
-
-dart tool/test_analyzer.dart --failures-only --export-analysis test_failure_analysis.json
-
-Make a script to turn 'flutter test --machine' into a json with only failures with these data : 
-
-{
-    "name":
-    "file": 
-    "suite":
-    "group"
-    "error": 
-}
   
 
 flutter test --machine | dart tool/test_failure_extractor.dart > failures.json
+

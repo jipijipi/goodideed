@@ -140,4 +140,6 @@ After setting the task, if the user *FIRST* checks in on :
   - Task: task.startTime, task.deadlineTime, task.activeDays,
   task.currentStatus, etc.
 
+1) In tests like test/initialization_test.dart, the test outputs includes all debug logs when they are not really needed by the test, is there a way to adapt the test or the logger so that the debug logs don't pollute the tests output? 
 
+2) run test/initialization_test.dart as needed Discuss possible solutions, dont code yet

@@ -28,8 +28,8 @@ void main() {
         // Check that we have the expected message IDs in sequence
         final messageIds = initialMessages.map((m) => m.id).toList();
         expect(messageIds, contains(1)); // First message
-        expect(messageIds, contains(6)); // Second message (may be expanded)
-        expect(messageIds, contains(7)); // Choice message
+        expect(messageIds, contains(160)); // Second message (may be expanded)
+        expect(messageIds, contains(161)); // Choice message
         
         // All messages should be displayable (no autoroute/dataAction in final result)
         final hasHiddenMessages = initialMessages.any((m) => m.type == MessageType.autoroute || m.type == MessageType.dataAction);

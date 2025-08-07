@@ -104,7 +104,7 @@ class SessionService {
     
     // Check if this is a new calendar day using the original session date
     final isNewDay = originalLastVisitDate != today;
-    final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
+    //final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
     
     // Note: Previous day archiving and grace period logic moved to script
     

@@ -24,7 +24,9 @@ class DataActionProcessor {
   Future<void> processActions(List<DataAction> actions) async {
     if (actions.isEmpty) return;
     
-    _logger.debug('Processing ${actions.length} dataActions', component: LogComponent.dataActionProcessor);
+    // Summary debug log showing action types instead of individual action logging
+    final actionSummary = actions.map((a) => '${a.type.name}(${a.key})').join(', ');
+    _logger.debug('Processing ${actions.length} dataActions: $actionSummary', component: LogComponent.dataActionProcessor);
         
     for (final action in actions) {
       await _processAction(action);
@@ -36,8 +38,6 @@ class DataActionProcessor {
       case DataActionType.set:
         final resolvedValue = await _resolveTemplateFunction(action.value);
         await _userDataService.storeValue(action.key, resolvedValue);
-        _logger.debug('SET ${action.key} = $resolvedValue', 
-            component: LogComponent.dataActionProcessor);
         break;
       case DataActionType.increment:
         await _incrementValue(action.key, action.value ?? DataActionConstants.defaultIncrementValue);
@@ -58,26 +58,22 @@ class DataActionProcessor {
     final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
     final newValue = currentValue + (incrementBy as int);
     await _userDataService.storeValue(key, newValue);
-    _logger.debug('INCREMENT $key = $newValue', component: LogComponent.dataActionProcessor);
   }
 
   Future<void> _decrementValue(String key, dynamic decrementBy) async {
     final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
     final newValue = currentValue - (decrementBy as int);
     await _userDataService.storeValue(key, newValue);
-    _logger.debug('DECREMENT $key = $newValue', component: LogComponent.dataActionProcessor);
   }
 
   Future<void> _resetValue(String key, dynamic resetValue) async {
     await _userDataService.storeValue(key, resetValue);
-    _logger.debug('RESET $key = $resetValue', component: LogComponent.dataActionProcessor);
   }
 
   Future<void> _processTrigger(DataAction action) async {
     if (_onEvent != null && action.event != null) {
       try {
         await _onEvent!(action.event!, action.data ?? {});
-        _logger.debug('TRIGGER ${action.event}', component: LogComponent.dataActionProcessor);
       } catch (e) {
         _logger.warning('Trigger failed: ${action.event} - $e', 
             component: LogComponent.dataActionProcessor);

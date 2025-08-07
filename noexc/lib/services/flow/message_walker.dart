@@ -37,8 +37,6 @@ class MessageWalker {
   /// 3. End of chain (no next message available) - natural end
   /// 4. Max depth reached - safety mechanism
   WalkResult walkFrom(int startId, MessageProvider provider) {
-    logger.debug('Starting walk from message ID: $startId');
-    
     final List<ChatMessage> messages = [];
     int? currentId = startId;
     int walkDepth = 0;
@@ -48,7 +46,6 @@ class MessageWalker {
       
       // Check if message exists
       if (!provider.hasMessage(currentId)) {
-        logger.debug('Message $currentId not found, ending walk');
         return WalkResult.success(
           messages: messages,
           stopReason: WalkStopReason.endOfChain,
@@ -57,14 +54,12 @@ class MessageWalker {
       }
       
       final ChatMessage message = provider.getMessage(currentId)!;
-      logger.debug('Walking message ${message.id} of type ${message.type}');
       
       // Always collect the message first
       messages.add(message);
       
       // Stop at interactive messages - they need user input to continue
       if (message.type == MessageType.choice || message.type == MessageType.textInput) {
-        logger.debug('Stopped at interactive message ${message.id}');
         return WalkResult.success(
           messages: messages,
           stopReason: WalkStopReason.interactiveMessage,
@@ -75,7 +70,6 @@ class MessageWalker {
       
       // Stop at autoroute messages - they need route processing to determine next message
       if (message.type == MessageType.autoroute) {
-        logger.debug('Stopped at autoroute message ${message.id}');
         return WalkResult.success(
           messages: messages,
           stopReason: WalkStopReason.endOfChain,
@@ -86,7 +80,6 @@ class MessageWalker {
       
       // Stop at sequence boundaries - they need sequence transition
       if (message.sequenceId != null) {
-        logger.debug('Stopped at sequence boundary, target: ${message.sequenceId}');
         return WalkResult.success(
           messages: messages,
           stopReason: WalkStopReason.sequenceBoundary,

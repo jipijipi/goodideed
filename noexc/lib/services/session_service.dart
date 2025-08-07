@@ -259,6 +259,13 @@ class SessionService {
     await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
   }
 
+  /// Public method to recalculate only the isPastEndDate flag without touching the endDate
+  Future<void> recalculatePastEndDate() async {
+    final now = DateTime.now();
+    final isPastEndDate = await _computeIsPastEndDate(now);
+    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
+  }
+
   /// Public method to recalculate task.endDate (called by dataAction triggers)
   Future<void> recalculateTaskEndDate() async {
     final now = DateTime.now();

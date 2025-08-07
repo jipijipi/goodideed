@@ -1,50 +1,22 @@
 {
     "metadata": {
-        "extracted_at": "2025-08-07T16:37:08.457228",
-        "total_failures": 9,
+        "extracted_at": "2025-08-07T17:34:49.655796",
+        "total_failures": 7,
         "extractor_version": "1.0.0"
     },
     "failures": [
-        {
-            "name": "SessionService Task End Date Computation should compute isPastEndDate as true when end date is before today",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart",
-            "suite": "session_service",
-            "group": "SessionService > SessionService Task End Date Computation",
-            "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 777,
-            "line": 457,
-            "column": 7,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 466:9       main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 13112,
-            "category": "assertion"
-        },
-        {
-            "name": "SessionService Task End Date Computation should compute correctly for dates far in the past",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart",
-            "suite": "session_service",
-            "group": "SessionService > SessionService Task End Date Computation",
-            "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 788,
-            "line": 521,
-            "column": 7,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 526:9       main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 13135,
-            "category": "assertion"
-        },
         {
             "name": "SessionService Task End Date Computation should not interfere with existing boolean computations",
             "file": "/Users/jpl/Dev/Apps/noexc/test/services/session_service_test.dart",
             "suite": "session_service",
             "group": "SessionService > SessionService Task End Date Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 790,
-            "line": 537,
+            "testId": 786,
+            "line": 538,
             "column": 7,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 550:9       main.<fn>.<fn>.<fn>\n",
+            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 551:9       main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13144,
+            "timestamp": 12708,
             "category": "assertion"
         },
         {
@@ -53,12 +25,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Basic Message Flow",
             "error": "Expected: contains <1>\n  Actual: [2, 160, 160, 161]\n   Which: does not contain <1>\n",
-            "testId": 786,
+            "testId": 820,
             "line": 18,
             "column": 7,
             "stackTrace": "package:matcher                                                   expect\npackage:flutter_test/src/widget_tester.dart 474:18                expect\ntest/services/flow/clean_architecture_integration_test.dart 30:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13175,
+            "timestamp": 12866,
             "category": "assertion"
         },
         {
@@ -67,12 +39,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Message Processing",
             "error": "Expected: non-empty\n  Actual: []\n",
-            "testId": 810,
+            "testId": 825,
             "line": 79,
             "column": 7,
             "stackTrace": "package:matcher                                                   expect\npackage:flutter_test/src/widget_tester.dart 474:18                expect\ntest/services/flow/clean_architecture_integration_test.dart 87:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13188,
+            "timestamp": 12878,
             "category": "assertion"
         },
         {
@@ -81,12 +53,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests State Management",
             "error": "Expected: true\n  Actual: <false>\n",
-            "testId": 823,
+            "testId": 832,
             "line": 142,
             "column": 7,
             "stackTrace": "package:matcher                                                    expect\npackage:flutter_test/src/widget_tester.dart 474:18                 expect\ntest/services/flow/clean_architecture_integration_test.dart 146:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13210,
+            "timestamp": 12898,
             "category": "assertion"
         },
         {
@@ -95,12 +67,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Backward Compatibility",
             "error": "Expected: true\n  Actual: <false>\n",
-            "testId": 827,
+            "testId": 834,
             "line": 156,
             "column": 7,
             "stackTrace": "package:matcher                                                    expect\npackage:flutter_test/src/widget_tester.dart 474:18                 expect\ntest/services/flow/clean_architecture_integration_test.dart 166:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13216,
+            "timestamp": 12904,
             "category": "assertion"
         },
         {
@@ -114,7 +86,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/flow/message_walker_test.dart 171:9   main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13416,
+            "timestamp": 13110,
             "category": "assertion"
         },
         {
@@ -128,7 +100,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/flow/message_walker_test.dart 235:9   main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 13424,
+            "timestamp": 13127,
             "category": "assertion"
         }
     ]

@@ -448,7 +448,8 @@ void main() {
         final todayString = _formatDate(today);
         
         await userDataService.storeValue(StorageKeys.taskEndDate, todayString);
-        await sessionService.initializeSession();
+        // Only recompute the past-end-date boolean without changing the endDate
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -460,7 +461,7 @@ void main() {
         final yesterdayString = _formatDate(yesterday);
         
         await userDataService.storeValue(StorageKeys.taskEndDate, yesterdayString);
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, true);
@@ -472,7 +473,7 @@ void main() {
         final tomorrowString = _formatDate(tomorrow);
         
         await userDataService.storeValue(StorageKeys.taskEndDate, tomorrowString);
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -480,7 +481,7 @@ void main() {
 
       test('should default to false when task end date is null', () async {
         // Don't set any end date
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -488,7 +489,7 @@ void main() {
 
       test('should default to false when task end date is empty', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -496,7 +497,7 @@ void main() {
 
       test('should default to false when task end date has invalid format', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, 'invalid-date');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -504,7 +505,7 @@ void main() {
 
       test('should default to false when task end date has partial format', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '2024-12');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -512,7 +513,7 @@ void main() {
 
       test('should handle date parsing exceptions gracefully', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, 'completely-invalid-date');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -520,7 +521,7 @@ void main() {
 
       test('should compute correctly for dates far in the past', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '2020-01-01');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, true);
@@ -528,7 +529,7 @@ void main() {
 
       test('should compute correctly for dates far in the future', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '2030-12-31');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);

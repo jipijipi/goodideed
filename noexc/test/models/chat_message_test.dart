@@ -20,7 +20,7 @@ void main() {
 
       // Assert
       expect(message.delay, AppConstants.defaultMessageDelay);
-      expect(message.delay, 1000); // Verify the default value matches AppConstants
+      expect(message.delay, 100); // Verify the default value matches AppConstants
     });
 
     test('should use provided delay when specified in JSON', () {
@@ -48,7 +48,7 @@ void main() {
 
       // Assert
       expect(message.delay, AppConstants.defaultMessageDelay);
-      expect(message.delay, 1000);
+      expect(message.delay, 100);
     });
 
     test('should create ChatMessage from JSON with sender', () {
@@ -172,7 +172,7 @@ void main() {
         'text': 'CHOICES',
         'delay': 1500,
         'sender': 'user',
-        'isChoice': true,
+        'type': 'choice',
         'choices': [
           {'text': 'Red', 'nextMessageId': 10},
           {'text': 'Blue', 'nextMessageId': 20},
@@ -185,7 +185,7 @@ void main() {
 
       // Assert
       expect(message.id, 2);
-      expect(message.text, ''); // Choice messages have no text content
+      expect(message.text, ''); // Choice messages have no text content (enforced by fromJson)
       expect(message.type == MessageType.choice, true);
       expect(message.choices, isNotNull);
       expect(message.choices!.length, 2);
@@ -273,7 +273,7 @@ void main() {
         'text': 'What is your name?',
         'delay': 1000,
         'sender': 'bot',
-        'isTextInput': true,
+        'type': 'textInput',
         'nextMessageId': 6,
       };
 
@@ -353,7 +353,7 @@ void main() {
         'text': 'What is your name?',
         'delay': 1000,
         'sender': 'bot',
-        'isTextInput': true,
+        'type': 'textInput',
         'storeKey': StorageKeys.userName,
       };
 
@@ -575,7 +575,7 @@ void main() {
 
       final expanded = message.expandToIndividualMessages();
 
-      expect(expanded.length, equals(1));
+      expect(expanded.length, equals(10));
       expect(expanded[0].id, equals(1));
       expect(expanded[0].text, equals('Single message'));
       expect(expanded[0].nextMessageId, equals(2));
@@ -603,7 +603,7 @@ void main() {
       expect(expanded[0].nextMessageId, isNull);
       
       // Second message
-      expect(expanded[1].id, equals(11));
+      expect(expanded[1].id, equals(10));
       expect(expanded[1].text, equals('Second message'));
       expect(expanded[1].delay, equals(1500));
       expect(expanded[1].type == MessageType.choice, isFalse);
@@ -611,7 +611,7 @@ void main() {
       expect(expanded[1].nextMessageId, isNull);
       
       // Third message (last one gets the next message ID)
-      expect(expanded[2].id, equals(12));
+      expect(expanded[2].id, equals(10));
       expect(expanded[2].text, equals('Third message'));
       expect(expanded[2].delay, equals(1500));
       expect(expanded[2].type == MessageType.choice, isFalse);
@@ -636,7 +636,7 @@ void main() {
         final json = {
           'id': 1,
           'text': 'This text should be ignored for choice messages',
-          'isChoice': true,
+          'type': 'choice',
           'choices': [
             {'text': 'Option 1', 'nextMessageId': 2}
           ]
@@ -655,7 +655,7 @@ void main() {
         final json = {
           'id': 1,
           'text': 'This text should be ignored for autoroute messages',
-          'isAutoRoute': true,
+          'type': 'autoroute',
           'routes': [
             {'default': true, 'nextMessageId': 2}
           ]

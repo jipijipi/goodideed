@@ -537,10 +537,10 @@ void main() {
 
       test('should not interfere with existing boolean computations', () async {
         final today = DateTime.now();
-        final yesterdayString = _formatDate(today.subtract(const Duration(days: 1)));
+        final twoDaysAgoString = _formatDate(today.subtract(const Duration(days: 2)));
         
-        await userDataService.storeValue(StorageKeys.taskEndDate, yesterdayString);
-        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        // Set taskCurrentDate to 2 days ago so computed taskEndDate becomes yesterday
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, twoDaysAgoString);
         await sessionService.initializeSession();
         
         // All boolean fields should be computed independently
@@ -548,7 +548,7 @@ void main() {
         final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
         final isPastDeadline = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
         
-        expect(isPastEndDate, true); // end date computation
+        expect(isPastEndDate, true); // end date computation (yesterday < today)
         expect(isActiveDay, isNotNull); // other computations should still work
         expect(isPastDeadline, isNotNull);
       });

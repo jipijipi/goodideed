@@ -40,4 +40,9 @@ class FormatterService {
     final String key = rawValue.toString();
     return formatter[key];
   }
+
+  /// Clear the cached formatters (primarily for testing)
+  void clearCache() {
+    _formatters.clear();
+  }
 }

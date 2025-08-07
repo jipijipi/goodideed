@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "extracted_at": "2025-08-07T14:08:44.682725",
-        "total_failures": 37,
+        "extracted_at": "2025-08-07T15:40:36.859151",
+        "total_failures": 20,
         "extractor_version": "1.0.0"
     },
     "failures": [
@@ -16,7 +16,7 @@
             "column": 5,
             "stackTrace": "package:matcher                                               expect\npackage:flutter_test/src/widget_tester.dart 474:18            expect\ntest/services/automatic_status_updates_simple_test.dart 88:9  main.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 5074,
+            "timestamp": 5103,
             "category": "assertion"
         },
         {
@@ -30,175 +30,21 @@
             "column": 5,
             "stackTrace": "",
             "isFailure": false,
-            "timestamp": 5235,
+            "timestamp": 5216,
             "category": "unknown"
-        },
-        {
-            "name": "MessageProcessor Semantic Content Integration Bot Message Processing should process message with contentKey",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service/message_processor_semantic_test.dart",
-            "suite": "message_processor_semantic",
-            "group": "MessageProcessor Semantic Content Integration > MessageProcessor Semantic Content Integration Bot Message Processing",
-            "error": "Expected: not 'Original fallback text'\n  Actual: 'Original fallback text'\n",
-            "testId": 217,
-            "line": 20,
-            "column": 7,
-            "stackTrace": "package:matcher                                                       expect\npackage:flutter_test/src/widget_tester.dart 474:18                    expect\ntest/services/chat_service/message_processor_semantic_test.dart 39:9  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 5968,
-            "category": "assertion"
-        },
-        {
-            "name": "MessageProcessor Semantic Content Integration Choice Message Processing should process choice message with contentKey",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service/message_processor_semantic_test.dart",
-            "suite": "message_processor_semantic",
-            "group": "MessageProcessor Semantic Content Integration > MessageProcessor Semantic Content Integration Choice Message Processing",
-            "error": "Expected: not 'Completed'\n  Actual: 'Completed'\n",
-            "testId": 222,
-            "line": 113,
-            "column": 7,
-            "stackTrace": "package:matcher                                                        expect\npackage:flutter_test/src/widget_tester.dart 474:18                     expect\ntest/services/chat_service/message_processor_semantic_test.dart 146:9  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 5981,
-            "category": "assertion"
-        },
-        {
-            "name": "MessageProcessor Semantic Content Integration Choice Message Processing should handle mixed choices (some with contentKey, some without)",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service/message_processor_semantic_test.dart",
-            "suite": "message_processor_semantic",
-            "group": "MessageProcessor Semantic Content Integration > MessageProcessor Semantic Content Integration Choice Message Processing",
-            "error": "Expected: not 'Completed'\n  Actual: 'Completed'\n",
-            "testId": 224,
-            "line": 176,
-            "column": 7,
-            "stackTrace": "package:matcher                                                        expect\npackage:flutter_test/src/widget_tester.dart 474:18                     expect\ntest/services/chat_service/message_processor_semantic_test.dart 200:9  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 5987,
-            "category": "assertion"
-        },
-        {
-            "name": "MessageProcessor Semantic Content Integration Legacy Compatibility should prioritize semantic content over legacy variants when contentKey present",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service/message_processor_semantic_test.dart",
-            "suite": "message_processor_semantic",
-            "group": "MessageProcessor Semantic Content Integration > MessageProcessor Semantic Content Integration Legacy Compatibility",
-            "error": "Expected: not 'Legacy fallback text'\n  Actual: 'Legacy fallback text'\n",
-            "testId": 229,
-            "line": 257,
-            "column": 7,
-            "stackTrace": "package:matcher                                                        expect\npackage:flutter_test/src/widget_tester.dart 474:18                     expect\ntest/services/chat_service/message_processor_semantic_test.dart 275:9  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 5996,
-            "category": "assertion"
-        },
-        {
-            "name": "MessageProcessor Semantic Content Integration Template Processing Integration should apply template processing after semantic content resolution",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service/message_processor_semantic_test.dart",
-            "suite": "message_processor_semantic",
-            "group": "MessageProcessor Semantic Content Integration > MessageProcessor Semantic Content Integration Template Processing Integration",
-            "error": "Expected: not 'Fallback with {user.name|friend}'\n  Actual: 'Fallback with {user.name|friend}'\n",
-            "testId": 231,
-            "line": 281,
-            "column": 7,
-            "stackTrace": "package:matcher                                                        expect\npackage:flutter_test/src/widget_tester.dart 474:18                     expect\ntest/services/chat_service/message_processor_semantic_test.dart 299:9  main.<fn>.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 6002,
-            "category": "assertion"
-        },
-        {
-            "name": "ChatService should load chat messages from JSON",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service_test.dart",
-            "suite": "chat_service",
-            "group": "ChatService",
-            "error": "Expected: 'Hi|||I\\'m Tristopher|||But my friends call me Trist.'\n  Actual: 'Here is how it\\'s going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I\\'ll be here to make sure you do it'\n   Which: is different.\n          Expected: Hi|||I'm Tr ...\n            Actual: Here is how ...\n                     ^\n           Differ at offset 1\n",
-            "testId": 350,
-            "line": 17,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/chat_service_test.dart 25:7           main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 7546,
-            "category": "assertion"
-        },
-        {
-            "name": "ChatService should return messages in correct order",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service_test.dart",
-            "suite": "chat_service",
-            "group": "ChatService",
-            "error": "Expected: <10>\n  Actual: <11>\n",
-            "testId": 351,
-            "line": 28,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/chat_service_test.dart 33:7           main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 7558,
-            "category": "assertion"
-        },
-        {
-            "name": "ChatService should not duplicate messages when switching sequences",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service_test.dart",
-            "suite": "chat_service",
-            "group": "ChatService",
-            "error": "Expected: <2>\n  Actual: <3>\nFound duplicate messages: [, Ok, so what are you going to do every day?, ]\n",
-            "testId": 353,
-            "line": 49,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/chat_service_test.dart 67:7           main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 7592,
-            "category": "assertion"
-        },
-        {
-            "name": "ChatService should load choice messages correctly",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service_test.dart",
-            "suite": "chat_service",
-            "group": "ChatService",
-            "error": "Expected: 'Hi Trist !'\n  Actual: 'How will you make sure?'\n   Which: is different.\n          Expected: Hi Trist !\n            Actual: How will yo ...\n                     ^\n           Differ at offset 1\n",
-            "testId": 354,
-            "line": 76,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/chat_service_test.dart 85:7           main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 7598,
-            "category": "assertion"
-        },
-        {
-            "name": "ChatService should build message map for quick lookup",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service_test.dart",
-            "suite": "chat_service",
-            "group": "ChatService",
-            "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 355,
-            "line": 89,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/chat_service_test.dart 94:7           main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 7603,
-            "category": "assertion"
-        },
-        {
-            "name": "ChatService should get message by id",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/chat_service_test.dart",
-            "suite": "chat_service",
-            "group": "ChatService",
-            "error": "Expected: not null\n  Actual: <null>\n",
-            "testId": 356,
-            "line": 99,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/chat_service_test.dart 105:7          main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 7609,
-            "category": "assertion"
         },
         {
             "name": "Previous Day Grace Period Tests should archive task on new day",
             "file": "/Users/jpl/Dev/Apps/noexc/test/services/previous_day_grace_period_test.dart",
             "suite": "previous_day_grace_period",
             "group": "Previous Day Grace Period Tests",
-            "error": "Expected: ('2024-01-02' or null)\n  Actual: '2025-08-06'\n",
+            "error": "Expected: ('2025-08-07' or null)\n  Actual: '2025-08-06'\n",
             "testId": 373,
             "line": 33,
             "column": 5,
-            "stackTrace": "package:matcher                                         expect\npackage:flutter_test/src/widget_tester.dart 474:18      expect\ntest/services/previous_day_grace_period_test.dart 49:7  main.<fn>.<fn>\n",
+            "stackTrace": "package:matcher                                         expect\npackage:flutter_test/src/widget_tester.dart 474:18      expect\ntest/services/previous_day_grace_period_test.dart 51:7  main.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 7782,
+            "timestamp": 8074,
             "category": "assertion"
         },
         {
@@ -212,7 +58,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                      expect\npackage:flutter_test/src/widget_tester.dart 474:18   expect\ntest/services/data_action_processor_test.dart 384:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 8661,
+            "timestamp": 8926,
             "category": "assertion"
         },
         {
@@ -226,7 +72,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                      expect\npackage:flutter_test/src/widget_tester.dart 474:18   expect\ntest/services/active_day_logic_fixes_test.dart 78:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 10503,
+            "timestamp": 10940,
             "category": "assertion"
         },
         {
@@ -240,7 +86,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                      expect\npackage:flutter_test/src/widget_tester.dart 474:18   expect\ntest/services/active_day_logic_fixes_test.dart 93:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 10518,
+            "timestamp": 10960,
             "category": "assertion"
         },
         {
@@ -254,7 +100,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                         expect\npackage:flutter_test/src/widget_tester.dart 474:18      expect\ntest/services/automatic_status_updates_test.dart 40:11  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 10980,
+            "timestamp": 11456,
             "category": "assertion"
         },
         {
@@ -268,7 +114,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                          expect\npackage:flutter_test/src/widget_tester.dart 474:18       expect\ntest/services/automatic_status_updates_test.dart 112:11  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 11032,
+            "timestamp": 11498,
             "category": "assertion"
         },
         {
@@ -282,7 +128,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                          expect\npackage:flutter_test/src/widget_tester.dart 474:18       expect\ntest/services/automatic_status_updates_test.dart 195:11  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 11060,
+            "timestamp": 11527,
             "category": "assertion"
         },
         {
@@ -296,7 +142,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                        expect\npackage:flutter_test/src/widget_tester.dart 474:18     expect\ntest/services/task_boolean_computation_test.dart 25:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 11229,
+            "timestamp": 11687,
             "category": "assertion"
         },
         {
@@ -310,91 +156,7 @@
             "column": 7,
             "stackTrace": "package:matcher                                         expect\npackage:flutter_test/src/widget_tester.dart 474:18      expect\ntest/services/task_boolean_computation_test.dart 102:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 11279,
-            "category": "assertion"
-        },
-        {
-            "name": "FormatterService should format timeOfDay values correctly",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart",
-            "suite": "formatter_service",
-            "group": "FormatterService",
-            "error": "Expected: 'morning'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
-            "testId": 756,
-            "line": 40,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/formatter_service_test.dart 41:7      main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11930,
-            "category": "assertion"
-        },
-        {
-            "name": "FormatterService should format intensity values correctly",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart",
-            "suite": "formatter_service",
-            "group": "FormatterService",
-            "error": "Expected: 'off'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
-            "testId": 757,
-            "line": 47,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/formatter_service_test.dart 48:7      main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11935,
-            "category": "assertion"
-        },
-        {
-            "name": "FormatterService should format activeDays values correctly",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart",
-            "suite": "formatter_service",
-            "group": "FormatterService",
-            "error": "Expected: 'weekdays'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
-            "testId": 758,
-            "line": 54,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/formatter_service_test.dart 55:7      main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11939,
-            "category": "assertion"
-        },
-        {
-            "name": "FormatterService should format timePeriod values correctly",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart",
-            "suite": "formatter_service",
-            "group": "FormatterService",
-            "error": "Expected: 'morning deadline'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
-            "testId": 759,
-            "line": 60,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/formatter_service_test.dart 61:7      main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11943,
-            "category": "assertion"
-        },
-        {
-            "name": "FormatterService should cache formatters after first load",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart",
-            "suite": "formatter_service",
-            "group": "FormatterService",
-            "error": "Expected: 'afternoon'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
-            "testId": 762,
-            "line": 79,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/formatter_service_test.dart 84:7      main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11959,
-            "category": "assertion"
-        },
-        {
-            "name": "FormatterService should convert numeric values to strings for lookup",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/services/formatter_service_test.dart",
-            "suite": "formatter_service",
-            "group": "FormatterService",
-            "error": "Expected: 'morning'\n  Actual: <null>\n   Which: not an <Instance of 'String'>\n",
-            "testId": 763,
-            "line": 87,
-            "column": 5,
-            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/formatter_service_test.dart 89:7      main.<fn>.<fn>\n",
-            "isFailure": true,
-            "timestamp": 11962,
+            "timestamp": 11729,
             "category": "assertion"
         },
         {
@@ -403,12 +165,12 @@
             "suite": "session_service",
             "group": "SessionService > SessionService Task End Date Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 832,
+            "testId": 830,
             "line": 530,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 539:9       main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12645,
+            "timestamp": 13088,
             "category": "assertion"
         },
         {
@@ -417,12 +179,12 @@
             "suite": "session_service",
             "group": "SessionService > SessionService Task End Date Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 839,
+            "testId": 841,
             "line": 594,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 599:9       main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12666,
+            "timestamp": 13111,
             "category": "assertion"
         },
         {
@@ -431,12 +193,12 @@
             "suite": "session_service",
             "group": "SessionService > SessionService Task End Date Computation",
             "error": "Expected: <true>\n  Actual: <false>\n",
-            "testId": 841,
+            "testId": 843,
             "line": 610,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/session_service_test.dart 623:9       main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12674,
+            "timestamp": 13118,
             "category": "assertion"
         },
         {
@@ -445,12 +207,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Basic Message Flow",
             "error": "Expected: contains <1>\n  Actual: [2, 160, 160, 161]\n   Which: does not contain <1>\n",
-            "testId": 845,
+            "testId": 839,
             "line": 18,
             "column": 7,
             "stackTrace": "package:matcher                                                   expect\npackage:flutter_test/src/widget_tester.dart 474:18                expect\ntest/services/flow/clean_architecture_integration_test.dart 30:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12715,
+            "timestamp": 13146,
             "category": "assertion"
         },
         {
@@ -459,12 +221,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Message Processing",
             "error": "Expected: non-empty\n  Actual: []\n",
-            "testId": 869,
+            "testId": 862,
             "line": 79,
             "column": 7,
             "stackTrace": "package:matcher                                                   expect\npackage:flutter_test/src/widget_tester.dart 474:18                expect\ntest/services/flow/clean_architecture_integration_test.dart 87:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12726,
+            "timestamp": 13156,
             "category": "assertion"
         },
         {
@@ -473,12 +235,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests State Management",
             "error": "Expected: true\n  Actual: <false>\n",
-            "testId": 882,
+            "testId": 875,
             "line": 142,
             "column": 7,
             "stackTrace": "package:matcher                                                    expect\npackage:flutter_test/src/widget_tester.dart 474:18                 expect\ntest/services/flow/clean_architecture_integration_test.dart 146:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12746,
+            "timestamp": 13175,
             "category": "assertion"
         },
         {
@@ -487,12 +249,12 @@
             "suite": "clean_architecture_integration",
             "group": "Clean Architecture Integration Tests > Clean Architecture Integration Tests Backward Compatibility",
             "error": "Expected: true\n  Actual: <false>\n",
-            "testId": 885,
+            "testId": 879,
             "line": 156,
             "column": 7,
             "stackTrace": "package:matcher                                                    expect\npackage:flutter_test/src/widget_tester.dart 474:18                 expect\ntest/services/flow/clean_architecture_integration_test.dart 166:9  main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12752,
+            "timestamp": 13180,
             "category": "assertion"
         },
         {
@@ -501,12 +263,12 @@
             "suite": "message_walker",
             "group": "MessageWalker > MessageWalker Special Messages",
             "error": "Expected: an object with length of <3>\n  Actual: [Instance of 'ChatMessage', Instance of 'ChatMessage']\n   Which: has length of <2>\n",
-            "testId": 904,
+            "testId": 902,
             "line": 158,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/flow/message_walker_test.dart 171:9   main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12905,
+            "timestamp": 13355,
             "category": "assertion"
         },
         {
@@ -515,12 +277,12 @@
             "suite": "message_walker",
             "group": "MessageWalker > MessageWalker Complex Scenarios",
             "error": "Expected: an object with length of <4>\n  Actual: [\n            Instance of 'ChatMessage',\n            Instance of 'ChatMessage',\n            Instance of 'ChatMessage'\n          ]\n   Which: has length of <3>\n",
-            "testId": 909,
+            "testId": 907,
             "line": 218,
             "column": 7,
             "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/services/flow/message_walker_test.dart 235:9   main.<fn>.<fn>.<fn>\n",
             "isFailure": true,
-            "timestamp": 12912,
+            "timestamp": 13363,
             "category": "assertion"
         }
     ]

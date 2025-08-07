@@ -22,7 +22,7 @@ void main() {
       expect(messages, isA<List<ChatMessage>>());
       expect(messages.isNotEmpty, true);
       // Updated to match current onboarding sequence content
-      expect(messages.first.text, 'Hi|||I\'m Tristopher|||But my friends call me Trist.');
+      expect(messages.first.text, 'Here is how it\'s going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I\'ll be here to make sure you do it');
     });
 
     test('should return messages in correct order', () async {
@@ -30,10 +30,10 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      expect(messages.length, 10); // Updated for current onboarding sequence
-      expect(messages[0].id, 1);
-      expect(messages[1].id, 7);
-      expect(messages[2].id, 11);
+      expect(messages.length, 11); // Updated for current onboarding sequence
+      expect(messages[0].id, 3);
+      expect(messages[1].id, 29);
+      expect(messages[2].id, 166);
     });
 
     test('should load messages with correct senders', () async {
@@ -55,22 +55,19 @@ void main() {
         templatingService: templatingService,
       );
       
-      // Note: setSequenceSwitchCallback method was removed as it was unused
-      
-      // Act - Load welcome sequence which routes to onboarding
+      // Act - Load welcome sequence which routes to other sequences
       final messages = await chatService.getInitialMessages(sequenceId: 'welcome_seq');
       
-      // Assert - Should not contain duplicate messages
-      final messageTexts = messages.map((m) => m.text).toList();
-      final uniqueTexts = messageTexts.toSet().toList();
+      // Assert - Should get some messages from the flow
+      expect(messages.isNotEmpty, true);
       
-      expect(messageTexts.length, equals(uniqueTexts.length), 
-        reason: 'Found duplicate messages: $messageTexts');
+      // Filter out empty text messages (from autoroute/dataAction messages)
+      final nonEmptyTexts = messages.map((m) => m.text).where((text) => text.isNotEmpty).toList();
+      final uniqueNonEmptyTexts = nonEmptyTexts.toSet().toList();
       
-      // Should not have "Hi" appearing twice
-      final hiCount = messageTexts.where((text) => text == 'Hi').length;
-      expect(hiCount, lessThanOrEqualTo(1), 
-        reason: 'Message "Hi" appears $hiCount times, should appear at most once');
+      // Should not have duplicate non-empty messages
+      expect(nonEmptyTexts.length, equals(uniqueNonEmptyTexts.length), 
+        reason: 'Found duplicate non-empty messages: $nonEmptyTexts');
     });
 
     test('should load choice messages correctly', () async {
@@ -82,8 +79,8 @@ void main() {
       expect(choiceMessage.type == MessageType.choice, true);
       expect(choiceMessage.choices, isNotNull);
       expect(choiceMessage.choices!.length, 2);
-      expect(choiceMessage.choices![0].text, 'Hi Trist !');
-      expect(choiceMessage.choices![0].nextMessageId, 8);
+      expect(choiceMessage.choices![0].text, 'How will you make sure?');
+      expect(choiceMessage.choices![0].nextMessageId, 167);
     });
 
     test('should build message map for quick lookup', () async {
@@ -91,8 +88,8 @@ void main() {
       await chatService.loadChatScript();
 
       // Assert
-      expect(chatService.hasMessage(1), true);
-      expect(chatService.hasMessage(7), true);
+      expect(chatService.hasMessage(3), true);
+      expect(chatService.hasMessage(29), true);
       expect(chatService.hasMessage(999), false);
     });
 
@@ -101,10 +98,10 @@ void main() {
       await chatService.loadChatScript();
 
       // Assert
-      final message = chatService.getMessageById(1);
+      final message = chatService.getMessageById(3);
       expect(message, isNotNull);
-      expect(message!.id, 1);
-      expect(message.text, 'Hi|||I\'m Tristopher|||But my friends call me Trist.');
+      expect(message!.id, 3);
+      expect(message.text, 'Here is how it\'s going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I\'ll be here to make sure you do it');
     });
 
     test('should return null for non-existent message id', () async {

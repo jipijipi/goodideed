@@ -4,13 +4,17 @@ import 'package:noexc/services/semantic_content_service.dart';
 import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/models/chat_sequence.dart';
 import 'package:noexc/models/choice.dart';
+import '../../test_helpers.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  
   group('MessageProcessor Semantic Content Integration', () {
     late MessageProcessor processor;
     late SemanticContentService semanticService;
     
     setUp(() {
+      setupQuietTesting();
       semanticService = SemanticContentService.instance;
       semanticService.clearCache();
       processor = MessageProcessor();

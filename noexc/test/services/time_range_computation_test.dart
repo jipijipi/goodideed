@@ -11,10 +11,14 @@ void main() {
     late UserDataService userDataService;
 
     setUp(() async {
-      setupQuietTesting();
+      setupSilentTesting(); // Use silent testing for data conversion error tests
       SharedPreferences.setMockInitialValues({});
       userDataService = UserDataService();
       sessionService = SessionService(userDataService);
+    });
+    
+    tearDown(() {
+      resetLoggingDefaults();
     });
 
     test('should compute isBeforeStart correctly', () async {

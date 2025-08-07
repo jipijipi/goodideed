@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/validation/asset_validator.dart';
 import 'package:noexc/validation/models/validation_models.dart';
+import '../test_helpers.dart';
 
 void main() {
   group('AssetValidator', () {
@@ -8,7 +9,12 @@ void main() {
     
     setUp(() {
       TestWidgetsFlutterBinding.ensureInitialized();
+      setupSilentTesting(); // Suppress expected error logging noise
       validator = AssetValidator();
+    });
+    
+    tearDown(() {
+      resetLoggingDefaults();
     });
     
     group('JSON Schema Validation', () {

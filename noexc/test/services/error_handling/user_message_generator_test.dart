@@ -1,8 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/error_handling/user_message_generator.dart';
 import 'package:noexc/services/error_handling/chat_error_types.dart';
+import '../../test_helpers.dart';
 
 void main() {
+  setUp(() {
+    setupSilentTesting(); // Suppress expected error logging noise
+  });
+  
+  tearDown(() {
+    resetLoggingDefaults();
+  });
   group('UserMessageGenerator', () {
     group('createFallbackMessage', () {
       test('should return appropriate message for assetNotFound', () {

@@ -49,6 +49,12 @@ class LoggerService {
   
   /// Whether to show timestamps
   bool _showTimestamps = false;
+  
+  /// Silent mode suppresses ALL logging (for noisy error testing)
+  bool _silentMode = false;
+  
+  /// Context flag for expected error scenarios
+  bool _inExpectedErrorScenario = false;
 
   /// Configure the logger
   void configure({
@@ -75,6 +81,14 @@ class LoggerService {
 
   /// Check if a log should be output
   bool _shouldLog(LogLevel level, LogComponent component) {
+    // Silent mode suppresses all output
+    if (_silentMode) return false;
+    
+    // Expected error scenario suppresses error/warning logs
+    if (_inExpectedErrorScenario && level.value >= LogLevel.warning.value) {
+      return false;
+    }
+    
     // Check log level
     if (level.value < _minLevel.value) return false;
     
@@ -171,6 +185,41 @@ class LoggerService {
       enabledComponents: {}, // Enable all components
       showTimestamps: false,
     );
+    _silentMode = false;
+    _inExpectedErrorScenario = false;
+  }
+  
+  /// Configure for completely silent testing (no output at all)
+  void configureForSilentTesting() {
+    _silentMode = true;
+    _inExpectedErrorScenario = false;
+  }
+  
+  /// Temporarily suppress expected error/warning logs during error testing
+  void suppressExpectedErrors(bool suppress) {
+    _inExpectedErrorScenario = suppress;
+  }
+  
+  /// Execute code block with expected errors suppressed
+  T withSuppressedErrors<T>(T Function() action) {
+    final previousState = _inExpectedErrorScenario;
+    _inExpectedErrorScenario = true;
+    try {
+      return action();
+    } finally {
+      _inExpectedErrorScenario = previousState;
+    }
+  }
+  
+  /// Execute async code block with expected errors suppressed
+  Future<T> withSuppressedErrorsAsync<T>(Future<T> Function() action) async {
+    final previousState = _inExpectedErrorScenario;
+    _inExpectedErrorScenario = true;
+    try {
+      return await action();
+    } finally {
+      _inExpectedErrorScenario = previousState;
+    }
   }
 
   /// Reset to default configuration
@@ -178,6 +227,8 @@ class LoggerService {
     _minLevel = _getDefaultLogLevel();
     _enabledComponents.clear();
     _showTimestamps = false;
+    _silentMode = false;
+    _inExpectedErrorScenario = false;
   }
 
   /// Get default log level based on environment

@@ -2,8 +2,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/error_handler.dart';
 import 'package:noexc/services/error_handling/chat_error_types.dart';
 import 'package:noexc/services/error_handling/chat_exceptions.dart';
+import '../test_helpers.dart';
 
 void main() {
+  setUp(() {
+    setupSilentTesting(); // Suppress expected error logging noise
+  });
+  
+  tearDown(() {
+    resetLoggingDefaults();
+  });
   group('ChatErrorHandler', () {
     group('Error Type Handling', () {
       test('should handle sequence load errors correctly', () {

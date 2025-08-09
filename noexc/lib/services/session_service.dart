@@ -323,7 +323,7 @@ class SessionService {
     // Get user's configured active days
     final activeDays = await userDataService.getValue<List<dynamic>>('task.activeDays');
     
-    // If no activeDays configured, default to false
+    // If no activeDays configured, default to true for backward compatibility
     if (activeDays == null || activeDays.isEmpty) {
       return true;
     }

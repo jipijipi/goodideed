@@ -50,7 +50,8 @@
       "WebFetch(domain:dart.dev)",
       "WebFetch(domain:github.com)",
       "Bash(./extract_test_failures.sh:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(date:*)"
     ],
     "deny": []
   }

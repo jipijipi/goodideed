@@ -144,8 +144,8 @@ After setting the task, if the user *FIRST* checks in on :
 
 flutter test --machine | dart tool/test_failure_extractor.dart > failures.json
 
-1) I want the default delay on bot text messages to be adapted on the word count of the message to be displayed. If a delay is specified in the script it takes precedence
+1) The input in bubbles is sometimes hard to select, is there a simple way to make it a larger target?
+2) Make the input text style identical to the style of the message it creates
+3) There is a slim zone next to the device bottom from where bubble come from, is there a way to make the display truely fullscreen with the bubbles coming from the very edge?
 
-2) I want a switch in the debug panel that toggles between this behavior (production behavior) and an instant display of messages for faster testing.
 
-3) All related tests and functionalities should be adapted to the new mechanism

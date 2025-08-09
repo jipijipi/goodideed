@@ -20,16 +20,19 @@ class TextInputBubble extends StatefulWidget {
 
 class _TextInputBubbleState extends State<TextInputBubble> {
   late final TextEditingController _textController;
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
     _textController = TextEditingController();
+    _focusNode = FocusNode();
   }
 
   @override
   void dispose() {
     _textController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -54,35 +57,38 @@ class _TextInputBubbleState extends State<TextInputBubble> {
 
   /// Builds the text input container
   Widget _buildInputContainer(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
-      ),
-      padding: DesignTokens.messageBubblePadding,
-      decoration: BoxDecoration(
-        color: DesignTokens.getInputBackground(context),
-        borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
-        border: Border.all(
-          color: DesignTokens.getInputBorderColor(context),
-          width: DesignTokens.inputBorderWidth,
+    return GestureDetector(
+      onTap: () => _focusNode.requestFocus(),
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: DesignTokens.getInputShadowColor(context),
-            offset: DesignTokens.inputShadowOffset,
-            blurRadius: DesignTokens.inputShadowBlurRadius,
+        padding: DesignTokens.messageBubblePadding,
+        decoration: BoxDecoration(
+          color: DesignTokens.getInputBackground(context),
+          borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
+          border: Border.all(
+            color: DesignTokens.getInputBorderColor(context),
+            width: DesignTokens.inputBorderWidth,
           ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: _buildTextField(),
-          ),
-          const SizedBox(width: DesignTokens.iconSpacing),
-          _buildSendButton(),
-        ],
+          boxShadow: [
+            BoxShadow(
+              color: DesignTokens.getInputShadowColor(context),
+              offset: DesignTokens.inputShadowOffset,
+              blurRadius: DesignTokens.inputShadowBlurRadius,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: _buildTextField(),
+            ),
+            const SizedBox(width: DesignTokens.iconSpacing),
+            _buildSendButton(),
+          ],
+        ),
       ),
     );
   }
@@ -91,6 +97,7 @@ class _TextInputBubbleState extends State<TextInputBubble> {
   Widget _buildTextField() {
     return TextField(
       controller: _textController,
+      focusNode: _focusNode,
       style: TextStyle(color: DesignTokens.getInputTextColor(context)),
       decoration: InputDecoration(
         hintText: widget.message.placeholderText,

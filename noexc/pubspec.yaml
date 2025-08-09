@@ -38,7 +38,7 @@ dependencies:
   flutter_markdown: ^0.6.18
   google_fonts: ^6.2.1
   lottie: ^3.3.1
-  rive: ^0.14.0-dev.5
+  rive: 0.14.0-dev.5
 
 dev_dependencies:
   flutter_test:

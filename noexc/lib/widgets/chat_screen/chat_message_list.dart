@@ -46,7 +46,10 @@ class _ChatMessageListState extends State<ChatMessageList> {
           // Check if this is a user message that should appear instantly
           if (!message.isFromBot) {
             // User messages appear instantly without animation
-            return _buildMessageItem(message);
+            return KeyedSubtree(
+              key: ObjectKey(message),
+              child: _buildMessageItem(message),
+            );
           } else {
             // Bot messages use full animation
             return _buildAnimatedMessageItem(message, animation);
@@ -62,7 +65,10 @@ class _ChatMessageListState extends State<ChatMessageList> {
         itemCount: widget.messages.length,
         itemBuilder: (context, index) {
           final message = widget.messages.reversed.toList()[index];
-          return _buildMessageItem(message);
+          return KeyedSubtree(
+            key: ObjectKey(message),
+            child: _buildMessageItem(message),
+          );
         },
       );
     }
@@ -85,14 +91,17 @@ class _ChatMessageListState extends State<ChatMessageList> {
       curve: DesignTokens.messageSlideAnimationCurve,
     ));
 
-    return SizeTransition(
-      sizeFactor: sizeAnimation,
-      axisAlignment: -1.0, // Align to bottom (since reverse: true)
-      child: SlideTransition(
-        position: slideAnimation,
-        child: FadeTransition(
-          opacity: animation,
-          child: _buildMessageItem(message),
+    return KeyedSubtree(
+      key: ObjectKey(message),
+      child: SizeTransition(
+        sizeFactor: sizeAnimation,
+        axisAlignment: -1.0, // Align to bottom (since reverse: true)
+        child: SlideTransition(
+          position: slideAnimation,
+          child: FadeTransition(
+            opacity: animation,
+            child: _buildMessageItem(message),
+          ),
         ),
       ),
     );
@@ -101,6 +110,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
   /// Builds an individual message item
   Widget _buildMessageItem(ChatMessage message) {
     return MessageBubble(
+      key: ValueKey(message),
       message: message,
       onChoiceSelected: widget.onChoiceSelected,
       onTextSubmitted: widget.onTextSubmitted,

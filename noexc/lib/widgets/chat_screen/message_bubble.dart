@@ -143,6 +143,7 @@ class MessageBubble extends StatelessWidget {
     return SizedBox(
       height: 200, // Fixed height for consistent chat bubble sizing
       child: _RiveAnimationWrapper(
+        key: GlobalObjectKey(message),
         animationPath: animationPath,
         onError: (error) {
           logger.error('Rive animation failed to load: $animationPath - $error', component: LogComponent.ui);
@@ -188,6 +189,7 @@ class _RiveAnimationWrapper extends StatefulWidget {
   final Function(String error)? onError;
 
   const _RiveAnimationWrapper({
+    super.key,
     required this.animationPath,
     this.onError,
   });

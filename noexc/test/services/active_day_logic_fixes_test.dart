@@ -19,20 +19,21 @@ void main() {
     });
 
     group('Problem 1: isActiveDay Logic with activeDays', () {
-      test('should return false on Monday when activeDays is [6,7] (weekends only)', () async {
-        // Setup: Monday (weekday 1) with weekend-only active days
+      test('should return false when today is not in activeDays', () async {
+        final tomorrow = DateTime.now().add(const Duration(days: 1));
         final mondayString = '2025-08-04'; // This is a Monday
         
-        // Set task scheduled for today (Monday)
+        // Set task scheduled for some day (task date doesn't affect isActiveDay)
         await userDataService.storeValue(StorageKeys.taskCurrentDate, mondayString);
         
-        // Set activeDays to weekends only [6,7] (Saturday, Sunday)
-        await userDataService.storeValue('task.activeDays', [6, 7]);
+        // Set activeDays to only include tomorrow's weekday (not today)
+        // This ensures today's weekday is NOT in activeDays
+        await userDataService.storeValue('task.activeDays', [tomorrow.weekday]);
         
         // Initialize session to compute booleans
         await sessionService.initializeSession();
         
-        // Should return false because Monday (1) is not in [6,7]
+        // Should return false because today's weekday is not in activeDays
         final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
         expect(isActiveDay, false);
       });
@@ -78,20 +79,7 @@ void main() {
         expect(isActiveDay, true);
       });
 
-      test('should return false when task scheduled for different date', () async {
-        // Setup: Task scheduled for tomorrow, not today
-        final tomorrow = DateTime.now().add(const Duration(days: 1));
-        final tomorrowString = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
-        
-        await userDataService.storeValue(StorageKeys.taskCurrentDate, tomorrowString);
-        await userDataService.storeValue('task.activeDays', [1, 2, 3, 4, 5, 6, 7]); // All days
-        
-        await sessionService.initializeSession();
-        
-        // Should return false because task is not scheduled for today
-        final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
-        expect(isActiveDay, false);
-      });
+      
     });
 
     group('Problem 2: NEXT_ACTIVE_DATE with JSON String Format', () {

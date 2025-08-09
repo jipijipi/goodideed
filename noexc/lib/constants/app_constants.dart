@@ -45,6 +45,16 @@ class AppConstants {
     'reminders_seq',
     'weekdays_seq',
     'task_start_timing_seq',
+    // Fix for validation test failures
+    'taskCheck_seq',
+    'taskparam_seq',
+    'autoFailed_seq',
+    'catchup_seq',
+    'due_seq',
+    'return_seq',
+    'startday_seq',
+    'updateChoice_seq',
+    'updatetask_seq',
   ];
   
   // User Response ID Offset

@@ -74,7 +74,7 @@ class TestUtils {
     Duration? duration,
   }) async {
     await tester.pumpWidget(widget);
-    await tester.pumpAndSettle(duration ?? const Duration(seconds: 10));
+    await tester.pumpAndSettle(duration ?? extendedPump);
   }
 
   /// Finds a widget by text with case-insensitive matching
@@ -99,7 +99,7 @@ class TestUtils {
   }) async {
     await tester.tap(finder);
     await tester.pumpAndSettle(
-      settleDuration ?? const Duration(seconds: 10),
+      settleDuration ?? extendedPump,
     );
   }
 
@@ -112,7 +112,7 @@ class TestUtils {
   }) async {
     await tester.enterText(finder, text);
     await tester.pumpAndSettle(
-      settleDuration ?? const Duration(seconds: 10),
+      settleDuration ?? extendedPump,
     );
   }
 
@@ -144,14 +144,31 @@ class TestUtils {
     return SessionService(userDataService);
   }
 
+  // Timeout Constants
   /// Standard test timeout duration
   static const Duration defaultTimeout = Duration(seconds: 30);
+  
+  /// Short timeout for quick operations
+  static const Duration shortTimeout = Duration(seconds: 5);
+  
+  /// Long timeout for complex operations
+  static const Duration longTimeout = Duration(seconds: 60);
 
+  // Animation and Pump Constants
   /// Standard animation duration for tests
   static const Duration animationDuration = Duration(milliseconds: 300);
 
   /// Standard settle duration for tests
   static const Duration settleDuration = Duration(milliseconds: 500);
+  
+  /// Quick pump duration for simple state changes
+  static const Duration quickPump = Duration(milliseconds: 100);
+  
+  /// Standard pump duration for most test operations
+  static const Duration standardPump = Duration(seconds: 2);
+  
+  /// Extended pump duration for complex animations
+  static const Duration extendedPump = Duration(seconds: 10);
 }
 
 /// Custom matcher for testing widget properties
@@ -178,7 +195,7 @@ class WidgetPropertyMatcher extends Matcher {
 extension WidgetTesterExtensions on WidgetTester {
   /// Convenience method to pump and settle with default duration
   Future<void> pumpAndSettleDefault() async {
-    await pumpAndSettle(const Duration(seconds: 10));
+    await pumpAndSettle(TestUtils.extendedPump);
   }
 
   /// Convenience method to tap and settle

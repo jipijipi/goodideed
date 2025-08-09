@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/user_variables_panel.dart';
 import 'package:noexc/services/user_data_service.dart';
+import 'test_utils.dart';
 
 void main() {
   setUp(() async {
@@ -37,7 +38,7 @@ void main() {
 
       // Wait for initial loading to complete
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(TestUtils.quickPump);
       
       // Should show debug panel header
       expect(find.text('Debug Panel'), findsOneWidget);

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-06T13:49:09.699Z",
+  "lastUpdated": "2025-08-07T18:13:22.409Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-06T13:49:09.678Z"
+    "timestamp": "2025-08-07T18:13:22.401Z"
   },
   "nodes": [
     {
@@ -3537,7 +3537,7 @@
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "2",
+        "nodeId": "1",
         "contentKey": "bot.introduce.character.casual",
         "content": "Hi|||You must be new here"
       }

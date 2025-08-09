@@ -46,7 +46,12 @@
       "Bash(git rev-list:*)",
       "Bash(git branch:*)",
       "Bash(git for-each-ref:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "WebFetch(domain:dart.dev)",
+      "WebFetch(domain:github.com)",
+      "Bash(./extract_test_failures.sh:*)",
+      "Bash(cat:*)",
+      "Bash(date:*)"
     ],
     "deny": []
   }

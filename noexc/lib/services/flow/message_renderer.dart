@@ -37,22 +37,20 @@ class MessageRenderer {
     List<ChatMessage> rawMessages, 
     ChatSequence? currentSequence,
   ) async {
-    logger.debug('Rendering ${rawMessages.length} raw messages');
-    
     // Phase 1: Filter displayable messages
     final displayableMessages = _filterDisplayableMessages(rawMessages);
-    logger.debug('${displayableMessages.length} messages are displayable');
     
     // Phase 2: Process templates and variants
     final processedMessages = await _messageProcessor.processMessageTemplates(
       displayableMessages,
       currentSequence,
     );
-    logger.debug('Processed ${processedMessages.length} message templates');
     
     // Phase 3: Expand multi-text messages
     final expandedMessages = _expandMultiTextMessages(processedMessages);
-    logger.debug('Expanded to ${expandedMessages.length} final messages');
+    
+    // Single summary log instead of 4 separate debug statements
+    logger.debug('Rendered ${rawMessages.length} → ${displayableMessages.length} → ${expandedMessages.length} messages');
     
     return expandedMessages;
   }
@@ -60,20 +58,8 @@ class MessageRenderer {
   /// Filter out messages that should not be displayed to the user
   List<ChatMessage> _filterDisplayableMessages(List<ChatMessage> messages) {
     return messages.where((message) {
-      // Autoroute messages are not displayed - they're processed by orchestrator
-      if (message.type == MessageType.autoroute) {
-        logger.debug('Filtering out autoroute message ${message.id}');
-        return false;
-      }
-      
-      // DataAction messages are not displayed - they're processed by orchestrator  
-      if (message.type == MessageType.dataAction) {
-        logger.debug('Filtering out dataAction message ${message.id}');
-        return false;
-      }
-      
-      // All other messages are displayable
-      return true;
+      // Autoroute and dataAction messages are not displayed - they're processed by orchestrator
+      return message.type != MessageType.autoroute && message.type != MessageType.dataAction;
     }).toList();
   }
 
@@ -84,10 +70,6 @@ class MessageRenderer {
     for (final message in messages) {
       final individualMessages = message.expandToIndividualMessages();
       expandedMessages.addAll(individualMessages);
-      
-      if (individualMessages.length > 1) {
-        logger.debug('Expanded message ${message.id} into ${individualMessages.length} parts');
-      }
     }
     
     return expandedMessages;
@@ -97,7 +79,6 @@ class MessageRenderer {
   /// 
   /// Delegates to the underlying MessageProcessor for consistency.
   Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
-    logger.debug('Handling user text input for message: ${textInputMessage.id}');
     await _messageProcessor.handleUserTextInput(textInputMessage, userInput);
   }
 
@@ -105,7 +86,6 @@ class MessageRenderer {
   /// 
   /// Delegates to the underlying MessageProcessor for consistency.
   Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
-    logger.debug('Handling user choice for message: ${choiceMessage.id}');
     await _messageProcessor.handleUserChoice(choiceMessage, selectedChoice);
   }
 }

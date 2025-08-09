@@ -145,7 +145,6 @@ class ChatStateManager extends ChangeNotifier {
     if (_disposed) return;
     
     try {
-      logger.debug('Reloading sequence: $_currentSequenceId', component: LogComponent.ui);
       
       // Force reload sequence from JSON file
       await ServiceLocator.instance.chatService.loadSequence(_currentSequenceId);
@@ -153,7 +152,7 @@ class ChatStateManager extends ChangeNotifier {
       // Reset chat with newly loaded sequence
       await resetChat();
       
-      logger.debug('Sequence reloaded successfully', component: LogComponent.ui);
+      logger.info('Sequence reloaded: $_currentSequenceId', component: LogComponent.ui);
     } catch (e) {
       logger.error('Failed to reload sequence: $e', component: LogComponent.ui);
     }
@@ -164,12 +163,10 @@ class ChatStateManager extends ChangeNotifier {
     if (_disposed) return;
     
     try {
-      logger.debug('Clearing all user data', component: LogComponent.ui);
-      
       // Clear all stored user variables
       await ServiceLocator.instance.userDataService.clearAllData();
       
-      logger.debug('All user data cleared successfully', component: LogComponent.ui);
+      logger.info('All user data cleared', component: LogComponent.ui);
     } catch (e) {
       logger.error('Failed to clear user data: $e', component: LogComponent.ui);
     }

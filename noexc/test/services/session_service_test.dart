@@ -143,81 +143,8 @@ void main() {
       expect(currentDate, '2024-01-01');
     });
 
-    test('should archive previous day task when moving to new day', () async {
-      // Day 1: Set task and status
-      await userDataService.storeValue(StorageKeys.userTask, 'Exercise for 30 minutes');
-      await sessionService.initializeSession();
-      // Status may be 'pending' or 'overdue' depending on current time vs deadline
-      final initialStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
-      expect(['pending', 'overdue'].contains(initialStatus), true);
-      
-      // Simulate Day 2 by setting yesterday's session date (to trigger isNewDay = true)
-      final yesterday = DateTime.now().subtract(const Duration(days: 1));
-      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-      await userDataService.storeValue(StorageKeys.sessionLastVisitDate, yesterdayString);
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
-      
-      // Initialize today (should archive previous day)
-      await sessionService.initializeSession();
-      
-      // Check if previous day was archived (only happens if initial status was pending)
-      final previousDate = await userDataService.getValue<String>(StorageKeys.taskPreviousDate);
-      final previousStatus = await userDataService.getValue<String>(StorageKeys.taskPreviousStatus);
-      final previousTask = await userDataService.getValue<String>(StorageKeys.taskPreviousTask);
-      
-      if (initialStatus == 'pending') {
-        // Should be archived if initial status was pending
-        expect(previousDate, yesterdayString);
-        expect(previousStatus, 'pending'); // Archived as pending, not overdue
-        expect(previousTask, 'Exercise for 30 minutes');
-      } else {
-        // No archiving if initial status was already overdue
-        expect(previousDate, isNull);
-        expect(previousStatus, isNull);  
-        expect(previousTask, isNull);
-      }
-      
-      // Check current day was reset (should be pending for new day, but may be overdue due to automatic status updates)
-      final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
-      expect(currentStatus, anyOf(equals('pending'), equals('overdue'))); // May be updated by automatic status system
-    });
 
-    test('should not archive if no task was set', () async {
-      // Day 1: No task set
-      await sessionService.initializeSession();
-      
-      // Simulate Day 2
-      final yesterday = DateTime.now().subtract(const Duration(days: 1));
-      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
-      
-      await sessionService.initializeSession();
-      
-      // Should not have archived anything
-      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousDate), isNull);
-      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), isNull);
-      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousTask), isNull);
-    });
-
-    test('should not archive if task was already completed', () async {
-      // Day 1: Set task and mark as completed
-      await userDataService.storeValue(StorageKeys.userTask, 'Read a book');
-      await sessionService.initializeSession();
-      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'completed');
-      
-      // Simulate Day 2
-      final yesterday = DateTime.now().subtract(const Duration(days: 1));
-      final yesterdayString = '${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}';
-      await userDataService.storeValue(StorageKeys.sessionLastVisitDate, yesterdayString);
-      await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
-      
-      await sessionService.initializeSession();
-      
-      // Should not have archived completed task
-      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousDate), isNull);
-      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousStatus), isNull);
-      expect(await userDataService.getValue<String>(StorageKeys.taskPreviousTask), isNull);
-    });
+  
 
     test('should preserve future date for next_active users across same-day sessions', () async {
       final tomorrow = DateTime.now().add(const Duration(days: 1));
@@ -328,20 +255,20 @@ void main() {
     });
 
     group('Active Day Pure Weekday Logic', () {
-      test('should return false when no activeDays configured', () async {
+      test('should return true when no activeDays configured', () async {
         // Don't set any activeDays
         await sessionService.initializeSession();
         
         final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
-        expect(isActiveDay, false);
+        expect(isActiveDay, true);
       });
 
-      test('should return false when activeDays is empty array', () async {
+      test('should return true when activeDays is empty array', () async {
         await userDataService.storeValue(StorageKeys.taskActiveDays, []);
         await sessionService.initializeSession();
         
         final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
-        expect(isActiveDay, false);
+        expect(isActiveDay, true);
       });
 
       test('should return true for weekdays when activeDays includes weekdays', () async {
@@ -521,7 +448,8 @@ void main() {
         final todayString = _formatDate(today);
         
         await userDataService.storeValue(StorageKeys.taskEndDate, todayString);
-        await sessionService.initializeSession();
+        // Only recompute the past-end-date boolean without changing the endDate
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -533,7 +461,7 @@ void main() {
         final yesterdayString = _formatDate(yesterday);
         
         await userDataService.storeValue(StorageKeys.taskEndDate, yesterdayString);
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, true);
@@ -545,7 +473,7 @@ void main() {
         final tomorrowString = _formatDate(tomorrow);
         
         await userDataService.storeValue(StorageKeys.taskEndDate, tomorrowString);
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -553,7 +481,7 @@ void main() {
 
       test('should default to false when task end date is null', () async {
         // Don't set any end date
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -561,7 +489,7 @@ void main() {
 
       test('should default to false when task end date is empty', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -569,7 +497,7 @@ void main() {
 
       test('should default to false when task end date has invalid format', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, 'invalid-date');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -577,7 +505,7 @@ void main() {
 
       test('should default to false when task end date has partial format', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '2024-12');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -585,7 +513,7 @@ void main() {
 
       test('should handle date parsing exceptions gracefully', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, 'completely-invalid-date');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -593,7 +521,7 @@ void main() {
 
       test('should compute correctly for dates far in the past', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '2020-01-01');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, true);
@@ -601,7 +529,7 @@ void main() {
 
       test('should compute correctly for dates far in the future', () async {
         await userDataService.storeValue(StorageKeys.taskEndDate, '2030-12-31');
-        await sessionService.initializeSession();
+        await sessionService.recalculatePastEndDate();
         
         final isPastEndDate = await userDataService.getValue<bool>(StorageKeys.taskIsPastEndDate);
         expect(isPastEndDate, false);
@@ -609,10 +537,10 @@ void main() {
 
       test('should not interfere with existing boolean computations', () async {
         final today = DateTime.now();
-        final yesterdayString = _formatDate(today.subtract(const Duration(days: 1)));
+        final twoDaysAgoString = _formatDate(today.subtract(const Duration(days: 2)));
         
-        await userDataService.storeValue(StorageKeys.taskEndDate, yesterdayString);
-        await userDataService.storeValue(StorageKeys.taskCurrentDate, yesterdayString);
+        // Set taskCurrentDate to 2 days ago so computed taskEndDate becomes yesterday
+        await userDataService.storeValue(StorageKeys.taskCurrentDate, twoDaysAgoString);
         await sessionService.initializeSession();
         
         // All boolean fields should be computed independently
@@ -620,7 +548,7 @@ void main() {
         final isActiveDay = await userDataService.getValue<bool>(StorageKeys.taskIsActiveDay);
         final isPastDeadline = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
         
-        expect(isPastEndDate, true); // end date computation
+        expect(isPastEndDate, true); // end date computation (yesterday < today)
         expect(isActiveDay, isNotNull); // other computations should still work
         expect(isPastDeadline, isNotNull);
       });

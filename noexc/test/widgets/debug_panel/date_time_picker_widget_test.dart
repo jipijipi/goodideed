@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/debug_panel/date_time_picker_widget.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/constants/storage_keys.dart';
+import '../test_utils.dart';
 
 void main() {
   group('DateTimePickerWidget', () {
@@ -31,7 +32,7 @@ void main() {
       );
 
       // Wait for async loading to complete
-      await tester.pumpAndSettle(const Duration(seconds: 10));
+      await tester.pumpAndSettle(TestUtils.extendedPump);
 
       // Check that the main section header is present
       expect(find.text('Date & Time Testing'), findsOneWidget);
@@ -62,7 +63,7 @@ void main() {
         ),
       );
 
-      await tester.pumpAndSettle(const Duration(seconds: 10));
+      await tester.pumpAndSettle(TestUtils.extendedPump);
 
       // Should show default values
       expect(find.text('Not set'), findsAtLeastNWidgets(1)); // Task date and deadline both show "Not set"
@@ -79,17 +80,17 @@ void main() {
         ),
       );
 
-      await tester.pumpAndSettle(const Duration(seconds: 10));
+      await tester.pumpAndSettle(TestUtils.extendedPump);
 
       // Test today button exists and is tappable
       expect(find.text('Today'), findsOneWidget);
       await tester.tap(find.text('Today'));
-      await tester.pumpAndSettle(const Duration(seconds: 5));
+      await tester.pumpAndSettle(TestUtils.shortTimeout);
 
       // Test yesterday button exists and is tappable  
       expect(find.text('Yesterday'), findsOneWidget);
       await tester.tap(find.text('Yesterday'));
-      await tester.pumpAndSettle(const Duration(seconds: 5));
+      await tester.pumpAndSettle(TestUtils.shortTimeout);
 
       // Just verify buttons work without checking specific snackbar text
       // as snackbar behavior can be inconsistent in tests
@@ -111,11 +112,11 @@ void main() {
         ),
       );
 
-      await tester.pumpAndSettle(const Duration(seconds: 10));
+      await tester.pumpAndSettle(TestUtils.extendedPump);
 
       // Tap today button which should trigger callback
       await tester.tap(find.text('Today'));
-      await tester.pumpAndSettle(const Duration(seconds: 5));
+      await tester.pumpAndSettle(TestUtils.shortTimeout);
 
       expect(callbackCalled, true);
     });
@@ -137,14 +138,14 @@ void main() {
         ),
       );
 
-      await tester.pumpAndSettle(const Duration(seconds: 10));
+      await tester.pumpAndSettle(TestUtils.extendedPump);
 
       // Should show dropdown for deadline options
       expect(find.text('Select deadline time'), findsOneWidget);
 
       // Tap the dropdown to open it
       await tester.tap(find.text('Select deadline time'));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tester.pumpAndSettle(TestUtils.standardPump);
 
       // Should show all deadline options in dropdown
       expect(find.text('Morning (10:00)'), findsOneWidget);
@@ -154,7 +155,7 @@ void main() {
 
       // Select the evening option
       await tester.tap(find.text('Evening (18:00)').last);
-      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tester.pumpAndSettle(TestUtils.standardPump);
 
       // Should update the display and trigger callback
       expect(callbackCalled, true);

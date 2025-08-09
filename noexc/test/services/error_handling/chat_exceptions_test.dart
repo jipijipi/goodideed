@@ -1,8 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/error_handling/chat_exceptions.dart';
 import 'package:noexc/services/error_handling/chat_error_types.dart';
+import '../../test_helpers.dart';
 
 void main() {
+  setUp(() {
+    setupSilentTesting(); // Suppress expected error logging noise
+  });
+  
+  tearDown(() {
+    resetLoggingDefaults();
+  });
   group('ChatSequenceException', () {
     test('should create exception with message, type, and sequenceId', () {
       const message = 'Sequence loading failed';

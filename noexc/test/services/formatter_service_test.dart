@@ -1,40 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:noexc/services/formatter_service.dart';
+import '../test_helpers.dart';
 
 void main() {
-  setUpAll(() {
-    TestWidgetsFlutterBinding.ensureInitialized();
-  });
+  TestWidgetsFlutterBinding.ensureInitialized();
   
-  setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(const MethodChannel('flutter/assets'), (MethodCall methodCall) async {
-    if (methodCall.method == 'loadString') {
-      final String key = methodCall.arguments as String;
-      
-      switch (key) {
-        case 'assets/content/formatters/timeOfDay.json':
-          return '{"1": "morning", "2": "afternoon", "3": "evening", "4": "night"}';
-        case 'assets/content/formatters/intensity.json':
-          return '{"none": "off", "mild": "low", "severe": "high", "extreme": "maximum"}';
-        case 'assets/content/formatters/activeDays.json':
-          return '{"1,2,3,4,5": "weekdays", "6,7": "weekends", "1,2,3,4,5,6,7": "daily"}';
-        case 'assets/content/formatters/timePeriod.json':
-          return '{"10:00": "morning deadline", "14:00": "afternoon deadline", "18:00": "evening deadline", "23:00": "night deadline", "08:00": "morning start", "12:00": "afternoon start", "16:00": "evening start", "21:00": "night start"}';
-        default:
-          throw PlatformException(code: 'FileNotFound', message: 'Asset not found');
-      }
-    }
-    return null;
-    });
-  });
-
   group('FormatterService', () {
     late FormatterService formatterService;
 
     setUp(() {
+      setupQuietTesting();
       formatterService = FormatterService();
+      formatterService.clearCache(); // Clear cache to ensure clean state
     });
 
     test('should format timeOfDay values correctly', () async {

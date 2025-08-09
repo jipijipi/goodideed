@@ -2,9 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:noexc/services/session_service.dart';
 import 'package:noexc/services/user_data_service.dart';
+import 'package:noexc/services/service_locator.dart';
 import 'package:noexc/widgets/chat_screen/chat_state_manager.dart';
 import 'package:noexc/constants/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'test_helpers.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -24,7 +26,13 @@ void main() {
     late ChatStateManager chatStateManager;
 
     setUp(() async {
+      setupSilentTesting();
       SharedPreferences.setMockInitialValues({});
+      
+      // Reset and initialize ServiceLocator for testing
+      ServiceLocator.reset();
+      await ServiceLocator.instance.initialize();
+      
       userDataService = UserDataService();
       sessionService = SessionService(userDataService);
       chatStateManager = ChatStateManager();

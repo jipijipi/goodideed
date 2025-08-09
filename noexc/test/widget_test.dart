@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:noexc/main.dart';
+import 'package:noexc/widgets/chat_screen/chat_message_list.dart';
 
 void main() {
   setUp(() async {
@@ -15,12 +16,12 @@ void main() {
 
     // Initially should show loading spinner
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    
-    // Wait for initialization to complete
-    await tester.pumpAndSettle(const Duration(seconds: 5));
+
+    // Wait for initialization and animations to settle
+    await tester.pumpAndSettle();
 
     // Verify that the chat screen loads after initialization
-    expect(find.text('Chat'), findsOneWidget);
-    expect(find.byType(ListView), findsOneWidget);
+    expect(find.byType(ChatMessageList), findsOneWidget);
+    expect(find.byType(AnimatedList), findsOneWidget);
   });
 }

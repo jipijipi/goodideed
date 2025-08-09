@@ -140,22 +140,8 @@ After setting the task, if the user *FIRST* checks in on :
   - Task: task.startTime, task.deadlineTime, task.activeDays,
   task.currentStatus, etc.
 
+  
+
+flutter test --machine | dart tool/test_failure_extractor.dart > failures.json
 
 
-Create :
-
-1) Create a launch calculation called task.endDate, it will be set as the task.currentDate's following active day. examples: 
-If the active days are everyday and the task.currentDate is friday, the task.endDate will be the next saturday
-If the active days are week days only and the task.currentDate is friday, the task.endDate will be the next monday
-If the active days are weekends only and the task.currentDate is sunday, the task.endDate will be the next saturday
-It's the same underlying logic as NEXT_ACTIVE_DATE_1 and NEXT_ACTIVE_DATE_2 if NEXT_ACTIVE_DATE_1 was the task.currentDate instead of today
-
-2) give the ability to recalculate it from a data action trigger
-
-1) Rename it FIRST_ACTIVE_DATE
-2) Create a new launch calculation called task.dueDay that returns the integers associated with the day of the week of task.currentDate. Make sure it is in the correct order at launch
-4) Create a new trigger called update_task_info that would group the recalculation of task related variables:
-    - task.endDate
-    - task.dueDay
-    - 
-    Use the existing logic functions and methods whenever possible, discuss and await validation before coding.

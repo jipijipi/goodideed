@@ -24,7 +24,9 @@ class DataActionProcessor {
   Future<void> processActions(List<DataAction> actions) async {
     if (actions.isEmpty) return;
     
-    _logger.debug('Processing ${actions.length} dataActions', component: LogComponent.dataActionProcessor);
+    // Summary debug log showing action types instead of individual action logging
+    final actionSummary = actions.map((a) => '${a.type.name}(${a.key})').join(', ');
+    _logger.debug('Processing ${actions.length} dataActions: $actionSummary', component: LogComponent.dataActionProcessor);
         
     for (final action in actions) {
       await _processAction(action);
@@ -36,8 +38,6 @@ class DataActionProcessor {
       case DataActionType.set:
         final resolvedValue = await _resolveTemplateFunction(action.value);
         await _userDataService.storeValue(action.key, resolvedValue);
-        _logger.debug('SET ${action.key} = $resolvedValue', 
-            component: LogComponent.dataActionProcessor);
         break;
       case DataActionType.increment:
         await _incrementValue(action.key, action.value ?? DataActionConstants.defaultIncrementValue);
@@ -58,26 +58,22 @@ class DataActionProcessor {
     final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
     final newValue = currentValue + (incrementBy as int);
     await _userDataService.storeValue(key, newValue);
-    _logger.debug('INCREMENT $key = $newValue', component: LogComponent.dataActionProcessor);
   }
 
   Future<void> _decrementValue(String key, dynamic decrementBy) async {
     final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
     final newValue = currentValue - (decrementBy as int);
     await _userDataService.storeValue(key, newValue);
-    _logger.debug('DECREMENT $key = $newValue', component: LogComponent.dataActionProcessor);
   }
 
   Future<void> _resetValue(String key, dynamic resetValue) async {
     await _userDataService.storeValue(key, resetValue);
-    _logger.debug('RESET $key = $resetValue', component: LogComponent.dataActionProcessor);
   }
 
   Future<void> _processTrigger(DataAction action) async {
     if (_onEvent != null && action.event != null) {
       try {
         await _onEvent!(action.event!, action.data ?? {});
-        _logger.debug('TRIGGER ${action.event}', component: LogComponent.dataActionProcessor);
       } catch (e) {
         _logger.warning('Trigger failed: ${action.event} - $e', 
             component: LogComponent.dataActionProcessor);
@@ -92,17 +88,6 @@ class DataActionProcessor {
       return value; // Not a string, return as-is
     }
 
-    // Check for indexed NEXT_ACTIVE_DATE patterns (e.g., NEXT_ACTIVE_DATE_1, NEXT_ACTIVE_DATE_2)
-    final indexedDateMatch = RegExp(r'^NEXT_ACTIVE_DATE_(\d+)$').firstMatch(value);
-    if (indexedDateMatch != null) {
-      final index = int.parse(indexedDateMatch.group(1)!);
-      if (_sessionService != null) {
-        return await _getNextActiveDate(index);
-      }
-      _logger.warning('NEXT_ACTIVE_DATE_$index using fallback - no session service', 
-          component: LogComponent.dataActionProcessor);
-      return _formatDate(DateTime.now().add(Duration(days: index - 1)));
-    }
 
     switch (value) {
       case 'TODAY_DATE':
@@ -143,14 +128,8 @@ class DataActionProcessor {
   }
 
   /// Get the next active date based on user's active days configuration
-  /// [index] specifies which active date to return (1 = next active, 2 = second active, etc.)
-  Future<String> _getNextActiveDate([int index = 1]) async {
-    // Validate index parameter
-    if (index < 1) {
-      _logger.warning('Invalid index $index for _getNextActiveDate, using 1', 
-          component: LogComponent.dataActionProcessor);
-      index = 1;
-    }
+  /// Always excludes today and returns the first active day after today
+  Future<String> _getNextActiveDate() async {
 
     final now = DateTime.now();
     
@@ -160,29 +139,25 @@ class DataActionProcessor {
     // Parse activeDays to handle both array and string formats
     final activeDays = _parseActiveDays(rawActiveDays);
     
-    // If no active days configured, default to today + (index-1) days
+    // If no active days configured, default to tomorrow
     if (activeDays == null || activeDays.isEmpty) {
-      final targetDate = now.add(Duration(days: index - 1));
+      final targetDate = now.add(const Duration(days: 1));
       return _formatDate(targetDate);
     }
     
-    // Find the Nth active day, starting from tomorrow (excluding today)
-    int foundCount = 0;
+    // Find the first active day, starting from tomorrow (excluding today)
     for (int i = 1; i <= 365; i++) { // Max 1 year lookahead
       final testDate = now.add(Duration(days: i));
       final testWeekday = testDate.weekday;
       
       if (activeDays.contains(testWeekday)) {
-        foundCount++;
-        if (foundCount == index) {
-          return _formatDate(testDate);
-        }
+        return _formatDate(testDate);
       }
     }
     
     // Fallback - should never reach here if activeDays is valid
-    final fallbackDate = now.add(Duration(days: index - 1));
-    _logger.warning('No active date found for index $index, using fallback', 
+    final fallbackDate = now.add(const Duration(days: 1));
+    _logger.warning('No active date found, using fallback', 
         component: LogComponent.dataActionProcessor);
     return _formatDate(fallbackDate);
   }

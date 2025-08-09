@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/chat_screen.dart';
+import 'package:noexc/services/service_locator.dart';
+import '../test_helpers.dart';
 
 void main() {
   setUp(() async {
+    setupQuietTesting();
     SharedPreferences.setMockInitialValues({});
+    
+    // Initialize ServiceLocator for widget tests
+    ServiceLocator.reset();
+    await ServiceLocator.instance.initialize();
   });
 
   tearDown(() async {
     // Clear any stored data to prevent test interference
     SharedPreferences.setMockInitialValues({});
+    ServiceLocator.reset();
   });
 
   group('ChatScreen Widget Tests', () {
-    testWidgets('should display chat screen with app bar', (WidgetTester tester) async {
+    testWidgets('should display chat screen with debug button', (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         const MaterialApp(
@@ -22,12 +30,11 @@ void main() {
         ),
       );
 
+      await tester.pumpAndSettle();
+
       // Assert
-      expect(find.byType(AppBar), findsOneWidget);
-      expect(find.text('Chat'), findsOneWidget);
-      
-      // Just pump once to avoid timer issues
-      await tester.pump();
+      expect(find.byKey(const ValueKey('chat_screen_stack')), findsOneWidget);
+      expect(find.byIcon(Icons.bug_report), findsOneWidget);
     });
 
 
@@ -39,8 +46,7 @@ void main() {
         ),
       );
 
-      // Wait for async loading to complete
-      await tester.pump();
+      await tester.pumpAndSettle();
       
       // Verify content area exists (should show chat messages)
       expect(find.byType(ListView), findsWidgets);
@@ -78,8 +84,7 @@ void main() {
         ),
       );
 
-      // Wait for loading
-      await tester.pump();
+      await tester.pumpAndSettle();
       
       // For now, just verify the screen loads without errors
       expect(find.byType(ListView), findsWidgets);
@@ -93,8 +98,7 @@ void main() {
         ),
       );
 
-      // Wait for loading
-      await tester.pump();
+      await tester.pumpAndSettle();
       
       // For now, just verify the screen loads without errors
       expect(find.byType(ListView), findsWidgets);

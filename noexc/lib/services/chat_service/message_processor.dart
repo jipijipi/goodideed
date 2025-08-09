@@ -32,7 +32,9 @@ class MessageProcessor {
     List<Choice>? processedChoices = message.choices;
     
     // 1. Apply semantic content resolution (new system)
-    if (message.contentKey != null && message.contentKey!.isNotEmpty) {
+    if (message.contentKey != null && 
+        message.contentKey!.isNotEmpty && 
+        message.type != MessageType.choice) {
       textToProcess = await _semanticContentService.getContent(message.contentKey!, message.text);
     } else {
       // 2. Fallback to legacy variant system for backward compatibility

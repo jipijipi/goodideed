@@ -1,40 +1,34 @@
 # Repository Guidelines
 
-## Project Structure & Modules
-- `lib/`: App source. Key areas: `widgets/chat_screen/` (service_manager, message_display_manager, user_interaction_handler), `services/` (ChatService, UserDataService, SessionService, LoggerService, SemanticContentService), `models/`.
-- `assets/sequences/`: JSON conversation flows (dynamic first-message via `SequenceManager.getFirstMessageId`).
-- `test/`: Mirrors `lib/` structure; widget/service/model tests.
-- `tool/`: Dev helpers (`tdd_runner.dart`, `quick_test_summary.sh`, `test_aliases.sh`).
-- `noexc-authoring-tool/`: React Flow editor for sequences.
+## Project Map
+- `lib/widgets/chat_screen/`: UI surface. Start with `chat_screen.dart` → `chat_message_list.dart` → `message_bubble.dart` (renders text, inputs, choices, and images/Rive). State entry: `chat_state_manager.dart` (delegates to `state_management/`).
+- `lib/services/`: Orchestration and logic. Key: `chat_service/` (`sequence_loader.dart`, `message_processor.dart`, `route_processor.dart`), `flow/` (`flow_orchestrator.dart`, `message_renderer.dart`, `sequence_manager.dart`).
+- `assets/sequences/`: JSON chat flows (first message is dynamic via `SequenceManager.getFirstMessageId`).
+- `test/`: Mirrors `lib/`. Use quiet helpers in `test/test_helpers.dart`.
+- `tool/`: Dev tooling (`tdd_runner.dart`, `quick_test_summary.sh`, `test_aliases.sh`).
 
-## Build, Test, and Development
-- Install deps: `flutter pub get`.
-- Run app: `flutter run`.
-- Full tests (quiet): `flutter test --reporter failures-only` or `flutter test --reporter compact`.
-- TDD loop (ultra-quiet): `dart tool/tdd_runner.dart --quiet test/specific_test.dart`.
-- Quick summary: `./tool/quick_test_summary.sh`.
-- Targeted: `flutter test test/services/ --reporter compact` (or `test/models/`, `test/widgets/`).
-- Aliases: `source tool/test_aliases.sh` then `tq`, `tf`, `tc`, `ts`.
+## Build & Test
+- Install: `flutter pub get`
+- Run: `flutter run`
+- Always start quiet (TDD): `dart tool/tdd_runner.dart --quiet test/specific_test.dart` or `flutter test --reporter failures-only` — minimizes log noise and token usage.
+- Targeted runs: `flutter test test/services/ --reporter compact`
+- Aliases: `source tool/test_aliases.sh` → `tq`, `tf`, `tc`, `ts`
 
-## Coding Style & Naming
-- Dart/Flutter, 2-space indent; follow `package:flutter_lints/flutter.yaml`.
-- Constructors: prefer `const`; include `super.key` in widgets.
-- Names: PascalCase types, lowerCamelCase members, `snake_case.dart` files.
-- Logging: never use `print`; use `LoggerService` (`debug/info/warning/error/critical`, plus `route/semantic/ui`).
-- UI state: keep `AnimatedList` in sync (always pair data changes with `insertItem/removeItem`).
+## Coding Rules
+- Lints: `flutter_lints` (2-space indent). Prefer `const`; include `super.key` in widgets.
+- Logging only via `LoggerService` (no `print`). Use `debug/info/warning/error/critical` and `route/semantic/ui` components.
+- AnimatedList: every data change must notify the list. Insert/remove at index 0 when `reverse: true`.
 
-## Testing Guidelines
-- Framework: `flutter_test`. TDD is mandatory; write tests first.
-- Structure: tests mirror `lib/` paths and file names.
-- Helpers: `setupQuietTesting()`, `setupSilentTesting()`, `withSuppressedErrorsAsync()` to reduce noise.
-- Coverage goal: ≥80%; add tests for new/changed code.
-- Example: `flutter test test/widgets/chat_screen/..._test.dart --reporter compact`.
+## Rive & Animations
+- Dependency: `rive: 0.14.0-dev.5` (pinned). Rive bubbles live in `message_bubble.dart` (`_RiveAnimationWrapper`).
+- Prevent replay on new messages: give stable keys to items (`ValueKey(message)`), keep Rive state in a `StatefulWidget` with `AutomaticKeepAliveClientMixin`, and create controllers once in `initState`/`onInit`.
+- Optional: cache `RiveFile` at a higher layer and clone artboards for multiple instances.
 
-## Commit & Pull Requests
-- Commits: concise, imperative subject (≤72 chars), explain why + what; group related changes only.
-- PRs: include description, linked issues, test evidence (output or screenshots), UI screenshots when relevant.
-- Requirements: all tests green, lints passing, docs updated (sequences validated, `AGENTS.md`/readme touched if behavior changes).
+## Testing (TDD First)
+- Non‑negotiable: Practice TDD. Write a failing test (Red), implement minimally (Green), then refactor. No feature merges without tests.
+- Start quiet: Use `tdd_runner --quiet` or failures‑only reporters first to reduce output and token cost; expand only when debugging.
+- Framework: `flutter_test`. Coverage goal ≥ 80% for new/changed code.
+- Helpers: `setupQuietTesting()`, `setupSilentTesting()`, `withSuppressedErrorsAsync()` to suppress expected errors and keep logs minimal.
 
-## Environment & Configuration
-- Flutter 3.29.3, Dart SDK `^3.7.2`; private package (`publish_to: none`).
-- Sequences must validate and support non-1 starting IDs; avoid assumptions about message `id=1`.
+## PR Checklist
+- Green tests + lints, updated docs (sequences validated), clear description with linked issues and screenshots when UI changes.

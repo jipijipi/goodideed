@@ -46,10 +46,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
           // Check if this is a user message that should appear instantly
           if (!message.isFromBot) {
             // User messages appear instantly without animation
-            return KeyedSubtree(
-              key: ObjectKey(message),
-              child: _buildMessageItem(message),
-            );
+            return _buildMessageItem(message);
           } else {
             // Bot messages use full animation
             return _buildAnimatedMessageItem(message, animation);

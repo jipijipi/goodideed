@@ -6,6 +6,7 @@ import 'message_queue.dart';
 import 'logger_service.dart';
 import 'session_service.dart';
 import 'display_settings_service.dart';
+import 'message_delay_policy.dart';
 
 /// Application-level service locator for dependency injection
 /// 
@@ -57,9 +58,11 @@ class ServiceLocator {
         sessionService: _sessionService,
       );
       
-      _messageQueue = MessageQueue();
       _displaySettingsService = DisplaySettingsService()
         ..instantDisplay = true; // Default to instant mode for now
+      _messageQueue = MessageQueue(
+        delayPolicy: MessageDelayPolicy(settings: _displaySettingsService),
+      );
       
       _initialized = true;
       logger.info('All services initialized successfully');

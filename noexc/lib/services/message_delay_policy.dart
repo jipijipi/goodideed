@@ -1,7 +1,6 @@
 import '../constants/app_constants.dart';
 import '../models/chat_message.dart';
 import 'display_settings_service.dart';
-import 'service_locator.dart';
 
 enum DelayMode { adaptive, instant }
 
@@ -19,15 +18,6 @@ class MessageDelayPolicy {
     // Instant mode via explicit mode parameter or global settings
     if (_mode == DelayMode.instant || _settings?.instantDisplay == true) {
       return 0;
-    }
-
-    // If a global settings service exists and is initialized, honor it
-    // without requiring explicit wiring everywhere.
-    try {
-      final settings = _settings ?? ServiceLocator.instance.displaySettings;
-      if (settings.instantDisplay) return 0;
-    } catch (_) {
-      // ServiceLocator may not be initialized in tests; ignore.
     }
 
     // Choice options: constant delay in production mode

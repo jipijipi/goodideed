@@ -162,7 +162,7 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
                             min: -200,
                             max: 200,
                             activeColor: _getSliderColor(index),
-                            inactiveColor: _getSliderColor(index).withOpacity(0.3),
+                            inactiveColor: _getSliderColor(index).withValues(alpha: 0.3),
                             onChanged: (value) {
                               setState(() {
                                 armPropertyValues[index] = value;

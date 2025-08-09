@@ -134,7 +134,7 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
                   min: 0,
                   max: 500,
                   activeColor: Colors.blue,
-                  inactiveColor: Colors.blue.withOpacity(0.3),
+                  inactiveColor: Colors.blue.withValues(alpha: 0.3),
                   onChanged: (value) {
                     setState(() => posX = value);
                     _updatePosition();
@@ -153,7 +153,7 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
                   min: 0,
                   max: 500,
                   activeColor: Colors.red,
-                  inactiveColor: Colors.red.withOpacity(0.3),
+                  inactiveColor: Colors.red.withValues(alpha: 0.3),
                   onChanged: (value) {
                     setState(() => posY = value);
                     _updatePosition();

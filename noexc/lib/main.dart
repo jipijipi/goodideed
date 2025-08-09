@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'widgets/chat_screen.dart';
-import 'widgets/rive_test_widget.dart';
-import 'widgets/rive_data_binding_test_widget.dart';
-import 'widgets/rive_arm_test_widget.dart';
+//import 'widgets/rive_test_widget.dart';
+//import 'widgets/rive_data_binding_test_widget.dart';
+//import 'widgets/rive_arm_test_widget.dart';
 import 'services/service_locator.dart';
 import 'services/session_service.dart';
 import 'themes/app_themes.dart';

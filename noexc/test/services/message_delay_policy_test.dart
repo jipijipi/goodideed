@@ -70,6 +70,31 @@ void main() {
       final delay = policy.effectiveDelay(msg);
       expect(delay, 0);
     });
+
+    test('applies constant delay for choice messages in production mode', () {
+      final policy = MessageDelayPolicy();
+      final msg = ChatMessage(
+        id: 10,
+        text: '',
+        type: MessageType.choice,
+        sender: 'bot',
+      );
+
+      final delay = policy.effectiveDelay(msg);
+      expect(delay, AppConstants.choiceDisplayDelayMs);
+    });
+
+    test('choice messages are instant in instant mode', () {
+      final policy = MessageDelayPolicy(mode: DelayMode.instant);
+      final msg = ChatMessage(
+        id: 11,
+        text: '',
+        type: MessageType.choice,
+        sender: 'user', // even if sender is user, instant wins
+      );
+
+      final delay = policy.effectiveDelay(msg);
+      expect(delay, 0);
+    });
   });
 }
-

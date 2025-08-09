@@ -18,6 +18,9 @@ class AppConstants {
   static const int dynamicDelayPerWordMs = 100;     // Per-word delay
   static const int dynamicDelayMinMs = 100;        // Clamp lower bound
   static const int dynamicDelayMaxMs = 3000;       // Clamp upper bound
+
+  // Choice options delay (production mode)
+  static const int choiceDisplayDelayMs = 1300;
   
   // Chat Sequences
   static const String sequencesAssetPath = 'assets/sequences/';

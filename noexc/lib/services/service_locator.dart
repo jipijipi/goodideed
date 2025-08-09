@@ -58,7 +58,8 @@ class ServiceLocator {
       );
       
       _messageQueue = MessageQueue();
-      _displaySettingsService = DisplaySettingsService();
+      _displaySettingsService = DisplaySettingsService()
+        ..instantDisplay = true; // Default to instant mode for now
       
       _initialized = true;
       logger.info('All services initialized successfully');

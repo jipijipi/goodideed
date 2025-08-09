@@ -1,1 +1,23 @@
-{"metadata":{"extracted_at":"2025-08-09T11:17:09.442817","total_failures":1,"extractor_version":"1.0.0"},"failures":[{"name":"ChatScreen Widget Tests should display chat screen with debug button","file":"package:flutter_test/src/widget_tester.dart","suite":"widget_tester.dart","group":"ChatScreen Widget Tests","error":"Test failed. See exception logs above.\nThe test description was: should display chat screen with debug button","testId":872,"line":175,"column":5,"stackTrace":"","isFailure":false,"timestamp":15645,"category":"unknown"}]}
+{
+    "metadata": {
+        "extracted_at": "2025-08-09T11:30:05.395207",
+        "total_failures": 1,
+        "extractor_version": "1.0.0"
+    },
+    "failures": [
+        {
+            "name": "ChatScreen Widget Tests should load chat content after initialization",
+            "file": "package:flutter_test/src/widget_tester.dart",
+            "suite": "widget_tester.dart",
+            "group": "ChatScreen Widget Tests",
+            "error": "Test failed. See exception logs above.\nThe test description was: should load chat content after initialization",
+            "testId": 872,
+            "line": 175,
+            "column": 5,
+            "stackTrace": "",
+            "isFailure": false,
+            "timestamp": 13865,
+            "category": "unknown"
+        }
+    ]
+}

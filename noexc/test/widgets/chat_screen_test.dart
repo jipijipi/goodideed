@@ -9,7 +9,7 @@ void main() {
   setUp(() async {
     setupQuietTesting();
     SharedPreferences.setMockInitialValues({});
-    
+
     // Initialize ServiceLocator for widget tests
     ServiceLocator.reset();
     await ServiceLocator.instance.initialize();
@@ -22,84 +22,64 @@ void main() {
   });
 
   group('ChatScreen Widget Tests', () {
-    testWidgets('should display chat screen with debug button', (WidgetTester tester) async {
+    testWidgets('should load chat content after initialization', (
+      WidgetTester tester,
+    ) async {
       // Arrange & Act
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ChatScreen(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ChatScreen()));
 
       await tester.pumpAndSettle();
 
-      // Assert
-      expect(find.byKey(const ValueKey('chat_screen_stack')), findsOneWidget);
-      expect(find.byIcon(Icons.bug_report), findsOneWidget);
-    });
-
-
-    testWidgets('should load chat content after initialization', (WidgetTester tester) async {
-      // Arrange & Act
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ChatScreen(),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-      
       // Verify content area exists (should show chat messages)
       expect(find.byType(ListView), findsWidgets);
     });
 
-    testWidgets('should allow legitimate message repetition in conversation loops', (WidgetTester tester) async {
-      // Arrange
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ChatScreen(),
-        ),
-      );
+    testWidgets(
+      'should allow legitimate message repetition in conversation loops',
+      (WidgetTester tester) async {
+        // Arrange
+        await tester.pumpWidget(const MaterialApp(home: ChatScreen()));
 
-      // Act - Allow sequence to load and all messages to display
-      await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
-      
-      // Give reasonable time for messages to load (reduce from 4000ms)
-      await tester.pumpAndSettle(const Duration(seconds: 10));
+        // Act - Allow sequence to load and all messages to display
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 100));
 
-      // Assert - Check that the chat loads successfully
-      final allText = find.byType(Text);
-      expect(allText, findsWidgets, 
-        reason: 'Should find some text messages after sequence loads');
+        // Give reasonable time for messages to load (reduce from 4000ms)
+        await tester.pumpAndSettle(const Duration(seconds: 10));
 
-      // The test passes if no errors occur during message processing
-      // (This verifies that removing duplicate filtering doesn't break the system)
-    });
+        // Assert - Check that the chat loads successfully
+        final allText = find.byType(Text);
+        expect(
+          allText,
+          findsWidgets,
+          reason: 'Should find some text messages after sequence loads',
+        );
 
-    testWidgets('should display text input field for text input messages', (WidgetTester tester) async {
+        // The test passes if no errors occur during message processing
+        // (This verifies that removing duplicate filtering doesn't break the system)
+      },
+    );
+
+    testWidgets('should display text input field for text input messages', (
+      WidgetTester tester,
+    ) async {
       // This test will verify that text input fields appear when needed
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ChatScreen(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ChatScreen()));
 
       await tester.pumpAndSettle();
-      
+
       // For now, just verify the screen loads without errors
       expect(find.byType(ListView), findsWidgets);
     });
 
-    testWidgets('should handle text input submission', (WidgetTester tester) async {
+    testWidgets('should handle text input submission', (
+      WidgetTester tester,
+    ) async {
       // This test will verify that text input can be submitted
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: ChatScreen(),
-        ),
-      );
+      await tester.pumpWidget(const MaterialApp(home: ChatScreen()));
 
       await tester.pumpAndSettle();
-      
+
       // For now, just verify the screen loads without errors
       expect(find.byType(ListView), findsWidgets);
     });

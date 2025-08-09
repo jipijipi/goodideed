@@ -6,7 +6,7 @@ class DisplaySettingsService extends ChangeNotifier {
   final _logger = LoggerService.instance;
 
   /// When true, bot messages display instantly (no delays).
-  bool _instantDisplay = false;
+  bool _instantDisplay = true; // Default: instant mode ON for now
 
   bool get instantDisplay => _instantDisplay;
 
@@ -17,4 +17,3 @@ class DisplaySettingsService extends ChangeNotifier {
     notifyListeners();
   }
 }
-

@@ -30,7 +30,12 @@ class MessageDelayPolicy {
       // ServiceLocator may not be initialized in tests; ignore.
     }
 
-    // No delay for user messages
+    // Choice options: constant delay in production mode
+    if (message.type == MessageType.choice) {
+      return AppConstants.choiceDisplayDelayMs;
+    }
+
+    // No delay for user-authored messages
     if (message.type == MessageType.user) return 0;
 
     // Explicit delay (from script or non-default constructor) takes precedence

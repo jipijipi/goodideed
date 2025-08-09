@@ -15,9 +15,10 @@
 - Aliases: `source tool/test_aliases.sh` → `tq`, `tf`, `tc`, `ts`
 
 ## Message Delays
-- Adaptive default: Bot text messages use adaptive delays based on word count when the script does not specify a `delay`. Formula: `dynamicDelayBaseMs + words * dynamicDelayPerWordMs` clamped to `[dynamicDelayMinMs, dynamicDelayMaxMs]` (see `AppConstants`).
+- Default mode: Instant display is ON by default (toggle in Debug Panel). This speeds up development and testing.
+- Production (adaptive) mode: Bot text messages use adaptive delays when no `delay` is specified. Formula: `dynamicDelayBaseMs + words * dynamicDelayPerWordMs` clamped to `[dynamicDelayMinMs, dynamicDelayMaxMs]` (see `AppConstants`).
+- Choice options: In production mode, choices appear after a constant delay (`choiceDisplayDelayMs`). In instant mode, they appear immediately.
 - Override: If a message has an explicit `delay` in the sequence JSON, that value takes precedence. For programmatically created messages, any non‑default `delay` is treated as explicit.
-- Instant mode: Use the debug panel switch “Instant display (test mode)” to disable delays for faster testing.
 
 ## Coding Rules
 - Lints: `flutter_lints` (2-space indent). Prefer `const`; include `super.key` in widgets.

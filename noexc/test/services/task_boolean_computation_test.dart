@@ -121,14 +121,14 @@ void main() {
 
     group('isPastDeadline Computation', () {
       test('should return false when no deadline is configured', () async {
-        // Setup: No deadline configured (will use default 21:00)
+        // Setup: No deadline configured (will use default 23:59)
         await sessionService.initializeSession();
         
         final isPastDeadline = await userDataService.getValue<bool>(StorageKeys.taskIsPastDeadline);
         final now = DateTime.now();
-        
-        // Should match whether current time is past 21:00
-        final expectedResult = now.hour >= 21;
+
+        // Should match whether current time is past 23:59
+        final expectedResult = now.hour >= 23 && now.minute >= 59;
         expect(isPastDeadline, expectedResult);
       });
 

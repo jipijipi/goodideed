@@ -149,3 +149,4 @@ flutter test --machine | dart tool/test_failure_extractor.dart > failures.json
 3) There is a slim zone next to the device bottom from where bubble come from, is there a way to make the display truely fullscreen with the bubbles coming from the very edge?
 
 
+Bot messages bubbles should appear immediately with typing indicator equal to the delay then replaced by actual text content

@@ -17,7 +17,7 @@ class SessionConstants {
   static const String afternoonDeadlineTime = '14:00';   // Mid afternoon  
   static const String eveningDeadlineTime = '18:00';     // Early evening
   static const String nightDeadlineTime = '23:00';       // Late night
-  static const String defaultDeadlineTime = '23:00';     // Default deadline
+  static const String defaultDeadlineTime = '23:59';     // Default deadline
   
   // Default start times (2 hours before deadline for reasonable range)
   static const String morningStartTime = '08:00';        // 2 hours before morning deadline

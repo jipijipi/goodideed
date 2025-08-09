@@ -18,6 +18,8 @@ class ChatMessage {
   final int id;
   final String text;
   final int delay;
+  // True when the script explicitly specified a delay value
+  final bool hasExplicitDelay;
   final String sender;
   final MessageType type;
   final List<Choice>? choices;
@@ -35,6 +37,7 @@ class ChatMessage {
     required this.id,
     required this.text,
     this.delay = AppConstants.defaultMessageDelay,
+    this.hasExplicitDelay = false,
     this.sender = ChatConfig.botSender,
     this.type = MessageType.bot,
     this.choices,
@@ -122,10 +125,13 @@ class ChatMessage {
     
     final imagePath = json['imagePath'] as String?;
     
+    final hasExplicitDelay = json.containsKey('delay');
+
     return ChatMessage(
       id: json['id'] as int,
       text: messageText,
       delay: json['delay'] as int? ?? AppConstants.defaultMessageDelay,
+      hasExplicitDelay: hasExplicitDelay,
       sender: json['sender'] as String? ?? ChatConfig.botSender,
       type: messageType,
       choices: choices,
@@ -233,6 +239,7 @@ class ChatMessage {
     int? id,
     String? text,
     int? delay,
+    bool? hasExplicitDelay,
     String? sender,
     MessageType? type,
     List<Choice>? choices,
@@ -250,6 +257,7 @@ class ChatMessage {
       id: id ?? this.id,
       text: text ?? this.text,
       delay: delay ?? this.delay,
+      hasExplicitDelay: hasExplicitDelay ?? this.hasExplicitDelay,
       sender: sender ?? this.sender,
       type: type ?? this.type,
       choices: choices ?? this.choices,

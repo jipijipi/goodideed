@@ -5,6 +5,7 @@ import 'chat_service.dart';
 import 'message_queue.dart';
 import 'logger_service.dart';
 import 'session_service.dart';
+import 'display_settings_service.dart';
 
 /// Application-level service locator for dependency injection
 /// 
@@ -19,6 +20,7 @@ class ServiceLocator {
   late final SessionService _sessionService;
   late final ChatService _chatService;
   late final MessageQueue _messageQueue;
+  late final DisplaySettingsService _displaySettingsService;
   final logger = LoggerService.instance;
   
   bool _initialized = false;
@@ -56,6 +58,7 @@ class ServiceLocator {
       );
       
       _messageQueue = MessageQueue();
+      _displaySettingsService = DisplaySettingsService();
       
       _initialized = true;
       logger.info('All services initialized successfully');
@@ -88,6 +91,12 @@ class ServiceLocator {
   MessageQueue get messageQueue {
     _ensureInitialized();
     return _messageQueue;
+  }
+  
+  /// Get the display settings service
+  DisplaySettingsService get displaySettings {
+    _ensureInitialized();
+    return _displaySettingsService;
   }
   
   /// Check if services are initialized

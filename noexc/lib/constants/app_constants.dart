@@ -13,6 +13,12 @@ class AppConstants {
   static const int defaultMessageDelay = 100; // milliseconds
   static const String defaultPlaceholderText = 'Type your answer...';
   
+  // Adaptive delay configuration (bot text messages)
+  static const int dynamicDelayBaseMs = 200;       // Base delay
+  static const int dynamicDelayPerWordMs = 100;     // Per-word delay
+  static const int dynamicDelayMinMs = 100;        // Clamp lower bound
+  static const int dynamicDelayMaxMs = 3000;       // Clamp upper bound
+  
   // Chat Sequences
   static const String sequencesAssetPath = 'assets/sequences/';
   static const String defaultSequenceId = 'welcome_seq';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants/design_tokens.dart';
 import '../chat_screen/chat_state_manager.dart';
+import 'delay_mode_toggle_widget.dart';
 import 'debug_status_area.dart';
 
 /// Widget responsible for chat control actions (reset, clear, reload, clear all data)
@@ -118,6 +119,9 @@ class ChatControlsWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
+
+        // Delay mode toggle (adaptive vs instant)
+        const DelayModeToggleWidget(),
       ],
     );
   }

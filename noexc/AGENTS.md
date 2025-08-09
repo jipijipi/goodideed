@@ -14,6 +14,11 @@
 - Targeted runs: `flutter test test/services/ --reporter compact`
 - Aliases: `source tool/test_aliases.sh` → `tq`, `tf`, `tc`, `ts`
 
+## Message Delays
+- Adaptive default: Bot text messages use adaptive delays based on word count when the script does not specify a `delay`. Formula: `dynamicDelayBaseMs + words * dynamicDelayPerWordMs` clamped to `[dynamicDelayMinMs, dynamicDelayMaxMs]` (see `AppConstants`).
+- Override: If a message has an explicit `delay` in the sequence JSON, that value takes precedence. For programmatically created messages, any non‑default `delay` is treated as explicit.
+- Instant mode: Use the debug panel switch “Instant display (test mode)” to disable delays for faster testing.
+
 ## Coding Rules
 - Lints: `flutter_lints` (2-space indent). Prefer `const`; include `super.key` in widgets.
 - Logging only via `LoggerService` (no `print`). Use `debug/info/warning/error/critical` and `route/semantic/ui` components.
@@ -23,6 +28,10 @@
 - Dependency: `rive: 0.14.0-dev.5` (pinned). Rive bubbles live in `message_bubble.dart` (`_RiveAnimationWrapper`).
 - Prevent replay on new messages: give stable keys to items (`ValueKey(message)`), keep Rive state in a `StatefulWidget` with `AutomaticKeepAliveClientMixin`, and create controllers once in `initState`/`onInit`.
 - Optional: cache `RiveFile` at a higher layer and clone artboards for multiple instances.
+
+## Debug Panel
+- Location: Open via the bug icon in the app bar. The panel provides Reset/Clear/Reload controls, data management, sequence switcher, and now a delay toggle.
+- Delay toggle: `Instant display (test mode)` flips between production adaptive delays and instant rendering to speed up TDD and manual QA.
 
 ## Testing (TDD First)
 - Non‑negotiable: Practice TDD. Write a failing test (Red), implement minimally (Green), then refactor. No feature merges without tests.

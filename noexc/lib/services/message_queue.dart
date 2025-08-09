@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import '../models/chat_message.dart';
+import 'message_delay_policy.dart';
 
 /// A message processing queue that handles message display with delays and prevents race conditions
 class MessageQueue {
@@ -8,6 +9,9 @@ class MessageQueue {
   bool _isProcessing = false;
   bool _disposed = false;
   final List<Timer> _activeTimers = [];
+  final MessageDelayPolicy _delayPolicy;
+
+  MessageQueue({MessageDelayPolicy? delayPolicy}) : _delayPolicy = delayPolicy ?? MessageDelayPolicy();
 
   /// Enqueue a batch of messages for processing
   Future<void> enqueue(List<ChatMessage> messages, Future<void> Function(ChatMessage) onDisplay) async {
@@ -42,10 +46,11 @@ class MessageQueue {
     for (final message in batch.messages) {
       if (_disposed) break;
       
-      // Apply delay if specified
-      if (message.delay > 0) {
+      // Apply effective delay per policy
+      final effective = _delayPolicy.effectiveDelay(message);
+      if (effective > 0) {
         final completer = Completer<void>();
-        final timer = Timer(Duration(milliseconds: message.delay), () {
+        final timer = Timer(Duration(milliseconds: effective), () {
           completer.complete();
         });
         _activeTimers.add(timer);

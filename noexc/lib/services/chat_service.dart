@@ -94,6 +94,15 @@ class ChatService {
       case 'refresh_task_calculations':
         await _handleRefreshTaskCalculations();
         break;
+      case 'notification_request_permissions':
+        await _handleNotificationRequestPermissions();
+        break;
+      case 'notification_reschedule':
+        await _handleNotificationReschedule();
+        break;
+      case 'notification_disable':
+        await _handleNotificationDisable();
+        break;
       default:
         // Forward unknown events to UI callback
         if (_onEvent != null) {
@@ -169,6 +178,39 @@ class ChatService {
       logger.info('Successfully recalculated task.status');
     } catch (e) {
       logger.error('Failed to recalculate task.status: $e');
+    }
+  }
+
+  /// Handle notification_request_permissions event from dataAction trigger
+  Future<void> _handleNotificationRequestPermissions() async {
+    try {
+      final notificationService = ServiceLocator.instance.notificationService;
+      final granted = await notificationService.requestPermissions();
+      logger.info('Notification permissions request completed: $granted');
+    } catch (e) {
+      logger.error('Failed to request notification permissions: $e');
+    }
+  }
+
+  /// Handle notification_reschedule event from dataAction trigger
+  Future<void> _handleNotificationReschedule() async {
+    try {
+      final notificationService = ServiceLocator.instance.notificationService;
+      await notificationService.scheduleDeadlineReminder();
+      logger.info('Successfully rescheduled notifications');
+    } catch (e) {
+      logger.error('Failed to reschedule notifications: $e');
+    }
+  }
+
+  /// Handle notification_disable event from dataAction trigger
+  Future<void> _handleNotificationDisable() async {
+    try {
+      final notificationService = ServiceLocator.instance.notificationService;
+      await notificationService.cancelAllNotifications();
+      logger.info('Successfully disabled all notifications');
+    } catch (e) {
+      logger.error('Failed to disable notifications: $e');
     }
   }
 

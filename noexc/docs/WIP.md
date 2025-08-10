@@ -181,3 +181,9 @@ intensity 3:
 
 14 15 16 17 18
 1           1
+
+
+New notifications related triggers need to be added to the script's data action nodes capability
+1) Triggers the permission prompt for notifications if not done already
+2) Recalculates notification schedule
+3) Disable notifications

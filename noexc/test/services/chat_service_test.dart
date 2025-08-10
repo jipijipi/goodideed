@@ -244,6 +244,7 @@ void main() {
       
       // Note: Full integration testing of trigger handlers would require
       // complex setup with ServiceLocator, UserDataService, SessionService, etc.
+      // This trigger now also includes notification rescheduling after task calculations.
       // This basic test ensures the method exists and the class can be instantiated.
     });
 

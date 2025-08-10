@@ -188,6 +188,4 @@ New notifications related triggers need to be added to the script's data action 
 2) Recalculates notification schedule
 3) Disable notifications
 
-1) Can notification_request_permissions trigger the prompt even if the user declined previously? 
-2) Dont prompt for notification permission on launch, wait for the script trigger
-3) Add the notification recalculation to the refresh_task_calculations trigger
+1) The permission prompt does not appear anymore even after notification_request_permissions is called

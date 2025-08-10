@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-10T12:31:59.639Z",
+  "lastUpdated": "2025-08-10T15:53:13.356Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-10T12:31:59.629Z"
+    "timestamp": "2025-08-10T15:53:13.346Z"
   },
   "nodes": [
     {
@@ -77,7 +77,7 @@
     {
       "id": "135",
       "position": {
-        "x": -6478.574984049551,
+        "x": -6553.181153494897,
         "y": -1931.434651974936
       },
       "type": "group",
@@ -90,7 +90,7 @@
       "height": 2892,
       "selected": false,
       "positionAbsolute": {
-        "x": -6478.574984049551,
+        "x": -6553.181153494897,
         "y": -1931.434651974936
       },
       "dragging": false,
@@ -269,8 +269,8 @@
     {
       "id": "207",
       "position": {
-        "x": -1523.805473943596,
-        "y": 1227.9741009476922
+        "x": -1262.6838808848809,
+        "y": 425.95777941020947
       },
       "data": {
         "label": "Group 207",
@@ -293,16 +293,16 @@
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": -1523.805473943596,
-        "y": 1227.9741009476922
+        "x": -1262.6838808848809,
+        "y": 425.95777941020947
       },
       "dragging": false
     },
     {
       "id": "215",
       "position": {
-        "x": 2094.9790719463917,
-        "y": 717.9424527852079
+        "x": 2169.5852413917387,
+        "y": 904.457876398576
       },
       "data": {
         "label": "Group 215",
@@ -325,8 +325,8 @@
       "height": 2552,
       "selected": false,
       "positionAbsolute": {
-        "x": 2094.9790719463917,
-        "y": 717.9424527852079
+        "x": 2169.5852413917387,
+        "y": 904.457876398576
       },
       "dragging": false
     },
@@ -364,7 +364,7 @@
     {
       "id": "264",
       "position": {
-        "x": -7801.619877077519,
+        "x": -7596.452911102814,
         "y": -1903.4077090540675
       },
       "data": {
@@ -386,7 +386,7 @@
       "height": 2281,
       "selected": false,
       "positionAbsolute": {
-        "x": -7801.619877077519,
+        "x": -7596.452911102814,
         "y": -1903.4077090540675
       },
       "dragging": false
@@ -615,7 +615,7 @@
       "id": "39",
       "position": {
         "x": 1613.1482360433563,
-        "y": 4303.338049011941
+        "y": 4471.201930263972
       },
       "type": "group",
       "style": {
@@ -628,7 +628,7 @@
       "selected": false,
       "positionAbsolute": {
         "x": 1613.1482360433563,
-        "y": 4303.338049011941
+        "y": 4471.201930263972
       },
       "dragging": false,
       "data": {
@@ -646,8 +646,8 @@
     {
       "id": "47",
       "position": {
-        "x": 3130.5492184915465,
-        "y": 4300.080466327923
+        "x": 3177.2366559673355,
+        "y": 4479.048976651784
       },
       "type": "group",
       "style": {
@@ -659,8 +659,8 @@
       "height": 2383,
       "selected": false,
       "positionAbsolute": {
-        "x": 3130.5492184915465,
-        "y": 4300.080466327923
+        "x": 3177.2366559673355,
+        "y": 4479.048976651784
       },
       "dragging": false,
       "data": {
@@ -678,22 +678,22 @@
     {
       "id": "55",
       "position": {
-        "x": 4463.166922622672,
-        "y": 4351.452994278992
+        "x": 4456.892354056749,
+        "y": 4607.407816957765
       },
       "type": "group",
       "style": {
         "width": 1540.2126928785221,
-        "height": 2766,
+        "height": 3417,
         "zIndex": 999
       },
       "width": 1540,
-      "height": 2766,
+      "height": 3417,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 4463.166922622672,
-        "y": 4351.452994278992
+        "x": 4456.892354056749,
+        "y": 4607.407816957765
       },
       "data": {
         "label": "Group 55",
@@ -1962,8 +1962,8 @@
         "content": "You're all set !"
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 249,
+      "height": 259,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -4488,8 +4488,8 @@
     {
       "id": "293",
       "position": {
-        "x": 44.8573233823945,
-        "y": 1192
+        "x": 232.8573233823945,
+        "y": 1230
       },
       "data": {
         "label": "Data action",
@@ -4498,20 +4498,22 @@
         "nodeId": "293",
         "dataActions": [
           {
-            "type": "set",
-            "key": "notification.action",
-            "value": "notification_disable"
+            "type": "trigger",
+            "key": "notification.isEnabled",
+            "value": false,
+            "event": "notification_disable",
+            "data": {}
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 395,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 4548.024246005067,
-        "y": 5243.452994278991
+        "x": 4689.749677439144,
+        "y": 5837.407816957765
       },
       "parentId": "55",
       "extent": "parent"
@@ -4519,8 +4521,8 @@
     {
       "id": "294",
       "position": {
-        "x": 773.7452249926064,
-        "y": 1198.265795247171
+        "x": 736.8009025871115,
+        "y": 1217.7781671285438
       },
       "data": {
         "label": "Data action",
@@ -4529,59 +4531,70 @@
         "nodeId": "294",
         "dataActions": [
           {
-            "type": "set",
+            "type": "trigger",
             "key": "notification.action",
-            "value": "notification_request_permissions"
+            "value": "",
+            "event": "notification_request_permissions",
+            "data": {}
           }
         ]
       },
       "type": "editable",
-      "width": 309,
-      "height": 396,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 5276.912147615279,
-        "y": 5249.718789526162
+        "x": 5104.899309341853,
+        "y": 5419.5306846381545
       },
-      "parentId": "55",
-      "extent": "parent"
-    },
-    {
-      "id": "295",
-      "position": {
-        "x": 799.387559550627,
-        "y": 1664.7093951643928
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "295"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5302.554482173299,
-        "y": 5716.162389443384
-      },
-      "dragging": true,
       "parentId": "55",
       "extent": "parent"
     },
     {
       "id": "296",
       "position": {
-        "x": 1077.2592540144042,
-        "y": 1899.0016845783957
+        "x": 730.3979187327677,
+        "y": 1676.981855252755
       },
       "data": {
         "label": "Data action",
         "category": "dataAction",
         "nodeLabel": "Data Action",
         "nodeId": "296",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "notification.isEnabled",
+            "value": "",
+            "event": "true",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 400,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5187.290272789517,
+        "y": 6284.38967221052
+      },
+      "dragging": true,
+      "parentId": "55",
+      "extent": "parent"
+    },
+    {
+      "id": "298",
+      "position": {
+        "x": 704.7959181988208,
+        "y": 2506.3018147866724
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "298",
         "dataActions": [
           {
             "type": "trigger",
@@ -4597,8 +4610,8 @@
       "height": 400,
       "selected": false,
       "positionAbsolute": {
-        "x": 5596.426176637076,
-        "y": 5502.454678857387
+        "x": 5161.68827225557,
+        "y": 7113.7096317444375
       },
       "dragging": true,
       "parentId": "55",
@@ -4685,18 +4698,18 @@
     {
       "id": "51",
       "position": {
-        "x": 780.5411096930511,
-        "y": 673.3861490353866
+        "x": 762.5411096930511,
+        "y": 733.3861490353866
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 999.9697616223198,
-        "y": 10370.099627734668
+        "x": 5310.546288014851,
+        "y": 5082.4989561348275
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "55",
       "extent": "parent",
       "data": {
@@ -4763,16 +4776,16 @@
     {
       "id": "54",
       "position": {
-        "x": 793.4291466703289,
-        "y": 2373
+        "x": 741.9341076385517,
+        "y": 3024
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 5312.596069293001,
-        "y": 5976.452994278991
+        "x": 5198.826461695301,
+        "y": 7631.407816957765
       },
       "dragging": true,
       "parentId": "55",
@@ -7228,68 +7241,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "293",
-      "sourceHandle": null,
-      "target": "54",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-293-54",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "295",
-      "sourceHandle": null,
-      "target": "54",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-295-54"
-    },
-    {
-      "zIndex": 1001,
-      "source": "294",
-      "sourceHandle": null,
-      "target": "295",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-294-295",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "295",
-      "sourceHandle": null,
-      "target": "296",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "notification.isEnabled == true"
-      },
-      "id": "reactflow__edge-295-296",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "296",
-      "sourceHandle": null,
-      "target": "54",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-296-54",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "227",
       "sourceHandle": null,
       "target": "297",
@@ -7330,6 +7281,60 @@
         "filter": "none"
       },
       "id": "reactflow__edge-260-297"
+    },
+    {
+      "zIndex": 1001,
+      "source": "294",
+      "sourceHandle": null,
+      "target": "296",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-294-296"
+    },
+    {
+      "zIndex": 1001,
+      "source": "293",
+      "sourceHandle": null,
+      "target": "298",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-293-298"
+    },
+    {
+      "zIndex": 1001,
+      "source": "296",
+      "sourceHandle": null,
+      "target": "298",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-296-298",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "298",
+      "sourceHandle": null,
+      "target": "54",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-298-54",
+      "selected": false
     }
   ]
 }

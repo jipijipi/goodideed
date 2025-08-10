@@ -179,14 +179,31 @@ class ChatService {
     } catch (e) {
       logger.error('Failed to recalculate task.status: $e');
     }
+    
+    // Reschedule notifications after task calculations
+    try {
+      final notificationService = ServiceLocator.instance.notificationService;
+      await notificationService.scheduleDeadlineReminder();
+      logger.info('Successfully rescheduled notifications after task refresh');
+    } catch (e) {
+      logger.error('Failed to reschedule notifications after task refresh: $e');
+    }
   }
 
   /// Handle notification_request_permissions event from dataAction trigger
   Future<void> _handleNotificationRequestPermissions() async {
     try {
       final notificationService = ServiceLocator.instance.notificationService;
+      
+      logger.info('Script triggered notification permission request');
       final granted = await notificationService.requestPermissions();
-      logger.info('Notification permissions request completed: $granted');
+      
+      if (granted) {
+        logger.info('Notification permissions granted by user');
+      } else {
+        logger.warning('Notification permissions denied or already decided by user');
+        logger.info('Note: If previously denied, user must enable manually in device Settings');
+      }
     } catch (e) {
       logger.error('Failed to request notification permissions: $e');
     }

@@ -6,12 +6,22 @@ import 'user_data_service.dart';
 import 'logger_service.dart';
 import '../constants/storage_keys.dart';
 import '../utils/active_date_calculator.dart';
+import '../models/notification_permission_status.dart';
+import '../models/notification_tap_event.dart';
+import 'app_state_service.dart';
+import 'dart:convert';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
   final UserDataService _userDataService;
   final LoggerService _logger = LoggerService.instance;
   late final ActiveDateCalculator _activeDateCalculator;
+  
+  // App state service for tracking notification taps
+  AppStateService? _appStateService;
+  
+  // Callback for notification tap events (for backward compatibility)
+  Function(NotificationTapEvent)? _onNotificationTap;
   
   static const int _dailyReminderNotificationId = 1001;
   static const String _channelId = 'daily_reminders';
@@ -94,9 +104,81 @@ class NotificationService {
         ?.createNotificationChannel(androidChannel);
   }
 
+  /// Set the AppStateService for tracking notification taps
+  void setAppStateService(AppStateService appStateService) {
+    _appStateService = appStateService;
+  }
+
+  /// Set callback for notification tap events (for backward compatibility)
+  void setNotificationTapCallback(Function(NotificationTapEvent) callback) {
+    _onNotificationTap = callback;
+  }
+
+  /// Get current notification permission status without requesting permissions
+  Future<NotificationPermissionStatus> getPermissionStatus() async {
+    _logger.info('Checking notification permission status');
+    
+    try {
+      // Check if we've ever requested permissions
+      final requestCount = await _userDataService.getValue<int>(StorageKeys.notificationPermissionRequestCount) ?? 0;
+      final hasBeenRequested = requestCount > 0;
+      
+      // Get stored permission status if available
+      final storedStatus = await _userDataService.getValue<String>(StorageKeys.notificationPermissionStatus);
+      if (storedStatus != null) {
+        try {
+          final index = NotificationPermissionStatus.values.indexWhere((status) => status.name == storedStatus);
+          if (index != -1) {
+            final status = NotificationPermissionStatus.values[index];
+            _logger.info('Found stored permission status: $status');
+            return status;
+          }
+        } catch (e) {
+          _logger.warning('Failed to parse stored permission status: $e');
+        }
+      }
+      
+      if (Platform.isIOS) {
+        // On iOS, we can't check permission status without requesting
+        // So we rely on stored status or assume not requested if never stored
+        if (!hasBeenRequested) {
+          return NotificationPermissionStatus.notRequested;
+        }
+        
+        // If we have requested before but no stored status, it's unknown
+        return NotificationPermissionStatus.unknown;
+      }
+      
+      if (Platform.isAndroid) {
+        // On Android, we can't easily check permission status without requesting
+        // Similar approach - rely on stored status
+        if (!hasBeenRequested) {
+          return NotificationPermissionStatus.notRequested;
+        }
+        
+        return NotificationPermissionStatus.unknown;
+      }
+      
+      // Other platforms (including macOS)
+      if (!hasBeenRequested) {
+        return NotificationPermissionStatus.notRequested;
+      }
+      
+      return NotificationPermissionStatus.unknown;
+    } catch (e) {
+      _logger.error('Failed to get permission status: $e');
+      return NotificationPermissionStatus.unknown;
+    }
+  }
+
   Future<bool> requestPermissions() async {
     _logger.info('=== REQUESTING NOTIFICATION PERMISSIONS ===');
     _logger.info('Platform: ${Platform.operatingSystem}');
+    
+    // Update request tracking
+    final requestCount = await _userDataService.getValue<int>(StorageKeys.notificationPermissionRequestCount) ?? 0;
+    await _userDataService.storeValue(StorageKeys.notificationPermissionRequestCount, requestCount + 1);
+    await _userDataService.storeValue(StorageKeys.notificationPermissionLastRequested, DateTime.now().toIso8601String());
     
     try {
       if (Platform.isIOS) {
@@ -120,6 +202,10 @@ class NotificationService {
         _logger.info('iOS permissions result: $result');
         _logger.info('Alert: ${result != null ? "granted" : "denied/unknown"}');
         
+        // Store permission status
+        final status = NotificationPermissionStatus.fromBoolean(result, true);
+        await _userDataService.storeValue(StorageKeys.notificationPermissionStatus, status.name);
+        
         return result ?? false;
       }
       
@@ -134,6 +220,11 @@ class NotificationService {
         
         final result = await androidImplementation.requestNotificationsPermission();
         _logger.info('Android permissions result: $result');
+        
+        // Store permission status
+        final status = NotificationPermissionStatus.fromBoolean(result, true);
+        await _userDataService.storeValue(StorageKeys.notificationPermissionStatus, status.name);
+        
         return result ?? false;
       }
       
@@ -270,11 +361,21 @@ class NotificationService {
           ),
         );
         
+        // Create payload with tracking information
+        final payload = json.encode({
+          'type': 'dailyReminder',
+          'scheduledDate': scheduledDate.toIso8601String(),
+          'taskDate': currentDateString,
+          'deadlineTime': deadlineTimeString,
+          'notificationId': _dailyReminderNotificationId,
+        });
+        
         _logger.info('Calling zonedSchedule with:');
         _logger.info('  ID: $_dailyReminderNotificationId');
         _logger.info('  Title: Task Reminder');
         _logger.info('  Body: Time to check in on your task!');
         _logger.info('  Scheduled date: $scheduledDate');
+        _logger.info('  Payload: $payload');
         _logger.info('  No repeat - single notification for this task date');
         
         await _notifications.zonedSchedule(
@@ -284,6 +385,7 @@ class NotificationService {
           scheduledDate,
           notificationDetails,
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          payload: payload,
           // No matchDateTimeComponents - single notification for specific date
         );
         
@@ -360,9 +462,36 @@ class NotificationService {
   }
 
   void _onNotificationTapped(NotificationResponse response) {
-    _logger.info('Notification tapped: ${response.payload}');
-    // App will automatically open when notification is tapped
-    // Additional handling can be added here if needed
+    _logger.info('Notification tapped: ID=${response.id}, payload=${response.payload}');
+    
+    try {
+      // Create notification tap event
+      final tapEvent = NotificationTapEvent.fromResponse(
+        response.id ?? 0,
+        response.payload,
+        response.actionId,
+        response.input,
+        response.data,
+      );
+      
+      _logger.info('Created NotificationTapEvent: $tapEvent');
+      
+      // Track the event using AppStateService if available
+      if (_appStateService != null) {
+        _appStateService!.handleNotificationTap(tapEvent);
+        _logger.info('Notification tap event tracked by AppStateService');
+      } else {
+        _logger.warning('AppStateService not set - tap event not tracked');
+      }
+      
+      // Fire callback if set (for backward compatibility)
+      if (_onNotificationTap != null) {
+        _onNotificationTap!(tapEvent);
+        _logger.info('Notification tap event fired to callback');
+      }
+    } catch (e) {
+      _logger.error('Failed to process notification tap: $e');
+    }
   }
 
   /// Detect if running on iOS simulator

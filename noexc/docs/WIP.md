@@ -188,5 +188,3 @@ New notifications related triggers need to be added to the script's data action 
 2) Recalculates notification schedule
 3) Disable notifications
 
-
-1) I need a graceful fallback when currentDate + deadlineTime are in the past.

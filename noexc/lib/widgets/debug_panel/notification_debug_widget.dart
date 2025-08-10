@@ -21,6 +21,8 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
   Map<String, dynamic> _notificationStatus = {};
   List<Map<String, dynamic>> _scheduledNotifications = [];
   Map<String, dynamic> _platformInfo = {};
+  Map<String, dynamic> _permissionStatus = {};
+  Map<String, dynamic> _appState = {};
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -46,12 +48,33 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
       final status = await notificationService.getNotificationStatus();
       final scheduled = await notificationService.getScheduledNotificationDetails();
       final platform = notificationService.getPlatformInfo();
+      
+      // Get detailed permission status
+      final permissionStatus = await notificationService.getPermissionStatus();
+      final permissionData = {
+        'status': permissionStatus.name,
+        'description': permissionStatus.description,
+        'canScheduleNotifications': permissionStatus.canScheduleNotifications,
+        'shouldRequestPermissions': permissionStatus.shouldRequestPermissions,
+        'needsManualSettings': permissionStatus.needsManualSettings,
+      };
+      
+      // Get app state if available
+      Map<String, dynamic> appStateData = {};
+      try {
+        final appStateService = ServiceLocator.instance.appStateService;
+        appStateData = await appStateService.getNotificationState();
+      } catch (e) {
+        appStateData = {'error': 'AppStateService not available: $e'};
+      }
 
       if (mounted) {
         setState(() {
           _notificationStatus = status;
           _scheduledNotifications = scheduled;
           _platformInfo = platform;
+          _permissionStatus = permissionData;
+          _appState = appStateData;
           _isLoading = false;
         });
       }
@@ -105,6 +128,30 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
       _loadNotificationData();
     } catch (e) {
       widget.statusController?.addError('Failed to request permissions: $e');
+    }
+  }
+
+  Future<void> _checkPermissionStatus() async {
+    try {
+      final notificationService = ServiceLocator.instance.notificationService;
+      final status = await notificationService.getPermissionStatus();
+      
+      widget.statusController?.addInfo('Permission Status: ${status.description}');
+      _loadNotificationData();
+    } catch (e) {
+      widget.statusController?.addError('Failed to check permission status: $e');
+    }
+  }
+
+  Future<void> _clearAppState() async {
+    try {
+      final appStateService = ServiceLocator.instance.appStateService;
+      await appStateService.clearNotificationState();
+      
+      widget.statusController?.addSuccess('App notification state cleared');
+      _loadNotificationData();
+    } catch (e) {
+      widget.statusController?.addError('Failed to clear app state: $e');
     }
   }
 
@@ -326,6 +373,186 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     );
   }
 
+  Widget _buildPermissionStatusSection() {
+    if (_permissionStatus.isEmpty) return const SizedBox.shrink();
+
+    final status = _permissionStatus['status'] ?? 'unknown';
+    final description = _permissionStatus['description'] ?? 'No description';
+    final canSchedule = _permissionStatus['canScheduleNotifications'] ?? false;
+    final shouldRequest = _permissionStatus['shouldRequestPermissions'] ?? false;
+    final needsManual = _permissionStatus['needsManualSettings'] ?? false;
+
+    // Color coding based on status
+    Color statusColor = Colors.grey;
+    IconData statusIcon = Icons.help_outline;
+    
+    switch (status) {
+      case 'granted':
+        statusColor = Colors.green;
+        statusIcon = Icons.check_circle;
+        break;
+      case 'denied':
+        statusColor = Colors.red;
+        statusIcon = Icons.cancel;
+        break;
+      case 'notRequested':
+        statusColor = Colors.blue;
+        statusIcon = Icons.notifications_none;
+        break;
+      case 'restricted':
+        statusColor = Colors.orange;
+        statusIcon = Icons.block;
+        break;
+      default:
+        statusColor = Colors.grey;
+        statusIcon = Icons.help_outline;
+    }
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(statusIcon, color: statusColor, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'Permission Status',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            _buildInfoRow('Status:', status.toUpperCase()),
+            _buildInfoRow('Description:', description),
+            _buildInfoRow('Can Schedule:', canSchedule ? 'Yes' : 'No'),
+            _buildInfoRow('Should Request:', shouldRequest ? 'Yes' : 'No'),
+            _buildInfoRow('Needs Manual:', needsManual ? 'Yes' : 'No'),
+            
+            // Show helpful actions based on status
+            if (shouldRequest || needsManual) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: statusColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: statusColor, size: 16),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        shouldRequest 
+                          ? 'Ready to request permissions - use "Request Permissions" button'
+                          : 'Permission denied - user must enable in Settings manually',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: statusColor == Colors.grey ? Colors.grey.shade800 : 
+                                statusColor == Colors.green ? Colors.green.shade800 :
+                                statusColor == Colors.red ? Colors.red.shade800 :
+                                statusColor == Colors.blue ? Colors.blue.shade800 :
+                                statusColor == Colors.orange ? Colors.orange.shade800 :
+                                Colors.grey.shade800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAppStateSection() {
+    if (_appState.isEmpty) return const SizedBox.shrink();
+
+    final cameFromNotification = _appState['cameFromNotification'] ?? false;
+    final hasNotificationTapEvent = _appState['hasNotificationTapEvent'] ?? false;
+    final cameFromDailyReminder = _appState['cameFromDailyReminder'] ?? false;
+    final currentSessionEvent = _appState['currentSessionEvent'];
+    final persistedEvent = _appState['persistedEvent'];
+    final error = _appState['error'];
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  cameFromNotification ? Icons.touch_app : Icons.app_shortcut,
+                  color: cameFromNotification ? Colors.green : Colors.grey,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'App State Tracking',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            
+            if (error != null) ...[
+              _buildInfoRow('Error:', error),
+            ] else ...[
+              _buildInfoRow('Came From Notification:', cameFromNotification ? 'Yes' : 'No'),
+              _buildInfoRow('Has Tap Event:', hasNotificationTapEvent ? 'Yes' : 'No'),
+              _buildInfoRow('From Daily Reminder:', cameFromDailyReminder ? 'Yes' : 'No'),
+              
+              if (currentSessionEvent != null)
+                _buildInfoRow('Current Event:', currentSessionEvent.toString()),
+              if (persistedEvent != null)
+                _buildInfoRow('Persisted Event:', persistedEvent.toString()),
+                
+              // Show state actions
+              if (hasNotificationTapEvent) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.green, size: 16),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Notification tap event detected - use "Clear State" to reset',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildControlsSection() {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -367,7 +594,27 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                   child: OutlinedButton.icon(
                     onPressed: _isLoading ? null : _requestPermissions,
                     icon: const Icon(Icons.security, size: 16),
-                    label: const Text('Check Permissions'),
+                    label: const Text('Request Perms'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _checkPermissionStatus,
+                    icon: const Icon(Icons.info, size: 16),
+                    label: const Text('Check Status'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _clearAppState,
+                    icon: const Icon(Icons.clear, size: 16),
+                    label: const Text('Clear State'),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -478,6 +725,8 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
           
           // Show data sections (if no error) or just controls (if error)
           if (_errorMessage == null) ...[
+            _buildPermissionStatusSection(),
+            _buildAppStateSection(),
             _buildStatusSection(),
             _buildNotificationsList(),
             _buildPlatformInfo(),

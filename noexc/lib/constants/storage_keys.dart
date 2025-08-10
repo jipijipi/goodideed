@@ -47,6 +47,15 @@ class StorageKeys {
   static const String notificationLastScheduled = '${notificationPrefix}lastScheduled';
   static const String notificationScheduledFor = '${notificationPrefix}scheduledFor';
   
+  // Permission tracking keys
+  static const String notificationPermissionStatus = '${notificationPrefix}permissionStatus';
+  static const String notificationPermissionRequestCount = '${notificationPrefix}requestCount';
+  static const String notificationPermissionLastRequested = '${notificationPrefix}lastRequested';
+  
+  // Notification tap tracking keys (used by AppStateService)
+  static const String notificationLastTapEvent = '${notificationPrefix}lastTapEvent';
+  static const String notificationLastTapTime = '${notificationPrefix}lastTapTime';
+  
   // Private constructor to prevent instantiation
   StorageKeys._();
 }

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-10T15:53:13.356Z",
+  "lastUpdated": "2025-08-10T18:46:36.320Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-10T15:53:13.346Z"
+    "timestamp": "2025-08-10T18:46:36.309Z"
   },
   "nodes": [
     {
@@ -237,8 +237,8 @@
     {
       "id": "191",
       "position": {
-        "x": 4928.3196838509875,
-        "y": 593.6329931564428
+        "x": 4393.35946277423,
+        "y": 580.0158238926706
       },
       "data": {
         "label": "Group 191",
@@ -254,23 +254,23 @@
       "type": "group",
       "style": {
         "width": 1198.9867026085985,
-        "height": 3651.909900625098,
+        "height": 3650.909900625098,
         "zIndex": 999
       },
       "width": 1199,
-      "height": 3652,
+      "height": 3651,
       "selected": false,
       "positionAbsolute": {
-        "x": 4928.3196838509875,
-        "y": 593.6329931564428
+        "x": 4393.35946277423,
+        "y": 580.0158238926706
       },
       "dragging": false
     },
     {
       "id": "207",
       "position": {
-        "x": -1262.6838808848809,
-        "y": 425.95777941020947
+        "x": -2118.0666409166,
+        "y": 696.8797211996148
       },
       "data": {
         "label": "Group 207",
@@ -293,8 +293,8 @@
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": -1262.6838808848809,
-        "y": 425.95777941020947
+        "x": -2118.0666409166,
+        "y": 696.8797211996148
       },
       "dragging": false
     },
@@ -379,10 +379,10 @@
       },
       "type": "group",
       "style": {
-        "width": 847.0648599364185,
+        "width": 848.0648599364185,
         "height": 2281.4704407226463
       },
-      "width": 847,
+      "width": 848,
       "height": 2281,
       "selected": false,
       "positionAbsolute": {
@@ -1714,7 +1714,7 @@
           {
             "type": "set",
             "key": "task.lastResolutionDate",
-            "value": "{task.currentDate}"
+            "value": "task.currentDate"
           },
           {
             "type": "set",
@@ -2116,8 +2116,8 @@
     {
       "id": "297",
       "position": {
-        "x": 517.4425315134486,
-        "y": 2654.517347659814
+        "x": 487.9738544583597,
+        "y": 2685.3532773442885
       },
       "data": {
         "label": "Data action",
@@ -2131,23 +2131,16 @@
             "value": "",
             "event": "refresh_task_calculations",
             "data": {}
-          },
-          {
-            "type": "trigger",
-            "key": "notification.action",
-            "value": "",
-            "event": "notification_reschedule",
-            "data": {}
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 584,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
-        "x": 5445.762215364436,
-        "y": 3248.1503408162566
+        "x": 4881.33331723259,
+        "y": 3265.369101236959
       },
       "dragging": true,
       "parentId": "191",
@@ -4059,15 +4052,17 @@
             "data": {}
           },
           {
-            "type": "set",
-            "key": "user.property",
-            "value": ""
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 579,
+      "height": 584,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -4293,8 +4288,8 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 764,
+      "width": 309,
+      "height": 765,
       "selected": false,
       "positionAbsolute": {
         "x": 3859.3240325436477,
@@ -4564,17 +4559,15 @@
         "nodeId": "296",
         "dataActions": [
           {
-            "type": "trigger",
+            "type": "set",
             "key": "notification.isEnabled",
-            "value": "",
-            "event": "true",
-            "data": {}
+            "value": true
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 400,
+      "height": 395,
       "selected": false,
       "positionAbsolute": {
         "x": 5187.290272789517,
@@ -4598,9 +4591,9 @@
         "dataActions": [
           {
             "type": "trigger",
-            "key": "notification.action",
+            "key": "task.info",
             "value": "",
-            "event": "notification_reschedule",
+            "event": "refresh_task_calculations",
             "data": {}
           }
         ]

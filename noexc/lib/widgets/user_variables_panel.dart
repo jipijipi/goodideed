@@ -13,6 +13,7 @@ import 'debug_panel/user_data_manager.dart';
 import 'debug_panel/date_time_picker_widget.dart';
 import 'debug_panel/debug_status_area.dart';
 import 'debug_panel/logger_controls_widget.dart';
+import 'debug_panel/notification_debug_widget.dart';
 
 /// Main user variables panel that orchestrates the display of user data and debug controls
 class UserVariablesPanel extends StatefulWidget {
@@ -311,6 +312,12 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                             userDataService: widget.userDataService,
                             onDataChanged: refreshData,
                             statusController: _statusController,
+                          ),
+                          
+                          // Notification Debug Section
+                          NotificationDebugWidget(
+                            statusController: _statusController,
+                            onDataRefresh: refreshData,
                           ),
                           
                           // Data Display Section

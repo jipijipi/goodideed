@@ -228,4 +228,79 @@ class NotificationService {
     // App will automatically open when notification is tapped
     // Additional handling can be added here if needed
   }
+
+  // Debug helper methods
+  
+  /// Get detailed notification status for debugging
+  Future<Map<String, dynamic>> getNotificationStatus() async {
+    try {
+      final isEnabled = await _userDataService.getValue<bool>(StorageKeys.notificationIsEnabled) ?? false;
+      final lastScheduled = await _userDataService.getValue<String>(StorageKeys.notificationLastScheduled);
+      final remindersIntensity = await _userDataService.getValue<int>('task.remindersIntensity') ?? 0;
+      final deadlineTime = await _userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+      final pendingCount = (await getPendingNotifications()).length;
+      
+      return {
+        'isEnabled': isEnabled,
+        'lastScheduled': lastScheduled,
+        'remindersIntensity': remindersIntensity,
+        'deadlineTime': deadlineTime,
+        'pendingCount': pendingCount,
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    } catch (e) {
+      _logger.error('Failed to get notification status: $e');
+      return {
+        'isEnabled': false,
+        'error': e.toString(),
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    }
+  }
+  
+  /// Get formatted details of all scheduled notifications
+  Future<List<Map<String, dynamic>>> getScheduledNotificationDetails() async {
+    try {
+      final pending = await getPendingNotifications();
+      
+      return pending.map((notification) {
+        return {
+          'id': notification.id,
+          'title': notification.title ?? 'No title',
+          'body': notification.body ?? 'No body',
+          'payload': notification.payload ?? 'No payload',
+          'scheduledTime': 'Daily repeat',
+          'type': 'Daily reminder',
+        };
+      }).toList();
+    } catch (e) {
+      _logger.error('Failed to get scheduled notification details: $e');
+      return [];
+    }
+  }
+  
+  /// Force reschedule notifications (for debug purposes)
+  Future<void> forceReschedule() async {
+    _logger.info('Force rescheduling notifications (debug)');
+    await scheduleDeadlineReminder();
+  }
+  
+  /// Get platform-specific notification capabilities info
+  Map<String, dynamic> getPlatformInfo() {
+    try {
+      return {
+        'platform': Platform.operatingSystem,
+        'supportsScheduled': true,
+        'supportsRepeating': true,
+        'channelId': _channelId,
+        'channelName': _channelName,
+        'dailyReminderNotificationId': _dailyReminderNotificationId,
+      };
+    } catch (e) {
+      return {
+        'platform': 'unknown',
+        'error': e.toString(),
+      };
+    }
+  }
 }

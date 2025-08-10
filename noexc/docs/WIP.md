@@ -155,7 +155,7 @@ I want to introduce the concept of local notifications/reminders to the
   possible for one reminder per day for now at deadline time. Make sure to
   keep everything notification related modular
 
-  
+
 
 rule : 
 
@@ -176,3 +176,8 @@ intensity 3:
     1 at deadline time
     8 total
 
+8 9 10 11 12 13 14 15 16 17 18
+1                            1
+
+14 15 16 17 18
+1           1

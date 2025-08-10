@@ -63,26 +63,53 @@ void main() {
         };
         final payload = json.encode(payloadData);
 
-        final event = NotificationTapEvent.fromResponse(999, payload, null, null, null);
+        final event = NotificationTapEvent.fromResponse(
+          999,
+          payload,
+          null,
+          null,
+          null,
+        );
 
         expect(event.type, equals(NotificationType.dailyReminder));
         expect(event.payload, equals(payload));
       });
 
-      test('should fallback to ID-based type detection when payload is invalid JSON', () {
-        final event = NotificationTapEvent.fromResponse(1001, 'invalid json', null, null, null);
+      test(
+        'should fallback to ID-based type detection when payload is invalid JSON',
+        () {
+          final event = NotificationTapEvent.fromResponse(
+            1001,
+            'invalid json',
+            null,
+            null,
+            null,
+          );
 
-        expect(event.type, equals(NotificationType.dailyReminder));
-      });
+          expect(event.type, equals(NotificationType.dailyReminder));
+        },
+      );
 
       test('should use unknown type when no type info available', () {
-        final event = NotificationTapEvent.fromResponse(999, null, null, null, null);
+        final event = NotificationTapEvent.fromResponse(
+          999,
+          null,
+          null,
+          null,
+          null,
+        );
 
         expect(event.type, equals(NotificationType.unknown));
       });
 
       test('should handle empty payload gracefully', () {
-        final event = NotificationTapEvent.fromResponse(123, '', null, null, null);
+        final event = NotificationTapEvent.fromResponse(
+          123,
+          '',
+          null,
+          null,
+          null,
+        );
 
         expect(event.type, equals(NotificationType.unknown));
         expect(event.payload, equals(''));
@@ -90,14 +117,17 @@ void main() {
     });
 
     group('convenience getters', () {
-      test('isFromDailyReminder should return true for daily reminder type', () {
-        final event = NotificationTapEvent(
-          notificationId: 123,
-          type: NotificationType.dailyReminder,
-        );
+      test(
+        'isFromDailyReminder should return true for daily reminder type',
+        () {
+          final event = NotificationTapEvent(
+            notificationId: 123,
+            type: NotificationType.dailyReminder,
+          );
 
-        expect(event.isFromDailyReminder, isTrue);
-      });
+          expect(event.isFromDailyReminder, isTrue);
+        },
+      );
 
       test('isFromDailyReminder should return false for other types', () {
         final event = NotificationTapEvent(
@@ -117,13 +147,22 @@ void main() {
         expect(event.isActionTap, isTrue);
       });
 
-      test('isActionTap should return false when actionId is null or empty', () {
-        final event1 = NotificationTapEvent(notificationId: 123, actionId: null);
-        final event2 = NotificationTapEvent(notificationId: 123, actionId: '');
+      test(
+        'isActionTap should return false when actionId is null or empty',
+        () {
+          final event1 = NotificationTapEvent(
+            notificationId: 123,
+            actionId: null,
+          );
+          final event2 = NotificationTapEvent(
+            notificationId: 123,
+            actionId: '',
+          );
 
-        expect(event1.isActionTap, isFalse);
-        expect(event2.isActionTap, isFalse);
-      });
+          expect(event1.isActionTap, isFalse);
+          expect(event2.isActionTap, isFalse);
+        },
+      );
 
       test('hasUserInput should return true when input is present', () {
         final event = NotificationTapEvent(
@@ -155,26 +194,31 @@ void main() {
       });
 
       test('payloadData should return null for invalid JSON', () {
-        final event = NotificationTapEvent(notificationId: 123, payload: 'invalid json');
+        final event = NotificationTapEvent(
+          notificationId: 123,
+          payload: 'invalid json',
+        );
         expect(event.payloadData, isNull);
       });
 
       test('payloadData should parse valid JSON', () {
         final data = {'key': 'value', 'number': 42};
         final payload = json.encode(data);
-        final event = NotificationTapEvent(notificationId: 123, payload: payload);
+        final event = NotificationTapEvent(
+          notificationId: 123,
+          payload: payload,
+        );
 
         expect(event.payloadData, equals(data));
       });
 
       test('getPayloadValue should return typed values from payload', () {
-        final data = {
-          'stringValue': 'test',
-          'intValue': 42,
-          'boolValue': true,
-        };
+        final data = {'stringValue': 'test', 'intValue': 42, 'boolValue': true};
         final payload = json.encode(data);
-        final event = NotificationTapEvent(notificationId: 123, payload: payload);
+        final event = NotificationTapEvent(
+          notificationId: 123,
+          payload: payload,
+        );
 
         expect(event.getPayloadValue<String>('stringValue'), equals('test'));
         expect(event.getPayloadValue<int>('intValue'), equals(42));
@@ -182,12 +226,18 @@ void main() {
       });
 
       test('getPayloadValue should return null for missing keys', () {
-        final event = NotificationTapEvent(notificationId: 123, payload: '{"key": "value"}');
+        final event = NotificationTapEvent(
+          notificationId: 123,
+          payload: '{"key": "value"}',
+        );
         expect(event.getPayloadValue<String>('missingKey'), isNull);
       });
 
       test('getPayloadValue should return null for wrong type', () {
-        final event = NotificationTapEvent(notificationId: 123, payload: '{"key": "value"}');
+        final event = NotificationTapEvent(
+          notificationId: 123,
+          payload: '{"key": "value"}',
+        );
         expect(event.getPayloadValue<int>('key'), isNull);
       });
 
@@ -220,8 +270,14 @@ void main() {
       });
 
       test('should not be equal when properties differ', () {
-        final event1 = NotificationTapEvent(notificationId: 123, payload: 'test1');
-        final event2 = NotificationTapEvent(notificationId: 123, payload: 'test2');
+        final event1 = NotificationTapEvent(
+          notificationId: 123,
+          payload: 'test1',
+        );
+        final event2 = NotificationTapEvent(
+          notificationId: 123,
+          payload: 'test2',
+        );
 
         expect(event1, isNot(equals(event2)));
       });
@@ -246,32 +302,68 @@ void main() {
   group('NotificationType', () {
     group('fromString', () {
       test('should parse daily reminder variants correctly', () {
-        expect(NotificationType.fromString('dailyReminder'), equals(NotificationType.dailyReminder));
-        expect(NotificationType.fromString('daily_reminder'), equals(NotificationType.dailyReminder));
-        expect(NotificationType.fromString('DAILYREMINDER'), equals(NotificationType.dailyReminder));
+        expect(
+          NotificationType.fromString('dailyReminder'),
+          equals(NotificationType.dailyReminder),
+        );
+        expect(
+          NotificationType.fromString('daily_reminder'),
+          equals(NotificationType.dailyReminder),
+        );
+        expect(
+          NotificationType.fromString('DAILYREMINDER'),
+          equals(NotificationType.dailyReminder),
+        );
       });
 
       test('should parse other types correctly', () {
-        expect(NotificationType.fromString('achievement'), equals(NotificationType.achievement));
-        expect(NotificationType.fromString('warning'), equals(NotificationType.warning));
-        expect(NotificationType.fromString('system'), equals(NotificationType.system));
+        expect(
+          NotificationType.fromString('achievement'),
+          equals(NotificationType.achievement),
+        );
+        expect(
+          NotificationType.fromString('warning'),
+          equals(NotificationType.warning),
+        );
+        expect(
+          NotificationType.fromString('system'),
+          equals(NotificationType.system),
+        );
       });
 
       test('should return unknown for unrecognized types', () {
-        expect(NotificationType.fromString('invalid'), equals(NotificationType.unknown));
-        expect(NotificationType.fromString(''), equals(NotificationType.unknown));
+        expect(
+          NotificationType.fromString('invalid'),
+          equals(NotificationType.unknown),
+        );
+        expect(
+          NotificationType.fromString(''),
+          equals(NotificationType.unknown),
+        );
       });
     });
 
     group('fromNotificationId', () {
       test('should return dailyReminder for ID 1001', () {
-        expect(NotificationType.fromNotificationId(1001), equals(NotificationType.dailyReminder));
+        expect(
+          NotificationType.fromNotificationId(1001),
+          equals(NotificationType.dailyReminder),
+        );
       });
 
       test('should return unknown for other IDs', () {
-        expect(NotificationType.fromNotificationId(999), equals(NotificationType.unknown));
-        expect(NotificationType.fromNotificationId(0), equals(NotificationType.unknown));
-        expect(NotificationType.fromNotificationId(-1), equals(NotificationType.unknown));
+        expect(
+          NotificationType.fromNotificationId(999),
+          equals(NotificationType.unknown),
+        );
+        expect(
+          NotificationType.fromNotificationId(0),
+          equals(NotificationType.unknown),
+        );
+        expect(
+          NotificationType.fromNotificationId(-1),
+          equals(NotificationType.unknown),
+        );
       });
     });
 

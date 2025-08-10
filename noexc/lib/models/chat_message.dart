@@ -4,15 +4,7 @@ import 'data_action.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 
-enum MessageType {
-  bot,
-  user,
-  choice,
-  textInput,
-  autoroute,
-  dataAction,
-  image,
-}
+enum MessageType { bot, user, choice, textInput, autoroute, dataAction, image }
 
 class ChatMessage {
   final int id;
@@ -24,7 +16,7 @@ class ChatMessage {
   final MessageType type;
   final List<Choice>? choices;
   final int? nextMessageId;
-  final String? sequenceId;  // Universal cross-sequence navigation
+  final String? sequenceId; // Universal cross-sequence navigation
   final String? storeKey;
   final String placeholderText;
   final String? selectedChoiceText;
@@ -42,7 +34,7 @@ class ChatMessage {
     this.type = MessageType.bot,
     this.choices,
     this.nextMessageId,
-    this.sequenceId,  // Universal cross-sequence navigation
+    this.sequenceId, // Universal cross-sequence navigation
     this.storeKey,
     this.placeholderText = AppConstants.defaultPlaceholderText,
     this.selectedChoiceText,
@@ -50,48 +42,50 @@ class ChatMessage {
     this.dataActions,
     this.contentKey,
     this.imagePath,
-  }) :
-       assert(
+  }) : assert(
          type != MessageType.choice || text.isEmpty,
-         'Choice messages should not have text content'
+         'Choice messages should not have text content',
        ),
        assert(
          type != MessageType.textInput || text.isEmpty,
-         'Text input messages should not have text content'
+         'Text input messages should not have text content',
        ),
        assert(
          type != MessageType.autoroute || text.isEmpty,
-         'Autoroute messages should not have text content'
+         'Autoroute messages should not have text content',
        ),
        assert(
          type != MessageType.dataAction || text.isEmpty,
-         'DataAction messages should not have text content'
+         'DataAction messages should not have text content',
        ),
        assert(
          type != MessageType.image || text.isEmpty,
-         'Image messages should not have text content'
+         'Image messages should not have text content',
        );
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) {
     List<Choice>? choices;
     if (json['choices'] != null) {
-      choices = (json['choices'] as List)
-          .map((choiceJson) => Choice.fromJson(choiceJson))
-          .toList();
+      choices =
+          (json['choices'] as List)
+              .map((choiceJson) => Choice.fromJson(choiceJson))
+              .toList();
     }
 
     List<RouteCondition>? routes;
     if (json['routes'] != null) {
-      routes = (json['routes'] as List)
-          .map((routeJson) => RouteCondition.fromJson(routeJson))
-          .toList();
+      routes =
+          (json['routes'] as List)
+              .map((routeJson) => RouteCondition.fromJson(routeJson))
+              .toList();
     }
 
     List<DataAction>? dataActions;
     if (json['dataActions'] != null) {
-      dataActions = (json['dataActions'] as List)
-          .map((actionJson) => DataAction.fromJson(actionJson))
-          .toList();
+      dataActions =
+          (json['dataActions'] as List)
+              .map((actionJson) => DataAction.fromJson(actionJson))
+              .toList();
     }
 
     // Determine message type from 'type' field
@@ -105,9 +99,10 @@ class ChatMessage {
     } else {
       // Default to bot message if no type specified
       final sender = json['sender'] as String? ?? ChatConfig.botSender;
-      messageType = sender == ChatConfig.userSender ? MessageType.user : MessageType.bot;
+      messageType =
+          sender == ChatConfig.userSender ? MessageType.user : MessageType.bot;
     }
-    
+
     // For interactive messages, use empty text to enforce single responsibility
     String messageText = json['text'] as String? ?? '';
     switch (messageType) {
@@ -122,9 +117,9 @@ class ChatMessage {
         // Do nothing
         break;
     }
-    
+
     final imagePath = json['imagePath'] as String?;
-    
+
     final hasExplicitDelay = json.containsKey('delay');
 
     return ChatMessage(
@@ -136,9 +131,12 @@ class ChatMessage {
       type: messageType,
       choices: choices,
       nextMessageId: json['nextMessageId'] as int?,
-      sequenceId: json['sequenceId'] as String?,  // Universal cross-sequence navigation
+      sequenceId:
+          json['sequenceId'] as String?, // Universal cross-sequence navigation
       storeKey: json['storeKey'] as String?,
-      placeholderText: json['placeholderText'] as String? ?? AppConstants.defaultPlaceholderText,
+      placeholderText:
+          json['placeholderText'] as String? ??
+          AppConstants.defaultPlaceholderText,
       selectedChoiceText: json['selectedChoiceText'] as String?,
       routes: routes,
       dataActions: dataActions,
@@ -199,7 +197,8 @@ class ChatMessage {
     }
 
     if (dataActions != null) {
-      json['dataActions'] = dataActions!.map((action) => action.toJson()).toList();
+      json['dataActions'] =
+          dataActions!.map((action) => action.toJson()).toList();
     }
 
     if (contentKey != null) {
@@ -215,25 +214,25 @@ class ChatMessage {
 
   bool get isFromBot => sender == ChatConfig.botSender;
   bool get isFromUser => sender == ChatConfig.userSender;
-  
-  
+
   /// Returns true if this message has multiple texts (contains separator)
   bool get hasMultipleTexts => text.contains(ChatConfig.multiTextSeparator);
-  
+
   /// Returns all text content as a list (splits on separator or single text)
   List<String> get allTexts {
     if (hasMultipleTexts) {
-      return text.split(ChatConfig.multiTextSeparator)
+      return text
+          .split(ChatConfig.multiTextSeparator)
           .map((t) => t.trim())
           .where((t) => t.isNotEmpty)
           .toList();
     }
     return [text];
   }
-  
+
   /// Returns all delays as a list (uses same delay for all split texts)
   List<int> get allDelays => List.filled(allTexts.length, delay);
-  
+
   /// Creates a copy of this message with optional field updates
   ChatMessage copyWith({
     int? id,
@@ -272,42 +271,62 @@ class ChatMessage {
       imagePath: imagePath ?? this.imagePath,
     );
   }
-  
+
   /// Creates individual ChatMessage objects for each text in a multi-text message
   List<ChatMessage> expandToIndividualMessages() {
     if (!hasMultipleTexts) {
       return [this];
     }
-    
+
     final textList = allTexts;
     final delayList = allDelays;
     final messages = <ChatMessage>[];
-    
+
     for (int i = 0; i < textList.length; i++) {
       final isLast = i == textList.length - 1;
-      final messageType = isLast ? type : MessageType.bot; // Only last message keeps original type
-      final messageText = isLast && (type == MessageType.choice || type == MessageType.textInput || type == MessageType.autoroute || type == MessageType.dataAction || type == MessageType.image) 
-          ? '' : textList[i]; // Interactive messages have no text
-      
-      messages.add(ChatMessage(
-        id: id, // Keep same ID for all parts of multi-text message
-        text: messageText,
-        delay: delayList[i],
-        sender: sender,
-        type: messageType,
-        choices: isLast ? choices : null,
-        nextMessageId: isLast ? nextMessageId : null, // Only last message has next ID
-        sequenceId: isLast ? sequenceId : null, // Only last message has sequence navigation
-        storeKey: isLast ? storeKey : null, // Only last message stores data
-        placeholderText: placeholderText,
-        selectedChoiceText: selectedChoiceText,
-        routes: isLast ? routes : null,
-        dataActions: isLast ? dataActions : null,
-        contentKey: isLast ? contentKey : null, // Only last message has contentKey for processing
-        imagePath: isLast ? imagePath : null, // Only last message has imagePath
-      ));
+      final messageType =
+          isLast
+              ? type
+              : MessageType.bot; // Only last message keeps original type
+      final messageText =
+          isLast &&
+                  (type == MessageType.choice ||
+                      type == MessageType.textInput ||
+                      type == MessageType.autoroute ||
+                      type == MessageType.dataAction ||
+                      type == MessageType.image)
+              ? ''
+              : textList[i]; // Interactive messages have no text
+
+      messages.add(
+        ChatMessage(
+          id: id, // Keep same ID for all parts of multi-text message
+          text: messageText,
+          delay: delayList[i],
+          sender: sender,
+          type: messageType,
+          choices: isLast ? choices : null,
+          nextMessageId:
+              isLast ? nextMessageId : null, // Only last message has next ID
+          sequenceId:
+              isLast
+                  ? sequenceId
+                  : null, // Only last message has sequence navigation
+          storeKey: isLast ? storeKey : null, // Only last message stores data
+          placeholderText: placeholderText,
+          selectedChoiceText: selectedChoiceText,
+          routes: isLast ? routes : null,
+          dataActions: isLast ? dataActions : null,
+          contentKey:
+              isLast
+                  ? contentKey
+                  : null, // Only last message has contentKey for processing
+          imagePath:
+              isLast ? imagePath : null, // Only last message has imagePath
+        ),
+      );
     }
-    
+
     return messages;
   }
 }

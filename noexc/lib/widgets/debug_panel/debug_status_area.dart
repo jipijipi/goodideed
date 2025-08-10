@@ -18,11 +18,7 @@ class StatusMessage {
 }
 
 /// Types of status messages with associated styling
-enum StatusType {
-  success,
-  error,
-  info,
-}
+enum StatusType { success, error, info }
 
 /// Compact status area widget for showing recent debug panel actions
 class DebugStatusArea extends StatefulWidget {
@@ -45,7 +41,7 @@ class DebugStatusArea extends StatefulWidget {
 
 class _DebugStatusAreaState extends State<DebugStatusArea> {
   Timer? _cleanupTimer;
-  
+
   @override
   void initState() {
     super.initState();
@@ -92,13 +88,13 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
     final now = DateTime.now();
     final messages = _currentMessages;
     final oldMessages = <StatusMessage>[];
-    
+
     for (final message in messages) {
       if (now.difference(message.timestamp) > widget.messageDuration) {
         oldMessages.add(message);
       }
     }
-    
+
     // Remove old messages through the controller if available
     if (widget.controller != null) {
       for (final message in oldMessages) {
@@ -109,12 +105,15 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
       widget.messages!.removeWhere((message) {
         return now.difference(message.timestamp) > widget.messageDuration;
       });
-      
+
       // Keep only the most recent messages
       if (widget.messages!.length > widget.maxMessages) {
-        widget.messages!.removeRange(0, widget.messages!.length - widget.maxMessages);
+        widget.messages!.removeRange(
+          0,
+          widget.messages!.length - widget.maxMessages,
+        );
       }
-      
+
       if (mounted) {
         setState(() {});
       }
@@ -182,7 +181,7 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
   @override
   Widget build(BuildContext context) {
     final messages = _currentMessages;
-    
+
     if (messages.isEmpty) {
       return const SizedBox.shrink();
     }
@@ -191,7 +190,9 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
       padding: DesignTokens.debugCardContentPadding,
       margin: DesignTokens.debugSectionMargin,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        color: Theme.of(
+          context,
+        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
         border: Border.all(
           color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
@@ -220,8 +221,7 @@ class _DebugStatusAreaState extends State<DebugStatusArea> {
             ],
           ),
           const SizedBox(height: 4),
-          ...messages
-              .reversed
+          ...messages.reversed
               .take(widget.maxMessages)
               .map((message) => _buildStatusMessage(message)),
         ],
@@ -237,12 +237,14 @@ class DebugStatusController extends ChangeNotifier {
   List<StatusMessage> get messages => List.unmodifiable(_messages);
 
   void addMessage(String message, StatusType type, {String? key}) {
-    _messages.add(StatusMessage(
-      message: message,
-      type: type,
-      timestamp: DateTime.now(),
-      key: key,
-    ));
+    _messages.add(
+      StatusMessage(
+        message: message,
+        type: type,
+        timestamp: DateTime.now(),
+        key: key,
+      ),
+    );
     notifyListeners();
   }
 
@@ -277,12 +279,14 @@ mixin DebugStatusMixin<T extends StatefulWidget> on State<T> {
 
   void addStatusMessage(String message, StatusType type, {String? key}) {
     setState(() {
-      _statusMessages.add(StatusMessage(
-        message: message,
-        type: type,
-        timestamp: DateTime.now(),
-        key: key,
-      ));
+      _statusMessages.add(
+        StatusMessage(
+          message: message,
+          type: type,
+          timestamp: DateTime.now(),
+          key: key,
+        ),
+      );
     });
   }
 

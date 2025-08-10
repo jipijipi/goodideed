@@ -26,7 +26,6 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     // Route to appropriate message type based on single responsibility
     if (message.type == MessageType.choice && message.choices != null) {
       return ChoiceButtons(
@@ -34,19 +33,16 @@ class MessageBubble extends StatelessWidget {
         onChoiceSelected: onChoiceSelected,
       );
     }
-    
+
     if (message.type == MessageType.textInput && isCurrentTextInput) {
-      return TextInputBubble(
-        message: message,
-        onSubmitted: onTextSubmitted,
-      );
+      return TextInputBubble(message: message, onSubmitted: onTextSubmitted);
     }
-    
+
     // Skip autoroute messages - they have no visual representation
     if (message.type == MessageType.autoroute) {
       return const SizedBox.shrink();
     }
-    
+
     // Image messages - display image or Rive animation with consistent spacing
     if (message.type == MessageType.image && message.imagePath != null) {
       return Padding(
@@ -54,7 +50,7 @@ class MessageBubble extends StatelessWidget {
         child: _buildImageOrAnimation(context, message.imagePath!),
       );
     }
-    
+
     // Regular text messages only
     return _buildRegularBubble(context);
   }
@@ -65,22 +61,21 @@ class MessageBubble extends StatelessWidget {
     if (message.text.trim().isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     final isBot = message.isFromBot;
-    
+
     return Padding(
       padding: DesignTokens.messageBubbleMargin,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: isBot ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment:
+            isBot ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: [
           if (isBot && DesignTokens.showAvatars) ...[
             _buildAvatar(context, isBot: true),
             const SizedBox(width: DesignTokens.avatarSpacing),
           ],
-          Flexible(
-            child: _buildMessageContainer(context, isBot),
-          ),
+          Flexible(child: _buildMessageContainer(context, isBot)),
           if (!isBot && DesignTokens.showAvatars) ...[
             const SizedBox(width: DesignTokens.avatarSpacing),
             _buildAvatar(context, isBot: false),
@@ -94,13 +89,16 @@ class MessageBubble extends StatelessWidget {
   Widget _buildMessageContainer(BuildContext context, bool isBot) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
+        maxWidth:
+            MediaQuery.of(context).size.width *
+            DesignTokens.messageMaxWidthFactor,
       ),
       padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
-        color: isBot 
-            ? DesignTokens.botMessageBackgroundLightWithAlpha
-            : DesignTokens.userMessageBackground,
+        color:
+            isBot
+                ? DesignTokens.botMessageBackgroundLightWithAlpha
+                : DesignTokens.userMessageBackground,
         borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
       ),
       child: MarkdownBody(
@@ -117,9 +115,10 @@ class MessageBubble extends StatelessWidget {
   /// Builds the avatar for bot or user messages
   Widget _buildAvatar(BuildContext context, {required bool isBot}) {
     return CircleAvatar(
-      backgroundColor: isBot 
-          ? Theme.of(context).colorScheme.primary
-          : Theme.of(context).colorScheme.secondary,
+      backgroundColor:
+          isBot
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.secondary,
       child: Icon(
         isBot ? Icons.smart_toy : Icons.person,
         color: DesignTokens.avatarIconColor,
@@ -130,7 +129,7 @@ class MessageBubble extends StatelessWidget {
   /// Builds either a static image or Rive animation based on file extension
   Widget _buildImageOrAnimation(BuildContext context, String imagePath) {
     final isRiveAnimation = imagePath.toLowerCase().endsWith('.riv');
-    
+
     if (isRiveAnimation) {
       return _buildRiveAnimation(context, imagePath);
     } else {
@@ -146,7 +145,10 @@ class MessageBubble extends StatelessWidget {
         key: GlobalObjectKey(message),
         animationPath: animationPath,
         onError: (error) {
-          logger.error('Rive animation failed to load: $animationPath - $error', component: LogComponent.ui);
+          logger.error(
+            'Rive animation failed to load: $animationPath - $error',
+            component: LogComponent.ui,
+          );
         },
       ),
     );
@@ -198,12 +200,11 @@ class _RiveAnimationWrapper extends StatefulWidget {
   State<_RiveAnimationWrapper> createState() => _RiveAnimationWrapperState();
 }
 
-class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper> 
+class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper>
     with AutomaticKeepAliveClientMixin {
-  
   @override
   bool get wantKeepAlive => true;
-  
+
   bool _hasError = false;
   File? _file;
   RiveWidgetController? _controller;
@@ -221,25 +222,28 @@ class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper>
       _hasError = false;
     });
     try {
-      _file = await File.asset(
-        widget.animationPath,
-        riveFactory: Factory.rive,
-      );
-      
+      _file = await File.asset(widget.animationPath, riveFactory: Factory.rive);
+
       _controller = RiveWidgetController(_file!);
-      
+
       setState(() {
         _isLoading = false;
       });
-      
-      logger.info('Rive animation loaded: ${widget.animationPath}', component: LogComponent.ui);
+
+      logger.info(
+        'Rive animation loaded: ${widget.animationPath}',
+        component: LogComponent.ui,
+      );
     } catch (e) {
       setState(() {
         _hasError = true;
         _isLoading = false;
       });
-      
-      logger.error('Rive animation failed to load: ${widget.animationPath} - $e', component: LogComponent.ui);
+
+      logger.error(
+        'Rive animation failed to load: ${widget.animationPath} - $e',
+        component: LogComponent.ui,
+      );
       widget.onError?.call(e.toString());
     }
   }
@@ -254,7 +258,7 @@ class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper>
   @override
   Widget build(BuildContext context) {
     super.build(context); // Required for AutomaticKeepAliveClientMixin
-    
+
     if (_hasError) {
       return Container(
         padding: DesignTokens.statusMessagePadding,
@@ -274,16 +278,11 @@ class _RiveAnimationWrapperState extends State<_RiveAnimationWrapper>
     }
 
     if (_isLoading || _controller == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     return RepaintBoundary(
-      child: RiveWidget(
-        controller: _controller!,
-        fit: Fit.contain,
-      ),
+      child: RiveWidget(controller: _controller!, fit: Fit.contain),
     );
   }
 }

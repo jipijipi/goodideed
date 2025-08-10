@@ -45,7 +45,7 @@ void main() {
 
       testWidgets('handles tap events', (tester) async {
         bool wasTapped = false;
-        
+
         await TestUtils.pumpWithAnimation(
           tester,
           TestUtils.createMaterialApp(
@@ -106,24 +106,24 @@ void main() {
         );
 
         final smallButton = tester.widget<SizedBox>(
-          find.ancestor(
-            of: find.text('Small'),
-            matching: find.byType(SizedBox),
-          ).first,
+          find
+              .ancestor(of: find.text('Small'), matching: find.byType(SizedBox))
+              .first,
         );
-        
+
         final mediumButton = tester.widget<SizedBox>(
-          find.ancestor(
-            of: find.text('Medium'),
-            matching: find.byType(SizedBox),
-          ).first,
+          find
+              .ancestor(
+                of: find.text('Medium'),
+                matching: find.byType(SizedBox),
+              )
+              .first,
         );
 
         final largeButton = tester.widget<SizedBox>(
-          find.ancestor(
-            of: find.text('Large'),
-            matching: find.byType(SizedBox),
-          ).first,
+          find
+              .ancestor(of: find.text('Large'), matching: find.byType(SizedBox))
+              .first,
         );
 
         expect(smallButton.height, equals(DesignTokens.buttonHeightS));
@@ -131,7 +131,9 @@ void main() {
         expect(largeButton.height, equals(DesignTokens.buttonHeightL));
       });
 
-      testWidgets('expands to full width when isExpanded is true', (tester) async {
+      testWidgets('expands to full width when isExpanded is true', (
+        tester,
+      ) async {
         await TestUtils.pumpWithAnimation(
           tester,
           TestUtils.createMaterialApp(
@@ -143,10 +145,12 @@ void main() {
         );
 
         final sizedBox = tester.widget<SizedBox>(
-          find.ancestor(
-            of: find.text('Expanded Button'),
-            matching: find.byType(SizedBox),
-          ).first,
+          find
+              .ancestor(
+                of: find.text('Expanded Button'),
+                matching: find.byType(SizedBox),
+              )
+              .first,
         );
 
         expect(sizedBox.width, equals(double.infinity));
@@ -195,7 +199,7 @@ void main() {
   TestGroups.animationTests('AppButton', () {
     testWidgets('loading animation works correctly', (tester) async {
       bool isLoading = false;
-      
+
       await TestUtils.pumpWithAnimation(
         tester,
         TestUtils.createMaterialApp(
@@ -221,7 +225,8 @@ void main() {
 
       // Tap to start loading
       await tester.tap(find.text('Toggle Loading'));
-      await tester.pump(); // Use pump() because loading state has infinite animation
+      await tester
+          .pump(); // Use pump() because loading state has infinite animation
 
       // Should now show loading indicator
       expect(find.text('Toggle Loading'), findsNothing);
@@ -234,17 +239,11 @@ void main() {
       await TestUtils.pumpWithAnimation(
         tester,
         TestUtils.createMaterialApp(
-          child: AppButton.primary(
-            text: 'Accessible Button',
-            onPressed: () {},
-          ),
+          child: AppButton.primary(text: 'Accessible Button', onPressed: () {}),
         ),
       );
 
-      expect(
-        find.bySemanticsLabel('Accessible Button'),
-        findsOneWidget,
-      );
+      expect(find.bySemanticsLabel('Accessible Button'), findsOneWidget);
     });
   });
 }

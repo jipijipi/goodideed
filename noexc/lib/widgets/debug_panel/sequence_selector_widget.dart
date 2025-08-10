@@ -42,12 +42,13 @@ class SequenceSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (stateManager == null) return const SizedBox.shrink();
-    
+
     // Gracefully handle sequences not in the dropdown list
-    final safeCurrentSequenceId = AppConstants.availableSequences.contains(currentSequenceId) 
-        ? currentSequenceId 
-        : null;
-    
+    final safeCurrentSequenceId =
+        AppConstants.availableSequences.contains(currentSequenceId)
+            ? currentSequenceId
+            : null;
+
     return Padding(
       padding: DesignTokens.variableItemPadding,
       child: Column(
@@ -62,15 +63,20 @@ class SequenceSelectorWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           // Show current sequence info if it's not in dropdown
-          if (currentSequenceId != null && !AppConstants.availableSequences.contains(currentSequenceId))
+          if (currentSequenceId != null &&
+              !AppConstants.availableSequences.contains(currentSequenceId))
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               margin: const EdgeInsets.only(bottom: 8),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
-                border: Border.all(color: Theme.of(context).colorScheme.outline),
+                borderRadius: BorderRadius.circular(
+                  DesignTokens.debugCardRadius,
+                ),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               ),
               child: Row(
                 children: [
@@ -86,14 +92,16 @@ class SequenceSelectorWidget extends StatelessWidget {
                       children: [
                         Text(
                           'Active: $currentSequenceId',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
                         Text(
                           'Not in main sequence list',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodySmall?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -114,34 +122,43 @@ class SequenceSelectorWidget extends StatelessWidget {
                 value: safeCurrentSequenceId,
                 isExpanded: true,
                 hint: Text(
-                  currentSequenceId != null && !AppConstants.availableSequences.contains(currentSequenceId)
+                  currentSequenceId != null &&
+                          !AppConstants.availableSequences.contains(
+                            currentSequenceId,
+                          )
                       ? 'Select main sequence...'
                       : 'Select sequence...',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
-                items: AppConstants.availableSequences.map((String sequenceId) {
-                  final displayName = ChatConfig.sequenceDisplayNames[sequenceId] ?? sequenceId;
-                  return DropdownMenuItem<String>(
-                    value: sequenceId,
-                    child: Row(
-                      children: [
-                        Icon(
-                          _getSequenceIcon(sequenceId),
-                          size: 20,
-                          color: Theme.of(context).colorScheme.primary,
+                items:
+                    AppConstants.availableSequences.map((String sequenceId) {
+                      final displayName =
+                          ChatConfig.sequenceDisplayNames[sequenceId] ??
+                          sequenceId;
+                      return DropdownMenuItem<String>(
+                        value: sequenceId,
+                        child: Row(
+                          children: [
+                            Icon(
+                              _getSequenceIcon(sequenceId),
+                              size: 20,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(displayName),
+                          ],
                         ),
-                        const SizedBox(width: 8),
-                        Text(displayName),
-                      ],
-                    ),
-                  );
-                }).toList(),
+                      );
+                    }).toList(),
                 onChanged: (String? newSequenceId) {
-                  if (newSequenceId != null && newSequenceId != currentSequenceId) {
+                  if (newSequenceId != null &&
+                      newSequenceId != currentSequenceId) {
                     stateManager?.switchSequence(newSequenceId);
-                    statusController?.addSuccess('Switched to $newSequenceId sequence');
+                    statusController?.addSuccess(
+                      'Switched to $newSequenceId sequence',
+                    );
                   }
                 },
               ),

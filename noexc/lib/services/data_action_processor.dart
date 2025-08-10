@@ -10,27 +10,42 @@ class DataActionProcessor {
   final SessionService? _sessionService;
   final LoggerService _logger = LoggerService.instance;
   late final ActiveDateCalculator _activeDateCalculator;
-  
+
   // Event callback for UI notifications
   Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
 
   DataActionProcessor(this._userDataService, {SessionService? sessionService})
-      : _sessionService = sessionService {
+    : _sessionService = sessionService {
     _activeDateCalculator = ActiveDateCalculator(_userDataService);
+
+    // Mark session service as intentionally wired for future use
+    if (_sessionService != null) {
+      _logger.debug(
+        'SessionService attached to DataActionProcessor',
+        component: LogComponent.dataActionProcessor,
+      );
+    }
   }
 
   /// Set callback for event notifications
-  void setEventCallback(Future<void> Function(String eventType, Map<String, dynamic> data) callback) {
+  void setEventCallback(
+    Future<void> Function(String eventType, Map<String, dynamic> data) callback,
+  ) {
     _onEvent = callback;
   }
 
   Future<void> processActions(List<DataAction> actions) async {
     if (actions.isEmpty) return;
-    
+
     // Summary debug log showing action types instead of individual action logging
-    final actionSummary = actions.map((a) => '${a.type.name}(${a.key})').join(', ');
-    _logger.debug('Processing ${actions.length} dataActions: $actionSummary', component: LogComponent.dataActionProcessor);
-        
+    final actionSummary = actions
+        .map((a) => '${a.type.name}(${a.key})')
+        .join(', ');
+    _logger.debug(
+      'Processing ${actions.length} dataActions: $actionSummary',
+      component: LogComponent.dataActionProcessor,
+    );
+
     for (final action in actions) {
       await _processAction(action);
     }
@@ -43,13 +58,22 @@ class DataActionProcessor {
         await _userDataService.storeValue(action.key, resolvedValue);
         break;
       case DataActionType.increment:
-        await _incrementValue(action.key, action.value ?? DataActionConstants.defaultIncrementValue);
+        await _incrementValue(
+          action.key,
+          action.value ?? DataActionConstants.defaultIncrementValue,
+        );
         break;
       case DataActionType.decrement:
-        await _decrementValue(action.key, action.value ?? DataActionConstants.defaultDecrementValue);
+        await _decrementValue(
+          action.key,
+          action.value ?? DataActionConstants.defaultDecrementValue,
+        );
         break;
       case DataActionType.reset:
-        await _resetValue(action.key, action.value ?? DataActionConstants.defaultResetValue);
+        await _resetValue(
+          action.key,
+          action.value ?? DataActionConstants.defaultResetValue,
+        );
         break;
       case DataActionType.trigger:
         await _processTrigger(action);
@@ -58,13 +82,17 @@ class DataActionProcessor {
   }
 
   Future<void> _incrementValue(String key, dynamic incrementBy) async {
-    final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
+    final currentValue =
+        await _userDataService.getValue<int>(key) ??
+        DataActionConstants.defaultNumericValue;
     final newValue = currentValue + (incrementBy as int);
     await _userDataService.storeValue(key, newValue);
   }
 
   Future<void> _decrementValue(String key, dynamic decrementBy) async {
-    final currentValue = await _userDataService.getValue<int>(key) ?? DataActionConstants.defaultNumericValue;
+    final currentValue =
+        await _userDataService.getValue<int>(key) ??
+        DataActionConstants.defaultNumericValue;
     final newValue = currentValue - (decrementBy as int);
     await _userDataService.storeValue(key, newValue);
   }
@@ -78,8 +106,10 @@ class DataActionProcessor {
       try {
         await _onEvent!(action.event!, action.data ?? {});
       } catch (e) {
-        _logger.warning('Trigger failed: ${action.event} - $e', 
-            component: LogComponent.dataActionProcessor);
+        _logger.warning(
+          'Trigger failed: ${action.event} - $e',
+          component: LogComponent.dataActionProcessor,
+        );
         // Silent error handling - events should not fail the message flow
       }
     }
@@ -91,20 +121,19 @@ class DataActionProcessor {
       return value; // Not a string, return as-is
     }
 
-
     switch (value) {
       case 'TODAY_DATE':
         return _formatDate(DateTime.now());
-      
+
       case 'NEXT_ACTIVE_DATE':
         return await _activeDateCalculator.getNextActiveDate();
-      
+
       case 'NEXT_ACTIVE_WEEKDAY':
         return await _activeDateCalculator.getNextActiveWeekday();
-      
+
       case 'FIRST_ACTIVE_DATE':
         return await _activeDateCalculator.getFirstActiveDate();
-      
+
       default:
         return value; // Not a template function, return as-is
     }
@@ -114,5 +143,4 @@ class DataActionProcessor {
   String _formatDate(DateTime date) {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
-
 }

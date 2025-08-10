@@ -15,12 +15,16 @@ class FormatterService {
     }
 
     try {
-      final String jsonString = await rootBundle.loadString('assets/content/formatters/$formatterName.json');
+      final String jsonString = await rootBundle.loadString(
+        'assets/content/formatters/$formatterName.json',
+      );
       final Map<String, dynamic> jsonMap = json.decode(jsonString);
-      
+
       // Convert all values to strings for consistent formatting
-      final Map<String, String> formatter = jsonMap.map((key, value) => MapEntry(key, value.toString()));
-      
+      final Map<String, String> formatter = jsonMap.map(
+        (key, value) => MapEntry(key, value.toString()),
+      );
+
       _formatters[formatterName] = formatter;
       return formatter;
     } catch (e) {
@@ -31,7 +35,10 @@ class FormatterService {
 
   /// Format a value using the specified formatter
   /// Returns the formatted string or null if formatter/value not found
-  Future<String?> getFormattedValue(String formatterName, dynamic rawValue) async {
+  Future<String?> getFormattedValue(
+    String formatterName,
+    dynamic rawValue,
+  ) async {
     final formatter = await _loadFormatter(formatterName);
     if (formatter == null) {
       return null;

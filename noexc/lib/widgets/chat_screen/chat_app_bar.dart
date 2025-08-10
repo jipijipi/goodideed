@@ -7,21 +7,14 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onThemeToggle;
   final VoidCallback? onPanelToggle;
 
-  const ChatAppBar({
-    super.key,
-    this.onThemeToggle,
-    this.onPanelToggle,
-  });
+  const ChatAppBar({super.key, this.onThemeToggle, this.onPanelToggle});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(ChatConfig.chatScreenTitle),
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      actions: [
-        _buildThemeToggleButton(),
-        _buildUserInfoButton(),
-      ],
+      actions: [_buildThemeToggleButton(), _buildUserInfoButton()],
     );
   }
 

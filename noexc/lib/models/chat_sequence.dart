@@ -16,9 +16,10 @@ class ChatSequence {
 
   factory ChatSequence.fromJson(Map<String, dynamic> json) {
     final List<dynamic> messagesJson = json['messages'] ?? [];
-    final messages = messagesJson
-        .map((messageJson) => ChatMessage.fromJson(messageJson))
-        .toList();
+    final messages =
+        messagesJson
+            .map((messageJson) => ChatMessage.fromJson(messageJson))
+            .toList();
 
     return ChatSequence(
       sequenceId: json['sequenceId'] as String,

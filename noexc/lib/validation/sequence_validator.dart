@@ -1,5 +1,6 @@
 /// Main sequence validator that orchestrates all validation types
 library;
+
 import '../models/chat_sequence.dart';
 import '../constants/validation_constants.dart';
 import 'models/validation_models.dart';
@@ -24,32 +25,36 @@ class SequenceValidator {
     final errors = <ValidationError>[];
     final warnings = <ValidationError>[];
     final info = <ValidationError>[];
-    
+
     // Basic structure validation
     errors.addAll(_structureValidator.validate(sequence));
-    
+
     // Message reference validation
     errors.addAll(_referenceValidator.validate(sequence));
-    
+
     // Flow analysis
     final flowIssues = _flowValidator.validate(sequence);
-    errors.addAll(flowIssues.where((e) => e.severity == ValidationConstants.severityError));
-    warnings.addAll(flowIssues.where((e) => e.severity == ValidationConstants.severityWarning));
-    info.addAll(flowIssues.where((e) => e.severity == ValidationConstants.severityInfo));
-    
+    errors.addAll(
+      flowIssues.where((e) => e.severity == ValidationConstants.severityError),
+    );
+    warnings.addAll(
+      flowIssues.where(
+        (e) => e.severity == ValidationConstants.severityWarning,
+      ),
+    );
+    info.addAll(
+      flowIssues.where((e) => e.severity == ValidationConstants.severityInfo),
+    );
+
     // Choice validation
     errors.addAll(_choiceValidator.validate(sequence));
-    
+
     // Route condition validation
     errors.addAll(_routeValidator.validate(sequence));
-    
+
     // Template validation
     warnings.addAll(_templateValidator.validate(sequence));
-    
-    return ValidationResult(
-      errors: errors,
-      warnings: warnings,
-      info: info,
-    );
+
+    return ValidationResult(errors: errors, warnings: warnings, info: info);
   }
 }

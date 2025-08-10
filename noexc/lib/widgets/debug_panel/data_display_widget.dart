@@ -25,7 +25,6 @@ class DataDisplayWidget extends StatefulWidget {
 }
 
 class _DataDisplayWidgetState extends State<DataDisplayWidget> {
-
   String _formatValue(dynamic value) {
     if (value is List) {
       return '[${value.join(', ')}]';
@@ -80,22 +79,22 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
 
   Map<int, String> get _timeOfDayOptions => {
     1: '☀️ Morning (before noon)',
-    2: '🌤️ Afternoon (noon - 5pm)', 
+    2: '🌤️ Afternoon (noon - 5pm)',
     3: '🌅 Evening (5pm - 9pm)',
     4: '🌙 Night (9pm - midnight)',
   };
 
   bool _isReadOnlyKey(String key) {
     // Read-only computed values
-    return key.contains('isActiveDay') || 
-           key.contains('isPastDeadline') || 
-           key.contains('visitCount') ||
-           key.contains('daysSince');
+    return key.contains('isActiveDay') ||
+        key.contains('isPastDeadline') ||
+        key.contains('visitCount') ||
+        key.contains('daysSince');
   }
 
   Future<void> _saveStringValue(String key, String newValue) async {
     if (widget.userDataService == null) return;
-    
+
     setState(() {
       _savingStates[key] = true;
     });
@@ -110,7 +109,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
 
   Future<void> _saveIntValue(String key, String newValue) async {
     if (widget.userDataService == null) return;
-    
+
     setState(() {
       _savingStates[key] = true;
     });
@@ -126,7 +125,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
 
   Future<void> _saveBoolValue(String key, bool newValue) async {
     if (widget.userDataService == null) return;
-    
+
     setState(() {
       _savingStates[key] = true;
     });
@@ -144,11 +143,11 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
       _editingStates[key] = false;
       _savingStates[key] = false;
     });
-    
+
     if (widget.onDataChanged != null) {
       widget.onDataChanged!();
     }
-    
+
     // Add success message to status area instead of SnackBar
     widget.statusController?.addSuccess('Saved $key', key: key);
   }
@@ -157,7 +156,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     setState(() {
       _savingStates[key] = false;
     });
-    
+
     // Add error message to status area instead of SnackBar
     widget.statusController?.addError('Failed to save $key: $error', key: key);
   }
@@ -165,7 +164,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
   void _startEditing(String key, dynamic value) {
     final controller = TextEditingController(text: value.toString());
     _controllers[key] = controller;
-    
+
     setState(() {
       _editingStates[key] = true;
     });
@@ -174,7 +173,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
   void _cancelEditing(String key) {
     _controllers[key]?.dispose();
     _controllers.remove(key);
-    
+
     setState(() {
       _editingStates[key] = false;
     });
@@ -194,15 +193,18 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
       return DropdownButton<int>(
         isExpanded: true,
         value: value as int,
-        items: _timeOfDayOptions.entries.map((entry) =>
-          DropdownMenuItem(
-            value: entry.key,
-            child: Text(
-              entry.value,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-        ).toList(),
+        items:
+            _timeOfDayOptions.entries
+                .map(
+                  (entry) => DropdownMenuItem(
+                    value: entry.key,
+                    child: Text(
+                      entry.value,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                )
+                .toList(),
         onChanged: (newValue) {
           if (newValue != null) {
             _saveIntValue(key, newValue.toString());
@@ -255,9 +257,13 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     final isSaving = _savingStates[entry.key] ?? false;
     final isIntValue = _isIntValue(entry.value);
     final isBoolValue = _isBoolValue(entry.value);
-    final isTimeOfDayEnum = _isTimeOfDayEnum(entry.key) && _isIntValue(entry.value);
+    final isTimeOfDayEnum =
+        _isTimeOfDayEnum(entry.key) && _isIntValue(entry.value);
     final isReadOnly = _isReadOnlyKey(entry.key);
-    final canEdit = _isEditableValue(entry.value) && !isReadOnly && widget.userDataService != null;
+    final canEdit =
+        _isEditableValue(entry.value) &&
+        !isReadOnly &&
+        widget.userDataService != null;
 
     return Padding(
       padding: DesignTokens.variableItemPadding,
@@ -279,18 +285,23 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
               const SizedBox(width: DesignTokens.variableKeySpacing),
               Expanded(
                 flex: 3,
-                child: ((isBoolValue || isTimeOfDayEnum) && canEdit)
-                    ? _buildInputWidget(context, entry.key, entry.value)
-                    : isEditing
+                child:
+                    ((isBoolValue || isTimeOfDayEnum) && canEdit)
+                        ? _buildInputWidget(context, entry.key, entry.value)
+                        : isEditing
                         ? _buildInputWidget(context, entry.key, entry.value)
                         : Text(
-                            isTimeOfDayEnum 
-                                ? _timeOfDayOptions[entry.value] ?? _formatValue(entry.value)
-                                : _formatValue(entry.value),
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
+                          isTimeOfDayEnum
+                              ? _timeOfDayOptions[entry.value] ??
+                                  _formatValue(entry.value)
+                              : _formatValue(entry.value),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
+                        ),
               ),
               if (canEdit && !isBoolValue && !isTimeOfDayEnum) ...[
                 const SizedBox(width: 8),
@@ -360,23 +371,29 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     }
   }
 
-  Map<String, List<MapEntry<String, dynamic>>> _groupVariables(Map<String, dynamic> data) {
+  Map<String, List<MapEntry<String, dynamic>>> _groupVariables(
+    Map<String, dynamic> data,
+  ) {
     final groups = <String, List<MapEntry<String, dynamic>>>{};
-    
+
     for (final entry in data.entries) {
       final category = _getVariableCategory(entry.key);
       groups.putIfAbsent(category, () => []).add(entry);
     }
-    
+
     // Sort entries within each group
     for (final group in groups.values) {
       group.sort((a, b) => a.key.compareTo(b.key));
     }
-    
+
     return groups;
   }
 
-  Widget _buildCategorySection(BuildContext context, String category, List<MapEntry<String, dynamic>> entries) {
+  Widget _buildCategorySection(
+    BuildContext context,
+    String category,
+    List<MapEntry<String, dynamic>> entries,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -427,10 +444,12 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
         // Debug Information Section (ungrouped)
         if (widget.debugData.isNotEmpty) ...[
           _buildSectionHeader(context, 'Debug Information'),
-          ...widget.debugData.entries.map((entry) => _buildDataRow(context, entry)),
+          ...widget.debugData.entries.map(
+            (entry) => _buildDataRow(context, entry),
+          ),
           const SizedBox(height: 16),
         ],
-        
+
         // User Data Section (grouped by category)
         if (widget.userData.isNotEmpty) ...[
           _buildSectionHeader(context, 'User Data'),
@@ -443,16 +462,23 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
   List<Widget> _buildGroupedUserData(BuildContext context) {
     final groups = _groupVariables(widget.userData);
     final widgets = <Widget>[];
-    
+
     // Define preferred order for categories
-    const categoryOrder = ['User Profile', 'Session Tracking', 'Task Management', 'Other'];
-    
+    const categoryOrder = [
+      'User Profile',
+      'Session Tracking',
+      'Task Management',
+      'Other',
+    ];
+
     for (final category in categoryOrder) {
       if (groups.containsKey(category) && groups[category]!.isNotEmpty) {
-        widgets.add(_buildCategorySection(context, category, groups[category]!));
+        widgets.add(
+          _buildCategorySection(context, category, groups[category]!),
+        );
       }
     }
-    
+
     return widgets;
   }
 }

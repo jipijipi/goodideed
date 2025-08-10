@@ -31,7 +31,7 @@ class UserPanelOverlay extends StatelessWidget {
       children: [
         // Semi-transparent overlay
         if (isVisible) _buildOverlay(),
-        
+
         // Sliding panel
         _buildSlidingPanel(),
       ],
@@ -43,7 +43,9 @@ class UserPanelOverlay extends StatelessWidget {
     return GestureDetector(
       onTap: onToggle,
       child: Container(
-        color: DesignTokens.brandBlack.withValues(alpha: DesignTokens.overlayOpacity),
+        color: DesignTokens.brandBlack.withValues(
+          alpha: DesignTokens.overlayOpacity,
+        ),
         child: const SizedBox.expand(),
       ),
     );

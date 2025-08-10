@@ -8,7 +8,7 @@ void main() {
   setUp(() {
     setupSilentTesting(); // Suppress expected error logging noise
   });
-  
+
   tearDown(() {
     resetLoggingDefaults();
   });
@@ -18,9 +18,12 @@ void main() {
       test('should handle FormatException as invalidFormat error', () {
         const sequenceId = 'test_seq';
         final formatError = const FormatException('Invalid JSON');
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, formatError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          formatError,
+        );
+
         expect(result, isA<ChatSequenceException>());
         final exception = result as ChatSequenceException;
         expect(exception.type, equals(ChatErrorType.invalidFormat));
@@ -32,9 +35,12 @@ void main() {
       test('should handle asset loading error as assetNotFound error', () {
         const sequenceId = 'missing_seq';
         final assetError = Exception('Unable to load asset');
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, assetError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          assetError,
+        );
+
         expect(result, isA<ChatSequenceException>());
         final exception = result as ChatSequenceException;
         expect(exception.type, equals(ChatErrorType.assetNotFound));
@@ -46,9 +52,12 @@ void main() {
       test('should handle generic errors as loadError', () {
         const sequenceId = 'error_seq';
         final genericError = Exception('Some other error');
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, genericError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          genericError,
+        );
+
         expect(result, isA<ChatSequenceException>());
         final exception = result as ChatSequenceException;
         expect(exception.type, equals(ChatErrorType.loadError));
@@ -61,18 +70,24 @@ void main() {
         const sequenceId = 'test_seq';
         const originalMessage = 'Original error details';
         final originalError = Exception(originalMessage);
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, originalError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          originalError,
+        );
+
         expect(result.toString(), contains(originalMessage));
       });
 
       test('should handle string errors', () {
         const sequenceId = 'string_error_seq';
         const stringError = 'String error message';
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, stringError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          stringError,
+        );
+
         expect(result, isA<ChatSequenceException>());
         final exception = result as ChatSequenceException;
         expect(exception.message, contains(stringError));
@@ -83,23 +98,32 @@ void main() {
       test('should create ChatMessageException with correct properties', () {
         const messageId = 42;
         final originalError = Exception('Processing failed');
-        
-        final result = ErrorClassifier.handleMessageProcessingError(messageId, originalError);
-        
+
+        final result = ErrorClassifier.handleMessageProcessingError(
+          messageId,
+          originalError,
+        );
+
         expect(result, isA<ChatMessageException>());
         final exception = result as ChatMessageException;
         expect(exception.type, equals(ChatErrorType.processingError));
         expect(exception.messageId, equals(messageId));
-        expect(exception.message, contains('Failed to process message $messageId'));
+        expect(
+          exception.message,
+          contains('Failed to process message $messageId'),
+        );
         expect(exception.message, contains('Processing failed'));
       });
 
       test('should handle null messageId', () {
         const messageId = 0;
         final originalError = Exception('Error');
-        
-        final result = ErrorClassifier.handleMessageProcessingError(messageId, originalError);
-        
+
+        final result = ErrorClassifier.handleMessageProcessingError(
+          messageId,
+          originalError,
+        );
+
         expect(result, isA<ChatMessageException>());
         final exception = result as ChatMessageException;
         expect(exception.messageId, equals(0));
@@ -109,9 +133,12 @@ void main() {
         const messageId = 123;
         const errorDetails = 'Detailed error information';
         final originalError = Exception(errorDetails);
-        
-        final result = ErrorClassifier.handleMessageProcessingError(messageId, originalError);
-        
+
+        final result = ErrorClassifier.handleMessageProcessingError(
+          messageId,
+          originalError,
+        );
+
         expect(result.toString(), contains(errorDetails));
       });
     });
@@ -120,9 +147,12 @@ void main() {
       test('should create ChatTemplateException with correct properties', () {
         const template = '{user.name|Guest}';
         final originalError = Exception('Template parsing failed');
-        
-        final result = ErrorClassifier.handleTemplateError(template, originalError);
-        
+
+        final result = ErrorClassifier.handleTemplateError(
+          template,
+          originalError,
+        );
+
         expect(result, isA<ChatTemplateException>());
         final exception = result as ChatTemplateException;
         expect(exception.type, equals(ChatErrorType.templateError));
@@ -132,11 +162,15 @@ void main() {
       });
 
       test('should handle complex template strings', () {
-        const template = 'Hello {user.name|Guest}, your score is {user.score|0}!';
+        const template =
+            'Hello {user.name|Guest}, your score is {user.score|0}!';
         final originalError = Exception('Complex template error');
-        
-        final result = ErrorClassifier.handleTemplateError(template, originalError);
-        
+
+        final result = ErrorClassifier.handleTemplateError(
+          template,
+          originalError,
+        );
+
         expect(result, isA<ChatTemplateException>());
         final exception = result as ChatTemplateException;
         expect(exception.template, equals(template));
@@ -146,9 +180,12 @@ void main() {
       test('should handle empty template', () {
         const template = '';
         final originalError = Exception('Empty template error');
-        
-        final result = ErrorClassifier.handleTemplateError(template, originalError);
-        
+
+        final result = ErrorClassifier.handleTemplateError(
+          template,
+          originalError,
+        );
+
         expect(result, isA<ChatTemplateException>());
         final exception = result as ChatTemplateException;
         expect(exception.template, equals(template));
@@ -159,9 +196,12 @@ void main() {
       test('should create ChatConditionException with correct properties', () {
         const condition = 'user.level > 5';
         final originalError = Exception('Condition evaluation failed');
-        
-        final result = ErrorClassifier.handleConditionError(condition, originalError);
-        
+
+        final result = ErrorClassifier.handleConditionError(
+          condition,
+          originalError,
+        );
+
         expect(result, isA<ChatConditionException>());
         final exception = result as ChatConditionException;
         expect(exception.type, equals(ChatErrorType.conditionError));
@@ -173,9 +213,12 @@ void main() {
       test('should handle complex condition expressions', () {
         const condition = 'user.level >= 5 && user.hasCompleted == false';
         final originalError = Exception('Complex condition error');
-        
-        final result = ErrorClassifier.handleConditionError(condition, originalError);
-        
+
+        final result = ErrorClassifier.handleConditionError(
+          condition,
+          originalError,
+        );
+
         expect(result, isA<ChatConditionException>());
         final exception = result as ChatConditionException;
         expect(exception.condition, equals(condition));
@@ -185,9 +228,12 @@ void main() {
       test('should handle boolean condition expressions', () {
         const condition = 'user.isActive';
         final originalError = Exception('Boolean condition error');
-        
-        final result = ErrorClassifier.handleConditionError(condition, originalError);
-        
+
+        final result = ErrorClassifier.handleConditionError(
+          condition,
+          originalError,
+        );
+
         expect(result, isA<ChatConditionException>());
         final exception = result as ChatConditionException;
         expect(exception.condition, equals(condition));
@@ -198,9 +244,12 @@ void main() {
       test('should create ChatFlowException with correct properties', () {
         const description = 'Dead end detected in conversation flow';
         final originalError = Exception('Flow navigation failed');
-        
-        final result = ErrorClassifier.handleFlowError(description, originalError);
-        
+
+        final result = ErrorClassifier.handleFlowError(
+          description,
+          originalError,
+        );
+
         expect(result, isA<ChatFlowException>());
         final exception = result as ChatFlowException;
         expect(exception.type, equals(ChatErrorType.flowError));
@@ -210,11 +259,15 @@ void main() {
       });
 
       test('should handle circular reference description', () {
-        const description = 'Circular reference detected between messages 1 and 5';
+        const description =
+            'Circular reference detected between messages 1 and 5';
         final originalError = Exception('Circular flow error');
-        
-        final result = ErrorClassifier.handleFlowError(description, originalError);
-        
+
+        final result = ErrorClassifier.handleFlowError(
+          description,
+          originalError,
+        );
+
         expect(result, isA<ChatFlowException>());
         final exception = result as ChatFlowException;
         expect(exception.description, equals(description));
@@ -224,9 +277,12 @@ void main() {
       test('should handle unreachable message description', () {
         const description = 'Message 10 is unreachable from starting point';
         final originalError = Exception('Unreachable message error');
-        
-        final result = ErrorClassifier.handleFlowError(description, originalError);
-        
+
+        final result = ErrorClassifier.handleFlowError(
+          description,
+          originalError,
+        );
+
         expect(result, isA<ChatFlowException>());
         final exception = result as ChatFlowException;
         expect(exception.description, equals(description));
@@ -237,9 +293,12 @@ void main() {
       test('should create ChatAssetException with correct properties', () {
         const asset = 'assets/sequences/test_seq.json';
         final originalError = Exception('Asset validation failed');
-        
-        final result = ErrorClassifier.handleAssetValidationError(asset, originalError);
-        
+
+        final result = ErrorClassifier.handleAssetValidationError(
+          asset,
+          originalError,
+        );
+
         expect(result, isA<ChatAssetException>());
         final exception = result as ChatAssetException;
         expect(exception.type, equals(ChatErrorType.assetValidation));
@@ -251,9 +310,12 @@ void main() {
       test('should handle variant file assets', () {
         const asset = 'assets/variants/onboarding_message_1.txt';
         final originalError = Exception('Variant file error');
-        
-        final result = ErrorClassifier.handleAssetValidationError(asset, originalError);
-        
+
+        final result = ErrorClassifier.handleAssetValidationError(
+          asset,
+          originalError,
+        );
+
         expect(result, isA<ChatAssetException>());
         final exception = result as ChatAssetException;
         expect(exception.asset, equals(asset));
@@ -263,9 +325,12 @@ void main() {
       test('should handle sequence file assets', () {
         const asset = 'assets/sequences/welcome_seq.json';
         final originalError = Exception('Sequence validation error');
-        
-        final result = ErrorClassifier.handleAssetValidationError(asset, originalError);
-        
+
+        final result = ErrorClassifier.handleAssetValidationError(
+          asset,
+          originalError,
+        );
+
         expect(result, isA<ChatAssetException>());
         final exception = result as ChatAssetException;
         expect(exception.asset, equals(asset));
@@ -279,7 +344,7 @@ void main() {
         // For now, we just verify the method doesn't throw
         const sequenceId = 'test_seq';
         final error = Exception('Test error');
-        
+
         expect(
           () => ErrorClassifier.handleSequenceLoadError(sequenceId, error),
           returnsNormally,
@@ -289,55 +354,97 @@ void main() {
       test('should handle Error objects with stack traces', () {
         const sequenceId = 'test_seq';
         final error = ArgumentError('Invalid argument');
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, error);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          error,
+        );
+
         expect(result, isA<ChatSequenceException>());
         expect(result.toString(), contains('Invalid argument'));
       });
 
       test('should handle null errors gracefully', () {
         const sequenceId = 'test_seq';
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, null);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          null,
+        );
+
         expect(result, isA<ChatSequenceException>());
         expect(result.toString(), contains('null'));
       });
     });
 
     group('error message consistency', () {
-      test('should maintain consistent error message format across handlers', () {
-        const testId = 'test_id';
-        final testError = Exception('test error');
-        
-        final sequenceError = ErrorClassifier.handleSequenceLoadError(testId, testError);
-        final messageError = ErrorClassifier.handleMessageProcessingError(1, testError);
-        final templateError = ErrorClassifier.handleTemplateError(testId, testError);
-        final conditionError = ErrorClassifier.handleConditionError(testId, testError);
-        final flowError = ErrorClassifier.handleFlowError(testId, testError);
-        final assetError = ErrorClassifier.handleAssetValidationError(testId, testError);
-        
-        // All should contain the original error message
-        expect(sequenceError.toString(), contains('test error'));
-        expect(messageError.toString(), contains('test error'));
-        expect(templateError.toString(), contains('test error'));
-        expect(conditionError.toString(), contains('test error'));
-        expect(flowError.toString(), contains('test error'));
-        expect(assetError.toString(), contains('test error'));
-      });
+      test(
+        'should maintain consistent error message format across handlers',
+        () {
+          const testId = 'test_id';
+          final testError = Exception('test error');
+
+          final sequenceError = ErrorClassifier.handleSequenceLoadError(
+            testId,
+            testError,
+          );
+          final messageError = ErrorClassifier.handleMessageProcessingError(
+            1,
+            testError,
+          );
+          final templateError = ErrorClassifier.handleTemplateError(
+            testId,
+            testError,
+          );
+          final conditionError = ErrorClassifier.handleConditionError(
+            testId,
+            testError,
+          );
+          final flowError = ErrorClassifier.handleFlowError(testId, testError);
+          final assetError = ErrorClassifier.handleAssetValidationError(
+            testId,
+            testError,
+          );
+
+          // All should contain the original error message
+          expect(sequenceError.toString(), contains('test error'));
+          expect(messageError.toString(), contains('test error'));
+          expect(templateError.toString(), contains('test error'));
+          expect(conditionError.toString(), contains('test error'));
+          expect(flowError.toString(), contains('test error'));
+          expect(assetError.toString(), contains('test error'));
+        },
+      );
 
       test('should include context information in all error messages', () {
         const contextInfo = 'context_info';
         final testError = Exception('test');
-        
-        final sequenceError = ErrorClassifier.handleSequenceLoadError(contextInfo, testError);
-        final messageError = ErrorClassifier.handleMessageProcessingError(123, testError);
-        final templateError = ErrorClassifier.handleTemplateError(contextInfo, testError);
-        final conditionError = ErrorClassifier.handleConditionError(contextInfo, testError);
-        final flowError = ErrorClassifier.handleFlowError(contextInfo, testError);
-        final assetError = ErrorClassifier.handleAssetValidationError(contextInfo, testError);
-        
+
+        final sequenceError = ErrorClassifier.handleSequenceLoadError(
+          contextInfo,
+          testError,
+        );
+        final messageError = ErrorClassifier.handleMessageProcessingError(
+          123,
+          testError,
+        );
+        final templateError = ErrorClassifier.handleTemplateError(
+          contextInfo,
+          testError,
+        );
+        final conditionError = ErrorClassifier.handleConditionError(
+          contextInfo,
+          testError,
+        );
+        final flowError = ErrorClassifier.handleFlowError(
+          contextInfo,
+          testError,
+        );
+        final assetError = ErrorClassifier.handleAssetValidationError(
+          contextInfo,
+          testError,
+        );
+
         expect(sequenceError.toString(), contains(contextInfo));
         expect(messageError.toString(), contains('123'));
         expect(templateError.toString(), contains(contextInfo));
@@ -352,9 +459,12 @@ void main() {
         const sequenceId = 'test_seq';
         final longMessage = 'A' * 1000; // Very long error message
         final longError = Exception(longMessage);
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, longError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          longError,
+        );
+
         expect(result, isA<ChatSequenceException>());
         expect(result.toString(), contains(longMessage));
       });
@@ -363,9 +473,12 @@ void main() {
         const sequenceId = 'test_seq';
         const specialMessage = 'Error with émojis 🎉 and symbols @#\$%^&*()';
         final specialError = Exception(specialMessage);
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, specialError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          specialError,
+        );
+
         expect(result, isA<ChatSequenceException>());
         expect(result.toString(), contains(specialMessage));
       });
@@ -373,12 +486,18 @@ void main() {
       test('should handle empty error messages', () {
         const sequenceId = 'test_seq';
         final emptyError = Exception('');
-        
-        final result = ErrorClassifier.handleSequenceLoadError(sequenceId, emptyError);
-        
+
+        final result = ErrorClassifier.handleSequenceLoadError(
+          sequenceId,
+          emptyError,
+        );
+
         expect(result, isA<ChatSequenceException>());
         final exception = result as ChatSequenceException;
-        expect(exception.message, isNotEmpty); // Should still have a meaningful message
+        expect(
+          exception.message,
+          isNotEmpty,
+        ); // Should still have a meaningful message
       });
     });
   });

@@ -1,10 +1,4 @@
-enum DataActionType {
-  set,
-  increment,
-  decrement,
-  reset,
-  trigger,
-}
+enum DataActionType { set, increment, decrement, reset, trigger }
 
 class DataAction {
   final DataActionType type;
@@ -33,15 +27,13 @@ class DataAction {
       key: json['key'] as String,
       value: json['value'],
       event: json['event'] as String?,
-      data: json['data'] != null ? Map<String, dynamic>.from(json['data']) : null,
+      data:
+          json['data'] != null ? Map<String, dynamic>.from(json['data']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = {
-      'type': type.name,
-      'key': key,
-    };
+    final Map<String, dynamic> json = {'type': type.name, 'key': key};
 
     if (value != null) {
       json['value'] = value;

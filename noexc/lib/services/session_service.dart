@@ -5,14 +5,16 @@ import 'service_locator.dart';
 
 class SessionService {
   final UserDataService userDataService;
-  
+
   SessionService(this.userDataService);
-  
+
   /// Initialize session data on app start
   Future<void> initializeSession() async {
     // Capture the original session date before any updates
-    final originalLastVisitDate = await userDataService.getValue<String>(StorageKeys.sessionLastVisitDate);
-    
+    final originalLastVisitDate = await userDataService.getValue<String>(
+      StorageKeys.sessionLastVisitDate,
+    );
+
     await _updateVisitCount();
     await _updateTotalVisitCount();
     await _updateTimeOfDay();
@@ -20,156 +22,208 @@ class SessionService {
     await _updateTaskInfo(originalLastVisitDate);
     await _scheduleNotifications();
   }
-  
+
   /// Update visit count (daily counter that resets each day)
   Future<void> _updateVisitCount() async {
     final now = DateTime.now();
     final today = _formatDate(now);
-    
+
     // Check last visit date
-    final lastVisitDate = await userDataService.getValue<String>(StorageKeys.sessionLastVisitDate);
+    final lastVisitDate = await userDataService.getValue<String>(
+      StorageKeys.sessionLastVisitDate,
+    );
     final isNewDay = lastVisitDate != today;
-    
+
     if (isNewDay) {
       // Reset daily visit count for new day
       await userDataService.storeValue(StorageKeys.sessionVisitCount, 1);
     } else {
       // Increment daily visit count for same day
-      final currentCount = await userDataService.getValue<int>(StorageKeys.sessionVisitCount) ?? 0;
-      await userDataService.storeValue(StorageKeys.sessionVisitCount, currentCount + 1);
+      final currentCount =
+          await userDataService.getValue<int>(StorageKeys.sessionVisitCount) ??
+          0;
+      await userDataService.storeValue(
+        StorageKeys.sessionVisitCount,
+        currentCount + 1,
+      );
     }
   }
-  
+
   /// Update total visit count (never resets)
   Future<void> _updateTotalVisitCount() async {
-    final currentTotal = await userDataService.getValue<int>(StorageKeys.sessionTotalVisitCount) ?? 0;
-    await userDataService.storeValue(StorageKeys.sessionTotalVisitCount, currentTotal + 1);
+    final currentTotal =
+        await userDataService.getValue<int>(
+          StorageKeys.sessionTotalVisitCount,
+        ) ??
+        0;
+    await userDataService.storeValue(
+      StorageKeys.sessionTotalVisitCount,
+      currentTotal + 1,
+    );
   }
-  
+
   /// Update time of day (1=morning, 2=afternoon, 3=evening, 4=night)
   Future<void> _updateTimeOfDay() async {
     final now = DateTime.now();
     final hour = now.hour;
-    
+
     int timeOfDay;
-    if (hour >= SessionConstants.morningStartHour && hour < SessionConstants.afternoonStartHour) {
+    if (hour >= SessionConstants.morningStartHour &&
+        hour < SessionConstants.afternoonStartHour) {
       timeOfDay = SessionConstants.timeOfDayMorning;
-    } else if (hour >= SessionConstants.afternoonStartHour && hour < SessionConstants.eveningStartHour) {
+    } else if (hour >= SessionConstants.afternoonStartHour &&
+        hour < SessionConstants.eveningStartHour) {
       timeOfDay = SessionConstants.timeOfDayAfternoon;
-    } else if (hour >= SessionConstants.eveningStartHour && hour < SessionConstants.nightStartHour) {
+    } else if (hour >= SessionConstants.eveningStartHour &&
+        hour < SessionConstants.nightStartHour) {
       timeOfDay = SessionConstants.timeOfDayEvening;
     } else {
       timeOfDay = SessionConstants.timeOfDayNight;
     }
-    
+
     await userDataService.storeValue(StorageKeys.sessionTimeOfDay, timeOfDay);
   }
-  
+
   /// Update date-related information
   Future<void> _updateDateInfo() async {
     final now = DateTime.now();
     final today = _formatDate(now);
-    
+
     // Check if this is a new day
-    final lastVisitDate = await userDataService.getValue<String>(StorageKeys.sessionLastVisitDate);
+    final lastVisitDate = await userDataService.getValue<String>(
+      StorageKeys.sessionLastVisitDate,
+    );
     final isNewDay = lastVisitDate != today;
-    
+
     if (isNewDay) {
       await userDataService.storeValue(StorageKeys.sessionLastVisitDate, today);
     }
-    
+
     // Set first visit date if not exists
-    final firstVisitDate = await userDataService.getValue<String>(StorageKeys.sessionFirstVisitDate);
+    final firstVisitDate = await userDataService.getValue<String>(
+      StorageKeys.sessionFirstVisitDate,
+    );
     if (firstVisitDate == null) {
-      await userDataService.storeValue(StorageKeys.sessionFirstVisitDate, today);
+      await userDataService.storeValue(
+        StorageKeys.sessionFirstVisitDate,
+        today,
+      );
     }
-    
+
     // Calculate days since first visit
-    final updatedFirstVisitDate = await userDataService.getValue<String>(StorageKeys.sessionFirstVisitDate);
+    final updatedFirstVisitDate = await userDataService.getValue<String>(
+      StorageKeys.sessionFirstVisitDate,
+    );
     if (updatedFirstVisitDate != null) {
       final firstDate = DateTime.parse(updatedFirstVisitDate);
       final daysSinceFirst = now.difference(firstDate).inDays;
-      await userDataService.storeValue(StorageKeys.sessionDaysSinceFirstVisit, daysSinceFirst);
+      await userDataService.storeValue(
+        StorageKeys.sessionDaysSinceFirstVisit,
+        daysSinceFirst,
+      );
     } else {
-      await userDataService.storeValue(StorageKeys.sessionDaysSinceFirstVisit, 0);
+      await userDataService.storeValue(
+        StorageKeys.sessionDaysSinceFirstVisit,
+        0,
+      );
     }
-    
+
     // Set weekend flag
-    final isWeekend = now.weekday == DateTime.saturday || now.weekday == DateTime.sunday;
+    final isWeekend =
+        now.weekday == DateTime.saturday || now.weekday == DateTime.sunday;
     await userDataService.storeValue(StorageKeys.sessionIsWeekend, isWeekend);
   }
 
-  /// Update daily task information  
+  /// Update daily task information
   Future<void> _updateTaskInfo(String? originalLastVisitDate) async {
     final now = DateTime.now();
     final today = _formatDate(now);
-    
+
     // Check if this is a new calendar day using the original session date
     final isNewDay = originalLastVisitDate != today;
     //final lastTaskDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    
+
     // Note: Previous day archiving and grace period logic moved to script
-    
+
     // Note: task.currentDate is now set by the script via template functions
     // No need for complex date management logic here
-    
+
     if (isNewDay) {
       // Reset task status to pending for new day
-      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+      await userDataService.storeValue(
+        StorageKeys.taskCurrentStatus,
+        'pending',
+      );
     }
-    
+
     // Set default status if not exists
-    final currentStatus = await userDataService.getValue<String>(StorageKeys.taskCurrentStatus);
+    final currentStatus = await userDataService.getValue<String>(
+      StorageKeys.taskCurrentStatus,
+    );
     if (currentStatus == null) {
-      await userDataService.storeValue(StorageKeys.taskCurrentStatus, 'pending');
+      await userDataService.storeValue(
+        StorageKeys.taskCurrentStatus,
+        'pending',
+      );
     }
-    
+
     // Compute scheduling-based task status
     await _computeTaskStatus(now);
-    
+
     // Compute task end date based on current date + active days
     await _computeTaskEndDate(now);
-    
+
     // Compute task due day (weekday integer of task.currentDate)
     await _computeTaskDueDay();
-    
+
     // Compute derived task boolean values (after endDate is calculated)
     await _computeTaskBooleans(now);
   }
-
-
-
 
   /// Compute derived task boolean values for easier conditional routing
   Future<void> _computeTaskBooleans(DateTime now) async {
     // Compute isActiveDay
     final isActiveDay = await _computeIsActiveDay(now);
     await userDataService.storeValue(StorageKeys.taskIsActiveDay, isActiveDay);
-    
+
     // Compute time range booleans
     final isBeforeStart = await _computeIsBeforeStart(now);
-    await userDataService.storeValue(StorageKeys.taskIsBeforeStart, isBeforeStart);
-    
+    await userDataService.storeValue(
+      StorageKeys.taskIsBeforeStart,
+      isBeforeStart,
+    );
+
     final isInTimeRange = await _computeIsInTimeRange(now);
-    await userDataService.storeValue(StorageKeys.taskIsInTimeRange, isInTimeRange);
-    
+    await userDataService.storeValue(
+      StorageKeys.taskIsInTimeRange,
+      isInTimeRange,
+    );
+
     final isPastDeadline = await _computeIsPastDeadline(now);
-    await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
-    
+    await userDataService.storeValue(
+      StorageKeys.taskIsPastDeadline,
+      isPastDeadline,
+    );
+
     final isPastEndDate = await _computeIsPastEndDate(now);
-    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
+    await userDataService.storeValue(
+      StorageKeys.taskIsPastEndDate,
+      isPastEndDate,
+    );
   }
 
   /// Compute scheduling-based task status (overdue/upcoming/pending)
   Future<void> _computeTaskStatus(DateTime now) async {
-    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    
+    final taskCurrentDate = await userDataService.getValue<String>(
+      StorageKeys.taskCurrentDate,
+    );
+
     // Default to pending if no task date is set or if date is invalid
     if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
       await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
       return;
     }
-    
+
     // Validate and parse the task date
     try {
       if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
@@ -177,11 +231,15 @@ class SessionService {
         await userDataService.storeValue(StorageKeys.taskStatus, 'pending');
         return;
       }
-      
+
       final taskDate = DateTime.parse(taskCurrentDate);
       final today = DateTime(now.year, now.month, now.day);
-      final taskDateOnly = DateTime(taskDate.year, taskDate.month, taskDate.day);
-      
+      final taskDateOnly = DateTime(
+        taskDate.year,
+        taskDate.month,
+        taskDate.day,
+      );
+
       String status;
       if (taskDateOnly.isBefore(today)) {
         status = 'overdue';
@@ -190,7 +248,7 @@ class SessionService {
       } else {
         status = 'pending'; // taskDate equals today
       }
-      
+
       await userDataService.storeValue(StorageKeys.taskStatus, status);
     } catch (e) {
       // Date parsing failed, default to pending and log warning
@@ -201,14 +259,16 @@ class SessionService {
 
   /// Compute task end date as the next active day after task.currentDate
   Future<void> _computeTaskEndDate(DateTime now) async {
-    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    
+    final taskCurrentDate = await userDataService.getValue<String>(
+      StorageKeys.taskCurrentDate,
+    );
+
     // Default to empty if no task date is set
     if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
       await userDataService.storeValue(StorageKeys.taskEndDate, '');
       return;
     }
-    
+
     // Validate and parse the task date
     try {
       if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
@@ -216,31 +276,43 @@ class SessionService {
         await userDataService.storeValue(StorageKeys.taskEndDate, '');
         return;
       }
-      
+
       final startDate = DateTime.parse(taskCurrentDate);
-      final activeDays = await userDataService.getValue<List<dynamic>>('task.activeDays');
-      
+      final activeDays = await userDataService.getValue<List<dynamic>>(
+        'task.activeDays',
+      );
+
       // If no active days configured, default to next day
       if (activeDays == null || activeDays.isEmpty) {
         final endDate = startDate.add(const Duration(days: 1));
-        await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(endDate));
+        await userDataService.storeValue(
+          StorageKeys.taskEndDate,
+          _formatDate(endDate),
+        );
         return;
       }
-      
+
       // Find the next active day after task.currentDate (exclusive)
-      for (int i = 1; i <= 365; i++) { // Max 1 year lookahead
+      for (int i = 1; i <= 365; i++) {
+        // Max 1 year lookahead
         final testDate = startDate.add(Duration(days: i));
         final testWeekday = testDate.weekday;
-        
+
         if (activeDays.contains(testWeekday)) {
-          await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(testDate));
+          await userDataService.storeValue(
+            StorageKeys.taskEndDate,
+            _formatDate(testDate),
+          );
           return;
         }
       }
-      
+
       // Fallback - should never reach here if activeDays is valid
       final fallbackEndDate = startDate.add(const Duration(days: 1));
-      await userDataService.storeValue(StorageKeys.taskEndDate, _formatDate(fallbackEndDate));
+      await userDataService.storeValue(
+        StorageKeys.taskEndDate,
+        _formatDate(fallbackEndDate),
+      );
     } catch (e) {
       // Date parsing failed, default to empty
       await userDataService.storeValue(StorageKeys.taskEndDate, '');
@@ -258,24 +330,33 @@ class SessionService {
   Future<void> recalculatePastDeadline() async {
     final now = DateTime.now();
     final isPastDeadline = await _computeIsPastDeadline(now);
-    await userDataService.storeValue(StorageKeys.taskIsPastDeadline, isPastDeadline);
+    await userDataService.storeValue(
+      StorageKeys.taskIsPastDeadline,
+      isPastDeadline,
+    );
   }
 
   /// Public method to recalculate only the isPastEndDate flag without touching the endDate
   Future<void> recalculatePastEndDate() async {
     final now = DateTime.now();
     final isPastEndDate = await _computeIsPastEndDate(now);
-    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
+    await userDataService.storeValue(
+      StorageKeys.taskIsPastEndDate,
+      isPastEndDate,
+    );
   }
 
   /// Public method to recalculate task.endDate (called by dataAction triggers)
   Future<void> recalculateTaskEndDate() async {
     final now = DateTime.now();
     await _computeTaskEndDate(now);
-    
+
     // Also recalculate isPastEndDate since it depends on endDate
     final isPastEndDate = await _computeIsPastEndDate(now);
-    await userDataService.storeValue(StorageKeys.taskIsPastEndDate, isPastEndDate);
+    await userDataService.storeValue(
+      StorageKeys.taskIsPastEndDate,
+      isPastEndDate,
+    );
   }
 
   /// Public method to recalculate task.dueDay (called by dataAction triggers)
@@ -291,14 +372,16 @@ class SessionService {
 
   /// Compute task due day as the weekday integer of task.currentDate
   Future<void> _computeTaskDueDay() async {
-    final taskCurrentDate = await userDataService.getValue<String>(StorageKeys.taskCurrentDate);
-    
+    final taskCurrentDate = await userDataService.getValue<String>(
+      StorageKeys.taskCurrentDate,
+    );
+
     // Default to 0 if no task date is set
     if (taskCurrentDate == null || taskCurrentDate.isEmpty) {
       await userDataService.storeValue(StorageKeys.taskDueDay, 0);
       return;
     }
-    
+
     // Validate and parse the task date
     try {
       if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskCurrentDate)) {
@@ -306,10 +389,13 @@ class SessionService {
         await userDataService.storeValue(StorageKeys.taskDueDay, 0);
         return;
       }
-      
+
       final taskDate = DateTime.parse(taskCurrentDate);
       // DateTime.weekday returns 1-7 (Monday=1, Sunday=7)
-      await userDataService.storeValue(StorageKeys.taskDueDay, taskDate.weekday);
+      await userDataService.storeValue(
+        StorageKeys.taskDueDay,
+        taskDate.weekday,
+      );
     } catch (e) {
       // Date parsing failed, default to 0
       await userDataService.storeValue(StorageKeys.taskDueDay, 0);
@@ -323,13 +409,15 @@ class SessionService {
   /// Returns true if today's weekday is in the user's activeDays configuration
   Future<bool> _computeIsActiveDay(DateTime now) async {
     // Get user's configured active days
-    final activeDays = await userDataService.getValue<List<dynamic>>('task.activeDays');
-    
+    final activeDays = await userDataService.getValue<List<dynamic>>(
+      'task.activeDays',
+    );
+
     // If no activeDays configured, default to true for backward compatibility
     if (activeDays == null || activeDays.isEmpty) {
       return true;
     }
-    
+
     // Return true if today's weekday (1=Monday, 7=Sunday) is in the activeDays list
     return activeDays.contains(now.weekday);
   }
@@ -341,10 +429,16 @@ class SessionService {
       final startParts = startTimeString.split(':');
       final startHour = int.parse(startParts[0]);
       final startMinute = int.parse(startParts[1]);
-      
+
       // Create today's start datetime
-      final todayStart = DateTime(now.year, now.month, now.day, startHour, startMinute);
-      
+      final todayStart = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        startHour,
+        startMinute,
+      );
+
       // Return true if current time is before start time
       return now.isBefore(todayStart);
     } catch (e) {
@@ -358,7 +452,7 @@ class SessionService {
     try {
       final isBeforeStart = await _computeIsBeforeStart(now);
       final isPastDeadline = await _computeIsPastDeadline(now);
-      
+
       // In range if not before start and not past deadline
       return !isBeforeStart && !isPastDeadline;
     } catch (e) {
@@ -374,10 +468,16 @@ class SessionService {
       final deadlineParts = deadlineTimeString.split(':');
       final deadlineHour = int.parse(deadlineParts[0]);
       final deadlineMinute = int.parse(deadlineParts[1]);
-      
+
       // Create today's deadline datetime
-      final todayDeadline = DateTime(now.year, now.month, now.day, deadlineHour, deadlineMinute);
-      
+      final todayDeadline = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        deadlineHour,
+        deadlineMinute,
+      );
+
       // Return true if current time is after deadline
       return now.isAfter(todayDeadline);
     } catch (e) {
@@ -388,24 +488,26 @@ class SessionService {
 
   /// Check if current date is past the task's end date
   Future<bool> _computeIsPastEndDate(DateTime now) async {
-    final taskEndDate = await userDataService.getValue<String>(StorageKeys.taskEndDate);
-    
+    final taskEndDate = await userDataService.getValue<String>(
+      StorageKeys.taskEndDate,
+    );
+
     // Default to false if no end date is set or if date is invalid
     if (taskEndDate == null || taskEndDate.isEmpty) {
       return false;
     }
-    
+
     // Validate and parse the end date
     try {
       if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(taskEndDate)) {
         // Invalid date format, default to false
         return false;
       }
-      
+
       final endDate = DateTime.parse(taskEndDate);
       final today = DateTime(now.year, now.month, now.day);
       final endDateOnly = DateTime(endDate.year, endDate.month, endDate.day);
-      
+
       // Return true if end date is before today
       return endDateOnly.isBefore(today);
     } catch (e) {
@@ -414,15 +516,16 @@ class SessionService {
     }
   }
 
-
   /// Get start time as string with migration for existing deadline-only users
   Future<String> _getStartTimeAsString() async {
     // Try to get explicit start time first
-    final startTime = await userDataService.getValue<String>(StorageKeys.taskStartTime);
+    final startTime = await userDataService.getValue<String>(
+      StorageKeys.taskStartTime,
+    );
     if (startTime != null) {
       return startTime;
     }
-    
+
     // If no start time set, derive default from deadline time
     final deadlineTime = await _getDeadlineTimeAsString();
     return _getDefaultStartTimeForDeadline(deadlineTime);
@@ -431,7 +534,9 @@ class SessionService {
   /// Get deadline time as string, with migration from integer format
   Future<String> _getDeadlineTimeAsString() async {
     // Try to get as string first (new format)
-    final stringValue = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+    final stringValue = await userDataService.getValue<String>(
+      StorageKeys.taskDeadlineTime,
+    );
     if (stringValue != null) {
       // Check if it's a valid time format (HH:MM), otherwise it might be a converted integer
       if (stringValue.contains(':')) {
@@ -441,48 +546,65 @@ class SessionService {
         final intValue = int.tryParse(stringValue);
         if (intValue != null) {
           final migratedTime = _convertIntegerToTimeString(intValue);
-          await userDataService.storeValue(StorageKeys.taskDeadlineTime, migratedTime);
+          await userDataService.storeValue(
+            StorageKeys.taskDeadlineTime,
+            migratedTime,
+          );
           return migratedTime;
         }
       }
     }
-    
+
     // Try to get as integer (legacy format) and migrate
-    final intValue = await userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
+    final intValue = await userDataService.getValue<int>(
+      StorageKeys.taskDeadlineTime,
+    );
     if (intValue != null) {
       // Convert integer to time string and store the migrated value
       final migratedTime = _convertIntegerToTimeString(intValue);
-      await userDataService.storeValue(StorageKeys.taskDeadlineTime, migratedTime);
+      await userDataService.storeValue(
+        StorageKeys.taskDeadlineTime,
+        migratedTime,
+      );
       return migratedTime;
     }
-    
+
     // Default if no deadline found
     return SessionConstants.defaultDeadlineTime;
   }
-  
+
   /// Convert legacy integer deadline to time string
   String _convertIntegerToTimeString(int intValue) {
     switch (intValue) {
-      case SessionConstants.timeOfDayMorning: return SessionConstants.morningDeadlineTime;
-      case SessionConstants.timeOfDayAfternoon: return SessionConstants.afternoonDeadlineTime;
-      case SessionConstants.timeOfDayEvening: return SessionConstants.eveningDeadlineTime;
-      case SessionConstants.timeOfDayNight: return SessionConstants.nightDeadlineTime;
-      default: return SessionConstants.defaultDeadlineTime;
-    }
-  }
-  
-  /// Get default start time for a given deadline time
-  String _getDefaultStartTimeForDeadline(String deadlineTime) {
-    switch (deadlineTime) {
-      case SessionConstants.morningDeadlineTime: return SessionConstants.morningStartTime;
-      case SessionConstants.afternoonDeadlineTime: return SessionConstants.afternoonStartTime;
-      case SessionConstants.eveningDeadlineTime: return SessionConstants.eveningStartTime;
-      case SessionConstants.nightDeadlineTime: return SessionConstants.nightStartTime;
-      default: return SessionConstants.defaultStartTime;
+      case SessionConstants.timeOfDayMorning:
+        return SessionConstants.morningDeadlineTime;
+      case SessionConstants.timeOfDayAfternoon:
+        return SessionConstants.afternoonDeadlineTime;
+      case SessionConstants.timeOfDayEvening:
+        return SessionConstants.eveningDeadlineTime;
+      case SessionConstants.timeOfDayNight:
+        return SessionConstants.nightDeadlineTime;
+      default:
+        return SessionConstants.defaultDeadlineTime;
     }
   }
 
-  
+  /// Get default start time for a given deadline time
+  String _getDefaultStartTimeForDeadline(String deadlineTime) {
+    switch (deadlineTime) {
+      case SessionConstants.morningDeadlineTime:
+        return SessionConstants.morningStartTime;
+      case SessionConstants.afternoonDeadlineTime:
+        return SessionConstants.afternoonStartTime;
+      case SessionConstants.eveningDeadlineTime:
+        return SessionConstants.eveningStartTime;
+      case SessionConstants.nightDeadlineTime:
+        return SessionConstants.nightStartTime;
+      default:
+        return SessionConstants.defaultStartTime;
+    }
+  }
+
   /// Schedule notifications based on current user settings
   Future<void> _scheduleNotifications() async {
     try {
@@ -497,11 +619,11 @@ class SessionService {
       // The notification service will log its own errors
     }
   }
-  
+
   /// Helper method to format date consistently
   String _formatDate(DateTime date) {
     return '${date.year}${SessionConstants.dateFormatSeparator}'
-           '${date.month.toString().padLeft(SessionConstants.dateFormatPadWidth, SessionConstants.dateFormatPadChar)}${SessionConstants.dateFormatSeparator}'
-           '${date.day.toString().padLeft(SessionConstants.dateFormatPadWidth, SessionConstants.dateFormatPadChar)}';
+        '${date.month.toString().padLeft(SessionConstants.dateFormatPadWidth, SessionConstants.dateFormatPadChar)}${SessionConstants.dateFormatSeparator}'
+        '${date.day.toString().padLeft(SessionConstants.dateFormatPadWidth, SessionConstants.dateFormatPadChar)}';
   }
 }

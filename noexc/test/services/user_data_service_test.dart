@@ -69,7 +69,9 @@ void main() {
 
     test('should return null for non-existent keys', () async {
       // Act
-      final retrievedValue = await userDataService.getValue<String>('non.existent.key');
+      final retrievedValue = await userDataService.getValue<String>(
+        'non.existent.key',
+      );
 
       // Assert
       expect(retrievedValue, isNull);

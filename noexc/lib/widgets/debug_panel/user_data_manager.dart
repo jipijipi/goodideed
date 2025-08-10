@@ -27,33 +27,35 @@ class UserDataManager {
   /// Generates debug information about the current chat state
   Map<String, dynamic> getDebugInfo() {
     final debugInfo = <String, dynamic>{};
-    
+
     // Chat System Info
     if (currentSequenceId != null) {
       debugInfo['Current Sequence'] = currentSequenceId!;
     }
-    
+
     if (chatService?.currentSequence != null) {
       debugInfo['Sequence Name'] = chatService!.currentSequence!.name;
-      debugInfo['Sequence Description'] = chatService!.currentSequence!.description;
+      debugInfo['Sequence Description'] =
+          chatService!.currentSequence!.description;
     }
-    
+
     if (totalMessages != null) {
       debugInfo['Total Messages'] = totalMessages!;
     }
-    
+
     // App Info
     debugInfo['Flutter Framework'] = 'Flutter 3.29.3';
     debugInfo['Dart SDK'] = '^3.7.2';
-    
+
     return debugInfo;
   }
 
   /// Loads both user data and debug information
-  Future<({Map<String, dynamic> userData, Map<String, dynamic> debugData})> loadAllData() async {
+  Future<({Map<String, dynamic> userData, Map<String, dynamic> debugData})>
+  loadAllData() async {
     final userData = await loadUserData();
     final debugData = getDebugInfo();
-    
+
     return (userData: userData, debugData: debugData);
   }
 }

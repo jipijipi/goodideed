@@ -18,7 +18,9 @@ class UserDataService {
       return;
     }
 
-    logger.debug('storeValue: key="$key", value=$value, valueType=${value.runtimeType}');
+    logger.debug(
+      'storeValue: key="$key", value=$value, valueType=${value.runtimeType}',
+    );
 
     if (value is String) {
       await prefs.setString(prefKey, value);
@@ -31,7 +33,9 @@ class UserDataService {
     } else {
       // For complex types, store as JSON string
       final jsonString = json.encode(value);
-      logger.debug('storeValue: encoding complex type as JSON for key "$key": $jsonString');
+      logger.debug(
+        'storeValue: encoding complex type as JSON for key "$key": $jsonString',
+      );
       await prefs.setString(prefKey, jsonString);
     }
   }
@@ -54,7 +58,9 @@ class UserDataService {
     }
 
     // Log the retrieval attempt
-    logger.debug('getValue: key="$key", value=$value, valueType=${value.runtimeType}, expectedType=$T');
+    logger.debug(
+      'getValue: key="$key", value=$value, valueType=${value.runtimeType}, expectedType=$T',
+    );
 
     // Handle exact type matches first
     if (T == String && value is String) {
@@ -71,29 +77,43 @@ class UserDataService {
 
     // Handle common type conversions with logging
     if (T == String && value is int) {
-      logger.warning('Auto-converting int to String for key "$key": $value -> "${value.toString()}"');
+      logger.warning(
+        'Auto-converting int to String for key "$key": $value -> "${value.toString()}"',
+      );
       return value.toString() as T;
     } else if (T == int && value is String) {
-      logger.warning('Attempting String to int conversion for key "$key": "$value"');
+      logger.warning(
+        'Attempting String to int conversion for key "$key": "$value"',
+      );
       final parsed = int.tryParse(value);
       if (parsed != null) {
-        logger.warning('Successfully converted String to int for key "$key": "$value" -> $parsed');
+        logger.warning(
+          'Successfully converted String to int for key "$key": "$value" -> $parsed',
+        );
         return parsed as T;
       } else {
-        logger.error('Failed to convert String to int for key "$key": "$value" is not a valid integer');
+        logger.error(
+          'Failed to convert String to int for key "$key": "$value" is not a valid integer',
+        );
         return null;
       }
     } else if (T == String && value is bool) {
-      logger.warning('Auto-converting bool to String for key "$key": $value -> "${value.toString()}"');
+      logger.warning(
+        'Auto-converting bool to String for key "$key": $value -> "${value.toString()}"',
+      );
       return value.toString() as T;
     } else if (T == bool && value is String) {
-      logger.warning('Attempting String to bool conversion for key "$key": "$value"');
+      logger.warning(
+        'Attempting String to bool conversion for key "$key": "$value"',
+      );
       if (value.toLowerCase() == 'true') {
         return true as T;
       } else if (value.toLowerCase() == 'false') {
         return false as T;
       } else {
-        logger.error('Failed to convert String to bool for key "$key": "$value" is not a valid boolean');
+        logger.error(
+          'Failed to convert String to bool for key "$key": "$value" is not a valid boolean',
+        );
         return null;
       }
     }
@@ -105,7 +125,9 @@ class UserDataService {
         logger.debug('Successfully parsed JSON for key "$key": $decoded');
         return decoded as T;
       } catch (e) {
-        logger.warning('JSON parsing failed for key "$key", returning as string: $e');
+        logger.warning(
+          'JSON parsing failed for key "$key", returning as string: $e',
+        );
         // If JSON parsing fails, return the string value
         return value as T;
       }
@@ -113,19 +135,25 @@ class UserDataService {
 
     // Final attempt - with comprehensive error logging
     try {
-      logger.debug('Attempting final cast for key "$key": ${value.runtimeType} -> $T');
+      logger.debug(
+        'Attempting final cast for key "$key": ${value.runtimeType} -> $T',
+      );
       return value as T?;
     } catch (e) {
       final contextInfo = _getStorageContextInfo(key);
-      logger.error('Type casting FAILED for key "$key": '
-          'stored=${value.runtimeType}($value), '
-          'requested=$T, '
-          'context=$contextInfo, '
-          'error=$e, '
-          'stackTrace=${StackTrace.current}');
-      
+      logger.error(
+        'Type casting FAILED for key "$key": '
+        'stored=${value.runtimeType}($value), '
+        'requested=$T, '
+        'context=$contextInfo, '
+        'error=$e, '
+        'stackTrace=${StackTrace.current}',
+      );
+
       // Return null instead of crashing the app
-      logger.warning('Returning null for key "$key" due to type casting failure');
+      logger.warning(
+        'Returning null for key "$key" due to type casting failure',
+      );
       return null;
     }
   }
@@ -161,7 +189,7 @@ class UserDataService {
   Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();
     final keys = prefs.getKeys().where((key) => key.startsWith(_keyPrefix));
-    
+
     for (final key in keys) {
       await prefs.remove(key);
     }
@@ -176,7 +204,7 @@ class UserDataService {
     for (final prefKey in keys) {
       final userKey = prefKey.substring(_keyPrefix.length);
       final value = prefs.get(prefKey);
-      
+
       if (value != null) {
         result[userKey] = value;
       }

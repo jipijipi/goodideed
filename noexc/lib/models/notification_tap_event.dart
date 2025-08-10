@@ -4,22 +4,22 @@ import 'dart:convert';
 class NotificationTapEvent {
   /// The unique ID of the notification that was tapped
   final int notificationId;
-  
+
   /// Optional payload data attached to the notification
   final String? payload;
-  
+
   /// ID of the specific action that was tapped (for action button notifications)
   final String? actionId;
-  
+
   /// Any input provided by the user (for input notifications)
   final String? input;
-  
+
   /// When the notification was tapped
   final DateTime tapTime;
-  
+
   /// The type of notification (parsed from payload if available)
   final NotificationType type;
-  
+
   /// Additional data from the platform
   final Map<String, dynamic>? platformData;
 
@@ -43,7 +43,7 @@ class NotificationTapEvent {
     Map<String, dynamic>? data,
   ) {
     NotificationType type = NotificationType.unknown;
-    
+
     // Try to parse type from payload
     if (payload != null && payload.isNotEmpty) {
       try {
@@ -56,7 +56,7 @@ class NotificationTapEvent {
         // Payload is not JSON, leave type as unknown
       }
     }
-    
+
     // Fallback to notification ID-based type detection
     if (type == NotificationType.unknown) {
       type = NotificationType.fromNotificationId(id);
@@ -74,29 +74,29 @@ class NotificationTapEvent {
 
   /// Returns true if this was a daily reminder notification
   bool get isFromDailyReminder => type == NotificationType.dailyReminder;
-  
+
   /// Returns true if this was an action button tap
   bool get isActionTap => actionId != null && actionId!.isNotEmpty;
-  
+
   /// Returns true if user provided input
   bool get hasUserInput => input != null && input!.isNotEmpty;
-  
+
   /// Parses the payload as JSON and returns the data
   Map<String, dynamic>? get payloadData {
     if (payload == null || payload!.isEmpty) return null;
-    
+
     try {
       return json.decode(payload!) as Map<String, dynamic>;
     } catch (e) {
       return null;
     }
   }
-  
+
   /// Gets a specific value from the payload data
   T? getPayloadValue<T>(String key) {
     final data = payloadData;
     if (data == null) return null;
-    
+
     final value = data[key];
     return value is T ? value : null;
   }
@@ -127,16 +127,16 @@ class NotificationTapEvent {
 enum NotificationType {
   /// Daily task reminder notifications
   dailyReminder,
-  
+
   /// Achievement or milestone notifications
   achievement,
-  
-  /// Warning or alert notifications  
+
+  /// Warning or alert notifications
   warning,
-  
+
   /// System or maintenance notifications
   system,
-  
+
   /// Unknown or unrecognized notification type
   unknown;
 

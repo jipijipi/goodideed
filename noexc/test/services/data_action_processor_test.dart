@@ -31,7 +31,9 @@ void main() {
 
       await processor.processActions([action]);
 
-      final result = await userDataService.getValue<String>(StorageKeys.userName);
+      final result = await userDataService.getValue<String>(
+        StorageKeys.userName,
+      );
       expect(result, 'John');
     });
 
@@ -132,7 +134,9 @@ void main() {
 
       await processor.processActions([action]);
 
-      final result = await userDataService.getValue<int>(StorageKeys.userStreak);
+      final result = await userDataService.getValue<int>(
+        StorageKeys.userStreak,
+      );
       expect(result, 0);
     });
 
@@ -147,7 +151,9 @@ void main() {
 
       await processor.processActions([action]);
 
-      final result = await userDataService.getValue<int>(StorageKeys.userStreak);
+      final result = await userDataService.getValue<int>(
+        StorageKeys.userStreak,
+      );
       expect(result, 0); // Default reset value is 0
     });
 
@@ -169,16 +175,8 @@ void main() {
 
     test('should process multiple actions in sequence', () async {
       final actions = [
-        DataAction(
-          type: DataActionType.set,
-          key: 'user.score',
-          value: 10,
-        ),
-        DataAction(
-          type: DataActionType.increment,
-          key: 'user.score',
-          value: 5,
-        ),
+        DataAction(type: DataActionType.set, key: 'user.score', value: 10),
+        DataAction(type: DataActionType.increment, key: 'user.score', value: 5),
         DataAction(
           type: DataActionType.set,
           key: StorageKeys.userName,
@@ -190,7 +188,7 @@ void main() {
 
       final score = await userDataService.getValue<int>('user.score');
       final name = await userDataService.getValue<String>(StorageKeys.userName);
-      
+
       expect(score, 15);
       expect(name, 'John');
     });
@@ -216,10 +214,7 @@ void main() {
         type: DataActionType.trigger,
         key: 'event.key',
         event: 'achievement_unlocked',
-        data: {
-          'title': 'Test Achievement',
-          'description': 'Test description',
-        },
+        data: {'title': 'Test Achievement', 'description': 'Test description'},
       );
 
       await processor.processActions([action]);
@@ -262,22 +257,19 @@ void main() {
 
       // Should not throw error even without callback
       await processor.processActions([action]);
-      
+
       expect(true, true);
     });
 
     test('should handle trigger action without event', () async {
       String? capturedEvent;
-      
+
       // Set up event callback
       processor.setEventCallback((eventType, data) async {
         capturedEvent = eventType;
       });
 
-      final action = DataAction(
-        type: DataActionType.trigger,
-        key: 'event.key',
-      );
+      final action = DataAction(type: DataActionType.trigger, key: 'event.key');
 
       await processor.processActions([action]);
 
@@ -299,24 +291,20 @@ void main() {
 
       // Should not throw error even if callback fails
       await processor.processActions([action]);
-      
+
       expect(true, true);
     });
 
     test('should process mixed actions with triggers', () async {
       final events = <String>[];
-      
+
       // Set up event callback
       processor.setEventCallback((eventType, data) async {
         events.add(eventType);
       });
 
       final actions = [
-        DataAction(
-          type: DataActionType.set,
-          key: 'user.score',
-          value: 50,
-        ),
+        DataAction(type: DataActionType.set, key: 'user.score', value: 50),
         DataAction(
           type: DataActionType.trigger,
           key: 'event.key',
@@ -347,12 +335,16 @@ void main() {
 
       setUp(() async {
         sessionService = SessionService(userDataService);
-        processorWithSession = DataActionProcessor(userDataService, sessionService: sessionService);
+        processorWithSession = DataActionProcessor(
+          userDataService,
+          sessionService: sessionService,
+        );
       });
 
       test('should resolve TODAY_DATE template function', () async {
         final today = DateTime.now();
-        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+        final expectedDate =
+            '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
 
         final action = DataAction(
           type: DataActionType.set,
@@ -366,17 +358,14 @@ void main() {
         expect(result, expectedDate);
       });
 
-
-
-
-
-
-
       test('should resolve NEXT_ACTIVE_DATE excluding today', () async {
         // Set active days to include today and tomorrow
         final today = DateTime.now();
         final tomorrow = today.add(const Duration(days: 1));
-        await userDataService.storeValue('task.activeDays', [today.weekday, tomorrow.weekday]);
+        await userDataService.storeValue('task.activeDays', [
+          today.weekday,
+          tomorrow.weekday,
+        ]);
 
         final action = DataAction(
           type: DataActionType.set,
@@ -387,7 +376,8 @@ void main() {
         await processorWithSession.processActions([action]);
 
         final result = await userDataService.getValue<String>('task.nextDate');
-        final expectedDate = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
+        final expectedDate =
+            '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
         expect(result, expectedDate); // Should be tomorrow, not today
       });
 
@@ -400,7 +390,9 @@ void main() {
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.customDate');
+        final result = await userDataService.getValue<String>(
+          'task.customDate',
+        );
         expect(result, '2024-12-25');
       });
 
@@ -417,7 +409,8 @@ void main() {
         final result = await userDataService.getValue<String>('task.nextDate');
         final today = DateTime.now();
         final expectedDate = today.add(const Duration(days: 1));
-        final expectedDateString = '${expectedDate.year}-${expectedDate.month.toString().padLeft(2, '0')}-${expectedDate.day.toString().padLeft(2, '0')}';
+        final expectedDateString =
+            '${expectedDate.year}-${expectedDate.month.toString().padLeft(2, '0')}-${expectedDate.day.toString().padLeft(2, '0')}';
         expect(result, expectedDateString);
       });
 
@@ -434,8 +427,11 @@ void main() {
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDate');
-        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+        final result = await userDataService.getValue<String>(
+          'task.firstActiveDate',
+        );
+        final expectedDate =
+            '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
         expect(result, expectedDate);
       });
 
@@ -453,27 +449,36 @@ void main() {
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDate');
-        final expectedDate = '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
-        expect(result, expectedDate);
-      });
-
-      test('should resolve FIRST_ACTIVE_DATE with no active days configured', () async {
-        // Don't set any active days - should default to today
-        final today = DateTime.now();
-
-        final action = DataAction(
-          type: DataActionType.set,
-          key: 'task.firstActiveDate',
-          value: 'FIRST_ACTIVE_DATE',
+        final result = await userDataService.getValue<String>(
+          'task.firstActiveDate',
         );
-
-        await processorWithSession.processActions([action]);
-
-        final result = await userDataService.getValue<String>('task.firstActiveDate');
-        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+        final expectedDate =
+            '${tomorrow.year}-${tomorrow.month.toString().padLeft(2, '0')}-${tomorrow.day.toString().padLeft(2, '0')}';
         expect(result, expectedDate);
       });
+
+      test(
+        'should resolve FIRST_ACTIVE_DATE with no active days configured',
+        () async {
+          // Don't set any active days - should default to today
+          final today = DateTime.now();
+
+          final action = DataAction(
+            type: DataActionType.set,
+            key: 'task.firstActiveDate',
+            value: 'FIRST_ACTIVE_DATE',
+          );
+
+          await processorWithSession.processActions([action]);
+
+          final result = await userDataService.getValue<String>(
+            'task.firstActiveDate',
+          );
+          final expectedDate =
+              '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+          expect(result, expectedDate);
+        },
+      );
 
       test('should resolve FIRST_ACTIVE_DATE with weekdays only', () async {
         // Set active days to weekdays only (1-5)
@@ -487,47 +492,58 @@ void main() {
 
         await processorWithSession.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDate');
+        final result = await userDataService.getValue<String>(
+          'task.firstActiveDate',
+        );
         expect(result, isNotNull);
         // Should be a valid date string
         expect(RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(result!), true);
-        
+
         // Parse the result date and verify it's a weekday
         final resultDate = DateTime.parse(result);
         expect([1, 2, 3, 4, 5].contains(resultDate.weekday), true);
       });
 
-      test('should resolve FIRST_ACTIVE_DATE without session service (fallback)', () async {
-        final action = DataAction(
-          type: DataActionType.set,
-          key: 'task.firstActiveDate',
-          value: 'FIRST_ACTIVE_DATE',
-        );
+      test(
+        'should resolve FIRST_ACTIVE_DATE without session service (fallback)',
+        () async {
+          final action = DataAction(
+            type: DataActionType.set,
+            key: 'task.firstActiveDate',
+            value: 'FIRST_ACTIVE_DATE',
+          );
 
-        // Use processor without session service
-        await processor.processActions([action]);
+          // Use processor without session service
+          await processor.processActions([action]);
 
-        final result = await userDataService.getValue<String>('task.firstActiveDate');
-        final today = DateTime.now();
-        final expectedDate = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-        expect(result, expectedDate);
-      });
+          final result = await userDataService.getValue<String>(
+            'task.firstActiveDate',
+          );
+          final today = DateTime.now();
+          final expectedDate =
+              '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+          expect(result, expectedDate);
+        },
+      );
     });
 
     group('Recalculate Triggers', () {
       late SessionService sessionService;
       late DataActionProcessor processorWithSession;
-      
+
       setUp(() async {
         sessionService = SessionService(userDataService);
-        processorWithSession = DataActionProcessor(userDataService, sessionService: sessionService);
+        processorWithSession = DataActionProcessor(
+          userDataService,
+          sessionService: sessionService,
+        );
       });
 
       test('should handle recalculate_end_date trigger', () async {
         bool triggerCalled = false;
         String? capturedEvent;
         Map<String, dynamic>? capturedData;
-        
+
         processorWithSession.setEventCallback((eventType, data) async {
           triggerCalled = true;
           capturedEvent = eventType;
@@ -548,49 +564,55 @@ void main() {
         expect(capturedData, {});
       });
 
-      test('should handle recalculate_end_date trigger with data payload', () async {
-        bool triggerCalled = false;
-        String? capturedEvent;
-        Map<String, dynamic>? capturedData;
-        
-        processorWithSession.setEventCallback((eventType, data) async {
-          triggerCalled = true;
-          capturedEvent = eventType;
-          capturedData = data;
-        });
+      test(
+        'should handle recalculate_end_date trigger with data payload',
+        () async {
+          bool triggerCalled = false;
+          String? capturedEvent;
+          Map<String, dynamic>? capturedData;
 
-        final action = DataAction(
-          type: DataActionType.trigger,
-          key: 'test.key',
-          event: 'recalculate_end_date',
-          data: {'reason': 'task_updated'},
-        );
+          processorWithSession.setEventCallback((eventType, data) async {
+            triggerCalled = true;
+            capturedEvent = eventType;
+            capturedData = data;
+          });
 
-        await processorWithSession.processActions([action]);
+          final action = DataAction(
+            type: DataActionType.trigger,
+            key: 'test.key',
+            event: 'recalculate_end_date',
+            data: {'reason': 'task_updated'},
+          );
 
-        expect(triggerCalled, true);
-        expect(capturedEvent, 'recalculate_end_date');
-        expect(capturedData, {'reason': 'task_updated'});
-      });
+          await processorWithSession.processActions([action]);
 
-      test('should handle recalculate_end_date trigger without callback set', () async {
-        final action = DataAction(
-          type: DataActionType.trigger,
-          key: 'test.key',
-          event: 'recalculate_end_date',
-        );
+          expect(triggerCalled, true);
+          expect(capturedEvent, 'recalculate_end_date');
+          expect(capturedData, {'reason': 'task_updated'});
+        },
+      );
 
-        // Should not throw error even without callback
-        await processorWithSession.processActions([action]);
-        
-        expect(true, true); // Test passes if no exception thrown
-      });
+      test(
+        'should handle recalculate_end_date trigger without callback set',
+        () async {
+          final action = DataAction(
+            type: DataActionType.trigger,
+            key: 'test.key',
+            event: 'recalculate_end_date',
+          );
+
+          // Should not throw error even without callback
+          await processorWithSession.processActions([action]);
+
+          expect(true, true); // Test passes if no exception thrown
+        },
+      );
 
       test('should handle refresh_task_calculations trigger', () async {
         bool triggerCalled = false;
         String? capturedEvent;
         Map<String, dynamic>? capturedData;
-        
+
         processorWithSession.setEventCallback((eventType, data) async {
           triggerCalled = true;
           capturedEvent = eventType;
@@ -611,69 +633,78 @@ void main() {
         expect(capturedData, {});
       });
 
-      test('should handle refresh_task_calculations trigger with data payload', () async {
-        bool triggerCalled = false;
-        String? capturedEvent;
-        Map<String, dynamic>? capturedData;
-        
-        processorWithSession.setEventCallback((eventType, data) async {
-          triggerCalled = true;
-          capturedEvent = eventType;
-          capturedData = data;
-        });
+      test(
+        'should handle refresh_task_calculations trigger with data payload',
+        () async {
+          bool triggerCalled = false;
+          String? capturedEvent;
+          Map<String, dynamic>? capturedData;
 
-        final action = DataAction(
-          type: DataActionType.trigger,
-          key: 'test.key',
-          event: 'refresh_task_calculations',
-          data: {'reason': 'active_days_updated'},
-        );
+          processorWithSession.setEventCallback((eventType, data) async {
+            triggerCalled = true;
+            capturedEvent = eventType;
+            capturedData = data;
+          });
 
-        await processorWithSession.processActions([action]);
+          final action = DataAction(
+            type: DataActionType.trigger,
+            key: 'test.key',
+            event: 'refresh_task_calculations',
+            data: {'reason': 'active_days_updated'},
+          );
 
-        expect(triggerCalled, true);
-        expect(capturedEvent, 'refresh_task_calculations');
-        expect(capturedData, {'reason': 'active_days_updated'});
-      });
+          await processorWithSession.processActions([action]);
 
-      test('should handle refresh_task_calculations trigger for comprehensive recalculation', () async {
-        bool triggerCalled = false;
-        String? capturedEvent;
-        
-        processorWithSession.setEventCallback((eventType, data) async {
-          triggerCalled = true;
-          capturedEvent = eventType;
-        });
+          expect(triggerCalled, true);
+          expect(capturedEvent, 'refresh_task_calculations');
+          expect(capturedData, {'reason': 'active_days_updated'});
+        },
+      );
 
-        final action = DataAction(
-          type: DataActionType.trigger,
-          key: 'test.key',
-          event: 'refresh_task_calculations',
-          data: {'reason': 'task_configuration_changed'},
-        );
+      test(
+        'should handle refresh_task_calculations trigger for comprehensive recalculation',
+        () async {
+          bool triggerCalled = false;
+          String? capturedEvent;
 
-        await processorWithSession.processActions([action]);
+          processorWithSession.setEventCallback((eventType, data) async {
+            triggerCalled = true;
+            capturedEvent = eventType;
+          });
 
-        // Verify trigger was called - this would recalculate:
-        // - task.endDate + task.isPastEndDate
-        // - task.dueDay  
-        // - task.status
-        expect(triggerCalled, true);
-        expect(capturedEvent, 'refresh_task_calculations');
-      });
+          final action = DataAction(
+            type: DataActionType.trigger,
+            key: 'test.key',
+            event: 'refresh_task_calculations',
+            data: {'reason': 'task_configuration_changed'},
+          );
 
-      test('should handle refresh_task_calculations trigger without callback set', () async {
-        final action = DataAction(
-          type: DataActionType.trigger,
-          key: 'test.key',
-          event: 'refresh_task_calculations',
-        );
+          await processorWithSession.processActions([action]);
 
-        // Should not throw error even without callback
-        await processorWithSession.processActions([action]);
-        
-        expect(true, true); // Test passes if no exception thrown
-      });
+          // Verify trigger was called - this would recalculate:
+          // - task.endDate + task.isPastEndDate
+          // - task.dueDay
+          // - task.status
+          expect(triggerCalled, true);
+          expect(capturedEvent, 'refresh_task_calculations');
+        },
+      );
+
+      test(
+        'should handle refresh_task_calculations trigger without callback set',
+        () async {
+          final action = DataAction(
+            type: DataActionType.trigger,
+            key: 'test.key',
+            event: 'refresh_task_calculations',
+          );
+
+          // Should not throw error even without callback
+          await processorWithSession.processActions([action]);
+
+          expect(true, true); // Test passes if no exception thrown
+        },
+      );
     });
   });
 }

@@ -11,25 +11,25 @@ class ServiceManager {
   late final TextVariantsService _variantsService;
   late final ChatService _chatService;
   late final MessageQueue _messageQueue;
-  
+
   bool _initialized = false;
 
   /// Get the user data service
   UserDataService get userDataService => _userDataService;
-  
+
   /// Get the chat service
   ChatService get chatService => _chatService;
-  
+
   /// Get the message queue
   MessageQueue get messageQueue => _messageQueue;
-  
+
   /// Check if services are initialized
   bool get isInitialized => _initialized;
 
   /// Initialize all required services
   void initializeServices() {
     if (_initialized) return;
-    
+
     _userDataService = UserDataService();
     _templatingService = TextTemplatingService(_userDataService);
     _variantsService = TextVariantsService();
@@ -39,9 +39,9 @@ class ServiceManager {
       variantsService: _variantsService,
     );
     _messageQueue = MessageQueue();
-    
+
     _initialized = true;
-    
+
     // Note: Sequence switching is now handled entirely by ChatService message accumulation
     // No callback needed - this prevents duplicate message processing
   }
@@ -49,7 +49,7 @@ class ServiceManager {
   /// Dispose of all services
   void dispose() {
     if (!_initialized) return;
-    
+
     _messageQueue.dispose();
     _initialized = false;
   }

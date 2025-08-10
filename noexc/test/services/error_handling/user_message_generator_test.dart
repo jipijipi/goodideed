@@ -7,58 +7,114 @@ void main() {
   setUp(() {
     setupSilentTesting(); // Suppress expected error logging noise
   });
-  
+
   tearDown(() {
     resetLoggingDefaults();
   });
   group('UserMessageGenerator', () {
     group('createFallbackMessage', () {
       test('should return appropriate message for assetNotFound', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.assetNotFound);
-        
-        expect(message, equals('Sorry, I couldn\'t find the conversation content. Please try again.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.assetNotFound,
+        );
+
+        expect(
+          message,
+          equals(
+            'Sorry, I couldn\'t find the conversation content. Please try again.',
+          ),
+        );
       });
 
       test('should return appropriate message for invalidFormat', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.invalidFormat);
-        
-        expect(message, equals('There seems to be an issue with the conversation format. Please contact support.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.invalidFormat,
+        );
+
+        expect(
+          message,
+          equals(
+            'There seems to be an issue with the conversation format. Please contact support.',
+          ),
+        );
       });
 
       test('should return appropriate message for templateError', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.templateError);
-        
-        expect(message, equals('I\'m having trouble personalizing this message. Continuing with default text.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.templateError,
+        );
+
+        expect(
+          message,
+          equals(
+            'I\'m having trouble personalizing this message. Continuing with default text.',
+          ),
+        );
       });
 
       test('should return appropriate message for conditionError', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.conditionError);
-        
-        expect(message, equals('I couldn\'t evaluate the conversation path. Taking the default route.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.conditionError,
+        );
+
+        expect(
+          message,
+          equals(
+            'I couldn\'t evaluate the conversation path. Taking the default route.',
+          ),
+        );
       });
 
       test('should return appropriate message for flowError', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.flowError);
-        
-        expect(message, equals('I lost track of our conversation flow. Let me restart from the beginning.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.flowError,
+        );
+
+        expect(
+          message,
+          equals(
+            'I lost track of our conversation flow. Let me restart from the beginning.',
+          ),
+        );
       });
 
       test('should return appropriate message for processingError', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.processingError);
-        
-        expect(message, equals('I encountered an issue processing your response. Please try again.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.processingError,
+        );
+
+        expect(
+          message,
+          equals(
+            'I encountered an issue processing your response. Please try again.',
+          ),
+        );
       });
 
       test('should return appropriate message for loadError', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.loadError);
-        
-        expect(message, equals('I\'m having trouble loading the conversation. Please check your connection.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.loadError,
+        );
+
+        expect(
+          message,
+          equals(
+            'I\'m having trouble loading the conversation. Please check your connection.',
+          ),
+        );
       });
 
       test('should return appropriate message for assetValidation', () {
-        final message = UserMessageGenerator.createFallbackMessage(ChatErrorType.assetValidation);
-        
-        expect(message, equals('There\'s an issue with the conversation content. Please contact support.'));
+        final message = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.assetValidation,
+        );
+
+        expect(
+          message,
+          equals(
+            'There\'s an issue with the conversation content. Please contact support.',
+          ),
+        );
       });
 
       test('should ignore context parameter in basic fallback messages', () {
@@ -66,17 +122,23 @@ void main() {
           ChatErrorType.assetNotFound,
           context: 'some context',
         );
-        final message2 = UserMessageGenerator.createFallbackMessage(ChatErrorType.assetNotFound);
-        
+        final message2 = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.assetNotFound,
+        );
+
         expect(message1, equals(message2));
       });
     });
 
     group('createContextualMessage', () {
       test('should return base message when no context provided', () {
-        final message = UserMessageGenerator.createContextualMessage(ChatErrorType.assetNotFound);
-        final baseMessage = UserMessageGenerator.createFallbackMessage(ChatErrorType.assetNotFound);
-        
+        final message = UserMessageGenerator.createContextualMessage(
+          ChatErrorType.assetNotFound,
+        );
+        final baseMessage = UserMessageGenerator.createFallbackMessage(
+          ChatErrorType.assetNotFound,
+        );
+
         expect(message, equals(baseMessage));
       });
 
@@ -86,9 +148,12 @@ void main() {
           ChatErrorType.loadError,
           sequenceId: sequenceId,
         );
-        
+
         expect(message, contains('(Sequence: $sequenceId)'));
-        expect(message, startsWith('I\'m having trouble loading the conversation.'));
+        expect(
+          message,
+          startsWith('I\'m having trouble loading the conversation.'),
+        );
       });
 
       test('should append messageId when provided', () {
@@ -97,9 +162,12 @@ void main() {
           ChatErrorType.processingError,
           messageId: messageId,
         );
-        
+
         expect(message, contains('(Message: $messageId)'));
-        expect(message, startsWith('I encountered an issue processing your response.'));
+        expect(
+          message,
+          startsWith('I encountered an issue processing your response.'),
+        );
       });
 
       test('should prefer sequenceId over messageId when both provided', () {
@@ -110,7 +178,7 @@ void main() {
           sequenceId: sequenceId,
           messageId: messageId,
         );
-        
+
         expect(message, contains('(Sequence: $sequenceId)'));
         expect(message, isNot(contains('(Message: $messageId)')));
       });
@@ -121,20 +189,20 @@ void main() {
           ChatErrorType.flowError,
           context: context,
         );
-        
+
         // Context parameter is accepted but may not be used in current implementation
         expect(message, isNotEmpty);
       });
 
       test('should handle all error types with sequenceId', () {
         const sequenceId = 'test_sequence';
-        
+
         for (final errorType in ChatErrorType.values) {
           final message = UserMessageGenerator.createContextualMessage(
             errorType,
             sequenceId: sequenceId,
           );
-          
+
           expect(message, contains('(Sequence: $sequenceId)'));
           expect(message, isNotEmpty);
         }
@@ -142,13 +210,13 @@ void main() {
 
       test('should handle all error types with messageId', () {
         const messageId = 999;
-        
+
         for (final errorType in ChatErrorType.values) {
           final message = UserMessageGenerator.createContextualMessage(
             errorType,
             messageId: messageId,
           );
-          
+
           expect(message, contains('(Message: $messageId)'));
           expect(message, isNotEmpty);
         }
@@ -157,50 +225,80 @@ void main() {
 
     group('createRecoveryMessage', () {
       test('should provide recovery suggestion for assetNotFound', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.assetNotFound);
-        
-        expect(message, equals('Try refreshing the page or checking your internet connection.'));
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.assetNotFound,
+        );
+
+        expect(
+          message,
+          equals(
+            'Try refreshing the page or checking your internet connection.',
+          ),
+        );
       });
 
       test('should provide recovery suggestion for invalidFormat', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.invalidFormat);
-        
-        expect(message, equals('Please contact support with the error details.'));
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.invalidFormat,
+        );
+
+        expect(
+          message,
+          equals('Please contact support with the error details.'),
+        );
       });
 
       test('should provide recovery suggestion for templateError', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.templateError);
-        
-        expect(message, equals('The conversation will continue with default text.'));
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.templateError,
+        );
+
+        expect(
+          message,
+          equals('The conversation will continue with default text.'),
+        );
       });
 
       test('should provide recovery suggestion for conditionError', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.conditionError);
-        
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.conditionError,
+        );
+
         expect(message, equals('The conversation will take the default path.'));
       });
 
       test('should provide recovery suggestion for flowError', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.flowError);
-        
-        expect(message, equals('The conversation will restart from the beginning.'));
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.flowError,
+        );
+
+        expect(
+          message,
+          equals('The conversation will restart from the beginning.'),
+        );
       });
 
       test('should provide recovery suggestion for processingError', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.processingError);
-        
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.processingError,
+        );
+
         expect(message, equals('Please try your response again.'));
       });
 
       test('should provide recovery suggestion for loadError', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.loadError);
-        
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.loadError,
+        );
+
         expect(message, equals('Check your connection and try again.'));
       });
 
       test('should provide recovery suggestion for assetValidation', () {
-        final message = UserMessageGenerator.createRecoveryMessage(ChatErrorType.assetValidation);
-        
+        final message = UserMessageGenerator.createRecoveryMessage(
+          ChatErrorType.assetValidation,
+        );
+
         expect(message, equals('Please contact support for assistance.'));
       });
 
@@ -213,34 +311,43 @@ void main() {
 
         for (final errorType in actionableTypes) {
           final message = UserMessageGenerator.createRecoveryMessage(errorType);
-          
-          expect(message, anyOf(
-            contains('try'),
-            contains('check'),
-            contains('refresh'),
-          ));
+
+          expect(
+            message,
+            anyOf(contains('try'), contains('check'), contains('refresh')),
+          );
         }
       });
 
-      test('should provide supportive recovery messages for technical errors', () {
-        final supportTypes = [
-          ChatErrorType.invalidFormat,
-          ChatErrorType.assetValidation,
-        ];
+      test(
+        'should provide supportive recovery messages for technical errors',
+        () {
+          final supportTypes = [
+            ChatErrorType.invalidFormat,
+            ChatErrorType.assetValidation,
+          ];
 
-        for (final errorType in supportTypes) {
-          final message = UserMessageGenerator.createRecoveryMessage(errorType);
-          
-          expect(message, contains('support'));
-        }
-      });
+          for (final errorType in supportTypes) {
+            final message = UserMessageGenerator.createRecoveryMessage(
+              errorType,
+            );
+
+            expect(message, contains('support'));
+          }
+        },
+      );
     });
 
     group('createCompleteMessage', () {
       test('should combine contextual and recovery messages', () {
-        final message = UserMessageGenerator.createCompleteMessage(ChatErrorType.loadError);
-        
-        expect(message, contains('I\'m having trouble loading the conversation.'));
+        final message = UserMessageGenerator.createCompleteMessage(
+          ChatErrorType.loadError,
+        );
+
+        expect(
+          message,
+          contains('I\'m having trouble loading the conversation.'),
+        );
         expect(message, contains('Check your connection and try again.'));
         expect(message, contains('\n\n'));
       });
@@ -251,7 +358,7 @@ void main() {
           ChatErrorType.assetNotFound,
           sequenceId: sequenceId,
         );
-        
+
         expect(message, contains('(Sequence: $sequenceId)'));
         expect(message, contains('Try refreshing the page'));
       });
@@ -262,7 +369,7 @@ void main() {
           ChatErrorType.processingError,
           messageId: messageId,
         );
-        
+
         expect(message, contains('(Message: $messageId)'));
         expect(message, contains('Please try your response again.'));
       });
@@ -273,14 +380,16 @@ void main() {
           ChatErrorType.templateError,
           context: context,
         );
-        
+
         expect(message, contains('personalizing this message'));
         expect(message, contains('continue with default text'));
       });
 
       test('should format complete message properly', () {
-        final message = UserMessageGenerator.createCompleteMessage(ChatErrorType.conditionError);
-        
+        final message = UserMessageGenerator.createCompleteMessage(
+          ChatErrorType.conditionError,
+        );
+
         final parts = message.split('\n\n');
         expect(parts, hasLength(2));
         expect(parts[0], contains('couldn\'t evaluate the conversation path'));
@@ -290,10 +399,10 @@ void main() {
       test('should handle all error types in complete messages', () {
         for (final errorType in ChatErrorType.values) {
           final message = UserMessageGenerator.createCompleteMessage(errorType);
-          
+
           expect(message, isNotEmpty);
           expect(message, contains('\n\n'));
-          
+
           final parts = message.split('\n\n');
           expect(parts, hasLength(2));
           expect(parts[0], isNotEmpty); // Contextual message
@@ -305,16 +414,19 @@ void main() {
     group('message quality', () {
       test('should use conversational language in all messages', () {
         for (final errorType in ChatErrorType.values) {
-          final fallbackMessage = UserMessageGenerator.createFallbackMessage(errorType);
-          final recoveryMessage = UserMessageGenerator.createRecoveryMessage(errorType);
-          
+          final fallbackMessage = UserMessageGenerator.createFallbackMessage(
+            errorType,
+          );
+          final recoveryMessage = UserMessageGenerator.createRecoveryMessage(
+            errorType,
+          );
+
           // Should start with conversational phrases
-          expect(fallbackMessage, anyOf(
-            startsWith('Sorry'),
-            startsWith('I'),
-            startsWith('There'),
-          ));
-          
+          expect(
+            fallbackMessage,
+            anyOf(startsWith('Sorry'), startsWith('I'), startsWith('There')),
+          );
+
           // Should not contain technical jargon
           expect(fallbackMessage.toLowerCase(), isNot(contains('exception')));
           expect(fallbackMessage.toLowerCase(), isNot(contains('null')));
@@ -325,22 +437,28 @@ void main() {
 
       test('should provide helpful guidance in recovery messages', () {
         for (final errorType in ChatErrorType.values) {
-          final recoveryMessage = UserMessageGenerator.createRecoveryMessage(errorType);
-          
-          expect(recoveryMessage, anyOf(
-            contains('try'),
-            contains('will'),
-            contains('contact'),
-            contains('check'),
-          ));
+          final recoveryMessage = UserMessageGenerator.createRecoveryMessage(
+            errorType,
+          );
+
+          expect(
+            recoveryMessage,
+            anyOf(
+              contains('try'),
+              contains('will'),
+              contains('contact'),
+              contains('check'),
+            ),
+          );
         }
       });
 
       test('should maintain consistent tone across all messages', () {
-        final messages = ChatErrorType.values
-            .map((type) => UserMessageGenerator.createFallbackMessage(type))
-            .toList();
-        
+        final messages =
+            ChatErrorType.values
+                .map((type) => UserMessageGenerator.createFallbackMessage(type))
+                .toList();
+
         // All messages should be polite and helpful
         for (final message in messages) {
           expect(message, isNot(contains('Error')));

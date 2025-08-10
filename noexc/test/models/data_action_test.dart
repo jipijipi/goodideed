@@ -90,11 +90,7 @@ void main() {
     });
 
     test('should create from JSON correctly', () {
-      final json = {
-        'type': 'set',
-        'key': 'user.name',
-        'value': 'John',
-      };
+      final json = {'type': 'set', 'key': 'user.name', 'value': 'John'};
 
       final action = DataAction.fromJson(json);
 
@@ -104,10 +100,7 @@ void main() {
     });
 
     test('should create from JSON without value', () {
-      final json = {
-        'type': 'increment',
-        'key': 'user.score',
-      };
+      final json = {'type': 'increment', 'key': 'user.score'};
 
       final action = DataAction.fromJson(json);
 
@@ -135,10 +128,7 @@ void main() {
         type: DataActionType.trigger,
         key: 'event.key',
         event: 'achievement_unlocked',
-        data: {
-          'title': 'Test Achievement',
-          'description': 'Test description',
-        },
+        data: {'title': 'Test Achievement', 'description': 'Test description'},
       );
 
       expect(action.type, DataActionType.trigger);
@@ -177,10 +167,7 @@ void main() {
         type: DataActionType.trigger,
         key: 'event.key',
         event: 'achievement_unlocked',
-        data: {
-          'title': 'Test Achievement',
-          'description': 'Test description',
-        },
+        data: {'title': 'Test Achievement', 'description': 'Test description'},
       );
 
       final json = action.toJson();

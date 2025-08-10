@@ -7,7 +7,7 @@ import 'user_variables_panel.dart';
 
 class ChatScreen extends StatefulWidget {
   final VoidCallback? onThemeToggle;
-  
+
   const ChatScreen({super.key, this.onThemeToggle});
 
   @override
@@ -31,14 +31,13 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         // Trigger rebuild when state manager notifies changes
       });
-      
+
       // Refresh panel data when it becomes visible
       if (_stateManager.isPanelVisible) {
         _panelKey.currentState?.refreshData();
       }
     }
   }
-
 
   @override
   void dispose() {
@@ -62,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
             currentTextInputMessage: _stateManager.currentTextInputMessage,
             animatedListKey: _stateManager.animatedListKey,
           ),
-          
+
           // User panel overlay
           UserPanelOverlay(
             isVisible: _stateManager.isPanelVisible,
@@ -73,10 +72,10 @@ class _ChatScreenState extends State<ChatScreen> {
             totalMessages: _stateManager.displayedMessages.length,
             stateManager: _stateManager,
           ),
-          
+
           // Frosted glass overlay in upper area
           const FrostedGlassOverlay(),
-          
+
           // Floating Action Buttons in top-right corner
           Positioned(
             top: MediaQuery.of(context).padding.top + 16,
@@ -104,6 +103,4 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
-
-
 }

@@ -21,18 +21,20 @@ class SequenceSelector extends StatelessWidget {
       onSelected: onSequenceSelected,
       itemBuilder: (BuildContext context) {
         return AppConstants.availableSequences.map((String sequenceId) {
-          final displayName = ChatConfig.sequenceDisplayNames[sequenceId] ?? sequenceId;
+          final displayName =
+              ChatConfig.sequenceDisplayNames[sequenceId] ?? sequenceId;
           final isSelected = sequenceId == currentSequenceId;
-          
+
           return PopupMenuItem<String>(
             value: sequenceId,
             child: Row(
               children: [
                 Icon(
                   _getSequenceIcon(sequenceId),
-                  color: isSelected 
-                    ? Theme.of(context).primaryColor 
-                    : Theme.of(context).iconTheme.color,
+                  color:
+                      isSelected
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).iconTheme.color,
                   size: 20.0,
                 ),
                 const SizedBox(width: 8.0),
@@ -40,10 +42,12 @@ class SequenceSelector extends StatelessWidget {
                   child: Text(
                     displayName,
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      color: isSelected 
-                        ? Theme.of(context).primaryColor 
-                        : Theme.of(context).textTheme.bodyMedium?.color,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      color:
+                          isSelected
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).textTheme.bodyMedium?.color,
                     ),
                   ),
                 ),

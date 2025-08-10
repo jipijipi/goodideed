@@ -36,13 +36,13 @@ class _MyAppState extends State<MyApp> {
   Future<void> _initializeApp() async {
     // Initialize all application services first
     await ServiceLocator.instance.initialize();
-    
+
     // Get session service from ServiceLocator and initialize it
     _sessionService = ServiceLocator.instance.sessionService;
     await _sessionService.initializeSession();
-    
+
     await _loadThemePreference();
-    
+
     // Mark initialization as complete
     setState(() {
       _isInitialized = true;
@@ -51,7 +51,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _loadThemePreference() async {
     final userDataService = ServiceLocator.instance.userDataService;
-    final isDark = await userDataService.getValue<bool>(AppThemes.themeKey) ?? false;
+    final isDark =
+        await userDataService.getValue<bool>(AppThemes.themeKey) ?? false;
     setState(() {
       _isDarkMode = isDark;
     });
@@ -78,13 +79,14 @@ class _MyAppState extends State<MyApp> {
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
       themeMode: AppThemes.getThemeMode(_isDarkMode),
-      home: _isInitialized 
-        ? ChatScreen(onThemeToggle: _toggleTheme) // const RiveArmTestWidget() // const RiveDataBindingTestWidget() // const RiveTestWidget()
-        : const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
+      home:
+          _isInitialized
+              ? ChatScreen(
+                onThemeToggle: _toggleTheme,
+              ) // const RiveArmTestWidget() // const RiveDataBindingTestWidget() // const RiveTestWidget()
+              : const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              ),
     );
   }
 }

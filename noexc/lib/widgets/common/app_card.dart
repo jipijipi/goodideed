@@ -40,13 +40,14 @@ class AppCard extends StatelessWidget {
     this.color,
     this.onTap,
     this.borderRadius,
-  }) : elevation = DesignTokens.elevationNone, hasBorder = true;
+  }) : elevation = DesignTokens.elevationNone,
+       hasBorder = true;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cardRadius = borderRadius ?? DesignTokens.cardRadius;
-    
+
     Widget cardChild = Container(
       padding: padding ?? DesignTokens.paddingL,
       child: child,
@@ -65,12 +66,13 @@ class AppCard extends StatelessWidget {
       color: color,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(cardRadius),
-        side: hasBorder
-            ? BorderSide(
-                color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                width: DesignTokens.borderThin,
-              )
-            : BorderSide.none,
+        side:
+            hasBorder
+                ? BorderSide(
+                  color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                  width: DesignTokens.borderThin,
+                )
+                : BorderSide.none,
       ),
       child: cardChild,
     );
@@ -95,7 +97,7 @@ class ContentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return AppCard(
       padding: EdgeInsets.zero,
       child: Column(
@@ -112,22 +114,34 @@ class ContentCard extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+            Divider(
+              height: 1,
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            ),
           ],
           Padding(
             padding: contentPadding ?? DesignTokens.paddingL,
             child: content,
           ),
           if (actions != null && actions!.isNotEmpty) ...[
-            Divider(height: 1, color: theme.colorScheme.outline.withValues(alpha: 0.2)),
+            Divider(
+              height: 1,
+              color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            ),
             Padding(
               padding: DesignTokens.paddingL,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: actions!
-                    .expand((action) => [action, const SizedBox(width: DesignTokens.spaceS)])
-                    .take(actions!.length * 2 - 1)
-                    .toList(),
+                children:
+                    actions!
+                        .expand(
+                          (action) => [
+                            action,
+                            const SizedBox(width: DesignTokens.spaceS),
+                          ],
+                        )
+                        .take(actions!.length * 2 - 1)
+                        .toList(),
               ),
             ),
           ],

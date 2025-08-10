@@ -8,21 +8,24 @@ void main() {
     setupQuietTesting();
   });
 
-  test('instantDisplay default is true and toggles with notifications', () async {
-    final svc = DisplaySettingsService();
-    var notified = 0;
-    svc.addListener(() => notified++);
+  test(
+    'instantDisplay default is true and toggles with notifications',
+    () async {
+      final svc = DisplaySettingsService();
+      var notified = 0;
+      svc.addListener(() => notified++);
 
-    expect(svc.instantDisplay, isTrue);
-    svc.instantDisplay = true; // no change
-    expect(notified, 0);
+      expect(svc.instantDisplay, isTrue);
+      svc.instantDisplay = true; // no change
+      expect(notified, 0);
 
-    svc.instantDisplay = false;
-    expect(svc.instantDisplay, isFalse);
-    expect(notified, 1);
+      svc.instantDisplay = false;
+      expect(svc.instantDisplay, isFalse);
+      expect(notified, 1);
 
-    svc.instantDisplay = true;
-    expect(svc.instantDisplay, isTrue);
-    expect(notified, 2);
-  });
+      svc.instantDisplay = true;
+      expect(svc.instantDisplay, isTrue);
+      expect(notified, 2);
+    },
+  );
 }

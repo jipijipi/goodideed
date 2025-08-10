@@ -42,31 +42,73 @@ void main() {
 
     group('canScheduleNotifications getter', () {
       test('should return true only for granted status', () {
-        expect(NotificationPermissionStatus.granted.canScheduleNotifications, isTrue);
-        expect(NotificationPermissionStatus.denied.canScheduleNotifications, isFalse);
-        expect(NotificationPermissionStatus.notRequested.canScheduleNotifications, isFalse);
-        expect(NotificationPermissionStatus.restricted.canScheduleNotifications, isFalse);
-        expect(NotificationPermissionStatus.unknown.canScheduleNotifications, isFalse);
+        expect(
+          NotificationPermissionStatus.granted.canScheduleNotifications,
+          isTrue,
+        );
+        expect(
+          NotificationPermissionStatus.denied.canScheduleNotifications,
+          isFalse,
+        );
+        expect(
+          NotificationPermissionStatus.notRequested.canScheduleNotifications,
+          isFalse,
+        );
+        expect(
+          NotificationPermissionStatus.restricted.canScheduleNotifications,
+          isFalse,
+        );
+        expect(
+          NotificationPermissionStatus.unknown.canScheduleNotifications,
+          isFalse,
+        );
       });
     });
 
     group('shouldRequestPermissions getter', () {
       test('should return true only for notRequested status', () {
-        expect(NotificationPermissionStatus.granted.shouldRequestPermissions, isFalse);
-        expect(NotificationPermissionStatus.denied.shouldRequestPermissions, isFalse);
-        expect(NotificationPermissionStatus.notRequested.shouldRequestPermissions, isTrue);
-        expect(NotificationPermissionStatus.restricted.shouldRequestPermissions, isFalse);
-        expect(NotificationPermissionStatus.unknown.shouldRequestPermissions, isFalse);
+        expect(
+          NotificationPermissionStatus.granted.shouldRequestPermissions,
+          isFalse,
+        );
+        expect(
+          NotificationPermissionStatus.denied.shouldRequestPermissions,
+          isFalse,
+        );
+        expect(
+          NotificationPermissionStatus.notRequested.shouldRequestPermissions,
+          isTrue,
+        );
+        expect(
+          NotificationPermissionStatus.restricted.shouldRequestPermissions,
+          isFalse,
+        );
+        expect(
+          NotificationPermissionStatus.unknown.shouldRequestPermissions,
+          isFalse,
+        );
       });
     });
 
     group('needsManualSettings getter', () {
       test('should return true for denied and restricted statuses', () {
-        expect(NotificationPermissionStatus.granted.needsManualSettings, isFalse);
+        expect(
+          NotificationPermissionStatus.granted.needsManualSettings,
+          isFalse,
+        );
         expect(NotificationPermissionStatus.denied.needsManualSettings, isTrue);
-        expect(NotificationPermissionStatus.notRequested.needsManualSettings, isFalse);
-        expect(NotificationPermissionStatus.restricted.needsManualSettings, isTrue);
-        expect(NotificationPermissionStatus.unknown.needsManualSettings, isFalse);
+        expect(
+          NotificationPermissionStatus.notRequested.needsManualSettings,
+          isFalse,
+        );
+        expect(
+          NotificationPermissionStatus.restricted.needsManualSettings,
+          isTrue,
+        );
+        expect(
+          NotificationPermissionStatus.unknown.needsManualSettings,
+          isFalse,
+        );
       });
     });
 
@@ -82,56 +124,78 @@ void main() {
         );
       });
 
-      test('should return denied when result is false and has been requested', () {
-        expect(
-          NotificationPermissionStatus.fromBoolean(false, true),
-          NotificationPermissionStatus.denied,
-        );
-      });
+      test(
+        'should return denied when result is false and has been requested',
+        () {
+          expect(
+            NotificationPermissionStatus.fromBoolean(false, true),
+            NotificationPermissionStatus.denied,
+          );
+        },
+      );
 
-      test('should return unknown when result is null and has been requested', () {
-        expect(
-          NotificationPermissionStatus.fromBoolean(null, true),
-          NotificationPermissionStatus.unknown,
-        );
-      });
+      test(
+        'should return unknown when result is null and has been requested',
+        () {
+          expect(
+            NotificationPermissionStatus.fromBoolean(null, true),
+            NotificationPermissionStatus.unknown,
+          );
+        },
+      );
 
-      test('should return notRequested when result is null and has not been requested', () {
-        expect(
-          NotificationPermissionStatus.fromBoolean(null, false),
-          NotificationPermissionStatus.notRequested,
-        );
-      });
+      test(
+        'should return notRequested when result is null and has not been requested',
+        () {
+          expect(
+            NotificationPermissionStatus.fromBoolean(null, false),
+            NotificationPermissionStatus.notRequested,
+          );
+        },
+      );
 
-      test('should return notRequested when result is false and has not been requested', () {
-        expect(
-          NotificationPermissionStatus.fromBoolean(false, false),
-          NotificationPermissionStatus.denied, // Actually returns denied regardless of hasBeenRequested when false
-        );
-      });
+      test(
+        'should return notRequested when result is false and has not been requested',
+        () {
+          expect(
+            NotificationPermissionStatus.fromBoolean(false, false),
+            NotificationPermissionStatus
+                .denied, // Actually returns denied regardless of hasBeenRequested when false
+          );
+        },
+      );
     });
 
     group('logical consistency', () {
-      test('granted status should allow scheduling and not need manual settings', () {
-        const status = NotificationPermissionStatus.granted;
-        expect(status.canScheduleNotifications, isTrue);
-        expect(status.shouldRequestPermissions, isFalse);
-        expect(status.needsManualSettings, isFalse);
-      });
+      test(
+        'granted status should allow scheduling and not need manual settings',
+        () {
+          const status = NotificationPermissionStatus.granted;
+          expect(status.canScheduleNotifications, isTrue);
+          expect(status.shouldRequestPermissions, isFalse);
+          expect(status.needsManualSettings, isFalse);
+        },
+      );
 
-      test('denied status should not allow scheduling but need manual settings', () {
-        const status = NotificationPermissionStatus.denied;
-        expect(status.canScheduleNotifications, isFalse);
-        expect(status.shouldRequestPermissions, isFalse);
-        expect(status.needsManualSettings, isTrue);
-      });
+      test(
+        'denied status should not allow scheduling but need manual settings',
+        () {
+          const status = NotificationPermissionStatus.denied;
+          expect(status.canScheduleNotifications, isFalse);
+          expect(status.shouldRequestPermissions, isFalse);
+          expect(status.needsManualSettings, isTrue);
+        },
+      );
 
-      test('notRequested status should allow requesting but not scheduling', () {
-        const status = NotificationPermissionStatus.notRequested;
-        expect(status.canScheduleNotifications, isFalse);
-        expect(status.shouldRequestPermissions, isTrue);
-        expect(status.needsManualSettings, isFalse);
-      });
+      test(
+        'notRequested status should allow requesting but not scheduling',
+        () {
+          const status = NotificationPermissionStatus.notRequested;
+          expect(status.canScheduleNotifications, isFalse);
+          expect(status.shouldRequestPermissions, isTrue);
+          expect(status.needsManualSettings, isFalse);
+        },
+      );
 
       test('restricted status should not allow scheduling or requesting', () {
         const status = NotificationPermissionStatus.restricted;

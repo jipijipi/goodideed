@@ -30,18 +30,12 @@ class _FadeTransitionWrapperState extends State<FadeTransitionWrapper>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _opacity = Tween<double>(
       begin: widget.fadeInOnInit ? 0.0 : 1.0,
       end: widget.fadeInOnInit ? 1.0 : 0.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.fadeInOnInit) {
       _controller.forward().then((_) => widget.onComplete?.call());
@@ -78,10 +72,7 @@ class _FadeTransitionWrapperState extends State<FadeTransitionWrapper>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _opacity,
-      child: widget.child,
-    );
+    return FadeTransition(opacity: _opacity, child: widget.child);
   }
 }
 
@@ -101,7 +92,8 @@ class ConditionalFadeTransition extends StatefulWidget {
   });
 
   @override
-  State<ConditionalFadeTransition> createState() => _ConditionalFadeTransitionState();
+  State<ConditionalFadeTransition> createState() =>
+      _ConditionalFadeTransitionState();
 }
 
 class _ConditionalFadeTransitionState extends State<ConditionalFadeTransition>
@@ -112,18 +104,12 @@ class _ConditionalFadeTransitionState extends State<ConditionalFadeTransition>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _opacity = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.isVisible) {
       _controller.forward();
@@ -150,9 +136,6 @@ class _ConditionalFadeTransitionState extends State<ConditionalFadeTransition>
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _opacity,
-      child: widget.child,
-    );
+    return FadeTransition(opacity: _opacity, child: widget.child);
   }
 }

@@ -26,7 +26,7 @@ class ChatService {
   late final MessageRenderer _messageRenderer;
   late final FlowOrchestrator _flowOrchestrator;
   final logger = LoggerService.instance;
-  
+
   // Callback for notifying UI about events from dataAction triggers
   Future<void> Function(String eventType, Map<String, dynamic> data)? _onEvent;
 
@@ -39,23 +39,26 @@ class ChatService {
     // Initialize sequence management first (single source of truth)
     final sequenceLoader = SequenceLoader();
     _sequenceManager = SequenceManager(sequenceLoader: sequenceLoader);
-    
+
     _messageProcessor = MessageProcessor(
       userDataService: userDataService,
       templatingService: templatingService,
       variantsService: variantsService,
     );
-    
+
     _routeProcessor = RouteProcessor(
-      conditionEvaluator: userDataService != null 
-          ? ConditionEvaluator(userDataService) 
-          : null,
-      dataActionProcessor: userDataService != null 
-          ? DataActionProcessor(userDataService, sessionService: sessionService) 
-          : null,
+      conditionEvaluator:
+          userDataService != null ? ConditionEvaluator(userDataService) : null,
+      dataActionProcessor:
+          userDataService != null
+              ? DataActionProcessor(
+                userDataService,
+                sessionService: sessionService,
+              )
+              : null,
       sequenceManager: _sequenceManager,
     );
-    
+
     // Initialize clean architecture components
     _messageWalker = MessageWalker();
     _messageRenderer = MessageRenderer(messageProcessor: _messageProcessor);
@@ -65,16 +68,17 @@ class ChatService {
       sequenceManager: _sequenceManager,
       routeProcessor: _routeProcessor,
     );
-    
+
     // Set up event callback for dataActionProcessor
     if (_routeProcessor.dataActionProcessor != null) {
       _routeProcessor.dataActionProcessor!.setEventCallback(_handleEvent);
     }
   }
 
-
   /// Set callback for event notifications from dataAction triggers
-  void setEventCallback(Future<void> Function(String eventType, Map<String, dynamic> data) callback) {
+  void setEventCallback(
+    Future<void> Function(String eventType, Map<String, dynamic> data) callback,
+  ) {
     _onEvent = callback;
   }
 
@@ -145,9 +149,13 @@ class ChatService {
       final userDataService = ServiceLocator.instance.userDataService;
       final sessionService = SessionService(userDataService);
       await sessionService.recalculateTaskEndDate();
-      logger.info('Successfully recalculated task.endDate and task.isPastEndDate');
+      logger.info(
+        'Successfully recalculated task.endDate and task.isPastEndDate',
+      );
     } catch (e) {
-      logger.error('Failed to recalculate task.endDate and task.isPastEndDate: $e');
+      logger.error(
+        'Failed to recalculate task.endDate and task.isPastEndDate: $e',
+      );
     }
   }
 
@@ -155,15 +163,19 @@ class ChatService {
   Future<void> _handleRefreshTaskCalculations() async {
     final userDataService = ServiceLocator.instance.userDataService;
     final sessionService = SessionService(userDataService);
-    
+
     // Recalculate task.endDate and task.isPastEndDate
     try {
       await sessionService.recalculateTaskEndDate();
-      logger.info('Successfully recalculated task.endDate and task.isPastEndDate');
+      logger.info(
+        'Successfully recalculated task.endDate and task.isPastEndDate',
+      );
     } catch (e) {
-      logger.error('Failed to recalculate task.endDate and task.isPastEndDate: $e');
+      logger.error(
+        'Failed to recalculate task.endDate and task.isPastEndDate: $e',
+      );
     }
-    
+
     // Recalculate task.dueDay
     try {
       await sessionService.recalculateTaskDueDay();
@@ -171,7 +183,7 @@ class ChatService {
     } catch (e) {
       logger.error('Failed to recalculate task.dueDay: $e');
     }
-    
+
     // Recalculate task.status
     try {
       await sessionService.recalculateTaskStatus();
@@ -179,7 +191,7 @@ class ChatService {
     } catch (e) {
       logger.error('Failed to recalculate task.status: $e');
     }
-    
+
     // Reschedule notifications after task calculations
     try {
       final notificationService = ServiceLocator.instance.notificationService;
@@ -194,15 +206,19 @@ class ChatService {
   Future<void> _handleNotificationRequestPermissions() async {
     try {
       final notificationService = ServiceLocator.instance.notificationService;
-      
+
       logger.info('Script triggered notification permission request');
       final granted = await notificationService.requestPermissions();
-      
+
       if (granted) {
         logger.info('Notification permissions granted by user');
       } else {
-        logger.warning('Notification permissions denied or already decided by user');
-        logger.info('Note: If previously denied, user must enable manually in device Settings');
+        logger.warning(
+          'Notification permissions denied or already decided by user',
+        );
+        logger.info(
+          'Note: If previously denied, user must enable manually in device Settings',
+        );
       }
     } catch (e) {
       logger.error('Failed to request notification permissions: $e');
@@ -253,17 +269,19 @@ class ChatService {
   }
 
   /// Get initial messages for a specific sequence
-  Future<List<ChatMessage>> getInitialMessages({String sequenceId = 'onboarding_seq'}) async {
+  Future<List<ChatMessage>> getInitialMessages({
+    String sequenceId = 'onboarding_seq',
+  }) async {
     if (_sequenceManager.currentSequenceId != sequenceId) {
       await loadSequence(sequenceId);
     }
-    
+
     // Start with the first message in the sequence
     final firstMessageId = _sequenceManager.getFirstMessageId();
     if (firstMessageId == null) {
       throw Exception('Sequence $sequenceId has no messages');
     }
-    
+
     return await _getMessagesFromId(firstMessageId);
   }
 
@@ -274,7 +292,10 @@ class ChatService {
     return await _getMessagesFromId(startId);
   }
 
-  Future<List<ChatMessage>> getMessagesAfterTextInput(int nextMessageId, String userInput) async {
+  Future<List<ChatMessage>> getMessagesAfterTextInput(
+    int nextMessageId,
+    String userInput,
+  ) async {
     return await _getMessagesFromId(nextMessageId);
   }
 
@@ -290,13 +311,19 @@ class ChatService {
   }
 
   /// Handle user text input and store it if storeKey is provided
-  Future<void> handleUserTextInput(ChatMessage textInputMessage, String userInput) async {
+  Future<void> handleUserTextInput(
+    ChatMessage textInputMessage,
+    String userInput,
+  ) async {
     // Use FlowOrchestrator for consistent processing
     await _flowOrchestrator.handleUserTextInput(textInputMessage, userInput);
   }
 
   /// Handle user choice selection and store it if storeKey is provided
-  Future<void> handleUserChoice(ChatMessage choiceMessage, Choice selectedChoice) async {
+  Future<void> handleUserChoice(
+    ChatMessage choiceMessage,
+    Choice selectedChoice,
+  ) async {
     // Use FlowOrchestrator for consistent processing
     await _flowOrchestrator.handleUserChoice(choiceMessage, selectedChoice);
   }
@@ -308,16 +335,17 @@ class ChatService {
   }
 
   /// Process a list of messages and replace template variables
-  Future<List<ChatMessage>> processMessageTemplates(List<ChatMessage> messages) async {
+  Future<List<ChatMessage>> processMessageTemplates(
+    List<ChatMessage> messages,
+  ) async {
     // Use FlowOrchestrator for consistent processing
     return await _flowOrchestrator.processMessageTemplates(messages);
   }
 
   Future<List<ChatMessage>> _getMessagesFromId(int startId) async {
     logger.info('Processing messages from ID: $startId');
-    
+
     final flowResponse = await _flowOrchestrator.processFrom(startId);
     return flowResponse.messages;
   }
-
 }

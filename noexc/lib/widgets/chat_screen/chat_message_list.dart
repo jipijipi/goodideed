@@ -31,7 +31,6 @@ class ChatMessageList extends StatefulWidget {
 class _ChatMessageListState extends State<ChatMessageList> {
   @override
   Widget build(BuildContext context) {
-    
     // Use AnimatedList if key is provided, otherwise fallback to ListView
     if (widget.animatedListKey != null) {
       return AnimatedList(
@@ -42,7 +41,7 @@ class _ChatMessageListState extends State<ChatMessageList> {
         initialItemCount: widget.messages.length,
         itemBuilder: (context, index, animation) {
           final message = widget.messages.reversed.toList()[index];
-          
+
           // Check if this is a user message that should appear instantly
           if (!message.isFromBot) {
             // User messages appear instantly without animation
@@ -72,21 +71,26 @@ class _ChatMessageListState extends State<ChatMessageList> {
   }
 
   /// Builds an animated message item that grows in height and slides in
-  Widget _buildAnimatedMessageItem(ChatMessage message, Animation<double> animation) {
+  Widget _buildAnimatedMessageItem(
+    ChatMessage message,
+    Animation<double> animation,
+  ) {
     // Create size animation that grows from 0 to 1
     final sizeAnimation = CurvedAnimation(
       parent: animation,
       curve: DesignTokens.messageSlideAnimationCurve,
     );
-    
+
     // Create slide animation for the content
     final slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3), // Start slightly below
       end: Offset.zero, // End at normal position
-    ).animate(CurvedAnimation(
-      parent: animation,
-      curve: DesignTokens.messageSlideAnimationCurve,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: animation,
+        curve: DesignTokens.messageSlideAnimationCurve,
+      ),
+    );
 
     return KeyedSubtree(
       key: ObjectKey(message),

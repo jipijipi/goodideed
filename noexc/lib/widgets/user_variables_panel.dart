@@ -42,7 +42,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
   bool _isLoading = true;
   late final UserDataManager _dataManager;
   late final DebugStatusController _statusController;
-  
+
   // Scenario-related state
   Map<String, dynamic> _scenarios = {};
   String? _selectedScenario;
@@ -75,7 +75,7 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
 
     try {
       final data = await _dataManager.loadAllData();
-      
+
       if (mounted) {
         setState(() {
           _userData = data.userData;
@@ -107,7 +107,10 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
         });
       }
     } catch (e) {
-      logger.warning('Failed to load scenarios: $e', component: LogComponent.ui);
+      logger.warning(
+        'Failed to load scenarios: $e',
+        component: LogComponent.ui,
+      );
     }
   }
 
@@ -119,12 +122,17 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
     });
 
     try {
-      await ScenarioManager.applyScenario(_selectedScenario!, widget.userDataService);
-      
+      await ScenarioManager.applyScenario(
+        _selectedScenario!,
+        widget.userDataService,
+      );
+
       // Refresh the data to show updated values
       refreshData();
-      
-      _statusController.addSuccess('Applied scenario: ${_scenarios[_selectedScenario!]['name']}');
+
+      _statusController.addSuccess(
+        'Applied scenario: ${_scenarios[_selectedScenario!]['name']}',
+      );
     } catch (e) {
       _statusController.addError('Failed to apply scenario: $e');
     } finally {
@@ -163,42 +171,49 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                     isExpanded: true,
                     hint: const Text('Select a scenario...'),
                     value: _selectedScenario,
-                    items: _scenarios.entries.map((entry) {
-                      final scenario = entry.value as Map<String, dynamic>;
-                      return DropdownMenuItem(
-                        value: entry.key,
-                        child: Container(
-                          constraints: const BoxConstraints(maxHeight: 60),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                scenario['name'] ?? entry.key,
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              if (scenario['description'] != null)
-                                Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 2),
-                                    child: Text(
-                                      scenario['description'],
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                    ),
+                    items:
+                        _scenarios.entries.map((entry) {
+                          final scenario = entry.value as Map<String, dynamic>;
+                          return DropdownMenuItem(
+                            value: entry.key,
+                            child: Container(
+                              constraints: const BoxConstraints(maxHeight: 60),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    scenario['name'] ?? entry.key,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(fontWeight: FontWeight.w500),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                                  if (scenario['description'] != null)
+                                    Flexible(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 2),
+                                        child: Text(
+                                          scenario['description'],
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodySmall?.copyWith(
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurfaceVariant,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
                     onChanged: (value) {
                       setState(() {
                         _selectedScenario = value;
@@ -208,16 +223,18 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
-                  onPressed: _selectedScenario != null && !_isApplyingScenario 
-                      ? _applyScenario 
-                      : null,
-                  child: _isApplyingScenario
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Apply'),
+                  onPressed:
+                      _selectedScenario != null && !_isApplyingScenario
+                          ? _applyScenario
+                          : null,
+                  child:
+                      _isApplyingScenario
+                          ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                          : const Text('Apply'),
                 ),
               ],
             ),
@@ -233,10 +250,14 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
       width: double.infinity,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(DesignTokens.panelTopRadius)),
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(DesignTokens.panelTopRadius),
+        ),
         boxShadow: [
           BoxShadow(
-            color: DesignTokens.brandBlack.withValues(alpha: DesignTokens.shadowOpacity),
+            color: DesignTokens.brandBlack.withValues(
+              alpha: DesignTokens.shadowOpacity,
+            ),
             blurRadius: DesignTokens.shadowBlurRadius,
             offset: DesignTokens.shadowOffset,
           ),
@@ -250,7 +271,9 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
             padding: DesignTokens.panelHeaderPadding,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primaryContainer,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(DesignTokens.panelTopRadius)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(DesignTokens.panelTopRadius),
+              ),
             ),
             child: Row(
               children: [
@@ -264,76 +287,76 @@ class UserVariablesPanelState extends State<UserVariablesPanel> {
               ],
             ),
           ),
-          
+
           // Content
           Flexible(
-            child: _isLoading
-                ? const Padding(
-                    padding: DesignTokens.panelEmptyStatePadding,
-                    child: CircularProgressIndicator(),
-                  )
-                : _debugData.isEmpty && _userData.isEmpty
+            child:
+                _isLoading
+                    ? const Padding(
+                      padding: DesignTokens.panelEmptyStatePadding,
+                      child: CircularProgressIndicator(),
+                    )
+                    : _debugData.isEmpty && _userData.isEmpty
                     ? Padding(
-                        padding: DesignTokens.panelEmptyStatePadding,
-                        child: Text(
-                          ChatConfig.emptyDataMessage,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                          textAlign: TextAlign.center,
+                      padding: DesignTokens.panelEmptyStatePadding,
+                      child: Text(
+                        ChatConfig.emptyDataMessage,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
-                      )
-                    : ListView(
-                        shrinkWrap: true,
-                        padding: DesignTokens.panelContentPadding,
-                        children: [
-                          // Status area for recent actions
-                          DebugStatusArea(controller: _statusController),
-                          
-                          // Chat Controls Section
-                          ChatControlsWidget(
-                            stateManager: widget.stateManager,
-                            onDataRefresh: refreshData,
-                            statusController: _statusController,
-                          ),
-                          
-                          // Sequence Selector
-                          SequenceSelectorWidget(
-                            currentSequenceId: widget.currentSequenceId,
-                            stateManager: widget.stateManager,
-                            statusController: _statusController,
-                          ),
-                          
-                          // Test Scenarios Section
-                          _buildScenarioSection(),
-                          
-                          // Date/Time Picker Section
-                          DateTimePickerWidget(
-                            userDataService: widget.userDataService,
-                            onDataChanged: refreshData,
-                            statusController: _statusController,
-                          ),
-                          
-                          // Notification Debug Section
-                          NotificationDebugWidget(
-                            statusController: _statusController,
-                            onDataRefresh: refreshData,
-                          ),
-                          
-                          // Data Display Section
-                          DataDisplayWidget(
-                            userData: _userData,
-                            debugData: _debugData,
-                            userDataService: widget.userDataService,
-                            onDataChanged: refreshData,
-                            statusController: _statusController,
-                          ),
-
-                          // Logger Controls Section
-                          const LoggerControlsWidget(),
-
-                        ],
+                        textAlign: TextAlign.center,
                       ),
+                    )
+                    : ListView(
+                      shrinkWrap: true,
+                      padding: DesignTokens.panelContentPadding,
+                      children: [
+                        // Status area for recent actions
+                        DebugStatusArea(controller: _statusController),
+
+                        // Chat Controls Section
+                        ChatControlsWidget(
+                          stateManager: widget.stateManager,
+                          onDataRefresh: refreshData,
+                          statusController: _statusController,
+                        ),
+
+                        // Sequence Selector
+                        SequenceSelectorWidget(
+                          currentSequenceId: widget.currentSequenceId,
+                          stateManager: widget.stateManager,
+                          statusController: _statusController,
+                        ),
+
+                        // Test Scenarios Section
+                        _buildScenarioSection(),
+
+                        // Date/Time Picker Section
+                        DateTimePickerWidget(
+                          userDataService: widget.userDataService,
+                          onDataChanged: refreshData,
+                          statusController: _statusController,
+                        ),
+
+                        // Notification Debug Section
+                        NotificationDebugWidget(
+                          statusController: _statusController,
+                          onDataRefresh: refreshData,
+                        ),
+
+                        // Data Display Section
+                        DataDisplayWidget(
+                          userData: _userData,
+                          debugData: _debugData,
+                          userDataService: widget.userDataService,
+                          onDataChanged: refreshData,
+                          statusController: _statusController,
+                        ),
+
+                        // Logger Controls Section
+                        const LoggerControlsWidget(),
+                      ],
+                    ),
           ),
         ],
       ),

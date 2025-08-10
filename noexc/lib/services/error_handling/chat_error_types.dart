@@ -14,15 +14,15 @@ enum ChatErrorType {
 abstract class ChatException implements Exception {
   final String message;
   final ChatErrorType type;
-  
+
   const ChatException(this.message, {required this.type});
-  
+
   @override
   String toString() => 'ChatException: $message';
-  
+
   /// Gets user-friendly error message
   String get userMessage => _createFallbackMessage(type);
-  
+
   /// Creates a safe fallback message for UI display
   static String _createFallbackMessage(ChatErrorType errorType) {
     switch (errorType) {

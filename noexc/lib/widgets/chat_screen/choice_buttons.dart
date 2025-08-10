@@ -22,18 +22,22 @@ class ChoiceButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool hasSelection = message.selectedChoiceText != null;
-    
+
     return Column(
-      children: message.choices!.map((choice) {
-        final ChoiceState state = _getChoiceState(hasSelection, message.selectedChoiceText == choice.text);
-        
-        return _buildChoiceButton(
-          context,
-          choice,
-          state: state,
-          hasSelection: hasSelection,
-        );
-      }).toList(),
+      children:
+          message.choices!.map((choice) {
+            final ChoiceState state = _getChoiceState(
+              hasSelection,
+              message.selectedChoiceText == choice.text,
+            );
+
+            return _buildChoiceButton(
+              context,
+              choice,
+              state: state,
+              hasSelection: hasSelection,
+            );
+          }).toList(),
     );
   }
 
@@ -58,12 +62,11 @@ class ChoiceButtons extends StatelessWidget {
         children: [
           Flexible(
             child: GestureDetector(
-              onTap: hasSelection ? null : () => onChoiceSelected?.call(choice, message),
-              child: _buildChoiceContainer(
-                context,
-                choice,
-                state: state,
-              ),
+              onTap:
+                  hasSelection
+                      ? null
+                      : () => onChoiceSelected?.call(choice, message),
+              child: _buildChoiceContainer(context, choice, state: state),
             ),
           ),
           if (DesignTokens.showAvatars) ...[
@@ -83,7 +86,9 @@ class ChoiceButtons extends StatelessWidget {
   }) {
     return Container(
       constraints: BoxConstraints(
-        maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
+        maxWidth:
+            MediaQuery.of(context).size.width *
+            DesignTokens.messageMaxWidthFactor,
       ),
       padding: DesignTokens.messageBubblePadding,
       decoration: BoxDecoration(
@@ -91,9 +96,10 @@ class ChoiceButtons extends StatelessWidget {
         borderRadius: BorderRadius.circular(DesignTokens.messageBubbleRadius),
         border: Border.all(
           color: _getChoiceBorderColor(context, state),
-          width: state == ChoiceState.selected 
-              ? DesignTokens.selectedChoiceBorderWidth 
-              : DesignTokens.unselectedChoiceBorderWidth,
+          width:
+              state == ChoiceState.selected
+                  ? DesignTokens.selectedChoiceBorderWidth
+                  : DesignTokens.unselectedChoiceBorderWidth,
         ),
         boxShadow: [
           BoxShadow(
@@ -109,7 +115,10 @@ class ChoiceButtons extends StatelessWidget {
           Flexible(
             child: MarkdownBody(
               data: choice.text,
-              styleSheet: DesignTokens.getChoiceMarkdownStyle(context, state: state),
+              styleSheet: DesignTokens.getChoiceMarkdownStyle(
+                context,
+                state: state,
+              ),
               shrinkWrap: true,
               selectable: false,
             ),
@@ -158,5 +167,4 @@ class ChoiceButtons extends StatelessWidget {
         return DesignTokens.getDisabledChoiceBorder(context);
     }
   }
-
 }

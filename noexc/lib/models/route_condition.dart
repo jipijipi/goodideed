@@ -23,22 +23,22 @@ class RouteCondition {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {};
-    
+
     if (condition != null) {
       json['condition'] = condition!;
     }
-    
+
     if (sequenceId != null) {
       json['sequenceId'] = sequenceId!;
       // When switching sequences, don't include nextMessageId as we always start at message 1
     } else if (nextMessageId != null) {
       json['nextMessageId'] = nextMessageId!;
     }
-    
+
     if (isDefault) {
       json['default'] = isDefault;
     }
-    
+
     return json;
   }
 
@@ -53,9 +53,9 @@ class RouteCondition {
   }
 
   @override
-  int get hashCode => 
-      condition.hashCode ^ 
-      sequenceId.hashCode ^ 
-      nextMessageId.hashCode ^ 
+  int get hashCode =>
+      condition.hashCode ^
+      sequenceId.hashCode ^
+      nextMessageId.hashCode ^
       isDefault.hashCode;
 }

@@ -14,7 +14,8 @@ class NotificationDebugWidget extends StatefulWidget {
   });
 
   @override
-  State<NotificationDebugWidget> createState() => _NotificationDebugWidgetState();
+  State<NotificationDebugWidget> createState() =>
+      _NotificationDebugWidgetState();
 }
 
 class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
@@ -44,11 +45,12 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
       }
 
       final notificationService = ServiceLocator.instance.notificationService;
-      
+
       final status = await notificationService.getNotificationStatus();
-      final scheduled = await notificationService.getScheduledNotificationDetails();
+      final scheduled =
+          await notificationService.getScheduledNotificationDetails();
       final platform = notificationService.getPlatformInfo();
-      
+
       // Get detailed permission status
       final permissionStatus = await notificationService.getPermissionStatus();
       final permissionData = {
@@ -58,7 +60,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
         'shouldRequestPermissions': permissionStatus.shouldRequestPermissions,
         'needsManualSettings': permissionStatus.needsManualSettings,
       };
-      
+
       // Get app state if available
       Map<String, dynamic> appStateData = {};
       try {
@@ -92,7 +94,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     try {
       final notificationService = ServiceLocator.instance.notificationService;
       await notificationService.cancelAllNotifications();
-      
+
       widget.statusController?.addSuccess('All notifications canceled');
       widget.onDataRefresh?.call();
       _loadNotificationData();
@@ -105,12 +107,14 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     try {
       final notificationService = ServiceLocator.instance.notificationService;
       await notificationService.forceReschedule();
-      
+
       widget.statusController?.addSuccess('Notifications rescheduled');
       widget.onDataRefresh?.call();
       _loadNotificationData();
     } catch (e) {
-      widget.statusController?.addError('Failed to reschedule notifications: $e');
+      widget.statusController?.addError(
+        'Failed to reschedule notifications: $e',
+      );
     }
   }
 
@@ -118,13 +122,15 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     try {
       final notificationService = ServiceLocator.instance.notificationService;
       final granted = await notificationService.requestPermissions();
-      
+
       if (granted) {
         widget.statusController?.addSuccess('Notification permissions granted');
       } else {
-        widget.statusController?.addInfo('Notification permissions denied or unavailable');
+        widget.statusController?.addInfo(
+          'Notification permissions denied or unavailable',
+        );
       }
-      
+
       _loadNotificationData();
     } catch (e) {
       widget.statusController?.addError('Failed to request permissions: $e');
@@ -135,11 +141,15 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     try {
       final notificationService = ServiceLocator.instance.notificationService;
       final status = await notificationService.getPermissionStatus();
-      
-      widget.statusController?.addInfo('Permission Status: ${status.description}');
+
+      widget.statusController?.addInfo(
+        'Permission Status: ${status.description}',
+      );
       _loadNotificationData();
     } catch (e) {
-      widget.statusController?.addError('Failed to check permission status: $e');
+      widget.statusController?.addError(
+        'Failed to check permission status: $e',
+      );
     }
   }
 
@@ -147,7 +157,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     try {
       final appStateService = ServiceLocator.instance.appStateService;
       await appStateService.clearNotificationState();
-      
+
       widget.statusController?.addSuccess('App notification state cleared');
       _loadNotificationData();
     } catch (e) {
@@ -195,7 +205,9 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
             Row(
               children: [
                 Icon(
-                  isEnabled ? Icons.notifications_active : Icons.notifications_off,
+                  isEnabled
+                      ? Icons.notifications_active
+                      : Icons.notifications_off,
                   color: isEnabled ? Colors.green : Colors.red,
                   size: 20,
                 ),
@@ -209,11 +221,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                 ),
                 if (isIOSSimulator) ...[
                   const SizedBox(width: 8),
-                  Icon(
-                    Icons.warning,
-                    color: Colors.orange,
-                    size: 16,
-                  ),
+                  Icon(Icons.warning, color: Colors.orange, size: 16),
                   const SizedBox(width: 4),
                   Text(
                     'Simulator',
@@ -235,28 +243,38 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
               ],
             ),
             const SizedBox(height: 8),
-            
+
             // Basic info
             _buildInfoRow('Platform:', platform),
             _buildInfoRow('Intensity:', intensity.toString()),
             _buildInfoRow('Deadline Time:', deadlineTime),
-            
+
             // Timezone info
             _buildInfoRow('Timezone:', timezone),
-            _buildInfoRow('Current Time:', currentTime.length > 25 ? currentTime.substring(0, 25) + '...' : currentTime),
-            
+            _buildInfoRow(
+              'Current Time:',
+              currentTime.length > 25
+                  ? currentTime.substring(0, 25) + '...'
+                  : currentTime,
+            ),
+
             // Permission info
             _buildInfoRow('Permissions:', permissions),
-            
-            if (lastScheduled != null) 
-              _buildInfoRow('Last Scheduled:', DateTime.parse(lastScheduled).toLocal().toString().substring(0, 19)),
-              
+
+            if (lastScheduled != null)
+              _buildInfoRow(
+                'Last Scheduled:',
+                DateTime.parse(
+                  lastScheduled,
+                ).toLocal().toString().substring(0, 19),
+              ),
+
             // Fallback information if available
             if (fallbackDate != null)
               _buildInfoRow('Fallback Date:', fallbackDate),
             if (fallbackReason != null)
               _buildInfoRow('Fallback Reason:', fallbackReason),
-              
+
             // iOS Simulator warning
             if (isIOSSimulator)
               Container(
@@ -265,7 +283,9 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                 decoration: BoxDecoration(
                   color: Colors.orange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: Colors.orange.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -298,16 +318,13 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
             width: 100,
             child: Text(
               label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            child: Text(value, style: Theme.of(context).textTheme.bodySmall),
           ),
         ],
       ),
@@ -340,9 +357,9 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
           children: [
             Text(
               'Scheduled Notifications (${_scheduledNotifications.length})',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
             ...(_scheduledNotifications.map((notification) {
@@ -350,17 +367,26 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildInfoRow('ID:', notification['id'].toString()),
-                    _buildInfoRow('Title:', notification['title'] ?? 'No title'),
+                    _buildInfoRow(
+                      'Title:',
+                      notification['title'] ?? 'No title',
+                    ),
                     _buildInfoRow('Body:', notification['body'] ?? 'No body'),
-                    _buildInfoRow('Scheduled:', notification['scheduledTime'] ?? 'Unknown'),
-                    if (notification['timeUntil'] != null && notification['timeUntil'].isNotEmpty)
+                    _buildInfoRow(
+                      'Scheduled:',
+                      notification['scheduledTime'] ?? 'Unknown',
+                    ),
+                    if (notification['timeUntil'] != null &&
+                        notification['timeUntil'].isNotEmpty)
                       _buildInfoRow('Time Until:', notification['timeUntil']),
                     _buildInfoRow('Type:', notification['type'] ?? 'Unknown'),
                   ],
@@ -379,13 +405,14 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     final status = _permissionStatus['status'] ?? 'unknown';
     final description = _permissionStatus['description'] ?? 'No description';
     final canSchedule = _permissionStatus['canScheduleNotifications'] ?? false;
-    final shouldRequest = _permissionStatus['shouldRequestPermissions'] ?? false;
+    final shouldRequest =
+        _permissionStatus['shouldRequestPermissions'] ?? false;
     final needsManual = _permissionStatus['needsManualSettings'] ?? false;
 
     // Color coding based on status
     Color statusColor = Colors.grey;
     IconData statusIcon = Icons.help_outline;
-    
+
     switch (status) {
       case 'granted':
         statusColor = Colors.green;
@@ -421,9 +448,9 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                 const SizedBox(width: 8),
                 Text(
                   'Permission Status',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -433,7 +460,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
             _buildInfoRow('Can Schedule:', canSchedule ? 'Yes' : 'No'),
             _buildInfoRow('Should Request:', shouldRequest ? 'Yes' : 'No'),
             _buildInfoRow('Needs Manual:', needsManual ? 'Yes' : 'No'),
-            
+
             // Show helpful actions based on status
             if (shouldRequest || needsManual) ...[
               const SizedBox(height: 12),
@@ -450,16 +477,22 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        shouldRequest 
-                          ? 'Ready to request permissions - use "Request Permissions" button'
-                          : 'Permission denied - user must enable in Settings manually',
+                        shouldRequest
+                            ? 'Ready to request permissions - use "Request Permissions" button'
+                            : 'Permission denied - user must enable in Settings manually',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: statusColor == Colors.grey ? Colors.grey.shade800 : 
-                                statusColor == Colors.green ? Colors.green.shade800 :
-                                statusColor == Colors.red ? Colors.red.shade800 :
-                                statusColor == Colors.blue ? Colors.blue.shade800 :
-                                statusColor == Colors.orange ? Colors.orange.shade800 :
-                                Colors.grey.shade800,
+                          color:
+                              statusColor == Colors.grey
+                                  ? Colors.grey.shade800
+                                  : statusColor == Colors.green
+                                  ? Colors.green.shade800
+                                  : statusColor == Colors.red
+                                  ? Colors.red.shade800
+                                  : statusColor == Colors.blue
+                                  ? Colors.blue.shade800
+                                  : statusColor == Colors.orange
+                                  ? Colors.orange.shade800
+                                  : Colors.grey.shade800,
                         ),
                       ),
                     ),
@@ -477,7 +510,8 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     if (_appState.isEmpty) return const SizedBox.shrink();
 
     final cameFromNotification = _appState['cameFromNotification'] ?? false;
-    final hasNotificationTapEvent = _appState['hasNotificationTapEvent'] ?? false;
+    final hasNotificationTapEvent =
+        _appState['hasNotificationTapEvent'] ?? false;
     final cameFromDailyReminder = _appState['cameFromDailyReminder'] ?? false;
     final currentSessionEvent = _appState['currentSessionEvent'];
     final persistedEvent = _appState['persistedEvent'];
@@ -500,26 +534,35 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                 const SizedBox(width: 8),
                 Text(
                   'App State Tracking',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            
+
             if (error != null) ...[
               _buildInfoRow('Error:', error),
             ] else ...[
-              _buildInfoRow('Came From Notification:', cameFromNotification ? 'Yes' : 'No'),
-              _buildInfoRow('Has Tap Event:', hasNotificationTapEvent ? 'Yes' : 'No'),
-              _buildInfoRow('From Daily Reminder:', cameFromDailyReminder ? 'Yes' : 'No'),
-              
+              _buildInfoRow(
+                'Came From Notification:',
+                cameFromNotification ? 'Yes' : 'No',
+              ),
+              _buildInfoRow(
+                'Has Tap Event:',
+                hasNotificationTapEvent ? 'Yes' : 'No',
+              ),
+              _buildInfoRow(
+                'From Daily Reminder:',
+                cameFromDailyReminder ? 'Yes' : 'No',
+              ),
+
               if (currentSessionEvent != null)
                 _buildInfoRow('Current Event:', currentSessionEvent.toString()),
               if (persistedEvent != null)
                 _buildInfoRow('Persisted Event:', persistedEvent.toString()),
-                
+
               // Show state actions
               if (hasNotificationTapEvent) ...[
                 const SizedBox(height: 12),
@@ -528,7 +571,9 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                   decoration: BoxDecoration(
                     color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: Colors.green.withValues(alpha: 0.3),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -537,9 +582,8 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                       Expanded(
                         child: Text(
                           'Notification tap event detected - use "Clear State" to reset',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.green.shade800,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: Colors.green.shade800),
                         ),
                       ),
                     ],
@@ -563,9 +607,9 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
           children: [
             Text(
               'Quick Actions',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 12),
             Row(
@@ -645,29 +689,38 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
           children: [
             Text(
               'Platform Info',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
             _buildInfoRow('Platform:', _platformInfo['platform'] ?? 'Unknown'),
             _buildInfoRow('Channel ID:', _platformInfo['channelId'] ?? 'N/A'),
-            _buildInfoRow('Channel Name:', _platformInfo['channelName'] ?? 'N/A'),
-            
+            _buildInfoRow(
+              'Channel Name:',
+              _platformInfo['channelName'] ?? 'N/A',
+            ),
+
             // Timezone information
             if (_platformInfo['timezone'] != null)
               _buildInfoRow('Timezone:', _platformInfo['timezone']),
             if (_platformInfo['timezoneStatus'] != null)
-              _buildInfoRow('Timezone Status:', _platformInfo['timezoneStatus']),
-              
+              _buildInfoRow(
+                'Timezone Status:',
+                _platformInfo['timezoneStatus'],
+              ),
+
             // iOS-specific info
             if (_platformInfo['isIOSSimulator'] != null)
-              _buildInfoRow('iOS Simulator:', _platformInfo['isIOSSimulator'].toString()),
+              _buildInfoRow(
+                'iOS Simulator:',
+                _platformInfo['isIOSSimulator'].toString(),
+              ),
             if (_platformInfo['simulatorLimitations'] != null)
               _buildInfoRow('Note:', _platformInfo['simulatorLimitations']),
             if (_platformInfo['permissionNote'] != null)
               _buildInfoRow('Settings:', _platformInfo['permissionNote']),
-              
+
             if (_platformInfo['error'] != null)
               _buildInfoRow('Error:', _platformInfo['error']),
           ],
@@ -682,7 +735,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader('Notifications Debug'),
-        
+
         if (_isLoading)
           const Card(
             margin: EdgeInsets.only(bottom: 12),
@@ -710,19 +763,25 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                 padding: const EdgeInsets.all(12),
                 child: Row(
                   children: [
-                    Icon(Icons.error, color: Theme.of(context).colorScheme.error, size: 16),
+                    Icon(
+                      Icons.error,
+                      color: Theme.of(context).colorScheme.error,
+                      size: 16,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         'Error: $_errorMessage',
-                        style: TextStyle(color: Theme.of(context).colorScheme.error),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          
+
           // Show data sections (if no error) or just controls (if error)
           if (_errorMessage == null) ...[
             _buildPermissionStatusSection(),
@@ -731,7 +790,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
             _buildNotificationsList(),
             _buildPlatformInfo(),
           ],
-          
+
           // Always show controls for debugging
           _buildControlsSection(),
         ],

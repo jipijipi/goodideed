@@ -8,11 +8,7 @@ class TextInputBubble extends StatefulWidget {
   final ChatMessage message;
   final Function(String, ChatMessage)? onSubmitted;
 
-  const TextInputBubble({
-    super.key,
-    required this.message,
-    this.onSubmitted,
-  });
+  const TextInputBubble({super.key, required this.message, this.onSubmitted});
 
   @override
   State<TextInputBubble> createState() => _TextInputBubbleState();
@@ -43,9 +39,7 @@ class _TextInputBubbleState extends State<TextInputBubble> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Flexible(
-            child: _buildInputContainer(context),
-          ),
+          Flexible(child: _buildInputContainer(context)),
           if (DesignTokens.showAvatars) ...[
             const SizedBox(width: DesignTokens.avatarSpacing),
             _buildUserAvatar(context),
@@ -61,7 +55,9 @@ class _TextInputBubbleState extends State<TextInputBubble> {
       onTap: () => _focusNode.requestFocus(),
       child: Container(
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * DesignTokens.messageMaxWidthFactor,
+          maxWidth:
+              MediaQuery.of(context).size.width *
+              DesignTokens.messageMaxWidthFactor,
         ),
         padding: DesignTokens.messageBubblePadding,
         decoration: BoxDecoration(
@@ -82,9 +78,7 @@ class _TextInputBubbleState extends State<TextInputBubble> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: _buildTextField(),
-            ),
+            Expanded(child: _buildTextField()),
             const SizedBox(width: DesignTokens.iconSpacing),
             _buildSendButton(),
           ],

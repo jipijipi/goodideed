@@ -3,7 +3,10 @@ import 'chat_error_types.dart';
 /// Generates user-friendly error messages for different error types
 class UserMessageGenerator {
   /// Creates a safe fallback message for UI display
-  static String createFallbackMessage(ChatErrorType errorType, {String? context}) {
+  static String createFallbackMessage(
+    ChatErrorType errorType, {
+    String? context,
+  }) {
     switch (errorType) {
       case ChatErrorType.assetNotFound:
         return 'Sorry, I couldn\'t find the conversation content. Please try again.';
@@ -23,26 +26,27 @@ class UserMessageGenerator {
         return 'There\'s an issue with the conversation content. Please contact support.';
     }
   }
-  
+
   /// Creates a contextual error message with additional information
-  static String createContextualMessage(ChatErrorType errorType, {
+  static String createContextualMessage(
+    ChatErrorType errorType, {
     String? context,
     String? sequenceId,
     int? messageId,
   }) {
     final baseMessage = createFallbackMessage(errorType, context: context);
-    
+
     if (sequenceId != null) {
       return '$baseMessage (Sequence: $sequenceId)';
     }
-    
+
     if (messageId != null) {
       return '$baseMessage (Message: $messageId)';
     }
-    
+
     return baseMessage;
   }
-  
+
   /// Creates a recovery suggestion message
   static String createRecoveryMessage(ChatErrorType errorType) {
     switch (errorType) {
@@ -64,9 +68,10 @@ class UserMessageGenerator {
         return 'Please contact support for assistance.';
     }
   }
-  
+
   /// Creates a complete error message with both explanation and recovery
-  static String createCompleteMessage(ChatErrorType errorType, {
+  static String createCompleteMessage(
+    ChatErrorType errorType, {
     String? context,
     String? sequenceId,
     int? messageId,
@@ -78,7 +83,7 @@ class UserMessageGenerator {
       messageId: messageId,
     );
     final recoveryMessage = createRecoveryMessage(errorType);
-    
+
     return '$contextualMessage\n\n$recoveryMessage';
   }
 }

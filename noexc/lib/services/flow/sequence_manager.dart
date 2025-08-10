@@ -5,13 +5,13 @@ import '../flow/message_walker.dart';
 import '../logger_service.dart';
 
 /// Clean sequence state management component
-/// 
+///
 /// SINGLE RESPONSIBILITY: Manage sequence loading/unloading and message access
-/// 
+///
 /// This component:
 /// - DOES: Load sequences, provide message access, manage sequence state
 /// - DOES NOT: Process messages, handle flow logic, make routing decisions
-/// 
+///
 /// State management principles:
 /// - Atomic operations (load succeeds completely or fails completely)
 /// - Clear state tracking
@@ -19,27 +19,28 @@ import '../logger_service.dart';
 class SequenceManager implements MessageProvider {
   final SequenceLoader _sequenceLoader;
   final logger = LoggerService.instance;
-  
+
   /// Currently loaded sequence (null if none loaded)
   ChatSequence? get currentSequence => _sequenceLoader.currentSequence;
-  
+
   /// ID of currently loaded sequence (null if none loaded)
   String? get currentSequenceId => _sequenceLoader.currentSequence?.sequenceId;
 
-  SequenceManager({
-    required SequenceLoader sequenceLoader,
-  }) : _sequenceLoader = sequenceLoader;
+  SequenceManager({required SequenceLoader sequenceLoader})
+    : _sequenceLoader = sequenceLoader;
 
   /// Load a sequence by ID
-  /// 
+  ///
   /// This operation is atomic - either succeeds completely or throws an exception.
   /// If it throws, the previous sequence state is preserved.
   Future<void> loadSequence(String sequenceId) async {
     logger.info('Loading sequence: $sequenceId');
-    
+
     try {
       final sequence = await _sequenceLoader.loadSequence(sequenceId);
-      logger.info('Successfully loaded sequence: $sequenceId with ${sequence.messages.length} messages');
+      logger.info(
+        'Successfully loaded sequence: $sequenceId with ${sequence.messages.length} messages',
+      );
     } catch (e) {
       logger.error('Failed to load sequence $sequenceId: $e');
       rethrow;
@@ -57,7 +58,7 @@ class SequenceManager implements MessageProvider {
   }
 
   /// Get a message by ID from the current sequence
-  /// 
+  ///
   /// Returns null if the message doesn't exist.
   /// Use hasMessage() first to check existence if needed.
   @override
@@ -81,7 +82,7 @@ class SequenceManager implements MessageProvider {
   }
 
   /// Get the ID of the first message in the current sequence
-  /// 
+  ///
   /// Returns null if no sequence is loaded or sequence has no messages.
   /// This is used to determine where to start when switching sequences.
   int? getFirstMessageId() {
@@ -99,13 +100,15 @@ class SequenceManager implements MessageProvider {
       logger.debug('No sequence loaded - state is valid');
       return true;
     }
-    
+
     if (sequence.messages.isEmpty) {
       logger.warning('Loaded sequence ${sequence.sequenceId} has no messages');
       return false;
     }
-    
-    logger.debug('Sequence state is valid: ${sequence.sequenceId} with ${sequence.messages.length} messages');
+
+    logger.debug(
+      'Sequence state is valid: ${sequence.sequenceId} with ${sequence.messages.length} messages',
+    );
     return true;
   }
 }

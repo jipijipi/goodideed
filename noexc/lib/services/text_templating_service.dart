@@ -15,8 +15,10 @@ class TextTemplatingService {
     }
 
     // Regular expression to find template variables like {user.name}, {user.name|fallback}, or {key:formatter|fallback}
-    final RegExp templateRegex = RegExp(r'\{([^}:|]+)(?::([^}|]+))?(?:\|([^}]*))?\}');
-    
+    final RegExp templateRegex = RegExp(
+      r'\{([^}:|]+)(?::([^}|]+))?(?:\|([^}]*))?\}',
+    );
+
     String result = text;
     final matches = templateRegex.allMatches(text);
 
@@ -25,16 +27,19 @@ class TextTemplatingService {
       final key = match.group(1)!; // The key (e.g., "user.name")
       final formatter = match.group(2); // The formatter (e.g., "timeOfDay")
       final fallback = match.group(3); // The fallback value
-      
+
       // Try to get the stored value
       final storedValue = await _userDataService.getValue<dynamic>(key);
-      
+
       String? finalValue;
-      
+
       if (storedValue != null) {
         // If formatter is specified, try to format the value
         if (formatter != null) {
-          final formattedValue = await _formatterService.getFormattedValue(formatter, storedValue);
+          final formattedValue = await _formatterService.getFormattedValue(
+            formatter,
+            storedValue,
+          );
           finalValue = formattedValue ?? storedValue.toString();
         } else {
           finalValue = storedValue.toString();
@@ -43,7 +48,7 @@ class TextTemplatingService {
         // Use fallback value if no stored value exists
         finalValue = fallback;
       }
-      
+
       // Replace the template variable with the final value
       if (finalValue != null) {
         result = result.replaceAll(fullMatch, finalValue);

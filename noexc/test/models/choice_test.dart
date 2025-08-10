@@ -5,10 +5,7 @@ void main() {
   group('Choice', () {
     test('should create Choice from JSON', () {
       // Arrange
-      final json = {
-        'text': 'Red',
-        'nextMessageId': 10,
-      };
+      final json = {'text': 'Red', 'nextMessageId': 10};
 
       // Act
       final choice = Choice.fromJson(json);
@@ -20,10 +17,7 @@ void main() {
 
     test('should convert Choice to JSON', () {
       // Arrange
-      final choice = Choice(
-        text: 'Blue',
-        nextMessageId: 20,
-      );
+      final choice = Choice(text: 'Blue', nextMessageId: 20);
 
       // Act
       final json = choice.toJson();
@@ -44,54 +38,60 @@ void main() {
       expect(choice1, isNot(equals(choice3)));
     });
 
-    test('should ignore nextMessageId when sequenceId is present in fromJson', () {
-      // Arrange
-      final json = {
-        'text': 'Go to Tutorial',
-        'sequenceId': 'tutorial',
-        'nextMessageId': 5, // This should be ignored
-      };
+    test(
+      'should ignore nextMessageId when sequenceId is present in fromJson',
+      () {
+        // Arrange
+        final json = {
+          'text': 'Go to Tutorial',
+          'sequenceId': 'tutorial',
+          'nextMessageId': 5, // This should be ignored
+        };
 
-      // Act
-      final choice = Choice.fromJson(json);
+        // Act
+        final choice = Choice.fromJson(json);
 
-      // Assert
-      expect(choice.text, 'Go to Tutorial');
-      expect(choice.sequenceId, 'tutorial');
-      expect(choice.nextMessageId, null); // Should be null, not 5
-    });
+        // Assert
+        expect(choice.text, 'Go to Tutorial');
+        expect(choice.sequenceId, 'tutorial');
+        expect(choice.nextMessageId, null); // Should be null, not 5
+      },
+    );
 
-    test('should not include nextMessageId in toJson when sequenceId is present', () {
-      // Arrange
-      final choice = Choice(
-        text: 'Go to Menu',
-        sequenceId: 'menu',
-        nextMessageId: 10, // This should be ignored in toJson
-      );
+    test(
+      'should not include nextMessageId in toJson when sequenceId is present',
+      () {
+        // Arrange
+        final choice = Choice(
+          text: 'Go to Menu',
+          sequenceId: 'menu',
+          nextMessageId: 10, // This should be ignored in toJson
+        );
 
-      // Act
-      final json = choice.toJson();
+        // Act
+        final json = choice.toJson();
 
-      // Assert
-      expect(json['text'], 'Go to Menu');
-      expect(json['sequenceId'], 'menu');
-      expect(json.containsKey('nextMessageId'), false);
-    });
+        // Assert
+        expect(json['text'], 'Go to Menu');
+        expect(json['sequenceId'], 'menu');
+        expect(json.containsKey('nextMessageId'), false);
+      },
+    );
 
-    test('should include nextMessageId in toJson when sequenceId is not present', () {
-      // Arrange
-      final choice = Choice(
-        text: 'Continue',
-        nextMessageId: 15,
-      );
+    test(
+      'should include nextMessageId in toJson when sequenceId is not present',
+      () {
+        // Arrange
+        final choice = Choice(text: 'Continue', nextMessageId: 15);
 
-      // Act
-      final json = choice.toJson();
+        // Act
+        final json = choice.toJson();
 
-      // Assert
-      expect(json['text'], 'Continue');
-      expect(json['nextMessageId'], 15);
-      expect(json.containsKey('sequenceId'), false);
-    });
+        // Assert
+        expect(json['text'], 'Continue');
+        expect(json['nextMessageId'], 15);
+        expect(json.containsKey('sequenceId'), false);
+      },
+    );
   });
 }

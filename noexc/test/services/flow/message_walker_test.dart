@@ -8,20 +8,20 @@ import '../../test_helpers.dart';
 /// Test implementation of MessageProvider
 class TestMessageProvider implements MessageProvider {
   final Map<int, ChatMessage> _messages = {};
-  
+
   void addMessage(ChatMessage message) {
     _messages[message.id] = message;
   }
-  
+
   void clear() {
     _messages.clear();
   }
-  
+
   @override
   bool hasMessage(int id) {
     return _messages.containsKey(id);
   }
-  
+
   @override
   ChatMessage? getMessage(int id) {
     return _messages[id];
@@ -40,16 +40,19 @@ void main() {
     });
 
     group('Basic Walking', () {
-      test('should return empty result when starting message does not exist', () {
-        // Act
-        final result = walker.walkFrom(1, provider);
+      test(
+        'should return empty result when starting message does not exist',
+        () {
+          // Act
+          final result = walker.walkFrom(1, provider);
 
-        // Assert
-        expect(result.messages, isEmpty);
-        expect(result.stopReason, equals(WalkStopReason.endOfChain));
-        expect(result.isValid, isTrue);
-        expect(result.walkDepth, equals(1));
-      });
+          // Assert
+          expect(result.messages, isEmpty);
+          expect(result.stopReason, equals(WalkStopReason.endOfChain));
+          expect(result.isValid, isTrue);
+          expect(result.walkDepth, equals(1));
+        },
+      );
 
       test('should collect single message', () {
         // Arrange
@@ -103,8 +106,16 @@ void main() {
     group('Stop Conditions', () {
       test('should stop at choice message', () {
         // Arrange
-        final botMessage = ChatMessage(id: 1, text: 'Question', nextMessageId: 2);
-        final choiceMessage = ChatMessage(id: 2, text: '', type: MessageType.choice);
+        final botMessage = ChatMessage(
+          id: 1,
+          text: 'Question',
+          nextMessageId: 2,
+        );
+        final choiceMessage = ChatMessage(
+          id: 2,
+          text: '',
+          type: MessageType.choice,
+        );
         provider.addMessage(botMessage);
         provider.addMessage(choiceMessage);
 
@@ -120,8 +131,16 @@ void main() {
 
       test('should stop at textInput message', () {
         // Arrange
-        final botMessage = ChatMessage(id: 1, text: 'Enter name', nextMessageId: 2);
-        final inputMessage = ChatMessage(id: 2, text: '', type: MessageType.textInput);
+        final botMessage = ChatMessage(
+          id: 1,
+          text: 'Enter name',
+          nextMessageId: 2,
+        );
+        final inputMessage = ChatMessage(
+          id: 2,
+          text: '',
+          type: MessageType.textInput,
+        );
         provider.addMessage(botMessage);
         provider.addMessage(inputMessage);
 
@@ -137,8 +156,16 @@ void main() {
 
       test('should stop at sequence boundary', () {
         // Arrange
-        final message1 = ChatMessage(id: 1, text: 'Before transition', nextMessageId: 2);
-        final transitionMessage = ChatMessage(id: 2, text: 'Transitioning', sequenceId: 'next_seq');
+        final message1 = ChatMessage(
+          id: 1,
+          text: 'Before transition',
+          nextMessageId: 2,
+        );
+        final transitionMessage = ChatMessage(
+          id: 2,
+          text: 'Transitioning',
+          sequenceId: 'next_seq',
+        );
         provider.addMessage(message1);
         provider.addMessage(transitionMessage);
 
@@ -157,8 +184,17 @@ void main() {
     group('Special Messages', () {
       test('should stop at autoroute messages for route processing', () {
         // Arrange
-        final botMessage = ChatMessage(id: 1, text: 'Before autoroute', nextMessageId: 2);
-        final autorouteMessage = ChatMessage(id: 2, text: '', type: MessageType.autoroute, nextMessageId: 3);
+        final botMessage = ChatMessage(
+          id: 1,
+          text: 'Before autoroute',
+          nextMessageId: 2,
+        );
+        final autorouteMessage = ChatMessage(
+          id: 2,
+          text: '',
+          type: MessageType.autoroute,
+          nextMessageId: 3,
+        );
         final afterMessage = ChatMessage(id: 3, text: 'After autoroute');
         provider.addMessage(botMessage);
         provider.addMessage(autorouteMessage);
@@ -177,8 +213,17 @@ void main() {
 
       test('should collect dataAction messages without stopping', () {
         // Arrange
-        final botMessage = ChatMessage(id: 1, text: 'Before data action', nextMessageId: 2);
-        final dataMessage = ChatMessage(id: 2, text: '', type: MessageType.dataAction, nextMessageId: 3);
+        final botMessage = ChatMessage(
+          id: 1,
+          text: 'Before data action',
+          nextMessageId: 2,
+        );
+        final dataMessage = ChatMessage(
+          id: 2,
+          text: '',
+          type: MessageType.dataAction,
+          nextMessageId: 3,
+        );
         final afterMessage = ChatMessage(id: 3, text: 'After data action');
         provider.addMessage(botMessage);
         provider.addMessage(dataMessage);
@@ -219,11 +264,21 @@ void main() {
         // Arrange - bot → data action → autoroute → choice
         final messages = [
           ChatMessage(id: 1, text: 'Start', nextMessageId: 2),
-          ChatMessage(id: 2, text: '', type: MessageType.dataAction, nextMessageId: 3),
-          ChatMessage(id: 3, text: '', type: MessageType.autoroute, nextMessageId: 4),
+          ChatMessage(
+            id: 2,
+            text: '',
+            type: MessageType.dataAction,
+            nextMessageId: 3,
+          ),
+          ChatMessage(
+            id: 3,
+            text: '',
+            type: MessageType.autoroute,
+            nextMessageId: 4,
+          ),
           ChatMessage(id: 4, text: '', type: MessageType.choice),
         ];
-        
+
         for (final msg in messages) {
           provider.addMessage(msg);
         }
@@ -232,7 +287,10 @@ void main() {
         final result = walker.walkFrom(1, provider);
 
         // Assert
-        expect(result.messages, hasLength(3)); // Stops at autoroute, doesn't reach choice
+        expect(
+          result.messages,
+          hasLength(3),
+        ); // Stops at autoroute, doesn't reach choice
         expect(result.stopReason, equals(WalkStopReason.endOfChain));
         expect(result.stopMessageId, equals(3)); // Stops at autoroute message
       });
@@ -240,9 +298,9 @@ void main() {
       test('should handle sequence transition with content', () {
         // Arrange - message with both text and sequenceId
         final message = ChatMessage(
-          id: 1, 
-          text: 'Moving to next sequence now', 
-          sequenceId: 'next_seq'
+          id: 1,
+          text: 'Moving to next sequence now',
+          sequenceId: 'next_seq',
         );
         provider.addMessage(message);
 

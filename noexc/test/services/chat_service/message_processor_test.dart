@@ -26,7 +26,7 @@ void main() {
       mockUserDataService = UserDataService();
       mockTemplatingService = TextTemplatingService(mockUserDataService);
       mockVariantsService = TextVariantsService();
-      
+
       messageProcessor = MessageProcessor(
         userDataService: mockUserDataService,
         templatingService: mockTemplatingService,
@@ -35,55 +35,67 @@ void main() {
     });
 
     group('processMessageTemplate', () {
-      test('should process regular bot message with template variables', () async {
-        // Arrange
-        await mockUserDataService.storeValue(StorageKeys.userName, 'John');
-        final message = ChatMessage(
-          id: 1,
-          text: 'Hello {user.name|Guest}!',
-          delay: 1000,
-          sender: 'bot',
-        );
-        final sequence = ChatSequence(
-          sequenceId: 'test_seq',
-          name: 'Test Sequence',
-          description: 'Test',
-          messages: [message],
-        );
+      test(
+        'should process regular bot message with template variables',
+        () async {
+          // Arrange
+          await mockUserDataService.storeValue(StorageKeys.userName, 'John');
+          final message = ChatMessage(
+            id: 1,
+            text: 'Hello {user.name|Guest}!',
+            delay: 1000,
+            sender: 'bot',
+          );
+          final sequence = ChatSequence(
+            sequenceId: 'test_seq',
+            name: 'Test Sequence',
+            description: 'Test',
+            messages: [message],
+          );
 
-        // Act
-        final result = await messageProcessor.processMessageTemplate(message, sequence);
+          // Act
+          final result = await messageProcessor.processMessageTemplate(
+            message,
+            sequence,
+          );
 
-        // Assert
-        expect(result.text, equals('Hello John!'));
-        expect(result.id, equals(1));
-        expect(result.delay, equals(1000));
-        expect(result.sender, equals('bot'));
-      });
+          // Assert
+          expect(result.text, equals('Hello John!'));
+          expect(result.id, equals(1));
+          expect(result.delay, equals(1000));
+          expect(result.sender, equals('bot'));
+        },
+      );
 
-      test('should use fallback value when template variable not found', () async {
-        // Arrange - Clear any existing data first
-        await mockUserDataService.clearAllData();
-        
-        final message = ChatMessage(
-          id: 1,
-          text: 'Hello {user.name|Guest}!',
-          delay: 1000,
-          sender: 'bot',
-        );
-        final sequence = ChatSequence(
-          sequenceId: 'test_seq',
-          name: 'Test Sequence',
-          description: 'Test',
-          messages: [message],
-        );
+      test(
+        'should use fallback value when template variable not found',
+        () async {
+          // Arrange - Clear any existing data first
+          await mockUserDataService.clearAllData();
 
-        // Act
-        final result = await messageProcessor.processMessageTemplate(message, sequence);
+          final message = ChatMessage(
+            id: 1,
+            text: 'Hello {user.name|Guest}!',
+            delay: 1000,
+            sender: 'bot',
+          );
+          final sequence = ChatSequence(
+            sequenceId: 'test_seq',
+            name: 'Test Sequence',
+            description: 'Test',
+            messages: [message],
+          );
 
-        // Assert
-        expect(result.text, equals('Hello Guest!'));
-      });
+          // Act
+          final result = await messageProcessor.processMessageTemplate(
+            message,
+            sequence,
+          );
+
+          // Assert
+          expect(result.text, equals('Hello Guest!'));
+        },
+      );
 
       test('should not apply variants to choice messages', () async {
         // Arrange
@@ -106,7 +118,10 @@ void main() {
         );
 
         // Act
-        final result = await messageProcessor.processMessageTemplate(message, sequence);
+        final result = await messageProcessor.processMessageTemplate(
+          message,
+          sequence,
+        );
 
         // Assert
         expect(result.text, equals(''));
@@ -132,7 +147,10 @@ void main() {
         );
 
         // Act
-        final result = await messageProcessor.processMessageTemplate(message, sequence);
+        final result = await messageProcessor.processMessageTemplate(
+          message,
+          sequence,
+        );
 
         // Assert
         expect(result.text, equals(''));
@@ -156,7 +174,10 @@ void main() {
         );
 
         // Act
-        final result = await messageProcessor.processMessageTemplate(message, sequence);
+        final result = await messageProcessor.processMessageTemplate(
+          message,
+          sequence,
+        );
 
         // Assert
         expect(result.text, equals(''));
@@ -179,7 +200,10 @@ void main() {
         );
 
         // Act
-        final result = await messageProcessor.processMessageTemplate(message, sequence);
+        final result = await messageProcessor.processMessageTemplate(
+          message,
+          sequence,
+        );
 
         // Assert
         expect(result.hasMultipleTexts, isTrue);
@@ -197,7 +221,10 @@ void main() {
         );
 
         // Act
-        final result = await processorWithoutServices.processMessageTemplate(message, null);
+        final result = await processorWithoutServices.processMessageTemplate(
+          message,
+          null,
+        );
 
         // Assert
         expect(result.text, equals('Hello {user.name|Guest}!'));
@@ -231,7 +258,10 @@ void main() {
         );
 
         // Act
-        final results = await messageProcessor.processMessageTemplates(messages, sequence);
+        final results = await messageProcessor.processMessageTemplates(
+          messages,
+          sequence,
+        );
 
         // Assert
         expect(results.length, equals(2));
@@ -244,7 +274,10 @@ void main() {
         final messages = <ChatMessage>[];
 
         // Act
-        final results = await messageProcessor.processMessageTemplates(messages, null);
+        final results = await messageProcessor.processMessageTemplates(
+          messages,
+          null,
+        );
 
         // Assert
         expect(results, isEmpty);
@@ -268,7 +301,9 @@ void main() {
         await messageProcessor.handleUserTextInput(textInputMessage, userInput);
 
         // Assert
-        final storedValue = await mockUserDataService.getValue(StorageKeys.userName);
+        final storedValue = await mockUserDataService.getValue(
+          StorageKeys.userName,
+        );
         expect(storedValue, equals('John Doe'));
       });
 
@@ -304,31 +339,42 @@ void main() {
         const userInput = 'Some input';
 
         // Act & Assert - Should not throw
-        await processorWithoutServices.handleUserTextInput(textInputMessage, userInput);
+        await processorWithoutServices.handleUserTextInput(
+          textInputMessage,
+          userInput,
+        );
         expect(true, isTrue);
       });
     });
 
     group('handleUserChoice', () {
-      test('should store choice text when storeKey is provided and no custom value', () async {
-        // Arrange
-        final choiceMessage = ChatMessage(
-          id: 1,
-          text: '', // Choice messages should have empty text
-          delay: 1000,
-          sender: 'bot',
-          type: MessageType.choice,
-          storeKey: 'user.preference',
-        );
-        final selectedChoice = Choice(text: 'Option A', nextMessageId: 2);
+      test(
+        'should store choice text when storeKey is provided and no custom value',
+        () async {
+          // Arrange
+          final choiceMessage = ChatMessage(
+            id: 1,
+            text: '', // Choice messages should have empty text
+            delay: 1000,
+            sender: 'bot',
+            type: MessageType.choice,
+            storeKey: 'user.preference',
+          );
+          final selectedChoice = Choice(text: 'Option A', nextMessageId: 2);
 
-        // Act
-        await messageProcessor.handleUserChoice(choiceMessage, selectedChoice);
+          // Act
+          await messageProcessor.handleUserChoice(
+            choiceMessage,
+            selectedChoice,
+          );
 
-        // Assert
-        final storedValue = await mockUserDataService.getValue('user.preference');
-        expect(storedValue, equals('Option A'));
-      });
+          // Assert
+          final storedValue = await mockUserDataService.getValue(
+            'user.preference',
+          );
+          expect(storedValue, equals('Option A'));
+        },
+      );
 
       test('should store custom value when provided', () async {
         // Arrange
@@ -350,7 +396,9 @@ void main() {
         await messageProcessor.handleUserChoice(choiceMessage, selectedChoice);
 
         // Assert
-        final storedValue = await mockUserDataService.getValue('user.preference');
+        final storedValue = await mockUserDataService.getValue(
+          'user.preference',
+        );
         expect(storedValue, equals('true'));
       });
 
@@ -386,7 +434,10 @@ void main() {
         final selectedChoice = Choice(text: 'Option A', nextMessageId: 2);
 
         // Act & Assert - Should not throw
-        await processorWithoutServices.handleUserChoice(choiceMessage, selectedChoice);
+        await processorWithoutServices.handleUserChoice(
+          choiceMessage,
+          selectedChoice,
+        );
         expect(true, isTrue);
       });
     });

@@ -20,16 +20,15 @@ void main() {
 
       // Assert
       expect(message.delay, AppConstants.defaultMessageDelay);
-      expect(message.delay, 100); // Verify the default value matches AppConstants
+      expect(
+        message.delay,
+        100,
+      ); // Verify the default value matches AppConstants
     });
 
     test('should use provided delay when specified in JSON', () {
       // Arrange
-      final json = {
-        'id': 1,
-        'text': 'Hello World',
-        'delay': 2000,
-      };
+      final json = {'id': 1, 'text': 'Hello World', 'delay': 2000};
 
       // Act
       final message = ChatMessage.fromJson(json);
@@ -38,18 +37,21 @@ void main() {
       expect(message.delay, 2000);
     });
 
-    test('should use default delay when creating ChatMessage without delay parameter', () {
-      // Act
-      final message = ChatMessage(
-        id: 1,
-        text: 'Hello World',
-        // No delay parameter provided
-      );
+    test(
+      'should use default delay when creating ChatMessage without delay parameter',
+      () {
+        // Act
+        final message = ChatMessage(
+          id: 1,
+          text: 'Hello World',
+          // No delay parameter provided
+        );
 
-      // Assert
-      expect(message.delay, AppConstants.defaultMessageDelay);
-      expect(message.delay, 100);
-    });
+        // Assert
+        expect(message.delay, AppConstants.defaultMessageDelay);
+        expect(message.delay, 100);
+      },
+    );
 
     test('should create ChatMessage from JSON with sender', () {
       // Arrange
@@ -70,23 +72,22 @@ void main() {
       expect(message.sender, 'bot');
     });
 
-    test('should create ChatMessage from JSON without sender (defaults to bot)', () {
-      // Arrange
-      final json = {
-        'id': 1,
-        'text': 'Hello World',
-        'delay': 1000,
-      };
+    test(
+      'should create ChatMessage from JSON without sender (defaults to bot)',
+      () {
+        // Arrange
+        final json = {'id': 1, 'text': 'Hello World', 'delay': 1000};
 
-      // Act
-      final message = ChatMessage.fromJson(json);
+        // Act
+        final message = ChatMessage.fromJson(json);
 
-      // Assert
-      expect(message.id, 1);
-      expect(message.text, 'Hello World');
-      expect(message.delay, 1000);
-      expect(message.sender, 'bot');
-    });
+        // Assert
+        expect(message.id, 1);
+        expect(message.text, 'Hello World');
+        expect(message.delay, 1000);
+        expect(message.sender, 'bot');
+      },
+    );
 
     test('should convert ChatMessage to JSON with sender', () {
       // Arrange
@@ -135,19 +136,22 @@ void main() {
       expect(userMessage.isFromUser, true);
     });
 
-    test('should default to bot sender when no sender specified in constructor', () {
-      // Arrange & Act
-      final message = ChatMessage(
-        id: 1,
-        text: 'Hello World',
-        // No sender specified
-      );
+    test(
+      'should default to bot sender when no sender specified in constructor',
+      () {
+        // Arrange & Act
+        final message = ChatMessage(
+          id: 1,
+          text: 'Hello World',
+          // No sender specified
+        );
 
-      // Assert
-      expect(message.sender, 'bot');
-      expect(message.isFromBot, true);
-      expect(message.isFromUser, false);
-    });
+        // Assert
+        expect(message.sender, 'bot');
+        expect(message.isFromBot, true);
+        expect(message.isFromUser, false);
+      },
+    );
 
     test('should include sender in JSON even when it is the default value', () {
       // Arrange
@@ -185,7 +189,10 @@ void main() {
 
       // Assert
       expect(message.id, 2);
-      expect(message.text, ''); // Choice messages have no text content (enforced by fromJson)
+      expect(
+        message.text,
+        '',
+      ); // Choice messages have no text content (enforced by fromJson)
       expect(message.type == MessageType.choice, true);
       expect(message.choices, isNotNull);
       expect(message.choices!.length, 2);
@@ -362,19 +369,17 @@ void main() {
 
       // Assert
       expect(message.id, equals(1));
-      expect(message.text, equals('')); // Text input messages have no text content
+      expect(
+        message.text,
+        equals(''),
+      ); // Text input messages have no text content
       expect(message.storeKey, equals(StorageKeys.userName));
       expect(message.type == MessageType.textInput, isTrue);
     });
 
     test('should create ChatMessage without storeKey from JSON', () {
       // Arrange
-      final json = {
-        'id': 1,
-        'text': 'Hello!',
-        'delay': 1000,
-        'sender': 'bot',
-      };
+      final json = {'id': 1, 'text': 'Hello!', 'delay': 1000, 'sender': 'bot'};
 
       // Act
       final message = ChatMessage.fromJson(json);
@@ -401,7 +406,10 @@ void main() {
 
       // Assert
       expect(json['id'], equals(1));
-      expect(json['text'], equals('')); // Text input messages have no text content
+      expect(
+        json['text'],
+        equals(''),
+      ); // Text input messages have no text content
       expect(json['storeKey'], equals(StorageKeys.userName));
       expect(json['isTextInput'], isTrue);
     });
@@ -503,34 +511,32 @@ void main() {
     });
 
     test('should detect single text message without separator', () {
-      final message = ChatMessage(
-        id: 1,
-        text: 'Single message',
-        sender: 'bot',
-      );
+      final message = ChatMessage(id: 1, text: 'Single message', sender: 'bot');
 
       expect(message.hasMultipleTexts, isFalse);
     });
 
     test('should return correct allTexts for single text message', () {
-      final message = ChatMessage(
-        id: 1,
-        text: 'Single message',
-        sender: 'bot',
-      );
+      final message = ChatMessage(id: 1, text: 'Single message', sender: 'bot');
 
       expect(message.allTexts, equals(['Single message']));
     });
 
-    test('should return correct allTexts for multi-text message with separator', () {
-      final message = ChatMessage(
-        id: 1,
-        text: 'First message ||| Second message ||| Third message',
-        sender: 'bot',
-      );
+    test(
+      'should return correct allTexts for multi-text message with separator',
+      () {
+        final message = ChatMessage(
+          id: 1,
+          text: 'First message ||| Second message ||| Third message',
+          sender: 'bot',
+        );
 
-      expect(message.allTexts, equals(['First message', 'Second message', 'Third message']));
-    });
+        expect(
+          message.allTexts,
+          equals(['First message', 'Second message', 'Third message']),
+        );
+      },
+    );
 
     test('should handle extra whitespace around separator', () {
       final message = ChatMessage(
@@ -539,7 +545,10 @@ void main() {
         sender: 'bot',
       );
 
-      expect(message.allTexts, equals(['First message', 'Second message', 'Third message']));
+      expect(
+        message.allTexts,
+        equals(['First message', 'Second message', 'Third message']),
+      );
     });
 
     test('should return correct allDelays for single text message', () {
@@ -593,7 +602,7 @@ void main() {
       final expanded = message.expandToIndividualMessages();
 
       expect(expanded.length, equals(3));
-      
+
       // First message
       expect(expanded[0].id, equals(10));
       expect(expanded[0].text, equals('First message'));
@@ -601,7 +610,7 @@ void main() {
       expect(expanded[0].type == MessageType.choice, isFalse);
       expect(expanded[0].choices, isNull);
       expect(expanded[0].nextMessageId, isNull);
-      
+
       // Second message
       expect(expanded[1].id, equals(10));
       expect(expanded[1].text, equals('Second message'));
@@ -609,7 +618,7 @@ void main() {
       expect(expanded[1].type == MessageType.choice, isFalse);
       expect(expanded[1].choices, isNull);
       expect(expanded[1].nextMessageId, isNull);
-      
+
       // Third message (last one gets the next message ID)
       expect(expanded[2].id, equals(10));
       expect(expanded[2].text, equals('Third message'));
@@ -631,43 +640,49 @@ void main() {
     });
 
     group('Text field separation enforcement', () {
-      test('should enforce empty text for choice messages from JSON with text field', () {
-        // Arrange
-        final json = {
-          'id': 1,
-          'text': 'This text should be ignored for choice messages',
-          'type': 'choice',
-          'choices': [
-            {'text': 'Option 1', 'nextMessageId': 2}
-          ]
-        };
+      test(
+        'should enforce empty text for choice messages from JSON with text field',
+        () {
+          // Arrange
+          final json = {
+            'id': 1,
+            'text': 'This text should be ignored for choice messages',
+            'type': 'choice',
+            'choices': [
+              {'text': 'Option 1', 'nextMessageId': 2},
+            ],
+          };
 
-        // Act
-        final message = ChatMessage.fromJson(json);
+          // Act
+          final message = ChatMessage.fromJson(json);
 
-        // Assert
-        expect(message.text, '');
-        expect(message.type == MessageType.choice, true);
-      });
+          // Assert
+          expect(message.text, '');
+          expect(message.type == MessageType.choice, true);
+        },
+      );
 
-      test('should enforce empty text for autoroute messages from JSON with text field', () {
-        // Arrange
-        final json = {
-          'id': 1,
-          'text': 'This text should be ignored for autoroute messages',
-          'type': 'autoroute',
-          'routes': [
-            {'default': true, 'nextMessageId': 2}
-          ]
-        };
+      test(
+        'should enforce empty text for autoroute messages from JSON with text field',
+        () {
+          // Arrange
+          final json = {
+            'id': 1,
+            'text': 'This text should be ignored for autoroute messages',
+            'type': 'autoroute',
+            'routes': [
+              {'default': true, 'nextMessageId': 2},
+            ],
+          };
 
-        // Act
-        final message = ChatMessage.fromJson(json);
+          // Act
+          final message = ChatMessage.fromJson(json);
 
-        // Assert
-        expect(message.text, '');
-        expect(message.type == MessageType.autoroute, true);
-      });
+          // Assert
+          expect(message.text, '');
+          expect(message.type == MessageType.autoroute, true);
+        },
+      );
 
       test('should allow text for regular messages', () {
         // Arrange
@@ -680,7 +695,10 @@ void main() {
         final message = ChatMessage.fromJson(json);
 
         // Assert
-        expect(message.text, 'This text should be preserved for regular messages');
+        expect(
+          message.text,
+          'This text should be preserved for regular messages',
+        );
         expect(message.type == MessageType.choice, false);
         expect(message.type == MessageType.textInput, false);
         expect(message.type == MessageType.autoroute, false);
@@ -691,8 +709,16 @@ void main() {
       test('should create dataAction message with actions', () {
         // Arrange
         final actions = [
-          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
-          DataAction(type: DataActionType.increment, key: 'user.score', value: 10),
+          DataAction(
+            type: DataActionType.set,
+            key: StorageKeys.userName,
+            value: 'John',
+          ),
+          DataAction(
+            type: DataActionType.increment,
+            key: 'user.score',
+            value: 10,
+          ),
         ];
 
         // Act
@@ -718,16 +744,8 @@ void main() {
           'id': 1,
           'type': 'dataAction',
           'dataActions': [
-            {
-              'type': 'set',
-              'key': StorageKeys.userName,
-              'value': 'John',
-            },
-            {
-              'type': 'increment',
-              'key': 'user.score',
-              'value': 10,
-            },
+            {'type': 'set', 'key': StorageKeys.userName, 'value': 'John'},
+            {'type': 'increment', 'key': 'user.score', 'value': 10},
           ],
           'nextMessageId': 2,
         };
@@ -752,8 +770,16 @@ void main() {
       test('should serialize dataAction message to JSON', () {
         // Arrange
         final actions = [
-          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
-          DataAction(type: DataActionType.increment, key: 'user.score', value: 10),
+          DataAction(
+            type: DataActionType.set,
+            key: StorageKeys.userName,
+            value: 'John',
+          ),
+          DataAction(
+            type: DataActionType.increment,
+            key: 'user.score',
+            value: 10,
+          ),
         ];
 
         final message = ChatMessage(
@@ -788,7 +814,11 @@ void main() {
           text: '',
           type: MessageType.dataAction,
           dataActions: [
-            DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
+            DataAction(
+              type: DataActionType.set,
+              key: StorageKeys.userName,
+              value: 'John',
+            ),
           ],
         );
 
@@ -800,11 +830,7 @@ void main() {
 
       test('should handle dataAction message without actions', () {
         // Arrange
-        final json = {
-          'id': 1,
-          'type': 'dataAction',
-          'nextMessageId': 2,
-        };
+        final json = {'id': 1, 'type': 'dataAction', 'nextMessageId': 2};
 
         // Act
         final message = ChatMessage.fromJson(json);
@@ -819,7 +845,11 @@ void main() {
       test('should handle expandToIndividualMessages for dataAction', () {
         // Arrange
         final actions = [
-          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
+          DataAction(
+            type: DataActionType.set,
+            key: StorageKeys.userName,
+            value: 'John',
+          ),
         ];
 
         final message = ChatMessage(
@@ -841,30 +871,37 @@ void main() {
         expect(expandedMessages[0].nextMessageId, 2);
       });
 
-      test('should preserve dataActions in single message when expanding (dataAction messages have no text)', () {
-        // Arrange
-        final actions = [
-          DataAction(type: DataActionType.set, key: StorageKeys.userName, value: 'John'),
-        ];
+      test(
+        'should preserve dataActions in single message when expanding (dataAction messages have no text)',
+        () {
+          // Arrange
+          final actions = [
+            DataAction(
+              type: DataActionType.set,
+              key: StorageKeys.userName,
+              value: 'John',
+            ),
+          ];
 
-        final message = ChatMessage(
-          id: 1,
-          text: '',
-          type: MessageType.dataAction,
-          dataActions: actions,
-          nextMessageId: 2,
-        );
+          final message = ChatMessage(
+            id: 1,
+            text: '',
+            type: MessageType.dataAction,
+            dataActions: actions,
+            nextMessageId: 2,
+          );
 
-        // Act
-        final expandedMessages = message.expandToIndividualMessages();
+          // Act
+          final expandedMessages = message.expandToIndividualMessages();
 
-        // Assert - dataAction messages with no text should not expand
-        expect(expandedMessages.length, 1);
-        expect(expandedMessages[0].type, MessageType.dataAction);
-        expect(expandedMessages[0].dataActions, actions);
-        expect(expandedMessages[0].text, '');
-        expect(expandedMessages[0].nextMessageId, 2);
-      });
+          // Assert - dataAction messages with no text should not expand
+          expect(expandedMessages.length, 1);
+          expect(expandedMessages[0].type, MessageType.dataAction);
+          expect(expandedMessages[0].dataActions, actions);
+          expect(expandedMessages[0].text, '');
+          expect(expandedMessages[0].nextMessageId, 2);
+        },
+      );
 
       test('should handle convenience getter isDataAction', () {
         // Arrange
@@ -899,24 +936,27 @@ void main() {
         expect(message.imagePath, 'assets/images/sample.png');
       });
 
-      test('should create image message from JSON with imagePath and clear text', () {
-        // Arrange
-        final json = {
-          'id': 1,
-          'text': 'Look at this!', // This text should be cleared
-          'type': 'image',
-          'imagePath': 'assets/images/test.jpg',
-        };
+      test(
+        'should create image message from JSON with imagePath and clear text',
+        () {
+          // Arrange
+          final json = {
+            'id': 1,
+            'text': 'Look at this!', // This text should be cleared
+            'type': 'image',
+            'imagePath': 'assets/images/test.jpg',
+          };
 
-        // Act
-        final message = ChatMessage.fromJson(json);
+          // Act
+          final message = ChatMessage.fromJson(json);
 
-        // Assert
-        expect(message.id, 1);
-        expect(message.text, ''); // Text should be cleared for image messages
-        expect(message.type, MessageType.image);
-        expect(message.imagePath, 'assets/images/test.jpg');
-      });
+          // Assert
+          expect(message.id, 1);
+          expect(message.text, ''); // Text should be cleared for image messages
+          expect(message.type, MessageType.image);
+          expect(message.imagePath, 'assets/images/test.jpg');
+        },
+      );
 
       test('should handle image message without imagePath and clear text', () {
         // Arrange
@@ -936,24 +976,27 @@ void main() {
         expect(message.imagePath, isNull);
       });
 
-      test('should include imagePath in JSON serialization with empty text', () {
-        // Arrange
-        final message = ChatMessage(
-          id: 1,
-          text: '', // Image messages have no text
-          type: MessageType.image,
-          imagePath: 'assets/images/example.png',
-        );
+      test(
+        'should include imagePath in JSON serialization with empty text',
+        () {
+          // Arrange
+          final message = ChatMessage(
+            id: 1,
+            text: '', // Image messages have no text
+            type: MessageType.image,
+            imagePath: 'assets/images/example.png',
+          );
 
-        // Act
-        final json = message.toJson();
+          // Act
+          final json = message.toJson();
 
-        // Assert
-        expect(json['id'], 1);
-        expect(json['text'], ''); // Image messages have empty text
-        expect(json['type'], 'image');
-        expect(json['imagePath'], 'assets/images/example.png');
-      });
+          // Assert
+          expect(json['id'], 1);
+          expect(json['text'], ''); // Image messages have empty text
+          expect(json['type'], 'image');
+          expect(json['imagePath'], 'assets/images/example.png');
+        },
+      );
 
       test('should not include imagePath in JSON when null', () {
         // Arrange
@@ -983,9 +1026,7 @@ void main() {
         );
 
         // Act
-        final copy = original.copyWith(
-          imagePath: 'assets/images/updated.png',
-        );
+        final copy = original.copyWith(imagePath: 'assets/images/updated.png');
 
         // Assert
         expect(copy.id, 1);

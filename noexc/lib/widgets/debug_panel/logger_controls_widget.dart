@@ -31,12 +31,15 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
       );
       _showTimestamps = config['showTimestamps'] ?? false;
       _allComponentsEnabled = config['allComponentsEnabled'] ?? true;
-      
+
       if (!_allComponentsEnabled) {
-        final enabledComponentNames = List<String>.from(config['enabledComponents'] ?? []);
-        _enabledComponents = LogComponent.values
-            .where((comp) => enabledComponentNames.contains(comp.name))
-            .toSet();
+        final enabledComponentNames = List<String>.from(
+          config['enabledComponents'] ?? [],
+        );
+        _enabledComponents =
+            LogComponent.values
+                .where((comp) => enabledComponentNames.contains(comp.name))
+                .toSet();
       }
     });
   }
@@ -47,7 +50,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
       enabledComponents: _allComponentsEnabled ? null : _enabledComponents,
       showTimestamps: _showTimestamps,
     );
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Logger configuration applied'),
@@ -71,15 +74,12 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                 SizedBox(width: 8),
                 Text(
                   'Logger Controls',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],
             ),
             const SizedBox(height: DesignTokens.mediumSpacing),
-            
+
             // Log Level Selection
             Text(
               'Log Level',
@@ -97,18 +97,19 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                 contentPadding: DesignTokens.debugCardContentPadding,
                 border: OutlineInputBorder(),
               ),
-              items: LogLevel.values.map((level) {
-                return DropdownMenuItem<LogLevel>(
-                  value: level,
-                  child: Row(
-                    children: [
-                      Text(level.emoji),
-                      const SizedBox(width: 8),
-                      Text(level.name.toUpperCase()),
-                    ],
-                  ),
-                );
-              }).toList(),
+              items:
+                  LogLevel.values.map((level) {
+                    return DropdownMenuItem<LogLevel>(
+                      value: level,
+                      child: Row(
+                        children: [
+                          Text(level.emoji),
+                          const SizedBox(width: 8),
+                          Text(level.name.toUpperCase()),
+                        ],
+                      ),
+                    );
+                  }).toList(),
               onChanged: (LogLevel? newLevel) {
                 if (newLevel != null) {
                   setState(() {
@@ -118,7 +119,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
               },
             ),
             const SizedBox(height: DesignTokens.mediumSpacing),
-            
+
             // Timestamps Toggle
             CheckboxListTile(
               title: const Text('Show Timestamps'),
@@ -131,7 +132,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                 });
               },
             ),
-            
+
             // All Components Toggle
             CheckboxListTile(
               title: const Text('Enable All Components'),
@@ -147,7 +148,7 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                 });
               },
             ),
-            
+
             // Component Selection (only if not all enabled)
             if (!_allComponentsEnabled) ...[
               const SizedBox(height: DesignTokens.smallSpacing),
@@ -162,33 +163,41 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
               Container(
                 constraints: const BoxConstraints(maxHeight: 200),
                 decoration: BoxDecoration(
-                  border: Border.all(color: DesignTokens.getDebugCardBorder(context)),
-                  borderRadius: BorderRadius.circular(DesignTokens.debugCardRadius),
+                  border: Border.all(
+                    color: DesignTokens.getDebugCardBorder(context),
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    DesignTokens.debugCardRadius,
+                  ),
                 ),
                 child: ListView(
                   shrinkWrap: true,
-                  children: LogComponent.values.map((component) {
-                    return CheckboxListTile(
-                      title: Text(component.tag, style: TextStyle(fontSize: DesignTokens.fontSizeXS)),
-                      value: _enabledComponents.contains(component),
-                      dense: true,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          if (value == true) {
-                            _enabledComponents.add(component);
-                          } else {
-                            _enabledComponents.remove(component);
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
+                  children:
+                      LogComponent.values.map((component) {
+                        return CheckboxListTile(
+                          title: Text(
+                            component.tag,
+                            style: TextStyle(fontSize: DesignTokens.fontSizeXS),
+                          ),
+                          value: _enabledComponents.contains(component),
+                          dense: true,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true) {
+                                _enabledComponents.add(component);
+                              } else {
+                                _enabledComponents.remove(component);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
                 ),
               ),
             ],
-            
+
             const SizedBox(height: DesignTokens.mediumSpacing),
-            
+
             // Apply Button
             SizedBox(
               width: double.infinity,
@@ -200,9 +209,9 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                 child: const Text('Apply Configuration'),
               ),
             ),
-            
+
             const SizedBox(height: DesignTokens.smallSpacing),
-            
+
             // Quick Actions
             Row(
               children: [
@@ -217,7 +226,10 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                       });
                       _applyConfiguration();
                     },
-                    child: Text('Debug All', style: TextStyle(fontSize: DesignTokens.fontSizeXS)),
+                    child: Text(
+                      'Debug All',
+                      style: TextStyle(fontSize: DesignTokens.fontSizeXS),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -232,7 +244,10 @@ class _LoggerControlsWidgetState extends State<LoggerControlsWidget> {
                       });
                       _applyConfiguration();
                     },
-                    child: Text('Errors Only', style: TextStyle(fontSize: DesignTokens.fontSizeXS)),
+                    child: Text(
+                      'Errors Only',
+                      style: TextStyle(fontSize: DesignTokens.fontSizeXS),
+                    ),
                   ),
                 ),
               ],

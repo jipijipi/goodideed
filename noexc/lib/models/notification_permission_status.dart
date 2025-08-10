@@ -2,16 +2,16 @@
 enum NotificationPermissionStatus {
   /// User has granted notification permissions
   granted,
-  
+
   /// User has explicitly denied notification permissions
   denied,
-  
+
   /// Permissions have not been requested yet
   notRequested,
-  
+
   /// Permissions are restricted by system policy (e.g., parental controls)
   restricted,
-  
+
   /// Unable to determine permission status
   unknown;
 
@@ -43,16 +43,23 @@ enum NotificationPermissionStatus {
 
   /// Returns true if user needs to manually enable in device Settings
   bool get needsManualSettings {
-    return this == NotificationPermissionStatus.denied || 
-           this == NotificationPermissionStatus.restricted;
+    return this == NotificationPermissionStatus.denied ||
+        this == NotificationPermissionStatus.restricted;
   }
 
   /// Creates NotificationPermissionStatus from a boolean result
   /// Used for backward compatibility with existing permission APIs
-  static NotificationPermissionStatus fromBoolean(bool? result, bool hasBeenRequested) {
+  static NotificationPermissionStatus fromBoolean(
+    bool? result,
+    bool hasBeenRequested,
+  ) {
     if (result == null) {
-      return hasBeenRequested ? NotificationPermissionStatus.unknown : NotificationPermissionStatus.notRequested;
+      return hasBeenRequested
+          ? NotificationPermissionStatus.unknown
+          : NotificationPermissionStatus.notRequested;
     }
-    return result ? NotificationPermissionStatus.granted : NotificationPermissionStatus.denied;
+    return result
+        ? NotificationPermissionStatus.granted
+        : NotificationPermissionStatus.denied;
   }
 }

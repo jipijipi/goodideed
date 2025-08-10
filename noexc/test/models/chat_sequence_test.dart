@@ -10,12 +10,8 @@ void main() {
         'name': 'Test Sequence',
         'description': 'A test sequence',
         'messages': [
-          {
-            'id': 1,
-            'text': 'Hello',
-            'sender': 'bot'
-          }
-        ]
+          {'id': 1, 'text': 'Hello', 'sender': 'bot'},
+        ],
       };
 
       final sequence = ChatSequence.fromJson(json);

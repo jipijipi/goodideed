@@ -11,7 +11,7 @@ class FrostedGlassOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     final safeAreaTop = MediaQuery.paddingOf(context).top;
     final totalHeight = DesignTokens.frostedGlassHeight + safeAreaTop;
-    
+
     return Positioned(
       top: 0,
       left: 0,
@@ -29,8 +29,12 @@ class FrostedGlassOverlay extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.8),
-                  Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.0),
+                  Theme.of(
+                    context,
+                  ).scaffoldBackgroundColor.withValues(alpha: 0.8),
+                  Theme.of(
+                    context,
+                  ).scaffoldBackgroundColor.withValues(alpha: 0.0),
                 ],
               ),
             ),

@@ -33,12 +33,13 @@ class _DelayModeToggleWidgetState extends State<DelayModeToggleWidget> {
   Widget build(BuildContext context) {
     return SwitchListTile(
       title: const Text('Instant display (test mode)'),
-      subtitle: Text(_settings.instantDisplay
-          ? 'Messages appear immediately'
-          : 'Adaptive delays based on word count'),
+      subtitle: Text(
+        _settings.instantDisplay
+            ? 'Messages appear immediately'
+            : 'Adaptive delays based on word count',
+      ),
       value: _settings.instantDisplay,
       onChanged: (v) => _settings.instantDisplay = v,
     );
   }
 }
-

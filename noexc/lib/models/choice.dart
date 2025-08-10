@@ -25,25 +25,23 @@ class Choice {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> json = {
-      'text': text,
-    };
-    
+    final Map<String, dynamic> json = {'text': text};
+
     if (sequenceId != null) {
       json['sequenceId'] = sequenceId!;
       // When switching sequences, don't include nextMessageId as we always start at message 1
     } else if (nextMessageId != null) {
       json['nextMessageId'] = nextMessageId!;
     }
-    
+
     if (value != null) {
       json['value'] = value;
     }
-    
+
     if (contentKey != null) {
       json['contentKey'] = contentKey;
     }
-    
+
     return json;
   }
 
@@ -59,5 +57,10 @@ class Choice {
   }
 
   @override
-  int get hashCode => text.hashCode ^ nextMessageId.hashCode ^ sequenceId.hashCode ^ value.hashCode ^ contentKey.hashCode;
+  int get hashCode =>
+      text.hashCode ^
+      nextMessageId.hashCode ^
+      sequenceId.hashCode ^
+      value.hashCode ^
+      contentKey.hashCode;
 }

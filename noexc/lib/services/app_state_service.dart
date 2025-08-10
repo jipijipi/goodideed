@@ -8,17 +8,17 @@ import 'dart:convert';
 class AppStateService {
   final UserDataService _userDataService;
   final LoggerService _logger = LoggerService.instance;
-  
+
   // In-memory state for current session
   NotificationTapEvent? _lastNotificationTapEvent;
   bool _cameFromNotification = false;
-  
+
   AppStateService(this._userDataService);
 
   /// Initialize the service - call on app startup
   Future<void> initialize() async {
     _logger.info('Initializing AppStateService');
-    
+
     try {
       // Load any persisted notification state from previous session
       await _loadPersistedState();
@@ -31,15 +31,15 @@ class AppStateService {
   /// Handle a notification tap event
   Future<void> handleNotificationTap(NotificationTapEvent event) async {
     _logger.info('Handling notification tap event: $event');
-    
+
     try {
       // Update in-memory state
       _lastNotificationTapEvent = event;
       _cameFromNotification = true;
-      
+
       // Persist the event for cross-session tracking
       await _persistNotificationTap(event);
-      
+
       _logger.info('Notification tap event processed successfully');
     } catch (e) {
       _logger.error('Failed to handle notification tap: $e');
@@ -48,28 +48,30 @@ class AppStateService {
 
   /// Returns true if the user came from a notification tap in this session
   bool get cameFromNotification => _cameFromNotification;
-  
+
   /// Returns the last notification tap event from this session
-  NotificationTapEvent? get lastNotificationTapEvent => _lastNotificationTapEvent;
-  
+  NotificationTapEvent? get lastNotificationTapEvent =>
+      _lastNotificationTapEvent;
+
   /// Returns true if there is a notification tap event available
   bool get hasNotificationTapEvent => _lastNotificationTapEvent != null;
-  
+
   /// Returns true if the last notification tap was from a daily reminder
-  bool get cameFromDailyReminder => _lastNotificationTapEvent?.isFromDailyReminder ?? false;
+  bool get cameFromDailyReminder =>
+      _lastNotificationTapEvent?.isFromDailyReminder ?? false;
 
   /// Clear the current notification state (typically called after handling the notification)
   Future<void> clearNotificationState() async {
     _logger.info('Clearing notification state');
-    
+
     try {
       // Clear in-memory state
       _lastNotificationTapEvent = null;
       _cameFromNotification = false;
-      
+
       // Clear persisted state
       await _clearPersistedState();
-      
+
       _logger.info('Notification state cleared');
     } catch (e) {
       _logger.error('Failed to clear notification state: $e');
@@ -80,7 +82,7 @@ class AppStateService {
   Future<Map<String, dynamic>> getNotificationState() async {
     try {
       final persistedEvent = await _getPersistedNotificationTap();
-      
+
       return {
         'cameFromNotification': _cameFromNotification,
         'hasNotificationTapEvent': hasNotificationTapEvent,
@@ -117,11 +119,13 @@ class AppStateService {
         // Set up current session state
         _lastNotificationTapEvent = persistedEvent;
         _cameFromNotification = true;
-        
+
         // Clear the persisted state since we've now consumed it
         await _clearPersistedState();
-        
-        _logger.info('Consumed pending notification from previous session: $persistedEvent');
+
+        _logger.info(
+          'Consumed pending notification from previous session: $persistedEvent',
+        );
         return persistedEvent;
       }
       return null;
@@ -136,7 +140,9 @@ class AppStateService {
   Future<void> _loadPersistedState() async {
     final persistedEvent = await _getPersistedNotificationTap();
     if (persistedEvent != null) {
-      _logger.info('Found persisted notification tap event from previous session');
+      _logger.info(
+        'Found persisted notification tap event from previous session',
+      );
       // Don't automatically set _cameFromNotification here - let the app decide when to consume it
     }
   }
@@ -151,26 +157,28 @@ class AppStateService {
       'type': event.type.value,
       'platformData': event.platformData,
     };
-    
+
     await _userDataService.storeValue(
-      '${StorageKeys.notificationPrefix}lastTapEvent', 
-      json.encode(eventData)
+      '${StorageKeys.notificationPrefix}lastTapEvent',
+      json.encode(eventData),
     );
     await _userDataService.storeValue(
-      '${StorageKeys.notificationPrefix}lastTapTime', 
-      event.tapTime.toIso8601String()
+      '${StorageKeys.notificationPrefix}lastTapTime',
+      event.tapTime.toIso8601String(),
     );
   }
 
   Future<NotificationTapEvent?> _getPersistedNotificationTap() async {
-    final eventJson = await _userDataService.getValue<String>('${StorageKeys.notificationPrefix}lastTapEvent');
+    final eventJson = await _userDataService.getValue<String>(
+      '${StorageKeys.notificationPrefix}lastTapEvent',
+    );
     if (eventJson == null || eventJson.isEmpty) return null;
-    
+
     try {
       final eventData = json.decode(eventJson) as Map<String, dynamic>;
       final tapTime = DateTime.parse(eventData['tapTime'] as String);
       final type = NotificationType.fromString(eventData['type'] as String);
-      
+
       return NotificationTapEvent(
         notificationId: eventData['notificationId'] as int,
         payload: eventData['payload'] as String?,
@@ -187,7 +195,11 @@ class AppStateService {
   }
 
   Future<void> _clearPersistedState() async {
-    await _userDataService.removeValue('${StorageKeys.notificationPrefix}lastTapEvent');
-    await _userDataService.removeValue('${StorageKeys.notificationPrefix}lastTapTime');
+    await _userDataService.removeValue(
+      '${StorageKeys.notificationPrefix}lastTapEvent',
+    );
+    await _userDataService.removeValue(
+      '${StorageKeys.notificationPrefix}lastTapTime',
+    );
   }
 }

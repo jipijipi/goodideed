@@ -38,21 +38,21 @@ enum LogComponent {
 class LoggerService {
   static LoggerService? _instance;
   static LoggerService get instance => _instance ??= LoggerService._();
-  
+
   LoggerService._();
 
   /// Current minimum log level (configurable)
   LogLevel _minLevel = _getDefaultLogLevel();
-  
+
   /// Component filters - if empty, all components are logged
   final Set<LogComponent> _enabledComponents = {};
-  
+
   /// Whether to show timestamps
   bool _showTimestamps = false;
-  
+
   /// Silent mode suppresses ALL logging (for noisy error testing)
   bool _silentMode = false;
-  
+
   /// Context flag for expected error scenarios
   bool _inExpectedErrorScenario = false;
 
@@ -83,47 +83,54 @@ class LoggerService {
   bool _shouldLog(LogLevel level, LogComponent component) {
     // Silent mode suppresses all output
     if (_silentMode) return false;
-    
+
     // Expected error scenario suppresses error/warning logs
     if (_inExpectedErrorScenario && level.value >= LogLevel.warning.value) {
       return false;
     }
-    
+
     // Check log level
     if (level.value < _minLevel.value) return false;
-    
+
     // Check component filter (empty means all enabled)
-    if (_enabledComponents.isNotEmpty && !_enabledComponents.contains(component)) {
+    if (_enabledComponents.isNotEmpty &&
+        !_enabledComponents.contains(component)) {
       return false;
     }
-    
+
     return true;
   }
 
   /// Format the log message
-  String _formatMessage(LogLevel level, LogComponent component, String message) {
+  String _formatMessage(
+    LogLevel level,
+    LogComponent component,
+    String message,
+  ) {
     final buffer = StringBuffer();
-    
+
     // Add timestamp if enabled
     if (_showTimestamps) {
       final now = DateTime.now();
-      buffer.write('[${now.hour.toString().padLeft(2, '0')}:'
-                  '${now.minute.toString().padLeft(2, '0')}:'
-                  '${now.second.toString().padLeft(2, '0')}] ');
+      buffer.write(
+        '[${now.hour.toString().padLeft(2, '0')}:'
+        '${now.minute.toString().padLeft(2, '0')}:'
+        '${now.second.toString().padLeft(2, '0')}] ',
+      );
     }
-    
+
     // Add level emoji and component tag
     buffer.write('${level.emoji} ${component.tag}: $message');
-    
+
     return buffer.toString();
   }
 
   /// Generic log method
   void _log(LogLevel level, LogComponent component, String message) {
     if (!_shouldLog(level, component)) return;
-    
+
     final formattedMessage = _formatMessage(level, component, message);
-    
+
     // In debug mode, use debugPrint for better IDE integration
     // In release mode, only critical/error logs should appear
     if (kDebugMode) {
@@ -144,7 +151,10 @@ class LoggerService {
   }
 
   /// Warning level logging
-  void warning(String message, {LogComponent component = LogComponent.general}) {
+  void warning(
+    String message, {
+    LogComponent component = LogComponent.general,
+  }) {
     _log(LogLevel.warning, component, message);
   }
 
@@ -154,7 +164,10 @@ class LoggerService {
   }
 
   /// Critical level logging (always shown)
-  void critical(String message, {LogComponent component = LogComponent.general}) {
+  void critical(
+    String message, {
+    LogComponent component = LogComponent.general,
+  }) {
     _log(LogLevel.critical, component, message);
   }
 
@@ -181,25 +194,25 @@ class LoggerService {
   /// Configure for test environment (minimal logging)
   void configureForTesting() {
     configure(
-      minLevel: LogLevel.error,  // Only show errors and critical in tests
+      minLevel: LogLevel.error, // Only show errors and critical in tests
       enabledComponents: {}, // Enable all components
       showTimestamps: false,
     );
     _silentMode = false;
     _inExpectedErrorScenario = false;
   }
-  
+
   /// Configure for completely silent testing (no output at all)
   void configureForSilentTesting() {
     _silentMode = true;
     _inExpectedErrorScenario = false;
   }
-  
+
   /// Temporarily suppress expected error/warning logs during error testing
   void suppressExpectedErrors(bool suppress) {
     _inExpectedErrorScenario = suppress;
   }
-  
+
   /// Execute code block with expected errors suppressed
   T withSuppressedErrors<T>(T Function() action) {
     final previousState = _inExpectedErrorScenario;
@@ -210,7 +223,7 @@ class LoggerService {
       _inExpectedErrorScenario = previousState;
     }
   }
-  
+
   /// Execute async code block with expected errors suppressed
   Future<T> withSuppressedErrorsAsync<T>(Future<T> Function() action) async {
     final previousState = _inExpectedErrorScenario;
@@ -235,7 +248,7 @@ class LoggerService {
   static LogLevel _getDefaultLogLevel() {
     // Check if we're in a test environment
     if (isTestEnvironment()) {
-      return LogLevel.error;  // Quiet during tests
+      return LogLevel.error; // Quiet during tests
     }
     return kDebugMode ? LogLevel.debug : LogLevel.error;
   }

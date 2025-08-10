@@ -9,20 +9,20 @@ void main() {
   group('Debug Logging Test', () {
     test('should show debug logs for semantic content resolution', () async {
       print('\n=== TESTING SEMANTIC CONTENT SYSTEM DEBUG LOGGING ===\n');
-      
+
       // Test 1: Direct SemanticContentService call
       final contentService = SemanticContentService.instance;
-      
+
       print('--- Test 1: Direct service call ---');
       final result1 = await contentService.getContent(
-        'bot.introduce.character.casual', 
-        'Original introduction text'
+        'bot.introduce.character.casual',
+        'Original introduction text',
       );
       print('Result: "$result1"\n');
-      
+
       // Test 2: MessageProcessor integration
       final processor = MessageProcessor();
-      
+
       print('--- Test 2: MessageProcessor integration ---');
       final message = ChatMessage(
         id: 1,
@@ -30,18 +30,18 @@ void main() {
         type: MessageType.bot,
         contentKey: 'bot.inform.welcome.casual',
       );
-      
+
       final sequence = ChatSequence(
         sequenceId: 'test_seq',
         name: 'Test Sequence',
         description: 'Test sequence for debug logging',
         messages: [message],
       );
-      
+
       final result2 = await processor.processMessageTemplate(message, sequence);
       print('Result text: "${result2.text}"');
       print('Result contentKey: "${result2.contentKey}"\n');
-      
+
       // Test 3: Choice processing
       print('--- Test 3: Choice processing ---');
       final choiceMessage = ChatMessage(
@@ -62,18 +62,23 @@ void main() {
           }),
         ],
       );
-      
-      final result3 = await processor.processMessageTemplate(choiceMessage, sequence);
+
+      final result3 = await processor.processMessageTemplate(
+        choiceMessage,
+        sequence,
+      );
       print('Choice message processed');
       print('Number of choices: ${result3.choices?.length}');
       if (result3.choices != null) {
         for (int i = 0; i < result3.choices!.length; i++) {
-          print('Choice ${i + 1}: "${result3.choices![i].text}" (contentKey: "${result3.choices![i].contentKey}")');
+          print(
+            'Choice ${i + 1}: "${result3.choices![i].text}" (contentKey: "${result3.choices![i].contentKey}")',
+          );
         }
       }
-      
+
       print('\n=== DEBUG LOGGING TEST COMPLETE ===\n');
-      
+
       // Basic assertions to make the test pass
       expect(result1, isNotNull);
       expect(result2.text, isNotNull);

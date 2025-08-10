@@ -4,20 +4,22 @@ class StorageKeys {
   static const String sessionPrefix = 'session.';
   static const String sessionLastVisitDate = '${sessionPrefix}lastVisitDate';
   static const String sessionVisitCount = '${sessionPrefix}visitCount';
-  static const String sessionTotalVisitCount = '${sessionPrefix}totalVisitCount';
+  static const String sessionTotalVisitCount =
+      '${sessionPrefix}totalVisitCount';
   static const String sessionTimeOfDay = '${sessionPrefix}timeOfDay';
   static const String sessionFirstVisitDate = '${sessionPrefix}firstVisitDate';
-  static const String sessionDaysSinceFirstVisit = '${sessionPrefix}daysSinceFirstVisit';
+  static const String sessionDaysSinceFirstVisit =
+      '${sessionPrefix}daysSinceFirstVisit';
   static const String sessionIsWeekend = '${sessionPrefix}isWeekend';
-  
-  // User data keys  
+
+  // User data keys
   static const String userPrefix = 'user.';
   static const String userName = '${userPrefix}name';
   static const String userTask = '${userPrefix}task';
   static const String userStreak = '${userPrefix}streak';
   static const String userIsOnboarded = '${userPrefix}isOnboarded';
   static const String userIsOnNotice = '${userPrefix}isOnNotice';
-  
+
   // Task configuration keys
   static const String taskPrefix = 'task.';
   static const String taskStartTime = '${taskPrefix}startTime';
@@ -40,22 +42,29 @@ class StorageKeys {
   static const String taskIsPastEndDate = '${taskPrefix}isPastEndDate';
   static const String taskStartTiming = '${taskPrefix}startTiming';
   static const String taskNextActiveWeekday = '${taskPrefix}nextActiveWeekday';
-  
+
   // Notification keys
   static const String notificationPrefix = 'notification.';
   static const String notificationIsEnabled = '${notificationPrefix}isEnabled';
-  static const String notificationLastScheduled = '${notificationPrefix}lastScheduled';
-  static const String notificationScheduledFor = '${notificationPrefix}scheduledFor';
-  
+  static const String notificationLastScheduled =
+      '${notificationPrefix}lastScheduled';
+  static const String notificationScheduledFor =
+      '${notificationPrefix}scheduledFor';
+
   // Permission tracking keys
-  static const String notificationPermissionStatus = '${notificationPrefix}permissionStatus';
-  static const String notificationPermissionRequestCount = '${notificationPrefix}requestCount';
-  static const String notificationPermissionLastRequested = '${notificationPrefix}lastRequested';
-  
+  static const String notificationPermissionStatus =
+      '${notificationPrefix}permissionStatus';
+  static const String notificationPermissionRequestCount =
+      '${notificationPrefix}requestCount';
+  static const String notificationPermissionLastRequested =
+      '${notificationPrefix}lastRequested';
+
   // Notification tap tracking keys (used by AppStateService)
-  static const String notificationLastTapEvent = '${notificationPrefix}lastTapEvent';
-  static const String notificationLastTapTime = '${notificationPrefix}lastTapTime';
-  
+  static const String notificationLastTapEvent =
+      '${notificationPrefix}lastTapEvent';
+  static const String notificationLastTapTime =
+      '${notificationPrefix}lastTapTime';
+
   // Private constructor to prevent instantiation
   StorageKeys._();
 }

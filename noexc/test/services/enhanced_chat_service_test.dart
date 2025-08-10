@@ -34,7 +34,9 @@ void main() {
       );
 
       // Act
-      final processedMessage = await chatService.processMessageTemplate(message);
+      final processedMessage = await chatService.processMessageTemplate(
+        message,
+      );
 
       // Assert
       expect(processedMessage.text, equals('Hello, John Doe! Welcome back.'));
@@ -89,10 +91,7 @@ void main() {
       // Arrange
       const choiceText = 'App features';
       const storeKey = 'user.interest';
-      final choice = Choice(
-        text: choiceText,
-        nextMessageId: 4,
-      );
+      final choice = Choice(text: choiceText, nextMessageId: 4);
       final choiceMessage = ChatMessage(
         id: 3,
         text: '', // Choice messages have no text content
@@ -114,7 +113,7 @@ void main() {
       // Arrange
       await userDataService.storeValue(StorageKeys.userName, 'John Doe');
       await userDataService.storeValue('user.age', 25);
-      
+
       final messages = [
         ChatMessage(
           id: 1,
@@ -137,7 +136,9 @@ void main() {
       ];
 
       // Act
-      final processedMessages = await chatService.processMessageTemplates(messages);
+      final processedMessages = await chatService.processMessageTemplates(
+        messages,
+      );
 
       // Assert
       expect(processedMessages.length, equals(3));
@@ -151,38 +152,57 @@ void main() {
       final messages = <ChatMessage>[];
 
       // Act
-      final processedMessages = await chatService.processMessageTemplates(messages);
+      final processedMessages = await chatService.processMessageTemplates(
+        messages,
+      );
 
       // Assert
       expect(processedMessages, isEmpty);
     });
 
-    test('should preserve message properties when processing templates', () async {
-      // Arrange
-      await userDataService.storeValue(StorageKeys.userName, 'John');
-      final originalMessage = ChatMessage(
-        id: 1,
-        text: '', // Choice messages have no text content
-        delay: 1500,
-        sender: 'bot',
-        type: MessageType.choice,
-        storeKey: 'some.key',
-        nextMessageId: 2,
-      );
+    test(
+      'should preserve message properties when processing templates',
+      () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'John');
+        final originalMessage = ChatMessage(
+          id: 1,
+          text: '', // Choice messages have no text content
+          delay: 1500,
+          sender: 'bot',
+          type: MessageType.choice,
+          storeKey: 'some.key',
+          nextMessageId: 2,
+        );
 
-      // Act
-      final processedMessage = await chatService.processMessageTemplate(originalMessage);
+        // Act
+        final processedMessage = await chatService.processMessageTemplate(
+          originalMessage,
+        );
 
-      // Assert
-      expect(processedMessage.text, equals('')); // Choice messages have no text content
-      expect(processedMessage.id, equals(originalMessage.id));
-      expect(processedMessage.delay, equals(originalMessage.delay));
-      expect(processedMessage.sender, equals(originalMessage.sender));
-      expect(processedMessage.type == MessageType.choice, equals(originalMessage.type == MessageType.choice));
-      expect(processedMessage.type == MessageType.textInput, equals(originalMessage.type == MessageType.textInput));
-      expect(processedMessage.storeKey, equals(originalMessage.storeKey));
-      expect(processedMessage.nextMessageId, equals(originalMessage.nextMessageId));
-    });
+        // Assert
+        expect(
+          processedMessage.text,
+          equals(''),
+        ); // Choice messages have no text content
+        expect(processedMessage.id, equals(originalMessage.id));
+        expect(processedMessage.delay, equals(originalMessage.delay));
+        expect(processedMessage.sender, equals(originalMessage.sender));
+        expect(
+          processedMessage.type == MessageType.choice,
+          equals(originalMessage.type == MessageType.choice),
+        );
+        expect(
+          processedMessage.type == MessageType.textInput,
+          equals(originalMessage.type == MessageType.textInput),
+        );
+        expect(processedMessage.storeKey, equals(originalMessage.storeKey));
+        expect(
+          processedMessage.nextMessageId,
+          equals(originalMessage.nextMessageId),
+        );
+      },
+    );
 
     test('should process templates with fallback values', () async {
       // Arrange
@@ -196,16 +216,21 @@ void main() {
       );
 
       // Act
-      final processedMessage = await chatService.processMessageTemplate(message);
+      final processedMessage = await chatService.processMessageTemplate(
+        message,
+      );
 
       // Assert
-      expect(processedMessage.text, equals('Hello, Alice! Your status is Active.'));
+      expect(
+        processedMessage.text,
+        equals('Hello, Alice! Your status is Active.'),
+      );
     });
 
     test('should process message list with fallback values', () async {
       // Arrange
       await userDataService.storeValue(StorageKeys.userName, 'Bob');
-      
+
       final messages = [
         ChatMessage(
           id: 1,
@@ -222,7 +247,9 @@ void main() {
       ];
 
       // Act
-      final processedMessages = await chatService.processMessageTemplates(messages);
+      final processedMessages = await chatService.processMessageTemplates(
+        messages,
+      );
 
       // Assert
       expect(processedMessages.length, equals(2));

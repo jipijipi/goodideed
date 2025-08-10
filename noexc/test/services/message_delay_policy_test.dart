@@ -24,26 +24,30 @@ void main() {
       expect(delay, 750);
     });
 
-    test('computes adaptive delay based on word count when no delay provided', () {
-      final policy = MessageDelayPolicy();
-      final msg = ChatMessage.fromJson({
-        'id': 2,
-        'text': 'Three little words', // 3 words
-        // no delay field on purpose
-        'sender': 'bot',
-      });
+    test(
+      'computes adaptive delay based on word count when no delay provided',
+      () {
+        final policy = MessageDelayPolicy();
+        final msg = ChatMessage.fromJson({
+          'id': 2,
+          'text': 'Three little words', // 3 words
+          // no delay field on purpose
+          'sender': 'bot',
+        });
 
-      final delay = policy.effectiveDelay(msg);
+        final delay = policy.effectiveDelay(msg);
 
-      final expected = AppConstants.dynamicDelayBaseMs +
-          3 * AppConstants.dynamicDelayPerWordMs;
-      final clamped = expected.clamp(
-        AppConstants.dynamicDelayMinMs,
-        AppConstants.dynamicDelayMaxMs,
-      );
+        final expected =
+            AppConstants.dynamicDelayBaseMs +
+            3 * AppConstants.dynamicDelayPerWordMs;
+        final clamped = expected.clamp(
+          AppConstants.dynamicDelayMinMs,
+          AppConstants.dynamicDelayMaxMs,
+        );
 
-      expect(delay, clamped);
-    });
+        expect(delay, clamped);
+      },
+    );
 
     test('returns zero delay in instant mode', () {
       final policy = MessageDelayPolicy(mode: DelayMode.instant);

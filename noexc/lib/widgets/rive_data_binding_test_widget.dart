@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 /// Example widget demonstrating Rive 0.14.0+ Data Binding
-/// 
+///
 /// This widget shows how to:
 /// - Load a Rive file with data binding capabilities
 /// - Access view model properties (number properties)
 /// - Update Rive animations via data binding in real-time
 /// - Properly dispose of resources
-/// 
+///
 /// Required setup in main.dart:
 /// ```dart
 /// Future<void> main() async {
@@ -21,19 +21,20 @@ class RiveDataBindingTestWidget extends StatefulWidget {
   const RiveDataBindingTestWidget({super.key});
 
   @override
-  State<RiveDataBindingTestWidget> createState() => _RiveDataBindingTestWidgetState();
+  State<RiveDataBindingTestWidget> createState() =>
+      _RiveDataBindingTestWidgetState();
 }
 
 class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
   // Core Rive components
   File? file;
   RiveWidgetController? controller;
-  
+
   // Data binding components
   ViewModelInstance? viewModelInstance;
   ViewModelInstanceNumber? posXProperty;
   ViewModelInstanceNumber? posYProperty;
-  
+
   // UI state
   double posX = 0.0;
   double posY = 0.0;
@@ -51,13 +52,13 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
       'assets/animations/test-spere.riv',
       riveFactory: Factory.rive, // Use Factory.rive for Rive renderer
     );
-    
+
     // Step 2: Create controller
     controller = RiveWidgetController(file!);
-    
+
     // Step 3: Set up data binding
     _initDataBinding();
-    
+
     // Step 4: Update UI
     setState(() {});
   }
@@ -66,13 +67,13 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
   void _initDataBinding() {
     // Create view model instance using auto-binding
     viewModelInstance = controller!.dataBind(DataBind.auto());
-    
+
     if (viewModelInstance != null) {
       // Access number properties from the view model
       // These correspond to properties defined in the Rive file
       posXProperty = viewModelInstance!.number('posx');
       posYProperty = viewModelInstance!.number('posy');
-      
+
       // Set initial UI values from Rive properties
       if (posXProperty != null) posX = posXProperty!.value;
       if (posYProperty != null) posY = posYProperty!.value;
@@ -85,7 +86,7 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
       // Set new values on the data binding properties
       posXProperty!.value = posX;
       posYProperty!.value = posY;
-      
+
       // Data binding automatically updates the animation - no manual advancement needed
     }
   }
@@ -104,21 +105,21 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
   @override
   Widget build(BuildContext context) {
     final controller = this.controller;
-    
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
         children: [
           // Rive animation display area
           Expanded(
-            child: controller == null
-                ? const Center(child: CircularProgressIndicator(color: Colors.white))
-                : RiveWidget(
-                    controller: controller,
-                    fit: Fit.contain,
-                  ),
+            child:
+                controller == null
+                    ? const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                    : RiveWidget(controller: controller, fit: Fit.contain),
           ),
-          
+
           // Control panel
           Container(
             padding: const EdgeInsets.all(20),
@@ -140,9 +141,9 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
                     _updatePosition();
                   },
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Y Position Slider
                 Text(
                   'Position Y: ${posY.toStringAsFixed(2)}',
@@ -159,7 +160,7 @@ class _RiveDataBindingTestWidgetState extends State<RiveDataBindingTestWidget> {
                     _updatePosition();
                   },
                 ),
-                
+
                 const SizedBox(height: 20),
               ],
             ),

@@ -57,7 +57,7 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return SizedBox(
       width: isExpanded ? double.infinity : null,
       height: _getHeight(),
@@ -96,7 +96,9 @@ class AppButton extends StatelessWidget {
         child: CircularProgressIndicator(
           strokeWidth: 2.0,
           valueColor: AlwaysStoppedAnimation<Color>(
-            variant == ButtonVariant.primary ? DesignTokens.avatarIconColor : DesignTokens.brandPrimary,
+            variant == ButtonVariant.primary
+                ? DesignTokens.avatarIconColor
+                : DesignTokens.brandPrimary,
           ),
         ),
       );
@@ -116,7 +118,10 @@ class AppButton extends StatelessWidget {
     return Text(text);
   }
 
-  ButtonStyle _getElevatedButtonStyle(BuildContext context, ColorScheme colorScheme) {
+  ButtonStyle _getElevatedButtonStyle(
+    BuildContext context,
+    ColorScheme colorScheme,
+  ) {
     return ElevatedButton.styleFrom(
       backgroundColor: DesignTokens.getPrimaryButtonBackground(context),
       foregroundColor: DesignTokens.getPrimaryButtonText(context),
@@ -128,7 +133,10 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  ButtonStyle _getFilledButtonStyle(BuildContext context, ColorScheme colorScheme) {
+  ButtonStyle _getFilledButtonStyle(
+    BuildContext context,
+    ColorScheme colorScheme,
+  ) {
     return FilledButton.styleFrom(
       backgroundColor: DesignTokens.getSecondaryButtonBackground(context),
       foregroundColor: DesignTokens.getSecondaryButtonText(context),
@@ -215,14 +223,6 @@ class AppButton extends StatelessWidget {
   }
 }
 
-enum ButtonVariant {
-  primary,
-  secondary,
-  outline,
-}
+enum ButtonVariant { primary, secondary, outline }
 
-enum ButtonSize {
-  small,
-  medium,
-  large,
-}
+enum ButtonSize { small, medium, large }

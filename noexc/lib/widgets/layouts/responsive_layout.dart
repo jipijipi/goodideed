@@ -41,10 +41,7 @@ class ResponsiveLayout extends StatelessWidget {
 class ResponsiveBuilder extends StatelessWidget {
   final Widget Function(BuildContext context, ScreenType screenType) builder;
 
-  const ResponsiveBuilder({
-    super.key,
-    required this.builder,
-  });
+  const ResponsiveBuilder({super.key, required this.builder});
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +64,7 @@ class ResponsiveBuilder extends StatelessWidget {
   }
 }
 
-enum ScreenType {
-  mobile,
-  tablet,
-  desktop,
-}
+enum ScreenType { mobile, tablet, desktop }
 
 /// Extension to get responsive values based on screen type
 extension ResponsiveExtension on BuildContext {
@@ -142,8 +135,9 @@ class ConstrainedContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveMaxWidth = maxWidth ?? _getDefaultMaxWidth(context.screenType);
-    
+    final effectiveMaxWidth =
+        maxWidth ?? _getDefaultMaxWidth(context.screenType);
+
     return Container(
       width: double.infinity,
       alignment: center ? Alignment.center : null,

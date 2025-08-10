@@ -10,8 +10,8 @@ class MessageDelayPolicy {
   final DisplaySettingsService? _settings;
 
   MessageDelayPolicy({DelayMode? mode, DisplaySettingsService? settings})
-      : _mode = mode ?? DelayMode.adaptive,
-        _settings = settings;
+    : _mode = mode ?? DelayMode.adaptive,
+      _settings = settings;
 
   /// Compute the effective delay for a message in milliseconds.
   int effectiveDelay(ChatMessage message) {
@@ -36,7 +36,8 @@ class MessageDelayPolicy {
 
     // Adaptive delay for bot text/image messages based on word count
     final words = _wordCount(message.text);
-    final raw = AppConstants.dynamicDelayBaseMs +
+    final raw =
+        AppConstants.dynamicDelayBaseMs +
         words * AppConstants.dynamicDelayPerWordMs;
     final clamped = raw.clamp(
       AppConstants.dynamicDelayMinMs,
@@ -47,10 +48,6 @@ class MessageDelayPolicy {
 
   int _wordCount(String text) {
     if (text.trim().isEmpty) return 0;
-    return text
-        .trim()
-        .split(RegExp(r"\s+"))
-        .where((w) => w.isNotEmpty)
-        .length;
+    return text.trim().split(RegExp(r"\s+")).where((w) => w.isNotEmpty).length;
   }
 }

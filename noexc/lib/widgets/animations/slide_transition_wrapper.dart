@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import '../../constants/design_tokens.dart';
 
 /// Direction for slide animations
-enum SlideDirection {
-  up,
-  down,
-  left,
-  right,
-}
+enum SlideDirection { up, down, left, right }
 
 /// A reusable slide transition wrapper for consistent animations
 class SlideTransitionWrapper extends StatefulWidget {
@@ -42,18 +37,12 @@ class _SlideTransitionWrapperState extends State<SlideTransitionWrapper>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _slide = Tween<Offset>(
       begin: widget.slideInOnInit ? _getBeginOffset() : Offset.zero,
       end: widget.slideInOnInit ? Offset.zero : _getEndOffset(),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.slideInOnInit) {
       _controller.forward().then((_) => widget.onComplete?.call());
@@ -116,10 +105,7 @@ class _SlideTransitionWrapperState extends State<SlideTransitionWrapper>
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _slide,
-      child: widget.child,
-    );
+    return SlideTransition(position: _slide, child: widget.child);
   }
 }
 
@@ -143,7 +129,8 @@ class ConditionalSlideTransition extends StatefulWidget {
   });
 
   @override
-  State<ConditionalSlideTransition> createState() => _ConditionalSlideTransitionState();
+  State<ConditionalSlideTransition> createState() =>
+      _ConditionalSlideTransitionState();
 }
 
 class _ConditionalSlideTransitionState extends State<ConditionalSlideTransition>
@@ -154,18 +141,12 @@ class _ConditionalSlideTransitionState extends State<ConditionalSlideTransition>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _slide = Tween<Offset>(
       begin: _getHiddenOffset(),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: widget.curve));
 
     if (widget.isVisible) {
       _controller.forward();
@@ -205,9 +186,6 @@ class _ConditionalSlideTransitionState extends State<ConditionalSlideTransition>
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _slide,
-      child: widget.child,
-    );
+    return SlideTransition(position: _slide, child: widget.child);
   }
 }

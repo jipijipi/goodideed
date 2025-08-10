@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 /// Example widget demonstrating Rive 0.14.0+ Data Binding with arm_test_3.riv
-/// 
+///
 /// This widget shows how to:
 /// - Load a Rive file with arm animation and data binding
 /// - Access and control arm animation properties
 /// - Update Rive animations via data binding in real-time
 /// - Handle arm-specific controls and interactions
-/// 
+///
 /// Required setup in main.dart:
 /// ```dart
 /// Future<void> main() async {
@@ -28,10 +28,10 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
   // Core Rive components
   File? file;
   RiveWidgetController? controller;
-  
+
   // Data binding components
   ViewModelInstance? viewModelInstance;
-  
+
   // Common arm control properties (will be populated based on what's available in the file)
   List<ViewModelInstanceNumber> armProperties = [];
   List<String> armPropertyNames = [];
@@ -50,13 +50,13 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
       'assets/animations/arm_test_3.riv',
       riveFactory: Factory.rive, // Use Factory.rive for Rive renderer
     );
-    
+
     // Step 2: Create controller
     controller = RiveWidgetController(file!);
-    
+
     // Step 3: Set up data binding
     _initDataBinding();
-    
+
     // Step 4: Update UI
     setState(() {});
   }
@@ -65,7 +65,7 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
   void _initDataBinding() {
     // Create view model instance using auto-binding
     viewModelInstance = controller!.dataBind(DataBind.auto());
-    
+
     if (viewModelInstance != null) {
       // Discover available number properties in the view model
       // Common arm animation properties might include position, rotation, scale, etc.
@@ -82,11 +82,11 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
       'pince_pos_x',
       'pince_pos_y',
       'pince_rotation',
-/*       'hand_controller_y', 
+      /*       'hand_controller_y', 
       'hand_controller_x',
       'hand_rotation', */
     ];
-    
+
     for (String propertyName in possibleProperties) {
       final property = viewModelInstance!.number(propertyName);
       if (property != null) {
@@ -102,7 +102,7 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
     if (index < armProperties.length) {
       armProperties[index].value = value;
       armPropertyValues[index] = value;
-      
+
       // Data binding automatically updates the animation - no manual advancement needed
     }
   }
@@ -122,21 +122,21 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
   @override
   Widget build(BuildContext context) {
     final controller = this.controller;
-    
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Column(
         children: [
           // Rive animation display area
           Expanded(
-            child: controller == null
-                ? const Center(child: CircularProgressIndicator(color: Colors.white))
-                : RiveWidget(
-                    controller: controller,
-                    fit: Fit.contain,
-                  ),
+            child:
+                controller == null
+                    ? const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                    : RiveWidget(controller: controller, fit: Fit.contain),
           ),
-          
+
           // Control panel
           Container(
             padding: const EdgeInsets.all(20),
@@ -155,14 +155,19 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
                         children: [
                           Text(
                             '${armPropertyNames[index]}: ${armPropertyValues[index].toStringAsFixed(2)}',
-                            style: const TextStyle(color: Colors.white, fontSize: 16),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
                           ),
                           Slider(
                             value: armPropertyValues[index],
                             min: -200,
                             max: 200,
                             activeColor: _getSliderColor(index),
-                            inactiveColor: _getSliderColor(index).withValues(alpha: 0.3),
+                            inactiveColor: _getSliderColor(
+                              index,
+                            ).withValues(alpha: 0.3),
                             onChanged: (value) {
                               setState(() {
                                 armPropertyValues[index] = value;
@@ -174,7 +179,7 @@ class _RiveArmTestWidgetState extends State<RiveArmTestWidget> {
                       ),
                     );
                   }),
-                
+
                 const SizedBox(height: 20),
               ],
             ),

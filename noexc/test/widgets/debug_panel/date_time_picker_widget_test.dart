@@ -20,13 +20,13 @@ void main() {
       await userDataService.clearAllData();
     });
 
-    testWidgets('should display date and time picker section', (WidgetTester tester) async {
+    testWidgets('should display date and time picker section', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DateTimePickerWidget(
-              userDataService: userDataService,
-            ),
+            body: DateTimePickerWidget(userDataService: userDataService),
           ),
         ),
       );
@@ -36,29 +36,29 @@ void main() {
 
       // Check that the main section header is present
       expect(find.text('Date & Time Testing'), findsOneWidget);
-      
+
       // Check that current values section is present
       expect(find.text('Current Values'), findsOneWidget);
       expect(find.text('Task Date:'), findsOneWidget);
       expect(find.text('Deadline Time:'), findsOneWidget);
-      
+
       // Check that date setting section is present
       expect(find.text('Set Task Date'), findsOneWidget);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Yesterday'), findsOneWidget);
-      
+
       // Check that deadline options section is present
       expect(find.text('Set Deadline Time'), findsOneWidget);
       expect(find.text('Select deadline time'), findsOneWidget);
     });
 
-    testWidgets('should show default values when no data is stored', (WidgetTester tester) async {
+    testWidgets('should show default values when no data is stored', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DateTimePickerWidget(
-              userDataService: userDataService,
-            ),
+            body: DateTimePickerWidget(userDataService: userDataService),
           ),
         ),
       );
@@ -66,16 +66,19 @@ void main() {
       await tester.pumpAndSettle(TestUtils.extendedPump);
 
       // Should show default values
-      expect(find.text('Not set'), findsAtLeastNWidgets(1)); // Task date and deadline both show "Not set"
+      expect(
+        find.text('Not set'),
+        findsAtLeastNWidgets(1),
+      ); // Task date and deadline both show "Not set"
     });
 
-    testWidgets('should have functional today and yesterday buttons', (WidgetTester tester) async {
+    testWidgets('should have functional today and yesterday buttons', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: DateTimePickerWidget(
-              userDataService: userDataService,
-            ),
+            body: DateTimePickerWidget(userDataService: userDataService),
           ),
         ),
       );
@@ -87,7 +90,7 @@ void main() {
       await tester.tap(find.text('Today'));
       await tester.pumpAndSettle(TestUtils.shortTimeout);
 
-      // Test yesterday button exists and is tappable  
+      // Test yesterday button exists and is tappable
       expect(find.text('Yesterday'), findsOneWidget);
       await tester.tap(find.text('Yesterday'));
       await tester.pumpAndSettle(TestUtils.shortTimeout);
@@ -96,9 +99,11 @@ void main() {
       // as snackbar behavior can be inconsistent in tests
     });
 
-    testWidgets('should handle data refresh callback', (WidgetTester tester) async {
+    testWidgets('should handle data refresh callback', (
+      WidgetTester tester,
+    ) async {
       bool callbackCalled = false;
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -121,10 +126,12 @@ void main() {
       expect(callbackCalled, true);
     });
 
-    testWidgets('should allow selecting deadline options', (WidgetTester tester) async {
+    testWidgets('should allow selecting deadline options', (
+      WidgetTester tester,
+    ) async {
       bool callbackCalled = false;
       final userDataService = UserDataService();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -161,7 +168,9 @@ void main() {
       expect(callbackCalled, true);
 
       // Verify the value was stored correctly (now as string format)
-      final storedValue = await userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+      final storedValue = await userDataService.getValue<String>(
+        StorageKeys.taskDeadlineTime,
+      );
       expect(storedValue, '18:00'); // Evening = 18:00
     });
   });

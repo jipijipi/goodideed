@@ -13,7 +13,7 @@ void main() {
   group('UserVariablesPanel', () {
     testWidgets('displays header correctly', (WidgetTester tester) async {
       final userDataService = UserDataService();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -25,9 +25,11 @@ void main() {
       expect(find.text('Debug Panel'), findsOneWidget);
     });
 
-    testWidgets('shows debug information initially', (WidgetTester tester) async {
+    testWidgets('shows debug information initially', (
+      WidgetTester tester,
+    ) async {
       final userDataService = UserDataService();
-      
+
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -39,17 +41,22 @@ void main() {
       // Wait for initial loading to complete
       await tester.pump();
       await tester.pump(TestUtils.quickPump);
-      
+
       // Should show debug panel header
       expect(find.text('Debug Panel'), findsOneWidget);
       // Check for any visible content in the panel
       expect(find.byType(UserVariablesPanel), findsOneWidget);
     });
 
-    testWidgets('can be instantiated with required parameters', (WidgetTester tester) async {
+    testWidgets('can be instantiated with required parameters', (
+      WidgetTester tester,
+    ) async {
       final userDataService = UserDataService();
-      
-      expect(() => UserVariablesPanel(userDataService: userDataService), returnsNormally);
+
+      expect(
+        () => UserVariablesPanel(userDataService: userDataService),
+        returnsNormally,
+      );
     });
   });
 }

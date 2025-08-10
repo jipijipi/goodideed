@@ -22,7 +22,10 @@ void main() {
       expect(messages, isA<List<ChatMessage>>());
       expect(messages.isNotEmpty, true);
       // Updated to match current onboarding sequence content
-      expect(messages.first.text, 'Here is how it\'s going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I\'ll be here to make sure you do it');
+      expect(
+        messages.first.text,
+        'Here is how it\'s going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I\'ll be here to make sure you do it',
+      );
     });
 
     test('should return messages in correct order', () async {
@@ -41,9 +44,18 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      expect(messages[0].sender, 'bot');   // "Welcome to our app! I'm here to help you get started."
-      expect(messages[1].sender, 'bot');   // "Let's begin by getting to know you better. What's your name?"
-      expect(messages[2].sender, 'bot');   // "Nice to meet you, {user.name|there}! What brings you to our app today?"
+      expect(
+        messages[0].sender,
+        'bot',
+      ); // "Welcome to our app! I'm here to help you get started."
+      expect(
+        messages[1].sender,
+        'bot',
+      ); // "Let's begin by getting to know you better. What's your name?"
+      expect(
+        messages[2].sender,
+        'bot',
+      ); // "Nice to meet you, {user.name|there}! What brings you to our app today?"
     });
 
     test('should not duplicate messages when switching sequences', () async {
@@ -54,20 +66,26 @@ void main() {
         userDataService: userDataService,
         templatingService: templatingService,
       );
-      
+
       // Act - Load welcome sequence which routes to other sequences
-      final messages = await chatService.getInitialMessages(sequenceId: 'welcome_seq');
-      
+      final messages = await chatService.getInitialMessages(
+        sequenceId: 'welcome_seq',
+      );
+
       // Assert - Should get some messages from the flow
       expect(messages.isNotEmpty, true);
-      
+
       // Filter out empty text messages (from autoroute/dataAction messages)
-      final nonEmptyTexts = messages.map((m) => m.text).where((text) => text.isNotEmpty).toList();
+      final nonEmptyTexts =
+          messages.map((m) => m.text).where((text) => text.isNotEmpty).toList();
       final uniqueNonEmptyTexts = nonEmptyTexts.toSet().toList();
-      
+
       // Should not have duplicate non-empty messages
-      expect(nonEmptyTexts.length, equals(uniqueNonEmptyTexts.length), 
-        reason: 'Found duplicate non-empty messages: $nonEmptyTexts');
+      expect(
+        nonEmptyTexts.length,
+        equals(uniqueNonEmptyTexts.length),
+        reason: 'Found duplicate non-empty messages: $nonEmptyTexts',
+      );
     });
 
     test('should load choice messages correctly', () async {
@@ -75,7 +93,9 @@ void main() {
       final messages = await chatService.loadChatScript();
 
       // Assert
-      final choiceMessage = messages.firstWhere((msg) => msg.type == MessageType.choice);
+      final choiceMessage = messages.firstWhere(
+        (msg) => msg.type == MessageType.choice,
+      );
       expect(choiceMessage.type == MessageType.choice, true);
       expect(choiceMessage.choices, isNotNull);
       expect(choiceMessage.choices!.length, 2);
@@ -101,7 +121,10 @@ void main() {
       final message = chatService.getMessageById(3);
       expect(message, isNotNull);
       expect(message!.id, 3);
-      expect(message.text, 'Here is how it\'s going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I\'ll be here to make sure you do it');
+      expect(
+        message.text,
+        'Here is how it\'s going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I\'ll be here to make sure you do it',
+      );
     });
 
     test('should return null for non-existent message id', () async {
@@ -140,7 +163,10 @@ void main() {
       await chatService.loadChatScript();
 
       // Act
-      final messages = await chatService.getMessagesAfterTextInput(100, 'John Doe');
+      final messages = await chatService.getMessagesAfterTextInput(
+        100,
+        'John Doe',
+      );
 
       // Assert
       expect(messages, isNotNull);
@@ -153,7 +179,10 @@ void main() {
       const messageId = 999;
 
       // Act
-      final userMessage = chatService.createUserResponseMessage(messageId, userInput);
+      final userMessage = chatService.createUserResponseMessage(
+        messageId,
+        userInput,
+      );
 
       // Assert
       expect(userMessage.id, messageId);
@@ -165,46 +194,62 @@ void main() {
   });
 
   group('processMessageTemplate', () {
-    test('should preserve placeholderText when processing templates without templating service', () async {
-      // Arrange
-      final chatService = ChatService(); // No templating service
+    test(
+      'should preserve placeholderText when processing templates without templating service',
+      () async {
+        // Arrange
+        final chatService = ChatService(); // No templating service
 
-      final originalMessage = ChatMessage(
-        id: 1,
-        text: '', // Text input messages have no text content
-        type: MessageType.textInput,
-        placeholderText: 'Enter your custom name here...',
-        storeKey: StorageKeys.userName,
-      );
+        final originalMessage = ChatMessage(
+          id: 1,
+          text: '', // Text input messages have no text content
+          type: MessageType.textInput,
+          placeholderText: 'Enter your custom name here...',
+          storeKey: StorageKeys.userName,
+        );
 
-      // Act
-      final processedMessage = await chatService.processMessageTemplate(originalMessage);
+        // Act
+        final processedMessage = await chatService.processMessageTemplate(
+          originalMessage,
+        );
 
-      // Assert
-      expect(processedMessage.placeholderText, 'Enter your custom name here...');
-      expect(processedMessage.type == MessageType.textInput, true);
-      expect(processedMessage.storeKey, StorageKeys.userName);
-      expect(processedMessage.text, ''); // Text input messages have no text content
-    });
+        // Assert
+        expect(
+          processedMessage.placeholderText,
+          'Enter your custom name here...',
+        );
+        expect(processedMessage.type == MessageType.textInput, true);
+        expect(processedMessage.storeKey, StorageKeys.userName);
+        expect(
+          processedMessage.text,
+          '',
+        ); // Text input messages have no text content
+      },
+    );
 
-    test('should preserve default placeholderText when processing templates', () async {
-      // Arrange
-      final chatService = ChatService(); // No templating service
+    test(
+      'should preserve default placeholderText when processing templates',
+      () async {
+        // Arrange
+        final chatService = ChatService(); // No templating service
 
-      final originalMessage = ChatMessage(
-        id: 1,
-        text: '', // Text input messages have no text content
-        type: MessageType.textInput,
-        // Using default placeholderText
-      );
+        final originalMessage = ChatMessage(
+          id: 1,
+          text: '', // Text input messages have no text content
+          type: MessageType.textInput,
+          // Using default placeholderText
+        );
 
-      // Act
-      final processedMessage = await chatService.processMessageTemplate(originalMessage);
+        // Act
+        final processedMessage = await chatService.processMessageTemplate(
+          originalMessage,
+        );
 
-      // Assert
-      expect(processedMessage.placeholderText, 'Type your answer...');
-      expect(processedMessage.type == MessageType.textInput, true);
-    });
+        // Assert
+        expect(processedMessage.placeholderText, 'Type your answer...');
+        expect(processedMessage.type == MessageType.textInput, true);
+      },
+    );
   });
 
   group('Trigger Event Handling', () {
@@ -219,13 +264,13 @@ void main() {
       // This is an integration test that verifies the trigger event is handled
       // without throwing errors. Full integration testing would require
       // a complete service setup which is complex for unit tests.
-      
+
       // Arrange - call the private method via reflection or public interface
       // For now, just verify the method exists and can be called
-      
+
       // Act & Assert - should not throw
       expect(() => chatService, returnsNormally);
-      
+
       // Note: Full integration testing of trigger handlers would require
       // complex setup with ServiceLocator, UserDataService, SessionService, etc.
       // This basic test ensures the method exists and the class can be instantiated.
@@ -235,13 +280,13 @@ void main() {
       // This is an integration test that verifies the new trigger event is handled
       // without throwing errors. Full integration testing would require
       // a complete service setup which is complex for unit tests.
-      
+
       // Arrange - call the private method via reflection or public interface
       // For now, just verify the method exists and can be called
-      
+
       // Act & Assert - should not throw
       expect(() => chatService, returnsNormally);
-      
+
       // Note: Full integration testing of trigger handlers would require
       // complex setup with ServiceLocator, UserDataService, SessionService, etc.
       // This trigger now also includes notification rescheduling after task calculations.
@@ -252,13 +297,13 @@ void main() {
       // This is an integration test that verifies the trigger event is handled
       // without throwing errors. Full integration testing would require
       // a complete service setup which is complex for unit tests.
-      
+
       // Arrange - call the private method via reflection or public interface
       // For now, just verify the method exists and can be called
-      
+
       // Act & Assert - should not throw
       expect(() => chatService, returnsNormally);
-      
+
       // Note: Full integration testing of notification trigger handlers would require
       // complex setup with ServiceLocator, NotificationService, etc.
       // This basic test ensures the method exists and the class can be instantiated.
@@ -268,13 +313,13 @@ void main() {
       // This is an integration test that verifies the trigger event is handled
       // without throwing errors. Full integration testing would require
       // a complete service setup which is complex for unit tests.
-      
+
       // Arrange - call the private method via reflection or public interface
       // For now, just verify the method exists and can be called
-      
+
       // Act & Assert - should not throw
       expect(() => chatService, returnsNormally);
-      
+
       // Note: Full integration testing of notification trigger handlers would require
       // complex setup with ServiceLocator, NotificationService, etc.
       // This basic test ensures the method exists and the class can be instantiated.
@@ -284,13 +329,13 @@ void main() {
       // This is an integration test that verifies the trigger event is handled
       // without throwing errors. Full integration testing would require
       // a complete service setup which is complex for unit tests.
-      
+
       // Arrange - call the private method via reflection or public interface
       // For now, just verify the method exists and can be called
-      
+
       // Act & Assert - should not throw
       expect(() => chatService, returnsNormally);
-      
+
       // Note: Full integration testing of notification trigger handlers would require
       // complex setup with ServiceLocator, NotificationService, etc.
       // This basic test ensures the method exists and the class can be instantiated.

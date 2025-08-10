@@ -18,19 +18,28 @@ void main() {
       const sequenceId = 'nonexistent';
       const messageId = 999;
 
-      final result = await variantsService.getVariant(originalText, sequenceId, messageId);
-      
+      final result = await variantsService.getVariant(
+        originalText,
+        sequenceId,
+        messageId,
+      );
+
       expect(result, equals(originalText));
     });
 
     test('should return variant when variants file exists', () async {
       // This test assumes the onboarding_message_1.txt file exists
-      const originalText = 'Welcome to our app! I\'m here to help you get started.';
+      const originalText =
+          'Welcome to our app! I\'m here to help you get started.';
       const sequenceId = 'onboarding';
       const messageId = 1;
 
-      final result = await variantsService.getVariant(originalText, sequenceId, messageId);
-      
+      final result = await variantsService.getVariant(
+        originalText,
+        sequenceId,
+        messageId,
+      );
+
       // Result should be one of the variants (could be the original or a variant)
       expect(result, isNotEmpty);
       expect(result, isA<String>());
@@ -42,11 +51,19 @@ void main() {
       const messageId = 1;
 
       // First call - loads from file
-      final result1 = await variantsService.getVariant(originalText, sequenceId, messageId);
-      
+      final result1 = await variantsService.getVariant(
+        originalText,
+        sequenceId,
+        messageId,
+      );
+
       // Second call - should use cache
-      final result2 = await variantsService.getVariant(originalText, sequenceId, messageId);
-      
+      final result2 = await variantsService.getVariant(
+        originalText,
+        sequenceId,
+        messageId,
+      );
+
       // Both calls should return valid strings
       expect(result1, isA<String>());
       expect(result2, isA<String>());
@@ -56,26 +73,38 @@ void main() {
       const sequenceId = 'onboarding';
       const messageId = 1;
 
-      final hasVariants = await variantsService.hasVariants(sequenceId, messageId);
-      
+      final hasVariants = await variantsService.hasVariants(
+        sequenceId,
+        messageId,
+      );
+
       expect(hasVariants, isA<bool>());
     });
 
-    test('should return false for hasVariants when file does not exist', () async {
-      const sequenceId = 'nonexistent';
-      const messageId = 999;
+    test(
+      'should return false for hasVariants when file does not exist',
+      () async {
+        const sequenceId = 'nonexistent';
+        const messageId = 999;
 
-      final hasVariants = await variantsService.hasVariants(sequenceId, messageId);
-      
-      expect(hasVariants, isFalse);
-    });
+        final hasVariants = await variantsService.hasVariants(
+          sequenceId,
+          messageId,
+        );
+
+        expect(hasVariants, isFalse);
+      },
+    );
 
     test('should get all variants for a message', () async {
       const sequenceId = 'onboarding';
       const messageId = 1;
 
-      final variants = await variantsService.getAllVariants(sequenceId, messageId);
-      
+      final variants = await variantsService.getAllVariants(
+        sequenceId,
+        messageId,
+      );
+
       expect(variants, isA<List<String>>());
       // Should have at least one variant (could be empty if file doesn't exist)
       expect(variants, isNotNull);
@@ -88,12 +117,16 @@ void main() {
 
       // Load variants to populate cache
       await variantsService.getVariant(originalText, sequenceId, messageId);
-      
+
       // Clear cache
       variantsService.clearCache();
-      
+
       // Should still work after cache clear (will reload from file)
-      final result = await variantsService.getVariant(originalText, sequenceId, messageId);
+      final result = await variantsService.getVariant(
+        originalText,
+        sequenceId,
+        messageId,
+      );
       expect(result, isA<String>());
     });
 
@@ -102,8 +135,12 @@ void main() {
       const sequenceId = 'empty';
       const messageId = 1;
 
-      final result = await variantsService.getVariant(originalText, sequenceId, messageId);
-      
+      final result = await variantsService.getVariant(
+        originalText,
+        sequenceId,
+        messageId,
+      );
+
       // Should return original text when variants file is empty or doesn't exist
       expect(result, equals(originalText));
     });
@@ -114,8 +151,12 @@ void main() {
       const messageId = 10;
 
       // This tests the internal key format: sequenceId_message_messageId
-      final result = await variantsService.getVariant(originalText, sequenceId, messageId);
-      
+      final result = await variantsService.getVariant(
+        originalText,
+        sequenceId,
+        messageId,
+      );
+
       expect(result, isA<String>());
     });
   });

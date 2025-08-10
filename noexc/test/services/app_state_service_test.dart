@@ -6,7 +6,7 @@ import '../test_helpers.dart';
 
 class MockUserDataService extends UserDataService {
   final Map<String, dynamic> _storage = {};
-  
+
   @override
   Future<void> storeValue(String key, dynamic value) async {
     if (value == null) {
@@ -15,23 +15,23 @@ class MockUserDataService extends UserDataService {
       _storage[key] = value;
     }
   }
-  
+
   @override
   Future<T?> getValue<T>(String key) async {
     final value = _storage[key];
     return value as T?;
   }
-  
+
   @override
   Future<bool> hasValue(String key) async {
     return _storage.containsKey(key);
   }
-  
+
   @override
   Future<void> removeValue(String key) async {
     _storage.remove(key);
   }
-  
+
   @override
   Future<void> clearAllData() async {
     _storage.clear();
@@ -137,12 +137,18 @@ void main() {
         await appStateService.handleNotificationTap(event);
 
         // Verify state is persisted
-        expect(await appStateService.hasPendingNotificationFromPreviousSession(), isFalse); // False because we're in same session
+        expect(
+          await appStateService.hasPendingNotificationFromPreviousSession(),
+          isFalse,
+        ); // False because we're in same session
 
         await appStateService.clearNotificationState();
 
         // Verify persisted state is cleared
-        expect(await appStateService.hasPendingNotificationFromPreviousSession(), isFalse);
+        expect(
+          await appStateService.hasPendingNotificationFromPreviousSession(),
+          isFalse,
+        );
       });
     });
 
@@ -158,7 +164,10 @@ void main() {
         final newAppStateService = AppStateService(userDataService);
         await newAppStateService.initialize();
 
-        expect(await newAppStateService.hasPendingNotificationFromPreviousSession(), isTrue);
+        expect(
+          await newAppStateService.hasPendingNotificationFromPreviousSession(),
+          isTrue,
+        );
       });
 
       test('should consume pending notification', () async {
@@ -171,7 +180,8 @@ void main() {
         final newAppStateService = AppStateService(userDataService);
         await newAppStateService.initialize();
 
-        final pendingEvent = await newAppStateService.consumePendingNotification();
+        final pendingEvent =
+            await newAppStateService.consumePendingNotification();
 
         expect(pendingEvent, isNotNull);
         expect(pendingEvent!.notificationId, equals(1001));
@@ -182,7 +192,10 @@ void main() {
         expect(newAppStateService.lastNotificationTapEvent, isNotNull);
 
         // Should clear persisted state after consumption
-        expect(await newAppStateService.hasPendingNotificationFromPreviousSession(), isFalse);
+        expect(
+          await newAppStateService.hasPendingNotificationFromPreviousSession(),
+          isFalse,
+        );
       });
 
       test('should return null when no pending notification', () async {
@@ -244,12 +257,18 @@ void main() {
 
       test('should handle invalid persisted data gracefully', () async {
         // Store invalid JSON
-        await userDataService.storeValue('notification.lastTapEvent', 'invalid json');
+        await userDataService.storeValue(
+          'notification.lastTapEvent',
+          'invalid json',
+        );
 
         final newAppStateService = AppStateService(userDataService);
         await newAppStateService.initialize();
 
-        expect(await newAppStateService.hasPendingNotificationFromPreviousSession(), isFalse);
+        expect(
+          await newAppStateService.hasPendingNotificationFromPreviousSession(),
+          isFalse,
+        );
         expect(await newAppStateService.consumePendingNotification(), isNull);
       });
 
@@ -263,7 +282,10 @@ void main() {
         final newAppStateService = AppStateService(userDataService);
         await newAppStateService.initialize();
 
-        expect(await newAppStateService.hasPendingNotificationFromPreviousSession(), isFalse);
+        expect(
+          await newAppStateService.hasPendingNotificationFromPreviousSession(),
+          isFalse,
+        );
       });
 
       test('should handle empty or null state gracefully', () {

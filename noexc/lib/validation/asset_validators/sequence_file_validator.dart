@@ -12,10 +12,10 @@ class SequenceFileValidator {
     final errors = <ValidationError>[];
     final warnings = <ValidationError>[];
     final info = <ValidationError>[];
-    
+
     // Get all available sequences
     final availableSequences = AppConstants.availableSequences;
-    
+
     for (final sequenceId in availableSequences) {
       try {
         // Try to load and validate each sequence
@@ -23,27 +23,25 @@ class SequenceFileValidator {
         if (sequence != null) {
           final validator = SequenceValidator();
           final result = validator.validateSequence(sequence);
-          
+
           errors.addAll(result.errors);
           warnings.addAll(result.warnings);
           info.addAll(result.info);
         }
       } catch (e) {
-        errors.add(ValidationError(
-          type: 'SEQUENCE_LOAD_ERROR',
-          message: 'Failed to load sequence: $e',
-          sequenceId: sequenceId,
-        ));
+        errors.add(
+          ValidationError(
+            type: 'SEQUENCE_LOAD_ERROR',
+            message: 'Failed to load sequence: $e',
+            sequenceId: sequenceId,
+          ),
+        );
       }
     }
-    
-    return ValidationResult(
-      errors: errors,
-      warnings: warnings,
-      info: info,
-    );
+
+    return ValidationResult(errors: errors, warnings: warnings, info: info);
   }
-  
+
   /// Loads a sequence from assets
   Future<ChatSequence?> loadSequence(String sequenceId) async {
     try {
@@ -55,36 +53,36 @@ class SequenceFileValidator {
       return null;
     }
   }
-  
+
   /// Checks if asset files exist and are accessible
   Future<ValidationResult> checkAssetFileAccess() async {
     final errors = <ValidationError>[];
     final info = <ValidationError>[];
-    
+
     // Check sequence files
     for (final sequenceId in AppConstants.availableSequences) {
       final assetPath = 'assets/sequences/$sequenceId.json';
       try {
         await rootBundle.loadString(assetPath);
-        info.add(ValidationError(
-          type: 'ASSET_FILE_OK',
-          message: 'Sequence file accessible: $assetPath',
-          sequenceId: sequenceId,
-          severity: 'info',
-        ));
+        info.add(
+          ValidationError(
+            type: 'ASSET_FILE_OK',
+            message: 'Sequence file accessible: $assetPath',
+            sequenceId: sequenceId,
+            severity: 'info',
+          ),
+        );
       } catch (e) {
-        errors.add(ValidationError(
-          type: 'ASSET_FILE_ERROR',
-          message: 'Cannot access sequence file: $assetPath ($e)',
-          sequenceId: sequenceId,
-        ));
+        errors.add(
+          ValidationError(
+            type: 'ASSET_FILE_ERROR',
+            message: 'Cannot access sequence file: $assetPath ($e)',
+            sequenceId: sequenceId,
+          ),
+        );
       }
     }
-    
-    return ValidationResult(
-      errors: errors,
-      warnings: [],
-      info: info,
-    );
+
+    return ValidationResult(errors: errors, warnings: [], info: info);
   }
 }

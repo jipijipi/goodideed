@@ -29,7 +29,7 @@ void main() {
       mockDataActionProcessor = DataActionProcessor(mockUserDataService);
       final sequenceLoader = SequenceLoader();
       mockSequenceManager = SequenceManager(sequenceLoader: sequenceLoader);
-      
+
       routeProcessor = RouteProcessor(
         conditionEvaluator: mockConditionEvaluator,
         dataActionProcessor: mockDataActionProcessor,
@@ -53,7 +53,9 @@ void main() {
         );
 
         // Act
-        final result = await routeProcessorWithoutEvaluator.processAutoRoute(routeMessage);
+        final result = await routeProcessorWithoutEvaluator.processAutoRoute(
+          routeMessage,
+        );
 
         // Assert
         expect(result, equals(5));
@@ -81,18 +83,9 @@ void main() {
         // Arrange
         await mockUserDataService.storeValue('user.hasTask', true);
         final routes = [
-          RouteCondition(
-            condition: 'user.hasTask == true',
-            nextMessageId: 10,
-          ),
-          RouteCondition(
-            condition: 'user.hasTask == false',
-            nextMessageId: 20,
-          ),
-          RouteCondition(
-            isDefault: true,
-            nextMessageId: 30,
-          ),
+          RouteCondition(condition: 'user.hasTask == true', nextMessageId: 10),
+          RouteCondition(condition: 'user.hasTask == false', nextMessageId: 20),
+          RouteCondition(isDefault: true, nextMessageId: 30),
         ];
         final routeMessage = ChatMessage(
           id: 1,
@@ -115,18 +108,9 @@ void main() {
         // Arrange
         await mockUserDataService.storeValue('user.hasTask', 'maybe');
         final routes = [
-          RouteCondition(
-            condition: 'user.hasTask == true',
-            nextMessageId: 10,
-          ),
-          RouteCondition(
-            condition: 'user.hasTask == false',
-            nextMessageId: 20,
-          ),
-          RouteCondition(
-            isDefault: true,
-            nextMessageId: 30,
-          ),
+          RouteCondition(condition: 'user.hasTask == true', nextMessageId: 10),
+          RouteCondition(condition: 'user.hasTask == false', nextMessageId: 20),
+          RouteCondition(isDefault: true, nextMessageId: 30),
         ];
         final routeMessage = ChatMessage(
           id: 1,
@@ -145,30 +129,33 @@ void main() {
         expect(result, equals(30));
       });
 
-      test('should return fallback nextMessageId when no routes match', () async {
-        // Arrange
-        final routes = [
-          RouteCondition(
-            condition: 'user.nonexistent == true',
-            nextMessageId: 10,
-          ),
-        ];
-        final routeMessage = ChatMessage(
-          id: 1,
-          text: '',
-          delay: 0,
-          sender: 'bot',
-          type: MessageType.autoroute,
-          routes: routes,
-          nextMessageId: 5,
-        );
+      test(
+        'should return fallback nextMessageId when no routes match',
+        () async {
+          // Arrange
+          final routes = [
+            RouteCondition(
+              condition: 'user.nonexistent == true',
+              nextMessageId: 10,
+            ),
+          ];
+          final routeMessage = ChatMessage(
+            id: 1,
+            text: '',
+            delay: 0,
+            sender: 'bot',
+            type: MessageType.autoroute,
+            routes: routes,
+            nextMessageId: 5,
+          );
 
-        // Act
-        final result = await routeProcessor.processAutoRoute(routeMessage);
+          // Act
+          final result = await routeProcessor.processAutoRoute(routeMessage);
 
-        // Assert
-        expect(result, equals(5));
-      });
+          // Assert
+          expect(result, equals(5));
+        },
+      );
 
       test('should handle route with sequenceId', () async {
         // Arrange
@@ -224,51 +211,47 @@ void main() {
         final result = await routeProcessor.processAutoRoute(routeMessage);
 
         // Assert
-        expect(result, equals(50)); // Should match the conditional route, not default
+        expect(
+          result,
+          equals(50),
+        ); // Should match the conditional route, not default
       });
 
-      test('should handle routes without conditions that are not default', () async {
-        // Arrange
-        final routes = [
-          RouteCondition(
-            nextMessageId: 10, // No condition, not default
-          ),
-          RouteCondition(
-            isDefault: true,
-            nextMessageId: 20,
-          ),
-        ];
-        final routeMessage = ChatMessage(
-          id: 1,
-          text: '',
-          delay: 0,
-          sender: 'bot',
-          type: MessageType.autoroute,
-          routes: routes,
-          nextMessageId: 5,
-        );
+      test(
+        'should handle routes without conditions that are not default',
+        () async {
+          // Arrange
+          final routes = [
+            RouteCondition(
+              nextMessageId: 10, // No condition, not default
+            ),
+            RouteCondition(isDefault: true, nextMessageId: 20),
+          ];
+          final routeMessage = ChatMessage(
+            id: 1,
+            text: '',
+            delay: 0,
+            sender: 'bot',
+            type: MessageType.autoroute,
+            routes: routes,
+            nextMessageId: 5,
+          );
 
-        // Act
-        final result = await routeProcessor.processAutoRoute(routeMessage);
+          // Act
+          final result = await routeProcessor.processAutoRoute(routeMessage);
 
-        // Assert
-        expect(result, equals(20)); // Should execute default route
-      });
+          // Assert
+          expect(result, equals(20)); // Should execute default route
+        },
+      );
     });
 
     group('processDataAction', () {
       test('should process data actions and return nextMessageId', () async {
         // Arrange
         final dataActions = [
-          DataAction(
-            type: DataActionType.set,
-            key: 'user.score',
-            value: 100,
-          ),
-          DataAction(
-            type: DataActionType.increment,
-            key: 'user.visits',
-          ),
+          DataAction(type: DataActionType.set, key: 'user.score', value: 100),
+          DataAction(type: DataActionType.increment, key: 'user.visits'),
         ];
         final dataActionMessage = ChatMessage(
           id: 1,
@@ -281,7 +264,9 @@ void main() {
         );
 
         // Act
-        final result = await routeProcessor.processDataAction(dataActionMessage);
+        final result = await routeProcessor.processDataAction(
+          dataActionMessage,
+        );
 
         // Assert
         expect(result, equals(10));
@@ -289,26 +274,31 @@ void main() {
         expect(score, equals(100));
       });
 
-      test('should return nextMessageId when no data action processor', () async {
-        // Arrange
-        final routeProcessorWithoutProcessor = RouteProcessor(
-          sequenceManager: mockSequenceManager,
-        );
-        final dataActionMessage = ChatMessage(
-          id: 1,
-          text: '',
-          delay: 0,
-          sender: 'bot',
-          type: MessageType.dataAction,
-          nextMessageId: 10,
-        );
+      test(
+        'should return nextMessageId when no data action processor',
+        () async {
+          // Arrange
+          final routeProcessorWithoutProcessor = RouteProcessor(
+            sequenceManager: mockSequenceManager,
+          );
+          final dataActionMessage = ChatMessage(
+            id: 1,
+            text: '',
+            delay: 0,
+            sender: 'bot',
+            type: MessageType.dataAction,
+            nextMessageId: 10,
+          );
 
-        // Act
-        final result = await routeProcessorWithoutProcessor.processDataAction(dataActionMessage);
+          // Act
+          final result = await routeProcessorWithoutProcessor.processDataAction(
+            dataActionMessage,
+          );
 
-        // Assert
-        expect(result, equals(10));
-      });
+          // Assert
+          expect(result, equals(10));
+        },
+      );
 
       test('should return nextMessageId when no data actions', () async {
         // Arrange
@@ -322,7 +312,9 @@ void main() {
         );
 
         // Act
-        final result = await routeProcessor.processDataAction(dataActionMessage);
+        final result = await routeProcessor.processDataAction(
+          dataActionMessage,
+        );
 
         // Assert
         expect(result, equals(10));
@@ -348,7 +340,9 @@ void main() {
         );
 
         // Act & Assert - Should not throw
-        final result = await routeProcessor.processDataAction(dataActionMessage);
+        final result = await routeProcessor.processDataAction(
+          dataActionMessage,
+        );
         expect(result, equals(10));
       });
     });

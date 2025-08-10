@@ -8,23 +8,28 @@ import 'package:noexc/services/user_data_service.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(const MethodChannel('flutter/assets'), (MethodCall methodCall) async {
-    if (methodCall.method == 'loadString') {
-      final String key = methodCall.arguments as String;
-      
-      switch (key) {
-        case 'assets/content/formatters/timeOfDay.json':
-          return '''{"1": "morning", "2": "afternoon", "3": "evening", "4": "night"}''';
-        case 'assets/content/formatters/intensity.json':
-          return '{"0": "off", "1": "low", "2": "high", "3": "maximum", "none": "off", "mild": "low", "severe": "high", "extreme": "maximum"}';
-        case 'assets/content/formatters/activeDays.json':
-          return '{"1,2,3,4,5": "weekdays", "[1,2,3,4,5]": "weekdays", "6,7": "weekends", "[6,7]": "weekends", "1,2,3,4,5,6,7": "daily", "[1,2,3,4,5,6,7]": "daily", "1": "Monday", "2": "Tuesday", "3": "Wednesday", "4": "Thursday", "5": "Friday", "6": "Saturday", "7": "Sunday", "1,3,5": "Monday, Wednesday, Friday", "2,4": "Tuesday and Thursday"}';
-        default:
-          throw PlatformException(code: 'FileNotFound', message: 'Asset not found');
-      }
-    }
-    return null;
-  });
+      .setMockMethodCallHandler(const MethodChannel('flutter/assets'), (
+        MethodCall methodCall,
+      ) async {
+        if (methodCall.method == 'loadString') {
+          final String key = methodCall.arguments as String;
+
+          switch (key) {
+            case 'assets/content/formatters/timeOfDay.json':
+              return '''{"1": "morning", "2": "afternoon", "3": "evening", "4": "night"}''';
+            case 'assets/content/formatters/intensity.json':
+              return '{"0": "off", "1": "low", "2": "high", "3": "maximum", "none": "off", "mild": "low", "severe": "high", "extreme": "maximum"}';
+            case 'assets/content/formatters/activeDays.json':
+              return '{"1,2,3,4,5": "weekdays", "[1,2,3,4,5]": "weekdays", "6,7": "weekends", "[6,7]": "weekends", "1,2,3,4,5,6,7": "daily", "[1,2,3,4,5,6,7]": "daily", "1": "Monday", "2": "Tuesday", "3": "Wednesday", "4": "Thursday", "5": "Friday", "6": "Saturday", "7": "Sunday", "1,3,5": "Monday, Wednesday, Friday", "2,4": "Tuesday and Thursday"}';
+            default:
+              throw PlatformException(
+                code: 'FileNotFound',
+                message: 'Asset not found',
+              );
+          }
+        }
+        return null;
+      });
 
   group('TextTemplatingService', () {
     late TextTemplatingService templatingService;
@@ -61,16 +66,19 @@ void main() {
       expect(result, equals('Hello, John Doe! You are 25 years old.'));
     });
 
-    test('should leave template variables unchanged if no stored value exists', () async {
-      // Arrange
-      const text = 'Hello, {user.name}!';
+    test(
+      'should leave template variables unchanged if no stored value exists',
+      () async {
+        // Arrange
+        const text = 'Hello, {user.name}!';
 
-      // Act
-      final result = await templatingService.processTemplate(text);
+        // Act
+        final result = await templatingService.processTemplate(text);
 
-      // Assert
-      expect(result, equals('Hello, {user.name}!'));
-    });
+        // Assert
+        expect(result, equals('Hello, {user.name}!'));
+      },
+    );
 
     test('should handle mixed existing and non-existing variables', () async {
       // Arrange
@@ -81,7 +89,10 @@ void main() {
       final result = await templatingService.processTemplate(text);
 
       // Assert
-      expect(result, equals('Hello, John Doe! Your favorite color is {user.color}.'));
+      expect(
+        result,
+        equals('Hello, John Doe! Your favorite color is {user.color}.'),
+      );
     });
 
     test('should handle text with no template variables', () async {
@@ -110,7 +121,8 @@ void main() {
       // Arrange
       await userDataService.storeValue('preferences.theme', 'dark');
       await userDataService.storeValue('settings.language', 'English');
-      const text = 'Your theme is {preferences.theme} and language is {settings.language}.';
+      const text =
+          'Your theme is {preferences.theme} and language is {settings.language}.';
 
       // Act
       final result = await templatingService.processTemplate(text);
@@ -154,41 +166,51 @@ void main() {
       expect(result, equals('Hello {user.name and {incomplete'));
     });
 
-    test('should use fallback value when provided and stored value does not exist', () async {
-      // Arrange
-      const text = 'Hello, {user.name|Guest}!';
+    test(
+      'should use fallback value when provided and stored value does not exist',
+      () async {
+        // Arrange
+        const text = 'Hello, {user.name|Guest}!';
 
-      // Act
-      final result = await templatingService.processTemplate(text);
+        // Act
+        final result = await templatingService.processTemplate(text);
 
-      // Assert
-      expect(result, equals('Hello, Guest!'));
-    });
+        // Assert
+        expect(result, equals('Hello, Guest!'));
+      },
+    );
 
-    test('should use stored value instead of fallback when stored value exists', () async {
-      // Arrange
-      await userDataService.storeValue(StorageKeys.userName, 'John Doe');
-      const text = 'Hello, {user.name|Guest}!';
+    test(
+      'should use stored value instead of fallback when stored value exists',
+      () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'John Doe');
+        const text = 'Hello, {user.name|Guest}!';
 
-      // Act
-      final result = await templatingService.processTemplate(text);
+        // Act
+        final result = await templatingService.processTemplate(text);
 
-      // Assert
-      expect(result, equals('Hello, John Doe!'));
-    });
+        // Assert
+        expect(result, equals('Hello, John Doe!'));
+      },
+    );
 
-    test('should handle multiple templates with different fallback scenarios', () async {
-      // Arrange
-      await userDataService.storeValue(StorageKeys.userName, 'Alice');
-      // user.age is not stored, so should use fallback
-      const text = 'Hello, {user.name|Guest}! You are {user.age|unknown} years old.';
+    test(
+      'should handle multiple templates with different fallback scenarios',
+      () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'Alice');
+        // user.age is not stored, so should use fallback
+        const text =
+            'Hello, {user.name|Guest}! You are {user.age|unknown} years old.';
 
-      // Act
-      final result = await templatingService.processTemplate(text);
+        // Act
+        final result = await templatingService.processTemplate(text);
 
-      // Assert
-      expect(result, equals('Hello, Alice! You are unknown years old.'));
-    });
+        // Assert
+        expect(result, equals('Hello, Alice! You are unknown years old.'));
+      },
+    );
 
     test('should handle empty fallback value', () async {
       // Arrange
@@ -223,17 +245,20 @@ void main() {
       expect(result, equals('Hello, {default.name|Guest}!'));
     });
 
-    test('should handle template without fallback alongside template with fallback', () async {
-      // Arrange
-      await userDataService.storeValue(StorageKeys.userName, 'Bob');
-      const text = 'Hello, {user.name|Guest}! Your email is {user.email}.';
+    test(
+      'should handle template without fallback alongside template with fallback',
+      () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'Bob');
+        const text = 'Hello, {user.name|Guest}! Your email is {user.email}.';
 
-      // Act
-      final result = await templatingService.processTemplate(text);
+        // Act
+        final result = await templatingService.processTemplate(text);
 
-      // Assert
-      expect(result, equals('Hello, Bob! Your email is {user.email}.'));
-    });
+        // Assert
+        expect(result, equals('Hello, Bob! Your email is {user.email}.'));
+      },
+    );
 
     test('should handle pipe character in stored value', () async {
       // Arrange
@@ -251,18 +276,23 @@ void main() {
       // Arrange
       await userDataService.storeValue('task.currentDate', '2024-07-18');
       await userDataService.storeValue('task.currentStatus', 'pending');
-      const text = 'Today ({task.currentDate}), your task status is: {task.currentStatus}';
+      const text =
+          'Today ({task.currentDate}), your task status is: {task.currentStatus}';
 
       // Act
       final result = await templatingService.processTemplate(text);
 
       // Assert
-      expect(result, equals('Today (2024-07-18), your task status is: pending'));
+      expect(
+        result,
+        equals('Today (2024-07-18), your task status is: pending'),
+      );
     });
 
     test('should handle task templates with fallbacks', () async {
       // Arrange - don't set any task data
-      const text = 'Date: {task.currentDate|unknown}, Status: {task.currentStatus|none}';
+      const text =
+          'Date: {task.currentDate|unknown}, Status: {task.currentStatus|none}';
 
       // Act
       final result = await templatingService.processTemplate(text);
@@ -276,24 +306,32 @@ void main() {
       await userDataService.storeValue('task.previousDate', '2024-07-17');
       await userDataService.storeValue('task.previousStatus', 'pending');
       await userDataService.storeValue('task.previousTask', 'Morning run');
-      const text = 'Yesterday ({task.previousDate}), your task "{task.previousTask}" is {task.previousStatus}';
+      const text =
+          'Yesterday ({task.previousDate}), your task "{task.previousTask}" is {task.previousStatus}';
 
       // Act
       final result = await templatingService.processTemplate(text);
 
       // Assert
-      expect(result, equals('Yesterday (2024-07-17), your task "Morning run" is pending'));
+      expect(
+        result,
+        equals('Yesterday (2024-07-17), your task "Morning run" is pending'),
+      );
     });
 
     test('should handle previous day templates with fallbacks', () async {
       // Arrange - don't set any previous day data
-      const text = 'Previous: {task.previousDate|none}, Status: {task.previousStatus|no previous task}, Task: {task.previousTask|nothing}';
+      const text =
+          'Previous: {task.previousDate|none}, Status: {task.previousStatus|no previous task}, Task: {task.previousTask|nothing}';
 
       // Act
       final result = await templatingService.processTemplate(text);
 
       // Assert
-      expect(result, equals('Previous: none, Status: no previous task, Task: nothing'));
+      expect(
+        result,
+        equals('Previous: none, Status: no previous task, Task: nothing'),
+      );
     });
 
     test('should handle mixed current and previous day templates', () async {
@@ -303,13 +341,19 @@ void main() {
       await userDataService.storeValue('task.previousDate', '2024-07-17');
       await userDataService.storeValue('task.previousStatus', 'completed');
       await userDataService.storeValue('task.previousTask', 'Read book');
-      const text = 'Today ({task.currentDate}): {task.currentStatus}. Yesterday ({task.previousDate}): {task.previousTask} was {task.previousStatus}';
+      const text =
+          'Today ({task.currentDate}): {task.currentStatus}. Yesterday ({task.previousDate}): {task.previousTask} was {task.previousStatus}';
 
       // Act
       final result = await templatingService.processTemplate(text);
 
       // Assert
-      expect(result, equals('Today (2024-07-18): pending. Yesterday (2024-07-17): Read book was completed'));
+      expect(
+        result,
+        equals(
+          'Today (2024-07-18): pending. Yesterday (2024-07-17): Read book was completed',
+        ),
+      );
     });
 
     test('should handle previous day status values correctly', () async {
@@ -322,7 +366,10 @@ void main() {
 
       for (final testCase in testCases) {
         // Arrange
-        await userDataService.storeValue('task.previousStatus', testCase['status']);
+        await userDataService.storeValue(
+          'task.previousStatus',
+          testCase['status'],
+        );
         const text = 'Previous task is {task.previousStatus}';
 
         // Act

@@ -30,16 +30,15 @@ class ChatControlsWidget extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (stateManager == null) return const SizedBox.shrink();
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader(context, 'Chat Controls'),
-        
+
         // First row with main chat controls
         Padding(
           padding: DesignTokens.variableItemPadding,
@@ -89,7 +88,7 @@ class ChatControlsWidget extends StatelessWidget {
             ],
           ),
         ),
-        
+
         // Second row with Clear All Data button
         Padding(
           padding: DesignTokens.variableItemPadding,
@@ -108,13 +107,18 @@ class ChatControlsWidget extends StatelessWidget {
                   icon: const Icon(Icons.delete_forever, size: 16),
                   label: const Text('Clear All Data'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.errorContainer,
-                    foregroundColor: Theme.of(context).colorScheme.onErrorContainer,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.errorContainer,
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onErrorContainer,
                     padding: const EdgeInsets.symmetric(vertical: 8),
                   ),
                 ),
               ),
-              const Expanded(flex: 2, child: SizedBox()), // Take up remaining space
+              const Expanded(
+                flex: 2,
+                child: SizedBox(),
+              ), // Take up remaining space
             ],
           ),
         ),

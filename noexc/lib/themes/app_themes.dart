@@ -4,7 +4,7 @@ import '../constants/design_tokens.dart';
 
 class AppThemes {
   static const String themeKey = AppConstants.themeKey;
-  
+
   static ThemeData get lightTheme {
     return ThemeData(
       colorScheme: ColorScheme.light(
@@ -22,7 +22,7 @@ class AppThemes {
       useMaterial3: DesignTokens.useMaterial3,
     );
   }
-  
+
   static ThemeData get darkTheme {
     return ThemeData(
       colorScheme: ColorScheme.dark(
@@ -40,7 +40,7 @@ class AppThemes {
       useMaterial3: DesignTokens.useMaterial3,
     );
   }
-  
+
   static ThemeMode getThemeMode(bool isDarkMode) {
     return isDarkMode ? ThemeMode.dark : ThemeMode.light;
   }

@@ -21,15 +21,17 @@ class SequenceLoader {
       final String assetPath = 'assets/sequences/$sequenceId.json';
       final String jsonString = await rootBundle.loadString(assetPath);
       final Map<String, dynamic> jsonData = json.decode(jsonString);
-      
+
       _currentSequence = ChatSequence.fromJson(jsonData);
-      
+
       // Build message map for quick lookup
       _messageMap = {for (var msg in _currentSequence!.messages) msg.id: msg};
-      
+
       return _currentSequence!;
     } catch (e) {
-      throw Exception('${ChatConfig.chatScriptLoadError} for sequence $sequenceId: $e');
+      throw Exception(
+        '${ChatConfig.chatScriptLoadError} for sequence $sequenceId: $e',
+      );
     }
   }
 
@@ -51,11 +53,14 @@ class SequenceLoader {
   }
 
   /// Get initial messages for a specific sequence
-  Future<List<ChatMessage>> getInitialMessages({String sequenceId = 'onboarding_seq'}) async {
-    if (_currentSequence == null || _currentSequence!.sequenceId != sequenceId) {
+  Future<List<ChatMessage>> getInitialMessages({
+    String sequenceId = 'onboarding_seq',
+  }) async {
+    if (_currentSequence == null ||
+        _currentSequence!.sequenceId != sequenceId) {
       await loadSequence(sequenceId);
     }
-    
+
     return _currentSequence!.messages;
   }
 

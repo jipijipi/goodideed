@@ -136,9 +136,10 @@ void main() {
       });
       
       test('should attempt to schedule with valid inputs', () async {
-        // Set up: valid reminders and deadline time
+        // Set up: valid reminders, deadline time, and task current date
         await mockUserDataService.storeValue('task.remindersIntensity', 1);
         await mockUserDataService.storeValue(StorageKeys.taskDeadlineTime, '14:30');
+        await mockUserDataService.storeValue('task.currentDate', '2024-12-11'); // Add required task date
         
         // Execute - this may fail due to platform dependencies in test, but should not crash
         try {
@@ -282,6 +283,7 @@ void main() {
         // Set up: single digit format
         await mockUserDataService.storeValue('task.remindersIntensity', 1);
         await mockUserDataService.storeValue(StorageKeys.taskDeadlineTime, '9:5');
+        await mockUserDataService.storeValue('task.currentDate', '2024-12-11'); // Add required task date
         
         // Execute - should not throw
         try {

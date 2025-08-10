@@ -45,6 +45,7 @@ class StorageKeys {
   static const String notificationPrefix = 'notification.';
   static const String notificationIsEnabled = '${notificationPrefix}isEnabled';
   static const String notificationLastScheduled = '${notificationPrefix}lastScheduled';
+  static const String notificationScheduledFor = '${notificationPrefix}scheduledFor';
   
   // Private constructor to prevent instantiation
   StorageKeys._();

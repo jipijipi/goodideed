@@ -187,6 +187,15 @@ class NotificationService {
       
       _logger.info('Parsed time: ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}');
       
+      // Get task current date (next due date)
+      final currentDateString = await _userDataService.getValue<String>('task.currentDate');
+      _logger.info('Task current date: $currentDateString');
+      
+      if (currentDateString == null || currentDateString.isEmpty) {
+        _logger.warning('No task current date set, cannot schedule reminder');
+        return;
+      }
+      
       // Validate timezone before scheduling
       try {
         final currentZone = tz.local;
@@ -194,14 +203,25 @@ class NotificationService {
         _logger.info('Current timezone: ${currentZone.name}');
         _logger.info('Current time: $now');
         
-        // Schedule notification for today at deadline time
-        var scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-        _logger.info('Initial scheduled date: $scheduledDate');
+        // Parse task.currentDate (expected format: YYYY-MM-DD or similar)
+        DateTime taskDate;
+        try {
+          taskDate = DateTime.parse(currentDateString);
+          _logger.info('Parsed task date: $taskDate');
+        } catch (e) {
+          _logger.error('Failed to parse task current date "$currentDateString": $e');
+          return;
+        }
         
-        // If the time has already passed today, schedule for tomorrow
+        // Schedule notification for task date at deadline time
+        var scheduledDate = tz.TZDateTime(tz.local, taskDate.year, taskDate.month, taskDate.day, hour, minute);
+        _logger.info('Notification scheduled for task date: $scheduledDate');
+        
+        // Check if scheduled date is in the past
         if (scheduledDate.isBefore(now)) {
-          scheduledDate = scheduledDate.add(const Duration(days: 1));
-          _logger.info('Time has passed, rescheduled for tomorrow: $scheduledDate');
+          _logger.warning('Scheduled date $scheduledDate is in the past (current: $now)');
+          _logger.info('This may indicate task.currentDate needs to be updated');
+          // Still schedule it - the task system should handle date updates
         }
         
         const notificationDetails = NotificationDetails(
@@ -224,7 +244,7 @@ class NotificationService {
         _logger.info('  Title: Task Reminder');
         _logger.info('  Body: Time to check in on your task!');
         _logger.info('  Scheduled date: $scheduledDate');
-        _logger.info('  Match components: ${DateTimeComponents.time}');
+        _logger.info('  No repeat - single notification for this task date');
         
         await _notifications.zonedSchedule(
           _dailyReminderNotificationId,
@@ -233,7 +253,7 @@ class NotificationService {
           scheduledDate,
           notificationDetails,
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at the same time
+          // No matchDateTimeComponents - single notification for specific date
         );
         
         _logger.info('zonedSchedule call completed successfully');
@@ -245,8 +265,9 @@ class NotificationService {
           _logger.info('  - ID: ${notification.id}, Title: ${notification.title}');
         }
         
-        // Store when we last scheduled the notification
+        // Store when we last scheduled the notification and the target date/time
         await _userDataService.storeValue(StorageKeys.notificationLastScheduled, DateTime.now().toIso8601String());
+        await _userDataService.storeValue(StorageKeys.notificationScheduledFor, scheduledDate.toIso8601String());
         await _userDataService.storeValue(StorageKeys.notificationIsEnabled, true);
         
         _logger.info('=== SCHEDULING COMPLETED SUCCESSFULLY ===');
@@ -325,6 +346,76 @@ class NotificationService {
     }
   }
 
+  /// Format DateTime for display
+  Map<String, String> _formatDateTime(DateTime dateTime) {
+    try {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final tomorrow = today.add(const Duration(days: 1));
+      final dateOnly = DateTime(dateTime.year, dateTime.month, dateTime.day);
+      
+      String dayLabel;
+      if (dateOnly == today) {
+        dayLabel = 'Today';
+      } else if (dateOnly == tomorrow) {
+        dayLabel = 'Tomorrow';
+      } else {
+        // Format as weekday, month day
+        final weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        final weekday = weekdays[dateTime.weekday - 1];
+        final month = months[dateTime.month - 1];
+        dayLabel = '$weekday, $month ${dateTime.day}';
+      }
+      
+      // Format time
+      final hour = dateTime.hour;
+      final minute = dateTime.minute.toString().padLeft(2, '0');
+      final period = hour >= 12 ? 'PM' : 'AM';
+      final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+      
+      final timeLabel = '$displayHour:$minute $period';
+      
+      return {
+        'formatted': '$dayLabel at $timeLabel',
+        'day': dayLabel,
+        'time': timeLabel,
+      };
+    } catch (e) {
+      return {'formatted': 'Invalid date'};
+    }
+  }
+
+  /// Format Duration for "time until" display
+  String _formatDuration(Duration duration) {
+    try {
+      if (duration.inDays > 0) {
+        final days = duration.inDays;
+        final hours = duration.inHours % 24;
+        if (days == 1) {
+          return hours > 0 ? 'in 1 day, $hours hours' : 'in 1 day';
+        } else {
+          return hours > 0 ? 'in $days days, $hours hours' : 'in $days days';
+        }
+      } else if (duration.inHours > 0) {
+        final hours = duration.inHours;
+        final minutes = duration.inMinutes % 60;
+        if (hours == 1) {
+          return minutes > 0 ? 'in 1 hour, $minutes min' : 'in 1 hour';
+        } else {
+          return minutes > 0 ? 'in $hours hours, $minutes min' : 'in $hours hours';
+        }
+      } else if (duration.inMinutes > 0) {
+        final minutes = duration.inMinutes;
+        return 'in $minutes minutes';
+      } else {
+        return 'very soon';
+      }
+    } catch (e) {
+      return 'unknown time';
+    }
+  }
+
   // Debug helper methods
   
   /// Get detailed notification status for debugging
@@ -388,14 +479,47 @@ class NotificationService {
     try {
       final pending = await getPendingNotifications();
       
+      // Get the stored scheduled date/time if available
+      final scheduledForString = await _userDataService.getValue<String>(StorageKeys.notificationScheduledFor);
+      DateTime? scheduledFor;
+      if (scheduledForString != null && scheduledForString.isNotEmpty) {
+        try {
+          scheduledFor = DateTime.parse(scheduledForString);
+        } catch (e) {
+          _logger.warning('Failed to parse stored scheduled date: $e');
+        }
+      }
+      
       return pending.map((notification) {
+        String scheduledTime = 'Unknown';
+        String timeUntil = '';
+        
+        if (scheduledFor != null) {
+          // Format the scheduled date/time
+          final formatter = _formatDateTime(scheduledFor);
+          scheduledTime = formatter['formatted'] ?? 'Unknown';
+          
+          // Calculate time until notification
+          final now = DateTime.now();
+          if (scheduledFor.isAfter(now)) {
+            final difference = scheduledFor.difference(now);
+            timeUntil = _formatDuration(difference);
+          } else {
+            timeUntil = 'Past due';
+          }
+        } else {
+          // Fallback if we can't get the stored date
+          scheduledTime = 'Check task.currentDate + deadlineTime';
+        }
+        
         return {
           'id': notification.id,
           'title': notification.title ?? 'No title',
           'body': notification.body ?? 'No body',
           'payload': notification.payload ?? 'No payload',
-          'scheduledTime': 'Daily repeat',
-          'type': 'Daily reminder',
+          'scheduledTime': scheduledTime,
+          'timeUntil': timeUntil,
+          'type': 'Task reminder',
         };
       }).toList();
     } catch (e) {

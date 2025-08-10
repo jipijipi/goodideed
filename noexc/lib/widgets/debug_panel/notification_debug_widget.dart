@@ -304,7 +304,9 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                     _buildInfoRow('ID:', notification['id'].toString()),
                     _buildInfoRow('Title:', notification['title'] ?? 'No title'),
                     _buildInfoRow('Body:', notification['body'] ?? 'No body'),
-                    _buildInfoRow('Schedule:', notification['scheduledTime'] ?? 'Unknown'),
+                    _buildInfoRow('Scheduled:', notification['scheduledTime'] ?? 'Unknown'),
+                    if (notification['timeUntil'] != null && notification['timeUntil'].isNotEmpty)
+                      _buildInfoRow('Time Until:', notification['timeUntil']),
                     _buildInfoRow('Type:', notification['type'] ?? 'Unknown'),
                   ],
                 ),

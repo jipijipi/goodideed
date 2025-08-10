@@ -7,6 +7,7 @@ import 'logger_service.dart';
 import 'session_service.dart';
 import 'display_settings_service.dart';
 import 'message_delay_policy.dart';
+import 'notification_service.dart';
 
 /// Application-level service locator for dependency injection
 /// 
@@ -22,6 +23,7 @@ class ServiceLocator {
   late final ChatService _chatService;
   late final MessageQueue _messageQueue;
   late final DisplaySettingsService _displaySettingsService;
+  late final NotificationService _notificationService;
   final logger = LoggerService.instance;
   
   bool _initialized = false;
@@ -64,6 +66,10 @@ class ServiceLocator {
         delayPolicy: MessageDelayPolicy(settings: _displaySettingsService),
       );
       
+      // Initialize notification service
+      _notificationService = NotificationService(_userDataService);
+      await _notificationService.initialize();
+      
       _initialized = true;
       logger.info('All services initialized successfully');
       
@@ -101,6 +107,12 @@ class ServiceLocator {
   DisplaySettingsService get displaySettings {
     _ensureInitialized();
     return _displaySettingsService;
+  }
+  
+  /// Get the notification service
+  NotificationService get notificationService {
+    _ensureInitialized();
+    return _notificationService;
   }
   
   /// Check if services are initialized

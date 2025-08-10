@@ -41,6 +41,11 @@ class StorageKeys {
   static const String taskStartTiming = '${taskPrefix}startTiming';
   static const String taskNextActiveWeekday = '${taskPrefix}nextActiveWeekday';
   
+  // Notification keys
+  static const String notificationPrefix = 'notification.';
+  static const String notificationIsEnabled = '${notificationPrefix}isEnabled';
+  static const String notificationLastScheduled = '${notificationPrefix}lastScheduled';
+  
   // Private constructor to prevent instantiation
   StorageKeys._();
 }

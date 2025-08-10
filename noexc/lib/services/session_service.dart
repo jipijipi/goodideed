@@ -1,6 +1,7 @@
 import 'user_data_service.dart';
 import '../constants/session_constants.dart';
 import '../constants/storage_keys.dart';
+import 'service_locator.dart';
 
 class SessionService {
   final UserDataService userDataService;
@@ -17,6 +18,7 @@ class SessionService {
     await _updateTimeOfDay();
     await _updateDateInfo();
     await _updateTaskInfo(originalLastVisitDate);
+    await _scheduleNotifications();
   }
   
   /// Update visit count (daily counter that resets each day)
@@ -480,6 +482,21 @@ class SessionService {
     }
   }
 
+  
+  /// Schedule notifications based on current user settings
+  Future<void> _scheduleNotifications() async {
+    try {
+      // Only schedule if the service locator is initialized and has the notification service
+      if (ServiceLocator.instance.isInitialized) {
+        final notificationService = ServiceLocator.instance.notificationService;
+        await notificationService.scheduleDeadlineReminder();
+      }
+    } catch (e) {
+      // Log error but don't crash the session initialization
+      // We can't use logger service here due to potential circular dependency
+      // The notification service will log its own errors
+    }
+  }
   
   /// Helper method to format date consistently
   String _formatDate(DateTime date) {

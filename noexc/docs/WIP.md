@@ -149,4 +149,30 @@ flutter test --machine | dart tool/test_failure_extractor.dart > failures.json
 3) There is a slim zone next to the device bottom from where bubble come from, is there a way to make the display truely fullscreen with the bubbles coming from the very edge?
 
 
-Bot messages bubbles should appear immediately with typing indicator equal to the delay then replaced by actual text content
+
+I want to introduce the concept of local notifications/reminders to the
+  app. Propose a plan to set it up as simply and straightforwardly as
+  possible for one reminder per day for now at deadline time. Make sure to
+  keep everything notification related modular
+
+  
+
+rule : 
+
+intensity 1:
+    1 at start time
+    1 at deadline time
+    2 total
+
+intensity 2:
+    1 at start time
+    2 in between
+    1 at deadline time
+    4 total
+
+intensity 3:
+    1 at start time
+    6 in between
+    1 at deadline time
+    8 total
+

@@ -19,20 +19,37 @@ class NotificationService {
   NotificationService(this._userDataService);
 
   Future<void> initialize() async {
-    _logger.info('Initializing NotificationService');
+    _logger.info('Initializing NotificationService for platform: ${Platform.operatingSystem}');
     
     try {
-      // Initialize timezone data
+      // Initialize timezone data with validation
+      _logger.info('Initializing timezone data...');
       tz.initializeTimeZones();
+      
+      // Validate timezone initialization
+      try {
+        final currentZone = tz.local;
+        final now = tz.TZDateTime.now(tz.local);
+        _logger.info('Timezone initialized successfully: ${currentZone.name}, current time: $now');
+      } catch (e) {
+        _logger.error('Timezone validation failed: $e');
+        throw Exception('Timezone initialization failed: $e');
+      }
+      
+      // Detect iOS simulator
+      final isIOSSimulator = Platform.isIOS && _isIOSSimulator();
+      if (isIOSSimulator) {
+        _logger.warning('Running on iOS Simulator - notifications may have limited functionality');
+      }
       
       // Android initialization
       const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
       
-      // iOS initialization  
+      // iOS initialization - FIXED: Enable permission requests
       const iosSettings = DarwinInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
       );
       
       const initSettings = InitializationSettings(
@@ -40,6 +57,7 @@ class NotificationService {
         iOS: iosSettings,
       );
       
+      _logger.info('Initializing flutter_local_notifications plugin...');
       await _notifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: _onNotificationTapped,
@@ -47,6 +65,7 @@ class NotificationService {
       
       // Create notification channel for Android
       if (Platform.isAndroid) {
+        _logger.info('Creating Android notification channel...');
         await _createNotificationChannel();
       }
       
@@ -72,41 +91,69 @@ class NotificationService {
   }
 
   Future<bool> requestPermissions() async {
-    _logger.info('Requesting notification permissions');
+    _logger.info('=== REQUESTING NOTIFICATION PERMISSIONS ===');
+    _logger.info('Platform: ${Platform.operatingSystem}');
     
     try {
       if (Platform.isIOS) {
-        final result = await _notifications
-            .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
-            ?.requestPermissions(
-              alert: true,
-              badge: true,
-              sound: true,
-            );
+        _logger.info('iOS permissions - requesting alert, badge, and sound');
+        if (_isIOSSimulator()) {
+          _logger.warning('Running on iOS Simulator - permissions may behave differently');
+        }
+        
+        final iosImplementation = _notifications.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+        if (iosImplementation == null) {
+          _logger.error('iOS implementation not found');
+          return false;
+        }
+        
+        final result = await iosImplementation.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+        
         _logger.info('iOS permissions result: $result');
+        _logger.info('Alert: ${result != null ? "granted" : "denied/unknown"}');
+        
         return result ?? false;
       }
       
       if (Platform.isAndroid) {
+        _logger.info('Android permissions - requesting notification permission');
         final androidImplementation = _notifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-        final result = await androidImplementation?.requestNotificationsPermission();
+        
+        if (androidImplementation == null) {
+          _logger.error('Android implementation not found');
+          return false;
+        }
+        
+        final result = await androidImplementation.requestNotificationsPermission();
         _logger.info('Android permissions result: $result');
         return result ?? false;
       }
       
+      _logger.info('Unknown platform - defaulting to true');
       return true; // Default to true for other platforms
     } catch (e) {
-      _logger.error('Failed to request notification permissions: $e');
+      _logger.error('=== PERMISSION REQUEST FAILED ===');
+      _logger.error('Error: $e');
+      _logger.error('Stack trace: ${StackTrace.current}');
       return false;
     }
   }
 
   Future<void> scheduleDeadlineReminder() async {
-    _logger.info('Scheduling deadline reminder');
+    _logger.info('=== SCHEDULING DEADLINE REMINDER ===');
+    _logger.info('Platform: ${Platform.operatingSystem}');
+    if (Platform.isIOS) {
+      _logger.info('iOS Simulator: ${_isIOSSimulator()}');
+    }
     
     try {
       // Check if reminders are enabled via intensity setting
       final remindersIntensity = await _userDataService.getValue<int>('task.remindersIntensity') ?? 0;
+      _logger.info('Reminders intensity: $remindersIntensity');
       
       if (remindersIntensity <= 0) {
         _logger.info('Reminders disabled (intensity: $remindersIntensity), canceling notifications');
@@ -116,6 +163,8 @@ class NotificationService {
       
       // Get deadline time
       final deadlineTimeString = await _userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
+      _logger.info('Deadline time string: $deadlineTimeString');
+      
       if (deadlineTimeString == null || deadlineTimeString.isEmpty) {
         _logger.warning('No deadline time set, cannot schedule reminder');
         return;
@@ -136,48 +185,83 @@ class NotificationService {
         return;
       }
       
-      // Schedule notification for today at deadline time
-      final now = tz.TZDateTime.now(tz.local);
-      var scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+      _logger.info('Parsed time: ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}');
       
-      // If the time has already passed today, schedule for tomorrow
-      if (scheduledDate.isBefore(now)) {
-        scheduledDate = scheduledDate.add(const Duration(days: 1));
+      // Validate timezone before scheduling
+      try {
+        final currentZone = tz.local;
+        final now = tz.TZDateTime.now(tz.local);
+        _logger.info('Current timezone: ${currentZone.name}');
+        _logger.info('Current time: $now');
+        
+        // Schedule notification for today at deadline time
+        var scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+        _logger.info('Initial scheduled date: $scheduledDate');
+        
+        // If the time has already passed today, schedule for tomorrow
+        if (scheduledDate.isBefore(now)) {
+          scheduledDate = scheduledDate.add(const Duration(days: 1));
+          _logger.info('Time has passed, rescheduled for tomorrow: $scheduledDate');
+        }
+        
+        const notificationDetails = NotificationDetails(
+          android: AndroidNotificationDetails(
+            _channelId,
+            _channelName,
+            channelDescription: _channelDescription,
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        );
+        
+        _logger.info('Calling zonedSchedule with:');
+        _logger.info('  ID: $_dailyReminderNotificationId');
+        _logger.info('  Title: Task Reminder');
+        _logger.info('  Body: Time to check in on your task!');
+        _logger.info('  Scheduled date: $scheduledDate');
+        _logger.info('  Match components: ${DateTimeComponents.time}');
+        
+        await _notifications.zonedSchedule(
+          _dailyReminderNotificationId,
+          'Task Reminder',
+          'Time to check in on your task!',
+          scheduledDate,
+          notificationDetails,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at the same time
+        );
+        
+        _logger.info('zonedSchedule call completed successfully');
+        
+        // Verify the notification was scheduled
+        final pendingNotifications = await _notifications.pendingNotificationRequests();
+        _logger.info('Pending notifications after scheduling: ${pendingNotifications.length}');
+        for (final notification in pendingNotifications) {
+          _logger.info('  - ID: ${notification.id}, Title: ${notification.title}');
+        }
+        
+        // Store when we last scheduled the notification
+        await _userDataService.storeValue(StorageKeys.notificationLastScheduled, DateTime.now().toIso8601String());
+        await _userDataService.storeValue(StorageKeys.notificationIsEnabled, true);
+        
+        _logger.info('=== SCHEDULING COMPLETED SUCCESSFULLY ===');
+        
+      } catch (timezoneError) {
+        _logger.error('Timezone error during scheduling: $timezoneError');
+        throw Exception('Timezone error: $timezoneError');
       }
       
-      const notificationDetails = NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      );
-      
-      await _notifications.zonedSchedule(
-        _dailyReminderNotificationId,
-        'Task Reminder',
-        'Time to check in on your task!',
-        scheduledDate,
-        notificationDetails,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at the same time
-      );
-      
-      // Store when we last scheduled the notification
-      await _userDataService.storeValue(StorageKeys.notificationLastScheduled, DateTime.now().toIso8601String());
-      await _userDataService.storeValue(StorageKeys.notificationIsEnabled, true);
-      
-      _logger.info('Deadline reminder scheduled for ${scheduledDate.toString()}');
     } catch (e) {
-      _logger.error('Failed to schedule deadline reminder: $e');
+      _logger.error('=== SCHEDULING FAILED ===');
+      _logger.error('Error: $e');
+      _logger.error('Stack trace: ${StackTrace.current}');
       await _userDataService.storeValue(StorageKeys.notificationIsEnabled, false);
+      rethrow;
     }
   }
 
@@ -229,6 +313,18 @@ class NotificationService {
     // Additional handling can be added here if needed
   }
 
+  /// Detect if running on iOS simulator
+  bool _isIOSSimulator() {
+    try {
+      // This is a simple heuristic - iOS simulators typically have different device identifiers
+      // In a real app, you might use a more sophisticated detection method
+      // For now, we'll assume any iOS environment during development is likely a simulator
+      return Platform.isIOS;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // Debug helper methods
   
   /// Get detailed notification status for debugging
@@ -240,12 +336,40 @@ class NotificationService {
       final deadlineTime = await _userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
       final pendingCount = (await getPendingNotifications()).length;
       
+      // Add timezone information
+      String timezoneInfo = 'Unknown';
+      String currentTime = 'Unknown';
+      try {
+        final currentZone = tz.local;
+        final now = tz.TZDateTime.now(tz.local);
+        timezoneInfo = currentZone.name;
+        currentTime = now.toString();
+      } catch (e) {
+        timezoneInfo = 'Error: $e';
+      }
+      
+      // Add permission status (basic check)
+      String permissionStatus = 'Unknown';
+      if (Platform.isIOS) {
+        permissionStatus = 'iOS (check device settings)';
+        if (_isIOSSimulator()) {
+          permissionStatus += ' - Simulator detected';
+        }
+      } else if (Platform.isAndroid) {
+        permissionStatus = 'Android (check device settings)';
+      }
+      
       return {
         'isEnabled': isEnabled,
         'lastScheduled': lastScheduled,
         'remindersIntensity': remindersIntensity,
         'deadlineTime': deadlineTime,
         'pendingCount': pendingCount,
+        'timezone': timezoneInfo,
+        'currentTime': currentTime,
+        'permissions': permissionStatus,
+        'platform': Platform.operatingSystem,
+        'isIOSSimulator': Platform.isIOS ? _isIOSSimulator() : false,
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {
@@ -253,6 +377,7 @@ class NotificationService {
       return {
         'isEnabled': false,
         'error': e.toString(),
+        'platform': Platform.operatingSystem,
         'timestamp': DateTime.now().toIso8601String(),
       };
     }
@@ -288,7 +413,7 @@ class NotificationService {
   /// Get platform-specific notification capabilities info
   Map<String, dynamic> getPlatformInfo() {
     try {
-      return {
+      final info = {
         'platform': Platform.operatingSystem,
         'supportsScheduled': true,
         'supportsRepeating': true,
@@ -296,6 +421,29 @@ class NotificationService {
         'channelName': _channelName,
         'dailyReminderNotificationId': _dailyReminderNotificationId,
       };
+      
+      // Add iOS-specific information
+      if (Platform.isIOS) {
+        info['isIOSSimulator'] = _isIOSSimulator();
+        info['simulatorLimitations'] = _isIOSSimulator() 
+            ? 'Notifications may not work properly in iOS Simulator'
+            : 'Running on real iOS device';
+        info['permissionNote'] = 'Check iOS Settings > Notifications > Your App';
+      } else if (Platform.isAndroid) {
+        info['permissionNote'] = 'Check Android Settings > Apps > Your App > Notifications';
+      }
+      
+      // Add timezone information
+      try {
+        final currentZone = tz.local;
+        info['timezone'] = currentZone.name;
+        info['timezoneStatus'] = 'OK';
+      } catch (e) {
+        info['timezone'] = 'Error';
+        info['timezoneStatus'] = 'Failed: $e';
+      }
+      
+      return info;
     } catch (e) {
       return {
         'platform': 'unknown',

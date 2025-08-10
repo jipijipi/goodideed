@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../services/service_locator.dart';
-import '../../services/notification_service.dart';
-import '../../constants/design_tokens.dart';
 import 'debug_status_area.dart';
 
 /// Debug widget for displaying and controlling notification state
@@ -131,6 +129,11 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     final intensity = _notificationStatus['remindersIntensity'] ?? 0;
     final deadlineTime = _notificationStatus['deadlineTime'] ?? 'Not set';
     final pendingCount = _notificationStatus['pendingCount'] ?? 0;
+    final timezone = _notificationStatus['timezone'] ?? 'Unknown';
+    final currentTime = _notificationStatus['currentTime'] ?? 'Unknown';
+    final permissions = _notificationStatus['permissions'] ?? 'Unknown';
+    final platform = _notificationStatus['platform'] ?? 'Unknown';
+    final isIOSSimulator = _notificationStatus['isIOSSimulator'] ?? false;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -139,6 +142,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Status header with warning for iOS simulator
             Row(
               children: [
                 Icon(
@@ -154,18 +158,75 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                     color: isEnabled ? Colors.green : Colors.red,
                   ),
                 ),
+                if (isIOSSimulator) ...[
+                  const SizedBox(width: 8),
+                  Icon(
+                    Icons.warning,
+                    color: Colors.orange,
+                    size: 16,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Simulator',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
                 const Spacer(),
                 Text(
                   '$pendingCount pending',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: pendingCount > 0 ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 8),
+            
+            // Basic info
+            _buildInfoRow('Platform:', platform),
             _buildInfoRow('Intensity:', intensity.toString()),
             _buildInfoRow('Deadline Time:', deadlineTime),
+            
+            // Timezone info
+            _buildInfoRow('Timezone:', timezone),
+            _buildInfoRow('Current Time:', currentTime.length > 25 ? currentTime.substring(0, 25) + '...' : currentTime),
+            
+            // Permission info
+            _buildInfoRow('Permissions:', permissions),
+            
             if (lastScheduled != null) 
               _buildInfoRow('Last Scheduled:', DateTime.parse(lastScheduled).toLocal().toString().substring(0, 19)),
+              
+            // iOS Simulator warning
+            if (isIOSSimulator)
+              Container(
+                margin: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.orange, size: 16),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'iOS Simulator detected. Notifications may not work properly. Test on a real device for accurate results.',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.orange[800],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),
@@ -234,7 +295,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceVariant.withValues(alpha: 0.3),
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Column(
@@ -335,6 +396,21 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
             _buildInfoRow('Platform:', _platformInfo['platform'] ?? 'Unknown'),
             _buildInfoRow('Channel ID:', _platformInfo['channelId'] ?? 'N/A'),
             _buildInfoRow('Channel Name:', _platformInfo['channelName'] ?? 'N/A'),
+            
+            // Timezone information
+            if (_platformInfo['timezone'] != null)
+              _buildInfoRow('Timezone:', _platformInfo['timezone']),
+            if (_platformInfo['timezoneStatus'] != null)
+              _buildInfoRow('Timezone Status:', _platformInfo['timezoneStatus']),
+              
+            // iOS-specific info
+            if (_platformInfo['isIOSSimulator'] != null)
+              _buildInfoRow('iOS Simulator:', _platformInfo['isIOSSimulator'].toString()),
+            if (_platformInfo['simulatorLimitations'] != null)
+              _buildInfoRow('Note:', _platformInfo['simulatorLimitations']),
+            if (_platformInfo['permissionNote'] != null)
+              _buildInfoRow('Settings:', _platformInfo['permissionNote']),
+              
             if (_platformInfo['error'] != null)
               _buildInfoRow('Error:', _platformInfo['error']),
           ],

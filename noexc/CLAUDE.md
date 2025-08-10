@@ -57,12 +57,17 @@ Visual tool in `noexc-authoring-tool/` for creating conversation sequences:
 - **SessionService** - Session tracking with daily reset functionality
 - **LoggerService** - Centralized logging system (NEVER use print statements)
 - **SemanticContentService** - Dynamic content resolution with graceful fallbacks
+- **NotificationService** - Comprehensive notification management with permission tracking and scheduling
+- **AppStateService** - Notification tap event tracking and cross-session state management
 
 #### Models & Message Types
 - **MessageType enum**: bot, user, choice, textInput, autoroute, dataAction
 - **ChatMessage** - Core message model with multi-text support (`|||`)
 - **Choice** - User interaction options with optional custom values
 - **DataAction** - Data modification operations (set, increment, decrement, reset, trigger)
+- **NotificationPermissionStatus** - 5-state permission model (granted, denied, notRequested, restricted, unknown)
+- **NotificationTapEvent** - Rich tap event model with JSON payload parsing and type detection
+- **NotificationType enum**: dailyReminder, achievement, warning, system, unknown
 
 #### UI Architecture
 - **ChatScreen** - Main container
@@ -106,6 +111,34 @@ Dynamic content system using semantic keys like `bot.acknowledge.completion.posi
 - **Usage**: Add `contentKey` field to messages for dynamic text resolution
 - **Legacy support**: `assets/variants/` files still work for backward compatibility
 
+### Notification System
+Comprehensive notification management with permission tracking and tap event handling:
+- **Permission Management**: 5-state model distinguishing between never-asked, denied, and granted permissions
+- **Rich Tap Events**: JSON payloads with type detection, action support, and user input handling
+- **Cross-Session Persistence**: AppStateService tracks notification taps even when app was closed
+- **Debug Integration**: Visual permission status and tap event tracking in debug panel
+- **Platform Support**: iOS, Android, and macOS with platform-specific behavior handling
+
+#### Permission States
+- **granted**: Notifications enabled, can schedule
+- **denied**: User explicitly denied, needs manual Settings enable
+- **notRequested**: Ready to request permissions from user
+- **restricted**: System policy prevents notifications (e.g., parental controls)
+- **unknown**: Unable to determine status (error condition)
+
+#### Notification Types
+- **dailyReminder** (ID: 1001): Task deadline notifications with scheduling data
+- **achievement**: Milestone and progress notifications  
+- **warning**: Alert notifications for important events
+- **system**: Maintenance and system-level notifications
+- **unknown**: Fallback for unrecognized notification types
+
+#### Key Methods
+- `NotificationService.getPermissionStatus()` - Check current permission state without requesting
+- `NotificationService.requestPermissions()` - Request permissions with tracking
+- `AppStateService.handleNotificationTap(event)` - Process tap events with rich context
+- `AppStateService.consumePendingNotification()` - Handle cross-session tap events
+
 ## Critical Rules
 
 ### Logging (MANDATORY)
@@ -117,9 +150,10 @@ Dynamic content system using semantic keys like `bot.acknowledge.completion.posi
 ### Testing (TDD Required)
 - **ALWAYS use Test-Driven Development** (Red-Green-Refactor cycle)
 - Write tests BEFORE implementing functionality
-- **290+ passing tests** across models, services, widgets, validation
+- **350+ passing tests** across models, services, widgets, validation
 - Test files mirror `lib/` directory structure in `test/`
 - Never commit code without corresponding tests
+- **Notification System**: 67 comprehensive tests covering permission states, tap events, and cross-session persistence
 
 #### Test Setup for Minimal Output
 ```dart
@@ -160,6 +194,10 @@ Default start: `welcome_seq` → routes to appropriate user flow
 - **Variable Editing**: Inline editing with type-aware inputs
 - **Date/Time Testing**: Task date and deadline selection for testing
 - **Sequence Selection**: Switch between sequences for testing
+- **Notification Debug**: 
+  - **Permission Status**: Visual indicators with color-coded states and actionable suggestions
+  - **App State Tracking**: Real-time notification tap event monitoring and cross-session persistence
+  - **Enhanced Controls**: Permission checking, state clearing, and comprehensive notification management
 
 ## Data Actions
 JSON format for modifying user data:
@@ -183,4 +221,30 @@ JSON format for modifying user data:
 - **Multi-text**: Use `|||` separator for multiple message bubbles
 
 ## Development Warnings
-- Do not test a build on iphone wireless, favor chrome runtime or iPhone 16 when available 
+- Do not test a build on iphone wireless, favor chrome runtime or iPhone 16 when available
+
+## Notification Development Guidelines
+
+### Permission Handling Best Practices
+- **Always check permission status** before attempting to schedule notifications using `getPermissionStatus()`
+- **Request permissions only when needed** - use `shouldRequestPermissions` property to determine timing
+- **Handle denied permissions gracefully** - guide users to Settings when `needsManualSettings` is true
+- **Track permission history** - system automatically stores request count and timestamps for debugging
+
+### Cross-Platform Considerations
+- **iOS**: Cannot check permission status without requesting; rely on stored status from previous requests
+- **Android**: Similar limitations to iOS; use stored status for accurate state tracking  
+- **macOS**: Supports permission checking; treat as "other platform" in permission logic
+- **All Platforms**: Use fallback logic for past dates in scheduling (automatic next-active-date calculation)
+
+### Tap Event Handling
+- **Rich Context**: Notification payloads include JSON data with scheduling context, task dates, and notification type
+- **Cross-Session Support**: AppStateService persists tap events across app launches - always check for pending events on startup
+- **Type Detection**: Events automatically determine type from payload JSON or fallback to notification ID-based detection
+- **Debugging**: Use debug panel to monitor tap events and inspect payload data in real-time
+
+### Testing Notifications
+- **Use Mock Services**: Test files include MockUserDataService for isolated testing without platform dependencies
+- **Platform Simulation**: Tests handle platform-specific failures gracefully with try-catch patterns
+- **State Persistence**: Verify cross-session functionality by testing AppStateService persistence methods
+- **Permission Edge Cases**: Test all 5 permission states and transitions between them 

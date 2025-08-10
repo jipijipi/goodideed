@@ -51,7 +51,9 @@
       "WebFetch(domain:github.com)",
       "Bash(./extract_test_failures.sh:*)",
       "Bash(cat:*)",
-      "Bash(date:*)"
+      "Bash(date:*)",
+      "WebFetch(domain:pub.dev)",
+      "WebFetch(domain:developer.android.com)"
     ],
     "deny": []
   }

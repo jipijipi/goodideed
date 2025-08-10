@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-07T18:13:22.409Z",
+  "lastUpdated": "2025-08-10T12:31:59.639Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-07T18:13:22.401Z"
+    "timestamp": "2025-08-10T12:31:59.629Z"
   },
   "nodes": [
     {
@@ -237,8 +237,8 @@
     {
       "id": "191",
       "position": {
-        "x": 4695.729885560141,
-        "y": 618.8258675711949
+        "x": 4928.3196838509875,
+        "y": 593.6329931564428
       },
       "data": {
         "label": "Group 191",
@@ -253,16 +253,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1235.3977643391936,
-        "height": 3440.521170611246,
+        "width": 1198.9867026085985,
+        "height": 3651.909900625098,
         "zIndex": 999
       },
-      "width": 1235,
-      "height": 3441,
+      "width": 1199,
+      "height": 3652,
       "selected": false,
       "positionAbsolute": {
-        "x": 4695.729885560141,
-        "y": 618.8258675711949
+        "x": 4928.3196838509875,
+        "y": 593.6329931564428
       },
       "dragging": false
     },
@@ -614,8 +614,8 @@
     {
       "id": "39",
       "position": {
-        "x": 1634.754542679893,
-        "y": 4347.008090492466
+        "x": 1613.1482360433563,
+        "y": 4303.338049011941
       },
       "type": "group",
       "style": {
@@ -627,8 +627,8 @@
       "height": 2080,
       "selected": false,
       "positionAbsolute": {
-        "x": 1634.754542679893,
-        "y": 4347.008090492466
+        "x": 1613.1482360433563,
+        "y": 4303.338049011941
       },
       "dragging": false,
       "data": {
@@ -678,22 +678,22 @@
     {
       "id": "55",
       "position": {
-        "x": 4453.035303463356,
-        "y": 4369.819083038666
+        "x": 4463.166922622672,
+        "y": 4351.452994278992
       },
       "type": "group",
       "style": {
         "width": 1540.2126928785221,
-        "height": 1613.3930468755825,
+        "height": 2766,
         "zIndex": 999
       },
       "width": 1540,
-      "height": 1613,
+      "height": 2766,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 4453.035303463356,
-        "y": 4369.819083038666
+        "x": 4463.166922622672,
+        "y": 4351.452994278992
       },
       "data": {
         "label": "Group 55",
@@ -1951,8 +1951,8 @@
     {
       "id": "192",
       "position": {
-        "x": 407.74894551381476,
-        "y": 3102.6112699861483
+        "x": 537.4729943640259,
+        "y": 3312.0000000000005
       },
       "data": {
         "label": "Welcome!",
@@ -1962,13 +1962,13 @@
         "content": "You're all set !"
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 8574.843064673438,
-        "y": 5448.70072047487
+        "x": 5465.792678215013,
+        "y": 3905.6329931564433
       },
       "parentId": "191",
       "extent": "parent"
@@ -2023,41 +2023,10 @@
       "extent": "parent"
     },
     {
-      "id": "197",
-      "position": {
-        "x": 60.57112430628513,
-        "y": 2424.1882906735386
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "197",
-        "dataActions": [
-          {
-            "type": "set",
-            "key": "task.startTiming",
-            "value": "next_active"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "dragging": true,
-      "positionAbsolute": {
-        "x": 8227.665243465908,
-        "y": 4770.27774116226
-      },
-      "parentId": "191",
-      "extent": "parent"
-    },
-    {
       "id": "227",
       "position": {
-        "x": 827.9688886454787,
-        "y": 1868.4250517401995
+        "x": 846.3761764536339,
+        "y": 1956.9729706898602
       },
       "data": {
         "label": "Data action",
@@ -2069,24 +2038,17 @@
             "type": "set",
             "key": "task.currentDate",
             "value": "TODAY_DATE"
-          },
-          {
-            "type": "trigger",
-            "key": "task.info",
-            "value": "",
-            "event": "refresh_task_calculations",
-            "data": {}
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 579,
+      "height": 395,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 5898.95411890146,
-        "y": 2506.0136865461864
+        "x": 5776.695860304621,
+        "y": 2598.605963846303
       },
       "parentId": "191",
       "extent": "parent"
@@ -2094,8 +2056,8 @@
     {
       "id": "260",
       "position": {
-        "x": 97.22374201749153,
-        "y": 1790.4124935984003
+        "x": 115.38947384503535,
+        "y": 1911.2745180235056
       },
       "data": {
         "label": "Data action",
@@ -2109,21 +2071,19 @@
             "value": "NEXT_ACTIVE_DATE"
           },
           {
-            "type": "trigger",
-            "key": "task.info",
-            "value": "",
-            "event": "refresh_task_calculations",
-            "data": {}
+            "type": "set",
+            "key": "task.startTiming",
+            "value": "next_active"
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 579,
+      "height": 574,
       "selected": false,
       "positionAbsolute": {
-        "x": 5168.208972273473,
-        "y": 2428.001128404387
+        "x": 5029.732153625172,
+        "y": 2544.0313978072536
       },
       "dragging": true,
       "parentId": "191",
@@ -2150,6 +2110,46 @@
         "x": 5322.765110865411,
         "y": 717.6787341808895
       },
+      "parentId": "191",
+      "extent": "parent"
+    },
+    {
+      "id": "297",
+      "position": {
+        "x": 517.4425315134486,
+        "y": 2654.517347659814
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "297",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          },
+          {
+            "type": "trigger",
+            "key": "notification.action",
+            "value": "",
+            "event": "notification_reschedule",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 584,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5445.762215364436,
+        "y": 3248.1503408162566
+      },
+      "dragging": true,
       "parentId": "191",
       "extent": "parent"
     },
@@ -4042,8 +4042,8 @@
     {
       "id": "193",
       "position": {
-        "x": 422.0905452071124,
-        "y": 1206.4183053352172
+        "x": 454.5596233814133,
+        "y": 1084.771135265065
       },
       "data": {
         "label": "Data action",
@@ -4057,17 +4057,22 @@
             "value": "",
             "event": "recalculate_past_deadline",
             "data": {}
+          },
+          {
+            "type": "set",
+            "key": "user.property",
+            "value": ""
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 400,
+      "height": 579,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 1539.3387691674955,
-        "y": 6239.665769935846
+        "x": 1469.7078594247696,
+        "y": 5412.109184277006
       },
       "parentId": "39",
       "extent": "parent"
@@ -4481,6 +4486,125 @@
       }
     },
     {
+      "id": "293",
+      "position": {
+        "x": 44.8573233823945,
+        "y": 1192
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "293",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "notification.action",
+            "value": "notification_disable"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 395,
+      "selected": false,
+      "dragging": true,
+      "positionAbsolute": {
+        "x": 4548.024246005067,
+        "y": 5243.452994278991
+      },
+      "parentId": "55",
+      "extent": "parent"
+    },
+    {
+      "id": "294",
+      "position": {
+        "x": 773.7452249926064,
+        "y": 1198.265795247171
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "294",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "notification.action",
+            "value": "notification_request_permissions"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 309,
+      "height": 396,
+      "selected": false,
+      "dragging": true,
+      "positionAbsolute": {
+        "x": 5276.912147615279,
+        "y": 5249.718789526162
+      },
+      "parentId": "55",
+      "extent": "parent"
+    },
+    {
+      "id": "295",
+      "position": {
+        "x": 799.387559550627,
+        "y": 1664.7093951643928
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "295"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5302.554482173299,
+        "y": 5716.162389443384
+      },
+      "dragging": true,
+      "parentId": "55",
+      "extent": "parent"
+    },
+    {
+      "id": "296",
+      "position": {
+        "x": 1077.2592540144042,
+        "y": 1899.0016845783957
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "296",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "notification.action",
+            "value": "",
+            "event": "notification_reschedule",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 400,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5596.426176637076,
+        "y": 5502.454678857387
+      },
+      "dragging": true,
+      "parentId": "55",
+      "extent": "parent"
+    },
+    {
       "id": "48",
       "position": {
         "x": 618.7938059535891,
@@ -4639,18 +4763,18 @@
     {
       "id": "54",
       "position": {
-        "x": 579.4291466703291,
-        "y": 1220.3930468755825
+        "x": 793.4291466703289,
+        "y": 2373
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 798.8577985995978,
-        "y": 10917.106525574864
+        "x": 5312.596069293001,
+        "y": 5976.452994278991
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "55",
       "extent": "parent",
       "data": {
@@ -5082,38 +5206,6 @@
         "value": 3,
         "contentKey": "user.choose.reminder_intensity.extreme"
       },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-53-54",
-      "source": "53",
-      "target": "54",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-52-54",
-      "source": "52",
-      "target": "54",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-51-54",
-      "source": "51",
-      "target": "54",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-50-54",
-      "source": "50",
-      "target": "54",
-      "type": "custom",
-      "data": {},
       "selected": false
     },
     {
@@ -6332,22 +6424,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "197",
-      "sourceHandle": null,
-      "target": "192",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-197-192"
-    },
-    {
-      "zIndex": 1001,
       "source": "185",
       "sourceHandle": null,
       "target": "186",
@@ -6426,22 +6502,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "227",
-      "sourceHandle": null,
-      "target": "192",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-227-192"
-    },
-    {
-      "zIndex": 1001,
       "source": "192",
       "sourceHandle": null,
       "target": "219",
@@ -6465,17 +6525,6 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-186-260",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "260",
-      "sourceHandle": null,
-      "target": "197",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-260-197",
       "selected": false
     },
     {
@@ -7112,6 +7161,175 @@
       "data": {},
       "id": "reactflow__edge-292-290",
       "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "50",
+      "target": "294",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-50-294",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "51",
+      "target": "294",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-51-294",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "52",
+      "target": "294",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 4,
+        "stroke": "#ff6b35",
+        "filter": "drop-shadow(0 0 6px rgba(255, 107, 53, 0.6))"
+      },
+      "id": "reactflow__edge-52-294",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "53",
+      "target": "293",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-53-293",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "293",
+      "sourceHandle": null,
+      "target": "54",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-293-54",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "295",
+      "sourceHandle": null,
+      "target": "54",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-295-54"
+    },
+    {
+      "zIndex": 1001,
+      "source": "294",
+      "sourceHandle": null,
+      "target": "295",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-294-295",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "295",
+      "sourceHandle": null,
+      "target": "296",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "notification.isEnabled == true"
+      },
+      "id": "reactflow__edge-295-296",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "296",
+      "sourceHandle": null,
+      "target": "54",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-296-54",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "227",
+      "sourceHandle": null,
+      "target": "297",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-227-297"
+    },
+    {
+      "zIndex": 1001,
+      "source": "297",
+      "sourceHandle": null,
+      "target": "192",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-297-192",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "260",
+      "sourceHandle": null,
+      "target": "297",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-260-297"
     }
   ]
 }

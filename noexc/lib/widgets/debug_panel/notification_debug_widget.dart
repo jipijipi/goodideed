@@ -134,6 +134,8 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
     final permissions = _notificationStatus['permissions'] ?? 'Unknown';
     final platform = _notificationStatus['platform'] ?? 'Unknown';
     final isIOSSimulator = _notificationStatus['isIOSSimulator'] ?? false;
+    final fallbackDate = _notificationStatus['fallbackDate'];
+    final fallbackReason = _notificationStatus['fallbackReason'];
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -201,6 +203,12 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
             
             if (lastScheduled != null) 
               _buildInfoRow('Last Scheduled:', DateTime.parse(lastScheduled).toLocal().toString().substring(0, 19)),
+              
+            // Fallback information if available
+            if (fallbackDate != null)
+              _buildInfoRow('Fallback Date:', fallbackDate),
+            if (fallbackReason != null)
+              _buildInfoRow('Fallback Reason:', fallbackReason),
               
             // iOS Simulator warning
             if (isIOSSimulator)

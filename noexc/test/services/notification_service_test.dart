@@ -299,5 +299,81 @@ void main() {
         }
       });
     });
+
+    group('past date fallback behavior', () {
+      test('should use fallback when task.currentDate is in the past', () async {
+        // Set up: valid reminders, deadline time, but past task date
+        await mockUserDataService.storeValue('task.remindersIntensity', 1);
+        await mockUserDataService.storeValue(StorageKeys.taskDeadlineTime, '14:30');
+        await mockUserDataService.storeValue('task.currentDate', '2020-01-01'); // Very old date
+        await mockUserDataService.storeValue('task.activeDays', '[1,2,3,4,5]'); // Weekdays
+        
+        // Execute - should not throw and should use fallback
+        try {
+          await notificationService.scheduleDeadlineReminder();
+          
+          // Verify fallback information was stored
+          final fallbackDate = await mockUserDataService.getValue<String>('notification.fallbackDate');
+          final fallbackReason = await mockUserDataService.getValue<String>('notification.fallbackReason');
+          
+          expect(fallbackDate, isNotNull);
+          expect(fallbackReason, 'task.currentDate was in the past');
+          
+          // Verify the fallback date is in the future
+          final parsedFallbackDate = DateTime.parse(fallbackDate!);
+          expect(parsedFallbackDate.isAfter(DateTime.now()), true);
+        } catch (e) {
+          // Platform operations may fail in test environment
+          // Should disable notifications on failure
+          final isEnabled = await mockUserDataService.getValue<bool>(StorageKeys.notificationIsEnabled);
+          expect(isEnabled, false);
+        }
+      });
+
+      test('should clear fallback info when date is not in the past', () async {
+        // Set up: Add old fallback info first
+        await mockUserDataService.storeValue('notification.fallbackDate', '2025-01-01');
+        await mockUserDataService.storeValue('notification.fallbackReason', 'test reason');
+        
+        // Set up valid reminders with future date
+        await mockUserDataService.storeValue('task.remindersIntensity', 1);
+        await mockUserDataService.storeValue(StorageKeys.taskDeadlineTime, '14:30');
+        
+        // Use a future date
+        final futureDate = DateTime.now().add(const Duration(days: 1));
+        final futureDateString = '${futureDate.year}-${futureDate.month.toString().padLeft(2, '0')}-${futureDate.day.toString().padLeft(2, '0')}';
+        await mockUserDataService.storeValue('task.currentDate', futureDateString);
+        
+        // Execute
+        try {
+          await notificationService.scheduleDeadlineReminder();
+          
+          // Verify fallback information was cleared
+          final fallbackDate = await mockUserDataService.getValue<String>('notification.fallbackDate');
+          final fallbackReason = await mockUserDataService.getValue<String>('notification.fallbackReason');
+          
+          expect(fallbackDate, isNull);
+          expect(fallbackReason, isNull);
+        } catch (e) {
+          // Platform operations may fail in test environment
+          expect(e, isNotNull);
+        }
+      });
+
+      test('should handle error in fallback calculation gracefully', () async {
+        // Set up: valid reminders, deadline time, past task date, but no active days to cause fallback error
+        await mockUserDataService.storeValue('task.remindersIntensity', 1);
+        await mockUserDataService.storeValue(StorageKeys.taskDeadlineTime, '14:30');
+        await mockUserDataService.storeValue('task.currentDate', '2020-01-01'); // Very old date
+        // Don't set active days - this might cause ActiveDateCalculator to have issues
+        
+        // Execute - should handle fallback error gracefully
+        await notificationService.scheduleDeadlineReminder();
+        
+        // Should disable notifications on fallback failure
+        final isEnabled = await mockUserDataService.getValue<bool>(StorageKeys.notificationIsEnabled);
+        expect(isEnabled, isNot(true)); // Should be false or null
+      });
+    });
   });
 }

@@ -5,18 +5,22 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'user_data_service.dart';
 import 'logger_service.dart';
 import '../constants/storage_keys.dart';
+import '../utils/active_date_calculator.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
   final UserDataService _userDataService;
   final LoggerService _logger = LoggerService.instance;
+  late final ActiveDateCalculator _activeDateCalculator;
   
   static const int _dailyReminderNotificationId = 1001;
   static const String _channelId = 'daily_reminders';
   static const String _channelName = 'Daily Task Reminders';
   static const String _channelDescription = 'Notifications to remind you about your daily task';
 
-  NotificationService(this._userDataService);
+  NotificationService(this._userDataService) {
+    _activeDateCalculator = ActiveDateCalculator(_userDataService);
+  }
 
   Future<void> initialize() async {
     _logger.info('Initializing NotificationService for platform: ${Platform.operatingSystem}');
@@ -217,11 +221,38 @@ class NotificationService {
         var scheduledDate = tz.TZDateTime(tz.local, taskDate.year, taskDate.month, taskDate.day, hour, minute);
         _logger.info('Notification scheduled for task date: $scheduledDate');
         
-        // Check if scheduled date is in the past
+        // Check if scheduled date is in the past - use next active date as fallback
         if (scheduledDate.isBefore(now)) {
           _logger.warning('Scheduled date $scheduledDate is in the past (current: $now)');
-          _logger.info('This may indicate task.currentDate needs to be updated');
-          // Still schedule it - the task system should handle date updates
+          _logger.info('Falling back to next active date for notification scheduling');
+          
+          try {
+            // Get next active date and combine with deadline time
+            final nextActiveDate = await _activeDateCalculator.getNextActiveDate();
+            final nextActiveDateTime = DateTime.parse(nextActiveDate);
+            scheduledDate = tz.TZDateTime(tz.local, nextActiveDateTime.year, nextActiveDateTime.month, nextActiveDateTime.day, hour, minute);
+            
+            _logger.info('Rescheduled to next active date: $scheduledDate');
+            
+            // Store fallback information for debugging
+            await _userDataService.storeValue('${StorageKeys.notificationPrefix}fallbackDate', nextActiveDate);
+            await _userDataService.storeValue('${StorageKeys.notificationPrefix}fallbackReason', 'task.currentDate was in the past');
+            
+            // Verify the new date isn't also in the past (edge case)
+            if (scheduledDate.isBefore(now)) {
+              _logger.error('Next active date $scheduledDate is also in the past - this should not happen');
+              await _userDataService.storeValue(StorageKeys.notificationIsEnabled, false);
+              return;
+            }
+          } catch (e) {
+            _logger.error('Failed to calculate fallback date: $e');
+            await _userDataService.storeValue(StorageKeys.notificationIsEnabled, false);
+            return;
+          }
+        } else {
+          // Clear any previous fallback information
+          await _userDataService.removeValue('${StorageKeys.notificationPrefix}fallbackDate');
+          await _userDataService.removeValue('${StorageKeys.notificationPrefix}fallbackReason');
         }
         
         const notificationDetails = NotificationDetails(
@@ -427,6 +458,10 @@ class NotificationService {
       final deadlineTime = await _userDataService.getValue<String>(StorageKeys.taskDeadlineTime);
       final pendingCount = (await getPendingNotifications()).length;
       
+      // Get fallback information
+      final fallbackDate = await _userDataService.getValue<String>('${StorageKeys.notificationPrefix}fallbackDate');
+      final fallbackReason = await _userDataService.getValue<String>('${StorageKeys.notificationPrefix}fallbackReason');
+      
       // Add timezone information
       String timezoneInfo = 'Unknown';
       String currentTime = 'Unknown';
@@ -461,6 +496,8 @@ class NotificationService {
         'permissions': permissionStatus,
         'platform': Platform.operatingSystem,
         'isIOSSimulator': Platform.isIOS ? _isIOSSimulator() : false,
+        'fallbackDate': fallbackDate,
+        'fallbackReason': fallbackReason,
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {

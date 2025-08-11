@@ -10,8 +10,11 @@ void main() {
   group('ChatService', () {
     late ChatService chatService;
 
+    setUpAll(() {
+      TestWidgetsFlutterBinding.ensureInitialized(); // Minimal setup like sequence_loader_test
+    });
+
     setUp(() {
-      setupTestingWithMocks(); // Use comprehensive test setup with platform mocks
       chatService = ChatService();
     });
 

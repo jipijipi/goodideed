@@ -135,50 +135,8 @@ void setupPlatformMocks() {
     },
   );
 
-  // Mock flutter assets loading with proper responses for Google Fonts
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(
-    const MethodChannel('flutter/assets'),
-    (MethodCall methodCall) async {
-      if (methodCall.method == 'loadString') {
-        final String assetKey = methodCall.arguments as String;
-        if (assetKey.contains('sequences/welcome_seq.json')) {
-          return '{"sequenceId": "welcome_seq", "name": "Welcome", "messages": [{"id": 1, "type": "bot", "text": "Welcome!"}]}';
-        } else if (assetKey.contains('AssetManifest.json')) {
-          // Proper asset manifest structure for Google Fonts
-          return '''
-{
-  "packages/google_fonts/fonts/Inter-Regular.ttf": ["packages/google_fonts/fonts/Inter-Regular.ttf"]
-}''';
-        } else if (assetKey.contains('FontManifest.json')) {
-          // Proper font manifest structure
-          return '''
-[
-  {
-    "family": "Inter",
-    "fonts": [
-      {
-        "asset": "packages/google_fonts/fonts/Inter-Regular.ttf",
-        "weight": 400
-      }
-    ]
-  }
-]''';
-        } else if (assetKey.contains('debug/scenarios.json')) {
-          // Mock scenarios for debug panel
-          return '{"scenarios": []}';
-        }
-      } else if (methodCall.method == 'load') {
-        // Handle binary asset loading (fonts)
-        final String assetKey = methodCall.arguments as String;
-        if (assetKey.contains('.ttf') || assetKey.contains('fonts/')) {
-          // Return empty byte array for font files
-          return Uint8List(0);
-        }
-      }
-      return null;
-    },
-  );
+  // Don't mock flutter/assets channel - let all assets load normally
+  // Google Fonts is disabled via GoogleFonts.config.allowRuntimeFetching = false above
 }
 
 /// Setup comprehensive testing environment with all necessary mocks

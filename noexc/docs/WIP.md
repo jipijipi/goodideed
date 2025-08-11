@@ -189,20 +189,62 @@ New notifications related triggers need to be added to the script's data action 
 3) Disable notifications
 
 
+I want to upgrade the notification system of the app in a logical and straightforward way:
+1) Familiarize yourself with the current notification implementation
+2) Familiarize yourself with the launch calculations
+3) Familiarize yourself with the scripts triggers
 
-
-Notification scheduling :
-Notifications should be scheduled in advance and updated on checkins. 
+4) Propose a logical, lean plan to enhance the notification system and scheduling based on :
 
 Notification Scheduling Logic
-	1.	On the Day of the Task
+1.	On the Day of the Task
 	•	Task Start → Send encouraging message at the scheduled start time.
 	•	Between Start & Deadline → Send multiple reminders based on the user’s selected reminder intensity.
 	•	Deadline → Send a “completion check” notification.
-	2.	Snooze / Cancellation Rules
+2.	Snooze / Cancellation Rules
 	•	Task Completed → Cancel all remaining reminders for that day. (triggered from script)
 	•	Task Marked as Pending → Cancel all remaining reminders except the final one. (triggered from script)
-	3.	After Multiple Consecutive Unchecked Days (2 active days, when task is past end date)
+3.	After Multiple Consecutive Unchecked Days (2 active days, when task is past end date)
 	•	Send occasional “come back” reminders with gradually decreasing intensity over time.
 
-Try to rely on existing calculations and script interactions as much as logical
+Try to rely on existing calculations and script interactions as much as logically possible, create new concepts and calculations only when missing from existing logic or when there is a risk of clashing values. Do not code until plan approval.
+
+Lets continue planning :
+
+Phase 1) Add multi-stage day schedule : 
+    Good plan.
+Phase 2) Snooze/cancellation rules via script triggers :
+    Task Completed : Is a new event necessary? since declaring completion will already reset the task.currentDate and reschedule future notifications?
+    Task Marked Pending : Instead of tracking which notifications to delete, would it be logical to just cancel all reminders and reschedule from the deadline? Discuss
+Phase 3) “Come back” reminders after multiple consecutive unchecked days :
+    The user will most likely never open the app until the need to send a comeback notification, does the plan account for this or is it dependant on recalculations?
+Phase 4) Debug and visibility : 
+    Good plan.
+Phase 5) Backward-compatible rollout :
+    Good plan.
+
+In effect, here is what a week of notifications would look like for a user (using intensity 1 for simplicity) setting a task on Monday at 11am with Start time at 10:00 and Deadline time at 18:00. His active days are monday to friday : 
+
+Assuming the user never checks in afterward and therefore does not trigger a rescheduling:
+
+User asks to start the NEXT ACTIVE DAY so currentDate points to tuesday in this case :
+
+Monday/present day : No reminders
+Tuesday/next active day : Start time encouragements, reminder around 14:00, completion check at deadline time
+Wednesday/following active day : Start time encouragements, reminder around 14:00, completion check at deadline time
+Thursday/first active day past end date : First comeback notification/reminder
+Friday/and following active days past end date : Possibly second comeback notification / all subsequent comeback notifications will depend on what rule we decide
+Saturday : Not an active day, no notifications
+Sunday : Not an active day, no notifications
+
+User asks to start TODAY so currentDate points to the same day :
+
+Monday/present day : SKIP Start time encouragements (in the past), reminder around 14:00, completion check at deadline time
+Tuesday/next active day : Start time encouragements, reminder around 14:00, completion check at deadline time
+Wednesday/first active day past end date : First comeback notification/reminder
+Thursday/and following active days past end date : Possibly second comeback notification / all subsequent comeback notifications will depend on what rule we decide
+Friday/and following active days past end date : Possibly third comeback notification / all subsequent comeback notifications will depend on what rule we decide
+Saturday : Not an active day, no notifications
+Sunday : Not an active day, no notifications
+
+A fallback system already exists currently for notifications set to be scheduled in the past, as only a deadline notification exist the fallback reschedules the notification to the next active day. This system needs to be reevaluated in light of the current plan. Do not code until plan approval.

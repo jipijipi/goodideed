@@ -27,7 +27,7 @@ class SessionConstants {
   static const String eveningStartTime =
       '16:00'; // 2 hours before evening deadline
   static const String nightStartTime = '21:00'; // 2 hours before night deadline
-  static const String defaultStartTime = '21:00'; // Default start time
+  static const String defaultStartTime = '08:00'; // Default start time (explicit until user sets)
 
   // Date formatting
   static const int dateFormatPadWidth = 2;

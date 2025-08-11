@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-11T13:36:01.945Z",
+  "lastUpdated": "2025-08-11T14:02:41.407Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-11T13:36:01.937Z"
+    "timestamp": "2025-08-11T14:02:41.395Z"
   },
   "nodes": [
     {
@@ -205,8 +205,8 @@
     {
       "id": "150",
       "position": {
-        "x": -5252.331961160313,
-        "y": -1949.2479885856017
+        "x": -5280.950747676739,
+        "y": -1958.7875840910774
       },
       "type": "group",
       "style": {
@@ -230,8 +230,8 @@
         "color": "rgba(76, 175, 80, 0.025)"
       },
       "positionAbsolute": {
-        "x": -5252.331961160313,
-        "y": -1949.2479885856017
+        "x": -5280.950747676739,
+        "y": -1958.7875840910774
       }
     },
     {
@@ -683,11 +683,11 @@
       },
       "type": "group",
       "style": {
-        "width": 1540.2126928785221,
+        "width": 1500.2018969606772,
         "height": 3417,
         "zIndex": 999
       },
-      "width": 1540,
+      "width": 1500,
       "height": 3417,
       "selected": false,
       "dragging": false,
@@ -1680,8 +1680,8 @@
         "y": 727.0326551643634
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
         "x": -4843.1276902416685,
@@ -1696,7 +1696,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "146",
         "contentKey": "",
-        "content": "NIce, keep it up"
+        "content": "Nice, keep it up"
       }
     },
     {
@@ -4521,8 +4521,8 @@
     {
       "id": "293",
       "position": {
-        "x": 232.8573233823945,
-        "y": 1230
+        "x": 177.60431949584654,
+        "y": 1235.7158279882633
       },
       "data": {
         "label": "Data action",
@@ -4545,8 +4545,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 4689.749677439144,
-        "y": 5837.407816957765
+        "x": 4634.496673552596,
+        "y": 5843.123644946028
       },
       "parentId": "55",
       "extent": "parent"
@@ -4781,18 +4781,18 @@
     {
       "id": "53",
       "position": {
-        "x": 25,
-        "y": 657.696298627985
+        "x": 65.01079591784492,
+        "y": 674.8437825927758
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 244.42865192926865,
-        "y": 10354.409777327266
+        "x": 4521.903149974594,
+        "y": 5282.251599550541
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "55",
       "extent": "parent",
       "data": {

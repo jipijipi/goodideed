@@ -516,19 +516,16 @@ class SessionService {
     }
   }
 
-  /// Get start time as string with migration for existing deadline-only users
+  /// Get start time as string
+  /// If explicit start time is missing or invalid, fallback to default '08:00'
   Future<String> _getStartTimeAsString() async {
-    // Try to get explicit start time first
     final startTime = await userDataService.getValue<String>(
       StorageKeys.taskStartTime,
     );
-    if (startTime != null) {
+    if (startTime != null && startTime.contains(':')) {
       return startTime;
     }
-
-    // If no start time set, derive default from deadline time
-    final deadlineTime = await _getDeadlineTimeAsString();
-    return _getDefaultStartTimeForDeadline(deadlineTime);
+    return SessionConstants.defaultStartTime;
   }
 
   /// Get deadline time as string, with migration from integer format
@@ -589,21 +586,7 @@ class SessionService {
     }
   }
 
-  /// Get default start time for a given deadline time
-  String _getDefaultStartTimeForDeadline(String deadlineTime) {
-    switch (deadlineTime) {
-      case SessionConstants.morningDeadlineTime:
-        return SessionConstants.morningStartTime;
-      case SessionConstants.afternoonDeadlineTime:
-        return SessionConstants.afternoonStartTime;
-      case SessionConstants.eveningDeadlineTime:
-        return SessionConstants.eveningStartTime;
-      case SessionConstants.nightDeadlineTime:
-        return SessionConstants.nightStartTime;
-      default:
-        return SessionConstants.defaultStartTime;
-    }
-  }
+  // No deadline-based default start time mapping anymore.
 
   /// Schedule notifications based on current user settings
   Future<void> _scheduleNotifications() async {

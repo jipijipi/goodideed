@@ -5,7 +5,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'user_data_service.dart';
 import 'logger_service.dart';
 import '../constants/storage_keys.dart';
-import '../utils/active_date_calculator.dart';
 import '../models/notification_permission_status.dart';
 import '../models/notification_tap_event.dart';
 import 'app_state_service.dart';
@@ -29,7 +28,6 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
   final UserDataService _userDataService;
   final LoggerService _logger = LoggerService.instance;
-  late final ActiveDateCalculator _activeDateCalculator;
 
   // App state service for tracking notification taps
   AppStateService? _appStateService;
@@ -43,9 +41,7 @@ class NotificationService {
   static const String _channelDescription =
       'Notifications to remind you about your daily task';
 
-  NotificationService(this._userDataService) {
-    _activeDateCalculator = ActiveDateCalculator(_userDataService);
-  }
+  NotificationService(this._userDataService);
 
   Future<void> initialize() async {
     _logger.info(
@@ -362,7 +358,7 @@ class NotificationService {
       }
 
       final deadlineTimeString = await _getDeadlineTimeAsString();
-      final startTimeString = await _getStartTimeAsString(deadlineTimeString);
+      final startTimeString = await _getStartTimeAsString();
       _logger.info('Start=$startTimeString, Deadline=$deadlineTimeString');
 
       // Validate timezone
@@ -797,12 +793,12 @@ class NotificationService {
     );
   }
 
-  Future<String> _getStartTimeAsString(String deadlineTime) async {
+  Future<String> _getStartTimeAsString() async {
     final explicit = await _userDataService.getValue<String>(
       StorageKeys.taskStartTime,
     );
     if (explicit != null && explicit.contains(':')) return explicit;
-    return _getDefaultStartTimeForDeadline(deadlineTime);
+    return SessionConstants.defaultStartTime;
   }
 
   Future<String> _getDeadlineTimeAsString() async {
@@ -819,20 +815,7 @@ class NotificationService {
     return SessionConstants.defaultDeadlineTime;
   }
 
-  String _getDefaultStartTimeForDeadline(String deadlineTime) {
-    switch (deadlineTime) {
-      case SessionConstants.morningDeadlineTime:
-        return SessionConstants.morningStartTime;
-      case SessionConstants.afternoonDeadlineTime:
-        return SessionConstants.afternoonStartTime;
-      case SessionConstants.eveningDeadlineTime:
-        return SessionConstants.eveningStartTime;
-      case SessionConstants.nightDeadlineTime:
-        return SessionConstants.nightStartTime;
-      default:
-        return SessionConstants.defaultStartTime;
-    }
-  }
+  // No deadline-based default start time mapping anymore.
 
   String _convertIntegerToTimeString(int intValue) {
     switch (intValue) {
@@ -1160,10 +1143,15 @@ class NotificationService {
               timeUntil = dt.isAfter(now) ? _formatDuration(dt.difference(now)) : 'passed';
             }
             if (slot != null) {
-              if (slot == 'start') type = 'Start nudge';
-              else if (slot.startsWith('mid')) type = 'Mid reminder';
-              else if (slot == 'deadline') type = 'Deadline check';
-              else if (slot.startsWith('comeback')) type = 'Come back';
+              if (slot == 'start') {
+                type = 'Start nudge';
+              } else if (slot.startsWith('mid')) {
+                type = 'Mid reminder';
+              } else if (slot == 'deadline') {
+                type = 'Deadline check';
+              } else if (slot.startsWith('comeback')) {
+                type = 'Come back';
+              }
             } else if (typeStr != null) {
               type = typeStr;
             }

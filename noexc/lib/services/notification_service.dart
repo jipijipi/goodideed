@@ -369,15 +369,12 @@ class NotificationService {
       await _cancelBeforeTaskDate(currentDateString);
 
       // If scripts requested to keep only final today, enforce it
-      final onlyFinalToday = await _userDataService.getValue<bool>(
+      final onlyFinalTodayFlag = await _userDataService.getValue<bool>(
             '${StorageKeys.notificationPrefix}onlyFinalToday',
           ) ??
           false;
-      if (onlyFinalToday) {
+      if (onlyFinalTodayFlag) {
         await _keepOnlyFinalForDate(_todayDateString());
-        await _userDataService.removeValue(
-          '${StorageKeys.notificationPrefix}onlyFinalToday',
-        );
       }
 
       // Prime activeDays cache
@@ -417,6 +414,7 @@ class NotificationService {
           startTimeString,
           deadlineTimeString,
           remindersIntensity,
+          onlyFinalTodayGlobal: onlyFinalTodayFlag,
         );
       }
 
@@ -430,6 +428,13 @@ class NotificationService {
 
         // Weekly repeating fallback after the series (light touch)
         await _scheduleWeeklyComeBackFallback(endDate, startTimeString);
+      }
+
+      // Clear one-shot only-final flag after applying
+      if (onlyFinalTodayFlag) {
+        await _userDataService.removeValue(
+          '${StorageKeys.notificationPrefix}onlyFinalToday',
+        );
       }
 
       await _userDataService.storeValue(
@@ -460,6 +465,7 @@ class NotificationService {
     String startTime,
     String deadlineTime,
     int intensity,
+    {bool onlyFinalTodayGlobal = false}
   ) async {
     try {
       final date = DateTime.parse(dateStr);
@@ -480,20 +486,22 @@ class NotificationService {
       }
 
       int count = 0;
-      // Start encouragement (skip if today and in the past)
-      if (!(isToday && start.isBefore(now))) {
-        count += await _scheduleSlot(
-          dateStr,
-          'start',
-          start,
-          title: 'Let’s get it started',
-          body: 'Quick nudge: your task window opens now.',
-        );
+      // Start encouragement (skip if today and in the past, or if only-final-today is set)
+      if (!(onlyFinalTodayGlobal && isToday)) {
+        if (!(isToday && start.isBefore(now))) {
+          count += await _scheduleSlot(
+            dateStr,
+            'start',
+            start,
+            title: 'Let’s get it started',
+            body: 'Quick nudge: your task window opens now.',
+          );
+        }
       }
 
       // Mid-window reminders based on intensity
       final window = end.difference(start).inMinutes;
-      if (window > 0 && intensity > 0) {
+      if (window > 0 && intensity > 0 && !(onlyFinalTodayGlobal && isToday)) {
         final midFractions = _fractionsForIntensity(intensity);
         var idx = 0;
         for (final f in midFractions) {

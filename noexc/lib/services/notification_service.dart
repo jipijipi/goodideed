@@ -10,6 +10,7 @@ import '../models/notification_permission_status.dart';
 import '../models/notification_tap_event.dart';
 import 'app_state_service.dart';
 import 'dart:convert';
+import '../constants/session_constants.dart';
 
 /// Simple test environment detection
 /// Returns true if we're running in a test environment
@@ -328,7 +329,7 @@ class NotificationService {
   }
 
   Future<void> scheduleDeadlineReminder() async {
-    _logger.info('=== SCHEDULING DEADLINE REMINDER ===');
+    _logger.info('=== SCHEDULING DAILY PLAN ===');
     _logger.info('Platform: ${Platform.operatingSystem}');
     if (Platform.isIOS) {
       _logger.info('iOS Simulator: ${_isIOSSimulator()}');
@@ -341,235 +342,110 @@ class NotificationService {
     }
 
     try {
-      // Check if reminders are enabled via intensity setting
+      // Check intensity
       final remindersIntensity =
           await _userDataService.getValue<int>('task.remindersIntensity') ?? 0;
       _logger.info('Reminders intensity: $remindersIntensity');
-
       if (remindersIntensity <= 0) {
-        _logger.info(
-          'Reminders disabled (intensity: $remindersIntensity), canceling notifications',
-        );
+        _logger.info('Reminders disabled, canceling notifications');
         await cancelAllNotifications();
         return;
       }
 
-      // Get deadline time
-      final deadlineTimeString = await _userDataService.getValue<String>(
-        StorageKeys.taskDeadlineTime,
-      );
-      _logger.info('Deadline time string: $deadlineTimeString');
-
-      if (deadlineTimeString == null || deadlineTimeString.isEmpty) {
-        _logger.warning('No deadline time set, cannot schedule reminder');
-        return;
-      }
-
-      // Parse deadline time
-      final timeParts = deadlineTimeString.split(':');
-      if (timeParts.length != 2) {
-        _logger.error('Invalid deadline time format: $deadlineTimeString');
-        return;
-      }
-
-      final hour = int.tryParse(timeParts[0]);
-      final minute = int.tryParse(timeParts[1]);
-
-      if (hour == null ||
-          minute == null ||
-          hour < 0 ||
-          hour > 23 ||
-          minute < 0 ||
-          minute > 59) {
-        _logger.error('Invalid deadline time values: $deadlineTimeString');
-        return;
-      }
-
-      _logger.info(
-        'Parsed time: ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}',
-      );
-
-      // Get task current date (next due date)
+      // Resolve times and dates
       final currentDateString = await _userDataService.getValue<String>(
-        'task.currentDate',
+        StorageKeys.taskCurrentDate,
       );
-      _logger.info('Task current date: $currentDateString');
-
       if (currentDateString == null || currentDateString.isEmpty) {
-        _logger.warning('No task current date set, cannot schedule reminder');
+        _logger.warning('No task.currentDate set, cannot schedule');
         return;
       }
 
-      // Validate timezone before scheduling
-      try {
-        final currentZone = tz.local;
-        final now = tz.TZDateTime.now(tz.local);
-        _logger.info('Current timezone: ${currentZone.name}');
-        _logger.info('Current time: $now');
+      final deadlineTimeString = await _getDeadlineTimeAsString();
+      final startTimeString = await _getStartTimeAsString(deadlineTimeString);
+      _logger.info('Start=$startTimeString, Deadline=$deadlineTimeString');
 
-        // Parse task.currentDate (expected format: YYYY-MM-DD or similar)
-        DateTime taskDate;
-        try {
-          taskDate = DateTime.parse(currentDateString);
-          _logger.info('Parsed task date: $taskDate');
-        } catch (e) {
-          _logger.error(
-            'Failed to parse task current date "$currentDateString": $e',
-          );
-          return;
-        }
+      // Validate timezone
+      final nowTz = tz.TZDateTime.now(tz.local);
+      _logger.info('Timezone OK: ${tz.local.name}, now=$nowTz');
 
-        // Schedule notification for task date at deadline time
-        var scheduledDate = tz.TZDateTime(
-          tz.local,
-          taskDate.year,
-          taskDate.month,
-          taskDate.day,
-          hour,
-          minute,
+      // Sweep stale notifications for past task days
+      await _cancelBeforeTaskDate(currentDateString);
+
+      // If scripts requested to keep only final today, enforce it
+      final onlyFinalToday = await _userDataService.getValue<bool>(
+            '${StorageKeys.notificationPrefix}onlyFinalToday',
+          ) ??
+          false;
+      if (onlyFinalToday) {
+        await _keepOnlyFinalForDate(_todayDateString());
+        await _userDataService.removeValue(
+          '${StorageKeys.notificationPrefix}onlyFinalToday',
         );
-        _logger.info('Notification scheduled for task date: $scheduledDate');
-
-        // Check if scheduled date is in the past - use next active date as fallback
-        if (scheduledDate.isBefore(now)) {
-          _logger.warning(
-            'Scheduled date $scheduledDate is in the past (current: $now)',
-          );
-          _logger.info(
-            'Falling back to next active date for notification scheduling',
-          );
-
-          try {
-            // Get next active date and combine with deadline time
-            final nextActiveDate =
-                await _activeDateCalculator.getNextActiveDate();
-            final nextActiveDateTime = DateTime.parse(nextActiveDate);
-            scheduledDate = tz.TZDateTime(
-              tz.local,
-              nextActiveDateTime.year,
-              nextActiveDateTime.month,
-              nextActiveDateTime.day,
-              hour,
-              minute,
-            );
-
-            _logger.info('Rescheduled to next active date: $scheduledDate');
-
-            // Store fallback information for debugging
-            await _userDataService.storeValue(
-              '${StorageKeys.notificationPrefix}fallbackDate',
-              nextActiveDate,
-            );
-            await _userDataService.storeValue(
-              '${StorageKeys.notificationPrefix}fallbackReason',
-              'task.currentDate was in the past',
-            );
-
-            // Verify the new date isn't also in the past (edge case)
-            if (scheduledDate.isBefore(now)) {
-              _logger.error(
-                'Next active date $scheduledDate is also in the past - this should not happen',
-              );
-              await _userDataService.storeValue(
-                StorageKeys.notificationIsEnabled,
-                false,
-              );
-              return;
-            }
-          } catch (e) {
-            _logger.error('Failed to calculate fallback date: $e');
-            await _userDataService.storeValue(
-              StorageKeys.notificationIsEnabled,
-              false,
-            );
-            return;
-          }
-        } else {
-          // Clear any previous fallback information
-          await _userDataService.removeValue(
-            '${StorageKeys.notificationPrefix}fallbackDate',
-          );
-          await _userDataService.removeValue(
-            '${StorageKeys.notificationPrefix}fallbackReason',
-          );
-        }
-
-        const notificationDetails = NotificationDetails(
-          android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
-            channelDescription: _channelDescription,
-            importance: Importance.high,
-            priority: Priority.high,
-          ),
-          iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        );
-
-        // Create payload with tracking information
-        final payload = json.encode({
-          'type': 'dailyReminder',
-          'scheduledDate': scheduledDate.toIso8601String(),
-          'taskDate': currentDateString,
-          'deadlineTime': deadlineTimeString,
-          'notificationId': _dailyReminderNotificationId,
-        });
-
-        _logger.info('Calling zonedSchedule with:');
-        _logger.info('  ID: $_dailyReminderNotificationId');
-        _logger.info('  Title: Task Reminder');
-        _logger.info('  Body: Time to check in on your task!');
-        _logger.info('  Scheduled date: $scheduledDate');
-        _logger.info('  Payload: $payload');
-        _logger.info('  No repeat - single notification for this task date');
-
-        await _notifications.zonedSchedule(
-          _dailyReminderNotificationId,
-          'Task Reminder',
-          'Time to check in on your task!',
-          scheduledDate,
-          notificationDetails,
-          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-          payload: payload,
-          // No matchDateTimeComponents - single notification for specific date
-        );
-
-        _logger.info('zonedSchedule call completed successfully');
-
-        // Verify the notification was scheduled
-        final pendingNotifications =
-            await _notifications.pendingNotificationRequests();
-        _logger.info(
-          'Pending notifications after scheduling: ${pendingNotifications.length}',
-        );
-        for (final notification in pendingNotifications) {
-          _logger.info(
-            '  - ID: ${notification.id}, Title: ${notification.title}',
-          );
-        }
-
-        // Store when we last scheduled the notification and the target date/time
-        await _userDataService.storeValue(
-          StorageKeys.notificationLastScheduled,
-          DateTime.now().toIso8601String(),
-        );
-        await _userDataService.storeValue(
-          StorageKeys.notificationScheduledFor,
-          scheduledDate.toIso8601String(),
-        );
-        await _userDataService.storeValue(
-          StorageKeys.notificationIsEnabled,
-          true,
-        );
-
-        _logger.info('=== SCHEDULING COMPLETED SUCCESSFULLY ===');
-      } catch (timezoneError) {
-        _logger.error('Timezone error during scheduling: $timezoneError');
-        throw Exception('Timezone error: $timezoneError');
       }
+
+      // Prime activeDays cache
+      await _primeActiveDaysCache();
+
+      // Build day-plan horizon from currentDate to endDate (inclusive)
+      final endDate = await _userDataService.getValue<String>(
+        StorageKeys.taskEndDate,
+      );
+
+      final datesToPlan = <String>[];
+      try {
+        final startDate = DateTime.parse(currentDateString);
+        DateTime end = endDate != null && endDate.isNotEmpty
+            ? DateTime.parse(endDate)
+            : startDate; // fallback: only current day
+        if (end.isBefore(startDate)) end = startDate;
+
+        for (var d = startDate;
+            !d.isAfter(end);
+            d = d.add(const Duration(days: 1))) {
+          if (_isActiveDay(d)) {
+            datesToPlan.add(_fmtDate(d));
+          }
+        }
+      } catch (e) {
+        _logger.warning('Failed building horizon: $e');
+        datesToPlan.clear();
+        datesToPlan.add(currentDateString);
+      }
+
+      // Schedule multi-stage per planned day
+      int scheduledCount = 0;
+      for (final dateStr in datesToPlan) {
+        scheduledCount += await _scheduleDaySlots(
+          dateStr,
+          startTimeString,
+          deadlineTimeString,
+          remindersIntensity,
+        );
+      }
+
+      // Post-end come-back nudges (three one-shots on consecutive active days after endDate)
+      if (endDate != null && endDate.isNotEmpty) {
+        scheduledCount += await _scheduleComeBackSeries(
+          endDate,
+          startTimeString,
+          maxShots: 3,
+        );
+
+        // Weekly repeating fallback after the series (light touch)
+        await _scheduleWeeklyComeBackFallback(endDate, startTimeString);
+      }
+
+      await _userDataService.storeValue(
+        StorageKeys.notificationLastScheduled,
+        DateTime.now().toIso8601String(),
+      );
+      await _userDataService.storeValue(
+        StorageKeys.notificationIsEnabled,
+        scheduledCount > 0,
+      );
+
+      _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications ===');
     } catch (e) {
       _logger.error('=== SCHEDULING FAILED ===');
       _logger.error('Error: $e');
@@ -579,6 +455,397 @@ class NotificationService {
         false,
       );
       rethrow;
+    }
+  }
+
+  // Compute and schedule one day’s slots (start/mid/deadline)
+  Future<int> _scheduleDaySlots(
+    String dateStr,
+    String startTime,
+    String deadlineTime,
+    int intensity,
+  ) async {
+    try {
+      final date = DateTime.parse(dateStr);
+      final now = DateTime.now();
+      final isToday = _sameDate(date, now);
+
+      final start = _composeLocal(date, startTime);
+      final end = _composeLocal(date, deadlineTime);
+      if (end.isBefore(start)) {
+        // Guard: if misconfigured, schedule only deadline
+        return await _scheduleSlot(
+          dateStr,
+          'deadline',
+          end,
+          title: 'Task Reminder',
+          body: 'Time to check in on your task!',
+        );
+      }
+
+      int count = 0;
+      // Start encouragement (skip if today and in the past)
+      if (!(isToday && start.isBefore(now))) {
+        count += await _scheduleSlot(
+          dateStr,
+          'start',
+          start,
+          title: 'Let’s get it started',
+          body: 'Quick nudge: your task window opens now.',
+        );
+      }
+
+      // Mid-window reminders based on intensity
+      final window = end.difference(start).inMinutes;
+      if (window > 0 && intensity > 0) {
+        final midFractions = _fractionsForIntensity(intensity);
+        var idx = 0;
+        for (final f in midFractions) {
+          idx += 1;
+          final minutesFromStart = (window * f).round();
+          final midTime = start.add(Duration(minutes: minutesFromStart));
+          if (isToday && midTime.isBefore(now)) continue;
+          count += await _scheduleSlot(
+            dateStr,
+            'mid$idx',
+            midTime,
+            title: 'Stay on track',
+            body: 'Quick check-in toward your goal.',
+          );
+        }
+      }
+
+      // Deadline completion check (skip only if in the past today)
+      if (!(isToday && end.isBefore(now))) {
+        count += await _scheduleSlot(
+          dateStr,
+          'deadline',
+          end,
+          title: 'Deadline check',
+          body: 'Did you complete your task today?',
+        );
+      }
+      return count;
+    } catch (e) {
+      _logger.warning('Failed scheduling day $dateStr: $e');
+      return 0;
+    }
+  }
+
+  Future<int> _scheduleComeBackSeries(
+    String endDateStr,
+    String startTime,
+    {int maxShots = 3}
+  ) async {
+    try {
+      final shots = <DateTime>[];
+      DateTime cursor = DateTime.parse(endDateStr);
+      for (int i = 0; i < maxShots; i++) {
+        cursor = _nextActiveDateAfter(cursor);
+        final t = _composeLocal(cursor, startTime);
+        shots.add(t);
+      }
+      int count = 0;
+      var i = 0;
+      for (final t in shots) {
+        i += 1;
+        if (t.isBefore(DateTime.now())) continue;
+        count += await _scheduleSlot(
+          _fmtDate(t),
+          'comeback$i',
+          t,
+          title: 'Come back to your habit',
+          body: 'Pick it back up today.',
+        );
+      }
+      return count;
+    } catch (e) {
+      _logger.warning('Failed scheduling comeback series: $e');
+      return 0;
+    }
+  }
+
+  Future<void> _scheduleWeeklyComeBackFallback(
+    String endDateStr,
+    String startTime,
+  ) async {
+    try {
+      final first = _composeLocal(_nextActiveDateAfter(DateTime.parse(endDateStr)), startTime);
+      if (first.isBefore(DateTime.now())) return;
+
+      final id = _buildId(_fmtDate(first), 'comeback_weekly');
+      final payload = json.encode({
+        'type': 'comeBack',
+        'slot': 'weekly',
+        'taskDate': _fmtDate(first),
+        'scheduledDate': first.toIso8601String(),
+      });
+
+      const details = NotificationDetails(
+        android: AndroidNotificationDetails(
+          _channelId,
+          _channelName,
+          channelDescription: _channelDescription,
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      );
+
+      await _notifications.zonedSchedule(
+        id,
+        'Check back in',
+        'It’s a great day to restart.',
+        tz.TZDateTime.from(first, tz.local),
+        details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: payload,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      );
+    } catch (e) {
+      _logger.warning('Failed scheduling weekly fallback: $e');
+    }
+  }
+
+  List<double> _fractionsForIntensity(int intensity) {
+    switch (intensity) {
+      case 1:
+        return [0.5];
+      case 2:
+        return [1 / 3, 2 / 3];
+      case 3:
+      default:
+        return [0.25, 0.5, 0.75];
+    }
+  }
+
+  Future<int> _scheduleSlot(
+    String taskDate,
+    String slot,
+    DateTime whenLocal,
+    {required String title, required String body}
+  ) async {
+    try {
+      final id = _buildId(taskDate, slot);
+      final payload = json.encode({
+        'type': slot == 'deadline' ? 'dailyReminder' : 'dailyNudge',
+        'slot': slot,
+        'taskDate': taskDate,
+        'scheduledDate': whenLocal.toIso8601String(),
+      });
+
+      const details = NotificationDetails(
+        android: AndroidNotificationDetails(
+          _channelId,
+          _channelName,
+          channelDescription: _channelDescription,
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      );
+
+      await _notifications.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(whenLocal, tz.local),
+        details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: payload,
+      );
+      return 1;
+    } catch (e) {
+      _logger.warning('Slot schedule failed ($taskDate/$slot): $e');
+      return 0;
+    }
+  }
+
+  int _buildId(String dateStr, String slot) {
+    final base = int.tryParse(dateStr.replaceAll('-', '')) ?? 0;
+    final code = () {
+      if (slot == 'start') return 1;
+      if (slot.startsWith('mid')) {
+        final raw = int.tryParse(slot.substring(3)) ?? 1;
+        final idx = raw < 1 ? 1 : (raw > 7 ? 7 : raw);
+        return 2 + idx; // 3..9
+      }
+      if (slot == 'deadline') return 9;
+      if (slot.startsWith('comeback')) return 6; // series
+      if (slot == 'comeback_weekly') return 7; // weekly fallback
+      return 5;
+    }();
+    return base * 10 + code;
+  }
+
+  String _todayDateString() => _fmtDate(DateTime.now());
+  String _fmtDate(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  DateTime _composeLocal(DateTime day, String hhmm) {
+    final p = hhmm.split(':');
+    final h = int.parse(p[0]);
+    final m = int.parse(p[1]);
+    return DateTime(day.year, day.month, day.day, h, m);
+    }
+
+  bool _sameDate(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  Future<void> _cancelBeforeTaskDate(String cutoffDate) async {
+    try {
+      final pending = await getPendingNotifications();
+      for (final p in pending) {
+        final payload = p.payload;
+        if (payload == null || payload.isEmpty) continue;
+        try {
+          final data = json.decode(payload) as Map<String, dynamic>;
+          final taskDate = data['taskDate'] as String?;
+          if (taskDate != null && taskDate.compareTo(cutoffDate) < 0) {
+            await _notifications.cancel(p.id);
+          }
+        } catch (_) {}
+      }
+    } catch (e) {
+      _logger.warning('Cancel-before sweep failed: $e');
+    }
+  }
+
+  Future<void> _keepOnlyFinalForDate(String dateStr) async {
+    try {
+      final pending = await getPendingNotifications();
+      for (final p in pending) {
+        final payload = p.payload;
+        if (payload == null || payload.isEmpty) continue;
+        try {
+          final data = json.decode(payload) as Map<String, dynamic>;
+          if (data['taskDate'] == dateStr) {
+            final slot = data['slot'] as String?;
+            if (slot != 'deadline') {
+              await _notifications.cancel(p.id);
+            }
+          }
+        } catch (_) {}
+      }
+    } catch (e) {
+      _logger.warning('Keep-final sweep failed: $e');
+    }
+  }
+
+  // ACTIVE DAY helpers
+  bool _isActiveDay(DateTime date) {
+    try {
+      // Use configured active days; default to Mon-Fri if unset
+      // Accept both List and JSON string formats
+      // Reusing parser approach as in ActiveDateCalculator
+    } catch (_) {}
+    return _activeDaysSet().contains(date.weekday);
+  }
+
+  Set<int> _activeDaysSet() {
+    final raw = _activeDaysRawSync;
+    final parsed = <int>{};
+    if (raw == null) {
+      // default: Mon-Fri
+      return {1, 2, 3, 4, 5};
+    }
+    if (raw is List) {
+      for (final e in raw) {
+        final v = e is int ? e : int.tryParse(e.toString());
+        if (v != null) parsed.add(v);
+      }
+      return parsed.isEmpty ? {1, 2, 3, 4, 5} : parsed;
+    }
+    if (raw is String && raw.trim().startsWith('[')) {
+      try {
+        final decoded = json.decode(raw);
+        if (decoded is List) {
+          for (final e in decoded) {
+            final v = e is int ? e : int.tryParse(e.toString());
+            if (v != null) parsed.add(v);
+          }
+          return parsed.isEmpty ? {1, 2, 3, 4, 5} : parsed;
+        }
+      } catch (_) {}
+    }
+    return {1, 2, 3, 4, 5};
+  }
+
+  dynamic get _activeDaysRawSync => _activeDaysCache;
+  dynamic _activeDaysCache;
+
+  DateTime _nextActiveDateAfter(DateTime date) {
+    var d = date.add(const Duration(days: 1));
+    for (int i = 0; i < 370; i++) {
+      if (_isActiveDay(d)) return d;
+      d = d.add(const Duration(days: 1));
+    }
+    return date.add(const Duration(days: 1));
+  }
+
+  Future<void> _primeActiveDaysCache() async {
+    _activeDaysCache = await _userDataService.getValue<dynamic>(
+      StorageKeys.taskActiveDays,
+    );
+  }
+
+  Future<String> _getStartTimeAsString(String deadlineTime) async {
+    final explicit = await _userDataService.getValue<String>(
+      StorageKeys.taskStartTime,
+    );
+    if (explicit != null && explicit.contains(':')) return explicit;
+    return _getDefaultStartTimeForDeadline(deadlineTime);
+  }
+
+  Future<String> _getDeadlineTimeAsString() async {
+    final s = await _userDataService.getValue<String>(
+      StorageKeys.taskDeadlineTime,
+    );
+    if (s != null) {
+      if (s.contains(':')) return s;
+      final asInt = int.tryParse(s);
+      if (asInt != null) return _convertIntegerToTimeString(asInt);
+    }
+    final i = await _userDataService.getValue<int>(StorageKeys.taskDeadlineTime);
+    if (i != null) return _convertIntegerToTimeString(i);
+    return SessionConstants.defaultDeadlineTime;
+  }
+
+  String _getDefaultStartTimeForDeadline(String deadlineTime) {
+    switch (deadlineTime) {
+      case SessionConstants.morningDeadlineTime:
+        return SessionConstants.morningStartTime;
+      case SessionConstants.afternoonDeadlineTime:
+        return SessionConstants.afternoonStartTime;
+      case SessionConstants.eveningDeadlineTime:
+        return SessionConstants.eveningStartTime;
+      case SessionConstants.nightDeadlineTime:
+        return SessionConstants.nightStartTime;
+      default:
+        return SessionConstants.defaultStartTime;
+    }
+  }
+
+  String _convertIntegerToTimeString(int intValue) {
+    switch (intValue) {
+      case SessionConstants.timeOfDayMorning:
+        return SessionConstants.morningDeadlineTime;
+      case SessionConstants.timeOfDayAfternoon:
+        return SessionConstants.afternoonDeadlineTime;
+      case SessionConstants.timeOfDayEvening:
+        return SessionConstants.eveningDeadlineTime;
+      case SessionConstants.timeOfDayNight:
+        return SessionConstants.nightDeadlineTime;
+      default:
+        return SessionConstants.defaultDeadlineTime;
     }
   }
 
@@ -874,41 +1141,34 @@ class NotificationService {
   Future<List<Map<String, dynamic>>> getScheduledNotificationDetails() async {
     try {
       final pending = await getPendingNotifications();
-
-      // Get the stored scheduled date/time if available
-      final scheduledForString = await _userDataService.getValue<String>(
-        StorageKeys.notificationScheduledFor,
-      );
-      DateTime? scheduledFor;
-      if (scheduledForString != null && scheduledForString.isNotEmpty) {
-        try {
-          scheduledFor = DateTime.parse(scheduledForString);
-        } catch (e) {
-          _logger.warning('Failed to parse stored scheduled date: $e');
-        }
-      }
-
       return pending.map((notification) {
         String scheduledTime = 'Unknown';
-        String timeUntil = '';
-
-        if (scheduledFor != null) {
-          // Format the scheduled date/time
-          final formatter = _formatDateTime(scheduledFor);
-          scheduledTime = formatter['formatted'] ?? 'Unknown';
-
-          // Calculate time until notification
-          final now = DateTime.now();
-          if (scheduledFor.isAfter(now)) {
-            final difference = scheduledFor.difference(now);
-            timeUntil = _formatDuration(difference);
-          } else {
-            timeUntil = 'Past due';
+        String? timeUntil;
+        String type = 'Task reminder';
+        try {
+          final payload = notification.payload;
+          if (payload != null && payload.isNotEmpty) {
+            final data = json.decode(payload) as Map<String, dynamic>;
+            final schedStr = data['scheduledDate'] as String?;
+            final slot = data['slot'] as String?;
+            final typeStr = data['type'] as String?;
+            if (schedStr != null) {
+              final dt = DateTime.parse(schedStr).toLocal();
+              final fmt = _formatDateTime(dt);
+              scheduledTime = fmt['formatted'] ?? 'Unknown';
+              final now = DateTime.now();
+              timeUntil = dt.isAfter(now) ? _formatDuration(dt.difference(now)) : 'passed';
+            }
+            if (slot != null) {
+              if (slot == 'start') type = 'Start nudge';
+              else if (slot.startsWith('mid')) type = 'Mid reminder';
+              else if (slot == 'deadline') type = 'Deadline check';
+              else if (slot.startsWith('comeback')) type = 'Come back';
+            } else if (typeStr != null) {
+              type = typeStr;
+            }
           }
-        } else {
-          // Fallback if we can't get the stored date
-          scheduledTime = 'Check task.currentDate + deadlineTime';
-        }
+        } catch (_) {}
 
         return {
           'id': notification.id,
@@ -916,8 +1176,8 @@ class NotificationService {
           'body': notification.body ?? 'No body',
           'payload': notification.payload ?? 'No payload',
           'scheduledTime': scheduledTime,
-          'timeUntil': timeUntil,
-          'type': 'Task reminder',
+          if (timeUntil != null) 'timeUntil': timeUntil,
+          'type': type,
         };
       }).toList();
     } catch (e) {

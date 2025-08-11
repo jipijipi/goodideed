@@ -4,9 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:noexc/main.dart';
 import 'package:noexc/widgets/chat_screen/chat_message_list.dart';
+import 'test_helpers.dart';
 
 void main() {
   setUp(() async {
+    setupTestingWithMocks(); // Add platform mocks for notification service
     SharedPreferences.setMockInitialValues({});
   });
 

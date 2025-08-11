@@ -1,1 +1,79 @@
-{"metadata":{"extracted_at":"2025-08-09T23:40:07.738978","total_failures":0,"extractor_version":"1.0.0"},"failures":[]}
+{
+    "metadata": {
+        "extracted_at": "2025-08-11T07:12:39.372323",
+        "total_failures": 5,
+        "extractor_version": "1.0.0"
+    },
+    "failures": [
+        {
+            "name": "App loads chat screen",
+            "file": "package:flutter_test/src/widget_tester.dart",
+            "suite": "widget_tester.dart",
+            "group": "",
+            "error": "Test failed. See exception logs above.\nThe test description was: App loads chat screen",
+            "testId": 253,
+            "line": 175,
+            "column": 5,
+            "stackTrace": "",
+            "isFailure": false,
+            "timestamp": 5316,
+            "category": "unknown"
+        },
+        {
+            "name": "NotificationService past date fallback behavior should handle error in fallback calculation gracefully",
+            "file": "/Users/jpl/Dev/Apps/noexc/test/services/notification_service_test.dart",
+            "suite": "notification_service",
+            "group": "NotificationService > NotificationService past date fallback behavior",
+            "error": "Exception: Timezone error: LateInitializationError: Field '_local@308310200' has not been initialized.",
+            "testId": 809,
+            "line": 485,
+            "column": 7,
+            "stackTrace": "package:noexc/services/notification_service.dart 525:9  NotificationService.scheduleDeadlineReminder\n",
+            "isFailure": false,
+            "timestamp": 11855,
+            "category": "unknown"
+        },
+        {
+            "name": "NotificationDebugWidget should display quick action buttons in error state",
+            "file": "package:flutter_test/src/widget_tester.dart",
+            "suite": "widget_tester.dart",
+            "group": "NotificationDebugWidget",
+            "error": "Test failed. See exception logs above.\nThe test description was: should display quick action buttons in error state",
+            "testId": 1086,
+            "line": 175,
+            "column": 5,
+            "stackTrace": "",
+            "isFailure": false,
+            "timestamp": 15774,
+            "category": "unknown"
+        },
+        {
+            "name": "NotificationDebugWidget widget interaction buttons should be available after loading completes",
+            "file": "package:flutter_test/src/widget_tester.dart",
+            "suite": "widget_tester.dart",
+            "group": "NotificationDebugWidget > NotificationDebugWidget widget interaction",
+            "error": "Test failed. See exception logs above.\nThe test description was: buttons should be available after loading completes",
+            "testId": 1093,
+            "line": 175,
+            "column": 5,
+            "stackTrace": "",
+            "isFailure": false,
+            "timestamp": 16029,
+            "category": "unknown"
+        },
+        {
+            "name": "NotificationDebugWidget accessibility should have proper semantic labels",
+            "file": "package:flutter_test/src/widget_tester.dart",
+            "suite": "widget_tester.dart",
+            "group": "NotificationDebugWidget > NotificationDebugWidget accessibility",
+            "error": "Test failed. See exception logs above.\nThe test description was: should have proper semantic labels",
+            "testId": 1102,
+            "line": 175,
+            "column": 5,
+            "stackTrace": "",
+            "isFailure": false,
+            "timestamp": 16163,
+            "category": "unknown"
+        }
+    ]
+}

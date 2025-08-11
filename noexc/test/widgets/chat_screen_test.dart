@@ -7,7 +7,7 @@ import '../test_helpers.dart';
 
 void main() {
   setUp(() async {
-    setupQuietTesting();
+    setupTestingWithMocks(); // Add platform mocks for notification service
     SharedPreferences.setMockInitialValues({});
 
     // Initialize ServiceLocator for widget tests

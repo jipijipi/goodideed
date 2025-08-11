@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:noexc/services/session_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/services/service_locator.dart';
@@ -9,20 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'test_helpers.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(const MethodChannel('flutter/assets'), (
-        MethodCall methodCall,
-      ) async {
-        if (methodCall.method == 'loadString') {
-          if (methodCall.arguments.toString().contains(
-            'sequences/welcome_seq.json',
-          )) {
-            return '{"sequenceId": "welcome_seq", "name": "Welcome", "messages": [{"id": 1, "type": "bot", "text": "Welcome!"}]}';
-          }
-        }
-        return null;
-      });
 
   group('App Initialization Sequence', () {
     late UserDataService userDataService;
@@ -30,10 +15,10 @@ void main() {
     late ChatStateManager chatStateManager;
 
     setUp(() async {
-      setupSilentTesting();
+      setupTestingWithMocks(); // This includes platform mocks and quiet logging
       SharedPreferences.setMockInitialValues({});
 
-      // Reset and initialize ServiceLocator for testing
+      // Reset and initialize ServiceLocator for testing (now with proper platform mocks)
       ServiceLocator.reset();
       await ServiceLocator.instance.initialize();
 

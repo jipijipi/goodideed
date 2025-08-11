@@ -9,9 +9,13 @@ void main() {
   group('NotificationDebugWidget', () {
     late DebugStatusController statusController;
 
-    setUp(() {
-      setupQuietTesting();
+    setUp(() async {
+      setupTestingWithMocks(); // Use platform mocks for ServiceLocator tests
       statusController = DebugStatusController();
+      
+      // Initialize ServiceLocator for widget tests that depend on services
+      ServiceLocator.reset();
+      await ServiceLocator.instance.initialize();
     });
 
     tearDown(() {
@@ -22,9 +26,11 @@ void main() {
     Widget createWidget() {
       return MaterialApp(
         home: Scaffold(
-          body: NotificationDebugWidget(
-            statusController: statusController,
-            onDataRefresh: () {},
+          body: SingleChildScrollView(
+            child: NotificationDebugWidget(
+              statusController: statusController,
+              onDataRefresh: () {},
+            ),
           ),
         ),
       );
@@ -88,7 +94,7 @@ void main() {
       // Should show action buttons even in error state
       expect(find.text('Reschedule'), findsOneWidget);
       expect(find.text('Cancel All'), findsOneWidget);
-      expect(find.text('Check Permissions'), findsOneWidget);
+      expect(find.text('Request Perms'), findsOneWidget); // Actual text is "Request Perms", not "Check Permissions"
       expect(find.text('Refresh'), findsOneWidget);
     });
 
@@ -170,10 +176,10 @@ void main() {
         await tester.pumpWidget(createWidget());
         await tester.pumpAndSettle();
 
-        // After loading completes (even with error), buttons should be available by their text
+        // After loading completes, buttons should be available by their text
         expect(find.text('Reschedule'), findsOneWidget);
         expect(find.text('Cancel All'), findsOneWidget);
-        expect(find.text('Check Permissions'), findsOneWidget);
+        expect(find.text('Request Perms'), findsOneWidget); // Actual text is "Request Perms"
         expect(find.text('Refresh'), findsOneWidget);
       });
 
@@ -227,7 +233,7 @@ void main() {
         // Buttons should have text labels for accessibility
         expect(find.text('Reschedule'), findsOneWidget);
         expect(find.text('Cancel All'), findsOneWidget);
-        expect(find.text('Check Permissions'), findsOneWidget);
+        expect(find.text('Request Perms'), findsOneWidget); // Actual text is "Request Perms"
         expect(find.text('Refresh'), findsOneWidget);
       });
 

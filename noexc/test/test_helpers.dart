@@ -4,11 +4,13 @@
 /// and ensure consistent test configuration across the test suite.
 library;
 
+import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_local_notifications_platform_interface/flutter_local_notifications_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:noexc/services/logger_service.dart';
 
 /// Configure environment for TDD with minimal logging output
@@ -119,6 +121,10 @@ class MockFlutterLocalNotificationsPlatform extends Fake
 void setupPlatformMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  // Configure Google Fonts for test environment (avoid network loading)
+  // This disables Google Fonts HTTP loading in test environment
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   // Register mock platform interface
   FlutterLocalNotificationsPlatform.instance = MockFlutterLocalNotificationsPlatform();
 
@@ -189,7 +195,7 @@ void setupPlatformMocks() {
     },
   );
 
-  // Mock flutter assets loading
+  // Mock flutter assets loading with proper responses for Google Fonts
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(
     const MethodChannel('flutter/assets'),
@@ -199,9 +205,35 @@ void setupPlatformMocks() {
         if (assetKey.contains('sequences/welcome_seq.json')) {
           return '{"sequenceId": "welcome_seq", "name": "Welcome", "messages": [{"id": 1, "type": "bot", "text": "Welcome!"}]}';
         } else if (assetKey.contains('AssetManifest.json')) {
-          return '{}'; // Empty manifest for Google Fonts
+          // Proper asset manifest structure for Google Fonts
+          return '''
+{
+  "packages/google_fonts/fonts/Inter-Regular.ttf": ["packages/google_fonts/fonts/Inter-Regular.ttf"]
+}''';
         } else if (assetKey.contains('FontManifest.json')) {
-          return '[]'; // Empty font manifest
+          // Proper font manifest structure
+          return '''
+[
+  {
+    "family": "Inter",
+    "fonts": [
+      {
+        "asset": "packages/google_fonts/fonts/Inter-Regular.ttf",
+        "weight": 400
+      }
+    ]
+  }
+]''';
+        } else if (assetKey.contains('debug/scenarios.json')) {
+          // Mock scenarios for debug panel
+          return '{"scenarios": []}';
+        }
+      } else if (methodCall.method == 'load') {
+        // Handle binary asset loading (fonts)
+        final String assetKey = methodCall.arguments as String;
+        if (assetKey.contains('.ttf') || assetKey.contains('fonts/')) {
+          // Return empty byte array for font files
+          return Uint8List(0);
         }
       }
       return null;

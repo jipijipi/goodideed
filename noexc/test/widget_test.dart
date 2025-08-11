@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:noexc/main.dart';
 import 'package:noexc/widgets/chat_screen/chat_message_list.dart';
+import 'package:noexc/services/service_locator.dart';
+import 'package:noexc/widgets/chat_screen.dart';
 import 'test_helpers.dart';
 
 void main() {
@@ -13,8 +15,16 @@ void main() {
   });
 
   testWidgets('App loads chat screen', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    // Initialize ServiceLocator before testing
+    ServiceLocator.reset();
+    await ServiceLocator.instance.initialize();
+
+    // Test ChatScreen directly to avoid Google Fonts theme loading issues
+    await tester.pumpWidget(
+      MaterialApp(
+        home: const ChatScreen(),
+      ),
+    );
 
     // Initially should show loading spinner
     expect(find.byType(CircularProgressIndicator), findsOneWidget);

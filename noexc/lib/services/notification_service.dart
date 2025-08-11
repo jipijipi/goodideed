@@ -368,13 +368,14 @@ class NotificationService {
       // Sweep stale notifications for past task days
       await _cancelBeforeTaskDate(currentDateString);
 
-      // If scripts requested to keep only final today, enforce it
-      final onlyFinalTodayFlag = await _userDataService.getValue<bool>(
-            '${StorageKeys.notificationPrefix}onlyFinalToday',
-          ) ??
-          false;
+      // If scripts requested to keep only final today (date-scoped), enforce it
+      final onlyFinalOnDate = await _userDataService.getValue<String>(
+        '${StorageKeys.notificationPrefix}onlyFinalOnDate',
+      );
+      final todayStr = _todayDateString();
+      final onlyFinalTodayFlag = (onlyFinalOnDate != null && onlyFinalOnDate == todayStr);
       if (onlyFinalTodayFlag) {
-        await _keepOnlyFinalForDate(_todayDateString());
+        await _keepOnlyFinalForDate(todayStr);
       }
 
       // Prime activeDays cache
@@ -428,13 +429,6 @@ class NotificationService {
 
         // Weekly repeating fallback after the series (light touch)
         await _scheduleWeeklyComeBackFallback(endDate, startTimeString);
-      }
-
-      // Clear one-shot only-final flag after applying
-      if (onlyFinalTodayFlag) {
-        await _userDataService.removeValue(
-          '${StorageKeys.notificationPrefix}onlyFinalToday',
-        );
       }
 
       await _userDataService.storeValue(

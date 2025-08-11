@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-11T14:02:41.407Z",
+  "lastUpdated": "2025-08-11T14:33:59.915Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-11T14:02:41.395Z"
+    "timestamp": "2025-08-11T14:33:59.880Z"
   },
   "nodes": [
     {
@@ -205,8 +205,8 @@
     {
       "id": "150",
       "position": {
-        "x": -5280.950747676739,
-        "y": -1958.7875840910774
+        "x": -5427.7707133395525,
+        "y": -2171.1776315062148
       },
       "type": "group",
       "style": {
@@ -230,8 +230,8 @@
         "color": "rgba(76, 175, 80, 0.025)"
       },
       "positionAbsolute": {
-        "x": -5280.950747676739,
-        "y": -1958.7875840910774
+        "x": -5427.7707133395525,
+        "y": -2171.1776315062148
       }
     },
     {
@@ -1680,8 +1680,8 @@
         "y": 727.0326551643634
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": -4843.1276902416685,
@@ -1787,8 +1787,8 @@
         "dataActions": [
           {
             "type": "set",
-            "key": "notification.onlyFinalToday",
-            "value": true
+            "key": "notification.onlyFinalOnDate",
+            "value": "TODAY_DATE"
           },
           {
             "type": "trigger",
@@ -1800,8 +1800,8 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 579,
+      "width": 310,
+      "height": 581,
       "selected": false,
       "positionAbsolute": {
         "x": -4856.331961160313,

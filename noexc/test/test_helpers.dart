@@ -4,12 +4,9 @@
 /// and ensure consistent test configuration across the test suite.
 library;
 
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_local_notifications_platform_interface/flutter_local_notifications_platform_interface.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+// Platform interfaces handled via method channels - no direct imports needed
 import 'package:google_fonts/google_fonts.dart';
 import 'package:noexc/services/logger_service.dart';
 
@@ -56,65 +53,9 @@ Future<T> withSuppressedErrorsAsync<T>(Future<T> Function() testFunction) {
   return LoggerService.instance.withSuppressedErrorsAsync(testFunction);
 }
 
-/// Mock implementation of FlutterLocalNotificationsPlatform for testing
-class MockFlutterLocalNotificationsPlatform extends Fake
-    with MockPlatformInterfaceMixin
-    implements FlutterLocalNotificationsPlatform {
-  @override
-  Future<bool?> initialize(
-    InitializationSettings initializationSettings, {
-    DidReceiveNotificationResponseCallback? onDidReceiveNotificationResponse,
-    DidReceiveBackgroundNotificationResponseCallback?
-        onDidReceiveBackgroundNotificationResponse,
-  }) async {
-    return true;
-  }
 
-  @override
-  Future<NotificationAppLaunchDetails?> getNotificationAppLaunchDetails() async {
-    return NotificationAppLaunchDetails(false, notificationResponse: null);
-  }
-
-  @override
-  Future<bool?> requestPermissions({
-    bool? alert,
-    bool? badge,
-    bool? sound,
-    bool? critical,
-  }) async {
-    return true;
-  }
-
-  @override
-  Future<void> show(int id, String? title, String? body,
-      {String? payload}) async {}
-
-  @override
-  Future<void> cancel(int id, {String? tag}) async {}
-
-  @override
-  Future<void> cancelAll() async {}
-
-  @override
-  Future<List<ActiveNotification>> getActiveNotifications() async {
-    return [];
-  }
-
-  @override
-  Future<List<PendingNotificationRequest>> pendingNotificationRequests() async {
-    return [];
-  }
-
-  @override
-  Future<void> createNotificationChannel(
-    AndroidNotificationChannel notificationChannel,
-  ) async {}
-
-  @override
-  Future<List<AndroidNotificationChannel>> getNotificationChannels() async {
-    return [];
-  }
-}
+// Platform interface mocks are handled via method channels below
+// No explicit platform interface implementation needed
 
 /// Setup mock method call handlers for Flutter platform plugins
 /// This prevents LateInitializationError during test execution
@@ -122,11 +63,10 @@ void setupPlatformMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   // Configure Google Fonts for test environment (avoid network loading)
-  // This disables Google Fonts HTTP loading in test environment
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  // Register mock platform interface
-  FlutterLocalNotificationsPlatform.instance = MockFlutterLocalNotificationsPlatform();
+  // Platform interface instance is not set explicitly
+  // Method channel mocks below handle all platform communication
 
   // Mock flutter_local_notifications platform with all known channels
   final notificationChannels = [

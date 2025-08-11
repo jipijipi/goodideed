@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:noexc/main.dart';
 import 'package:noexc/widgets/chat_screen/chat_message_list.dart';
 import 'package:noexc/services/service_locator.dart';
 import 'package:noexc/widgets/chat_screen.dart';

@@ -188,3 +188,21 @@ New notifications related triggers need to be added to the script's data action 
 2) Recalculates notification schedule
 3) Disable notifications
 
+
+
+
+Notification scheduling :
+Notifications should be scheduled in advance and updated on checkins. 
+
+Notification Scheduling Logic
+	1.	On the Day of the Task
+	•	Task Start → Send encouraging message at the scheduled start time.
+	•	Between Start & Deadline → Send multiple reminders based on the user’s selected reminder intensity.
+	•	Deadline → Send a “completion check” notification.
+	2.	Snooze / Cancellation Rules
+	•	Task Completed → Cancel all remaining reminders for that day. (triggered from script)
+	•	Task Marked as Pending → Cancel all remaining reminders except the final one. (triggered from script)
+	3.	After Multiple Consecutive Unchecked Days (2 active days, when task is past end date)
+	•	Send occasional “come back” reminders with gradually decreasing intensity over time.
+
+Try to rely on existing calculations and script interactions as much as logical

@@ -10,18 +10,22 @@ void main() {
     late DebugStatusController statusController;
 
     setUp(() async {
-      setupTestingWithMocks(); // Use platform mocks for ServiceLocator tests
+      setupTestingWithMocks(); // Use platform mocks but don't automatically initialize ServiceLocator
       statusController = DebugStatusController();
       
-      // Initialize ServiceLocator for widget tests that depend on services
+      // Don't automatically initialize ServiceLocator - let individual tests decide
       ServiceLocator.reset();
-      await ServiceLocator.instance.initialize();
     });
 
     tearDown(() {
       statusController.dispose();
       ServiceLocator.reset();
     });
+
+    /// Helper method to initialize services for tests that need them working
+    Future<void> initializeServicesForTest() async {
+      await ServiceLocator.instance.initialize();
+    }
 
     Widget createWidget() {
       return MaterialApp(
@@ -86,12 +90,15 @@ void main() {
     testWidgets('should display quick action buttons in error state', (
       tester,
     ) async {
+      // Initialize services for this test
+      await initializeServicesForTest();
+      
       await tester.pumpWidget(createWidget());
 
       // Wait for loading to complete
       await tester.pumpAndSettle();
 
-      // Should show action buttons even in error state
+      // Should show action buttons when services are available
       expect(find.text('Reschedule'), findsOneWidget);
       expect(find.text('Cancel All'), findsOneWidget);
       expect(find.text('Request Perms'), findsOneWidget); // Actual text is "Request Perms", not "Check Permissions"
@@ -173,6 +180,9 @@ void main() {
       testWidgets('buttons should be available after loading completes', (
         tester,
       ) async {
+        // Initialize services for this test
+        await initializeServicesForTest();
+        
         await tester.pumpWidget(createWidget());
         await tester.pumpAndSettle();
 
@@ -184,6 +194,9 @@ void main() {
       });
 
       testWidgets('should display appropriate icons', (tester) async {
+        // Initialize services for this test
+        await initializeServicesForTest();
+        
         await tester.pumpWidget(createWidget());
         await tester.pumpAndSettle();
 
@@ -227,6 +240,9 @@ void main() {
 
     group('accessibility', () {
       testWidgets('should have proper semantic labels', (tester) async {
+        // Initialize services for this test
+        await initializeServicesForTest();
+        
         await tester.pumpWidget(createWidget());
         await tester.pumpAndSettle();
 

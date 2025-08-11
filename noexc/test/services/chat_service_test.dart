@@ -4,13 +4,14 @@ import 'package:noexc/services/chat_service.dart';
 import 'package:noexc/services/user_data_service.dart';
 import 'package:noexc/services/text_templating_service.dart';
 import 'package:noexc/models/chat_message.dart';
+import '../test_helpers.dart';
 
 void main() {
   group('ChatService', () {
     late ChatService chatService;
 
     setUp(() {
-      TestWidgetsFlutterBinding.ensureInitialized();
+      setupTestingWithMocks(); // Use comprehensive test setup with platform mocks
       chatService = ChatService();
     });
 
@@ -256,7 +257,7 @@ void main() {
     late ChatService chatService;
 
     setUp(() {
-      TestWidgetsFlutterBinding.ensureInitialized();
+      setupTestingWithMocks(); // Use comprehensive test setup with platform mocks
       chatService = ChatService();
     });
 

@@ -225,6 +225,10 @@ class NotificationService {
         requestCount + 1
       );
       await _userDataService.storeValue(
+        StorageKeys.notificationPermissionLastRequested,
+        DateTime.now().toIso8601String(),
+      );
+      await _userDataService.storeValue(
         StorageKeys.notificationPermissionStatus,
         'granted',
       );

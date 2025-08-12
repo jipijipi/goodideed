@@ -175,3 +175,4 @@ I want to trigger rive animations in different zones of the screen depending on 
 2) The second of 4 zones for rive animations will be overlaid on top of everything. This zone will be used to display animations like achievements / trophies. These animations will be triggered directly from the script. Explain the best and most straightforward way to achieve it.
 
 Do not code until plan validation
+

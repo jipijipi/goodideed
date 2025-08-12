@@ -6,14 +6,18 @@ import '../../services/logger_service.dart';
 import '../../services/rive_overlay_service.dart';
 
 /// Full-screen overlay host for displaying Rive animations above the UI.
+typedef RiveFileLoader = Future<File?> Function(String asset);
+
 class RiveOverlayHost extends StatefulWidget {
   final RiveOverlayService service;
   final int zone; // Which zone this host is responsible for
+  final RiveFileLoader? fileLoader; // For tests or custom loading
 
   const RiveOverlayHost({
     super.key,
     required this.service,
     this.zone = 2,
+    this.fileLoader,
   });
 
   @override
@@ -33,6 +37,7 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
   File? _file;
   RiveWidgetController? _controller;
   bool _loading = false;
+  Timer? _hideTimer;
 
   @override
   void initState() {
@@ -60,9 +65,19 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
       _loading = true;
     });
 
+    // Schedule auto-hide immediately, independent of load completion
+    _hideTimer?.cancel();
+    if (show.autoHideAfter != null) {
+      _hideTimer = Timer(show.autoHideAfter!, () {
+        if (mounted) _hide();
+      });
+    }
+
     try {
       // Load Rive file and controller
-      final file = await File.asset(show.asset, riveFactory: Factory.rive);
+      final loader = widget.fileLoader ??
+          ((String asset) => File.asset(asset, riveFactory: Factory.rive));
+      final file = await loader(show.asset);
       if (file == null) {
         if (mounted) {
           logger.error('Overlay Rive load returned null for ${show.asset}', component: LogComponent.ui);
@@ -111,6 +126,8 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
   }
 
   void _disposeRive() {
+    _hideTimer?.cancel();
+    _hideTimer = null;
     _controller?.dispose();
     _controller = null;
     _file?.dispose();

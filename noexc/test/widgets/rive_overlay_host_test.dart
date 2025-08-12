@@ -3,7 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:rive/rive.dart';
 
-import 'package:noexc/widgets/chat_screen.dart';
+import 'dart:async';
+import 'package:noexc/widgets/chat_screen/rive_overlay_host.dart';
 import 'package:noexc/services/service_locator.dart';
 import '../test_helpers.dart';
 
@@ -12,7 +13,7 @@ void main() {
     // Ensure bindings and platform mocks
     setupTestingWithMocks();
     SharedPreferences.setMockInitialValues({});
-    await RiveNative.init();
+    // Do NOT call RiveNative.init() in tests; avoid native loading
   });
 
   tearDown(() {
@@ -23,11 +24,26 @@ void main() {
     // Initialize services
     await ServiceLocator.instance.initialize();
 
-    // Pump ChatScreen (which includes overlay host)
-    await tester.pumpWidget(const MaterialApp(home: ChatScreen()));
+    // Use a RiveOverlayHost directly with a loader that never completes
+    // to keep the overlay in loading state (no native calls).
+    final completer = Completer<File?>();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Stack(
+            children: [
+              RiveOverlayHost(
+                service: ServiceLocator.instance.riveOverlayService,
+                zone: 2,
+                fileLoader: (_) => completer.future,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
 
-    // Wait for initial loading to settle
-    await tester.pumpAndSettle();
+    // No initial loading to settle; host is idle until show()
 
     // Initially, overlay should not be active
     expect(find.byKey(const ValueKey('rive_overlay_zone_2_active')), findsNothing);
@@ -49,9 +65,9 @@ void main() {
 
     // After autoHide duration + a small buffer, it should disappear
     await tester.pump(const Duration(milliseconds: 350));
-    await tester.pumpAndSettle();
+    // Allow AnimatedSwitcher to complete its transition
+    await tester.pump(const Duration(milliseconds: 250));
 
     expect(find.byKey(const ValueKey('rive_overlay_zone_2_active')), findsNothing);
   });
 }
-

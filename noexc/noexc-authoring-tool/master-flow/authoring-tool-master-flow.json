@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-12T08:14:52.983Z",
+  "lastUpdated": "2025-08-12T13:52:23.116Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-12T08:14:52.972Z"
+    "timestamp": "2025-08-12T13:52:23.092Z"
   },
   "nodes": [
     {
@@ -173,21 +173,21 @@
     {
       "id": "148",
       "position": {
-        "x": -2197.9600235277703,
+        "x": -2191.4600235277703,
         "y": -6004.418367449576
       },
       "type": "group",
       "style": {
-        "width": 992.1792331585411,
+        "width": 957.4653949088874,
         "height": 2174.2500223139023,
         "zIndex": 999
       },
-      "width": 992,
+      "width": 957,
       "height": 2174,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -2197.9600235277703,
+        "x": -2191.4600235277703,
         "y": -6004.418367449576
       },
       "data": {
@@ -1600,8 +1600,8 @@
     {
       "id": "300",
       "position": {
-        "x": 585.9987375520659,
-        "y": 259.18216874963764
+        "x": 551.2848993024122,
+        "y": 348.3748574041283
       },
       "data": {
         "label": "Data action",
@@ -1627,26 +1627,17 @@
             "key": "fx",
             "value": "",
             "event": "overlay_rive",
-            "data": {
-              "asset": "assets/animations/test-spere.riv",
-              "zone": 3,
-              "align": "center",
-              "fit": "contain",
-              "bindings": {
-                "posx": 100,
-                "posy": 200
-              }
-            }
+            "data": "{\n  \"asset\": \"assets/animations/streakcount_test_2.riv\",\n  \"zone\": 3,\n  \"align\": \"center\",\n  \"fit\": \"contain\",\n  \"bindings\": {\n    \"streakCount\": {{user.streak}}\n  }\n}"
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 655,
+      "width": 310,
+      "height": 778,
       "selected": false,
       "positionAbsolute": {
-        "x": -1611.9612859757044,
-        "y": -5745.2361986999385
+        "x": -1640.175124225358,
+        "y": -5656.043510045448
       },
       "dragging": true,
       "parentId": "148",

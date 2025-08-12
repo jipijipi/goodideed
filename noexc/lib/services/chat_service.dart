@@ -150,6 +150,7 @@ class ChatService {
               (v is num) ? v.toDouble() : double.tryParse(v.toString()) ?? 0.0,
             ));
       }
+      final useDataBinding = (data['useDataBinding'] as bool?) ?? false;
 
       ServiceLocator.instance.riveOverlayService.show(
         asset: asset,
@@ -158,6 +159,7 @@ class ChatService {
         autoHideAfter: autoHide,
         zone: zone,
         bindings: bindings,
+        useDataBinding: useDataBinding,
       );
     } catch (e) {
       logger.error('Failed to handle overlay_rive: $e');

@@ -13,6 +13,7 @@ class RiveOverlayShow extends RiveOverlayCommand {
   final Duration? autoHideAfter;
   final int zone;
   final Map<String, double>? bindings; // Data bindings by property name
+  final bool useDataBinding;
 
   RiveOverlayShow({
     required this.asset,
@@ -22,6 +23,7 @@ class RiveOverlayShow extends RiveOverlayCommand {
     this.autoHideAfter,
     this.zone = 2,
     this.bindings,
+    this.useDataBinding = false,
   });
 }
 
@@ -50,6 +52,7 @@ class RiveOverlayService {
     Duration? autoHideAfter,
     int zone = 2,
     Map<String, double>? bindings,
+    bool useDataBinding = false,
   }) {
     _controller.add(
       RiveOverlayShow(
@@ -60,6 +63,7 @@ class RiveOverlayService {
         autoHideAfter: autoHideAfter,
         zone: zone,
         bindings: bindings,
+        useDataBinding: useDataBinding,
       ),
     );
   }

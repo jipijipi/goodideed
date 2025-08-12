@@ -41,6 +41,7 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
   ViewModelInstance? _viewModelInstance;
   final Map<String, ViewModelInstanceNumber> _numberProps = {};
   Map<String, double>? _pendingBindings;
+  bool _bindingUnsupported = false;
 
   @override
   void initState() {
@@ -111,10 +112,12 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
         _loading = false;
       });
 
-      // Initialize data binding and apply pending bindings
-      _initDataBinding();
-      if (_pendingBindings != null) {
-        _applyBindings(_pendingBindings!);
+      // Initialize data binding and apply pending bindings only if needed
+      if (show.useDataBinding || _pendingBindings != null) {
+        _initDataBinding();
+        if (_pendingBindings != null) {
+          _applyBindings(_pendingBindings!);
+        }
       }
     } catch (e) {
       logger.error('Overlay Rive load failed: $e', component: LogComponent.ui);
@@ -151,8 +154,19 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
 
   void _initDataBinding() {
     final controller = _controller;
-    if (controller == null) return;
-    _viewModelInstance ??= controller.dataBind(DataBind.auto());
+    if (controller == null || _bindingUnsupported || _viewModelInstance != null) {
+      return;
+    }
+    try {
+      _viewModelInstance = controller.dataBind(DataBind.auto());
+    } catch (e) {
+      // If the asset has no exported view model, skip further attempts
+      _bindingUnsupported = true;
+      logger.warning(
+        'Data binding not available for this Rive asset: $e',
+        component: LogComponent.ui,
+      );
+    }
   }
 
   void _applyBindings(Map<String, double> bindings) {
@@ -162,7 +176,7 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
     }
     _initDataBinding();
     final viewModel = _viewModelInstance;
-    if (viewModel == null) {
+    if (viewModel == null || _bindingUnsupported) {
       _pendingBindings = bindings;
       return;
     }

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-12T15:24:56.138Z",
+  "lastUpdated": "2025-08-12T15:47:20.123Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-12T15:24:56.127Z"
+    "timestamp": "2025-08-12T15:47:20.077Z"
   },
   "nodes": [
     {
@@ -109,21 +109,21 @@
     {
       "id": "145",
       "position": {
-        "x": -6156.047849554584,
-        "y": 1877.8997985547248
+        "x": -6538.255138831724,
+        "y": 1879.7919138481761
       },
       "type": "group",
       "style": {
-        "width": 468,
-        "height": 1071.140296942222,
+        "width": 470.2556337954866,
+        "height": 1295.1402969422215,
         "zIndex": 999
       },
-      "width": 468,
-      "height": 1071,
+      "width": 470,
+      "height": 1295,
       "selected": false,
       "positionAbsolute": {
-        "x": -6156.047849554584,
-        "y": 1877.8997985547248
+        "x": -6538.255138831724,
+        "y": 1879.7919138481761
       },
       "dragging": false,
       "data": {
@@ -173,22 +173,22 @@
     {
       "id": "148",
       "position": {
-        "x": -2191.4600235277703,
-        "y": -6004.418367449576
+        "x": -2405.174856235731,
+        "y": -6013.1198979143155
       },
       "type": "group",
       "style": {
-        "width": 929.9974949208774,
+        "width": 967.9751122603741,
         "height": 2174.2500223139023,
         "zIndex": 999
       },
-      "width": 930,
+      "width": 968,
       "height": 2174,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -2191.4600235277703,
-        "y": -6004.418367449576
+        "x": -2405.174856235731,
+        "y": -6013.1198979143155
       },
       "data": {
         "label": "Group 148",
@@ -1280,16 +1280,16 @@
     {
       "id": "126",
       "position": {
-        "x": 16.782331893363335,
-        "y": 460.00000000000045
+        "x": 58.26495432791944,
+        "y": 427
       },
       "type": "editable",
       "width": 308,
-      "height": 574,
+      "height": 829,
       "selected": false,
       "positionAbsolute": {
-        "x": -7636.358338063527,
-        "y": 3631.7918376622965
+        "x": -6479.990184503805,
+        "y": 2306.791913848176
       },
       "dragging": true,
       "parentId": "145",
@@ -1309,6 +1309,18 @@
             "type": "set",
             "key": "user.isOnNotice",
             "value": false
+          },
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 3,
+              "bindings": {
+                "streakCount": "{user.streak}"
+              }
+            }
           }
         ]
       }
@@ -1600,8 +1612,8 @@
     {
       "id": "300",
       "position": {
-        "x": 523.8169993144022,
-        "y": 324.69563327653395
+        "x": 561.7946166538989,
+        "y": 505.27991756269876
       },
       "data": {
         "label": "Data action",
@@ -1631,18 +1643,34 @@
               "asset": "assets/animations/tristopher_simple.riv",
               "zone": 4,
               "align": "topRight",
-              "fit": "scaleDown"
+              "fit": "scaleDown",
+              "autoHideMs": 3800
+            }
+          },
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive",
+            "data": {
+              "asset": "assets/animations/streakcount_test_2.riv",
+              "zone": 3,
+              "align": "center",
+              "fit": "scaleDown",
+              "bindings": {
+                "streakCount": 0
+              }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 778,
+      "width": 308,
+      "height": 839,
       "selected": false,
       "positionAbsolute": {
-        "x": -1667.643024213368,
-        "y": -5679.722734173042
+        "x": -1843.3802395818323,
+        "y": -5507.839980351617
       },
       "dragging": true,
       "parentId": "148",

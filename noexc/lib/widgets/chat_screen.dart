@@ -3,7 +3,7 @@ import 'chat_screen/chat_state_manager.dart';
 import 'chat_screen/chat_message_list.dart';
 import 'chat_screen/user_panel_overlay.dart';
 import 'chat_screen/frosted_glass_overlay.dart';
-import 'chat_screen/rive_overlay_host.dart';
+import 'chat_screen/rive_overlay_layer.dart';
 import 'user_variables_panel.dart';
 import '../services/service_locator.dart';
 
@@ -54,11 +54,9 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Stack(
         key: const ValueKey('chat_screen_stack'),
         children: [
-          // Background Rive overlay host for zone 3 (behind content)
-          RiveOverlayHost(
-            key: const ValueKey('rive_overlay_zone_3'),
+          // Rive overlay layers behind UI (zones 3, 4)
+          RiveOverlayLayerBehindUI(
             service: ServiceLocator.instance.riveOverlayService,
-            zone: 3,
           ),
 
           // Main chat content
@@ -71,11 +69,9 @@ class _ChatScreenState extends State<ChatScreen> {
             animatedListKey: _stateManager.animatedListKey,
           ),
 
-          // Mid-ground Rive overlay host for zone 4 (above messages, below panels)
-          RiveOverlayHost(
-            key: const ValueKey('rive_overlay_zone_4'),
+          // Mid-ground Rive overlay layer (zone 4) above messages, below panels
+          RiveOverlayLayerMidUI(
             service: ServiceLocator.instance.riveOverlayService,
-            zone: 4,
           ),
 
           // User panel overlay
@@ -92,11 +88,9 @@ class _ChatScreenState extends State<ChatScreen> {
           // Frosted glass overlay in upper area
           const FrostedGlassOverlay(),
 
-          // Global Rive overlay host for zone 2 (above everything)
-          RiveOverlayHost(
-            key: const ValueKey('rive_overlay_zone_2'),
+          // Rive overlay layer above UI (zone 2)
+          RiveOverlayLayerFrontUI(
             service: ServiceLocator.instance.riveOverlayService,
-            zone: 2,
           ),
 
           // Floating Action Buttons in top-right corner

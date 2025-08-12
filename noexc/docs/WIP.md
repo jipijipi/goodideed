@@ -176,3 +176,7 @@ I want to trigger rive animations in different zones of the screen depending on 
 
 Do not code until plan validation
 
+{ "asset": "assets/animations/test-spere.riv", "zone": 3, "align": "center", "fit": "contain", "bindings": { "posx": 100, "posy": 200 } } 
+
+{ "asset": "assets/animations/intro_logo_animated.riv", "autoHideMs": 1800, "align": "center", "fit": "contain", "zone": 2 }
+{ "asset": "assets/animations/test-spere.riv", "autoHideMs": 1800, "align": "center", "fit": "contain", "zone": 2 }

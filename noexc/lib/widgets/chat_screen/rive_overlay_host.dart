@@ -38,6 +38,9 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
   RiveWidgetController? _controller;
   bool _loading = false;
   Timer? _hideTimer;
+  ViewModelInstance? _viewModelInstance;
+  final Map<String, ViewModelInstanceNumber> _numberProps = {};
+  Map<String, double>? _pendingBindings;
 
   @override
   void initState() {
@@ -52,6 +55,10 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
     }
     if (cmd is RiveOverlayHide && cmd.zone == widget.zone) {
       _hide();
+      return;
+    }
+    if (cmd is RiveOverlayUpdate && cmd.zone == widget.zone) {
+      _applyBindings(cmd.bindings);
       return;
     }
   }
@@ -72,6 +79,9 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
         if (mounted) _hide();
       });
     }
+
+    // Stash incoming bindings until controller is ready
+    _pendingBindings = show.bindings;
 
     try {
       // Load Rive file and controller
@@ -101,11 +111,10 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
         _loading = false;
       });
 
-      // Schedule auto-hide if requested
-      if (show.autoHideAfter != null) {
-        Future.delayed(show.autoHideAfter!, () {
-          if (mounted) _hide();
-        });
+      // Initialize data binding and apply pending bindings
+      _initDataBinding();
+      if (_pendingBindings != null) {
+        _applyBindings(_pendingBindings!);
       }
     } catch (e) {
       logger.error('Overlay Rive load failed: $e', component: LogComponent.ui);
@@ -128,10 +137,43 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
   void _disposeRive() {
     _hideTimer?.cancel();
     _hideTimer = null;
+    for (final prop in _numberProps.values) {
+      prop.dispose();
+    }
+    _numberProps.clear();
+    _viewModelInstance?.dispose();
+    _viewModelInstance = null;
     _controller?.dispose();
     _controller = null;
     _file?.dispose();
     _file = null;
+  }
+
+  void _initDataBinding() {
+    final controller = _controller;
+    if (controller == null) return;
+    _viewModelInstance ??= controller.dataBind(DataBind.auto());
+  }
+
+  void _applyBindings(Map<String, double> bindings) {
+    if (_controller == null) {
+      _pendingBindings = bindings;
+      return;
+    }
+    _initDataBinding();
+    final viewModel = _viewModelInstance;
+    if (viewModel == null) {
+      _pendingBindings = bindings;
+      return;
+    }
+    bindings.forEach((key, value) {
+      var prop = _numberProps[key];
+      prop ??= viewModel.number(key);
+      if (prop != null) {
+        _numberProps[key] = prop;
+        prop.value = value;
+      }
+    });
   }
 
   @override
@@ -151,7 +193,7 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
         duration: const Duration(milliseconds: 150),
         child: _active
             ? Container(
-                key: const ValueKey('rive_overlay_zone_2_active'),
+                key: ValueKey('rive_overlay_zone_${widget.zone}_active'),
                 alignment: _align,
                 margin: _margin,
                 // Ensure overlay sits above everything with a full-screen box

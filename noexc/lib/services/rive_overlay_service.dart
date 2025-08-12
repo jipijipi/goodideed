@@ -12,6 +12,7 @@ class RiveOverlayShow extends RiveOverlayCommand {
   final EdgeInsets? margin;
   final Duration? autoHideAfter;
   final int zone;
+  final Map<String, double>? bindings; // Data bindings by property name
 
   RiveOverlayShow({
     required this.asset,
@@ -20,12 +21,19 @@ class RiveOverlayShow extends RiveOverlayCommand {
     this.margin,
     this.autoHideAfter,
     this.zone = 2,
+    this.bindings,
   });
 }
 
 class RiveOverlayHide extends RiveOverlayCommand {
   final int zone;
   RiveOverlayHide({this.zone = 2});
+}
+
+class RiveOverlayUpdate extends RiveOverlayCommand {
+  final int zone;
+  final Map<String, double> bindings;
+  RiveOverlayUpdate({required this.zone, required this.bindings});
 }
 
 /// Service used to trigger global Rive overlays (e.g., achievements/trophies).
@@ -41,6 +49,7 @@ class RiveOverlayService {
     EdgeInsets? margin,
     Duration? autoHideAfter,
     int zone = 2,
+    Map<String, double>? bindings,
   }) {
     _controller.add(
       RiveOverlayShow(
@@ -50,12 +59,17 @@ class RiveOverlayService {
         margin: margin,
         autoHideAfter: autoHideAfter,
         zone: zone,
+        bindings: bindings,
       ),
     );
   }
 
   void hide({int zone = 2}) {
     _controller.add(RiveOverlayHide(zone: zone));
+  }
+
+  void update({required int zone, required Map<String, double> bindings}) {
+    _controller.add(RiveOverlayUpdate(zone: zone, bindings: bindings));
   }
 
   void dispose() {

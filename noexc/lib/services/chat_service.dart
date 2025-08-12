@@ -112,6 +112,9 @@ class ChatService {
       case 'overlay_rive':
         await _handleOverlayRive(data);
         break;
+      case 'overlay_rive_update':
+        await _handleOverlayRiveUpdate(data);
+        break;
       default:
         // Forward unknown events to UI callback
         if (_onEvent != null) {
@@ -139,6 +142,14 @@ class ChatService {
       final zone = (data['zone'] as int?) ?? 2;
       final autoHideMs = data['autoHideMs'] as int?;
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
+      final bindingsMap = data['bindings'];
+      Map<String, double>? bindings;
+      if (bindingsMap is Map) {
+        bindings = bindingsMap.map<String, double>((k, v) => MapEntry(
+              k.toString(),
+              (v is num) ? v.toDouble() : double.tryParse(v.toString()) ?? 0.0,
+            ));
+      }
 
       ServiceLocator.instance.riveOverlayService.show(
         asset: asset,
@@ -146,9 +157,25 @@ class ChatService {
         fit: fit,
         autoHideAfter: autoHide,
         zone: zone,
+        bindings: bindings,
       );
     } catch (e) {
       logger.error('Failed to handle overlay_rive: $e');
+    }
+  }
+
+  Future<void> _handleOverlayRiveUpdate(Map<String, dynamic> data) async {
+    try {
+      final zone = (data['zone'] as int?) ?? 3;
+      final bindingsMap = data['bindings'];
+      if (bindingsMap is! Map) return;
+      final bindings = bindingsMap.map<String, double>((k, v) => MapEntry(
+            k.toString(),
+            (v is num) ? v.toDouble() : double.tryParse(v.toString()) ?? 0.0,
+          ));
+      ServiceLocator.instance.riveOverlayService.update(zone: zone, bindings: bindings);
+    } catch (e) {
+      logger.error('Failed to handle overlay_rive_update: $e');
     }
   }
 

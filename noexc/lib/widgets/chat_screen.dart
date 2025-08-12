@@ -54,6 +54,13 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Stack(
         key: const ValueKey('chat_screen_stack'),
         children: [
+          // Background Rive overlay host for zone 3 (behind content)
+          RiveOverlayHost(
+            key: const ValueKey('rive_overlay_zone_3'),
+            service: ServiceLocator.instance.riveOverlayService,
+            zone: 3,
+          ),
+
           // Main chat content
           ChatMessageList(
             messages: _stateManager.displayedMessages,

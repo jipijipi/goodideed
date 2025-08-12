@@ -104,6 +104,42 @@ Update the streak later:
 }
 ```
 
+### D. Bindings from stored values (templating)
+- To bind a stored value, use the templating syntax with braces, or a shorthand path. Both resolve through the stored data (user/session/task):
+
+Show with stored user streak:
+```json
+{
+  "type": "trigger",
+  "key": "fx",
+  "event": "overlay_rive",
+  "data": {
+    "asset": "assets/animations/streakcount_test.riv",
+    "zone": 3,
+    "useDataBinding": true,
+    "bindings": { "streak": "{user.streak}" }
+  }
+}
+```
+
+Update from a stored path using shorthand (no braces):
+```json
+{
+  "type": "trigger",
+  "key": "fx",
+  "event": "overlay_rive_update",
+  "data": {
+    "zone": 3,
+    "bindings": { "streak": "user.streak" }
+  }
+}
+```
+
+Notes:
+- Values must resolve to numbers (int/double). Non‑numeric results are skipped with a warning (not coerced to 0).
+- Supported roots: `user.*`, `session.*`, `task.*` (from stored data).
+- Property names in the Rive file must match binding keys (e.g., `streak`).
+
 ## Authoring Notes (Rive)
 - For data binding, the Rive file must export a View Model and expose matching property names (e.g., `streak`, `posx`, `posy`).
 - Bindings are numeric (`double`) values. Strings/booleans are not supported by this quick path.
@@ -128,4 +164,3 @@ Update the streak later:
 - Updates not applying:
   - Confirm property names match the Rive file’s View Model.
   - Ensure the zone matches the one you used in the initial `overlay_rive`.
-

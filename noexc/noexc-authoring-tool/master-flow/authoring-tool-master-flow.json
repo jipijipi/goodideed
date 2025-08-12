@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-12T14:10:13.806Z",
+  "lastUpdated": "2025-08-12T14:54:37.426Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-12T14:10:13.802Z"
+    "timestamp": "2025-08-12T14:54:37.409Z"
   },
   "nodes": [
     {
@@ -1633,15 +1633,15 @@
               "align": "center",
               "fit": "contain",
               "bindings": {
-                "streakCount": "{{user.streak}}"
+                "streakCount": "{user.streak}"
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 778,
+      "width": 308,
+      "height": 776,
       "selected": false,
       "positionAbsolute": {
         "x": -1640.175124225358,

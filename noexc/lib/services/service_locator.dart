@@ -21,6 +21,10 @@ class ServiceLocator {
   late final UserDataService _userDataService;
   late final TextTemplatingService _templatingService;
   late final TextVariantsService _variantsService;
+  TextTemplatingService get templatingService {
+    _ensureInitialized();
+    return _templatingService;
+  }
   late final SessionService _sessionService;
   late final ChatService _chatService;
   late final MessageQueue _messageQueue;

@@ -177,7 +177,7 @@ class ChatService {
   Future<Map<String, double>?> _resolveNumericBindings(dynamic raw) async {
     if (raw is! Map) return null;
     final Map<String, double> result = {};
-    final userData = ServiceLocator.instance.userDataService;
+    final templating = ServiceLocator.instance.templatingService;
 
     for (final entry in raw.entries) {
       final key = entry.key.toString();
@@ -187,30 +187,17 @@ class ChatService {
       if (value is num) {
         resolved = value.toDouble();
       } else if (value is String) {
-        final trimmed = value.trim();
-        String? varPath;
-        final templateMatch = RegExp(r"^\{\{\s*(.+?)\s*\}\}").firstMatch(trimmed);
-        if (templateMatch != null) {
-          varPath = templateMatch.group(1)?.trim();
-        } else {
-          // Treat plain strings as a path shorthand (e.g., "user.streak")
-          varPath = trimmed;
-        }
-
-        if (varPath != null && varPath.isNotEmpty) {
-          // Currently support user.* explicitly; unknown roots are ignored gracefully
-          if (varPath.startsWith('user.')) {
-            final dyn = await userData.getValue<dynamic>(varPath);
-            resolved = _toDouble(dyn);
-            if (resolved == null) {
-              logger.warning('Binding "$key" could not parse value for "$varPath"');
-            }
-          } else {
-            // Try direct numeric parse last
-            resolved = double.tryParse(varPath);
-            if (resolved == null) {
-              logger.warning('Binding "$key" uses unsupported path "$varPath"');
-            }
+        // If it's already numeric string, parse directly.
+        resolved = double.tryParse(value);
+        if (resolved == null) {
+          // Use TextTemplatingService to resolve variables from user/session/task data.
+          // Accept both explicit templates (e.g., "{user.streak}") and shorthand paths (e.g., "user.streak").
+          final template = value.contains('{') ? value : '{${value.trim()}}';
+          final processed = await templating.processTemplate(template);
+          // If unresolved, processed may still contain braces; attempt numeric parse only.
+          resolved = double.tryParse(processed);
+          if (resolved == null) {
+            logger.warning('Binding "$key" is not numeric after templating: "$value" -> "$processed"');
           }
         }
       }

@@ -142,14 +142,7 @@ class ChatService {
       final zone = (data['zone'] as int?) ?? 2;
       final autoHideMs = data['autoHideMs'] as int?;
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
-      final bindingsMap = data['bindings'];
-      Map<String, double>? bindings;
-      if (bindingsMap is Map) {
-        bindings = bindingsMap.map<String, double>((k, v) => MapEntry(
-              k.toString(),
-              (v is num) ? v.toDouble() : double.tryParse(v.toString()) ?? 0.0,
-            ));
-      }
+      final bindings = await _resolveNumericBindings(data['bindings']);
       final useDataBinding = (data['useDataBinding'] as bool?) ?? false;
 
       ServiceLocator.instance.riveOverlayService.show(
@@ -169,16 +162,72 @@ class ChatService {
   Future<void> _handleOverlayRiveUpdate(Map<String, dynamic> data) async {
     try {
       final zone = (data['zone'] as int?) ?? 3;
-      final bindingsMap = data['bindings'];
-      if (bindingsMap is! Map) return;
-      final bindings = bindingsMap.map<String, double>((k, v) => MapEntry(
-            k.toString(),
-            (v is num) ? v.toDouble() : double.tryParse(v.toString()) ?? 0.0,
-          ));
+      final bindings = await _resolveNumericBindings(data['bindings']);
+      if (bindings == null || bindings.isEmpty) return;
       ServiceLocator.instance.riveOverlayService.update(zone: zone, bindings: bindings);
     } catch (e) {
       logger.error('Failed to handle overlay_rive_update: $e');
     }
+  }
+
+  /// Resolve a `bindings` map into numeric values, supporting:
+  /// - numeric literals (int/double)
+  /// - templated strings like "{{ user.streak }}"
+  /// - direct path strings like "user.streak"
+  Future<Map<String, double>?> _resolveNumericBindings(dynamic raw) async {
+    if (raw is! Map) return null;
+    final Map<String, double> result = {};
+    final userData = ServiceLocator.instance.userDataService;
+
+    for (final entry in raw.entries) {
+      final key = entry.key.toString();
+      final value = entry.value;
+
+      double? resolved;
+      if (value is num) {
+        resolved = value.toDouble();
+      } else if (value is String) {
+        final trimmed = value.trim();
+        String? varPath;
+        final templateMatch = RegExp(r"^\{\{\s*(.+?)\s*\}\}").firstMatch(trimmed);
+        if (templateMatch != null) {
+          varPath = templateMatch.group(1)?.trim();
+        } else {
+          // Treat plain strings as a path shorthand (e.g., "user.streak")
+          varPath = trimmed;
+        }
+
+        if (varPath != null && varPath.isNotEmpty) {
+          // Currently support user.* explicitly; unknown roots are ignored gracefully
+          if (varPath.startsWith('user.')) {
+            final dyn = await userData.getValue<dynamic>(varPath);
+            resolved = _toDouble(dyn);
+            if (resolved == null) {
+              logger.warning('Binding "$key" could not parse value for "$varPath"');
+            }
+          } else {
+            // Try direct numeric parse last
+            resolved = double.tryParse(varPath);
+            if (resolved == null) {
+              logger.warning('Binding "$key" uses unsupported path "$varPath"');
+            }
+          }
+        }
+      }
+
+      if (resolved != null) {
+        result[key] = resolved;
+      }
+    }
+
+    return result;
+  }
+
+  double? _toDouble(dynamic v) {
+    if (v == null) return null;
+    if (v is num) return v.toDouble();
+    if (v is String) return double.tryParse(v);
+    return null;
   }
 
   Alignment? _parseAlignment(String? value) {

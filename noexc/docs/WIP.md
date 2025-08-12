@@ -248,3 +248,60 @@ Saturday : Not an active day, no notifications
 Sunday : Not an active day, no notifications
 
 A fallback system already exists currently for notifications set to be scheduled in the past, as only a deadline notification exist the fallback reschedules the notification to the next active day. This system needs to be reevaluated in light of the current plan. Do not code until plan approval.
+
+**Minimal Cleanup Plan**
+
+- **Unify Payload Types:**
+  - Change payload `type` to snake_case aligned with parser: use `daily_reminder
+` for all scheduled notifications (start/mid/deadline/comeback) to ensure taps c
+lassify as `dailyReminder`.
+  - Add parser tolerance: extend `NotificationType.fromString` to accept both `d
+aily_reminder` and legacy `dailyReminder` (camelCase) to be future‑proof. Option
+ally accept `daily_nudge`/`come_back` but map them to `dailyReminder` to keep th
+e enum minimal.
+
+- **Modernize Cancellation API:**
+  - Update `cancelDeadlineReminder()` to cancel “today’s deadline” by scanning p
+ending notifications and canceling those with `payload.slot == 'deadline'` and `
+payload.taskDate == today`. This restores behavior now that the single fixed ID
+is no longer used.
+  - Deprecate `_dailyReminderNotificationId = 1001` and stop referencing it in c
+ode and comments.
+
+- **Remove/Quarantine Legacy References:**
+  - Audit and remove any left-over reads/writes tied to the old single-notificat
+ion model (e.g., `StorageKeys.notificationScheduledFor`, which is no longer used
+ by `getScheduledNotificationDetails`).
+  - Keep `notificationLastScheduled` as a useful debug/telemetry timestamp.
+
+- **Keep Channel Strategy Simple:**
+  - Continue using the single Android channel (`daily_reminders`) for all catego
+ries. It’s sufficient for current scope and avoids complexity.
+  - Revisit multi-channel split only if you want per-category user control (e.g.
+, “Daily nudges”, “Deadline checks”, “Come back”), which would require migration
+ and UX work.
+
+- **Surface Date-Scoped Flag (Optional but Helpful):**
+  - Debug Panel: Display `notification.onlyFinalOnDate` if set to explain why St
+art/Mid are suppressed for the day. This aids QA without changing logic.
+
+- **Tests/Verification:**
+  - Add a small test to assert tap classification returns `dailyReminder` for an
+y of the scheduled notifications with the new `type` format.
+  - Add a test for `cancelDeadlineReminder()` that verifies it cancels only the
+deadline slot for today and leaves other days/slots intact.
+
+**Why this is minimal**
+- All changes are localized: scheduler payloads, small parser tweak, and one can
+cellation helper.
+- No schema changes beyond using the already-adopted date-scoped key.
+- Keeps channels simple; avoids enum expansion or broad refactors.
+
+user
+Only do the following :
+
+- Unify Payload Types
+- Modernize Cancellation API
+- Remove/Quarantine Legacy References
+- Add a small test to assert tap classification returns `dailyReminder` for an
+y of the scheduled notifications with the new `type` format.

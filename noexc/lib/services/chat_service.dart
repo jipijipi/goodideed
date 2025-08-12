@@ -210,12 +210,7 @@ class ChatService {
     return result;
   }
 
-  double? _toDouble(dynamic v) {
-    if (v == null) return null;
-    if (v is num) return v.toDouble();
-    if (v is String) return double.tryParse(v);
-    return null;
-  }
+  // Removed unused helper _toDouble after templating refactor
 
   Alignment? _parseAlignment(String? value) {
     switch (value) {

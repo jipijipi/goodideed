@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:noexc/services/service_locator.dart';
+import 'package:rive/rive.dart';
 import 'package:noexc/widgets/chat_screen/rive_overlay_host.dart';
 
 import '../test_helpers.dart';
@@ -62,4 +63,3 @@ void main() {
     expect(find.byKey(const ValueKey('rive_overlay_zone_4_active')), findsNothing);
   });
 }
-

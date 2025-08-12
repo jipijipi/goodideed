@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:noexc/services/service_locator.dart';
-import 'package:noexc/services/user_data_service.dart';
 
 import '../test_helpers.dart';
 
@@ -19,7 +18,7 @@ void main() {
   });
 
   test('TextTemplatingService resolves {user.streak} to numeric string', () async {
-    final userData = ServiceLocator.instance.userDataService as UserDataService;
+    final userData = ServiceLocator.instance.userDataService;
     await userData.storeValue('user.streak', 123);
 
     final templating = ServiceLocator.instance.templatingService;
@@ -30,7 +29,7 @@ void main() {
   });
 
   test('Templating supports multiple roots (session.*, task.*)', () async {
-    final userData = ServiceLocator.instance.userDataService as UserDataService;
+    final userData = ServiceLocator.instance.userDataService;
     await userData.storeValue('session.visitCount', 5);
     await userData.storeValue('task.statusScore', 42);
 
@@ -44,4 +43,3 @@ void main() {
     expect(double.tryParse(res2), 42.0);
   });
 }
-

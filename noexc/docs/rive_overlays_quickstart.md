@@ -7,6 +7,7 @@ Works with rive: `0.14.0-dev.5` (Rive 0.14). The app already calls `RiveNative.i
 ## Zones
 - Zone 2: Foreground overlay (above all UI). Ideal for trophies/achievements. Typically auto-hides.
 - Zone 3: Background overlay (behind chat content, above the app background). Ideal for persistent, data‑bound visuals (e.g., streak counter, growing tree).
+- Zone 4: Mid-ground overlay (above message bubbles, beneath debug panels/UI). Ideal for interactive visuals reacting to user actions (e.g., clock reacting to a slider).
 
 Both zones are always mounted; they render only after you trigger them.
 
@@ -139,6 +140,27 @@ Notes:
 - Values must resolve to numbers (int/double). Non‑numeric results are skipped with a warning (not coerced to 0).
 - Supported roots: `user.*`, `session.*`, `task.*` (from stored data).
 - Property names in the Rive file must match binding keys (e.g., `streak`).
+
+### E. Zone 4 (mid-ground) quick example
+Show an interactive clock above messages (no auto-hide), then update from UI code:
+```json
+{
+  "type": "trigger",
+  "key": "fx",
+  "event": "overlay_rive",
+  "data": {
+    "asset": "assets/animations/clock.riv",
+    "zone": 4,
+    "useDataBinding": true
+  }
+}
+```
+In UI code (e.g., slider onChanged):
+```dart
+ServiceLocator.instance.riveOverlayService.update(zone: 4, bindings: {
+  'clockAngle': angle,
+});
+```
 
 ## Authoring Notes (Rive)
 - For data binding, the Rive file must export a View Model and expose matching property names (e.g., `streak`, `posx`, `posy`).

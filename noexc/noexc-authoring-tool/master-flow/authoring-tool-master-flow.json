@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-12T15:05:24.021Z",
+  "lastUpdated": "2025-08-12T15:24:56.138Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-12T15:05:24.005Z"
+    "timestamp": "2025-08-12T15:24:56.127Z"
   },
   "nodes": [
     {
@@ -1629,7 +1629,7 @@
             "event": "overlay_rive",
             "data": {
               "asset": "assets/animations/tristopher_simple.riv",
-              "zone": 3,
+              "zone": 4,
               "align": "topRight",
               "fit": "scaleDown"
             }

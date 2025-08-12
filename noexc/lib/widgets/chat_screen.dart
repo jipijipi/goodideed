@@ -71,6 +71,13 @@ class _ChatScreenState extends State<ChatScreen> {
             animatedListKey: _stateManager.animatedListKey,
           ),
 
+          // Mid-ground Rive overlay host for zone 4 (above messages, below panels)
+          RiveOverlayHost(
+            key: const ValueKey('rive_overlay_zone_4'),
+            service: ServiceLocator.instance.riveOverlayService,
+            zone: 4,
+          ),
+
           // User panel overlay
           UserPanelOverlay(
             isVisible: _stateManager.isPanelVisible,

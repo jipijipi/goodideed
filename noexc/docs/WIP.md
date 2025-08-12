@@ -182,12 +182,4 @@ Do not code until plan validation
 { "asset": "assets/animations/test-spere.riv", "autoHideMs": 1800, "align": "center", "fit": "contain", "zone": 2 }
 
 
-The trigger works fine when the variable is set directly ("streakCount": 3)
-However, the script can't always use hard coded values, if the streak is incremented for example it should be able to update thanks to the stored user.streak. The script already make use of those values in several places, if it is possible already inside the data field of data action nodes provide guidance, else provide a plan.
-Tested so far : 
-"bindings": {"streakCount": 3} : OK, displays 3.000..
-"bindings": {"streakCount": "user.streak"} : NOT OK, displays 0.000.. while user.streak==123
-"bindings": {"streakCount": user.streak} : NOT OK AT ALL, fails the entire chat building with exceptions : flutter: ❌ GENERAL: Failed to load sequence welcome_seq: Exception: Failed to load chat script for sequence welcome_seq: type 'String' is not a subtype of type 'Map<dynamic, dynamic>'
-flutter: ❌ UI: Error loading chat script: Exception: Failed to load chat script for sequence welcome_seq: type 'String' is not a subtype of type 'Map<dynamic, dynamic>'
-
-Do not code, discuss a plan of action
+The last zone will be very similar to the background zone (3), except that it will sit above the message bubbles but beneath any panel or UI. Animations here will react mostly to actions performed by the user (changing parameters for example). One example would be an animated clock reacting to the user adjusting a slider. Discuss how to best implement it by reusing whats already in place as much as possible. Propose refactoring as you feel necessary. Do not code until plan approval.

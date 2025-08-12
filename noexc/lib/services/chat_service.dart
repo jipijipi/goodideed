@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 import '../models/chat_message.dart';
 import '../models/chat_sequence.dart';
 import '../models/choice.dart';
@@ -107,6 +109,9 @@ class ChatService {
       case 'notification_disable':
         await _handleNotificationDisable();
         break;
+      case 'overlay_rive':
+        await _handleOverlayRive(data);
+        break;
       default:
         // Forward unknown events to UI callback
         if (_onEvent != null) {
@@ -116,6 +121,80 @@ class ChatService {
             // Silent error handling
           }
         }
+    }
+  }
+
+  /// Handle overlay_rive event to display a global overlay animation
+  Future<void> _handleOverlayRive(Map<String, dynamic> data) async {
+    try {
+      final asset = data['asset'] as String?;
+      if (asset == null || asset.isEmpty) {
+        logger.warning('overlay_rive missing asset path');
+        return;
+      }
+      final alignStr = data['align'] as String?;
+      final align = _parseAlignment(alignStr) ?? Alignment.center;
+      final fitStr = data['fit'] as String?;
+      final fit = _parseRiveFit(fitStr) ?? Fit.contain;
+      final zone = (data['zone'] as int?) ?? 2;
+      final autoHideMs = data['autoHideMs'] as int?;
+      final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
+
+      ServiceLocator.instance.riveOverlayService.show(
+        asset: asset,
+        align: align,
+        fit: fit,
+        autoHideAfter: autoHide,
+        zone: zone,
+      );
+    } catch (e) {
+      logger.error('Failed to handle overlay_rive: $e');
+    }
+  }
+
+  Alignment? _parseAlignment(String? value) {
+    switch (value) {
+      case 'topLeft':
+        return Alignment.topLeft;
+      case 'topCenter':
+        return Alignment.topCenter;
+      case 'topRight':
+        return Alignment.topRight;
+      case 'centerLeft':
+        return Alignment.centerLeft;
+      case 'center':
+        return Alignment.center;
+      case 'centerRight':
+        return Alignment.centerRight;
+      case 'bottomLeft':
+        return Alignment.bottomLeft;
+      case 'bottomCenter':
+        return Alignment.bottomCenter;
+      case 'bottomRight':
+        return Alignment.bottomRight;
+      default:
+        return null;
+    }
+  }
+
+  Fit? _parseRiveFit(String? value) {
+    switch (value) {
+      case 'contain':
+        return Fit.contain;
+      case 'cover':
+        return Fit.cover;
+      case 'fill':
+        return Fit.fill;
+      case 'fitWidth':
+        return Fit.fitWidth;
+      case 'fitHeight':
+        return Fit.fitHeight;
+      case 'none':
+        return Fit.none;
+      case 'scaleDown':
+        return Fit.scaleDown;
+      default:
+        return null;
     }
   }
 

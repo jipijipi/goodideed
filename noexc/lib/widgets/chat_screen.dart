@@ -3,7 +3,9 @@ import 'chat_screen/chat_state_manager.dart';
 import 'chat_screen/chat_message_list.dart';
 import 'chat_screen/user_panel_overlay.dart';
 import 'chat_screen/frosted_glass_overlay.dart';
+import 'chat_screen/rive_overlay_host.dart';
 import 'user_variables_panel.dart';
+import '../services/service_locator.dart';
 
 class ChatScreen extends StatefulWidget {
   final VoidCallback? onThemeToggle;
@@ -75,6 +77,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
           // Frosted glass overlay in upper area
           const FrostedGlassOverlay(),
+
+          // Global Rive overlay host for zone 2 (above everything)
+          RiveOverlayHost(
+            key: const ValueKey('rive_overlay_zone_2'),
+            service: ServiceLocator.instance.riveOverlayService,
+            zone: 2,
+          ),
 
           // Floating Action Buttons in top-right corner
           Positioned(

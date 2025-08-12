@@ -144,84 +144,7 @@ After setting the task, if the user *FIRST* checks in on :
 
 flutter test --machine | dart tool/test_failure_extractor.dart > failures.json
 
-1) The input in bubbles is sometimes hard to select, is there a simple way to make it a larger target?
-2) Make the input text style identical to the style of the message it creates
-3) There is a slim zone next to the device bottom from where bubble come from, is there a way to make the display truely fullscreen with the bubbles coming from the very edge?
 
-
-
-I want to introduce the concept of local notifications/reminders to the
-  app. Propose a plan to set it up as simply and straightforwardly as
-  possible for one reminder per day for now at deadline time. Make sure to
-  keep everything notification related modular
-
-
-
-rule : 
-
-intensity 1:
-    1 at start time
-    1 at deadline time
-    2 total
-
-intensity 2:
-    1 at start time
-    2 in between
-    1 at deadline time
-    4 total
-
-intensity 3:
-    1 at start time
-    6 in between
-    1 at deadline time
-    8 total
-
-8 9 10 11 12 13 14 15 16 17 18
-1                            1
-
-14 15 16 17 18
-1           1
-
-
-New notifications related triggers need to be added to the script's data action nodes capability
-1) Triggers the permission prompt for notifications if not done already
-2) Recalculates notification schedule
-3) Disable notifications
-
-
-I want to upgrade the notification system of the app in a logical and straightforward way:
-1) Familiarize yourself with the current notification implementation
-2) Familiarize yourself with the launch calculations
-3) Familiarize yourself with the scripts triggers
-
-4) Propose a logical, lean plan to enhance the notification system and scheduling based on :
-
-Notification Scheduling Logic
-1.	On the Day of the Task
-	•	Task Start → Send encouraging message at the scheduled start time.
-	•	Between Start & Deadline → Send multiple reminders based on the user’s selected reminder intensity.
-	•	Deadline → Send a “completion check” notification.
-2.	Snooze / Cancellation Rules
-	•	Task Completed → Cancel all remaining reminders for that day. (triggered from script)
-	•	Task Marked as Pending → Cancel all remaining reminders except the final one. (triggered from script)
-3.	After Multiple Consecutive Unchecked Days (2 active days, when task is past end date)
-	•	Send occasional “come back” reminders with gradually decreasing intensity over time.
-
-Try to rely on existing calculations and script interactions as much as logically possible, create new concepts and calculations only when missing from existing logic or when there is a risk of clashing values. Do not code until plan approval.
-
-Lets continue planning :
-
-Phase 1) Add multi-stage day schedule : 
-    Good plan.
-Phase 2) Snooze/cancellation rules via script triggers :
-    Task Completed : Is a new event necessary? since declaring completion will already reset the task.currentDate and reschedule future notifications?
-    Task Marked Pending : Instead of tracking which notifications to delete, would it be logical to just cancel all reminders and reschedule from the deadline? Discuss
-Phase 3) “Come back” reminders after multiple consecutive unchecked days :
-    The user will most likely never open the app until the need to send a comeback notification, does the plan account for this or is it dependant on recalculations?
-Phase 4) Debug and visibility : 
-    Good plan.
-Phase 5) Backward-compatible rollout :
-    Good plan.
 
 In effect, here is what a week of notifications would look like for a user (using intensity 1 for simplicity) setting a task on Monday at 11am with Start time at 10:00 and Deadline time at 18:00. His active days are monday to friday : 
 
@@ -247,61 +170,8 @@ Friday/and following active days past end date : Possibly third comeback notific
 Saturday : Not an active day, no notifications
 Sunday : Not an active day, no notifications
 
-A fallback system already exists currently for notifications set to be scheduled in the past, as only a deadline notification exist the fallback reschedules the notification to the next active day. This system needs to be reevaluated in light of the current plan. Do not code until plan approval.
+I want to trigger rive animations in different zones of the screen depending on context. 
+1) Rive animations are already used inline in chat bubbles. Start by reviewing how they are implemented, check that they use the correct API as the new version is a major prerelease (rive: ^0.14.0-dev.5)
+2) The second of 4 zones for rive animations will be overlaid on top of everything. This zone will be used to display animations like achievements / trophies. These animations will be triggered directly from the script. Explain the best and most straightforward way to achieve it.
 
-**Minimal Cleanup Plan**
-
-- **Unify Payload Types:**
-  - Change payload `type` to snake_case aligned with parser: use `daily_reminder
-` for all scheduled notifications (start/mid/deadline/comeback) to ensure taps c
-lassify as `dailyReminder`.
-  - Add parser tolerance: extend `NotificationType.fromString` to accept both `d
-aily_reminder` and legacy `dailyReminder` (camelCase) to be future‑proof. Option
-ally accept `daily_nudge`/`come_back` but map them to `dailyReminder` to keep th
-e enum minimal.
-
-- **Modernize Cancellation API:**
-  - Update `cancelDeadlineReminder()` to cancel “today’s deadline” by scanning p
-ending notifications and canceling those with `payload.slot == 'deadline'` and `
-payload.taskDate == today`. This restores behavior now that the single fixed ID
-is no longer used.
-  - Deprecate `_dailyReminderNotificationId = 1001` and stop referencing it in c
-ode and comments.
-
-- **Remove/Quarantine Legacy References:**
-  - Audit and remove any left-over reads/writes tied to the old single-notificat
-ion model (e.g., `StorageKeys.notificationScheduledFor`, which is no longer used
- by `getScheduledNotificationDetails`).
-  - Keep `notificationLastScheduled` as a useful debug/telemetry timestamp.
-
-- **Keep Channel Strategy Simple:**
-  - Continue using the single Android channel (`daily_reminders`) for all catego
-ries. It’s sufficient for current scope and avoids complexity.
-  - Revisit multi-channel split only if you want per-category user control (e.g.
-, “Daily nudges”, “Deadline checks”, “Come back”), which would require migration
- and UX work.
-
-- **Surface Date-Scoped Flag (Optional but Helpful):**
-  - Debug Panel: Display `notification.onlyFinalOnDate` if set to explain why St
-art/Mid are suppressed for the day. This aids QA without changing logic.
-
-- **Tests/Verification:**
-  - Add a small test to assert tap classification returns `dailyReminder` for an
-y of the scheduled notifications with the new `type` format.
-  - Add a test for `cancelDeadlineReminder()` that verifies it cancels only the
-deadline slot for today and leaves other days/slots intact.
-
-**Why this is minimal**
-- All changes are localized: scheduler payloads, small parser tweak, and one can
-cellation helper.
-- No schema changes beyond using the already-adopted date-scoped key.
-- Keeps channels simple; avoids enum expansion or broad refactors.
-
-user
-Only do the following :
-
-- Unify Payload Types
-- Modernize Cancellation API
-- Remove/Quarantine Legacy References
-- Add a small test to assert tap classification returns `dailyReminder` for an
-y of the scheduled notifications with the new `type` format.
+Do not code until plan validation

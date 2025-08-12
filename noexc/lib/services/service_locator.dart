@@ -9,6 +9,7 @@ import 'display_settings_service.dart';
 import 'message_delay_policy.dart';
 import 'notification_service.dart';
 import 'app_state_service.dart';
+import 'rive_overlay_service.dart';
 
 /// Application-level service locator for dependency injection
 ///
@@ -26,6 +27,7 @@ class ServiceLocator {
   late final DisplaySettingsService _displaySettingsService;
   late final NotificationService _notificationService;
   late final AppStateService _appStateService;
+  late final RiveOverlayService _riveOverlayService;
   final logger = LoggerService.instance;
 
   bool _initialized = false;
@@ -76,6 +78,9 @@ class ServiceLocator {
       // Initialize app state service
       _appStateService = AppStateService(_userDataService);
       await _appStateService.initialize();
+
+      // Initialize overlay service
+      _riveOverlayService = RiveOverlayService();
 
       // Connect notification service to app state service
       _notificationService.setAppStateService(_appStateService);
@@ -130,6 +135,12 @@ class ServiceLocator {
     return _appStateService;
   }
 
+  /// Get the Rive overlay service
+  RiveOverlayService get riveOverlayService {
+    _ensureInitialized();
+    return _riveOverlayService;
+  }
+
   /// Check if services are initialized
   bool get isInitialized => _initialized;
 
@@ -141,6 +152,7 @@ class ServiceLocator {
     logger.info('Disposing application services');
 
     _messageQueue.dispose();
+    _riveOverlayService.dispose();
     _initialized = false;
 
     logger.info('All services disposed');

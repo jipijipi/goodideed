@@ -183,3 +183,24 @@ Do not code until plan validation
 
 
 The last zone will be very similar to the background zone (3), except that it will sit above the message bubbles but beneath any panel or UI. Animations here will react mostly to actions performed by the user (changing parameters for example). One example would be an animated clock reacting to the user adjusting a slider. Discuss how to best implement it by reusing whats already in place as much as possible. Propose refactoring as you feel necessary. Do not code until plan approval.
+
+
+{
+  "asset": "assets/animations/arm_rig_test.riv",
+  "zone": 4,
+  "align": "center",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "hand_x": 300,
+    "hand_y": 300
+  }
+}
+
+{
+  "zone": 4,
+  "bindings": {
+    "hand_x": 250,
+    "hand_y": 250
+  }
+}

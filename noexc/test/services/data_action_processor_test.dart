@@ -706,5 +706,290 @@ void main() {
         },
       );
     });
+
+    group('List Operations', () {
+      test('should append to empty list (create new)', () async {
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'user.tags',
+          value: 'important',
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['important']);
+      });
+
+      test('should append to existing list', () async {
+        // Set initial list
+        await userDataService.storeValue('user.tags', ['first', 'second']);
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'user.tags',
+          value: 'third',
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['first', 'second', 'third']);
+      });
+
+      test('should not append duplicate values', () async {
+        // Set initial list
+        await userDataService.storeValue('user.tags', ['first', 'second']);
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'user.tags',
+          value: 'second', // Duplicate
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['first', 'second']); // No duplicate added
+      });
+
+      test('should append to JSON string list', () async {
+        // Set initial list as JSON string (how weekdays are often stored)
+        await userDataService.storeValue('task.activeDays', '[1,2,3]');
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'task.activeDays',
+          value: 4,
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('task.activeDays');
+        expect(result, [1, 2, 3, 4]);
+      });
+
+      test('should handle append with null value gracefully', () async {
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'user.tags',
+          value: null,
+        );
+
+        await processor.processActions([action]);
+
+        // Should not create list or modify anything
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, isNull);
+      });
+
+      test('should handle append to non-list value gracefully', () async {
+        // Set a non-list value
+        await userDataService.storeValue('user.name', 'John');
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'user.name',
+          value: 'Doe',
+        );
+
+        await processor.processActions([action]);
+
+        // Original value should remain unchanged
+        final result = await userDataService.getValue<String>('user.name');
+        expect(result, 'John');
+      });
+
+      test('should remove from existing list', () async {
+        // Set initial list
+        await userDataService.storeValue('user.tags', ['first', 'second', 'third']);
+
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'user.tags',
+          value: 'second',
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['first', 'third']);
+      });
+
+      test('should remove from JSON string list', () async {
+        // Set initial list as JSON string
+        await userDataService.storeValue('task.activeDays', '[1,2,3,4,5]');
+
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'task.activeDays',
+          value: 3,
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('task.activeDays');
+        expect(result, [1, 2, 4, 5]);
+      });
+
+      test('should handle remove from non-existent key gracefully', () async {
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'user.nonexistent',
+          value: 'something',
+        );
+
+        await processor.processActions([action]);
+
+        // Should not throw error
+        expect(true, true);
+      });
+
+      test('should handle remove non-existent value gracefully', () async {
+        // Set initial list
+        await userDataService.storeValue('user.tags', ['first', 'second']);
+
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'user.tags',
+          value: 'nonexistent',
+        );
+
+        await processor.processActions([action]);
+
+        // List should remain unchanged
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['first', 'second']);
+      });
+
+      test('should handle remove with null value gracefully', () async {
+        await userDataService.storeValue('user.tags', ['first', 'second']);
+
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'user.tags',
+          value: null,
+        );
+
+        await processor.processActions([action]);
+
+        // List should remain unchanged
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['first', 'second']);
+      });
+
+      test('should handle remove from non-list value gracefully', () async {
+        // Set a non-list value
+        await userDataService.storeValue('user.name', 'John');
+
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'user.name',
+          value: 'John',
+        );
+
+        await processor.processActions([action]);
+
+        // Original value should remain unchanged
+        final result = await userDataService.getValue<String>('user.name');
+        expect(result, 'John');
+      });
+
+      test('should remove multiple instances of same value', () async {
+        // Set initial list with duplicates
+        await userDataService.storeValue('user.tags', ['first', 'second', 'first', 'third']);
+
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'user.tags',
+          value: 'first',
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['second', 'third']);
+      });
+
+      test('should process mixed list operations', () async {
+        final actions = [
+          DataAction(type: DataActionType.set, key: 'user.tags', value: ['initial']),
+          DataAction(type: DataActionType.append, key: 'user.tags', value: 'second'),
+          DataAction(type: DataActionType.append, key: 'user.tags', value: 'third'),
+          DataAction(type: DataActionType.remove, key: 'user.tags', value: 'initial'),
+        ];
+
+        await processor.processActions(actions);
+
+        final result = await userDataService.getValue<List>('user.tags');
+        expect(result, ['second', 'third']);
+      });
+
+      test('should handle complex weekday scenario', () async {
+        final actions = [
+          // Start with weekdays only
+          DataAction(type: DataActionType.set, key: 'task.activeDays', value: [1, 2, 3, 4, 5]),
+          // Add Saturday
+          DataAction(type: DataActionType.append, key: 'task.activeDays', value: 6),
+          // Add Sunday
+          DataAction(type: DataActionType.append, key: 'task.activeDays', value: 7),
+          // Remove Wednesday
+          DataAction(type: DataActionType.remove, key: 'task.activeDays', value: 3),
+        ];
+
+        await processor.processActions(actions);
+
+        final result = await userDataService.getValue<List>('task.activeDays');
+        expect(result, [1, 2, 4, 5, 6, 7]); // Mon, Tue, Thu, Fri, Sat, Sun
+      });
+
+      test('should handle JSON parsing errors gracefully', () async {
+        // Set an invalid JSON string
+        await userDataService.storeValue('task.activeDays', '[1,2,invalid}');
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'task.activeDays',
+          value: 3,
+        );
+
+        await processor.processActions([action]);
+
+        // Should not throw error and leave original value unchanged
+        final result = await userDataService.getValue<String>('task.activeDays');
+        expect(result, '[1,2,invalid}');
+      });
+
+      test('should parse JSON list with mixed types', () async {
+        // Set JSON list with mixed number and string types
+        await userDataService.storeValue('mixed.list', '[1,"hello",3]');
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'mixed.list',
+          value: 'world',
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('mixed.list');
+        expect(result, [1, 'hello', 3, 'world']);
+      });
+
+      test('should handle empty JSON list', () async {
+        await userDataService.storeValue('empty.list', '[]');
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'empty.list',
+          value: 'first',
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('empty.list');
+        expect(result, ['first']);
+      });
+    });
   });
 }

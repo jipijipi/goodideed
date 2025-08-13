@@ -1,4 +1,4 @@
-enum DataActionType { set, increment, decrement, reset, trigger }
+enum DataActionType { set, increment, decrement, reset, trigger, append, remove }
 
 class DataAction {
   final DataActionType type;

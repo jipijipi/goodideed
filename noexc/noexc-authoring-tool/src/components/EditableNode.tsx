@@ -590,6 +590,8 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                       <option value="decrement">Decrement</option>
                       <option value="reset">Reset</option>
                       <option value="trigger">Trigger</option>
+                      <option value="append">Append</option>
+                      <option value="remove">Remove</option>
                     </select>
                   </div>
                   

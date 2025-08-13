@@ -78,6 +78,12 @@ class DataActionProcessor {
       case DataActionType.trigger:
         await _processTrigger(action);
         break;
+      case DataActionType.append:
+        await _appendToList(action.key, action.value);
+        break;
+      case DataActionType.remove:
+        await _removeFromList(action.key, action.value);
+        break;
     }
   }
 
@@ -113,6 +119,150 @@ class DataActionProcessor {
         // Silent error handling - events should not fail the message flow
       }
     }
+  }
+
+  Future<void> _appendToList(String key, dynamic valueToAdd) async {
+    if (valueToAdd == null) return;
+
+    // Try to get existing list, default to empty list if not found
+    final existingData = await _userDataService.getValue<dynamic>(key);
+    List<dynamic> currentList;
+
+    if (existingData == null) {
+      currentList = [];
+    } else if (existingData is List) {
+      currentList = List<dynamic>.from(existingData);
+    } else if (existingData is String) {
+      // Try to parse as JSON list
+      try {
+        final parsed = _parseJsonList(existingData);
+        currentList = List<dynamic>.from(parsed);
+      } catch (e) {
+        _logger.warning(
+          'Failed to parse existing value as list for append operation on key "$key": $existingData',
+          component: LogComponent.dataActionProcessor,
+        );
+        return;
+      }
+    } else {
+      _logger.warning(
+        'Cannot append to non-list value for key "$key": $existingData',
+        component: LogComponent.dataActionProcessor,
+      );
+      return;
+    }
+
+    // Add the value if it's not already in the list
+    if (!currentList.contains(valueToAdd)) {
+      currentList.add(valueToAdd);
+      await _userDataService.storeValue(key, currentList);
+      _logger.debug(
+        'Appended "$valueToAdd" to list at key "$key"',
+        component: LogComponent.dataActionProcessor,
+      );
+    } else {
+      _logger.debug(
+        'Value "$valueToAdd" already exists in list at key "$key"',
+        component: LogComponent.dataActionProcessor,
+      );
+    }
+  }
+
+  Future<void> _removeFromList(String key, dynamic valueToRemove) async {
+    if (valueToRemove == null) return;
+
+    // Try to get existing list
+    final existingData = await _userDataService.getValue<dynamic>(key);
+    if (existingData == null) {
+      _logger.debug(
+        'No existing list found for key "$key" - nothing to remove',
+        component: LogComponent.dataActionProcessor,
+      );
+      return;
+    }
+
+    List<dynamic> currentList;
+    if (existingData is List) {
+      currentList = List<dynamic>.from(existingData);
+    } else if (existingData is String) {
+      // Try to parse as JSON list
+      try {
+        final parsed = _parseJsonList(existingData);
+        currentList = List<dynamic>.from(parsed);
+      } catch (e) {
+        _logger.warning(
+          'Failed to parse existing value as list for remove operation on key "$key": $existingData',
+          component: LogComponent.dataActionProcessor,
+        );
+        return;
+      }
+    } else {
+      _logger.warning(
+        'Cannot remove from non-list value for key "$key": $existingData',
+        component: LogComponent.dataActionProcessor,
+      );
+      return;
+    }
+
+    // Remove the value if it exists
+    final initialLength = currentList.length;
+    currentList.removeWhere((item) => item == valueToRemove);
+    
+    if (currentList.length < initialLength) {
+      await _userDataService.storeValue(key, currentList);
+      _logger.debug(
+        'Removed "$valueToRemove" from list at key "$key"',
+        component: LogComponent.dataActionProcessor,
+      );
+    } else {
+      _logger.debug(
+        'Value "$valueToRemove" not found in list at key "$key"',
+        component: LogComponent.dataActionProcessor,
+      );
+    }
+  }
+
+  /// Helper method to parse JSON list strings like "[1,2,3]"
+  List<dynamic> _parseJsonList(String jsonString) {
+    // Handle simple cases where it might already be a valid JSON array
+    if (jsonString.startsWith('[') && jsonString.endsWith(']')) {
+      try {
+        final parsed = _parseJsonValue(jsonString);
+        if (parsed is List) {
+          return parsed;
+        }
+      } catch (e) {
+        // Fall through to error handling
+      }
+    }
+    
+    throw FormatException('Not a valid JSON list: $jsonString');
+  }
+
+  /// Helper method to safely parse JSON values
+  dynamic _parseJsonValue(String jsonString) {
+    // Simple JSON parser for basic cases - could use dart:convert for full parsing
+    jsonString = jsonString.trim();
+    
+    if (jsonString.startsWith('[') && jsonString.endsWith(']')) {
+      // Parse array like "[1,2,3]"
+      final content = jsonString.substring(1, jsonString.length - 1).trim();
+      if (content.isEmpty) return [];
+      
+      return content.split(',').map((item) {
+        item = item.trim();
+        // Remove quotes if present
+        if ((item.startsWith('"') && item.endsWith('"')) ||
+            (item.startsWith("'") && item.endsWith("'"))) {
+          return item.substring(1, item.length - 1);
+        }
+        // Try parsing as number
+        final numValue = int.tryParse(item) ?? double.tryParse(item);
+        return numValue ?? item;
+      }).toList();
+    }
+    
+    throw FormatException('Cannot parse JSON: $jsonString');
   }
 
   /// Resolve template functions like TODAY_DATE, NEXT_ACTIVE_DATE, FIRST_ACTIVE_DATE

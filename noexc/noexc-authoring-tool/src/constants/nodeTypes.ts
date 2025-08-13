@@ -31,7 +31,7 @@ export type NodeCategory = typeof NODE_CATEGORIES[number];
 export type NodeLabel = typeof NODE_LABELS[number];
 
 export interface DataActionItem {
-  type: 'set' | 'increment' | 'decrement' | 'reset' | 'trigger';
+  type: 'set' | 'increment' | 'decrement' | 'reset' | 'trigger' | 'append' | 'remove';
   key: string;
   value?: any;
   event?: string;

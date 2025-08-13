@@ -113,12 +113,15 @@ export const helpContent: Record<string, HelpContent> = {
     examples: [
       "Set: user.score = 0",
       "Increment: user.score += 10",
-      "Trigger: achievement_unlocked"
+      "Trigger: achievement_unlocked",
+      "Append: task.activeDays add 2 (Tuesday)",
+      "Remove: task.activeDays remove 6 (Saturday)"
     ],
     tips: [
       "Use 'set' to initialize values",
       "Use 'increment'/'decrement' for counters",
       "Use 'trigger' for achievements",
+      "Use 'append'/'remove' for list management",
       "Always continue to next message"
     ]
   },
@@ -131,13 +134,17 @@ export const helpContent: Record<string, HelpContent> = {
       "increment - Add to a number",
       "decrement - Subtract from a number",
       "reset - Reset to default value",
-      "trigger - Fire an event"
+      "trigger - Fire an event",
+      "append - Add item to a list",
+      "remove - Remove item from a list"
     ],
     tips: [
       "Set: For initial values or updates",
       "Increment/Decrement: For scores, counters",
       "Reset: For clearing data",
-      "Trigger: For events, achievements"
+      "Trigger: For events, achievements",
+      "Append: For adding to lists (prevents duplicates)",
+      "Remove: For removing items from lists"
     ]
   },
 

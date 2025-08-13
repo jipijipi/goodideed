@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-13T22:59:02.270Z",
+  "lastUpdated": "2025-08-13T23:09:55.325Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-13T22:59:02.258Z"
+    "timestamp": "2025-08-13T23:09:55.313Z"
   },
   "nodes": [
     {
@@ -269,8 +269,8 @@
     {
       "id": "207",
       "position": {
-        "x": -2118.0666409166,
-        "y": 696.8797211996148
+        "x": -1388.7402883876955,
+        "y": 667.8614313111971
       },
       "data": {
         "label": "Group 207",
@@ -285,16 +285,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1983.7848235094116,
+        "width": 1981.7848235094116,
         "height": 3171.2101335904176,
         "zIndex": 999
       },
-      "width": 1984,
+      "width": 1982,
       "height": 3171,
       "selected": false,
       "positionAbsolute": {
-        "x": -2118.0666409166,
-        "y": 696.8797211996148
+        "x": -1388.7402883876955,
+        "y": 667.8614313111971
       },
       "dragging": false
     },
@@ -645,8 +645,8 @@
     {
       "id": "363",
       "position": {
-        "x": 981.1268618218858,
-        "y": 4695.992846963734
+        "x": 671.3360377391093,
+        "y": 5250.508427108746
       },
       "data": {
         "label": "Group 363",
@@ -662,14 +662,14 @@
       "type": "group",
       "style": {
         "width": 2066.292219840339,
-        "height": 3060.268660996043
+        "height": 3881
       },
       "width": 2066,
-      "height": 3060,
+      "height": 3881,
       "selected": false,
       "positionAbsolute": {
-        "x": 981.1268618218858,
-        "y": 4695.992846963734
+        "x": 671.3360377391093,
+        "y": 5250.508427108746
       },
       "dragging": false
     },
@@ -2532,8 +2532,8 @@
     {
       "id": "205",
       "position": {
-        "x": 589.6806454022094,
-        "y": 1612.9248093501592
+        "x": 539.781575407111,
+        "y": 1623.0374141432853
       },
       "data": {
         "label": "Data action",
@@ -2545,16 +2545,21 @@
             "type": "set",
             "key": "task.deadlineTime",
             "value": null
+          },
+          {
+            "type": "set",
+            "key": "task.startTime",
+            "value": null
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 395,
+      "height": 574,
       "selected": false,
       "positionAbsolute": {
-        "x": 569.9051715777812,
-        "y": 6729.461169071379
+        "x": -848.9587129805846,
+        "y": 2290.8988454544824
       },
       "dragging": true,
       "parentId": "207",
@@ -5646,7 +5651,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "361",
-        "content": "Sure why not"
+        "content": "All right!"
       },
       "type": "editable",
       "width": 248,
@@ -5682,6 +5687,61 @@
         "y": 7792.4893836755255
       },
       "dragging": false,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "365",
+      "position": {
+        "x": 893.6516442053194,
+        "y": 3585
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "365"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1400.7785060272051,
+        "y": 8282.992846963734
+      },
+      "dragging": true,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "366",
+      "position": {
+        "x": 1087.7128384705409,
+        "y": 2999.2381380850766
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "366",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "task.startTime",
+            "value": null
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 397,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1594.8397002924266,
+        "y": 7697.230985048811
+      },
+      "dragging": true,
       "parentId": "363",
       "extent": "parent"
     },
@@ -7431,7 +7491,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "My deadline times"
+        "label": "My times"
       },
       "id": "reactflow__edge-199-202",
       "selected": false
@@ -9548,20 +9608,6 @@
       "zIndex": 1001,
       "source": "338",
       "sourceHandle": null,
-      "target": "346",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "value": "22:00",
-        "label": "Night"
-      },
-      "id": "reactflow__edge-338-346",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "338",
-      "sourceHandle": null,
       "target": "349",
       "targetHandle": null,
       "type": "custom",
@@ -9635,7 +9681,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "4 am",
+        "label": "4am",
         "value": "04:00"
       },
       "id": "reactflow__edge-339-351",
@@ -9649,8 +9695,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "7 am",
-        "value": "7:00"
+        "label": "7am",
+        "value": "07:00"
       },
       "id": "reactflow__edge-340-351",
       "selected": false
@@ -9663,7 +9709,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "1 pm",
+        "label": "1pm",
         "value": "13:00"
       },
       "id": "reactflow__edge-341-351",
@@ -9677,7 +9723,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "7 pm",
+        "label": "7pm",
         "value": "19:00"
       },
       "id": "reactflow__edge-350-351",
@@ -9691,7 +9737,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "11 pm",
+        "label": "11pm",
         "value": "23:00"
       },
       "id": "reactflow__edge-342-351",
@@ -9705,8 +9751,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "5 am",
-        "value": "5:00"
+        "label": "5am",
+        "value": "05:00"
       },
       "id": "reactflow__edge-339-352",
       "selected": false
@@ -9719,8 +9765,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "8 am",
-        "value": "8:00"
+        "label": "8am",
+        "value": "08:00"
       },
       "id": "reactflow__edge-340-352",
       "selected": false
@@ -9733,7 +9779,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "2 pm",
+        "label": "2pm",
         "value": "14:00"
       },
       "id": "reactflow__edge-341-352",
@@ -9747,7 +9793,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "8 pm",
+        "label": "8pm",
         "value": "20:00"
       },
       "id": "reactflow__edge-350-352",
@@ -9761,7 +9807,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "12 pm",
+        "label": "12pm",
         "value": "00:00"
       },
       "id": "reactflow__edge-342-352",
@@ -9776,7 +9822,7 @@
       "type": "custom",
       "data": {
         "label": "6am",
-        "value": "6:00"
+        "value": "06:00"
       },
       "id": "reactflow__edge-339-353",
       "selected": false
@@ -9790,7 +9836,7 @@
       "type": "custom",
       "data": {
         "label": "9am",
-        "value": "9:00"
+        "value": "09:00"
       },
       "id": "reactflow__edge-340-353",
       "selected": false
@@ -9803,7 +9849,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "10 am",
+        "label": "10am",
         "value": "10:00"
       },
       "id": "reactflow__edge-340-356",
@@ -9817,7 +9863,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "11 am",
+        "label": "11am",
         "value": "11:00"
       },
       "id": "reactflow__edge-340-357",
@@ -9831,7 +9877,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "12 am",
+        "label": "12am",
         "value": "12:00"
       },
       "id": "reactflow__edge-340-358",
@@ -9845,7 +9891,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "3 pm",
+        "label": "3pm",
         "value": "15:00"
       },
       "id": "reactflow__edge-341-353",
@@ -9859,7 +9905,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "4 pm",
+        "label": "4pm",
         "value": "16:00"
       },
       "id": "reactflow__edge-341-356",
@@ -9873,7 +9919,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "5 pm",
+        "label": "5pm",
         "value": "17:00"
       },
       "id": "reactflow__edge-341-357",
@@ -9887,7 +9933,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "6 pm",
+        "label": "6pm",
         "value": "18:00"
       },
       "id": "reactflow__edge-341-358",
@@ -9901,7 +9947,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "9 pm",
+        "label": "9pm",
         "value": "21:00"
       },
       "id": "reactflow__edge-350-353",
@@ -9915,7 +9961,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "10 pm",
+        "label": "10pm",
         "value": "22:00"
       },
       "id": "reactflow__edge-350-356",
@@ -9929,7 +9975,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "1 am",
+        "label": "1am",
         "value": "1:00"
       },
       "id": "reactflow__edge-342-353",
@@ -9943,7 +9989,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "2 am",
+        "label": "2am",
         "value": "2:00"
       },
       "id": "reactflow__edge-342-356",
@@ -9957,7 +10003,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "3 am",
+        "label": "3am",
         "value": "3:00"
       },
       "id": "reactflow__edge-342-357",
@@ -10112,28 +10158,64 @@
       "zIndex": 1001,
       "source": "361",
       "sourceHandle": null,
+      "target": "365",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-361-365",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "365",
+      "sourceHandle": null,
       "target": "219",
       "targetHandle": null,
       "type": "custom",
       "data": {},
+      "id": "reactflow__edge-365-219",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "362",
+      "sourceHandle": null,
+      "target": "366",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-362-366",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "366",
+      "sourceHandle": null,
+      "target": "365",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-366-365",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "338",
+      "sourceHandle": null,
+      "target": "346",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "value": "22:00",
+        "label": "Night"
+      },
       "selected": false,
       "style": {
         "strokeWidth": 2,
         "stroke": "#999",
         "filter": "none"
       },
-      "id": "reactflow__edge-361-219"
-    },
-    {
-      "zIndex": 1001,
-      "source": "362",
-      "sourceHandle": null,
-      "target": "219",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-362-219",
-      "selected": false
+      "id": "reactflow__edge-338-346"
     }
   ]
 }

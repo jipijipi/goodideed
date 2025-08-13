@@ -1,3 +1,4 @@
+import 'dart:convert';
 import '../models/data_action.dart';
 import 'user_data_service.dart';
 import '../constants/data_action_constants.dart';
@@ -152,17 +153,20 @@ class DataActionProcessor {
       return;
     }
 
+    // Convert valueToAdd to match existing list type if possible
+    final coercedValue = _coerceValueType(valueToAdd, currentList);
+    
     // Add the value if it's not already in the list
-    if (!currentList.contains(valueToAdd)) {
-      currentList.add(valueToAdd);
+    if (!currentList.contains(coercedValue)) {
+      currentList.add(coercedValue);
       await _userDataService.storeValue(key, currentList);
       _logger.debug(
-        'Appended "$valueToAdd" to list at key "$key"',
+        'Appended "$coercedValue" to list at key "$key"',
         component: LogComponent.dataActionProcessor,
       );
     } else {
       _logger.debug(
-        'Value "$valueToAdd" already exists in list at key "$key"',
+        'Value "$coercedValue" already exists in list at key "$key"',
         component: LogComponent.dataActionProcessor,
       );
     }
@@ -204,65 +208,92 @@ class DataActionProcessor {
       return;
     }
 
+    // Convert valueToRemove to match existing list type if possible
+    final coercedValue = _coerceValueType(valueToRemove, currentList);
+    
     // Remove the value if it exists
     final initialLength = currentList.length;
-    currentList.removeWhere((item) => item == valueToRemove);
+    currentList.removeWhere((item) => item == coercedValue);
     
     if (currentList.length < initialLength) {
       await _userDataService.storeValue(key, currentList);
       _logger.debug(
-        'Removed "$valueToRemove" from list at key "$key"',
+        'Removed "$coercedValue" from list at key "$key"',
         component: LogComponent.dataActionProcessor,
       );
     } else {
       _logger.debug(
-        'Value "$valueToRemove" not found in list at key "$key"',
+        'Value "$coercedValue" not found in list at key "$key"',
         component: LogComponent.dataActionProcessor,
       );
     }
   }
 
-  /// Helper method to parse JSON list strings like "[1,2,3]"
-  List<dynamic> _parseJsonList(String jsonString) {
-    // Handle simple cases where it might already be a valid JSON array
-    if (jsonString.startsWith('[') && jsonString.endsWith(']')) {
-      try {
-        final parsed = _parseJsonValue(jsonString);
-        if (parsed is List) {
-          return parsed;
-        }
-      } catch (e) {
-        // Fall through to error handling
-      }
+  /// Helper method to coerce value type to match existing list elements
+  dynamic _coerceValueType(dynamic value, List<dynamic> existingList) {
+    if (existingList.isEmpty) {
+      return value; // No existing pattern to match
     }
     
-    throw FormatException('Not a valid JSON list: $jsonString');
+    // Get the type of the first non-null element as the target type
+    final targetType = existingList.firstWhere((item) => item != null, orElse: () => null)?.runtimeType;
+    
+    if (targetType == null) {
+      return value; // No non-null elements to match
+    }
+    
+    // If value is already the correct type, return as-is
+    if (value.runtimeType == targetType) {
+      return value;
+    }
+    
+    // Try type conversions based on target type
+    if (targetType == int && value is String) {
+      final intValue = int.tryParse(value);
+      if (intValue != null) {
+        _logger.debug(
+          'Coerced string "$value" to int $intValue for list consistency',
+          component: LogComponent.dataActionProcessor,
+        );
+        return intValue;
+      }
+    } else if (targetType == double && value is String) {
+      final doubleValue = double.tryParse(value);
+      if (doubleValue != null) {
+        _logger.debug(
+          'Coerced string "$value" to double $doubleValue for list consistency',
+          component: LogComponent.dataActionProcessor,
+        );
+        return doubleValue;
+      }
+    } else if (targetType == String && value is num) {
+      final stringValue = value.toString();
+      _logger.debug(
+        'Coerced number $value to string "$stringValue" for list consistency',
+        component: LogComponent.dataActionProcessor,
+      );
+      return stringValue;
+    }
+    
+    // If no conversion is possible, return original value with warning
+    _logger.warning(
+      'Unable to coerce value "$value" (${value.runtimeType}) to match list type $targetType',
+      component: LogComponent.dataActionProcessor,
+    );
+    return value;
   }
 
-  /// Helper method to safely parse JSON values
-  dynamic _parseJsonValue(String jsonString) {
-    // Simple JSON parser for basic cases - could use dart:convert for full parsing
-    jsonString = jsonString.trim();
-    
-    if (jsonString.startsWith('[') && jsonString.endsWith(']')) {
-      // Parse array like "[1,2,3]"
-      final content = jsonString.substring(1, jsonString.length - 1).trim();
-      if (content.isEmpty) return [];
-      
-      return content.split(',').map((item) {
-        item = item.trim();
-        // Remove quotes if present
-        if ((item.startsWith('"') && item.endsWith('"')) ||
-            (item.startsWith("'") && item.endsWith("'"))) {
-          return item.substring(1, item.length - 1);
-        }
-        // Try parsing as number
-        final numValue = int.tryParse(item) ?? double.tryParse(item);
-        return numValue ?? item;
-      }).toList();
+  /// Helper method to parse JSON list strings like "[1,2,3]"
+  List<dynamic> _parseJsonList(String jsonString) {
+    try {
+      final parsed = jsonDecode(jsonString);
+      if (parsed is List) {
+        return parsed;
+      }
+      throw FormatException('Parsed JSON is not a list: $parsed');
+    } catch (e) {
+      throw FormatException('Not a valid JSON list: $jsonString - $e');
     }
-    
-    throw FormatException('Cannot parse JSON: $jsonString');
   }
 
   /// Resolve template functions like TODAY_DATE, NEXT_ACTIVE_DATE, FIRST_ACTIVE_DATE

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-13T18:15:38.323Z",
+  "lastUpdated": "2025-08-13T18:23:18.300Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-13T18:15:38.299Z"
+    "timestamp": "2025-08-13T18:23:18.279Z"
   },
   "nodes": [
     {
@@ -7917,7 +7917,7 @@
       "contentKey": "user.choose.active_days.custom",
       "data": {
         "label": "It's more complicated",
-        "value": "[]",
+        "value": "[1]",
         "contentKey": "user.choose.active_days.custom"
       },
       "selected": false,

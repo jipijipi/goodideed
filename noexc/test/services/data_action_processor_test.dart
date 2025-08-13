@@ -991,5 +991,139 @@ void main() {
         expect(result, ['first']);
       });
     });
+
+    group('Type Consistency', () {
+      test('should maintain int type when appending to int list', () async {
+        // Start with int list (like task.activeDays)
+        await userDataService.storeValue('int.list', [1, 2, 3]);
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'int.list',
+          value: '4', // String that should be converted to int
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('int.list');
+        expect(result, [1, 2, 3, 4]); // All should be ints
+        expect(result!.last, isA<int>());
+      });
+
+      test('should maintain int type when removing from int list', () async {
+        await userDataService.storeValue('int.list', [1, 2, 3, 4, 5]);
+
+        final action = DataAction(
+          type: DataActionType.remove,
+          key: 'int.list',
+          value: '3', // String that should be converted to int for matching
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('int.list');
+        expect(result, [1, 2, 4, 5]);
+        expect(result!.every((item) => item is int), true);
+      });
+
+      test('should maintain string type when appending to string list', () async {
+        await userDataService.storeValue('string.list', ['a', 'b', 'c']);
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'string.list',
+          value: 100, // Number that should be converted to string
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('string.list');
+        expect(result, ['a', 'b', 'c', '100']);
+        expect(result!.last, isA<String>());
+      });
+
+      test('should work with JSON int list like task.activeDays', () async {
+        // Simulate how task.activeDays is stored as JSON string
+        await userDataService.storeValue('task.activeDays', '[1,2,3,4,5]');
+
+        final actions = [
+          DataAction(type: DataActionType.append, key: 'task.activeDays', value: '6'),
+          DataAction(type: DataActionType.remove, key: 'task.activeDays', value: '3'),
+        ];
+
+        await processor.processActions(actions);
+
+        final result = await userDataService.getValue<List>('task.activeDays');
+        expect(result, [1, 2, 4, 5, 6]); // All should be ints
+        expect(result!.every((item) => item is int), true);
+      });
+
+      test('should handle mixed operations maintaining weekday int types', () async {
+        final actions = [
+          // Start with weekdays only (Mon-Fri)
+          DataAction(type: DataActionType.set, key: 'task.activeDays', value: [1, 2, 3, 4, 5]),
+          // Add Saturday (string value)
+          DataAction(type: DataActionType.append, key: 'task.activeDays', value: '6'),
+          // Add Sunday (int value)
+          DataAction(type: DataActionType.append, key: 'task.activeDays', value: 7),
+          // Remove Wednesday (string value)
+          DataAction(type: DataActionType.remove, key: 'task.activeDays', value: '3'),
+        ];
+
+        await processor.processActions(actions);
+
+        final result = await userDataService.getValue<List>('task.activeDays');
+        expect(result, [1, 2, 4, 5, 6, 7]); // Mon, Tue, Thu, Fri, Sat, Sun
+        expect(result!.every((item) => item is int && item >= 1 && item <= 7), true);
+      });
+
+      test('should handle type coercion failure gracefully', () async {
+        await userDataService.storeValue('int.list', [1, 2, 3]);
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'int.list',
+          value: 'not_a_number', // Cannot be converted to int
+        );
+
+        await processor.processActions([action]);
+
+        // Should still add the value but log a warning
+        final result = await userDataService.getValue<List>('int.list');
+        expect(result, [1, 2, 3, 'not_a_number']);
+      });
+
+      test('should work with empty list (no type to match)', () async {
+        await userDataService.storeValue('empty.list', []);
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'empty.list',
+          value: 42,
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('empty.list');
+        expect(result, [42]);
+        expect(result!.first, isA<int>());
+      });
+
+      test('should handle double type coercion', () async {
+        await userDataService.storeValue('double.list', [1.5, 2.7, 3.9]);
+
+        final action = DataAction(
+          type: DataActionType.append,
+          key: 'double.list',
+          value: '4.2',
+        );
+
+        await processor.processActions([action]);
+
+        final result = await userDataService.getValue<List>('double.list');
+        expect(result, [1.5, 2.7, 3.9, 4.2]);
+        expect(result!.last, isA<double>());
+      });
+    });
   });
 }

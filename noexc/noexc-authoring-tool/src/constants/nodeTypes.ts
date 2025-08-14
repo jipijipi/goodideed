@@ -5,7 +5,8 @@ export const NODE_CATEGORIES = [
   'textInput',
   'autoroute',
   'dataAction',
-  'image'
+  'image',
+  'system'
 ] as const;
 
 export const NODE_LABELS = [
@@ -16,6 +17,7 @@ export const NODE_LABELS = [
   'Text Input',
   'Conditional Route',
   'Data Action',
+  'System Message',
   'End Message',
   'Error Handler',
   'Custom'

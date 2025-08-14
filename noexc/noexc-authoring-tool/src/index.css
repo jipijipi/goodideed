@@ -24,6 +24,7 @@
   --node-autoroute: #fff8e1;  /* Light yellow - logic routing */
   --node-dataAction: #fce4ec; /* Light pink - data operations */
   --node-image: #e0f2f1;      /* Light teal - image display */
+  --node-system: #f5f5f5;     /* Light gray - system messages */
 }
 
 [data-theme="dark"] {
@@ -52,6 +53,7 @@
   --node-autoroute: #3e2723;  /* Dark yellow/brown */
   --node-dataAction: #4a148c; /* Dark pink/purple */
   --node-image: #004d40;      /* Dark teal */
+  --node-system: #424242;     /* Dark gray - system messages */
 }
 
 body {

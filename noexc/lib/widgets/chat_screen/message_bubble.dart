@@ -134,12 +134,13 @@ class MessageBubble extends StatelessWidget {
   /// Builds a system message with centered text, no bubble, and monospace font
   Widget _buildSystemMessage(BuildContext context) {
     return Padding(
-      padding: DesignTokens.messageBubbleMargin,
+      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
       child: Center(
         child: Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.8,
           ),
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
           child: MarkdownBody(
             data: message.text,
             styleSheet: DesignTokens.getSystemMessageMarkdownStyle(context),

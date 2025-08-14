@@ -1623,7 +1623,7 @@ function Flow() {
       }
       
       // Add contentKey only for message types that support text content
-      if (node.data.contentKey && ['bot', 'user'].includes(node.data.category)) {
+      if (node.data.contentKey && ['bot', 'user', 'system'].includes(node.data.category)) {
         message.contentKey = node.data.contentKey;
       }
       
@@ -1697,6 +1697,22 @@ function Flow() {
             } else {
               // Same sequence navigation
               message.nextMessageId = nextUserId;
+            }
+          }
+          break;
+          
+        case 'system':
+          if (node.data.content) {
+            message.text = node.data.content;
+          }
+          const nextSystemId = getNextMessageId(node.id, edges, groupNodes);
+          if (nextSystemId) {
+            if (typeof nextSystemId === 'object') {
+              // Cross-sequence navigation - don't set nextMessageId, Flutter app assumes first node
+              message.sequenceId = nextSystemId.sequenceId;
+            } else {
+              // Same sequence navigation
+              message.nextMessageId = nextSystemId;
             }
           }
           break;
@@ -2010,6 +2026,7 @@ function Flow() {
     { category: 'autoroute' as NodeCategory, label: 'Conditional Route' as NodeLabel, text: 'Route condition', icon: '🔀', description: 'Auto-route' },
     { category: 'dataAction' as NodeCategory, label: 'Data Action' as NodeLabel, text: 'Data action', icon: '⚙️', description: 'Data action' },
     { category: 'image' as NodeCategory, label: 'Image' as NodeLabel, text: 'Image display', icon: '🖼️', description: 'Image' },
+    { category: 'system' as NodeCategory, label: 'System Message' as NodeLabel, text: '[ System: Status update ]', icon: '🖥️', description: 'System message' },
   ];
 
   // Auto-load master flow on component mount

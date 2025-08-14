@@ -14,7 +14,8 @@ const getCategoryColor = (category: NodeCategory): string => {
     textInput: 'var(--node-textInput)', // Blue - user types
     autoroute: 'var(--node-autoroute)', // Yellow - logic flow
     dataAction: 'var(--node-dataAction)', // Pink - data manipulation
-    image: 'var(--node-image)'        // Teal - image display
+    image: 'var(--node-image)',       // Teal - image display
+    system: 'var(--node-system)'     // Gray - system messages
   };
   return colors[category] || 'var(--bg-secondary)';
 };
@@ -27,7 +28,8 @@ const getNodeTitle = (category: NodeCategory): string => {
     textInput: 'Input',
     autoroute: 'Auto-Route',
     dataAction: 'Data Action',
-    image: 'Image'
+    image: 'Image',
+    system: 'System'
   };
   return titles[category] || 'Node';
 };
@@ -86,6 +88,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
     switch (data.category) {
       case 'bot':
       case 'user':
+      case 'system':
         return (
           <>
             {/* ID Field */}

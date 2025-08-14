@@ -53,8 +53,10 @@
       "Bash(cat:*)",
       "Bash(date:*)",
       "WebFetch(domain:pub.dev)",
-      "WebFetch(domain:developer.android.com)"
+      "WebFetch(domain:developer.android.com)",
+      "WebSearch"
     ],
-    "deny": []
+    "deny": [],
+    "defaultMode": "acceptEdits"
   }
 }

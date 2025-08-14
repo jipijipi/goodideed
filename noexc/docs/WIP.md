@@ -204,3 +204,9 @@ The last zone will be very similar to the background zone (3), except that it wi
     "hand_y": 250
   }
 }
+
+Make sure the new system messages in the authoring tool behaves like the others when it comes to save/restore and all exports. Initial tests deployed this : 
+{
+      "id": 425,
+      "type": "system"
+    }

@@ -1,1 +1,23 @@
-{"metadata":{"extracted_at":"2025-08-14T07:09:10.917134","total_failures":0,"extractor_version":"1.0.0"},"failures":[]}
+{
+    "metadata": {
+        "extracted_at": "2025-08-14T08:10:11.064880",
+        "total_failures": 1,
+        "extractor_version": "1.0.0"
+    },
+    "failures": [
+        {
+            "name": "Deadline Format Compatibility Tests should handle integer deadline format (legacy from JSON sequences)",
+            "file": "/Users/jpl/Dev/Apps/noexc/test/services/deadline_format_compatibility_test.dart",
+            "suite": "deadline_format_compatibility",
+            "group": "Deadline Format Compatibility Tests",
+            "error": "Expected: '14:00'\n  Actual: '2'\n   Which: is different.\n          Expected: 14:00\n            Actual: 2\n                    ^\n           Differ at offset 0\n",
+            "testId": 505,
+            "line": 52,
+            "column": 5,
+            "stackTrace": "package:matcher                                             expect\npackage:flutter_test/src/widget_tester.dart 474:18          expect\ntest/services/deadline_format_compatibility_test.dart 79:9  main.<fn>.<fn>\n",
+            "isFailure": true,
+            "timestamp": 10625,
+            "category": "assertion"
+        }
+    ]
+}

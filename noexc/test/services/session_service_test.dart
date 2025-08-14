@@ -87,7 +87,7 @@ void main() {
       );
       expect(timeOfDay, isNotNull);
       expect(timeOfDay, isA<int>());
-      expect(timeOfDay! >= 1 && timeOfDay <= 4, true);
+      expect(timeOfDay! >= 0 && timeOfDay <= 23, true);
     });
 
     test('should set date information', () async {

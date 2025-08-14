@@ -67,21 +67,9 @@ class SessionService {
     final now = DateTime.now();
     final hour = now.hour;
 
-    int timeOfDay;
-    if (hour >= SessionConstants.morningStartHour &&
-        hour < SessionConstants.afternoonStartHour) {
-      timeOfDay = SessionConstants.timeOfDayMorning;
-    } else if (hour >= SessionConstants.afternoonStartHour &&
-        hour < SessionConstants.eveningStartHour) {
-      timeOfDay = SessionConstants.timeOfDayAfternoon;
-    } else if (hour >= SessionConstants.eveningStartHour &&
-        hour < SessionConstants.nightStartHour) {
-      timeOfDay = SessionConstants.timeOfDayEvening;
-    } else {
-      timeOfDay = SessionConstants.timeOfDayNight;
-    }
-
-    await userDataService.storeValue(StorageKeys.sessionTimeOfDay, timeOfDay);
+    // Store the actual current hour instead of abstract time-of-day constants
+    // This makes session.timeOfDay compatible with timeDisplay formatter and more useful
+    await userDataService.storeValue(StorageKeys.sessionTimeOfDay, hour);
   }
 
   /// Update date-related information

@@ -66,6 +66,8 @@ class AppConstants {
     'updatetask_seq',
     'customDays_seq',
     'startTime_seq',
+    'deadlineTime_seq',
+    'taskConfirm_seq',
   ];
 
   // User Response ID Offset

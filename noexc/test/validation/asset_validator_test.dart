@@ -146,7 +146,7 @@ bool _isDemoSequence(String message) {
     'weekdays_seq',
     // Additional terminal sequences that naturally end
     'taskparam_seq', 'autoFailed_seq', 'catchup_seq', 'due_seq', 'startday_seq',
-    'updateChoice_seq', 'updatetask_seq',
+    'updateChoice_seq', 'updatetask_seq', 'customDays_seq','startTime_seq',
   ];
 
   return terminalSequences.any((seq) => message.contains(seq));

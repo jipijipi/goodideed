@@ -826,6 +826,11 @@ class NotificationService {
   // No deadline-based default start time mapping anymore.
 
   String _convertIntegerToTimeString(int hour) {
+    // Handle special "end of day" case
+    if (hour == 24) {
+      return '23:59';
+    }
+    
     // Handle direct hour values (0-23)
     if (hour >= 0 && hour <= 23) {
       return '${hour.toString().padLeft(2, '0')}:00';

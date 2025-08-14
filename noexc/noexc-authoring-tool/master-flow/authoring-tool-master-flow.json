@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-14T10:59:45.399Z",
+  "lastUpdated": "2025-08-14T15:33:33.486Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-14T10:59:45.393Z"
+    "timestamp": "2025-08-14T15:33:33.475Z"
   },
   "nodes": [
     {
@@ -582,8 +582,8 @@
     {
       "id": "31",
       "position": {
-        "x": 292.3468538517724,
-        "y": 4647.152448870047
+        "x": 358.8274632863047,
+        "y": 3826.82246352076
       },
       "type": "group",
       "style": {
@@ -596,8 +596,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 292.3468538517724,
-        "y": 4647.152448870047
+        "x": 358.8274632863047,
+        "y": 3826.82246352076
       },
       "data": {
         "label": "Group 31",
@@ -614,8 +614,8 @@
     {
       "id": "363",
       "position": {
-        "x": 862.0657166209082,
-        "y": 4606.7957608826755
+        "x": 971.5747991379344,
+        "y": 3820.739682793146
       },
       "data": {
         "label": "Group 363",
@@ -630,55 +630,54 @@
       },
       "type": "group",
       "style": {
-        "width": 2154,
-        "height": 3880
+        "width": 2166.3800149918934,
+        "height": 3349.9622849451744
       },
-      "width": 2154,
-      "height": 3880,
+      "width": 2166,
+      "height": 3350,
       "selected": false,
       "positionAbsolute": {
-        "x": 862.0657166209082,
-        "y": 4606.7957608826755
+        "x": 971.5747991379344,
+        "y": 3820.739682793146
       },
       "dragging": false
     },
     {
-      "id": "39",
+      "id": "409",
       "position": {
-        "x": 6798.131411111648,
-        "y": 4321.417403856588
+        "x": 3650.120452177959,
+        "y": 3810.36179909341
+      },
+      "data": {
+        "label": "Group 409",
+        "category": "bot",
+        "nodeLabel": "Group",
+        "nodeId": "409",
+        "content": "Subflow Group",
+        "groupId": "deadlineTime_seq",
+        "title": "Deadline Setting Sequence",
+        "description": "To let the user set a deadline",
+        "color": "rgba(156, 39, 176, 0.025)"
       },
       "type": "group",
       "style": {
-        "width": 1286.5937511479312,
-        "height": 2365.6626071009287,
-        "zIndex": 999
+        "width": 1971.007119734662,
+        "height": 6996.999999999999
       },
-      "width": 1287,
-      "height": 2366,
+      "width": 1971,
+      "height": 6997,
       "selected": false,
-      "positionAbsolute": {
-        "x": 6798.131411111648,
-        "y": 4321.417403856588
-      },
       "dragging": false,
-      "data": {
-        "label": "Group 39",
-        "category": "bot",
-        "nodeLabel": "Group",
-        "nodeId": "39",
-        "content": "Subflow Group",
-        "groupId": "deadline_seq",
-        "title": "Deadline Sequence",
-        "description": "Asks the user to set a daily deadline",
-        "color": "rgba(156, 39, 176, 0.025)"
+      "positionAbsolute": {
+        "x": 3650.120452177959,
+        "y": 3810.36179909341
       }
     },
     {
       "id": "47",
       "position": {
-        "x": 9797.030966855582,
-        "y": 152.36618982534128
+        "x": 8598.996803077373,
+        "y": 296.13028947872647
       },
       "type": "group",
       "style": {
@@ -690,8 +689,8 @@
       "height": 14708,
       "selected": false,
       "positionAbsolute": {
-        "x": 9797.030966855582,
-        "y": 152.36618982534128
+        "x": 8598.996803077373,
+        "y": 296.13028947872647
       },
       "dragging": false,
       "data": {
@@ -768,259 +767,6 @@
         "title": "Sendoff Sequence",
         "description": "Last sequence in an interaction, goodbyes",
         "color": "rgba(255, 152, 0, 0.025)"
-      }
-    },
-    {
-      "id": "378",
-      "position": {
-        "x": 3499.344043904464,
-        "y": 4599.944389650687
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "378",
-        "content": "By what time should your task have ended?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3499.344043904464,
-        "y": 4599.944389650687
-      },
-      "dragging": false
-    },
-    {
-      "id": "380",
-      "position": {
-        "x": 3065.8391816922694,
-        "y": 6830.712409589273
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "380",
-        "content": "When exactly?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3065.8391816922694,
-        "y": 6830.712409589273
-      },
-      "dragging": false
-    },
-    {
-      "id": "381",
-      "position": {
-        "x": 3343.5911955163347,
-        "y": 6226.326432806308
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "381",
-        "content": "When exactly?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3343.5911955163347,
-        "y": 6226.326432806308
-      },
-      "dragging": false
-    },
-    {
-      "id": "382",
-      "position": {
-        "x": 3644.982533225761,
-        "y": 6240.150682980417
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "382",
-        "content": "When exactly?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3644.982533225761,
-        "y": 6240.150682980417
-      },
-      "dragging": false
-    },
-    {
-      "id": "383",
-      "position": {
-        "x": 3972.878029077696,
-        "y": 6242.919312207988
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "383",
-        "content": "When exactly?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3972.878029077696,
-        "y": 6242.919312207988
-      },
-      "dragging": false
-    },
-    {
-      "id": "385",
-      "position": {
-        "x": 4264.812961043519,
-        "y": 6239.001022839624
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "385",
-        "content": "When exactly?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 4264.812961043519,
-        "y": 6239.001022839624
-      },
-      "dragging": false
-    },
-    {
-      "id": "386",
-      "position": {
-        "x": 3060.081678856896,
-        "y": 5734.64459339751
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "386",
-        "storeKey": "task.deadlineTime"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3060.081678856896,
-        "y": 5734.64459339751
-      },
-      "dragging": false
-    },
-    {
-      "id": "387",
-      "position": {
-        "x": 3370.872518575401,
-        "y": 5736.94838899387
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "387",
-        "storeKey": "task.deadlineTime"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3370.872518575401,
-        "y": 5736.94838899387
-      },
-      "dragging": false
-    },
-    {
-      "id": "388",
-      "position": {
-        "x": 3658.795792991327,
-        "y": 5735.007854178731
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "388",
-        "storeKey": "task.deadlineTime"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3658.795792991327,
-        "y": 5735.007854178731
-      },
-      "dragging": false
-    },
-    {
-      "id": "389",
-      "position": {
-        "x": 3949.8879147919156,
-        "y": 5725.28912121632
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "389",
-        "storeKey": "task.deadlineTime"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3949.8879147919156,
-        "y": 5725.28912121632
-      },
-      "dragging": false
-    },
-    {
-      "id": "390",
-      "position": {
-        "x": 4224.52872322906,
-        "y": 5730.188471185984
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "390",
-        "storeKey": "task.deadlineTime"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "dragging": false,
-      "positionAbsolute": {
-        "x": 4224.52872322906,
-        "y": 5730.188471185984
       }
     },
     {
@@ -4518,8 +4264,8 @@
     {
       "id": "339",
       "position": {
-        "x": 213.96333115576545,
-        "y": 1043.6371025831531
+        "x": 15.619985008106823,
+        "y": 1180.4940114250376
       },
       "data": {
         "label": "Select option:",
@@ -4529,22 +4275,22 @@
         "storeKey": "task.startTime"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 249,
+      "height": 213,
       "selected": false,
       "positionAbsolute": {
-        "x": 1241.1178462883195,
-        "y": 6183.128383239558
+        "x": 877.685701629015,
+        "y": 5787.289772307713
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "363",
       "extent": "parent"
     },
     {
       "id": "340",
       "position": {
-        "x": 542.2049069492969,
-        "y": 1045.8159329039154
+        "x": 296.2591577262003,
+        "y": 1071.6005679031114
       },
       "data": {
         "label": "Select option:",
@@ -4558,18 +4304,18 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 1569.3594220818509,
-        "y": 6185.307213560321
+        "x": 1158.3248743471086,
+        "y": 5678.396328785787
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "363",
       "extent": "parent"
     },
     {
       "id": "341",
       "position": {
-        "x": 875.157192411808,
-        "y": 1037.908213594209
+        "x": 709.2415097565095,
+        "y": 1012.2736606127746
       },
       "data": {
         "label": "Select option:",
@@ -4583,10 +4329,10 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 1902.311707544362,
-        "y": 6177.399494250614
+        "x": 1571.3072263774177,
+        "y": 5619.06942149545
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "363",
       "extent": "parent"
     },
@@ -4618,8 +4364,8 @@
     {
       "id": "343",
       "position": {
-        "x": 216.4792485222431,
-        "y": 740.2245908239311
+        "x": 39.95367045082685,
+        "y": 732.2908569780247
       },
       "data": {
         "label": "Welcome!",
@@ -4633,18 +4379,18 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1243.6337636547971,
-        "y": 5879.715871480336
+        "x": 902.0193870717351,
+        "y": 5339.0866178607
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "363",
       "extent": "parent"
     },
     {
       "id": "344",
       "position": {
-        "x": 551.2515959384746,
-        "y": 733.3120199952627
+        "x": 398.88506542036725,
+        "y": 739.1722711690363
       },
       "data": {
         "label": "Welcome!",
@@ -4654,22 +4400,22 @@
         "content": "You want to be more precise?"
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
-        "x": 1578.4061110710286,
-        "y": 5872.803300651668
+        "x": 1260.9507820412755,
+        "y": 5345.968032051712
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "363",
       "extent": "parent"
     },
     {
       "id": "345",
       "position": {
-        "x": 879.417119239909,
-        "y": 728.2090790073262
+        "x": 807.1406880967043,
+        "y": 708.6749084280818
       },
       "data": {
         "label": "Welcome!",
@@ -4683,10 +4429,10 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1906.571634372463,
-        "y": 5867.700359663731
+        "x": 1669.2064047176125,
+        "y": 5315.470669310757
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "363",
       "extent": "parent"
     },
@@ -4726,7 +4472,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "349",
-        "content": "Enter your message here..."
+        "content": "You want to be more precise?"
       },
       "type": "editable",
       "width": 248,
@@ -4912,152 +4658,23 @@
     {
       "id": "359",
       "position": {
-        "x": 844.8477311441347,
-        "y": 2020.1186284867345
+        "x": 814.3742780669834,
+        "y": 2956.9622849451744
       },
       "data": {
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "359",
-        "content": "So {task.startTime}? Right?"
+        "content": "So {task.startTime}, good."
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1872.0022462766888,
-        "y": 7159.60990914314
-      },
-      "dragging": false,
-      "parentId": "363",
-      "extent": "parent"
-    },
-    {
-      "id": "360",
-      "position": {
-        "x": 848.4153596661909,
-        "y": 2318.009130995284
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "360"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 1875.5698747987449,
-        "y": 7457.500411651689
-      },
-      "dragging": false,
-      "parentId": "363",
-      "extent": "parent"
-    },
-    {
-      "id": "361",
-      "position": {
-        "x": 701.2747929061175,
-        "y": 2669.268660996043
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "361",
-        "content": "All right!"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 1728.4293080386715,
-        "y": 7808.759941652448
-      },
-      "dragging": false,
-      "parentId": "363",
-      "extent": "parent"
-    },
-    {
-      "id": "362",
-      "position": {
-        "x": 1044.3207817209914,
-        "y": 2679.7460252378287
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "362",
-        "content": "Oh boy..."
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 1906.3864983418996,
-        "y": 7286.541786120504
-      },
-      "dragging": true,
-      "parentId": "363",
-      "extent": "parent"
-    },
-    {
-      "id": "365",
-      "position": {
-        "x": 893.6516442053194,
-        "y": 3585
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "365"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 1400.7785060272051,
-        "y": 8282.992846963734
-      },
-      "dragging": true,
-      "parentId": "363",
-      "extent": "parent"
-    },
-    {
-      "id": "366",
-      "position": {
-        "x": 1011.7128384705409,
-        "y": 2999.2381380850766
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "366",
-        "dataActions": [
-          {
-            "type": "set",
-            "key": "task.startTime",
-            "value": null
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 1873.778555091449,
-        "y": 7606.033898967752
+        "x": 1785.9490772049178,
+        "y": 6777.7019677383205
       },
       "dragging": true,
       "parentId": "363",
@@ -5088,10 +4705,43 @@
       "extent": "parent"
     },
     {
+      "id": "410",
+      "position": {
+        "x": 789.2942116234376,
+        "y": 2401.6822461344236
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "410",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 400,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1735.869010761372,
+        "y": 6197.42192892757
+      },
+      "dragging": false,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
       "id": "193",
       "position": {
-        "x": 454.5596233814133,
-        "y": 1084.771135265065
+        "x": 653.4155603872714,
+        "y": 3735.012516018479
       },
       "data": {
         "label": "Data action",
@@ -5101,10 +4751,144 @@
         "dataActions": [
           {
             "type": "trigger",
-            "key": "task.isPastDeadline",
+            "key": "task.info",
             "value": "",
-            "event": "recalculate_past_deadline",
+            "event": "refresh_task_calculations",
             "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 400,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 4133.781471306717,
+        "y": 8292.398535157292
+      },
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "360",
+      "position": {
+        "x": 458.97276911547306,
+        "y": 4931.633636089134
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "360"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3939.338680034919,
+        "y": 9489.019655227947
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "361",
+      "position": {
+        "x": 311.83220235539966,
+        "y": 5282.893166089893
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "361",
+        "content": "All right!"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3792.1981132748456,
+        "y": 9840.279185228706
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "362",
+      "position": {
+        "x": 654.8781911702736,
+        "y": 5293.370530331679
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "362",
+        "content": "Oh boy..."
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4135.2441020897195,
+        "y": 9850.756549470492
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "365",
+      "position": {
+        "x": 305.76819638284314,
+        "y": 6697.999999999999
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "365"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3811.134107302289,
+        "y": 11280.386019138812
+      },
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "366",
+      "position": {
+        "x": 636.7273868450538,
+        "y": 5747.393258232333
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "366",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "task.startTime",
+            "value": null
+          },
+          {
+            "type": "set",
+            "key": "task.deadlineTime",
+            "value": null
           },
           {
             "type": "trigger",
@@ -5117,151 +4901,21 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 584,
+      "height": 759,
       "selected": false,
-      "dragging": true,
       "positionAbsolute": {
-        "x": 1469.7078594247696,
-        "y": 5412.109184277006
+        "x": 4117.0932977645,
+        "y": 10304.779277371146
       },
-      "parentId": "39",
+      "dragging": false,
+      "parentId": "409",
       "extent": "parent"
-    },
-    {
-      "id": "32",
-      "position": {
-        "x": 413.6952980519212,
-        "y": 25
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "dragging": false,
-      "positionAbsolute": {
-        "x": 497.2888191608978,
-        "y": 6399.617565348666
-      },
-      "parentId": "39",
-      "extent": "parent",
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "5",
-        "contentKey": "bot.request.deadline.casual",
-        "content": "By what time of the day should your task be completed?"
-      }
-    },
-    {
-      "id": "33",
-      "position": {
-        "x": 408.51485479366477,
-        "y": 350.9924021324996
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 492.10837590264134,
-        "y": 6725.609967481166
-      },
-      "dragging": false,
-      "parentId": "39",
-      "extent": "parent",
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "33",
-        "contentKey": "user.choose.deadline",
-        "storeKey": "task.deadlineTime"
-      }
-    },
-    {
-      "id": "34",
-      "position": {
-        "x": 25,
-        "y": 731.1793803505889
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 108.59352110897657,
-        "y": 7105.796945699255
-      },
-      "dragging": false,
-      "parentId": "39",
-      "extent": "parent",
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "34",
-        "contentKey": "bot.acknowledge.deadline.morning",
-        "content": "{task.deadlineTime}, early riser, good."
-      }
-    },
-    {
-      "id": "35",
-      "position": {
-        "x": 303.31358762290785,
-        "y": 722.5110650417028
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 386.9071087318844,
-        "y": 7097.128630390369
-      },
-      "dragging": false,
-      "parentId": "39",
-      "extent": "parent",
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "35",
-        "contentKey": "bot.acknowledge.deadline.afternoon",
-        "content": "{task.deadlineTime} allright"
-      }
-    },
-    {
-      "id": "36",
-      "position": {
-        "x": 589.2939300173148,
-        "y": 724.9610153566418
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 672.8874511262914,
-        "y": 7099.578580705308
-      },
-      "dragging": false,
-      "parentId": "39",
-      "extent": "parent",
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "36",
-        "contentKey": "bot.acknowledge.deadline.evening",
-        "content": "{task.deadlineTime}, noted"
-      }
     },
     {
       "id": "367",
       "position": {
-        "x": 481.20611209069693,
-        "y": 1715.76292570226
+        "x": 682.0290532446079,
+        "y": 4183.072920686792
       },
       "data": {
         "label": "Route condition",
@@ -5273,81 +4927,81 @@
       "width": 248,
       "height": 162,
       "selected": false,
-      "dragging": true,
+      "dragging": false,
       "positionAbsolute": {
-        "x": 3742.001213984994,
-        "y": 6110.447138389456
+        "x": 4162.394964164054,
+        "y": 8740.458939825605
       },
-      "parentId": "39",
+      "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "368",
       "position": {
-        "x": 637.0789846574107,
-        "y": 1972.6626071009287
+        "x": 1049.934921663269,
+        "y": 5078.903987854342
       },
       "data": {
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "368",
-        "content": "It...Works. start > deadline"
+        "content": "Your deadline is before your starting time, that's weird|||Try again"
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
-      "dragging": true,
-      "parentId": "39",
+      "dragging": false,
+      "parentId": "409",
       "extent": "parent",
       "positionAbsolute": {
-        "x": 3819.845649629496,
-        "y": 6111.803688867883
+        "x": 4530.300832582715,
+        "y": 9636.290006993155
       }
     },
     {
-      "id": "37",
+      "id": "378",
       "position": {
-        "x": 903.5937511479312,
-        "y": 724.8395742138964
+        "x": 407.4559877875263,
+        "y": 25
       },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 987.1872722569078,
-        "y": 7099.457139562563
-      },
-      "dragging": false,
-      "parentId": "39",
-      "extent": "parent",
       "data": {
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
-        "nodeId": "37",
-        "contentKey": "bot.acknowledge.deadline.night",
-        "content": "{task.deadlineTime}, giving yourself all the time possible, nice"
-      }
-    },
-    {
-      "id": "38",
-      "position": {
-        "x": 257.22040525366447,
-        "y": 1953
+        "nodeId": "378",
+        "content": "By what time should your task have ended?",
+        "contentKey": "bot.request.deadline.casual"
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3518.0155071479617,
-        "y": 6347.684212687196
+        "x": 3442.537666644422,
+        "y": 4682.215694647989
       },
-      "dragging": true,
-      "parentId": "39",
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "38",
+      "position": {
+        "x": 456.0763422595228,
+        "y": 4603.241380753413
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3936.4422531789687,
+        "y": 9160.627399892226
+      },
+      "dragging": false,
+      "parentId": "409",
       "extent": "parent",
       "data": {
         "label": "Welcome!",
@@ -5357,6 +5011,579 @@
         "contentKey": "bot.warn.deadline.serious",
         "content": "By {task.deadlineTime} everyday, I'll consider you've failed."
       }
+    },
+    {
+      "id": "380",
+      "position": {
+        "x": 30.757502835373543,
+        "y": 2173.496714941284
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "380",
+        "content": "When exactly?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3065.8391816922694,
+        "y": 6830.712409589273
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "381",
+      "position": {
+        "x": 308.50951665943876,
+        "y": 2031.1107381583188
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "381",
+        "content": "When exactly?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3343.5911955163347,
+        "y": 6688.326432806308
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "382",
+      "position": {
+        "x": 611.9008543688651,
+        "y": 1900.9349883324276
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "382",
+        "content": "When exactly?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3646.982533225761,
+        "y": 6558.150682980417
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "383",
+      "position": {
+        "x": 913.7963502207999,
+        "y": 1799.7036175599987
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "383",
+        "content": "When exactly?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3948.878029077696,
+        "y": 6456.919312207988
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "385",
+      "position": {
+        "x": 1189.731282186623,
+        "y": 1687.785328191635
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "385",
+        "content": "When exactly?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4224.812961043519,
+        "y": 6345.001022839624
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "386",
+      "position": {
+        "x": 25,
+        "y": 1077.428898749521
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "386",
+        "storeKey": "task.deadlineTime",
+        "contentKey": "user.choose.deadline"
+      },
+      "type": "editable",
+      "width": 250,
+      "height": 214,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3060.081678856896,
+        "y": 5734.64459339751
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "387",
+      "position": {
+        "x": 335.79083971850514,
+        "y": 1079.732694345881
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "387",
+        "storeKey": "task.deadlineTime",
+        "contentKey": "user.choose.deadline"
+      },
+      "type": "editable",
+      "width": 250,
+      "height": 214,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3370.872518575401,
+        "y": 5736.94838899387
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "388",
+      "position": {
+        "x": 623.7141141344309,
+        "y": 1077.7921595307416
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "388",
+        "storeKey": "task.deadlineTime",
+        "contentKey": "user.choose.deadline"
+      },
+      "type": "editable",
+      "width": 250,
+      "height": 214,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3658.795792991327,
+        "y": 5735.007854178731
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "389",
+      "position": {
+        "x": 914.8062359350197,
+        "y": 1068.0734265683313
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "389",
+        "storeKey": "task.deadlineTime",
+        "contentKey": "user.choose.deadline"
+      },
+      "type": "editable",
+      "width": 250,
+      "height": 214,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3949.8879147919156,
+        "y": 5725.28912121632
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "390",
+      "position": {
+        "x": 1189.4470443721643,
+        "y": 1072.9727765379948
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "390",
+        "storeKey": "task.deadlineTime",
+        "contentKey": "user.choose.deadline"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 4224.52872322906,
+        "y": 5730.188471185984
+      },
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "395",
+      "position": {
+        "x": 413.1902356612809,
+        "y": 324.3391728347815
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "395"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3448.271914518177,
+        "y": 4981.5548674827705
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "396",
+      "position": {
+        "x": 28.934289753077792,
+        "y": 2479.3642988549345
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "396",
+        "storeKey": "task.deadlineTime"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3064.0159686099737,
+        "y": 7136.579993502924
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "397",
+      "position": {
+        "x": 320.17984986923057,
+        "y": 2387.8076030827788
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "397",
+        "storeKey": "task.deadlineTime"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3355.2615287261265,
+        "y": 7045.023297730768
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "398",
+      "position": {
+        "x": 608.4312429661318,
+        "y": 2321.1401857009805
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "398",
+        "storeKey": "task.deadlineTime"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 3643.5129218230277,
+        "y": 6978.35588034897
+      },
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "399",
+      "position": {
+        "x": 904.4346389822467,
+        "y": 2233.2702349310157
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "399",
+        "storeKey": "task.deadlineTime"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 3939.5163178391426,
+        "y": 6890.485929579005
+      },
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "400",
+      "position": {
+        "x": 1192.2379072284698,
+        "y": 2221.984644814507
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "400",
+        "storeKey": "task.deadlineTime"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 4227.319586085366,
+        "y": 6879.200339462496
+      },
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "402",
+      "position": {
+        "x": 64.30403437223595,
+        "y": 2850.9425781603477
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "402"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3099.385713229132,
+        "y": 7508.158272808337
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "403",
+      "position": {
+        "x": 340.9570266060864,
+        "y": 2861.601049990367
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "403"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3376.0387054629823,
+        "y": 7518.816744638356
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "404",
+      "position": {
+        "x": 653.956649451351,
+        "y": 2865.556928187869
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "404"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3689.038328308247,
+        "y": 7522.772622835858
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "405",
+      "position": {
+        "x": 964.5736542271084,
+        "y": 2867.1235960793447
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "405"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3999.6553330840043,
+        "y": 7524.339290727334
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "406",
+      "position": {
+        "x": 1278.7884937058038,
+        "y": 2872.4769693630924
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "406"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4313.8701725627,
+        "y": 7529.692664011081
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "407",
+      "position": {
+        "x": 1008.0315973662364,
+        "y": 3396.999999999999
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "407",
+        "content": "So {task.deadlineTime}, noted."
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4513.397508285682,
+        "y": 7979.386019138812
+      },
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "408",
+      "position": {
+        "x": 1588.007119734662,
+        "y": 2870.3557115554204
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "408"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4623.088798591558,
+        "y": 7527.571406203409
+      },
+      "dragging": false,
+      "parentId": "409",
+      "extent": "parent"
     },
     {
       "id": "182",
@@ -7057,293 +7284,6 @@
         "contentKey": "bot.sendoff.casual",
         "content": "See you later, or tomorrow"
       }
-    },
-    {
-      "id": "395",
-      "position": {
-        "x": 3448.271914518177,
-        "y": 4981.5548674827705
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "395"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3448.271914518177,
-        "y": 4981.5548674827705
-      },
-      "dragging": false
-    },
-    {
-      "id": "396",
-      "position": {
-        "x": 3064.0159686099737,
-        "y": 7136.579993502924
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "396"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3064.0159686099737,
-        "y": 7136.579993502924
-      },
-      "dragging": false
-    },
-    {
-      "id": "397",
-      "position": {
-        "x": 3337.832021533733,
-        "y": 6535.144885398292
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "397"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3337.832021533733,
-        "y": 6535.144885398292
-      },
-      "dragging": false
-    },
-    {
-      "id": "398",
-      "position": {
-        "x": 3637.562621438598,
-        "y": 6553.90111959298
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "398"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "dragging": false,
-      "positionAbsolute": {
-        "x": 3637.562621438598,
-        "y": 6553.90111959298
-      }
-    },
-    {
-      "id": "399",
-      "position": {
-        "x": 3969.267819761292,
-        "y": 6555.285674589461
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "399"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "dragging": false,
-      "positionAbsolute": {
-        "x": 3969.267819761292,
-        "y": 6555.285674589461
-      }
-    },
-    {
-      "id": "400",
-      "position": {
-        "x": 4261.319586085366,
-        "y": 6535.200339462496
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "400"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "dragging": false,
-      "positionAbsolute": {
-        "x": 4261.319586085366,
-        "y": 6535.200339462496
-      }
-    },
-    {
-      "id": "401",
-      "position": {
-        "x": 3071.01994587519,
-        "y": 7492.342316279932
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "401"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "dragging": false,
-      "positionAbsolute": {
-        "x": 3071.01994587519,
-        "y": 7492.342316279932
-      }
-    },
-    {
-      "id": "402",
-      "position": {
-        "x": 3343.385713229132,
-        "y": 7492.158272808337
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "402"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3343.385713229132,
-        "y": 7492.158272808337
-      },
-      "dragging": false
-    },
-    {
-      "id": "403",
-      "position": {
-        "x": 3625.5386141303575,
-        "y": 7478.709582209936
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "403"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3625.5386141303575,
-        "y": 7478.709582209936
-      },
-      "dragging": false
-    },
-    {
-      "id": "404",
-      "position": {
-        "x": 3905.038328308247,
-        "y": 7474.772622835858
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "404"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3905.038328308247,
-        "y": 7474.772622835858
-      },
-      "dragging": false
-    },
-    {
-      "id": "405",
-      "position": {
-        "x": 4203.655333084004,
-        "y": 7478.339290727334
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "405"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 4203.655333084004,
-        "y": 7478.339290727334
-      },
-      "dragging": false
-    },
-    {
-      "id": "406",
-      "position": {
-        "x": 4485.8701725627,
-        "y": 7481.692664011081
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "406"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 4485.8701725627,
-        "y": 7481.692664011081
-      },
-      "dragging": false
-    },
-    {
-      "id": "407",
-      "position": {
-        "x": 3665.8974035242686,
-        "y": 7918.7812572487965
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "407",
-        "content": "Enter your message here..."
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3665.8974035242686,
-        "y": 7918.7812572487965
-      },
-      "dragging": false
     }
   ],
   "edges": [
@@ -7482,66 +7422,6 @@
       "id": "reactflow__edge-29-13",
       "source": "29",
       "target": "13",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-33-34",
-      "source": "33",
-      "target": "34",
-      "type": "custom",
-      "label": "By morning",
-      "value": 1,
-      "data": {
-        "label": "By morning",
-        "value": 10
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-33-35",
-      "source": "33",
-      "target": "35",
-      "type": "custom",
-      "label": "By the afternoon",
-      "value": 2,
-      "data": {
-        "label": "By the afternoon",
-        "value": 14
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-33-36",
-      "source": "33",
-      "target": "36",
-      "type": "custom",
-      "label": "By the evening",
-      "value": 3,
-      "data": {
-        "label": "By the evening",
-        "value": 18
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-33-37",
-      "source": "33",
-      "target": "37",
-      "type": "custom",
-      "label": "By night time",
-      "value": 4,
-      "data": {
-        "label": "By night time",
-        "value": 23
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-32-33",
-      "source": "32",
-      "target": "33",
       "type": "custom",
       "data": {},
       "selected": false
@@ -8088,70 +7968,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "37",
-      "target": "193",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-37-193",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "36",
-      "target": "193",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-36-193",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "35",
-      "target": "193",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-35-193",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "34",
-      "target": "193",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-34-193",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
       "source": "185",
       "sourceHandle": null,
       "target": "195",
@@ -8358,22 +8174,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "209",
-      "sourceHandle": null,
-      "target": "32",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-209-32"
-    },
-    {
-      "zIndex": 1001,
       "source": "67",
       "sourceHandle": null,
       "target": "198",
@@ -8456,17 +8256,6 @@
         "filter": "none"
       },
       "id": "reactflow__edge-210-40"
-    },
-    {
-      "zIndex": 1001,
-      "source": "38",
-      "sourceHandle": null,
-      "target": "219",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-38-219",
-      "selected": false
     },
     {
       "zIndex": 1001,
@@ -10026,8 +9815,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Late night or Early Morning",
-        "value": 5
+        "label": "Late night"
       },
       "selected": false,
       "style": {
@@ -10045,8 +9833,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Morning",
-        "value": 9
+        "label": "Morning"
       },
       "id": "reactflow__edge-338-344",
       "selected": false
@@ -10059,8 +9846,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Afternoon",
-        "value": 14
+        "label": "Afternoon"
       },
       "id": "reactflow__edge-338-345",
       "selected": false
@@ -10073,8 +9859,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Evening",
-        "value": 20
+        "label": "Evening"
       },
       "id": "reactflow__edge-338-349",
       "selected": false
@@ -10416,83 +10201,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "351",
-      "sourceHandle": null,
-      "target": "359",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-351-359",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "352",
-      "sourceHandle": null,
-      "target": "359",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-352-359",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "353",
-      "sourceHandle": null,
-      "target": "359",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-353-359",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "356",
-      "sourceHandle": null,
-      "target": "359",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-356-359",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "357",
-      "sourceHandle": null,
-      "target": "359",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-357-359",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "358",
-      "sourceHandle": null,
-      "target": "359",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-358-359",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "359",
-      "sourceHandle": null,
-      "target": "360",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-359-360",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "360",
       "sourceHandle": null,
       "target": "361",
@@ -10600,7 +10308,6 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "value": 22,
         "label": "Night"
       },
       "selected": false,
@@ -10644,17 +10351,6 @@
         "label": "task.startTime >= task.deadlineTime"
       },
       "id": "reactflow__edge-367-368",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "368",
-      "sourceHandle": null,
-      "target": "38",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-368-38",
       "selected": false
     },
     {
@@ -11146,8 +10842,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Early Morning",
-        "value": 6
+        "label": "Late night"
       },
       "id": "reactflow__edge-386-380",
       "selected": false
@@ -11160,8 +10855,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Morning",
-        "value": 12
+        "label": "Morning"
       },
       "id": "reactflow__edge-386-381",
       "selected": false
@@ -11174,8 +10868,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Afternoon",
-        "value": 18
+        "label": "Afternoon"
       },
       "id": "reactflow__edge-386-382",
       "selected": false
@@ -11188,8 +10881,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Evening",
-        "value": 21
+        "label": "Evening"
       },
       "id": "reactflow__edge-386-383",
       "selected": false
@@ -11202,8 +10894,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Night",
-        "value": 23
+        "label": "Night"
       },
       "id": "reactflow__edge-386-385",
       "selected": false
@@ -11216,8 +10907,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Morning",
-        "value": 12
+        "label": "Morning"
       },
       "id": "reactflow__edge-387-381",
       "selected": false
@@ -11230,8 +10920,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Afternoon",
-        "value": 18
+        "label": "Afternoon"
       },
       "id": "reactflow__edge-387-382",
       "selected": false
@@ -11244,8 +10933,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Evening",
-        "value": 21
+        "label": "Evening"
       },
       "id": "reactflow__edge-387-383",
       "selected": false
@@ -11258,8 +10946,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Night",
-        "value": 23
+        "label": "Night"
       },
       "id": "reactflow__edge-387-385",
       "selected": false
@@ -11272,8 +10959,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Afternoon",
-        "value": 18
+        "label": "Afternoon"
       },
       "id": "reactflow__edge-388-382",
       "selected": false
@@ -11286,8 +10972,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Evening",
-        "value": 21
+        "label": "Evening"
       },
       "id": "reactflow__edge-388-383",
       "selected": false
@@ -11300,8 +10985,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Night",
-        "value": 23
+        "label": "Night"
       },
       "id": "reactflow__edge-388-385",
       "selected": false
@@ -11314,8 +10998,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Evening",
-        "value": 21
+        "label": "Evening"
       },
       "id": "reactflow__edge-389-383",
       "selected": false
@@ -11328,8 +11011,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Night",
-        "value": 23
+        "label": "Night"
       },
       "id": "reactflow__edge-389-385",
       "selected": false
@@ -11342,8 +11024,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Night",
-        "value": 23
+        "label": "Night"
       },
       "id": "reactflow__edge-390-385",
       "selected": false
@@ -11416,17 +11097,6 @@
         "value": 6
       },
       "id": "reactflow__edge-339-391",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "391",
-      "sourceHandle": null,
-      "target": "359",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-391-359",
       "selected": false
     },
     {
@@ -11575,86 +11245,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "401",
-      "sourceHandle": null,
-      "target": "407",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-401-407",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "402",
-      "sourceHandle": null,
-      "target": "407",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-402-407",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "403",
-      "sourceHandle": null,
-      "target": "407",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-403-407",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "404",
-      "sourceHandle": null,
-      "target": "407",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-404-407",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "405",
-      "sourceHandle": null,
-      "target": "407",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-405-407",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "406",
-      "sourceHandle": null,
-      "target": "407",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-406-407",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "396",
-      "sourceHandle": null,
-      "target": "401",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "12pm",
-        "value": 0
-      },
-      "id": "reactflow__edge-396-401",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "396",
       "sourceHandle": null,
       "target": "402",
@@ -11688,7 +11278,10 @@
       "target": "404",
       "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "label": "3am",
+        "value": 3
+      },
       "id": "reactflow__edge-396-404",
       "selected": false
     },
@@ -11699,7 +11292,10 @@
       "target": "405",
       "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "label": "4am",
+        "value": 4
+      },
       "id": "reactflow__edge-396-405",
       "selected": false
     },
@@ -11710,8 +11306,556 @@
       "target": "406",
       "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "label": "5am",
+        "value": 5
+      },
       "id": "reactflow__edge-396-406",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "396",
+      "sourceHandle": null,
+      "target": "408",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "6am",
+        "value": 6
+      },
+      "id": "reactflow__edge-396-408",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "397",
+      "sourceHandle": null,
+      "target": "402",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "7am",
+        "value": 7
+      },
+      "id": "reactflow__edge-397-402",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "397",
+      "sourceHandle": null,
+      "target": "403",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "8am",
+        "value": 8
+      },
+      "id": "reactflow__edge-397-403",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "397",
+      "sourceHandle": null,
+      "target": "404",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "9am",
+        "value": 9
+      },
+      "id": "reactflow__edge-397-404",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "397",
+      "sourceHandle": null,
+      "target": "405",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "10am",
+        "value": 10
+      },
+      "id": "reactflow__edge-397-405",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "397",
+      "sourceHandle": null,
+      "target": "406",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "11am",
+        "value": 11
+      },
+      "id": "reactflow__edge-397-406",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "397",
+      "sourceHandle": null,
+      "target": "408",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "12pm",
+        "value": 12
+      },
+      "id": "reactflow__edge-397-408",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "398",
+      "sourceHandle": null,
+      "target": "402",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "1pm",
+        "value": 13
+      },
+      "id": "reactflow__edge-398-402",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "398",
+      "sourceHandle": null,
+      "target": "403",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "2pm",
+        "value": 14
+      },
+      "id": "reactflow__edge-398-403",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "398",
+      "sourceHandle": null,
+      "target": "404",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "3pm",
+        "value": 15
+      },
+      "id": "reactflow__edge-398-404",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "398",
+      "sourceHandle": null,
+      "target": "405",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "4pm",
+        "value": 16
+      },
+      "id": "reactflow__edge-398-405",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "398",
+      "sourceHandle": null,
+      "target": "406",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "5pm",
+        "value": 17
+      },
+      "id": "reactflow__edge-398-406",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "398",
+      "sourceHandle": null,
+      "target": "408",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "6pm",
+        "value": 18
+      },
+      "id": "reactflow__edge-398-408",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "399",
+      "sourceHandle": null,
+      "target": "402",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "7pm",
+        "value": 19
+      },
+      "id": "reactflow__edge-399-402",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "399",
+      "sourceHandle": null,
+      "target": "403",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "8pm",
+        "value": 20
+      },
+      "id": "reactflow__edge-399-403",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "399",
+      "sourceHandle": null,
+      "target": "404",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "9pm",
+        "value": 21
+      },
+      "id": "reactflow__edge-399-404",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "400",
+      "sourceHandle": null,
+      "target": "402",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "10pm",
+        "value": 22
+      },
+      "id": "reactflow__edge-400-402",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "400",
+      "sourceHandle": null,
+      "target": "403",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "11pm",
+        "value": 23
+      },
+      "id": "reactflow__edge-400-403",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "400",
+      "sourceHandle": null,
+      "target": "404",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Midnight",
+        "value": 24
+      },
+      "id": "reactflow__edge-400-404",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "209",
+      "sourceHandle": null,
+      "target": "378",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-209-378"
+    },
+    {
+      "zIndex": 1001,
+      "source": "38",
+      "sourceHandle": null,
+      "target": "360",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-38-360",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "368",
+      "sourceHandle": null,
+      "target": "366",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-368-366",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "391",
+      "sourceHandle": null,
+      "target": "410",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-391-410"
+    },
+    {
+      "zIndex": 1001,
+      "source": "358",
+      "sourceHandle": null,
+      "target": "410",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-358-410"
+    },
+    {
+      "zIndex": 1001,
+      "source": "357",
+      "sourceHandle": null,
+      "target": "410",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-357-410"
+    },
+    {
+      "zIndex": 1001,
+      "source": "356",
+      "sourceHandle": null,
+      "target": "410",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-356-410"
+    },
+    {
+      "zIndex": 1001,
+      "source": "353",
+      "sourceHandle": null,
+      "target": "410",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-353-410"
+    },
+    {
+      "zIndex": 1001,
+      "source": "352",
+      "sourceHandle": null,
+      "target": "410",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 4,
+        "stroke": "#ff6b35",
+        "filter": "drop-shadow(0 0 6px rgba(255, 107, 53, 0.6))"
+      },
+      "id": "reactflow__edge-352-410"
+    },
+    {
+      "zIndex": 1001,
+      "source": "351",
+      "sourceHandle": null,
+      "target": "410",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-351-410"
+    },
+    {
+      "zIndex": 1001,
+      "source": "410",
+      "sourceHandle": null,
+      "target": "359",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-410-359",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "359",
+      "sourceHandle": null,
+      "target": "219",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-359-219",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "408",
+      "sourceHandle": null,
+      "target": "193",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-408-193"
+    },
+    {
+      "zIndex": 1001,
+      "source": "406",
+      "sourceHandle": null,
+      "target": "193",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-406-193"
+    },
+    {
+      "zIndex": 1001,
+      "source": "405",
+      "sourceHandle": null,
+      "target": "193",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-405-193"
+    },
+    {
+      "zIndex": 1001,
+      "source": "404",
+      "sourceHandle": null,
+      "target": "193",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-404-193"
+    },
+    {
+      "zIndex": 1001,
+      "source": "403",
+      "sourceHandle": null,
+      "target": "193",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-403-193"
+    },
+    {
+      "zIndex": 1001,
+      "source": "402",
+      "sourceHandle": null,
+      "target": "193",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-402-193"
+    },
+    {
+      "zIndex": 1001,
+      "source": "365",
+      "sourceHandle": null,
+      "target": "219",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-365-219",
       "selected": false
     }
   ]

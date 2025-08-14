@@ -519,12 +519,16 @@ class SessionService {
   /// Get start time as string
   /// If explicit start time is missing or invalid, fallback to default '08:00'
   Future<String> _getStartTimeAsString() async {
-    final startTime = await userDataService.getValue<String>(
+    final s = await userDataService.getValue<String>(
       StorageKeys.taskStartTime,
     );
-    if (startTime != null && startTime.contains(':')) {
-      return startTime;
+    if (s != null) {
+      if (s.contains(':')) return s;
+      final asInt = int.tryParse(s);
+      if (asInt != null) return _convertIntegerToTimeString(asInt);
     }
+    final i = await userDataService.getValue<int>(StorageKeys.taskStartTime);
+    if (i != null) return _convertIntegerToTimeString(i);
     return SessionConstants.defaultStartTime;
   }
 
@@ -539,15 +543,10 @@ class SessionService {
       if (stringValue.contains(':')) {
         return stringValue;
       } else {
-        // It's a stringified integer, convert it
+        // It's a stringified integer, convert it for display only
         final intValue = int.tryParse(stringValue);
         if (intValue != null) {
-          final migratedTime = _convertIntegerToTimeString(intValue);
-          await userDataService.storeValue(
-            StorageKeys.taskDeadlineTime,
-            migratedTime,
-          );
-          return migratedTime;
+          return _convertIntegerToTimeString(intValue);
         }
       }
     }
@@ -557,33 +556,23 @@ class SessionService {
       StorageKeys.taskDeadlineTime,
     );
     if (intValue != null) {
-      // Convert integer to time string and store the migrated value
-      final migratedTime = _convertIntegerToTimeString(intValue);
-      await userDataService.storeValue(
-        StorageKeys.taskDeadlineTime,
-        migratedTime,
-      );
-      return migratedTime;
+      // Convert integer to time string for display only
+      return _convertIntegerToTimeString(intValue);
     }
 
     // Default if no deadline found
     return SessionConstants.defaultDeadlineTime;
   }
 
-  /// Convert legacy integer deadline to time string
-  String _convertIntegerToTimeString(int intValue) {
-    switch (intValue) {
-      case SessionConstants.timeOfDayMorning:
-        return SessionConstants.morningDeadlineTime;
-      case SessionConstants.timeOfDayAfternoon:
-        return SessionConstants.afternoonDeadlineTime;
-      case SessionConstants.timeOfDayEvening:
-        return SessionConstants.eveningDeadlineTime;
-      case SessionConstants.timeOfDayNight:
-        return SessionConstants.nightDeadlineTime;
-      default:
-        return SessionConstants.defaultDeadlineTime;
+  /// Convert integer hour to time string (e.g., 14 -> "14:00")
+  String _convertIntegerToTimeString(int hour) {
+    // Handle direct hour values (0-23)
+    if (hour >= 0 && hour <= 23) {
+      return '${hour.toString().padLeft(2, '0')}:00';
     }
+    
+    // Fallback to default for invalid values
+    return SessionConstants.defaultDeadlineTime;
   }
 
   // No deadline-based default start time mapping anymore.

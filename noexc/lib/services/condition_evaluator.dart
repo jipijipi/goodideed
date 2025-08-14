@@ -24,7 +24,7 @@ class ConditionEvaluator {
       final rightOperand = parsedCondition['right'] as String;
 
       final value = await _getValue(leftOperand);
-      final expected = _parseValue(rightOperand);
+      final expected = await _getValueOrParse(rightOperand);
 
       bool result;
       switch (operator) {
@@ -109,6 +109,21 @@ class ConditionEvaluator {
     }
 
     return -1;
+  }
+
+  /// Get a value from storage or parse as literal
+  /// First tries to get as a variable, then parses as literal value
+  Future<dynamic> _getValueOrParse(String operand) async {
+    // First try to get as a variable if it looks like one (contains a dot)
+    if (operand.contains('.')) {
+      final value = await _getValue(operand);
+      if (value != null) {
+        return value;
+      }
+    }
+    
+    // If not found as variable or doesn't look like variable, parse as literal
+    return _parseValue(operand);
   }
 
   /// Get a value from the user data service

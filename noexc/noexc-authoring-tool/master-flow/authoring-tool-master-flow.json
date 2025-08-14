@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-13T23:36:59.999Z",
+  "lastUpdated": "2025-08-14T07:01:12.300Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-13T23:36:59.994Z"
+    "timestamp": "2025-08-14T07:01:12.293Z"
   },
   "nodes": [
     {
@@ -3749,8 +3749,8 @@
         ]
       },
       "type": "editable",
-      "width": 309,
-      "height": 511,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -4233,7 +4233,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 741,
+      "height": 579,
       "selected": false,
       "positionAbsolute": {
         "x": 977.856867163699,
@@ -4914,8 +4914,8 @@
         "nodeId": "328"
       },
       "type": "editable",
-      "width": 250,
-      "height": 214,
+      "width": 248,
+      "height": 212,
       "selected": false,
       "positionAbsolute": {
         "x": 5375.741561149738,
@@ -5734,8 +5734,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 397,
+      "width": 308,
+      "height": 395,
       "selected": false,
       "positionAbsolute": {
         "x": 1594.8397002924266,
@@ -5997,8 +5997,8 @@
         "y": 1953
       },
       "type": "editable",
-      "width": 249,
-      "height": 259,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": 3518.0155071479617,
@@ -6755,7 +6755,7 @@
       "value": 1,
       "data": {
         "label": "By morning",
-        "value": "10:00"
+        "value": 10
       },
       "selected": false
     },
@@ -6768,7 +6768,7 @@
       "value": 2,
       "data": {
         "label": "By the afternoon",
-        "value": "14:00"
+        "value": 14
       },
       "selected": false
     },
@@ -6781,7 +6781,7 @@
       "value": 3,
       "data": {
         "label": "By the evening",
-        "value": "18:00"
+        "value": 18
       },
       "selected": false
     },
@@ -6794,7 +6794,7 @@
       "value": 4,
       "data": {
         "label": "By night time",
-        "value": "23:00"
+        "value": 23
       },
       "selected": false
     },
@@ -6812,51 +6812,6 @@
       "target": "41",
       "type": "custom",
       "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-41-42",
-      "source": "41",
-      "target": "42",
-      "type": "custom",
-      "label": "Every. Single. Day.",
-      "value": "[1,2,3,4,5,6,7]",
-      "contentKey": "user.choose.active_days.all",
-      "data": {
-        "label": "Every. Single. Day.",
-        "value": "[1,2,3,4,5,6,7]",
-        "contentKey": "user.choose.active_days.all"
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-41-43",
-      "source": "41",
-      "target": "43",
-      "type": "custom",
-      "label": "Only on weekends.",
-      "value": "[6,7]",
-      "contentKey": "user.choose.active_days.weekends",
-      "data": {
-        "label": "Only on weekends.",
-        "value": "[6,7]",
-        "contentKey": "user.choose.active_days.weekends"
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-41-45",
-      "source": "41",
-      "target": "45",
-      "type": "custom",
-      "label": "Only on week days",
-      "value": "[1,2,3,4,5]",
-      "contentKey": "user.choose.active_days.weekends",
-      "data": {
-        "label": "Only on week days",
-        "value": "[1,2,3,4,5]",
-        "contentKey": "user.choose.active_days.weekdays"
-      },
       "selected": false
     },
     {
@@ -9080,29 +9035,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "41",
-      "target": "305",
-      "type": "custom",
-      "label": "It's more complicated",
-      "value": "[1,2,3,4,5,6,7]",
-      "contentKey": "user.choose.active_days.custom",
-      "data": {
-        "label": "It's more complicated",
-        "value": "[7]",
-        "contentKey": "user.choose.active_days.custom"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-41-305",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
       "source": "306",
       "sourceHandle": null,
       "target": "308",
@@ -9720,7 +9652,7 @@
       "type": "custom",
       "data": {
         "label": "4am",
-        "value": "04:00"
+        "value": 4
       },
       "id": "reactflow__edge-339-351",
       "selected": false
@@ -9734,7 +9666,7 @@
       "type": "custom",
       "data": {
         "label": "7am",
-        "value": "07:00"
+        "value": 7
       },
       "id": "reactflow__edge-340-351",
       "selected": false
@@ -9748,7 +9680,7 @@
       "type": "custom",
       "data": {
         "label": "1pm",
-        "value": "13:00"
+        "value": 13
       },
       "id": "reactflow__edge-341-351",
       "selected": false
@@ -9762,7 +9694,7 @@
       "type": "custom",
       "data": {
         "label": "7pm",
-        "value": "19:00"
+        "value": 19
       },
       "id": "reactflow__edge-350-351",
       "selected": false
@@ -9776,7 +9708,7 @@
       "type": "custom",
       "data": {
         "label": "11pm",
-        "value": "23:00"
+        "value": 23
       },
       "id": "reactflow__edge-342-351",
       "selected": false
@@ -9790,7 +9722,7 @@
       "type": "custom",
       "data": {
         "label": "5am",
-        "value": "05:00"
+        "value": 5
       },
       "id": "reactflow__edge-339-352",
       "selected": false
@@ -9804,7 +9736,7 @@
       "type": "custom",
       "data": {
         "label": "8am",
-        "value": "08:00"
+        "value": 8
       },
       "id": "reactflow__edge-340-352",
       "selected": false
@@ -9818,7 +9750,7 @@
       "type": "custom",
       "data": {
         "label": "2pm",
-        "value": "14:00"
+        "value": 14
       },
       "id": "reactflow__edge-341-352",
       "selected": false
@@ -9832,7 +9764,7 @@
       "type": "custom",
       "data": {
         "label": "8pm",
-        "value": "20:00"
+        "value": 20
       },
       "id": "reactflow__edge-350-352",
       "selected": false
@@ -9846,7 +9778,7 @@
       "type": "custom",
       "data": {
         "label": "12pm",
-        "value": "00:00"
+        "value": 0
       },
       "id": "reactflow__edge-342-352",
       "selected": false
@@ -9860,7 +9792,7 @@
       "type": "custom",
       "data": {
         "label": "6am",
-        "value": "06:00"
+        "value": 6
       },
       "id": "reactflow__edge-339-353",
       "selected": false
@@ -9874,7 +9806,7 @@
       "type": "custom",
       "data": {
         "label": "9am",
-        "value": "09:00"
+        "value": 9
       },
       "id": "reactflow__edge-340-353",
       "selected": false
@@ -9888,7 +9820,7 @@
       "type": "custom",
       "data": {
         "label": "10am",
-        "value": "10:00"
+        "value": 10
       },
       "id": "reactflow__edge-340-356",
       "selected": false
@@ -9902,7 +9834,7 @@
       "type": "custom",
       "data": {
         "label": "11am",
-        "value": "11:00"
+        "value": 11
       },
       "id": "reactflow__edge-340-357",
       "selected": false
@@ -9915,8 +9847,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "12am",
-        "value": "12:00"
+        "label": "12pm",
+        "value": 12
       },
       "id": "reactflow__edge-340-358",
       "selected": false
@@ -9930,7 +9862,7 @@
       "type": "custom",
       "data": {
         "label": "3pm",
-        "value": "15:00"
+        "value": 15
       },
       "id": "reactflow__edge-341-353",
       "selected": false
@@ -9944,7 +9876,7 @@
       "type": "custom",
       "data": {
         "label": "4pm",
-        "value": "16:00"
+        "value": 16
       },
       "id": "reactflow__edge-341-356",
       "selected": false
@@ -9958,7 +9890,7 @@
       "type": "custom",
       "data": {
         "label": "5pm",
-        "value": "17:00"
+        "value": 17
       },
       "id": "reactflow__edge-341-357",
       "selected": false
@@ -9972,7 +9904,7 @@
       "type": "custom",
       "data": {
         "label": "6pm",
-        "value": "18:00"
+        "value": 18
       },
       "id": "reactflow__edge-341-358",
       "selected": false
@@ -9986,7 +9918,7 @@
       "type": "custom",
       "data": {
         "label": "9pm",
-        "value": "21:00"
+        "value": 21
       },
       "id": "reactflow__edge-350-353",
       "selected": false
@@ -10000,7 +9932,7 @@
       "type": "custom",
       "data": {
         "label": "10pm",
-        "value": "22:00"
+        "value": 22
       },
       "id": "reactflow__edge-350-356",
       "selected": false
@@ -10014,7 +9946,7 @@
       "type": "custom",
       "data": {
         "label": "1am",
-        "value": "1:00"
+        "value": 1
       },
       "id": "reactflow__edge-342-353",
       "selected": false
@@ -10028,7 +9960,7 @@
       "type": "custom",
       "data": {
         "label": "2am",
-        "value": "2:00"
+        "value": 2
       },
       "id": "reactflow__edge-342-356",
       "selected": false
@@ -10042,7 +9974,7 @@
       "type": "custom",
       "data": {
         "label": "3am",
-        "value": "3:00"
+        "value": 3
       },
       "id": "reactflow__edge-342-357",
       "selected": false
@@ -10300,6 +10232,98 @@
       "data": {},
       "id": "reactflow__edge-368-38",
       "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "41",
+      "target": "42",
+      "type": "custom",
+      "label": "Every. Single. Day.",
+      "value": "[1,2,3,4,5,6,7]",
+      "contentKey": "user.choose.active_days.all",
+      "data": {
+        "label": "Every. Single. Day.",
+        "value": "[1,2,3,4,5,6,7]",
+        "contentKey": "user.choose.active_days.all"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-41-42",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "41",
+      "target": "45",
+      "type": "custom",
+      "label": "Only on week days",
+      "value": "[1,2,3,4,5]",
+      "contentKey": "user.choose.active_days.weekends",
+      "data": {
+        "label": "Only on week days",
+        "value": "[1,2,3,4,5]",
+        "contentKey": "user.choose.active_days.weekdays"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-41-45",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "41",
+      "target": "43",
+      "type": "custom",
+      "label": "Only on weekends.",
+      "value": "[6,7]",
+      "contentKey": "user.choose.active_days.weekends",
+      "data": {
+        "label": "Only on weekends.",
+        "value": "[6,7]",
+        "contentKey": "user.choose.active_days.weekends"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-41-43",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "41",
+      "target": "305",
+      "type": "custom",
+      "label": "It's more complicated",
+      "value": "[1,2,3,4,5,6,7]",
+      "contentKey": "user.choose.active_days.custom",
+      "data": {
+        "label": "It's more complicated",
+        "value": "[7]",
+        "contentKey": "user.choose.active_days.custom"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-41-305"
     }
   ]
 }

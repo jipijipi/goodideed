@@ -796,10 +796,16 @@ class NotificationService {
   }
 
   Future<String> _getStartTimeAsString() async {
-    final explicit = await _userDataService.getValue<String>(
+    final s = await _userDataService.getValue<String>(
       StorageKeys.taskStartTime,
     );
-    if (explicit != null && explicit.contains(':')) return explicit;
+    if (s != null) {
+      if (s.contains(':')) return s;
+      final asInt = int.tryParse(s);
+      if (asInt != null) return _convertIntegerToTimeString(asInt);
+    }
+    final i = await _userDataService.getValue<int>(StorageKeys.taskStartTime);
+    if (i != null) return _convertIntegerToTimeString(i);
     return SessionConstants.defaultStartTime;
   }
 
@@ -819,19 +825,14 @@ class NotificationService {
 
   // No deadline-based default start time mapping anymore.
 
-  String _convertIntegerToTimeString(int intValue) {
-    switch (intValue) {
-      case SessionConstants.timeOfDayMorning:
-        return SessionConstants.morningDeadlineTime;
-      case SessionConstants.timeOfDayAfternoon:
-        return SessionConstants.afternoonDeadlineTime;
-      case SessionConstants.timeOfDayEvening:
-        return SessionConstants.eveningDeadlineTime;
-      case SessionConstants.timeOfDayNight:
-        return SessionConstants.nightDeadlineTime;
-      default:
-        return SessionConstants.defaultDeadlineTime;
+  String _convertIntegerToTimeString(int hour) {
+    // Handle direct hour values (0-23)
+    if (hour >= 0 && hour <= 23) {
+      return '${hour.toString().padLeft(2, '0')}:00';
     }
+    
+    // Fallback to default for invalid values
+    return SessionConstants.defaultDeadlineTime;
   }
 
   Future<void> cancelAllNotifications() async {

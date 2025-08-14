@@ -30,7 +30,7 @@
       "task.isActiveDay": true,
       "task.activeDays": [1,2,3,4,5,6,7],
       "user.streak": 0,
-      "task.deadlineTime": "19:00",
+      "task.deadlineTime": 19,
       "task.currentDate": "2025-08-05"
     }
   },
@@ -40,7 +40,7 @@
     "variables": {
       "user.isOnboarded": true,
       "user.name": "Kyle",
-      "task.deadlineTime": "10:00",
+      "task.deadlineTime": 10,
       "user.task": "Medidate for 10 minutes"
     }
   },
@@ -77,7 +77,7 @@
       "session.timeOfDay": 4,
       "session.daysSinceFirstVisit": 15,
       "session.isWeekend": false,
-      "task.deadlineTime": "14:00",
+      "task.deadlineTime": 14,
       "task.currentDate": "2024-12-20",
       "task.isActiveDay": true,
       "task.isPastDeadline": true,
@@ -98,7 +98,7 @@
       "user.isOnboarded": true,
       "user.name": "Casey",
       "user.streak": 23,
-      "task.deadlineTime": "18:00",
+      "task.deadlineTime": 18,
       "task.currentDate": "2024-12-20",
       "task.isActiveDay": true,
       "task.isPastDeadline": false,
@@ -118,7 +118,7 @@
       "session.timeOfDay": 4,
       "session.daysSinceFirstVisit": 28,
       "user.streak": 12,
-      "task.deadlineTime": "23:00",
+      "task.deadlineTime": 23,
       "task.currentDate": "2025-08-01",
       "task.isPastDeadline": true
     }

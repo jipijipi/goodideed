@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-14T07:03:55.953Z",
+  "lastUpdated": "2025-08-14T10:00:35.512Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-14T07:03:55.944Z"
+    "timestamp": "2025-08-14T10:00:35.500Z"
   },
   "nodes": [
     {
@@ -18,12 +18,12 @@
       },
       "type": "group",
       "style": {
-        "width": 942.7189624985176,
-        "height": 1706.2751536640312,
+        "width": 944.7189624985176,
+        "height": 1707.2751536640312,
         "zIndex": 999
       },
-      "width": 943,
-      "height": 1706,
+      "width": 945,
+      "height": 1707,
       "selected": false,
       "positionAbsolute": {
         "x": -8139.004249794367,
@@ -50,12 +50,12 @@
       },
       "type": "group",
       "style": {
-        "width": 468,
-        "height": 1131.4546995692172,
+        "width": 470,
+        "height": 1133.4546995692172,
         "zIndex": 999
       },
-      "width": 468,
-      "height": 1131,
+      "width": 470,
+      "height": 1133,
       "selected": false,
       "positionAbsolute": {
         "x": -8234.063790271168,
@@ -82,12 +82,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1116.4496937841695,
-        "height": 2892.155667629361,
+        "width": 1118.4496937841695,
+        "height": 2894.155667629361,
         "zIndex": 999
       },
-      "width": 1116,
-      "height": 2892,
+      "width": 1118,
+      "height": 2894,
       "selected": false,
       "positionAbsolute": {
         "x": -6553.181153494897,
@@ -115,11 +115,11 @@
       "type": "group",
       "style": {
         "width": 470.2556337954866,
-        "height": 1295.1402969422215,
+        "height": 1225.1402969422215,
         "zIndex": 999
       },
       "width": 470,
-      "height": 1295,
+      "height": 1225,
       "selected": false,
       "positionAbsolute": {
         "x": -6538.255138831724,
@@ -173,22 +173,22 @@
     {
       "id": "148",
       "position": {
-        "x": -2405.174856235731,
-        "y": -6013.1198979143155
+        "x": -2586.3902817285125,
+        "y": -6007.2106992569425
       },
       "type": "group",
       "style": {
-        "width": 939.1291072120991,
+        "width": 978.5540320421301,
         "height": 2174.2500223139023,
         "zIndex": 999
       },
-      "width": 939,
+      "width": 979,
       "height": 2174,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -2405.174856235731,
-        "y": -6013.1198979143155
+        "x": -2586.3902817285125,
+        "y": -6007.2106992569425
       },
       "data": {
         "label": "Group 148",
@@ -210,12 +210,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1128.2225354289367,
-        "height": 2472.423878327061,
+        "width": 1130.2225354289367,
+        "height": 2474.423878327061,
         "zIndex": 999
       },
-      "width": 1128,
-      "height": 2472,
+      "width": 1130,
+      "height": 2474,
       "selected": false,
       "dragging": false,
       "data": {
@@ -253,12 +253,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1198.9867026085985,
-        "height": 3650.909900625098,
+        "width": 1200.9867026085985,
+        "height": 3651.909900625098,
         "zIndex": 999
       },
-      "width": 1199,
-      "height": 3651,
+      "width": 1201,
+      "height": 3652,
       "selected": false,
       "positionAbsolute": {
         "x": 4337.417139985067,
@@ -269,8 +269,8 @@
     {
       "id": "207",
       "position": {
-        "x": -1388.7402883876955,
-        "y": 667.8614313111971
+        "x": -2343.5358951152775,
+        "y": 596.3509240414235
       },
       "data": {
         "label": "Group 207",
@@ -285,16 +285,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1981.7848235094116,
-        "height": 3171.2101335904176,
+        "width": 1766.9913483129167,
+        "height": 3559.5101619231586,
         "zIndex": 999
       },
-      "width": 1982,
-      "height": 3171,
+      "width": 1767,
+      "height": 3560,
       "selected": false,
       "positionAbsolute": {
-        "x": -1388.7402883876955,
-        "y": 667.8614313111971
+        "x": -2343.5358951152775,
+        "y": 596.3509240414235
       },
       "dragging": false
     },
@@ -317,12 +317,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1625.2177035860836,
-        "height": 2552.158859823583,
+        "width": 1627.2177035860836,
+        "height": 2554.158859823583,
         "zIndex": 999
       },
-      "width": 1625,
-      "height": 2552,
+      "width": 1627,
+      "height": 2554,
       "selected": false,
       "positionAbsolute": {
         "x": 2171.5197940509665,
@@ -379,11 +379,11 @@
       },
       "type": "group",
       "style": {
-        "width": 848.0648599364185,
-        "height": 2281.4704407226463
+        "width": 849.0648599364185,
+        "height": 2283.4704407226463
       },
-      "width": 848,
-      "height": 2281,
+      "width": 849,
+      "height": 2283,
       "selected": false,
       "positionAbsolute": {
         "x": -7596.452911102814,
@@ -411,10 +411,10 @@
       "type": "group",
       "style": {
         "width": 606.3510707247251,
-        "height": 1957.738480796354
+        "height": 1959.738480796354
       },
       "width": 606,
-      "height": 1958,
+      "height": 1960,
       "selected": false,
       "positionAbsolute": {
         "x": -6450.896666059564,
@@ -523,12 +523,12 @@
       },
       "type": "group",
       "style": {
-        "width": 769.4030255654502,
-        "height": 2291,
+        "width": 771.4030255654502,
+        "height": 2293,
         "zIndex": 999
       },
-      "width": 769,
-      "height": 2291,
+      "width": 771,
+      "height": 2293,
       "selected": false,
       "positionAbsolute": {
         "x": 1910.4248618925976,
@@ -555,12 +555,12 @@
       },
       "type": "group",
       "style": {
-        "width": 764.8126306290392,
-        "height": 3898.6273875671027,
+        "width": 766.8126306290392,
+        "height": 3900.6273875671027,
         "zIndex": 999
       },
-      "width": 765,
-      "height": 3899,
+      "width": 767,
+      "height": 3901,
       "selected": false,
       "positionAbsolute": {
         "x": 3061.0061469927177,
@@ -582,22 +582,22 @@
     {
       "id": "31",
       "position": {
-        "x": 129.53753918967288,
-        "y": 4658.92179691791
+        "x": 292.3468538517724,
+        "y": 4647.152448870047
       },
       "type": "group",
       "style": {
-        "width": 486.0670527089834,
-        "height": 1862.4543612957523,
+        "width": 470,
+        "height": 1777.9903561031006,
         "zIndex": 999
       },
-      "width": 486,
-      "height": 1862,
+      "width": 470,
+      "height": 1778,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 129.53753918967288,
-        "y": 4658.92179691791
+        "x": 292.3468538517724,
+        "y": 4647.152448870047
       },
       "data": {
         "label": "Group 31",
@@ -610,37 +610,6 @@
         "description": "Asks the user the name of the task he'll want to perform",
         "color": "rgba(156, 39, 176, 0.025)"
       }
-    },
-    {
-      "id": "318",
-      "position": {
-        "x": 6274.685175885618,
-        "y": 4631.406507626959
-      },
-      "data": {
-        "label": "Group 318",
-        "category": "bot",
-        "nodeLabel": "Group",
-        "nodeId": "318",
-        "content": "Subflow Group",
-        "groupId": "customDays_seq",
-        "title": "Custom Days Setting Sequence",
-        "description": "When a user wants to select specific days",
-        "color": "rgba(156, 39, 176, 0.025)"
-      },
-      "type": "group",
-      "style": {
-        "width": 946.3865598384446,
-        "height": 10119
-      },
-      "width": 946,
-      "height": 10119,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 6274.685175885618,
-        "y": 4631.406507626959
-      },
-      "dragging": false
     },
     {
       "id": "363",
@@ -662,10 +631,10 @@
       "type": "group",
       "style": {
         "width": 2066.292219840339,
-        "height": 3880
+        "height": 3882
       },
       "width": 2066,
-      "height": 3880,
+      "height": 3882,
       "selected": false,
       "positionAbsolute": {
         "x": 862.0657166209082,
@@ -682,11 +651,11 @@
       "type": "group",
       "style": {
         "width": 1286.5937511479312,
-        "height": 2365.6626071009287,
+        "height": 2367.6626071009287,
         "zIndex": 999
       },
       "width": 1287,
-      "height": 2366,
+      "height": 2368,
       "selected": false,
       "positionAbsolute": {
         "x": 3167.1609775876427,
@@ -708,21 +677,21 @@
     {
       "id": "47",
       "position": {
-        "x": 4806.692897890143,
-        "y": 4642.63243232003
+        "x": 4074.831421754241,
+        "y": 4240.76513654881
       },
       "type": "group",
       "style": {
-        "width": 1133.270629832271,
-        "height": 2518,
+        "width": 2531.4426850958043,
+        "height": 14708.424913634946,
         "zIndex": 999
       },
-      "width": 1133,
-      "height": 2518,
+      "width": 2531,
+      "height": 14708,
       "selected": false,
       "positionAbsolute": {
-        "x": 4806.692897890143,
-        "y": 4642.63243232003
+        "x": 4074.831421754241,
+        "y": 4240.76513654881
       },
       "dragging": false,
       "data": {
@@ -740,22 +709,22 @@
     {
       "id": "55",
       "position": {
-        "x": 7648.673132432325,
-        "y": 1152.2663594786063
+        "x": 6788.943897439383,
+        "y": 353.9990085767927
       },
       "type": "group",
       "style": {
         "width": 1452.0427913623016,
-        "height": 3417,
+        "height": 3419,
         "zIndex": 999
       },
       "width": 1452,
-      "height": 3417,
+      "height": 3419,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 7648.673132432325,
-        "y": 1152.2663594786063
+        "x": 6788.943897439383,
+        "y": 353.9990085767927
       },
       "data": {
         "label": "Group 55",
@@ -1672,77 +1641,6 @@
       "extent": "parent"
     },
     {
-      "id": "300",
-      "position": {
-        "x": 534.9486116056239,
-        "y": 545.7822009019201
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "300",
-        "dataActions": [
-          {
-            "type": "trigger",
-            "key": "fx",
-            "value": "",
-            "event": "overlay_rive",
-            "data": {
-              "asset": "assets/animations/intro_logo_animated.riv",
-              "autoHideMs": 1800,
-              "align": "center",
-              "fit": "contain",
-              "zone": 2
-            }
-          },
-          {
-            "type": "trigger",
-            "key": "fx",
-            "value": "",
-            "event": "overlay_rive",
-            "data": {
-              "asset": "assets/animations/arm_rig_test.riv",
-              "zone": 4,
-              "align": "center",
-              "fit": "contain",
-              "useDataBinding": true,
-              "bindings": {
-                "hand_x": -50,
-                "hand_y": 100
-              }
-            }
-          },
-          {
-            "type": "trigger",
-            "key": "fx",
-            "value": "",
-            "event": "overlay_rive",
-            "data": {
-              "asset": "assets/animations/streakcount_test_2.riv",
-              "zone": 3,
-              "align": "center",
-              "fit": "scaleDown",
-              "bindings": {
-                "streakCount": 0
-              }
-            }
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 769,
-      "selected": false,
-      "positionAbsolute": {
-        "x": -1870.2262446301072,
-        "y": -5467.337697012395
-      },
-      "dragging": true,
-      "parentId": "148",
-      "extent": "parent"
-    },
-    {
       "id": "101",
       "position": {
         "x": 374.98352005308607,
@@ -2406,8 +2304,8 @@
     {
       "id": "201",
       "position": {
-        "x": 1001.4909519734333,
-        "y": 1192.270569769451
+        "x": 1122.3462887273488,
+        "y": 1099.3194746985262
       },
       "data": {
         "label": "Welcome!",
@@ -2421,8 +2319,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 981.7154781490051,
-        "y": 6308.806929490671
+        "x": -1221.1896063879287,
+        "y": 1695.6703987399496
       },
       "dragging": true,
       "parentId": "207",
@@ -2431,8 +2329,8 @@
     {
       "id": "202",
       "position": {
-        "x": 633.7664760922366,
-        "y": 1179.9431500202827
+        "x": 781.1101167285387,
+        "y": 1092.6548216339036
       },
       "data": {
         "label": "Welcome!",
@@ -2446,8 +2344,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 613.9910022678084,
-        "y": 6296.479509741503
+        "x": -1568.125780683988,
+        "y": 1730.805762521822
       },
       "dragging": true,
       "parentId": "207",
@@ -2456,8 +2354,8 @@
     {
       "id": "203",
       "position": {
-        "x": 1632.929401727094,
-        "y": 1242.9775317611866
+        "x": 454.9289269622352,
+        "y": 1104.2774758614532
       },
       "data": {
         "label": "Welcome!",
@@ -2471,8 +2369,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1613.1539279026658,
-        "y": 6359.5138914824065
+        "x": -1894.3069704502916,
+        "y": 1742.4284167493718
       },
       "dragging": true,
       "parentId": "207",
@@ -2481,8 +2379,8 @@
     {
       "id": "204",
       "position": {
-        "x": 82.17534141762042,
-        "y": 1506.325438290285
+        "x": 77.00865168708333,
+        "y": 1449.772216203559
       },
       "data": {
         "label": "Data action",
@@ -2512,7 +2410,7 @@
           },
           {
             "type": "set",
-            "key": "task.startTiming",
+            "key": "task.startTime",
             "value": null
           }
         ]
@@ -2522,8 +2420,8 @@
       "height": 1113,
       "selected": false,
       "positionAbsolute": {
-        "x": 510.0863485162342,
-        "y": 6566.8866994929385
+        "x": -2266.527243428194,
+        "y": 2046.1231402449826
       },
       "dragging": true,
       "parentId": "207",
@@ -2532,8 +2430,8 @@
     {
       "id": "205",
       "position": {
-        "x": 539.781575407111,
-        "y": 1623.0374141432853
+        "x": 752.5816611710854,
+        "y": 1429.2373360368085
       },
       "data": {
         "label": "Data action",
@@ -2558,8 +2456,8 @@
       "height": 574,
       "selected": false,
       "positionAbsolute": {
-        "x": -848.9587129805846,
-        "y": 2290.8988454544824
+        "x": -1596.6542362414414,
+        "y": 2067.388276924727
       },
       "dragging": true,
       "parentId": "207",
@@ -2568,8 +2466,8 @@
     {
       "id": "206",
       "position": {
-        "x": 949.2236802537313,
-        "y": 1616.315323616077
+        "x": 1101.223741513713,
+        "y": 1428.2152478068492
       },
       "data": {
         "label": "Data action",
@@ -2589,8 +2487,8 @@
       "height": 395,
       "selected": false,
       "positionAbsolute": {
-        "x": 929.4482064293031,
-        "y": 6732.851683337297
+        "x": -1242.3121536015644,
+        "y": 2024.5661718482727
       },
       "dragging": true,
       "parentId": "207",
@@ -2599,8 +2497,8 @@
     {
       "id": "208",
       "position": {
-        "x": 1323.7328226116201,
-        "y": 1249.4802821486683
+        "x": 1434,
+        "y": 1097.4802208886865
       },
       "data": {
         "label": "Welcome!",
@@ -2617,15 +2515,15 @@
       "parentId": "207",
       "extent": "parent",
       "positionAbsolute": {
-        "x": 1303.957348787192,
-        "y": 6366.016641869888
+        "x": -915.2358974125268,
+        "y": 1735.631161776605
       }
     },
     {
       "id": "217",
       "position": {
-        "x": 804.5563181243359,
-        "y": 2887
+        "x": 910.956361006323,
+        "y": 3273.300028332741
       },
       "data": {
         "label": "Route condition",
@@ -2639,8 +2537,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 784.7808442999077,
-        "y": 8003.53635972122
+        "x": -1432.5795341089545,
+        "y": 3869.6509523741647
       },
       "parentId": "207",
       "extent": "parent"
@@ -2648,8 +2546,8 @@
     {
       "id": "221",
       "position": {
-        "x": 1595.960164927032,
-        "y": 1685.409280986662
+        "x": 414.1596886306738,
+        "y": 1436.5091806734415
       },
       "data": {
         "label": "Data action",
@@ -2670,8 +2568,8 @@
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 308.9370143719808,
-        "y": 2096.941360372335
+        "x": -1929.3762064846037,
+        "y": 2032.860104714865
       },
       "parentId": "207",
       "extent": "parent"
@@ -2703,6 +2601,37 @@
       "positionAbsolute": {
         "x": 310.75225392623656,
         "y": 3013.59892503389
+      },
+      "parentId": "207",
+      "extent": "parent"
+    },
+    {
+      "id": "369",
+      "position": {
+        "x": 663.444829925023,
+        "y": 2772.2614422608694
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "369",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "task.startTiming",
+            "value": null
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 395,
+      "selected": false,
+      "dragging": true,
+      "positionAbsolute": {
+        "x": -1680.0910651902545,
+        "y": 3368.612366302293
       },
       "parentId": "207",
       "extent": "parent"
@@ -4202,8 +4131,8 @@
     {
       "id": "235",
       "position": {
-        "x": 72.59801726863122,
-        "y": 736.3732624844397
+        "x": 58.36685710908921,
+        "y": 802.5659806519598
       },
       "data": {
         "label": "Data action",
@@ -4215,29 +4144,16 @@
             "type": "set",
             "key": "task.startTiming",
             "value": null
-          },
-          {
-            "type": "trigger",
-            "key": "fx",
-            "value": "",
-            "event": "overlay_rive_update",
-            "data": {
-              "zone": 4,
-              "bindings": {
-                "hand_x": 500,
-                "hand_y": 500
-              }
-            }
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 579,
+      "height": 395,
       "selected": false,
       "positionAbsolute": {
-        "x": 977.856867163699,
-        "y": 5211.306179375008
+        "x": 350.7137109608616,
+        "y": 5449.718429522007
       },
       "dragging": true,
       "parentId": "31",
@@ -4273,16 +4189,16 @@
     {
       "id": "26",
       "position": {
-        "x": 56.53096455964783,
-        "y": 1538.4543612957523
+        "x": 99.74510675123707,
+        "y": 1453.9903561031006
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1156.3467498209254,
-        "y": 5997.765693246622
+        "x": 229.28264594090996,
+        "y": 6112.91215302101
       },
       "dragging": true,
       "parentId": "31",
@@ -4295,857 +4211,6 @@
         "contentKey": "bot.acknowledge.task_input.positive",
         "content": "{user.task}? Hey, baby steps, smart I guess."
       }
-    },
-    {
-      "id": "305",
-      "position": {
-        "x": 281.0364607589854,
-        "y": 25
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "305",
-        "content": "Uuuugh, of course...||| What about monday? "
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 4495.340975512208,
-        "y": 5116.60361359877
-      },
-      "dragging": false,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "306",
-      "position": {
-        "x": 289.2174201615999,
-        "y": 342.2601830079675
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "306"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 4503.521934914823,
-        "y": 5433.863796606737
-      },
-      "dragging": false,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "307",
-      "position": {
-        "x": 131.39749770647995,
-        "y": 1336.5587492731047
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "307",
-        "dataActions": [
-          {
-            "type": "append",
-            "key": "task.activeDays",
-            "value": "1"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5120.102695985921,
-        "y": 5875.362771770965
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "308",
-      "position": {
-        "x": 509.8096056586601,
-        "y": 1342.2300927065944
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "308",
-        "dataActions": [
-          {
-            "type": "remove",
-            "key": "task.activeDays",
-            "value": "1"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5498.514803938101,
-        "y": 5881.034115204455
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "309",
-      "position": {
-        "x": 361.5747950004543,
-        "y": 1817.9441394778623
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "309",
-        "content": "Tuesday"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5350.279993279895,
-        "y": 6356.748161975723
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "310",
-      "position": {
-        "x": 356.9072799645619,
-        "y": 2149.188121834938
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "310"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5345.612478244003,
-        "y": 6687.9921443327985
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "311",
-      "position": {
-        "x": 113,
-        "y": 2605.791092191206
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "311",
-        "dataActions": [
-          {
-            "type": "append",
-            "key": "task.activeDays",
-            "value": "2"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5101.705198279441,
-        "y": 7144.595114689067
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "312",
-      "position": {
-        "x": 591.3865598384446,
-        "y": 2600.7752190549527
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "312",
-        "dataActions": [
-          {
-            "type": "remove",
-            "key": "task.activeDays",
-            "value": "2"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5580.091758117886,
-        "y": 7139.579241552813
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "313",
-      "position": {
-        "x": 363.9624575159605,
-        "y": 3143.0806310385624
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "313",
-        "content": "Wednesday maybe?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5352.6676557954015,
-        "y": 7681.884653536423
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "314",
-      "position": {
-        "x": 364.8923349941688,
-        "y": 3503.5631719763715
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "314"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5353.59753327361,
-        "y": 8042.367194474232
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "315",
-      "position": {
-        "x": 174.04331464605184,
-        "y": 3905.8503829159135
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "315",
-        "dataActions": [
-          {
-            "type": "append",
-            "key": "task.activeDays",
-            "value": "3"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5162.748512925493,
-        "y": 8444.654405413774
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "316",
-      "position": {
-        "x": 539.3599590307331,
-        "y": 3886.0874609461816
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "316",
-        "dataActions": [
-          {
-            "type": "remove",
-            "key": "task.activeDays",
-            "value": "3"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5528.065157310174,
-        "y": 8424.891483444042
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "317",
-      "position": {
-        "x": 406.4595672618507,
-        "y": 4429.510614901842
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "317",
-        "content": "What about thursday?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5395.164765541292,
-        "y": 8968.314637399702
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "319",
-      "position": {
-        "x": 587.5107768174748,
-        "y": 617.4544303121556
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "319",
-        "content": "YOU started it|||You finish it|||Monday?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5576.215975096916,
-        "y": 5156.258452810016
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "320",
-      "position": {
-        "x": 397.46551898978305,
-        "y": 4797.005117844482
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "320"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5386.170717269224,
-        "y": 9335.809140342342
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "321",
-      "position": {
-        "x": 157.7609728855723,
-        "y": 5182.9279668939025
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "321",
-        "dataActions": [
-          {
-            "type": "append",
-            "key": "task.activeDays",
-            "value": "4"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5146.466171165013,
-        "y": 9721.731989391763
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "322",
-      "position": {
-        "x": 564.2011998732432,
-        "y": 5161.677872109039
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "322",
-        "dataActions": [
-          {
-            "type": "remove",
-            "key": "task.activeDays",
-            "value": "4"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5552.906398152684,
-        "y": 9700.481894606899
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "323",
-      "position": {
-        "x": 407.83123969037024,
-        "y": 5685.9593939661
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "323",
-        "content": "Friday?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5396.536437969811,
-        "y": 10224.76341646396
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "324",
-      "position": {
-        "x": 403.8176139178713,
-        "y": 6058.111889067052
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "324"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5392.522812197312,
-        "y": 10596.915911564913
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "325",
-      "position": {
-        "x": 191.52175204357172,
-        "y": 6555.439307394478
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "325",
-        "dataActions": [
-          {
-            "type": "append",
-            "key": "task.activeDays",
-            "value": "5"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5180.226950323013,
-        "y": 11094.243329892339
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "326",
-      "position": {
-        "x": 576.0794185024806,
-        "y": 6542.950165844867
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "326",
-        "dataActions": [
-          {
-            "type": "remove",
-            "key": "task.activeDays",
-            "value": "5"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5564.784616781922,
-        "y": 11081.754188342728
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "327",
-      "position": {
-        "x": 398.2915054257264,
-        "y": 7094.372297533243
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "327",
-        "content": "Saturday?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5386.996703705167,
-        "y": 11633.176320031103
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "328",
-      "position": {
-        "x": 387.0363628702971,
-        "y": 7452.822317155927
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "328"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5375.741561149738,
-        "y": 11991.626339653787
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "329",
-      "position": {
-        "x": 193.9241134369404,
-        "y": 7818.930876166517
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "329",
-        "dataActions": [
-          {
-            "type": "append",
-            "key": "task.activeDays",
-            "value": "6"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5182.629311716381,
-        "y": 12357.734898664377
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "330",
-      "position": {
-        "x": 549.6141584988027,
-        "y": 7808.443504119355
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "330",
-        "dataActions": [
-          {
-            "type": "remove",
-            "key": "task.activeDays",
-            "value": "6"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5538.319356778244,
-        "y": 12347.247526617215
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "331",
-      "position": {
-        "x": 399.67265383390713,
-        "y": 8479.483914614273
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "331",
-        "content": "And Sunday?"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5388.377852113348,
-        "y": 13018.287937112133
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "332",
-      "position": {
-        "x": 398.88071083452724,
-        "y": 8812.509197149204
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "332"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5387.585909113968,
-        "y": 13351.313219647063
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "333",
-      "position": {
-        "x": 197.1007276440505,
-        "y": 9145.845743245296
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "333",
-        "dataActions": [
-          {
-            "type": "append",
-            "key": "task.activeDays",
-            "value": "7"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5185.8059259234915,
-        "y": 13684.649765743157
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "334",
-      "position": {
-        "x": 555.4843966894268,
-        "y": 9155.508315002942
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "334",
-        "dataActions": [
-          {
-            "type": "remove",
-            "key": "task.activeDays",
-            "value": "7"
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 395,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5544.189594968868,
-        "y": 13694.312337500802
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "335",
-      "position": {
-        "x": 397.34701104630494,
-        "y": 9726
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "335",
-        "content": "All right, got it."
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5386.052209325746,
-        "y": 14264.804022497861
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
-    },
-    {
-      "id": "336",
-      "position": {
-        "x": 581.3118773963597,
-        "y": 941.3048690579226
-      },
-      "data": {
-        "label": "Select option:",
-        "category": "choice",
-        "nodeLabel": "Choice Menu",
-        "nodeId": "336"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 212,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 5096.241301808689,
-        "y": 5596.862108469073
-      },
-      "dragging": true,
-      "parentId": "318",
-      "extent": "parent"
     },
     {
       "id": "337",
@@ -6019,8 +5084,8 @@
     {
       "id": "182",
       "position": {
-        "x": 356.7748140521012,
-        "y": 1202.5104121571585
+        "x": 383.72012394692683,
+        "y": 1346.1743157414567
       },
       "data": {
         "label": "Data action",
@@ -6030,10 +5095,126 @@
         "dataActions": [
           {
             "type": "trigger",
-            "key": "task.isActiveDay",
+            "key": "task.info",
             "value": "",
-            "event": "recalculate_active_day",
+            "event": "refresh_task_calculations",
             "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 400,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4589.601292968997,
+        "y": 5967.697367851136
+      },
+      "dragging": false,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "305",
+      "position": {
+        "x": 1535.9413129725272,
+        "y": 753.3626295475797
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "305",
+        "content": "Uuuugh, of course...||| What about monday? "
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6524.612684727977,
+        "y": 4989.5553818999315
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "306",
+      "position": {
+        "x": 1537.0004508131105,
+        "y": 1262.0212632364064
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "306"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6525.67182256856,
+        "y": 5498.214015588758
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "307",
+      "position": {
+        "x": 1464.2838600295954,
+        "y": 2101.689564833102
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "307",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "1"
+          },
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "0"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 574,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6452.955231785045,
+        "y": 6337.882317185454
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "308",
+      "position": {
+        "x": 1813.9127661182138,
+        "y": 2103.534736571797
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "308",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "1"
           },
           {
             "type": "trigger",
@@ -6041,21 +5222,1016 @@
             "value": "",
             "event": "refresh_task_calculations",
             "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6802.584137873663,
+        "y": 6339.727488924149
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "309",
+      "position": {
+        "x": 1665.0487975538217,
+        "y": 2803.4581673930707
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "309",
+        "content": "Tuesday"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6653.720169309271,
+        "y": 7039.6509197454225
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "310",
+      "position": {
+        "x": 1658.3812825179293,
+        "y": 3103.0498063605573
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "310"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6647.052654273379,
+        "y": 7339.242558712909
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "311",
+      "position": {
+        "x": 1395.4740025533674,
+        "y": 3459.9069348140347
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "311",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "2"
           },
           {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "0"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 574,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6384.145374308817,
+        "y": 7696.0996871663865
+      },
+      "dragging": false,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "312",
+      "position": {
+        "x": 1832.8137213333102,
+        "y": 3462.891061677781
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "312",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "2"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6821.48509308876,
+        "y": 7699.083814030133
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "313",
+      "position": {
+        "x": 1628.9169241339832,
+        "y": 4267.869399858613
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "313",
+        "content": "Wednesday maybe?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6617.588295889433,
+        "y": 8504.062152210965
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "314",
+      "position": {
+        "x": 1619.8468016121915,
+        "y": 4592.351940796423
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "314"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6608.518173367641,
+        "y": 8828.544693148775
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "315",
+      "position": {
+        "x": 1374.9544666180227,
+        "y": 4946.893309833173
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "315",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "3"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6363.625838373472,
+        "y": 9183.086062185524
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "316",
+      "position": {
+        "x": 1798.267584590254,
+        "y": 4937.130387863443
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "316",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "3"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6786.938956345703,
+        "y": 9173.323140215794
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "317",
+      "position": {
+        "x": 1720.2551785118349,
+        "y": 5595.129896735656
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "317",
+        "content": "What about thursday?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6708.926550267284,
+        "y": 9831.322649088008
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "319",
+      "position": {
+        "x": 1866.7574119151732,
+        "y": 1495.347132573872
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "319",
+        "content": "YOU started it|||You finish it|||Monday?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6855.428783670623,
+        "y": 5731.539884926224
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "320",
+      "position": {
+        "x": 1715.2611302397672,
+        "y": 5956.624399678298
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "320"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6703.932501995217,
+        "y": 10192.81715203065
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "321",
+      "position": {
+        "x": 1493.7956112499842,
+        "y": 6300.801406824925
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "321",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "4"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6482.466983005434,
+        "y": 10536.994159177277
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "322",
+      "position": {
+        "x": 1907.9499700647257,
+        "y": 6301.551312040061
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "322",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "4"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6896.621341820175,
+        "y": 10537.744064392413
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "323",
+      "position": {
+        "x": 1711.6268509403544,
+        "y": 7013.578675799916
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "323",
+        "content": "Friday?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6700.298222695804,
+        "y": 11249.771428152268
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "324",
+      "position": {
+        "x": 1685.6132251678555,
+        "y": 7359.731170900868
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "324"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6674.284596923305,
+        "y": 11595.92392325322
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "325",
+      "position": {
+        "x": 1438.819266825085,
+        "y": 7688.027374802452
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "325",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "5"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6427.490638580534,
+        "y": 11924.220127154804
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "326",
+      "position": {
+        "x": 1916.8518442690638,
+        "y": 7657.5382332528425
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "326",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "5"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6905.523216024513,
+        "y": 11893.730985605194
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "327",
+      "position": {
+        "x": 1757.1107722508114,
+        "y": 8414.70620684401
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "327",
+        "content": "Saturday?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6745.782144006261,
+        "y": 12650.898959196362
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "328",
+      "position": {
+        "x": 1733.855629695382,
+        "y": 8805.156226466694
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "328"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6722.527001450831,
+        "y": 13041.348978819045
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "329",
+      "position": {
+        "x": 1654.319957474243,
+        "y": 9728.022875544175
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "329",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "6"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6782.352341654699,
+        "y": 16260.334781138265
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "330",
+      "position": {
+        "x": 2088.4426850958043,
+        "y": 9721.803884337696
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "330",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "6"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 7216.47506927626,
+        "y": 16254.115789931786
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "331",
+      "position": {
+        "x": 1910.0525753081647,
+        "y": 10625.82997220961
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "331",
+        "content": "And Sunday?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 7034.210486731714,
+        "y": 16544.037945834018
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "332",
+      "position": {
+        "x": 1902.9210399992617,
+        "y": 11025.538348121758
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "332"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 7075.078951422811,
+        "y": 15429.746321746165
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "333",
+      "position": {
+        "x": 1677.6319604784821,
+        "y": 11597.88327648527
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "333",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "7"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6849.789871902031,
+        "y": 16002.091250109677
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "334",
+      "position": {
+        "x": 2060.819266825085,
+        "y": 11582.333909310764
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "334",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "7"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 7232.977178248634,
+        "y": 15986.541882935171
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "335",
+      "position": {
+        "x": 1691.988487909478,
+        "y": 12471.080839926497
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "335",
+        "content": "All right, got it."
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5812.834350963542,
+        "y": 16773.636797649357
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "336",
+      "position": {
+        "x": 1655.8327477415041,
+        "y": 1822.2780978013798
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "336"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6644.5041194969535,
+        "y": 6058.470850153732
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "370",
+      "position": {
+        "x": 252.08318321155912,
+        "y": 13249.829781337728
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "370"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4372.929046265624,
+        "y": 17552.385739060588
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "371",
+      "position": {
+        "x": 219.03963668692995,
+        "y": 14047.663099400248
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "371",
+        "content": "Fantastic"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4339.885499740994,
+        "y": 18350.219057123108
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "372",
+      "position": {
+        "x": 583.6609302981251,
+        "y": 13616.837375175957
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "372",
+        "content": "Arf"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4704.50679335219,
+        "y": 17919.393332898817
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "373",
+      "position": {
+        "x": 560.1621618556601,
+        "y": 13938.549403003988
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "373",
+        "dataActions": [
+          {
             "type": "set",
-            "key": "task.startTiming",
+            "key": "task.activeDays",
             "value": null
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 764,
+      "height": 395,
       "selected": false,
       "positionAbsolute": {
-        "x": 3458.3194688476724,
-        "y": 5679.5593888089425
+        "x": 4681.008024909725,
+        "y": 18241.105360726848
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "374",
+      "position": {
+        "x": 214.58775815911758,
+        "y": 14430
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "374"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4335.433621213182,
+        "y": 18732.55595772286
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "375",
+      "position": {
+        "x": 2086.2872625339805,
+        "y": 12191.167402658099
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "375"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6207.133125588045,
+        "y": 16493.72336038096
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "376",
+      "position": {
+        "x": 2088.4924359917704,
+        "y": 12689.879552790102
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "376",
+        "content": "You've not choosen anything..."
+      },
+      "type": "editable",
+      "width": 249,
+      "height": 259,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 6209.338299045835,
+        "y": 16992.43551051296
       },
       "dragging": true,
       "parentId": "47",
@@ -6064,18 +6240,18 @@
     {
       "id": "40",
       "position": {
-        "x": 397.214063257466,
-        "y": 25
+        "x": 399.8535888478209,
+        "y": 43.57508636505281
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 907.7241977972476,
-        "y": 7942.2632237132075
+        "x": 5398.485545601373,
+        "y": 4891.437413491515
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "47",
       "extent": "parent",
       "data": {
@@ -6194,16 +6370,16 @@
     {
       "id": "46",
       "position": {
-        "x": 383.67028921375186,
-        "y": 2123
+        "x": 255.72074857966163,
+        "y": 12912.325025721442
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3485.214944009323,
-        "y": 6600.048976651784
+        "x": 4376.566611633726,
+        "y": 17214.8809834443
       },
       "dragging": true,
       "parentId": "47",
@@ -7730,54 +7906,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "205",
-      "sourceHandle": null,
-      "target": "217",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-205-217"
-    },
-    {
-      "zIndex": 1001,
-      "source": "206",
-      "sourceHandle": null,
-      "target": "217",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-206-217"
-    },
-    {
-      "zIndex": 1001,
-      "source": "208",
-      "sourceHandle": null,
-      "target": "217",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-208-217"
-    },
-    {
-      "zIndex": 1001,
       "source": "203",
       "sourceHandle": null,
       "target": "221",
@@ -7785,17 +7913,6 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-203-221",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "221",
-      "sourceHandle": null,
-      "target": "217",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-221-217",
       "selected": false
     },
     {
@@ -7867,17 +7984,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "46",
-      "sourceHandle": null,
-      "target": "219",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-46-219",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "54",
       "sourceHandle": null,
       "target": "219",
@@ -7886,22 +7992,6 @@
       "data": {},
       "id": "reactflow__edge-54-219",
       "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "204",
-      "sourceHandle": null,
-      "target": "217",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-204-217"
     },
     {
       "zIndex": 1001,
@@ -8970,33 +9060,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "292",
-      "sourceHandle": null,
-      "target": "300",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-292-300"
-    },
-    {
-      "zIndex": 1001,
-      "source": "300",
-      "sourceHandle": null,
-      "target": "290",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-300-290",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "9",
       "target": "301",
       "type": "custom",
@@ -9037,19 +9100,6 @@
       "zIndex": 1001,
       "source": "306",
       "sourceHandle": null,
-      "target": "308",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No"
-      },
-      "id": "reactflow__edge-306-308",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "306",
-      "sourceHandle": null,
       "target": "307",
       "targetHandle": null,
       "type": "custom",
@@ -9080,24 +9130,6 @@
       "data": {},
       "id": "reactflow__edge-308-309",
       "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "310",
-      "sourceHandle": null,
-      "target": "312",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-310-312"
     },
     {
       "zIndex": 1001,
@@ -9176,19 +9208,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "314",
-      "sourceHandle": null,
-      "target": "316",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No"
-      },
-      "id": "reactflow__edge-314-316",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "316",
       "sourceHandle": null,
       "target": "317",
@@ -9207,32 +9226,6 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-315-317",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "306",
-      "sourceHandle": null,
-      "target": "319",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Cancel"
-      },
-      "id": "reactflow__edge-306-319",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "320",
-      "sourceHandle": null,
-      "target": "322",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No"
-      },
-      "id": "reactflow__edge-320-322",
       "selected": false
     },
     {
@@ -9355,19 +9348,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "328",
-      "sourceHandle": null,
-      "target": "330",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No"
-      },
-      "id": "reactflow__edge-328-330",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "329",
       "sourceHandle": null,
       "target": "331",
@@ -9403,19 +9383,6 @@
       "zIndex": 1001,
       "source": "332",
       "sourceHandle": null,
-      "target": "334",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No"
-      },
-      "id": "reactflow__edge-332-334",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "332",
-      "sourceHandle": null,
       "target": "333",
       "targetHandle": null,
       "type": "custom",
@@ -9423,17 +9390,6 @@
         "label": "Yes"
       },
       "id": "reactflow__edge-332-333",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "334",
-      "sourceHandle": null,
-      "target": "335",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-334-335",
       "selected": false
     },
     {
@@ -9446,22 +9402,6 @@
       "data": {},
       "id": "reactflow__edge-333-335",
       "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "335",
-      "sourceHandle": null,
-      "target": "219",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-335-219"
     },
     {
       "zIndex": 1001,
@@ -9485,19 +9425,6 @@
         "label": "Yes"
       },
       "id": "reactflow__edge-336-307",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "336",
-      "sourceHandle": null,
-      "target": "308",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No"
-      },
-      "id": "reactflow__edge-336-308",
       "selected": false
     },
     {
@@ -9536,7 +9463,7 @@
       "type": "custom",
       "data": {
         "label": "Early Morning",
-        "value": "05:00"
+        "value": 5
       },
       "selected": false,
       "style": {
@@ -9555,7 +9482,7 @@
       "type": "custom",
       "data": {
         "label": "Morning",
-        "value": "09:00"
+        "value": 9
       },
       "id": "reactflow__edge-338-344",
       "selected": false
@@ -9569,7 +9496,7 @@
       "type": "custom",
       "data": {
         "label": "Afternoon",
-        "value": "14:00"
+        "value": 14
       },
       "id": "reactflow__edge-338-345",
       "selected": false
@@ -9583,7 +9510,7 @@
       "type": "custom",
       "data": {
         "label": "Evening",
-        "value": "20:00"
+        "value": 20
       },
       "id": "reactflow__edge-338-349",
       "selected": false
@@ -10176,7 +10103,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "value": "22:00",
+        "value": 22,
         "label": "Night"
       },
       "selected": false,
@@ -10312,7 +10239,7 @@
       "contentKey": "user.choose.active_days.custom",
       "data": {
         "label": "It's more complicated",
-        "value": "[7]",
+        "value": "[0]",
         "contentKey": "user.choose.active_days.custom"
       },
       "selected": false,
@@ -10324,6 +10251,395 @@
       "sourceHandle": null,
       "targetHandle": null,
       "id": "reactflow__edge-41-305"
+    },
+    {
+      "zIndex": 1001,
+      "source": "204",
+      "sourceHandle": null,
+      "target": "369",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-204-369"
+    },
+    {
+      "zIndex": 1001,
+      "source": "221",
+      "sourceHandle": null,
+      "target": "369",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-221-369"
+    },
+    {
+      "zIndex": 1001,
+      "source": "206",
+      "sourceHandle": null,
+      "target": "369",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-206-369"
+    },
+    {
+      "zIndex": 1001,
+      "source": "369",
+      "sourceHandle": null,
+      "target": "217",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-369-217",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "205",
+      "sourceHandle": null,
+      "target": "369",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-205-369"
+    },
+    {
+      "zIndex": 1001,
+      "source": "208",
+      "sourceHandle": null,
+      "target": "217",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-208-217",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "370",
+      "sourceHandle": null,
+      "target": "371",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "That's correct"
+      },
+      "id": "reactflow__edge-370-371",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "370",
+      "sourceHandle": null,
+      "target": "372",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No let's start over"
+      },
+      "id": "reactflow__edge-370-372",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "372",
+      "sourceHandle": null,
+      "target": "373",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-372-373",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "46",
+      "sourceHandle": null,
+      "target": "370",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-46-370",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "373",
+      "sourceHandle": null,
+      "target": "374",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-373-374",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "374",
+      "sourceHandle": null,
+      "target": "219",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-374-219"
+    },
+    {
+      "zIndex": 1001,
+      "source": "371",
+      "sourceHandle": null,
+      "target": "374",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-371-374",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "310",
+      "sourceHandle": null,
+      "target": "312",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-310-312"
+    },
+    {
+      "zIndex": 1001,
+      "source": "306",
+      "sourceHandle": null,
+      "target": "308",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-306-308"
+    },
+    {
+      "zIndex": 1001,
+      "source": "336",
+      "sourceHandle": null,
+      "target": "308",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-336-308"
+    },
+    {
+      "zIndex": 1001,
+      "source": "314",
+      "sourceHandle": null,
+      "target": "316",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-314-316"
+    },
+    {
+      "zIndex": 1001,
+      "source": "320",
+      "sourceHandle": null,
+      "target": "322",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-320-322"
+    },
+    {
+      "zIndex": 1001,
+      "source": "328",
+      "sourceHandle": null,
+      "target": "330",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-328-330"
+    },
+    {
+      "zIndex": 1001,
+      "source": "335",
+      "sourceHandle": null,
+      "target": "46",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-335-46",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "292",
+      "sourceHandle": null,
+      "target": "290",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-292-290"
+    },
+    {
+      "zIndex": 1001,
+      "source": "306",
+      "sourceHandle": null,
+      "target": "319",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Cancel"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-306-319"
+    },
+    {
+      "zIndex": 1001,
+      "source": "332",
+      "sourceHandle": null,
+      "target": "334",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-332-334"
+    },
+    {
+      "zIndex": 1001,
+      "source": "375",
+      "sourceHandle": null,
+      "target": "335",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-375-335",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "375",
+      "sourceHandle": null,
+      "target": "376",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "task.activeDays == [0]"
+      },
+      "id": "reactflow__edge-375-376",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "334",
+      "sourceHandle": null,
+      "target": "375",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-334-375",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "376",
+      "sourceHandle": null,
+      "target": "373",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-376-373",
+      "selected": false
     }
   ]
 }

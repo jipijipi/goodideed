@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-14T16:01:43.587Z",
+  "lastUpdated": "2025-08-14T16:20:26.928Z",
   "gitBranch": "authoring-tool-upgrade",
   "gitCommit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "authoring-tool-upgrade",
     "commit": "a383cdcae0f1ac773d8f9e99d50191123b3c9404",
-    "timestamp": "2025-08-14T16:01:43.566Z"
+    "timestamp": "2025-08-14T16:20:26.921Z"
   },
   "nodes": [
     {
@@ -178,11 +178,11 @@
       },
       "type": "group",
       "style": {
-        "width": 978.5540320421301,
+        "width": 798.1804956064752,
         "height": 2174.2500223139023,
         "zIndex": 999
       },
-      "width": 979,
+      "width": 798,
       "height": 2174,
       "selected": false,
       "dragging": false,
@@ -1665,6 +1665,45 @@
       "positionAbsolute": {
         "x": -1797.2588950310492,
         "y": -6016.691871993871
+      },
+      "dragging": true,
+      "parentId": "148",
+      "extent": "parent"
+    },
+    {
+      "id": "424",
+      "position": {
+        "x": 392,
+        "y": 469.5108736068423
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "424",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive",
+            "data": {
+              "asset": "assets/animations/tristopher_simple.riv",
+              "autoHideMs": 1800,
+              "align": "center",
+              "fit": "contain",
+              "zone": 2
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 586,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -2194.3902817285125,
+        "y": -5537.6998256501
       },
       "dragging": true,
       "parentId": "148",
@@ -5780,8 +5819,8 @@
         "content": "And you chose the reminder level : {task.remindersIntensity}"
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": -973.6205749255791,
@@ -11051,22 +11090,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "292",
-      "sourceHandle": null,
-      "target": "290",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-292-290"
-    },
-    {
-      "zIndex": 1001,
       "source": "306",
       "sourceHandle": null,
       "target": "319",
@@ -12340,6 +12363,28 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-421-198",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "292",
+      "sourceHandle": null,
+      "target": "424",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-292-424",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "424",
+      "sourceHandle": null,
+      "target": "290",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-424-290",
       "selected": false
     }
   ]

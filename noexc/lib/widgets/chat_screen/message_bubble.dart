@@ -51,6 +51,11 @@ class MessageBubble extends StatelessWidget {
       );
     }
 
+    // System messages - centered, no bubble, monospace font
+    if (message.type == MessageType.system) {
+      return _buildSystemMessage(context);
+    }
+
     // Regular text messages only
     return _buildRegularBubble(context);
   }
@@ -122,6 +127,26 @@ class MessageBubble extends StatelessWidget {
       child: Icon(
         isBot ? Icons.smart_toy : Icons.person,
         color: DesignTokens.avatarIconColor,
+      ),
+    );
+  }
+
+  /// Builds a system message with centered text, no bubble, and monospace font
+  Widget _buildSystemMessage(BuildContext context) {
+    return Padding(
+      padding: DesignTokens.messageBubbleMargin,
+      child: Center(
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.8,
+          ),
+          child: MarkdownBody(
+            data: message.text,
+            styleSheet: DesignTokens.getSystemMessageMarkdownStyle(context),
+            shrinkWrap: true,
+            selectable: false,
+          ),
+        ),
       ),
     );
   }

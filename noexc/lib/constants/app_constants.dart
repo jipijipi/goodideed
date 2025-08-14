@@ -68,6 +68,7 @@ class AppConstants {
     'startTime_seq',
     'deadlineTime_seq',
     'taskConfirm_seq',
+    'system_demo_seq',
   ];
 
   // User Response ID Offset

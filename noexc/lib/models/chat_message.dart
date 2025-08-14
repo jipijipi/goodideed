@@ -4,7 +4,7 @@ import 'data_action.dart';
 import '../constants/app_constants.dart';
 import '../config/chat_config.dart';
 
-enum MessageType { bot, user, choice, textInput, autoroute, dataAction, image }
+enum MessageType { bot, user, choice, textInput, autoroute, dataAction, image, system }
 
 class ChatMessage {
   final int id;
@@ -113,8 +113,10 @@ class ChatMessage {
       case MessageType.image:
         messageText = '';
         break;
-      default:
-        // Do nothing
+      case MessageType.system:
+      case MessageType.bot:
+      case MessageType.user:
+        // Keep text content for display messages
         break;
     }
 

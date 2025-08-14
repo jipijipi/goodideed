@@ -864,6 +864,41 @@ class DesignTokens {
     );
   }
 
+  /// Creates a MarkdownStyleSheet for system messages
+  static MarkdownStyleSheet getSystemMessageMarkdownStyle(BuildContext context) {
+    final textColor = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
+    
+    return MarkdownStyleSheet(
+      // Base text style - monospace font, smaller size, center aligned
+      p: GoogleFonts.inconsolata(
+        fontSize: messageFontSize * 0.85, // Slightly smaller than regular messages
+        color: textColor,
+        height: 1.3,
+      ),
+      // Disable styling variations for system messages
+      strong: GoogleFonts.inconsolata(
+        fontSize: messageFontSize * 0.85,
+        color: textColor,
+        fontWeight: FontWeight.normal, // No bold in system messages
+      ),
+      em: GoogleFonts.inconsolata(
+        fontSize: messageFontSize * 0.85,
+        color: textColor,
+        fontStyle: FontStyle.normal, // No italic in system messages
+      ),
+      // Disable all other markdown elements
+      h1: const TextStyle(fontSize: 0, height: 0),
+      h2: const TextStyle(fontSize: 0, height: 0),
+      h3: const TextStyle(fontSize: 0, height: 0),
+      h4: const TextStyle(fontSize: 0, height: 0),
+      h5: const TextStyle(fontSize: 0, height: 0),
+      h6: const TextStyle(fontSize: 0, height: 0),
+      blockquote: const TextStyle(fontSize: 0, height: 0),
+      code: GoogleFonts.inconsolata(fontSize: messageFontSize * 0.85, color: textColor),
+      codeblockDecoration: const BoxDecoration(),
+    );
+  }
+
   /// Creates a MarkdownStyleSheet for choice buttons
   static MarkdownStyleSheet getChoiceMarkdownStyle(
     BuildContext context, {

@@ -24,34 +24,8 @@ class DateTimePickerWidget extends StatefulWidget {
 class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
   DateTime _selectedDate = DateTime.now();
   String _currentTaskDate = '';
-  String _currentDeadlineTime = '';
   String _currentIsActiveDay = '';
   String _currentIsPastDeadline = '';
-  int? _selectedDeadlineOption;
-
-  // Deadline options matching the JSON sequence choices
-  static const Map<int, String> deadlineOptions = {
-    1: 'Morning (10:00)',
-    2: 'Afternoon (14:00)',
-    3: 'Evening (18:00)',
-    4: 'Night (23:00)',
-  };
-
-  // Time string to option number mapping
-  static const Map<String, int> timeStringToOption = {
-    '10:00': 1,
-    '14:00': 2,
-    '18:00': 3,
-    '23:00': 4,
-  };
-
-  // Option number to time string mapping
-  static const Map<int, String> optionToTimeString = {
-    1: '10:00',
-    2: '14:00',
-    3: '18:00',
-    4: '23:00',
-  };
 
   @override
   void initState() {
@@ -70,33 +44,8 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
       StorageKeys.taskIsPastDeadline,
     );
 
-    // Handle both string and integer deadline formats
-    String deadlineDisplay = 'Not set';
-    int? selectedOption;
-
-    // Try string format first (new format)
-    final deadlineString = await widget.userDataService.getValue<String>(
-      StorageKeys.taskDeadlineTime,
-    );
-    if (deadlineString != null) {
-      deadlineDisplay = deadlineString;
-      // Convert string time to option number for UI selection
-      selectedOption = _timeStringToOption(deadlineString);
-    } else {
-      // Try integer format (legacy format)
-      final deadlineOption = await widget.userDataService.getValue<int>(
-        StorageKeys.taskDeadlineTime,
-      );
-      if (deadlineOption != null) {
-        selectedOption = deadlineOption;
-        deadlineDisplay = deadlineOptions[deadlineOption] ?? 'Unknown option';
-      }
-    }
-
     setState(() {
       _currentTaskDate = taskDate ?? 'Not set';
-      _selectedDeadlineOption = selectedOption;
-      _currentDeadlineTime = deadlineDisplay;
       _currentIsActiveDay = isActiveDay?.toString() ?? 'Not computed';
       _currentIsPastDeadline = isPastDeadline?.toString() ?? 'Not computed';
     });
@@ -123,10 +72,6 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
-  /// Convert time string to option number for UI selection
-  int? _timeStringToOption(String timeString) {
-    return timeStringToOption[timeString];
-  }
 
   Widget _buildSectionHeader(BuildContext context, String title) {
     return Padding(
@@ -218,27 +163,6 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     widget.statusController?.addSuccess('Task date set to $dateString');
   }
 
-  Future<void> _setDeadlineOption(int option) async {
-    // Store as string format (new format)
-    final timeString = optionToTimeString[option];
-    if (timeString != null) {
-      await widget.userDataService.storeValue(
-        StorageKeys.taskDeadlineTime,
-        timeString,
-      );
-
-      setState(() {
-        _selectedDeadlineOption = option;
-        _currentDeadlineTime = timeString;
-      });
-
-      widget.onDataChanged?.call();
-
-      widget.statusController?.addSuccess(
-        'Deadline set to ${deadlineOptions[option]} ($timeString)',
-      );
-    }
-  }
 
   Future<void> _setToToday() async {
     final today = DateTime.now();
@@ -298,7 +222,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSectionHeader(context, 'Date & Time Testing'),
+          _buildSectionHeader(context, 'Task Date Testing'),
 
           // Current Values Display
           Container(
@@ -326,7 +250,6 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                 ),
                 const SizedBox(height: 8),
                 _buildCurrentValueRow('Task Date:', _currentTaskDate),
-                _buildCurrentValueRow('Deadline Time:', _currentDeadlineTime),
                 _buildCurrentValueRow('Is Active Day:', _currentIsActiveDay),
                 _buildCurrentValueRow(
                   'Is Past Deadline:',
@@ -390,64 +313,6 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                           foregroundColor:
                               Theme.of(context).colorScheme.secondary,
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Deadline Options Section
-          Padding(
-            padding: DesignTokens.variableItemPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Set Deadline Time',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<int>(
-                        value: _selectedDeadlineOption,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          hintText: 'Select deadline time',
-                        ),
-                        items:
-                            deadlineOptions.entries
-                                .map(
-                                  (entry) => DropdownMenuItem<int>(
-                                    value: entry.key,
-                                    child: Text(
-                                      entry.value,
-                                      style: TextStyle(
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.onSurface,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                        onChanged: (int? value) {
-                          if (value != null) {
-                            _setDeadlineOption(value);
-                          }
-                        },
                       ),
                     ),
                   ],

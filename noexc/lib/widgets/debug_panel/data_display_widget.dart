@@ -69,20 +69,11 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     return value is bool;
   }
 
-  bool _isTimeOfDayEnum(String key) {
-    return key.contains('timeOfDay');
-  }
 
   bool _isEditableValue(dynamic value) {
     return _isStringValue(value) || _isIntValue(value) || _isBoolValue(value);
   }
 
-  Map<int, String> get _timeOfDayOptions => {
-    1: '☀️ Morning (before noon)',
-    2: '🌤️ Afternoon (noon - 5pm)',
-    3: '🌅 Evening (5pm - 9pm)',
-    4: '🌙 Night (9pm - midnight)',
-  };
 
   bool _isReadOnlyKey(String key) {
     // Read-only computed values
@@ -188,29 +179,6 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
         },
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       );
-    } else if (_isTimeOfDayEnum(key) && _isIntValue(value)) {
-      // TimeOfDay enum dropdown
-      return DropdownButton<int>(
-        isExpanded: true,
-        value: value as int,
-        items:
-            _timeOfDayOptions.entries
-                .map(
-                  (entry) => DropdownMenuItem(
-                    value: entry.key,
-                    child: Text(
-                      entry.value,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                )
-                .toList(),
-        onChanged: (newValue) {
-          if (newValue != null) {
-            _saveIntValue(key, newValue.toString());
-          }
-        },
-      );
     } else if (_isIntValue(value)) {
       return TextField(
         controller: _controllers[key],
@@ -257,8 +225,6 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
     final isSaving = _savingStates[entry.key] ?? false;
     final isIntValue = _isIntValue(entry.value);
     final isBoolValue = _isBoolValue(entry.value);
-    final isTimeOfDayEnum =
-        _isTimeOfDayEnum(entry.key) && _isIntValue(entry.value);
     final isReadOnly = _isReadOnlyKey(entry.key);
     final canEdit =
         _isEditableValue(entry.value) &&
@@ -286,15 +252,12 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
               Expanded(
                 flex: 3,
                 child:
-                    ((isBoolValue || isTimeOfDayEnum) && canEdit)
+                    (isBoolValue && canEdit)
                         ? _buildInputWidget(context, entry.key, entry.value)
                         : isEditing
                         ? _buildInputWidget(context, entry.key, entry.value)
                         : Text(
-                          isTimeOfDayEnum
-                              ? _timeOfDayOptions[entry.value] ??
-                                  _formatValue(entry.value)
-                              : _formatValue(entry.value),
+                          _formatValue(entry.value),
                           style: Theme.of(
                             context,
                           ).textTheme.bodyMedium?.copyWith(
@@ -303,7 +266,7 @@ class _DataDisplayWidgetState extends State<DataDisplayWidget> {
                           ),
                         ),
               ),
-              if (canEdit && !isBoolValue && !isTimeOfDayEnum) ...[
+              if (canEdit && !isBoolValue) ...[
                 const SizedBox(width: 8),
                 if (isSaving)
                   const SizedBox(

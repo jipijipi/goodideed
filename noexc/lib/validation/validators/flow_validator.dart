@@ -155,7 +155,10 @@ class FlowValidator {
 
   /// Checks if a message is a valid endpoint (intentional end)
   bool _isValidEndpoint(ChatMessage message) {
-    // Check if message has cross-sequence navigation
+    // Check if message itself has cross-sequence navigation
+    if (message.sequenceId != null) return true;
+    
+    // Check if message has cross-sequence navigation in choices
     if (message.choices != null) {
       for (final choice in message.choices!) {
         if (choice.sequenceId != null) return true;

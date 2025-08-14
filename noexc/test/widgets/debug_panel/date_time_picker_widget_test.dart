@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/debug_panel/date_time_picker_widget.dart';
 import 'package:noexc/services/user_data_service.dart';
-import 'package:noexc/constants/storage_keys.dart';
 import '../test_utils.dart';
 
 void main() {
@@ -20,7 +19,7 @@ void main() {
       await userDataService.clearAllData();
     });
 
-    testWidgets('should display date and time picker section', (
+    testWidgets('should display task date picker section', (
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
@@ -35,21 +34,16 @@ void main() {
       await tester.pumpAndSettle(TestUtils.extendedPump);
 
       // Check that the main section header is present
-      expect(find.text('Date & Time Testing'), findsOneWidget);
+      expect(find.text('Task Date Testing'), findsOneWidget);
 
       // Check that current values section is present
       expect(find.text('Current Values'), findsOneWidget);
       expect(find.text('Task Date:'), findsOneWidget);
-      expect(find.text('Deadline Time:'), findsOneWidget);
 
       // Check that date setting section is present
       expect(find.text('Set Task Date'), findsOneWidget);
       expect(find.text('Today'), findsOneWidget);
       expect(find.text('Yesterday'), findsOneWidget);
-
-      // Check that deadline options section is present
-      expect(find.text('Set Deadline Time'), findsOneWidget);
-      expect(find.text('Select deadline time'), findsOneWidget);
     });
 
     testWidgets('should show default values when no data is stored', (
@@ -126,52 +120,5 @@ void main() {
       expect(callbackCalled, true);
     });
 
-    testWidgets('should allow selecting deadline options', (
-      WidgetTester tester,
-    ) async {
-      bool callbackCalled = false;
-      final userDataService = UserDataService();
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: DateTimePickerWidget(
-              userDataService: userDataService,
-              onDataChanged: () {
-                callbackCalled = true;
-              },
-            ),
-          ),
-        ),
-      );
-
-      await tester.pumpAndSettle(TestUtils.extendedPump);
-
-      // Should show dropdown for deadline options
-      expect(find.text('Select deadline time'), findsOneWidget);
-
-      // Tap the dropdown to open it
-      await tester.tap(find.text('Select deadline time'));
-      await tester.pumpAndSettle(TestUtils.standardPump);
-
-      // Should show all deadline options in dropdown
-      expect(find.text('Morning (10:00)'), findsOneWidget);
-      expect(find.text('Afternoon (14:00)'), findsOneWidget);
-      expect(find.text('Evening (18:00)'), findsOneWidget);
-      expect(find.text('Night (23:00)'), findsOneWidget);
-
-      // Select the evening option
-      await tester.tap(find.text('Evening (18:00)').last);
-      await tester.pumpAndSettle(TestUtils.standardPump);
-
-      // Should update the display and trigger callback
-      expect(callbackCalled, true);
-
-      // Verify the value was stored correctly (now as string format)
-      final storedValue = await userDataService.getValue<String>(
-        StorageKeys.taskDeadlineTime,
-      );
-      expect(storedValue, '18:00'); // Evening = 18:00
-    });
   });
 }

@@ -6,6 +6,7 @@ import '../constants/data_action_constants.dart';
 import 'session_service.dart';
 import 'logger_service.dart';
 import '../utils/active_date_calculator.dart';
+import 'service_locator.dart';
 
 class DataActionProcessor {
   final UserDataService _userDataService;
@@ -132,6 +133,9 @@ class DataActionProcessor {
   Future<void> _appendToList(String key, dynamic valueToAdd) async {
     if (valueToAdd == null) return;
 
+    // Resolve templated values (e.g., "{user.streak}" or shorthand "user.streak") to scalars
+    valueToAdd = await _resolveScalarFromTemplate(valueToAdd);
+
     // Try to get existing list, default to empty list if not found
     final existingData = await _userDataService.getValue<dynamic>(key);
     List<dynamic> currentList;
@@ -184,6 +188,9 @@ class DataActionProcessor {
 
   Future<void> _removeFromList(String key, dynamic valueToRemove) async {
     if (valueToRemove == null) return;
+
+    // Resolve templated values (e.g., "{user.streak}" or shorthand "user.streak") to scalars
+    valueToRemove = await _resolveScalarFromTemplate(valueToRemove);
 
     // Try to get existing list
     final existingData = await _userDataService.getValue<dynamic>(key);
@@ -239,6 +246,53 @@ class DataActionProcessor {
         'Value "$coercedValue" not found in list at key "$key"',
         component: LogComponent.dataActionProcessor,
       );
+    }
+  }
+
+  /// Resolve a potential template string to a scalar (int/double/bool/string)
+  /// Supports explicit templates like "{user.streak}" or shorthand paths like "user.streak".
+  Future<dynamic> _resolveScalarFromTemplate(dynamic value) async {
+    if (value is num || value is bool) return value;
+    if (value is! String) return value;
+
+    // Only attempt templating if value contains braces or resembles a path (has a dot)
+    final looksLikeTemplate = value.contains('{');
+    final looksLikePath = !looksLikeTemplate && value.contains('.');
+    if (!looksLikeTemplate && !looksLikePath) return value;
+
+    try {
+      final templating = ServiceLocator.instance.templatingService;
+      final template = looksLikeTemplate ? value : '{${value.trim()}}';
+      final processed = await templating.processTemplate(template);
+
+      // If unresolved (still has braces), keep as original literal
+      if (processed.contains('{') || processed.contains('}')) {
+        _logger.warning(
+          'Template did not resolve fully for append/remove value: "$value" -> "$processed"',
+          component: LogComponent.dataActionProcessor,
+        );
+        return value;
+      }
+
+      // Try bool
+      final lower = processed.toLowerCase();
+      if (lower == 'true') return true;
+      if (lower == 'false') return false;
+
+      // Try int then double
+      final asInt = int.tryParse(processed);
+      if (asInt != null) return asInt;
+      final asDouble = double.tryParse(processed);
+      if (asDouble != null) return asDouble;
+
+      // Fallback to string
+      return processed;
+    } catch (e) {
+      _logger.warning(
+        'Template resolution failed for append/remove value "$value": $e',
+        component: LogComponent.dataActionProcessor,
+      );
+      return value;
     }
   }
 

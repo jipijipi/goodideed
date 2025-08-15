@@ -277,3 +277,47 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "level": "{task.remindersIntensity}"
   }
 }
+{
+  "zone": 4,
+  "id": "throttle",
+  "autoHideMs": 1000
+}
+
+{
+  "zone": 4,
+  "id": "calendar",
+  "autoHideMs": 1000
+}
+{
+  "zone": 4,
+  "id": "calendar",
+  "bindings": {
+    "monday": "{session.mon_active}",
+    "tuesday": "{session.tue_active}",
+    "wednesday": "{session.wed_active}",
+    "thursday": "{session.thu_active}",
+    "friday": "{session.fri_active}",
+    "saturday": "{session.sat_active}",
+    "sunday": "{session.sun_active}"
+  }
+}
+
+
+{
+  "asset": "assets/animations/calendar.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "calendar",
+  "policy": "ignore",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "monday": "{session.mon_active}",
+    "tuesday": "{session.tue_active}",
+    "wednesday": "{session.wed_active}",
+    "thursday": "{session.thu_active}",
+    "friday": "{session.fri_active}",
+    "saturday": "{session.sat_active}",
+    "sunday": "{session.sun_active}"
+  }
+}

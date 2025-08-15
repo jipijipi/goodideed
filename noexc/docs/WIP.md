@@ -205,8 +205,12 @@ The last zone will be very similar to the background zone (3), except that it wi
   }
 }
 
-Make sure the new system messages in the authoring tool behaves like the others when it comes to save/restore and all exports. Initial tests deployed this : 
-{
-      "id": 425,
-      "type": "system"
-    }
+TASK SUMMARY
+  --------
+task : {user.task}
+days : {task.activeDays}
+start : {task.startTime}
+deadline : {task.deadlineTime}
+reminders : {task.remindersIntensity}
+
+TASK SUMMARY|||--------|||task : {user.task}|||days : {task.activeDays}|||start : {task.startTime}|||deadline : {task.deadlineTime}|||reminders : {task.remindersIntensity}

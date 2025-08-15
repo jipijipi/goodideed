@@ -331,6 +331,38 @@ class ChatService {
       logger.error('Failed to recalculate task.status: $e');
     }
 
+    // Recalculate task.isPastDeadline (CRITICAL: was missing!)
+    try {
+      await sessionService.recalculatePastDeadline();
+      logger.info('Successfully recalculated task.isPastDeadline');
+    } catch (e) {
+      logger.error('Failed to recalculate task.isPastDeadline: $e');
+    }
+
+    // Recalculate task.isActiveDay
+    try {
+      await sessionService.recalculateActiveDay();
+      logger.info('Successfully recalculated task.isActiveDay');
+    } catch (e) {
+      logger.error('Failed to recalculate task.isActiveDay: $e');
+    }
+
+    // Recalculate time range variables (isBeforeStart, isInTimeRange)
+    try {
+      await sessionService.recalculateTimeRange();
+      logger.info('Successfully recalculated task.isBeforeStart and task.isInTimeRange');
+    } catch (e) {
+      logger.error('Failed to recalculate time range variables: $e');
+    }
+
+    // Recalculate session.timeOfDay
+    try {
+      await sessionService.recalculateTimeOfDay();
+      logger.info('Successfully recalculated session.timeOfDay');
+    } catch (e) {
+      logger.error('Failed to recalculate session.timeOfDay: $e');
+    }
+
     // Reschedule notifications after task calculations
     try {
       final notificationService = ServiceLocator.instance.notificationService;

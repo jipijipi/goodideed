@@ -358,6 +358,24 @@ class SessionService {
     await _computeTaskStatus(now);
   }
 
+  /// Public method to recalculate time-range variables (called by dataAction triggers)
+  Future<void> recalculateTimeRange() async {
+    final now = DateTime.now();
+    
+    // Recalculate task.isBeforeStart
+    final isBeforeStart = await _computeIsBeforeStart(now);
+    await userDataService.storeValue(StorageKeys.taskIsBeforeStart, isBeforeStart);
+    
+    // Recalculate task.isInTimeRange  
+    final isInTimeRange = await _computeIsInTimeRange(now);
+    await userDataService.storeValue(StorageKeys.taskIsInTimeRange, isInTimeRange);
+  }
+
+  /// Public method to recalculate session.timeOfDay (called by dataAction triggers)
+  Future<void> recalculateTimeOfDay() async {
+    await _updateTimeOfDay();
+  }
+
   /// Compute task due day as the weekday integer of task.currentDate
   Future<void> _computeTaskDueDay() async {
     final taskCurrentDate = await userDataService.getValue<String>(

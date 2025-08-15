@@ -205,6 +205,25 @@ The last zone will be very similar to the background zone (3), except that it wi
   }
 }
 
+{
+    "asset": "assets/animations/radial_range_test.riv",
+    "zone": 4,
+    "align": "center",
+    "fit": "contain",
+    "useDataBinding": true,
+    "bindings": { "start": 0, "end":0 }
+  }
+
+  {
+  "type": "trigger",
+  "key": "fx",
+  "event": "overlay_rive_update",
+  "data": {
+    "zone": 4,
+    "bindings": { "start": "{task.deadlineTime}", "end":"{task.startTime}" }
+  }
+}
+
 TASK SUMMARY
   --------
 task : {user.task}

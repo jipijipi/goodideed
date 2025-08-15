@@ -249,6 +249,18 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "end": 0
   }
 }
+{
+  "asset": "assets/animations/throttle_test.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "throttle",
+  "policy": "ignore",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "level": 0
+  }
+}
 
 {
   "zone": 4,
@@ -256,5 +268,12 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
   "bindings": {
     "start": "{task.deadlineTime}",
     "end": "{task.startTime}"
+  }
+}
+{
+  "zone": 4,
+  "id": "throttle",
+  "bindings": {
+    "level": "{task.remindersIntensity}"
   }
 }

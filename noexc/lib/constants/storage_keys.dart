@@ -11,6 +11,14 @@ class StorageKeys {
   static const String sessionDaysSinceFirstVisit =
       '${sessionPrefix}daysSinceFirstVisit';
   static const String sessionIsWeekend = '${sessionPrefix}isWeekend';
+  // Weekly active day flags (derived from task.activeDays)
+  static const String sessionMonActive = '${sessionPrefix}mon_active';
+  static const String sessionTueActive = '${sessionPrefix}tue_active';
+  static const String sessionWedActive = '${sessionPrefix}wed_active';
+  static const String sessionThuActive = '${sessionPrefix}thu_active';
+  static const String sessionFriActive = '${sessionPrefix}fri_active';
+  static const String sessionSatActive = '${sessionPrefix}sat_active';
+  static const String sessionSunActive = '${sessionPrefix}sun_active';
 
   // User data keys
   static const String userPrefix = 'user.';

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../models/data_action.dart';
 import 'user_data_service.dart';
+import '../constants/storage_keys.dart';
 import '../constants/data_action_constants.dart';
 import 'session_service.dart';
 import 'logger_service.dart';
@@ -57,6 +58,9 @@ class DataActionProcessor {
       case DataActionType.set:
         final resolvedValue = await _resolveTemplateFunction(action.value);
         await _userDataService.storeValue(action.key, resolvedValue);
+        if (action.key == StorageKeys.taskActiveDays) {
+          await _sessionService?.recalculateWeeklyActiveDays();
+        }
         break;
       case DataActionType.increment:
         await _incrementValue(
@@ -75,6 +79,9 @@ class DataActionProcessor {
           action.key,
           action.value ?? DataActionConstants.defaultResetValue,
         );
+        if (action.key == StorageKeys.taskActiveDays) {
+          await _sessionService?.recalculateWeeklyActiveDays();
+        }
         break;
       case DataActionType.trigger:
         await _processTrigger(action);
@@ -164,6 +171,9 @@ class DataActionProcessor {
         'Appended "$coercedValue" to list at key "$key"',
         component: LogComponent.dataActionProcessor,
       );
+      if (key == StorageKeys.taskActiveDays) {
+        await _sessionService?.recalculateWeeklyActiveDays();
+      }
     } else {
       _logger.debug(
         'Value "$coercedValue" already exists in list at key "$key"',
@@ -221,6 +231,9 @@ class DataActionProcessor {
         'Removed "$coercedValue" from list at key "$key"',
         component: LogComponent.dataActionProcessor,
       );
+      if (key == StorageKeys.taskActiveDays) {
+        await _sessionService?.recalculateWeeklyActiveDays();
+      }
     } else {
       _logger.debug(
         'Value "$coercedValue" not found in list at key "$key"',

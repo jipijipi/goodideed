@@ -324,7 +324,7 @@ class _OverlayInstance {
 
   Widget build() {
     return Align(
-      key: ValueKey('rive_overlay_instance_${id}'),
+      key: ValueKey('rive_overlay_instance_$id'),
       alignment: align,
       child: _loading || _controller == null
           ? const SizedBox.shrink()

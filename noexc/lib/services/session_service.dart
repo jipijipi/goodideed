@@ -198,6 +198,9 @@ class SessionService {
       StorageKeys.taskIsPastEndDate,
       isPastEndDate,
     );
+
+    // Update weekly session actives derived from task.activeDays
+    await _updateWeeklyActiveDays();
   }
 
   /// Compute scheduling-based task status (overdue/upcoming/pending)
@@ -312,6 +315,29 @@ class SessionService {
     final now = DateTime.now();
     final isActiveDay = await _computeIsActiveDay(now);
     await userDataService.storeValue(StorageKeys.taskIsActiveDay, isActiveDay);
+    await _updateWeeklyActiveDays();
+  }
+
+  /// Public method to recalculate `session.<day>_active` flags from task.activeDays
+  Future<void> recalculateWeeklyActiveDays() async {
+    await _updateWeeklyActiveDays();
+  }
+
+  /// Map task.activeDays (DateTime.weekday: 1=Mon..7=Sun) to `session.<day>_active` = 0/1
+  Future<void> _updateWeeklyActiveDays() async {
+    final activeDays = await userDataService.getValue<List<dynamic>>(
+      StorageKeys.taskActiveDays,
+    );
+
+    bool contains(int weekday) => activeDays != null && activeDays.contains(weekday);
+
+    await userDataService.storeValue(StorageKeys.sessionMonActive, contains(DateTime.monday) ? 1 : 0);
+    await userDataService.storeValue(StorageKeys.sessionTueActive, contains(DateTime.tuesday) ? 1 : 0);
+    await userDataService.storeValue(StorageKeys.sessionWedActive, contains(DateTime.wednesday) ? 1 : 0);
+    await userDataService.storeValue(StorageKeys.sessionThuActive, contains(DateTime.thursday) ? 1 : 0);
+    await userDataService.storeValue(StorageKeys.sessionFriActive, contains(DateTime.friday) ? 1 : 0);
+    await userDataService.storeValue(StorageKeys.sessionSatActive, contains(DateTime.saturday) ? 1 : 0);
+    await userDataService.storeValue(StorageKeys.sessionSunActive, contains(DateTime.sunday) ? 1 : 0);
   }
 
   /// Public method to recalculate isPastDeadline (called by dataAction triggers)

@@ -241,6 +241,7 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
   "zone": 4,
   "align": "center",
   "id": "clock",
+  "policy": "ignore",
   "fit": "contain",
   "useDataBinding": true,
   "bindings": {

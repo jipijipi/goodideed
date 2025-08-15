@@ -99,3 +99,49 @@ Authoring Tips
 - Prefer update for data changes; only show again when changing asset/artboard/state machine.
 - Use autoHideMs to chain queued items, or overlay_rive_hide to force a swap.
 
+Details
+- Event fields
+  - asset: Path to the .riv file. Required for show.
+  - zone: Integer zone; 2 by default for both show and update.
+  - id: String identifier for targeting the specific overlay within a zone. If omitted, a legacy id is synthesized and only one overlay is supported per zone.
+  - align/fit/margin: Position and scaling of the overlay.
+  - zIndex: Higher zIndex draws above lower ones within the same zone.
+  - bindings/useDataBinding: Numeric properties to bind via Rive data model; you can pass numbers or templated strings that resolve to numbers (e.g., '{user.streak}').
+  - autoHideMs: Schedules a hide after the given duration. Applies to show and can be applied at update time as well.
+  - minShowMs: Prevents an overlay from hiding before the specified duration has elapsed since it was shown.
+  - policy (show only): 'replace' | 'queue' | 'ignore'. Controls behavior when the same id is already active.
+
+- Policies
+  - replace (default): Disposes the currently active overlay with the same id and immediately shows the new request. This restarts the animation.
+  - ignore: Drops the new request if an overlay with the same id is already active; the current animation continues uninterrupted.
+  - queue: Enqueues the new request for the same id and shows it only after the current one hides (via autoHideMs or explicit hide). Useful when you want a sequence of reveals.
+
+- Targeting and identity
+  - Provide a stable id per conceptual overlay (e.g., 'badge', 'confetti').
+  - overlay_rive_update and overlay_rive_hide operate on that id. If id is missing, they act on the legacy single overlay for the zone.
+  - Multiple overlays per zone require distinct ids. Use zIndex to control stacking.
+
+- Multiple overlays per zone
+  - Supported by providing different ids on overlay_rive events. The host maintains a stack of active instances.
+  - Updates and hides must target the desired id to avoid unintended effects.
+
+- Timing controls
+  - autoHideMs: Schedules a hide for an overlay. When it fires, queued items (if any) for the same id are shown next.
+  - minShowMs: Ensures overlays are visible long enough to avoid flicker when scripts loop quickly. Hides (including auto-hide or explicit hide) are delayed until the guard is satisfied.
+
+- Bindings and data binding
+  - Bindings are applied via Rive's data binding system when available. If the asset lacks an exported view model, bindings are buffered and a one-time warning is logged.
+  - Use overlay_rive_update to change numeric values without reloading the asset.
+
+Authoring Patterns
+- Update without restart (loop-friendly)
+  - When looping back in a sequence and the overlay should persist, do NOT resend overlay_rive with the same id to change values. Instead, send overlay_rive_update with that id and new bindings. This keeps the current animation running and avoids a restart.
+  - If the script currently emits overlay_rive on each loop iteration, set policy: 'ignore' (to keep the current one) and follow it with overlay_rive_update to change values.
+
+- Replace vs. Update
+  - Replace when switching to a different asset/artboard/state machine or when you want a fresh start.
+  - Update when changing only numeric parameters or small state flags exposed via bindings.
+
+FAQ
+- Can a policy update a running animation instead of restarting on repeated overlay_rive?
+  - In this iteration, no single policy automatically converts a repeated overlay_rive into an in-place update. Policies control whether the new show request replaces, queues, or is ignored. To update a running animation without restarting, use overlay_rive_update targeting the same zone and id. A possible future enhancement is a 'merge' policy that detects identical assets and applies bindings instead of replacing.

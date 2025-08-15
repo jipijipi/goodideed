@@ -213,4 +213,4 @@ start : {task.startTime}
 deadline : {task.deadlineTime}
 reminders : {task.remindersIntensity}
 
-TASK SUMMARY|||--------|||task : {user.task}|||days : {task.activeDays}|||start : {task.startTime}|||deadline : {task.deadlineTime}|||reminders : {task.remindersIntensity}
+TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nstart : {task.startTime}\n\ndeadline : {task.deadlineTime}\n\nreminders : {task.remindersIntensity}

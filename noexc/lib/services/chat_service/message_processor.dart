@@ -73,6 +73,9 @@ class MessageProcessor {
           );
         }
 
+        // Unescape choice text for markdown rendering
+        choiceText = _unescapeTextForMarkdown(choiceText);
+
         processedChoices.add(
           Choice(
             text: choiceText,
@@ -89,6 +92,9 @@ class MessageProcessor {
     if (_templatingService != null) {
       textToProcess = await _templatingService.processTemplate(textToProcess);
     }
+
+    // 5. Unescape newlines and other common escape sequences for markdown rendering
+    textToProcess = _unescapeTextForMarkdown(textToProcess);
 
     return ChatMessage(
       id: message.id,
@@ -180,5 +186,17 @@ class MessageProcessor {
     }
 
     return rawValue; // Not a JSON array, return as-is
+  }
+
+  /// Unescape common escape sequences for markdown rendering
+  /// Converts escaped characters from JSON strings to actual characters
+  String _unescapeTextForMarkdown(String text) {
+    return text
+        .replaceAll('\\\\', '\x00TEMP_BACKSLASH\x00')  // Temporarily store backslashes
+        .replaceAll('\\n', '\n')    // Newlines for line breaks
+        .replaceAll('\\t', '\t')    // Tabs for indentation  
+        .replaceAll('\\r', '\r')    // Carriage returns
+        .replaceAll('\\"', '"')     // Escaped quotes (fixed: single backslash)
+        .replaceAll('\x00TEMP_BACKSLASH\x00', '\\');   // Restore backslashes (must be last)
   }
 }

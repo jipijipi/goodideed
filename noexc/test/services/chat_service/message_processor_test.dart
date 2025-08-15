@@ -441,5 +441,66 @@ void main() {
         expect(true, isTrue);
       });
     });
+
+    group('Newline Unescaping', () {
+      test('should unescape newlines in message text', () async {
+        // Arrange
+        final messageWithNewlines = ChatMessage(
+          id: 1,
+          text: 'Line 1\\nLine 2\\nLine 3',
+          type: MessageType.bot,
+        );
+
+        // Act
+        final processed = await messageProcessor.processMessageTemplate(
+          messageWithNewlines,
+          null,
+        );
+
+        // Assert
+        expect(processed.text, equals('Line 1\nLine 2\nLine 3'));
+      });
+
+      test('should unescape multiple escape sequences', () async {
+        // Arrange
+        final messageWithEscapes = ChatMessage(
+          id: 1,
+          text: 'TASK SUMMARY\\n--------\\ntask: \\"test\\"\\ttab-separated',
+          type: MessageType.system,
+        );
+
+        // Act
+        final processed = await messageProcessor.processMessageTemplate(
+          messageWithEscapes,
+          null,
+        );
+
+        // Assert  
+        expect(processed.text, equals('TASK SUMMARY\n--------\ntask: "test"\ttab-separated'));
+      });
+
+      test('should unescape newlines in choice text', () async {
+        // Arrange
+        final choiceWithNewlines = Choice(
+          text: 'Option A\\nWith details',
+          nextMessageId: 2,
+        );
+        final messageWithChoices = ChatMessage(
+          id: 1,
+          text: '', // Choice messages must have empty text
+          type: MessageType.choice,
+          choices: [choiceWithNewlines],
+        );
+
+        // Act
+        final processed = await messageProcessor.processMessageTemplate(
+          messageWithChoices,
+          null,
+        );
+
+        // Assert
+        expect(processed.choices![0].text, equals('Option A\nWith details'));
+      });
+    });
   });
 }

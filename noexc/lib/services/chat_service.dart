@@ -115,6 +115,9 @@ class ChatService {
       case 'overlay_rive_update':
         await _handleOverlayRiveUpdate(data);
         break;
+      case 'overlay_rive_hide':
+        await _handleOverlayRiveHide(data);
+        break;
       default:
         // Forward unknown events to UI callback
         if (_onEvent != null) {
@@ -141,18 +144,27 @@ class ChatService {
       final fit = _parseRiveFit(fitStr) ?? Fit.contain;
       final zone = (data['zone'] as int?) ?? 2;
       final autoHideMs = data['autoHideMs'] as int?;
+      final minShowMs = data['minShowMs'] as int?;
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
+      final minShow = minShowMs != null ? Duration(milliseconds: minShowMs) : null;
       final bindings = await _resolveNumericBindings(data['bindings']);
       final useDataBinding = (data['useDataBinding'] as bool?) ?? false;
+      final id = data['id'] as String?;
+      final policy = (data['policy'] as String?)?.toLowerCase() ?? 'replace';
+      final zIndex = (data['zIndex'] as int?) ?? 0;
 
       ServiceLocator.instance.riveOverlayService.show(
         asset: asset,
         align: align,
         fit: fit,
         autoHideAfter: autoHide,
+        minShowAfter: minShow,
         zone: zone,
         bindings: bindings,
         useDataBinding: useDataBinding,
+        id: id,
+        policy: policy,
+        zIndex: zIndex,
       );
     } catch (e) {
       logger.error('Failed to handle overlay_rive: $e');
@@ -161,12 +173,31 @@ class ChatService {
 
   Future<void> _handleOverlayRiveUpdate(Map<String, dynamic> data) async {
     try {
-      final zone = (data['zone'] as int?) ?? 3;
+      final zone = (data['zone'] as int?) ?? 2;
+      final id = data['id'] as String?;
       final bindings = await _resolveNumericBindings(data['bindings']);
+      final autoHideMs = data['autoHideMs'] as int?;
+      final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
       if (bindings == null || bindings.isEmpty) return;
-      ServiceLocator.instance.riveOverlayService.update(zone: zone, bindings: bindings);
+      ServiceLocator.instance.riveOverlayService.update(
+        zone: zone,
+        bindings: bindings,
+        id: id,
+        autoHideAfter: autoHide,
+      );
     } catch (e) {
       logger.error('Failed to handle overlay_rive_update: $e');
+    }
+  }
+
+  Future<void> _handleOverlayRiveHide(Map<String, dynamic> data) async {
+    try {
+      final zone = (data['zone'] as int?) ?? 2;
+      final id = data['id'] as String?;
+      final all = (data['all'] as bool?) ?? (id == null);
+      ServiceLocator.instance.riveOverlayService.hide(zone: zone, id: id, all: all);
+    } catch (e) {
+      logger.error('Failed to handle overlay_rive_hide: $e');
     }
   }
 

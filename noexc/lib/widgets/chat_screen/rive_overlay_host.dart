@@ -30,18 +30,10 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
   bool get wantKeepAlive => true;
 
   StreamSubscription<RiveOverlayCommand>? _sub;
-  bool _active = false;
-  Alignment _align = Alignment.center;
-  Fit _fit = Fit.contain;
-  EdgeInsets? _margin;
-  File? _file;
-  RiveWidgetController? _controller;
-  bool _loading = false;
-  Timer? _hideTimer;
-  ViewModelInstance? _viewModelInstance;
-  final Map<String, ViewModelInstanceNumber> _numberProps = {};
-  Map<String, double>? _pendingBindings;
-  bool _bindingUnsupported = false;
+  // Multiple overlay instances per zone, keyed by id
+  final Map<String, _OverlayInstance> _instances = {};
+  // Queues per id for queued replacement
+  final Map<String, List<RiveOverlayShow>> _queues = {};
 
   @override
   void initState() {
@@ -51,93 +43,234 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
 
   Future<void> _handleCommand(RiveOverlayCommand cmd) async {
     if (cmd is RiveOverlayShow && cmd.zone == widget.zone) {
-      await _show(cmd);
+      await _onShow(cmd);
       return;
     }
     if (cmd is RiveOverlayHide && cmd.zone == widget.zone) {
-      _hide();
+      await _onHide(cmd);
       return;
     }
     if (cmd is RiveOverlayUpdate && cmd.zone == widget.zone) {
-      _applyBindings(cmd.bindings);
+      await _onUpdate(cmd);
       return;
     }
   }
 
-  Future<void> _show(RiveOverlayShow show) async {
-    setState(() {
-      _active = true;
-      _align = show.align;
-      _fit = show.fit;
-      _margin = show.margin;
-      _loading = true;
-    });
+  Future<void> _onShow(RiveOverlayShow show) async {
+    final id = show.id ?? 'zone-${widget.zone}-default';
+    final existing = _instances[id];
 
-    // Schedule auto-hide immediately, independent of load completion
-    _hideTimer?.cancel();
-    if (show.autoHideAfter != null) {
-      _hideTimer = Timer(show.autoHideAfter!, () {
-        if (mounted) _hide();
-      });
+    if (existing != null) {
+      switch (show.policy) {
+        case 'ignore':
+          return;
+        case 'queue':
+          _queues.putIfAbsent(id, () => <RiveOverlayShow>[]).add(show);
+          setState(() {});
+          return;
+        case 'replace':
+        default:
+          await existing.dispose();
+          _instances.remove(id);
+      }
     }
 
-    // Stash incoming bindings until controller is ready
-    _pendingBindings = show.bindings;
+    final inst = _OverlayInstance(
+      id: id,
+      align: show.align,
+      fit: show.fit,
+      margin: show.margin,
+      zIndex: show.zIndex,
+      fileLoader: widget.fileLoader,
+    );
+    _instances[id] = inst;
+    setState(() {});
 
+    await inst.start(show);
+
+    // Schedule auto-hide if requested
+    if (show.autoHideAfter != null) {
+      inst.scheduleHide(show.autoHideAfter!, _onInstanceHiddenCallback(id));
+    }
+  }
+
+  Future<void> _onHide(RiveOverlayHide hide) async {
+    final all = hide.all || hide.id == null;
+    if (all) {
+      final ids = _instances.keys.toList(growable: false);
+      for (final id in ids) {
+        await _instances[id]?.hide();
+        await _instances[id]?.dispose();
+        _instances.remove(id);
+        _drainQueueAndShowNext(id);
+      }
+      setState(() {});
+      return;
+    }
+
+    final id = hide.id!;
+    final inst = _instances[id];
+    if (inst != null) {
+      await inst.hide();
+      await inst.dispose();
+      _instances.remove(id);
+      setState(() {});
+      _drainQueueAndShowNext(id);
+    }
+  }
+
+  Future<void> _onUpdate(RiveOverlayUpdate update) async {
+    final id = update.id ?? 'zone-${widget.zone}-default';
+    final inst = _instances[id];
+    if (inst != null) {
+      inst.applyBindings(update.bindings);
+      if (update.autoHideAfter != null) {
+        inst.scheduleHide(update.autoHideAfter!, _onInstanceHiddenCallback(id));
+      }
+    }
+  }
+
+  VoidCallback _onInstanceHiddenCallback(String id) {
+    return () async {
+      final inst = _instances[id];
+      if (inst == null) return;
+      await inst.dispose();
+      _instances.remove(id);
+      if (mounted) setState(() {});
+      _drainQueueAndShowNext(id);
+    };
+  }
+
+  void _drainQueueAndShowNext(String id) {
+    final queue = _queues[id];
+    if (queue == null || queue.isEmpty) return;
+    final next = queue.removeAt(0);
+    // Fire and forget; schedule show of next
+    _onShow(next);
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    for (final inst in _instances.values) {
+      inst.dispose();
+    }
+    _instances.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    final hasAny = _instances.isNotEmpty;
+    return IgnorePointer(
+      ignoring: true,
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 150),
+        child: hasAny
+            ? Container(
+                key: ValueKey('rive_overlay_zone_${widget.zone}_active'),
+                // Full-screen box hosting stacked overlays
+                alignment: Alignment.center,
+                child: Stack(
+                  children: () {
+                    final list = _instances.values.toList();
+                    list.sort((a, b) => a.zIndex.compareTo(b.zIndex));
+                    return list.map((inst) => inst.build()).toList();
+                  }(),
+                ),
+              )
+            : const SizedBox.shrink(),
+      ),
+    );
+  }
+}
+
+class _OverlayInstance {
+  final String id;
+  Alignment align;
+  Fit fit;
+  EdgeInsets? margin;
+  final int zIndex;
+  final RiveFileLoader? fileLoader;
+
+  File? _file;
+  RiveWidgetController? _controller;
+  bool _loading = false;
+  Timer? _hideTimer;
+  DateTime? _earliestHideAt;
+  ViewModelInstance? _viewModelInstance;
+  final Map<String, ViewModelInstanceNumber> _numberProps = {};
+  Map<String, double>? _pendingBindings;
+  bool _bindingUnsupported = false;
+
+  _OverlayInstance({
+    required this.id,
+    required this.align,
+    required this.fit,
+    required this.margin,
+    required this.zIndex,
+    required this.fileLoader,
+  });
+
+  Future<void> start(RiveOverlayShow show) async {
+    _loading = true;
+    if (show.minShowAfter != null) {
+      _earliestHideAt = DateTime.now().add(show.minShowAfter!);
+    }
+    _pendingBindings = show.bindings;
     try {
-      // Load Rive file and controller
-      final loader = widget.fileLoader ??
-          ((String asset) => File.asset(asset, riveFactory: Factory.rive));
+      final loader = fileLoader ?? ((String asset) => File.asset(asset, riveFactory: Factory.rive));
       final file = await loader(show.asset);
       if (file == null) {
-        if (mounted) {
-          logger.error('Overlay Rive load returned null for ${show.asset}', component: LogComponent.ui);
-          setState(() {
-            _loading = false;
-            _active = false;
-          });
-        }
+        logger.error('Overlay Rive load returned null for ${show.asset}', component: LogComponent.ui);
+        _loading = false;
         return;
       }
       final controller = RiveWidgetController(file);
-      if (!mounted) {
-        // Clean up if unmounted
-        controller.dispose();
-        file.dispose();
-        return;
-      }
-      setState(() {
-        _file = file;
-        _controller = controller;
-        _loading = false;
-      });
+      _file = file;
+      _controller = controller;
+      _loading = false;
 
-      // Initialize data binding and apply pending bindings only if needed
       if (show.useDataBinding || _pendingBindings != null) {
         _initDataBinding();
         if (_pendingBindings != null) {
-          _applyBindings(_pendingBindings!);
+          applyBindings(_pendingBindings!);
         }
       }
     } catch (e) {
       logger.error('Overlay Rive load failed: $e', component: LogComponent.ui);
-      if (mounted) {
-        setState(() {
-          _loading = false;
-          _active = false;
-        });
-      }
+      _loading = false;
     }
   }
 
-  void _hide() {
-    setState(() {
-      _active = false;
+  void scheduleHide(Duration after, VoidCallback onHidden) {
+    _hideTimer?.cancel();
+    final now = DateTime.now();
+    var delay = after;
+    if (_earliestHideAt != null && now.add(after).isBefore(_earliestHideAt!)) {
+      // Ensure we don't hide before minShow; extend delay
+      delay = _earliestHideAt!.difference(now);
+    }
+    _hideTimer = Timer(delay, () async {
+      await hide();
+      onHidden();
     });
-    _disposeRive();
   }
 
-  void _disposeRive() {
+  Future<void> hide() async {
+    final now = DateTime.now();
+    if (_earliestHideAt != null && now.isBefore(_earliestHideAt!)) {
+      final wait = _earliestHideAt!.difference(now);
+      final completer = Completer<void>();
+      Timer(wait, () => completer.complete());
+      await completer.future;
+    }
+    _hideTimer?.cancel();
+    _hideTimer = null;
+  }
+
+  Future<void> dispose() async {
     _hideTimer?.cancel();
     _hideTimer = null;
     for (final prop in _numberProps.values) {
@@ -160,7 +293,6 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
     try {
       _viewModelInstance = controller.dataBind(DataBind.auto());
     } catch (e) {
-      // If the asset has no exported view model, skip further attempts
       _bindingUnsupported = true;
       logger.warning(
         'Data binding not available for this Rive asset: $e',
@@ -169,7 +301,7 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
     }
   }
 
-  void _applyBindings(Map<String, double> bindings) {
+  void applyBindings(Map<String, double> bindings) {
     if (_controller == null) {
       _pendingBindings = bindings;
       return;
@@ -190,33 +322,13 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
     });
   }
 
-  @override
-  void dispose() {
-    _sub?.cancel();
-    _disposeRive();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    // Host container always present; content toggles based on _active
-    return IgnorePointer(
-      ignoring: true,
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 150),
-        child: _active
-            ? Container(
-                key: ValueKey('rive_overlay_zone_${widget.zone}_active'),
-                alignment: _align,
-                margin: _margin,
-                // Ensure overlay sits above everything with a full-screen box
-                child: _loading || _controller == null
-                    ? const SizedBox.shrink()
-                    : RiveWidget(controller: _controller!, fit: _fit),
-              )
-            : const SizedBox.shrink(),
-      ),
+  Widget build() {
+    return Align(
+      key: ValueKey('rive_overlay_instance_${id}'),
+      alignment: align,
+      child: _loading || _controller == null
+          ? const SizedBox.shrink()
+          : RiveWidget(controller: _controller!, fit: fit),
     );
   }
 }

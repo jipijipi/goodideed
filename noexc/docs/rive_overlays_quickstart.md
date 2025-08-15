@@ -1,188 +1,101 @@
-# Rive Overlays Quickstart (Scripts)
+Rive Overlays Quickstart
 
-This guide shows how to trigger and control Rive animations from your chat scripts.
+Overview
+- Global overlay animations are triggered via script events and rendered by zone hosts in the chat screen.
+- Zones: 2 (front, above UI), 4 (mid, above messages, below panels), 3 (behind UI).
+- Multiple overlays can run concurrently in the same zone when given distinct ids.
 
-Works with rive: `0.14.0-dev.5` (Rive 0.14). The app already calls `RiveNative.init()` at startup.
+Events
+- overlay_rive: Show an overlay
+  - Required: asset: string (path to .riv)
+  - Common: zone: int (default 2), align: string, fit: string
+  - Data: bindings: { string: number|string }, useDataBinding: bool (default false)
+  - Identity: id: string (recommended when you plan to update/hide or run multiple overlays in a zone)
+  - Control:
+    - policy: 'replace' | 'queue' | 'ignore' (default 'replace')
+    - autoHideMs: int (optional, schedules hide)
+    - minShowMs: int (optional, prevents hiding before elapsed)
+    - zIndex: int (optional, default 0; stacking within the zone)
 
-## Zones
-- Zone 2: Foreground overlay (above all UI). Ideal for trophies/achievements. Typically auto-hides.
-- Zone 3: Background overlay (behind chat content, above the app background). Ideal for persistent, data‑bound visuals (e.g., streak counter, growing tree).
-- Zone 4: Mid-ground overlay (above message bubbles, beneath debug panels/UI). Ideal for interactive visuals reacting to user actions (e.g., clock reacting to a slider).
+- overlay_rive_update: Update bindings for an overlay
+  - Target: zone (default 2), id (optional; defaults to the zone’s legacy id)
+  - Payload: bindings: { string: number|string }
+  - Control: autoHideMs: int (optional, schedules hide from now)
 
-Both zones are always mounted; they render only after you trigger them.
+- overlay_rive_hide: Hide overlays
+  - Target: zone (default 2), id (optional)
+  - all: bool (optional; if true or when id is missing, hides all overlays in the zone)
 
-## Events (Script Triggers)
+Defaults and Compatibility
+- Defaults remain backward compatible with previous behavior when using a single overlay per zone:
+  - overlay_rive defaults to zone 2.
+  - overlay_rive_update now also defaults to zone 2.
+  - If no id is provided, a legacy id is synthesized per zone, so show → update → hide continues to work.
 
-Use a `dataAction` with `type: "trigger"` and `event` as below:
+Replacement Semantics (policy)
+- replace (default): Immediately replaces the existing overlay with the new one for the same target id.
+- ignore: Drops the new request if the target id is currently active.
+- queue: Enqueues the request; it will show after the current overlay for that id is hidden.
+  - Swap signals supported in this iteration: explicit overlay_rive_hide, or autoHideMs elapsing.
+  - minShowMs delays hiding (including auto-hide) until the minimum time is reached.
 
-1) `overlay_rive` — show an overlay
-- `asset` (string, required): Path to a `.riv` asset under `assets/animations/`.
-- `zone` (int, optional): `2` (foreground) or `3` (background). Default `2`.
-- `align` (string, optional): one of `topLeft|topCenter|topRight|centerLeft|center|centerRight|bottomLeft|bottomCenter|bottomRight`. Default `center`.
-- `fit` (string, optional): one of `contain|cover|fill|fitWidth|fitHeight|none|scaleDown`. Default `contain`.
-- `autoHideMs` (int, optional): Auto-hide delay in milliseconds. Omit for persistent overlays (e.g., zone 3 backgrounds).
-- `bindings` (object, optional): Key/value pairs for Rive data binding (numbers only), e.g. `{ "streak": 17 }`.
-- `useDataBinding` (bool, optional): Force-enable data binding even if you don’t pass initial `bindings`. Default `false`.
+Multiple Overlays per Zone
+- Use distinct ids to run more than one overlay simultaneously within a zone.
+- Stack order is controlled by zIndex (lower values render first, higher values on top).
+- overlay_rive_update/hide target a specific overlay by id. If id is omitted, the “legacy” overlay for that zone is targeted.
 
-2) `overlay_rive_update` — update bindings for an existing overlay
-- `zone` (int, optional): Target zone. Default `3`.
-- `bindings` (object, required): Key/value pairs (numbers) to update.
+Bindings and Data
+- Provide numeric bindings either directly (numbers) or via templated strings such as '{user.streak}' or shorthand paths 'user.streak'.
+- Non-numeric results after templating are ignored with a warning.
+- If Rive data binding is not available for a given asset, bindings are buffered until it becomes available; a one-time warning is logged.
 
-Note: Script-driven explicit hide for an overlay is not implemented. Use `autoHideMs` (zone 2), or leave persistent (zone 3). Programmatic hides are available in code via `RiveOverlayService.hide(zone: ...)`.
-
-## Examples
-
-### A. Simple trophy (zone 2), auto-hide
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive",
-  "data": {
-    "asset": "assets/animations/intro_logo_animated.riv",
-    "zone": 2,
-    "align": "center",
-    "fit": "contain",
-    "autoHideMs": 1800
-  }
-}
-```
-
-### B. Trophy with future data binding (opt‑in)
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive",
-  "data": {
-    "asset": "assets/animations/trophy_with_stars.riv",
-    "zone": 2,
-    "useDataBinding": true,
-    "autoHideMs": 2000
-  }
-}
-```
-Later in the flow (or immediately), update bound properties:
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive_update",
-  "data": {
-    "zone": 2,
-    "bindings": { "stars": 3 }
-  }
-}
-```
-
-### C. Background with live streak (zone 3), persistent
-Show once (no auto‑hide) with initial binding:
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive",
-  "data": {
-    "asset": "assets/animations/streakcount_test.riv",
-    "zone": 3,
-    "align": "center",
-    "fit": "contain",
-    "useDataBinding": true,
-    "bindings": { "streak": 17 }
-  }
-}
-```
-Update the streak later:
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive_update",
-  "data": {
-    "zone": 3,
-    "bindings": { "streak": 18 }
-  }
-}
-```
-
-### D. Bindings from stored values (templating)
-- To bind a stored value, use the templating syntax with braces, or a shorthand path. Both resolve through the stored data (user/session/task):
-
-Show with stored user streak:
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive",
-  "data": {
-    "asset": "assets/animations/streakcount_test.riv",
-    "zone": 3,
-    "useDataBinding": true,
-    "bindings": { "streak": "{user.streak}" }
-  }
-}
-```
-
-Update from a stored path using shorthand (no braces):
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive_update",
-  "data": {
-    "zone": 3,
-    "bindings": { "streak": "user.streak" }
-  }
-}
-```
-
-Notes:
-- Values must resolve to numbers (int/double). Non‑numeric results are skipped with a warning (not coerced to 0).
-- Supported roots: `user.*`, `session.*`, `task.*` (from stored data).
-- Property names in the Rive file must match binding keys (e.g., `streak`).
-
-### E. Zone 4 (mid-ground) quick example
-Show an interactive clock above messages (no auto-hide), then update from UI code:
-```json
-{
-  "type": "trigger",
-  "key": "fx",
-  "event": "overlay_rive",
-  "data": {
-    "asset": "assets/animations/clock.riv",
+Examples
+- Show and auto-hide after 2s:
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/confetti.riv",
     "zone": 4,
-    "useDataBinding": true
+    "id": "confetti",
+    "policy": "replace",
+    "autoHideMs": 2000,
+    "zIndex": 5
   }
-}
-```
-In UI code (e.g., slider onChanged):
-```dart
-ServiceLocator.instance.riveOverlayService.update(zone: 4, bindings: {
-  'clockAngle': angle,
-});
-```
 
-## Authoring Notes (Rive)
-- For data binding, the Rive file must export a View Model and expose matching property names (e.g., `streak`, `posx`, `posy`).
-- Bindings are numeric (`double`) values. Strings/booleans are not supported by this quick path.
-- If the file has no exported View Model, binding is skipped automatically and a single warning is logged. The animation still plays.
+- Update a score binding and schedule hide in 1s:
+  {
+    "event": "overlay_rive_update",
+    "zone": 4,
+    "id": "badge",
+    "bindings": {"score": "user.streak"},
+    "autoHideMs": 1000
+  }
 
-## Best Practices
-- Zone 2 (trophies):
-  - Omit `bindings`/`useDataBinding` unless you actually need them.
-  - Prefer `autoHideMs` to avoid overlaying the UI for too long.
-- Zone 3 (backgrounds):
-  - Use `useDataBinding: true` and pass initial `bindings`, then update via `overlay_rive_update` when data changes (e.g., `user.streak`).
-  - Keep alignment/fit consistent with your layout.
-- Property names: Match the exact names in the Rive file’s View Model.
-- Performance: Reuse a single persistent background (zone 3) and update it instead of re‑showing.
+- Queue a badge reveal to play after the current one ends:
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/badge.riv",
+    "zone": 4,
+    "id": "badge",
+    "policy": "queue",
+    "minShowMs": 1200
+  }
 
-## Troubleshooting
-- Error: `RiveDataBindException: Default view model instance not found`
-  - The asset doesn’t export a View Model. Remove `bindings`/`useDataBinding` for this asset, or export a VM in Rive if you need binding.
-- Overlay not visible:
-  - Check the asset path and that the `.riv` is included under `assets/animations/` in `pubspec.yaml`.
-  - Ensure you didn’t set `autoHideMs` for a background that should persist.
-- Updates not applying:
-  - Confirm property names match the Rive file’s View Model.
-  - Ensure the zone matches the one you used in the initial `overlay_rive`.
+- Hide a specific overlay:
+  {
+    "event": "overlay_rive_hide",
+    "zone": 4,
+    "id": "badge"
+  }
+
+- Hide all overlays in a zone:
+  {
+    "event": "overlay_rive_hide",
+    "zone": 4,
+    "all": true
+  }
+
+Authoring Tips
+- Always set an id for overlays you plan to update or hide.
+- Prefer update for data changes; only show again when changing asset/artboard/state machine.
+- Use autoHideMs to chain queued items, or overlay_rive_hide to force a swap.
+

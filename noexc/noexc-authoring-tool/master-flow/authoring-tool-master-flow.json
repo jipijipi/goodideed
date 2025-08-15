@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-15T09:58:40.925Z",
+  "lastUpdated": "2025-08-15T10:41:17.204Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-15T09:58:40.887Z"
+    "timestamp": "2025-08-15T10:41:17.193Z"
   },
   "nodes": [
     {
@@ -4828,6 +4828,7 @@
               "asset": "assets/animations/radial_range_test.riv",
               "zone": 4,
               "align": "center",
+              "id": "clock",
               "fit": "contain",
               "useDataBinding": true,
               "bindings": {
@@ -4844,8 +4845,8 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 685,
+      "width": 310,
+      "height": 687,
       "selected": false,
       "positionAbsolute": {
         "x": 1394.4527533449336,
@@ -4874,9 +4875,10 @@
             "event": "overlay_rive_update",
             "data": {
               "zone": 4,
+              "id": "clock",
               "bindings": {
-                "start": "{task.deadlineTime}",
-                "end": "{task.startTime}"
+                "start": "{task.startTime}",
+                "end": 24
               }
             }
           }
@@ -4891,69 +4893,6 @@
         "y": 7261.512359627443
       },
       "dragging": true,
-      "parentId": "363",
-      "extent": "parent"
-    },
-    {
-      "id": "431",
-      "position": {
-        "x": 1269.761753088192,
-        "y": 28.371164721478635
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "431"
-      },
-      "type": "editable",
-      "width": 250,
-      "height": 164,
-      "selected": false,
-      "dragging": true,
-      "positionAbsolute": {
-        "x": 2304.906561298096,
-        "y": 4358.585956840342
-      },
-      "parentId": "363",
-      "extent": "parent"
-    },
-    {
-      "id": "432",
-      "position": {
-        "x": 1619.021184505632,
-        "y": 112.01622225439769
-      },
-      "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "432",
-        "dataActions": [
-          {
-            "type": "trigger",
-            "key": "fx",
-            "value": "",
-            "event": "overlay_rive_update",
-            "data": {
-              "zone": 4,
-              "bindings": {
-                "start": "{task.deadlineTime}",
-                "end": "{task.startTime}"
-              }
-            }
-          }
-        ]
-      },
-      "type": "editable",
-      "width": 308,
-      "height": 470,
-      "selected": false,
-      "dragging": true,
-      "positionAbsolute": {
-        "x": 2654.165992715536,
-        "y": 4442.231014373261
-      },
       "parentId": "363",
       "extent": "parent"
     },
@@ -5824,17 +5763,18 @@
             "event": "overlay_rive_update",
             "data": {
               "zone": 4,
+              "id": "clock",
               "bindings": {
-                "start": "{task.deadlineTime}",
-                "end": "{task.startTime}"
+                "start": "{task.startTime}",
+                "end": "{task.deadlineTime}"
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 470,
+      "width": 310,
+      "height": 472,
       "selected": false,
       "dragging": true,
       "parentId": "409",
@@ -12561,53 +12501,13 @@
     },
     {
       "zIndex": 1001,
-      "source": "431",
-      "sourceHandle": null,
-      "target": "432",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "ui.riveLoaded == true"
-      },
-      "id": "reactflow__edge-431-432",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "337",
-      "sourceHandle": null,
-      "target": "431",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-337-431"
-    },
-    {
-      "zIndex": 1001,
-      "source": "431",
       "sourceHandle": null,
       "target": "428",
       "targetHandle": null,
       "type": "custom",
       "data": {},
-      "id": "reactflow__edge-431-428",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "432",
-      "sourceHandle": null,
-      "target": "338",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-432-338",
+      "id": "reactflow__edge-337-428",
       "selected": false
     }
   ]

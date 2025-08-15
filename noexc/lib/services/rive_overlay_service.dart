@@ -11,9 +11,13 @@ class RiveOverlayShow extends RiveOverlayCommand {
   final Fit fit;
   final EdgeInsets? margin;
   final Duration? autoHideAfter;
+  final Duration? minShowAfter;
   final int zone;
   final Map<String, double>? bindings; // Data bindings by property name
   final bool useDataBinding;
+  final String? id; // Optional overlay id for targeting and concurrency
+  final String policy; // 'replace' | 'queue' | 'ignore'
+  final int zIndex;
 
   RiveOverlayShow({
     required this.asset,
@@ -21,21 +25,34 @@ class RiveOverlayShow extends RiveOverlayCommand {
     this.fit = Fit.contain,
     this.margin,
     this.autoHideAfter,
+    this.minShowAfter,
     this.zone = 2,
     this.bindings,
     this.useDataBinding = false,
+    this.id,
+    this.policy = 'replace',
+    this.zIndex = 0,
   });
 }
 
 class RiveOverlayHide extends RiveOverlayCommand {
   final int zone;
-  RiveOverlayHide({this.zone = 2});
+  final String? id; // If null, hide all in zone
+  final bool all; // Hide all in zone
+  RiveOverlayHide({this.zone = 2, this.id, this.all = false});
 }
 
 class RiveOverlayUpdate extends RiveOverlayCommand {
   final int zone;
   final Map<String, double> bindings;
-  RiveOverlayUpdate({required this.zone, required this.bindings});
+  final String? id;
+  final Duration? autoHideAfter; // Optional: schedule hide after update
+  RiveOverlayUpdate({
+    required this.zone,
+    required this.bindings,
+    this.id,
+    this.autoHideAfter,
+  });
 }
 
 /// Service used to trigger global Rive overlays (e.g., achievements/trophies).
@@ -50,9 +67,13 @@ class RiveOverlayService {
     Fit fit = Fit.contain,
     EdgeInsets? margin,
     Duration? autoHideAfter,
+    Duration? minShowAfter,
     int zone = 2,
     Map<String, double>? bindings,
     bool useDataBinding = false,
+    String? id,
+    String policy = 'replace',
+    int zIndex = 0,
   }) {
     _controller.add(
       RiveOverlayShow(
@@ -61,19 +82,35 @@ class RiveOverlayService {
         fit: fit,
         margin: margin,
         autoHideAfter: autoHideAfter,
+        minShowAfter: minShowAfter,
         zone: zone,
         bindings: bindings,
         useDataBinding: useDataBinding,
+        id: id,
+        policy: policy,
+        zIndex: zIndex,
       ),
     );
   }
 
-  void hide({int zone = 2}) {
-    _controller.add(RiveOverlayHide(zone: zone));
+  void hide({int zone = 2, String? id, bool all = false}) {
+    _controller.add(RiveOverlayHide(zone: zone, id: id, all: all));
   }
 
-  void update({required int zone, required Map<String, double> bindings}) {
-    _controller.add(RiveOverlayUpdate(zone: zone, bindings: bindings));
+  void update({
+    required int zone,
+    required Map<String, double> bindings,
+    String? id,
+    Duration? autoHideAfter,
+  }) {
+    _controller.add(
+      RiveOverlayUpdate(
+        zone: zone,
+        bindings: bindings,
+        id: id,
+        autoHideAfter: autoHideAfter,
+      ),
+    );
   }
 
   void dispose() {

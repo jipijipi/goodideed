@@ -233,3 +233,27 @@ deadline : {task.deadlineTime}
 reminders : {task.remindersIntensity}
 
 TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nstart : {task.startTime}\n\ndeadline : {task.deadlineTime}\n\nreminders : {task.remindersIntensity}
+
+
+
+{
+  "asset": "assets/animations/radial_range_test.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "clock",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "start": 0,
+    "end": 0
+  }
+}
+
+{
+  "zone": 4,
+  "id": "clock",
+  "bindings": {
+    "start": "{task.deadlineTime}",
+    "end": "{task.startTime}"
+  }
+}

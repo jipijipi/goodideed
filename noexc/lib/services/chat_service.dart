@@ -178,10 +178,12 @@ class ChatService {
       final bindings = await _resolveNumericBindings(data['bindings']);
       final autoHideMs = data['autoHideMs'] as int?;
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
-      if (bindings == null || bindings.isEmpty) return;
+      // Allow auto-hide-only updates: proceed if autoHide is set even when bindings are empty
+      final effectiveBindings = bindings ?? <String, double>{};
+      if (effectiveBindings.isEmpty && autoHide == null) return;
       ServiceLocator.instance.riveOverlayService.update(
         zone: zone,
-        bindings: bindings,
+        bindings: effectiveBindings,
         id: id,
         autoHideAfter: autoHide,
       );

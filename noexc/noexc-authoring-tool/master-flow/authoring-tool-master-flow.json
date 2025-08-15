@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-15T22:35:15.332Z",
+  "lastUpdated": "2025-08-15T23:05:43.480Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-15T22:35:15.318Z"
+    "timestamp": "2025-08-15T23:05:43.473Z"
   },
   "nodes": [
     {
@@ -707,21 +707,21 @@
     {
       "id": "47",
       "position": {
-        "x": 9290.768324284842,
-        "y": 255.49249217848228
+        "x": 8177.475416531204,
+        "y": -443.5452273455494
       },
       "type": "group",
       "style": {
-        "width": 2531.4426850958043,
+        "width": 3413.203615052711,
         "height": 15031.424913634946,
         "zIndex": 999
       },
-      "width": 2531,
+      "width": 3413,
       "height": 15031,
       "selected": false,
       "positionAbsolute": {
-        "x": 9290.768324284842,
-        "y": 255.49249217848228
+        "x": 8177.475416531204,
+        "y": -443.5452273455494
       },
       "dragging": false,
       "data": {
@@ -5830,8 +5830,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 531,
+      "width": 308,
+      "height": 529,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -7207,8 +7207,8 @@
     {
       "id": "375",
       "position": {
-        "x": 2086.2872625339805,
-        "y": 12191.167402658099
+        "x": 2082.2872625339805,
+        "y": 12269.167402658099
       },
       "data": {
         "label": "Route condition",
@@ -7221,8 +7221,8 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 6207.133125588045,
-        "y": 16493.72336038096
+        "x": 10259.762679065185,
+        "y": 11825.62217531255
       },
       "dragging": true,
       "parentId": "47",
@@ -7441,8 +7441,8 @@
         ]
       },
       "type": "editable",
-      "width": 309,
-      "height": 525,
+      "width": 308,
+      "height": 524,
       "selected": false,
       "positionAbsolute": {
         "x": 9671.840169028741,
@@ -7490,6 +7490,86 @@
       "extent": "parent"
     },
     {
+      "id": "447",
+      "position": {
+        "x": 2303.9162248386147,
+        "y": 2844.6034262465973
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "447",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "session.customWeekIndex",
+            "value": "2"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 395,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 10481.391641369819,
+        "y": 2401.058198901048
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "448",
+      "position": {
+        "x": 2759.235722060839,
+        "y": 3105.0342924250544
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "448",
+        "content": "{session.customWeekIndex:activeDays}?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 10911.711138592043,
+        "y": 2636.489065079505
+      },
+      "dragging": false,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "449",
+      "position": {
+        "x": 2739.5780118318617,
+        "y": 3413.043190516883
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "449"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 10892.053428363066,
+        "y": 2944.4979631713336
+      },
+      "dragging": false,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
       "id": "45",
       "position": {
         "x": 392.67899082015947,
@@ -7514,6 +7594,180 @@
         "contentKey": "bot.acknowledge.active_days.weekdays",
         "content": "Giving yourself a bit of rest on the weekend, I get that."
       }
+    },
+    {
+      "id": "450",
+      "position": {
+        "x": 2481,
+        "y": 3857.383464906321
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "450",
+        "dataActions": [
+          {
+            "type": "append",
+            "key": "task.activeDays",
+            "value": "session.customWeekIndex"
+          },
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "0"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 574,
+      "selected": false,
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent",
+      "positionAbsolute": {
+        "x": 10658.475416531204,
+        "y": 3413.8382375607716
+      }
+    },
+    {
+      "id": "451",
+      "position": {
+        "x": 2970.203615052711,
+        "y": 3855.7326735825923
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "451",
+        "dataActions": [
+          {
+            "type": "remove",
+            "key": "task.activeDays",
+            "value": "session.customWeekIndex"
+          },
+          {
+            "type": "trigger",
+            "key": "task.info",
+            "value": "",
+            "event": "refresh_task_calculations",
+            "data": {}
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 11122.679031583915,
+        "y": 3387.187446237043
+      },
+      "dragging": false,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "452",
+      "position": {
+        "x": 2591.286334546894,
+        "y": 4489.4493815437545
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "452",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "calendar",
+              "bindings": {
+                "monday": "{session.mon_active}",
+                "tuesday": "{session.tue_active}",
+                "wednesday": "{session.wed_active}",
+                "thursday": "{session.thu_active}",
+                "friday": "{session.fri_active}",
+                "saturday": "{session.sat_active}",
+                "sunday": "{session.sun_active}"
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 579,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 10743.761751078098,
+        "y": 4020.904154198205
+      },
+      "dragging": false,
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "453",
+      "position": {
+        "x": 2885.8146591503373,
+        "y": 5560.074797850097
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "453",
+        "dataActions": [
+          {
+            "type": "increment",
+            "key": "session.customWeekIndex",
+            "value": 1
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 395,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 11038.290075681542,
+        "y": 5091.529570504547
+      },
+      "parentId": "47",
+      "extent": "parent"
+    },
+    {
+      "id": "454",
+      "position": {
+        "x": 2603.6366911425503,
+        "y": 5303.0036348150825
+      },
+      "data": {
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "454"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 162,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 10781.112107673755,
+        "y": 4859.458407469533
+      },
+      "dragging": true,
+      "parentId": "47",
+      "extent": "parent"
     },
     {
       "id": "46",
@@ -10295,28 +10549,6 @@
         "label": "Yes"
       },
       "id": "reactflow__edge-306-307",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "307",
-      "sourceHandle": null,
-      "target": "309",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-307-309",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "308",
-      "sourceHandle": null,
-      "target": "309",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-308-309",
       "selected": false
     },
     {
@@ -13167,6 +13399,187 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-438-446",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "447",
+      "sourceHandle": null,
+      "target": "448",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-447-448",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "448",
+      "sourceHandle": null,
+      "target": "449",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-448-449",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "449",
+      "sourceHandle": null,
+      "target": "450",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "yes"
+      },
+      "id": "reactflow__edge-449-450",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "449",
+      "sourceHandle": null,
+      "target": "451",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "no"
+      },
+      "id": "reactflow__edge-449-451",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "450",
+      "sourceHandle": null,
+      "target": "452",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-450-452",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "451",
+      "sourceHandle": null,
+      "target": "454",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-451-454"
+    },
+    {
+      "zIndex": 1001,
+      "source": "452",
+      "sourceHandle": null,
+      "target": "454",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-452-454"
+    },
+    {
+      "zIndex": 1001,
+      "source": "454",
+      "sourceHandle": null,
+      "target": "453",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-454-453",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "454",
+      "sourceHandle": null,
+      "target": "375",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "session.customWeekIndex >= 7"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#ff9800",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-454-375"
+    },
+    {
+      "zIndex": 1001,
+      "source": "308",
+      "sourceHandle": null,
+      "target": "447",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-308-447"
+    },
+    {
+      "zIndex": 1001,
+      "source": "306",
+      "sourceHandle": null,
+      "target": "309",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "old"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-306-309"
+    },
+    {
+      "zIndex": 1001,
+      "source": "307",
+      "sourceHandle": null,
+      "target": "447",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-307-447"
+    },
+    {
+      "zIndex": 1001,
+      "source": "453",
+      "sourceHandle": null,
+      "target": "448",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-453-448",
       "selected": false
     }
   ]

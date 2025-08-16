@@ -1,8 +1,37 @@
 {
     "metadata": {
-        "extracted_at": "2025-08-14T17:13:12.840856",
-        "total_failures": 0,
+        "extracted_at": "2025-08-16T08:50:35.347095",
+        "total_failures": 2,
         "extractor_version": "1.0.0"
     },
-    "failures": []
+    "failures": [
+        {
+            "name": "append/remove resolve templated values from session variables",
+            "file": "/Users/jpl/Dev/Apps/noexc/test/services/data_action_templating_append_remove_test.dart",
+            "suite": "data_action_templating_append_remove",
+            "group": "",
+            "error": "Expected: <Instance of 'List'>\n  Actual: '[9]'\n   Which: is not an instance of 'List'\n",
+            "testId": 514,
+            "line": 21,
+            "column": 3,
+            "stackTrace": "package:matcher                                                    expect\npackage:flutter_test/src/widget_tester.dart 474:18                 expect\ntest/services/data_action_templating_append_remove_test.dart 37:5  main.<fn>\n",
+            "isFailure": true,
+            "timestamp": 10923,
+            "category": "assertion"
+        },
+        {
+            "name": "Overlay host shows and auto-hides Rive overlay",
+            "file": "package:flutter_test/src/widget_tester.dart",
+            "suite": "widget_tester.dart",
+            "group": "",
+            "error": "Test failed. See exception logs above.\nThe test description was: Overlay host shows and auto-hides Rive overlay",
+            "testId": 1201,
+            "line": 175,
+            "column": 5,
+            "stackTrace": "",
+            "isFailure": false,
+            "timestamp": 22845,
+            "category": "unknown"
+        }
+    ]
 }

@@ -321,3 +321,12 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "sunday": "{session.sun_active}"
   }
 }
+
+  {
+    "asset": "assets/animations/tristopher_simple.riv",
+    "zone": 4,
+    "id": "success",
+    "policy": "queue",
+    "minShowMs": 1000,
+    "autoHideMs": 1200
+  }

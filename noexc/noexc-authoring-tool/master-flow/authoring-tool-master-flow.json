@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-16T07:53:08.323Z",
+  "lastUpdated": "2025-08-16T15:51:22.678Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-16T07:53:08.317Z"
+    "timestamp": "2025-08-16T15:51:22.639Z"
   },
   "nodes": [
     {
@@ -178,11 +178,11 @@
       },
       "type": "group",
       "style": {
-        "width": 693.3838086371661,
+        "width": 694.3838086371661,
         "height": 2166.9182475500857,
         "zIndex": 999
       },
-      "width": 693,
+      "width": 694,
       "height": 2167,
       "selected": false,
       "dragging": false,
@@ -707,8 +707,8 @@
     {
       "id": "47",
       "position": {
-        "x": 8307.460532639196,
-        "y": -3214.3672493753566
+        "x": 8174.275622466268,
+        "y": -3472.186118302673
       },
       "type": "group",
       "style": {
@@ -720,8 +720,8 @@
       "height": 9523,
       "selected": false,
       "positionAbsolute": {
-        "x": 8307.460532639196,
-        "y": -3214.3672493753566
+        "x": 8174.275622466268,
+        "y": -3472.186118302673
       },
       "dragging": false,
       "data": {
@@ -1345,8 +1345,8 @@
         "y": 527.5522187596766
       },
       "type": "editable",
-      "width": 309,
-      "height": 575,
+      "width": 308,
+      "height": 574,
       "selected": false,
       "positionAbsolute": {
         "x": -6572.154413707447,
@@ -1404,7 +1404,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": -6573.853249433956,
@@ -1557,8 +1557,8 @@
         "contentKey": "system.check.user_profile_setup_status"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 249,
+      "height": 163,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -1631,8 +1631,8 @@
         "nodeId": "1"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
         "x": -1914.538102838661,
@@ -1687,8 +1687,8 @@
         "imagePath": "assets/animations/intro_logo_animated.riv"
       },
       "type": "editable",
-      "width": 250,
-      "height": 211,
+      "width": 248,
+      "height": 209,
       "selected": false,
       "positionAbsolute": {
         "x": -2518.9451934867716,
@@ -4831,7 +4831,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 1885.4142088315523,
@@ -5816,7 +5816,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -6178,8 +6178,8 @@
         "content": "YOU started it|||You finish it|||Monday?"
       },
       "type": "editable",
-      "width": 249,
-      "height": 259,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": 11033.614497059705,
@@ -6332,8 +6332,8 @@
         "nodeId": "374"
       },
       "type": "editable",
-      "width": 250,
-      "height": 164,
+      "width": 248,
+      "height": 162,
       "selected": false,
       "positionAbsolute": {
         "x": 8772.721823628275,
@@ -6536,7 +6536,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 10054.907683721305,
@@ -6618,7 +6618,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -6947,8 +6947,8 @@
         "nodeId": "457"
       },
       "type": "editable",
-      "width": 249,
-      "height": 163,
+      "width": 248,
+      "height": 162,
       "selected": false,
       "positionAbsolute": {
         "x": 10650.46481727593,
@@ -6992,8 +6992,8 @@
         ]
       },
       "type": "editable",
-      "width": 309,
-      "height": 471,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {

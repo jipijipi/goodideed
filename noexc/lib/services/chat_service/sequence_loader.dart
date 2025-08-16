@@ -36,6 +36,8 @@ class SequenceLoader {
   }
 
   /// Load the default chat script (for backward compatibility)
+  /// TODO(noexc): Prefer ChatService.start(AppConstants.defaultSequenceId)
+  /// and route via Orchestrator. This method remains for legacy tests only.
   Future<List<ChatMessage>> loadChatScript() async {
     // Default to onboarding_seq sequence for backward compatibility
     final sequence = await loadSequence('onboarding_seq');
@@ -53,6 +55,8 @@ class SequenceLoader {
   }
 
   /// Get initial messages for a specific sequence
+  /// TODO(noexc): Prefer ChatService.start(sequenceId) to keep a single
+  /// flow entrypoint and avoid bypassing the orchestrator.
   Future<List<ChatMessage>> getInitialMessages({
     String sequenceId = 'onboarding_seq',
   }) async {

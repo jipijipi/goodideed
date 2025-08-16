@@ -493,6 +493,9 @@ class ChatService {
   ChatSequence? get currentSequence => _sequenceManager.currentSequence;
 
   Future<List<ChatMessage>> getMessagesAfterChoice(int startId) async {
+    // TODO(noexc): Migrate callers to ChatService.applyChoiceAndContinue
+    // and rely on FlowResponse to manage continuation. This wrapper will be
+    // removed after UI migrates off direct message lists.
     return await _getMessagesFromId(startId);
   }
 
@@ -500,6 +503,8 @@ class ChatService {
     int nextMessageId,
     String userInput,
   ) async {
+    // TODO(noexc): Migrate callers to ChatService.applyTextAndContinue and
+    // rely on FlowResponse; this wrapper exists for compatibility.
     return await _getMessagesFromId(nextMessageId);
   }
 
@@ -534,6 +539,8 @@ class ChatService {
 
   /// Process a single message template and replace variables with stored values
   Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
+    // TODO(noexc): Keep for compatibility; prefer running flows via start/
+    // continue/apply* methods to minimize piecemeal processing.
     // Use FlowOrchestrator for consistent processing
     return await _flowOrchestrator.processMessageTemplate(message);
   }
@@ -542,6 +549,8 @@ class ChatService {
   Future<List<ChatMessage>> processMessageTemplates(
     List<ChatMessage> messages,
   ) async {
+    // TODO(noexc): Keep for compatibility; prefer running flows via start/
+    // continue/apply* methods to minimize piecemeal processing.
     // Use FlowOrchestrator for consistent processing
     return await _flowOrchestrator.processMessageTemplates(messages);
   }

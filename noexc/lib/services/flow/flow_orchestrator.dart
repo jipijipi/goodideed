@@ -224,6 +224,8 @@ class FlowOrchestrator {
   /// This method provides backward compatibility for components that need
   /// to process individual messages rather than message flows.
   Future<ChatMessage> processMessageTemplate(ChatMessage message) async {
+    // TODO(noexc): Legacy support. Prefer using ChatService facade methods
+    // (start/continue/apply*AndContinue) so flow rules stay centralized.
     // Use the renderer to process the message
     final processedMessages = await _renderer.render([
       message,
@@ -243,6 +245,8 @@ class FlowOrchestrator {
   Future<List<ChatMessage>> processMessageTemplates(
     List<ChatMessage> messages,
   ) async {
+    // TODO(noexc): Legacy support. Prefer using ChatService facade methods
+    // to avoid piecemeal processing outside the orchestrator.
     // Use the renderer to process all messages
     return await _renderer.render(messages, _sequenceManager.currentSequence);
   }
@@ -255,6 +259,8 @@ class FlowOrchestrator {
     ChatMessage textInputMessage,
     String userInput,
   ) async {
+    // TODO(noexc): Legacy support. Prefer ChatService.applyTextAndContinue
+    // which returns a FlowResponse for UI to render.
     // Delegate to the renderer for consistent processing
     await _renderer.handleUserTextInput(textInputMessage, userInput);
   }
@@ -267,6 +273,8 @@ class FlowOrchestrator {
     ChatMessage choiceMessage,
     Choice selectedChoice,
   ) async {
+    // TODO(noexc): Legacy support. Prefer ChatService.applyChoiceAndContinue
+    // which returns a FlowResponse for UI to render.
     // Delegate to the renderer for consistent processing
     await _renderer.handleUserChoice(choiceMessage, selectedChoice);
   }

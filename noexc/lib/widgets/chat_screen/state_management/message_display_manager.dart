@@ -52,6 +52,8 @@ class MessageDisplayManager {
     MessageQueue messageQueue,
     VoidCallback notifyListeners,
   ) async {
+    // TODO(noexc): Once Renderer filtering is fully trusted, remove this
+    // additional filtering and keep only a strict empty-text guard.
     // Filter out empty messages only
     final filteredMessages =
         messages.where((message) {

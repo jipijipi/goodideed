@@ -13,7 +13,6 @@ class UserInteractionHandler {
   final ChatService _chatService;
   final MessageQueue _messageQueue;
 
-  bool _disposed = false;
 
   UserInteractionHandler({
     required MessageDisplayManager messageDisplayManager,
@@ -31,29 +30,34 @@ class UserInteractionHandler {
     Function(String) onSequenceChange,
     VoidCallback notifyListeners,
   ) async {
-    // Store the user's choice if storeKey is provided
+    // Persist and continue flow via facade
     await _chatService.handleUserChoice(choiceMessage, choice);
 
     // Update choice message to mark the selected choice and disable interaction
     _messageDisplayManager.updateChoiceMessage(choiceMessage, choice.text);
     notifyListeners();
 
-    // Check if this choice switches sequences
-    if (choice.sequenceId != null) {
-      logger.info(
-        'Switching to sequence: ${choice.sequenceId}',
-        component: LogComponent.ui,
+    try {
+      // Track sequence change intent for UI state
+      if (choice.sequenceId != null && choice.sequenceId!.isNotEmpty) {
+        _messageDisplayManager.currentTextInputMessage = null;
+        onSequenceChange(choice.sequenceId!);
+      }
+
+      final flow = await _chatService.applyChoiceAndContinue(
+        choiceMessage,
+        choice,
       );
-      await _switchToSequenceFromChoice(
-        choice.sequenceId!,
-        onSequenceChange,
+
+      // Display returned messages
+      await _messageDisplayManager.displayMessages(
+        flow.messages,
+        _messageQueue,
         notifyListeners,
       );
-    } else if (choice.nextMessageId != null) {
-      await _continueWithChoice(choice.nextMessageId!, notifyListeners);
-    } else {
-      logger.warning(
-        'Choice has no next action - conversation may end here',
+    } catch (e) {
+      logger.error(
+        'Error continuing after choice: $e',
         component: LogComponent.ui,
       );
     }
@@ -67,101 +71,38 @@ class UserInteractionHandler {
   ) async {
     if (userInput.trim().isEmpty) return;
 
-    // Store the user's input if storeKey is provided
+    // Persist input and echo user message
     await _chatService.handleUserTextInput(textInputMessage, userInput.trim());
 
-    // Create user response message
     final userResponseMessage = _chatService.createUserResponseMessage(
       textInputMessage.id + AppConstants.userResponseIdOffset,
       userInput.trim(),
     );
 
-    // Add user response as new message instead of replacing
     _messageDisplayManager.addUserResponseMessage(userResponseMessage);
     _messageDisplayManager.currentTextInputMessage = null;
     notifyListeners();
 
-    // Continue with next messages if available
-    if (textInputMessage.nextMessageId != null) {
-      await _continueWithTextInput(
-        textInputMessage.nextMessageId!,
-        userInput.trim(),
-        notifyListeners,
-      );
-    }
-  }
-
-  /// Continue conversation after choice selection
-  Future<void> _continueWithChoice(
-    int nextMessageId,
-    VoidCallback notifyListeners,
-  ) async {
-    final nextMessages = await _chatService.getMessagesAfterChoice(
-      nextMessageId,
-    );
-    await _messageDisplayManager.displayMessages(
-      nextMessages,
-      _messageQueue,
-      notifyListeners,
-    );
-  }
-
-  /// Switch to a different sequence from a choice selection
-  Future<void> _switchToSequenceFromChoice(
-    String sequenceId,
-    Function(String) onSequenceChange,
-    VoidCallback notifyListeners,
-  ) async {
-    if (_disposed) return;
-
     try {
-      // Clear current text input message and update sequence tracking
-      _messageDisplayManager.currentTextInputMessage = null;
-      onSequenceChange(sequenceId);
-
-      // Load the new sequence
-      await _chatService.loadSequence(sequenceId);
-
-      // Get initial messages for the new sequence (starts with first message)
-      final nextMessages = await _chatService.getInitialMessages(
-        sequenceId: sequenceId,
+      final flow = await _chatService.applyTextAndContinue(
+        textInputMessage,
+        userInput.trim(),
       );
-
-      // Display the new sequence messages
       await _messageDisplayManager.displayMessages(
-        nextMessages,
+        flow.messages,
         _messageQueue,
         notifyListeners,
       );
-
-      notifyListeners();
     } catch (e) {
       logger.error(
-        'Error switching sequence from choice: $e',
+        'Error continuing after text input: $e',
         component: LogComponent.ui,
       );
     }
   }
 
-  /// Continue conversation after text input
-  Future<void> _continueWithTextInput(
-    int nextMessageId,
-    String userInput,
-    VoidCallback notifyListeners,
-  ) async {
-    final nextMessages = await _chatService.getMessagesAfterTextInput(
-      nextMessageId,
-      userInput,
-    );
-    await _messageDisplayManager.displayMessages(
-      nextMessages,
-      _messageQueue,
-      notifyListeners,
-    );
-  }
+  // Old continuation helpers removed in favor of ChatService facades
 
   /// Dispose of resources
-  void dispose() {
-    _disposed = true;
-  }
+  void dispose() {}
 }

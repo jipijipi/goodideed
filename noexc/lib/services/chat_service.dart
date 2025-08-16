@@ -576,4 +576,41 @@ class ChatService {
   Future<FlowResponse> continueFrom(int messageId) async {
     return await _flowOrchestrator.processFrom(messageId);
   }
+
+  /// Store choice value (if any) and continue the flow from the appropriate point.
+  /// - If the choice targets a new sequence, loads it and starts from its first message.
+  /// - Otherwise, continues from the choice's nextMessageId.
+  Future<FlowResponse> applyChoiceAndContinue(
+    ChatMessage choiceMessage,
+    Choice selectedChoice,
+  ) async {
+    // Persist choice via renderer/processor for consistency
+    await _flowOrchestrator.handleUserChoice(choiceMessage, selectedChoice);
+
+    if (selectedChoice.sequenceId != null && selectedChoice.sequenceId!.isNotEmpty) {
+      return await start(selectedChoice.sequenceId!);
+    }
+
+    if (selectedChoice.nextMessageId != null) {
+      return await continueFrom(selectedChoice.nextMessageId!);
+    }
+
+    logger.warning('Choice has no next action; returning no-op response');
+    return const FlowResponse(messages: [], isComplete: true);
+  }
+
+  /// Store text input (if any) and continue the flow from the message's nextMessageId.
+  Future<FlowResponse> applyTextAndContinue(
+    ChatMessage textInputMessage,
+    String userInput,
+  ) async {
+    await _flowOrchestrator.handleUserTextInput(textInputMessage, userInput);
+
+    if (textInputMessage.nextMessageId != null) {
+      return await continueFrom(textInputMessage.nextMessageId!);
+    }
+
+    logger.warning('Text input has no continuation; returning no-op response');
+    return const FlowResponse(messages: [], isComplete: true);
+  }
 }

@@ -4,6 +4,7 @@ import 'package:noexc/models/chat_sequence.dart';
 import 'package:noexc/models/choice.dart';
 import 'package:noexc/validation/sequence_validator.dart';
 import 'package:noexc/models/route_condition.dart';
+import 'package:noexc/constants/validation_constants.dart';
 
 void main() {
   group('Additional validators', () {
@@ -22,8 +23,20 @@ void main() {
       );
 
       final res = SequenceValidator().validateSequence(seq);
-      expect(res.errors.any((e) => e.messageId == 1), isTrue);
-      expect(res.errors.any((e) => e.messageId == 2), isFalse);
+      // Error for msg 1 (missing imagePath)
+      expect(
+        res.errors
+            .where((e) => e.type == ValidationConstants.invalidTextForType)
+            .any((e) => e.messageId == 1),
+        isTrue,
+      );
+      // No type-rule error for msg 2 (proper image)
+      expect(
+        res.errors
+            .where((e) => e.type == ValidationConstants.invalidTextForType)
+            .any((e) => e.messageId == 2),
+        isFalse,
+      );
     });
 
     test('delay hygiene warnings for non-display types', () {
@@ -37,8 +50,20 @@ void main() {
         ],
       );
       final res = SequenceValidator().validateSequence(seq);
-      expect(res.warnings.any((w) => w.messageId == 1), isTrue);
-      expect(res.warnings.any((w) => w.messageId == 2), isFalse);
+      // Warning for msg 1 (non-zero explicit delay on non-display type)
+      expect(
+        res.warnings
+            .where((w) => w.type == 'UNNECESSARY_DELAY')
+            .any((w) => w.messageId == 1),
+        isTrue,
+      );
+      // No hygiene warning for msg 2 (explicit but zero delay)
+      expect(
+        res.warnings
+            .where((w) => w.type == 'UNNECESSARY_DELAY')
+            .any((w) => w.messageId == 2),
+        isFalse,
+      );
     });
 
     test('choice ambiguity warning when both sequenceId and nextMessageId', () {

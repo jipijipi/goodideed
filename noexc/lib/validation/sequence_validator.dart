@@ -11,6 +11,10 @@ import 'validators/choice_validator.dart';
 import 'validators/route_validator.dart';
 import 'validators/template_validator.dart';
 import 'validators/type_rules_validator.dart';
+import 'validators/image_message_validator.dart';
+import 'validators/delay_hygiene_validator.dart';
+import 'validators/route_syntax_validator.dart';
+import 'validators/choice_ambiguity_validator.dart';
 
 /// Main validator that coordinates all validation types
 class SequenceValidator {
@@ -21,6 +25,10 @@ class SequenceValidator {
   final RouteValidator _routeValidator = RouteValidator();
   final TemplateValidator _templateValidator = TemplateValidator();
   final TypeRulesValidator _typeRulesValidator = TypeRulesValidator();
+  final ImageMessageValidator _imageMessageValidator = ImageMessageValidator();
+  final DelayHygieneValidator _delayHygieneValidator = DelayHygieneValidator();
+  final RouteSyntaxValidator _routeSyntaxValidator = RouteSyntaxValidator();
+  final ChoiceAmbiguityValidator _choiceAmbiguityValidator = ChoiceAmbiguityValidator();
 
   /// Validates a complete chat sequence
   ValidationResult validateSequence(ChatSequence sequence) {
@@ -59,6 +67,18 @@ class SequenceValidator {
 
     // Type-specific rules validation
     errors.addAll(_typeRulesValidator.validate(sequence));
+
+    // Image message constraints (errors)
+    errors.addAll(_imageMessageValidator.validate(sequence));
+
+    // Delay hygiene (warnings only)
+    warnings.addAll(_delayHygieneValidator.validate(sequence));
+
+    // Route syntax (warnings)
+    warnings.addAll(_routeSyntaxValidator.validate(sequence));
+
+    // Choice ambiguity (warnings)
+    warnings.addAll(_choiceAmbiguityValidator.validate(sequence));
 
     return ValidationResult(errors: errors, warnings: warnings, info: info);
   }

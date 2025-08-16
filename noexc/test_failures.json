@@ -1,8 +1,37 @@
 {
     "metadata": {
-        "extracted_at": "2025-08-16T15:04:38.316224",
-        "total_failures": 0,
+        "extracted_at": "2025-08-16T16:25:25.723064",
+        "total_failures": 2,
         "extractor_version": "1.0.0"
     },
-    "failures": []
+    "failures": [
+        {
+            "name": "Additional validators image message must have imagePath and no extraneous fields",
+            "file": "/Users/jpl/Dev/Apps/noexc/test/validation/additional_validators_test.dart",
+            "suite": "additional_validators",
+            "group": "Additional validators",
+            "error": "Expected: false\n  Actual: <true>\n",
+            "testId": 1256,
+            "line": 13,
+            "column": 5,
+            "stackTrace": "package:matcher                                       expect\npackage:flutter_test/src/widget_tester.dart 474:18    expect\ntest/validation/additional_validators_test.dart 26:7  main.<fn>.<fn>\n",
+            "isFailure": true,
+            "timestamp": 24631,
+            "category": "assertion"
+        },
+        {
+            "name": "Additional validators delay hygiene warnings for non-display types",
+            "file": "/Users/jpl/Dev/Apps/noexc/test/validation/additional_validators_test.dart",
+            "suite": "additional_validators",
+            "group": "Additional validators",
+            "error": "Expected: false\n  Actual: <true>\n",
+            "testId": 1257,
+            "line": 29,
+            "column": 5,
+            "stackTrace": "package:matcher                                       expect\npackage:flutter_test/src/widget_tester.dart 474:18    expect\ntest/validation/additional_validators_test.dart 41:7  main.<fn>.<fn>\n",
+            "isFailure": true,
+            "timestamp": 24635,
+            "category": "assertion"
+        }
+    ]
 }

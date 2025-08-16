@@ -100,6 +100,7 @@ class MessageDisplayManager {
 
   /// Scroll to the bottom of the message list
   void _scrollToBottom() {
+    if (_disposed) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(

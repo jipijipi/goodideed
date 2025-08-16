@@ -552,4 +552,19 @@ class ChatService {
     final flowResponse = await _flowOrchestrator.processFrom(startId);
     return flowResponse.messages;
   }
+
+  // Facade seed: start a sequence and return flow response
+  Future<FlowResponse> start(String sequenceId) async {
+    await _sequenceManager.loadSequence(sequenceId);
+    final firstMessageId = _sequenceManager.getFirstMessageId();
+    if (firstMessageId == null) {
+      throw Exception('Sequence $sequenceId has no messages');
+    }
+    return await _flowOrchestrator.processFrom(firstMessageId);
+  }
+
+  // Facade seed: continue flow from a message id
+  Future<FlowResponse> continueFrom(int messageId) async {
+    return await _flowOrchestrator.processFrom(messageId);
+  }
 }

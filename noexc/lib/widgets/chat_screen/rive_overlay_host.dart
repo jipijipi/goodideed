@@ -86,9 +86,18 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
     _instances[id] = inst;
     setState(() {});
 
+    // If a min-show is requested, set guard before scheduling hide
+    if (show.minShowAfter != null) {
+      inst.setMinShowGuard(show.minShowAfter!);
+    }
+    // Schedule auto-hide immediately so it works even if loading never completes
+    if (show.autoHideAfter != null) {
+      inst.scheduleHide(show.autoHideAfter!, _onInstanceHiddenCallback(id));
+    }
+
     await inst.start(show);
 
-    // Schedule auto-hide if requested
+    // Re-schedule hide to ensure guard/timing is honored after initialization (cancels previous timer)
     if (show.autoHideAfter != null) {
       inst.scheduleHide(show.autoHideAfter!, _onInstanceHiddenCallback(id));
     }
@@ -242,6 +251,11 @@ class _OverlayInstance {
       logger.error('Overlay Rive load failed: $e', component: LogComponent.ui);
       _loading = false;
     }
+  }
+
+  // Set a min-show guard prior to start() to ensure early hide timers respect it
+  void setMinShowGuard(Duration duration) {
+    _earliestHideAt = DateTime.now().add(duration);
   }
 
   void scheduleHide(Duration after, VoidCallback onHidden) {

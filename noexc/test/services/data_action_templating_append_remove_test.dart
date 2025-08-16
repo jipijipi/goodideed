@@ -33,17 +33,16 @@ void main() {
       DataAction(type: DataActionType.append, key: 'debug.hours', value: '{session.timeOfDay}')
     ]);
 
-    final list1 = await userData.getValue<dynamic>('debug.hours');
+    final list1 = await userData.getValue<List<dynamic>>('debug.hours');
     expect(list1, isA<List>());
-    expect((list1 as List).first, 9);
+    expect(list1!.first, 9);
 
     // Remove using shorthand path
     await processor.processActions([
       DataAction(type: DataActionType.remove, key: 'debug.hours', value: 'session.timeOfDay')
     ]);
 
-    final list2 = await userData.getValue<dynamic>('debug.hours');
-    expect((list2 as List).contains(9), isFalse);
+    final list2 = await userData.getValue<List<dynamic>>('debug.hours');
+    expect(list2!.contains(9), isFalse);
   });
 }
-

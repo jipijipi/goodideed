@@ -19,7 +19,7 @@ class DelayHygieneValidator {
       if (shouldWarn && m.hasExplicitDelay && m.delay != 0) {
         warnings.add(
           ValidationError(
-            type: 'UNNECESSARY_DELAY',
+            type: ValidationConstants.unnecessaryDelay,
             message:
                 'Delay on ${m.type.name} is ignored by UI; consider removing for clarity',
             messageId: m.id,
@@ -33,4 +33,3 @@ class DelayHygieneValidator {
     return warnings;
   }
 }
-

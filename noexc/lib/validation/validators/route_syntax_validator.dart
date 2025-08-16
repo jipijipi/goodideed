@@ -29,7 +29,7 @@ class RouteSyntaxValidator {
         if (sqCount % 2 != 0 || dqCount % 2 != 0 || !hasOp) {
           warnings.add(
             ValidationError(
-              type: 'SUSPECT_ROUTE_CONDITION',
+              type: ValidationConstants.suspectRouteCondition,
               message:
                   'Route condition may be malformed or unparseable: "$c"',
               messageId: m.id,

@@ -15,7 +15,7 @@ class ChoiceAmbiguityValidator {
         if (choice.sequenceId != null && choice.nextMessageId != null) {
           warnings.add(
             ValidationError(
-              type: 'CHOICE_AMBIGUOUS_DESTINATION',
+              type: ValidationConstants.choiceAmbiguousDestination,
               message:
                   'Choice defines both sequenceId and nextMessageId; prefer one',
               messageId: m.id,
@@ -30,4 +30,3 @@ class ChoiceAmbiguityValidator {
     return warnings;
   }
 }
-

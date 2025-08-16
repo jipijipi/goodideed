@@ -20,6 +20,9 @@ class ValidationConstants {
   static const String routeNoDestination = 'ROUTE_NO_DESTINATION';
   static const String templateSyntaxWarning = 'TEMPLATE_SYNTAX_WARNING';
   static const String invalidTextForType = 'INVALID_TEXT_FOR_TYPE';
+  static const String unnecessaryDelay = 'UNNECESSARY_DELAY';
+  static const String suspectRouteCondition = 'SUSPECT_ROUTE_CONDITION';
+  static const String choiceAmbiguousDestination = 'CHOICE_AMBIGUOUS_DESTINATION';
 
   // Severity levels
   static const String severityError = 'error';

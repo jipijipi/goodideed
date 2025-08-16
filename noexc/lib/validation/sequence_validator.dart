@@ -10,6 +10,7 @@ import 'validators/flow_validator.dart';
 import 'validators/choice_validator.dart';
 import 'validators/route_validator.dart';
 import 'validators/template_validator.dart';
+import 'validators/type_rules_validator.dart';
 
 /// Main validator that coordinates all validation types
 class SequenceValidator {
@@ -19,6 +20,7 @@ class SequenceValidator {
   final ChoiceValidator _choiceValidator = ChoiceValidator();
   final RouteValidator _routeValidator = RouteValidator();
   final TemplateValidator _templateValidator = TemplateValidator();
+  final TypeRulesValidator _typeRulesValidator = TypeRulesValidator();
 
   /// Validates a complete chat sequence
   ValidationResult validateSequence(ChatSequence sequence) {
@@ -54,6 +56,9 @@ class SequenceValidator {
 
     // Template validation
     warnings.addAll(_templateValidator.validate(sequence));
+
+    // Type-specific rules validation
+    errors.addAll(_typeRulesValidator.validate(sequence));
 
     return ValidationResult(errors: errors, warnings: warnings, info: info);
   }

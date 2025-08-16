@@ -19,6 +19,7 @@ class ValidationConstants {
   static const String missingDefaultRoute = 'MISSING_DEFAULT_ROUTE';
   static const String routeNoDestination = 'ROUTE_NO_DESTINATION';
   static const String templateSyntaxWarning = 'TEMPLATE_SYNTAX_WARNING';
+  static const String invalidTextForType = 'INVALID_TEXT_FOR_TYPE';
 
   // Severity levels
   static const String severityError = 'error';

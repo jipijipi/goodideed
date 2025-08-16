@@ -6,6 +6,7 @@ import '../text_templating_service.dart';
 import '../text_variants_service.dart';
 import '../user_data_service.dart';
 import '../semantic_content_service.dart';
+import '../formatter_service.dart';
 
 /// Handles message processing including templates and variants
 class MessageProcessor {
@@ -74,7 +75,7 @@ class MessageProcessor {
         }
 
         // Unescape choice text for markdown rendering
-        choiceText = _unescapeTextForMarkdown(choiceText);
+        choiceText = FormatterService().unescapeTextForMarkdown(choiceText);
 
         processedChoices.add(
           Choice(
@@ -94,7 +95,7 @@ class MessageProcessor {
     }
 
     // 5. Unescape newlines and other common escape sequences for markdown rendering
-    textToProcess = _unescapeTextForMarkdown(textToProcess);
+    textToProcess = FormatterService().unescapeTextForMarkdown(textToProcess);
 
     return ChatMessage(
       id: message.id,
@@ -188,15 +189,5 @@ class MessageProcessor {
     return rawValue; // Not a JSON array, return as-is
   }
 
-  /// Unescape common escape sequences for markdown rendering
-  /// Converts escaped characters from JSON strings to actual characters
-  String _unescapeTextForMarkdown(String text) {
-    return text
-        .replaceAll('\\\\', '\x00TEMP_BACKSLASH\x00')  // Temporarily store backslashes
-        .replaceAll('\\n', '\n')    // Newlines for line breaks
-        .replaceAll('\\t', '\t')    // Tabs for indentation  
-        .replaceAll('\\r', '\r')    // Carriage returns
-        .replaceAll('\\"', '"')     // Escaped quotes (fixed: single backslash)
-        .replaceAll('\x00TEMP_BACKSLASH\x00', '\\');   // Restore backslashes (must be last)
-  }
+  // Unescape logic moved to FormatterService
 }

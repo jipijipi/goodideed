@@ -64,13 +64,4 @@ class SequenceLoader {
     return _currentSequence!.messages;
   }
 
-  /// Create a user response message
-  ChatMessage createUserResponseMessage(int id, String userInput) {
-    return ChatMessage(
-      id: id,
-      text: userInput,
-      delay: 0,
-      sender: ChatConfig.userSender,
-    );
-  }
 }

@@ -110,6 +110,25 @@ class FlowOrchestrator {
         allDisplayMessages.addAll(processingResult.displayMessages);
       }
 
+      // Compact flow trace for observability
+      try {
+        final trace = {
+          'cycle': processingCycles,
+          'walked': walkResult.messages.length,
+          'stop': walkResult.stopReason.name,
+          'display': processingResult.displayMessages.length,
+          if (processingResult.continueFromId != null)
+            'nextId': processingResult.continueFromId,
+          if (walkResult.requiresUserInteraction)
+            'await': walkResult.stopMessageId,
+          if (walkResult.requiresSequenceTransition)
+            'toSeq': walkResult.targetSequenceId,
+        };
+        logger.debug('flow ${trace.toString()}');
+      } catch (_) {
+        // best-effort logging only
+      }
+
       // Phase 3: Handle continuation based on walk result
       if (walkResult.requiresUserInteraction) {
         logger.info(

@@ -8,6 +8,19 @@ class FormatterService {
 
   final Map<String, Map<String, String>> _formatters = {};
 
+  /// Unescape common escape sequences for markdown rendering
+  /// Converts escaped characters from JSON strings to actual characters
+  /// Centralized here to avoid duplication and ensure consistent behavior
+  String unescapeTextForMarkdown(String text) {
+    return text
+        .replaceAll('\\\\', '\\x00TEMP_BACKSLASH\\x00') // Temporarily store backslashes
+        .replaceAll('\\n', '\n') // Newlines for line breaks
+        .replaceAll('\\t', '\t') // Tabs for indentation
+        .replaceAll('\\r', '\r') // Carriage returns
+        .replaceAll('\\"', '"') // Escaped quotes
+        .replaceAll('\\x00TEMP_BACKSLASH\\x00', '\\\\'); // Restore backslashes (must be last)
+  }
+
   /// Load a formatter from JSON file and cache it
   Future<Map<String, String>?> _loadFormatter(String formatterName) async {
     if (_formatters.containsKey(formatterName)) {

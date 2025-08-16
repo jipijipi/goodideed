@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:noexc/services/chat_service/sequence_loader.dart';
-import 'package:noexc/models/chat_message.dart';
 import 'package:noexc/config/chat_config.dart';
 
 void main() {
@@ -206,51 +205,8 @@ void main() {
       });
     });
 
-    group('createUserResponseMessage', () {
-      test('should create user message with correct properties', () {
-        const messageId = 100;
-        const userInput = 'Test user input';
-
-        final message = sequenceLoader.createUserResponseMessage(
-          messageId,
-          userInput,
-        );
-
-        expect(message.id, equals(messageId));
-        expect(message.text, equals(userInput));
-        expect(message.delay, equals(0));
-        expect(message.sender, equals(ChatConfig.userSender));
-        expect(message.type, equals(MessageType.bot)); // Default type is bot
-      });
-
-      test('should handle empty user input', () {
-        const messageId = 101;
-        const userInput = '';
-
-        final message = sequenceLoader.createUserResponseMessage(
-          messageId,
-          userInput,
-        );
-
-        expect(message.id, equals(messageId));
-        expect(message.text, equals(''));
-        expect(message.sender, equals(ChatConfig.userSender));
-      });
-
-      test('should handle special characters in user input', () {
-        const messageId = 102;
-        const userInput = 'Test with émojis 🎉 and symbols @#\$%';
-
-        final message = sequenceLoader.createUserResponseMessage(
-          messageId,
-          userInput,
-        );
-
-        expect(message.id, equals(messageId));
-        expect(message.text, equals(userInput));
-        expect(message.sender, equals(ChatConfig.userSender));
-      });
-    });
+    // Note: user response message creation now belongs to ChatService and
+    // is covered by ChatService tests.
 
     group('state management', () {
       test('should maintain state across multiple operations', () async {

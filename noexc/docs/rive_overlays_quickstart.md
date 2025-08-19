@@ -182,6 +182,115 @@ Rendering and Diagnostics
 - When bindings fail to resolve, the system logs a one-time warning per instance and basic asset diagnostics (default artboard/state machine/view model presence).
  - Note on data model instances: Instance selection fields are accepted and future-proofed. In the current pinned runtime version, binding is performed via auto-bind; property updates still apply by name/path. When the runtime exposes explicit instance binding, these fields will take effect without breaking changes.
 
+More Examples
+- Show with named instance and nested paths:
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/hud.riv",
+    "zone": 4,
+    "id": "hud",
+    "artboard": "HUD",
+    "stateMachine": "Main",
+    "dataModel": "HUDModel",
+    "dataInstanceMode": "byName",
+    "dataInstance": "NightTheme",
+    "bindingsString": {
+      "Header/Title/text": "Welcome, {user.name}"
+    },
+    "bindingsColor": {
+      "Theme/accent": "#FF00AA"
+    },
+    "bindingsBool": {
+      "Flags/isPremium": "{user.isPremium}"
+    }
+  }
+
+- Show with blank instance and numeric + color int bindings:
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/progress.riv",
+    "zone": 3,
+    "id": "progress",
+    "artboard": "Progress",
+    "stateMachine": "Default",
+    "dataModel": "ProgressVM",
+    "dataInstanceMode": "blank",
+    "bindings": {
+      "Bar/value": 0.25
+    },
+    "bindingsColor": {
+      "Bar/color": 4281545523
+    }
+  }
+
+- Queue two overlays with stacking order (zIndex):
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/confetti.riv",
+    "zone": 2,
+    "id": "confetti",
+    "policy": "queue",
+    "zIndex": 1,
+    "autoHideMs": 1500
+  }
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/badge.riv",
+    "zone": 2,
+    "id": "confetti",
+    "policy": "queue",
+    "zIndex": 2,
+    "minShowMs": 800
+  }
+
+- Update only timing (no bindings):
+  {
+    "event": "overlay_rive_update",
+    "zone": 2,
+    "id": "toast",
+    "autoHideMs": 500
+  }
+
+- Legacy single overlay per zone (no id):
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/toast.riv",
+    "zone": 4,
+    "bindingsString": {"Text/value": "Saved"}
+  }
+  {
+    "event": "overlay_rive_update",
+    "zone": 4,
+    "bindingsString": {"Text/value": "Updated"}
+  }
+  {
+    "event": "overlay_rive_hide",
+    "zone": 4
+  }
+
+- Boolean bindings via numeric and templates:
+  {
+    "event": "overlay_rive",
+    "asset": "assets/animations/flags.riv",
+    "zone": 3,
+    "id": "flags",
+    "bindingsBool": {
+      "Flags/isActive": 1,
+      "Flags/showBeta": "{session.isBeta}"
+    }
+  }
+
+- Color via template and hex without alpha (assumes FF alpha):
+  {
+    "event": "overlay_rive_update",
+    "zone": 3,
+    "id": "hud",
+    "bindingsColor": {
+      "Theme/accent": "#3366FF",
+      "Theme/bg": "{theme.bgColorHex}"
+    }
+  }
+
 FAQ
 - Can a policy update a running animation instead of restarting on repeated overlay_rive?
   - In this iteration, no single policy automatically converts a repeated overlay_rive into an in-place update. Policies control whether the new show request replaces, queues, or is ignored. To update a running animation without restarting, use overlay_rive_update targeting the same zone and id. A possible future enhancement is a 'merge' policy that detects identical assets and applies bindings instead of replacing.

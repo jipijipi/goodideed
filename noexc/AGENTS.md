@@ -30,6 +30,26 @@
 - Prevent replay on new messages: give stable keys to items (`ValueKey(message)`), keep Rive state in a `StatefulWidget` with `AutomaticKeepAliveClientMixin`, and create controllers once in `initState`/`onInit`.
 - Optional: cache `RiveFile` at a higher layer and clone artboards for multiple instances.
 
+### Rive 0.14 Runtime Notes (Flutter)
+- Init/runtime: Call `await RiveNative.init()` at startup and use `Factory.rive` when loading files/images.
+- Artboard selection: Prefer `ArtboardSelector.byDefault/.byName/.byIndex` via `RiveWidgetController` (or `RiveWidgetBuilder`).
+- State machine selection: Use `StateMachineSelector.byName/.byIndex` in `RiveWidgetController` (default if omitted).
+- Layout: If the artboard uses Rive Layouts, set `fit: Fit.layout` (optionally `layoutScaleFactor`). Otherwise, use `fit` + `alignment`.
+- Data binding: Bind with `controller.dataBind(DataBind.auto())` or via file/view-model APIs. Properties supported include number, bool, string, color, trigger, enum, nested view models, image, and lists. Use slash paths for nested properties and dispose property handles when done.
+- Assets: Embedded/Hosted/Referenced supported. For referenced, supply `assetLoader:` in `File.asset(...)` and return `true` when you handle an asset.
+- Caching: You may keep a `File` alive and reuse it across widgets to avoid repeated decoding; always dispose when no longer needed.
+
+### App Status vs Docs
+- Bubbles: Load `.riv` and render via `RiveWidgetController(file)`; no artboard/state machine selection or data binding yet.
+- Overlays: Zones/ids/queue policies supported; numeric data binding via `DataBind.auto()` implemented.
+
+### Recommended Next Steps
+- Add optional `artboard`, `stateMachine` (or `animation`), `dataModel`, and `bindings` to overlay/bubble APIs; apply bindings before first frame.
+- Broaden bindings beyond numbers (bool/string/color; image as needed) and support nested paths.
+- Introduce a simple `Rive` file cache (service-level) to reuse decoded files across instances.
+- Expose `fit: 'layout' | 'contain' | ...` and optional `layoutScaleFactor` in APIs for authored Layouts.
+- Add optional `assetLoader` support for referenced assets.
+
 ## Debug Panel
 - Location: Open via the bug icon in the app bar. The panel provides Reset/Clear/Reload controls, data management, sequence switcher, and now a delay toggle.
 - Delay toggle: `Instant display (test mode)` flips between production adaptive delays and instant rendering to speed up TDD and manual QA.

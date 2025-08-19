@@ -148,6 +148,9 @@ class ChatService {
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
       final minShow = minShowMs != null ? Duration(milliseconds: minShowMs) : null;
       final bindings = await _resolveNumericBindings(data['bindings']);
+      final bindingsBool = await _resolveBoolBindings(data['bindingsBool']);
+      final bindingsString = await _resolveStringBindings(data['bindingsString']);
+      final bindingsColor = await _resolveColorBindings(data['bindingsColor']);
       final useDataBinding = (data['useDataBinding'] as bool?) ?? false;
       final id = data['id'] as String?;
       final policy = (data['policy'] as String?)?.toLowerCase() ?? 'replace';
@@ -161,6 +164,9 @@ class ChatService {
         minShowAfter: minShow,
         zone: zone,
         bindings: bindings,
+        bindingsBool: bindingsBool,
+        bindingsString: bindingsString,
+        bindingsColor: bindingsColor,
         useDataBinding: useDataBinding,
         id: id,
         policy: policy,
@@ -176,14 +182,23 @@ class ChatService {
       final zone = (data['zone'] as int?) ?? 2;
       final id = data['id'] as String?;
       final bindings = await _resolveNumericBindings(data['bindings']);
+      final bindingsBool = await _resolveBoolBindings(data['bindingsBool']);
+      final bindingsString = await _resolveStringBindings(data['bindingsString']);
+      final bindingsColor = await _resolveColorBindings(data['bindingsColor']);
       final autoHideMs = data['autoHideMs'] as int?;
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
-      // Allow auto-hide-only updates: proceed if autoHide is set even when bindings are empty
-      final effectiveBindings = bindings ?? <String, double>{};
-      if (effectiveBindings.isEmpty && autoHide == null) return;
+      // Allow auto-hide-only updates: proceed if autoHide is set even when all bindings are empty
+      final hasAnyBindings = (bindings != null && bindings.isNotEmpty) ||
+          (bindingsBool != null && bindingsBool.isNotEmpty) ||
+          (bindingsString != null && bindingsString.isNotEmpty) ||
+          (bindingsColor != null && bindingsColor.isNotEmpty);
+      if (!hasAnyBindings && autoHide == null) return;
       ServiceLocator.instance.riveOverlayService.update(
         zone: zone,
-        bindings: effectiveBindings,
+        bindings: bindings,
+        bindingsBool: bindingsBool,
+        bindingsString: bindingsString,
+        bindingsColor: bindingsColor,
         id: id,
         autoHideAfter: autoHide,
       );
@@ -240,6 +255,100 @@ class ChatService {
       }
     }
 
+    return result;
+  }
+
+  Future<Map<String, bool>?> _resolveBoolBindings(dynamic raw) async {
+    if (raw is! Map) return null;
+    final Map<String, bool> result = {};
+    final templating = ServiceLocator.instance.templatingService;
+    for (final entry in raw.entries) {
+      final key = entry.key.toString();
+      final value = entry.value;
+      bool? resolved;
+      if (value is bool) {
+        resolved = value;
+      } else if (value is num) {
+        resolved = value != 0;
+      } else if (value is String) {
+        final s = value.trim().toLowerCase();
+        if (s == 'true' || s == 'false') {
+          resolved = s == 'true';
+        } else if (s == '1' || s == '0') {
+          resolved = s == '1';
+        } else {
+          final template = value.contains('{') ? value : '{${value.trim()}}';
+          final processed = await templating.processTemplate(template);
+          final p = processed.trim().toLowerCase();
+          if (p == 'true' || p == 'false') {
+            resolved = p == 'true';
+          } else if (p == '1' || p == '0') {
+            resolved = p == '1';
+          }
+        }
+      }
+      if (resolved != null) result[key] = resolved;
+    }
+    return result;
+  }
+
+  Future<Map<String, String>?> _resolveStringBindings(dynamic raw) async {
+    if (raw is! Map) return null;
+    final Map<String, String> result = {};
+    final templating = ServiceLocator.instance.templatingService;
+    for (final entry in raw.entries) {
+      final key = entry.key.toString();
+      final value = entry.value;
+      String? resolved;
+      if (value is String) {
+        // If it looks like a template path, process; else use directly.
+        if (value.contains('{')) {
+          resolved = await templating.processTemplate(value);
+        } else if (value.contains('.')) {
+          final processed = await templating.processTemplate('{${value.trim()}}');
+          resolved = processed;
+        } else {
+          resolved = value;
+        }
+      } else {
+        resolved = value?.toString();
+      }
+      if (resolved != null) result[key] = resolved;
+    }
+    return result;
+  }
+
+  Future<Map<String, int>?> _resolveColorBindings(dynamic raw) async {
+    if (raw is! Map) return null;
+    final Map<String, int> result = {};
+    final templating = ServiceLocator.instance.templatingService;
+    int? parseColor(String s) {
+      var v = s.trim();
+      if (v.startsWith('#')) v = v.substring(1);
+      if (v.startsWith('0x')) v = v.substring(2);
+      // If RRGGBB, add opaque alpha.
+      if (v.length == 6) v = 'FF$v';
+      if (v.length != 8) return null;
+      final n = int.tryParse(v, radix: 16);
+      return n;
+    }
+    for (final entry in raw.entries) {
+      final key = entry.key.toString();
+      final value = entry.value;
+      int? resolved;
+      if (value is int) {
+        resolved = value;
+      } else if (value is String) {
+        resolved = parseColor(value);
+        if (resolved == null) {
+          final processed = await templating.processTemplate(
+            value.contains('{') ? value : '{${value.trim()}}',
+          );
+          resolved = parseColor(processed);
+        }
+      }
+      if (resolved != null) result[key] = resolved;
+    }
     return result;
   }
 

@@ -9,7 +9,12 @@ Events
 - overlay_rive: Show an overlay
   - Required: asset: string (path to .riv)
   - Common: zone: int (default 2), align: string, fit: string
-  - Data: bindings: { string: number|string }, useDataBinding: bool (default false)
+  - Data (all optional):
+    - bindings: { nameOrPath: number | string }
+    - bindingsBool: { nameOrPath: boolean | 0 | 1 | string('true'|'false'|'0'|'1'|template) }
+    - bindingsString: { nameOrPath: string | template }
+    - bindingsColor: { nameOrPath: ARGB int | hex string (#RRGGBB | #AARRGGBB | 0xAARRGGBB | template) }
+    - useDataBinding: bool (default false; auto-enabled when any bindings are provided)
   - Identity: id: string (recommended when you plan to update/hide or run multiple overlays in a zone)
   - Control:
     - policy: 'replace' | 'queue' | 'ignore' (default 'replace')
@@ -19,7 +24,11 @@ Events
 
 - overlay_rive_update: Update bindings for an overlay
   - Target: zone (default 2), id (optional; defaults to the zone’s legacy id)
-  - Payload: bindings: { string: number|string }
+  - Payload (any subset):
+    - bindings: { nameOrPath: number | string }
+    - bindingsBool: { nameOrPath: boolean | 0 | 1 | string('true'|'false'|'0'|'1'|template) }
+    - bindingsString: { nameOrPath: string | template }
+    - bindingsColor: { nameOrPath: ARGB int | hex string (#RRGGBB | #AARRGGBB | 0xAARRGGBB | template) }
   - Control: autoHideMs: int (optional, schedules hide from now)
 
 - overlay_rive_hide: Hide overlays
@@ -45,12 +54,16 @@ Multiple Overlays per Zone
 - overlay_rive_update/hide target a specific overlay by id. If id is omitted, the “legacy” overlay for that zone is targeted.
 
 Bindings and Data
-- Provide numeric bindings either directly (numbers) or via templated strings such as '{user.streak}' or shorthand paths 'user.streak'.
-- Non-numeric results after templating are ignored with a warning.
-- If Rive data binding is not available for a given asset, bindings are buffered until it becomes available; a one-time warning is logged.
+- Numeric: numbers or templated strings such as '{user.streak}' or shorthand paths 'user.streak'.
+- Boolean: true/false, 0/1, or templated strings resolving to those.
+- String: direct string or template; dotted paths resolve via templating.
+- Color: ARGB int or hex strings (#RRGGBB, #AARRGGBB, 0xAARRGGBB) or templates resolving to those. If #RRGGBB is used, alpha defaults to FF (opaque).
+- Nested paths: Use slash-delimited names to target nested view-model properties, e.g., 'Card/Title/text'. This works for all binding types.
+- Missing properties: unknown names/paths are ignored with a one-time warning per overlay instance, plus concise diagnostics.
+- Data binding availability: If the asset lacks a view model at load time, bindings are buffered and applied once available (warning logged once).
 
 Examples
-- Show and auto-hide after 2s:
+- Show with multiple bindings and auto-hide after 2s:
   {
     "event": "overlay_rive",
     "asset": "assets/animations/confetti.riv",
@@ -58,7 +71,11 @@ Examples
     "id": "confetti",
     "policy": "replace",
     "autoHideMs": 2000,
-    "zIndex": 5
+    "zIndex": 5,
+    "bindings": {"ProgressBar/value": 0.75},
+    "bindingsBool": {"Toggles/Sound/enabled": true},
+    "bindingsString": {"Card/Title/text": "Hello {user.name}"},
+    "bindingsColor": {"Theme/accent": "#FF3366"}
   }
 
 - Update a score binding and schedule hide in 1s:
@@ -67,6 +84,9 @@ Examples
     "zone": 4,
     "id": "badge",
     "bindings": {"score": "user.streak"},
+    "bindingsBool": {"meta/isNew": "true"},
+    "bindingsString": {"label": "Streak: {user.streak}"},
+    "bindingsColor": {"accent": "0xFF112233"},
     "autoHideMs": 1000
   }
 
@@ -98,6 +118,8 @@ Authoring Tips
 - Always set an id for overlays you plan to update or hide.
 - Prefer update for data changes; only show again when changing asset/artboard/state machine.
 - Use autoHideMs to chain queued items, or overlay_rive_hide to force a swap.
+- Use nested paths for view-model hierarchies (e.g., 'Profile/Card/Title/text').
+- Colors: prefer #AARRGGBB for explicit alpha; #RRGGBB assumes opaque.
 
 Details
 - Event fields
@@ -106,7 +128,7 @@ Details
   - id: String identifier for targeting the specific overlay within a zone. If omitted, a legacy id is synthesized and only one overlay is supported per zone.
   - align/fit/margin: Position and scaling of the overlay.
   - zIndex: Higher zIndex draws above lower ones within the same zone.
-  - bindings/useDataBinding: Numeric properties to bind via Rive data model; you can pass numbers or templated strings that resolve to numbers (e.g., '{user.streak}').
+  - bindings / bindingsBool / bindingsString / bindingsColor / useDataBinding: Properties to bind via Rive data model. Templates are supported and resolved via the templating service.
   - autoHideMs: Schedules a hide after the given duration. Applies to show and can be applied at update time as well.
   - minShowMs: Prevents an overlay from hiding before the specified duration has elapsed since it was shown.
   - policy (show only): 'replace' | 'queue' | 'ignore'. Controls behavior when the same id is already active.
@@ -141,6 +163,10 @@ Authoring Patterns
 - Replace vs. Update
   - Replace when switching to a different asset/artboard/state machine or when you want a fresh start.
   - Update when changing only numeric parameters or small state flags exposed via bindings.
+
+Rendering and Diagnostics
+- Overlays appear as soon as their controller is ready; host rebuilds on readiness to avoid invisible overlays.
+- When bindings fail to resolve, the system logs a one-time warning per instance and basic asset diagnostics (default artboard/state machine/view model presence).
 
 FAQ
 - Can a policy update a running animation instead of restarting on repeated overlay_rive?

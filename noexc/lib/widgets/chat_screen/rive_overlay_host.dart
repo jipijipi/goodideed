@@ -135,7 +135,10 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
     final id = update.id ?? 'zone-${widget.zone}-default';
     final inst = _instances[id];
     if (inst != null) {
-      inst.applyBindings(update.bindings);
+      if (update.bindings != null) inst.applyBindings(update.bindings!);
+      if (update.bindingsBool != null) inst.applyBoolBindings(update.bindingsBool!);
+      if (update.bindingsString != null) inst.applyStringBindings(update.bindingsString!);
+      if (update.bindingsColor != null) inst.applyColorBindings(update.bindingsColor!);
       if (update.autoHideAfter != null) {
         inst.scheduleHide(update.autoHideAfter!, _onInstanceHiddenCallback(id));
       }
@@ -214,8 +217,15 @@ class _OverlayInstance {
   DateTime? _earliestHideAt;
   ViewModelInstance? _viewModelInstance;
   final Map<String, ViewModelInstanceNumber> _numberProps = {};
+  final Map<String, dynamic> _boolProps = {};
+  final Map<String, dynamic> _stringProps = {};
+  final Map<String, dynamic> _colorProps = {};
   Map<String, double>? _pendingBindings;
+  Map<String, bool>? _pendingBindingsBool;
+  Map<String, String>? _pendingBindingsString;
+  Map<String, int>? _pendingBindingsColor;
   bool _bindingUnsupported = false;
+  bool _loggedMissingProps = false;
 
   _OverlayInstance({
     required this.id,
@@ -233,6 +243,9 @@ class _OverlayInstance {
       _earliestHideAt = DateTime.now().add(show.minShowAfter!);
     }
     _pendingBindings = show.bindings;
+    _pendingBindingsBool = show.bindingsBool;
+    _pendingBindingsString = show.bindingsString;
+    _pendingBindingsColor = show.bindingsColor;
     try {
       final loader = fileLoader ?? ((String asset) => File.asset(asset, riveFactory: Factory.rive));
       final file = await loader(show.asset);
@@ -246,10 +259,23 @@ class _OverlayInstance {
       _controller = controller;
       _loading = false;
 
-      if (show.useDataBinding || _pendingBindings != null) {
+      if (show.useDataBinding ||
+          _pendingBindings != null ||
+          _pendingBindingsBool != null ||
+          _pendingBindingsString != null ||
+          _pendingBindingsColor != null) {
         _initDataBinding();
         if (_pendingBindings != null) {
           applyBindings(_pendingBindings!);
+        }
+        if (_pendingBindingsBool != null) {
+          applyBoolBindings(_pendingBindingsBool!);
+        }
+        if (_pendingBindingsString != null) {
+          applyStringBindings(_pendingBindingsString!);
+        }
+        if (_pendingBindingsColor != null) {
+          applyColorBindings(_pendingBindingsColor!);
         }
       }
 
@@ -299,6 +325,18 @@ class _OverlayInstance {
       prop.dispose();
     }
     _numberProps.clear();
+    for (final prop in _boolProps.values) {
+      try { prop.dispose(); } catch (_) {}
+    }
+    _boolProps.clear();
+    for (final prop in _stringProps.values) {
+      try { prop.dispose(); } catch (_) {}
+    }
+    _stringProps.clear();
+    for (final prop in _colorProps.values) {
+      try { prop.dispose(); } catch (_) {}
+    }
+    _colorProps.clear();
     _viewModelInstance?.dispose();
     _viewModelInstance = null;
     _controller?.dispose();
@@ -320,6 +358,7 @@ class _OverlayInstance {
         'Data binding not available for this Rive asset: $e',
         component: LogComponent.ui,
       );
+      _logRiveDiagnostics(context: 'dataBind-failure');
     }
   }
 
@@ -334,14 +373,116 @@ class _OverlayInstance {
       _pendingBindings = bindings;
       return;
     }
+    final missing = <String>[];
     bindings.forEach((key, value) {
       var prop = _numberProps[key];
       prop ??= viewModel.number(key);
+      prop ??= _findNumberPropertyByPath(viewModel, key);
       if (prop != null) {
         _numberProps[key] = prop;
         prop.value = value;
+      } else {
+        missing.add(key);
       }
     });
+    if (missing.isNotEmpty && !_loggedMissingProps) {
+      _loggedMissingProps = true; // avoid spamming logs for repeated updates
+      logger.warning(
+        'Rive data binding: missing numeric properties ${missing.join(', ')}',
+        component: LogComponent.ui,
+      );
+      _logRiveDiagnostics(context: 'missing-props');
+    }
+  }
+
+  void applyBoolBindings(Map<String, bool> bindings) {
+    if (_controller == null) {
+      _pendingBindingsBool = bindings;
+      return;
+    }
+    _initDataBinding();
+    final viewModel = _viewModelInstance;
+    if (viewModel == null || _bindingUnsupported) {
+      _pendingBindingsBool = bindings;
+      return;
+    }
+    final missing = <String>[];
+    bindings.forEach((key, value) {
+      dynamic prop = _boolProps[key];
+      prop ??= viewModel.boolean(key);
+      prop ??= _findBoolPropertyByPath(viewModel, key);
+      if (prop != null) {
+        _boolProps[key] = prop;
+        prop.value = value;
+      } else {
+        missing.add(key);
+      }
+    });
+    if (missing.isNotEmpty && !_loggedMissingProps) {
+      _loggedMissingProps = true;
+      logger.warning('Rive data binding: missing bool properties ${missing.join(', ')}', component: LogComponent.ui);
+      _logRiveDiagnostics(context: 'missing-bools');
+    }
+  }
+
+  void applyStringBindings(Map<String, String> bindings) {
+    if (_controller == null) {
+      _pendingBindingsString = bindings;
+      return;
+    }
+    _initDataBinding();
+    final viewModel = _viewModelInstance;
+    if (viewModel == null || _bindingUnsupported) {
+      _pendingBindingsString = bindings;
+      return;
+    }
+    final missing = <String>[];
+    bindings.forEach((key, value) {
+      dynamic prop = _stringProps[key];
+      prop ??= viewModel.string(key);
+      prop ??= _findStringPropertyByPath(viewModel, key);
+      if (prop != null) {
+        _stringProps[key] = prop;
+        prop.value = value;
+      } else {
+        missing.add(key);
+      }
+    });
+    if (missing.isNotEmpty && !_loggedMissingProps) {
+      _loggedMissingProps = true;
+      logger.warning('Rive data binding: missing string properties ${missing.join(', ')}', component: LogComponent.ui);
+      _logRiveDiagnostics(context: 'missing-strings');
+    }
+  }
+
+  void applyColorBindings(Map<String, int> bindings) {
+    if (_controller == null) {
+      _pendingBindingsColor = bindings;
+      return;
+    }
+    _initDataBinding();
+    final viewModel = _viewModelInstance;
+    if (viewModel == null || _bindingUnsupported) {
+      _pendingBindingsColor = bindings;
+      return;
+    }
+    final missing = <String>[];
+    bindings.forEach((key, value) {
+      dynamic prop = _colorProps[key];
+      prop ??= viewModel.color(key);
+      prop ??= _findColorPropertyByPath(viewModel, key);
+      if (prop != null) {
+        _colorProps[key] = prop;
+        prop.value = value; // value is ARGB int
+      } else {
+        missing.add(key);
+      }
+    });
+    if (missing.isNotEmpty && !_loggedMissingProps) {
+      _loggedMissingProps = true;
+      logger.warning('Rive data binding: missing color properties ${missing.join(', ')}', component: LogComponent.ui);
+      _logRiveDiagnostics(context: 'missing-colors');
+    }
   }
 
   Widget build() {
@@ -352,5 +493,100 @@ class _OverlayInstance {
           ? const SizedBox.shrink()
           : RiveWidget(controller: _controller!, fit: fit),
     );
+  }
+
+  void _logRiveDiagnostics({required String context}) {
+    try {
+      final file = _file;
+      if (file == null) {
+        logger.debug('[RiveDiag:$context] No file loaded');
+        return;
+      }
+      // Default artboard diagnostics
+      final artboard = file.defaultArtboard();
+      final hasDefaultArtboard = artboard != null;
+      bool hasDefaultSM = false;
+      try {
+        hasDefaultSM = artboard?.defaultStateMachine() != null;
+      } catch (_) {}
+
+      int? vmCount;
+      bool hasDefaultVM = false;
+      try {
+        vmCount = file.viewModelCount;
+      } catch (_) {}
+      try {
+        final vm = hasDefaultArtboard ? file.defaultArtboardViewModel(artboard) : null;
+        hasDefaultVM = vm != null;
+        vm?.dispose();
+      } catch (_) {}
+
+      logger.info(
+        '[RiveDiag:$context] defaultArtboard=$hasDefaultArtboard, defaultStateMachine=$hasDefaultSM, viewModelCount=${vmCount ?? -1}, hasDefaultViewModel=$hasDefaultVM',
+        component: LogComponent.ui,
+      );
+    } catch (_) {
+      // Keep diagnostics non-fatal
+    }
+  }
+
+  // --- Nested path helpers ---
+
+  ViewModelInstance? _traverseToParent(ViewModelInstance root, List<String> segments) {
+    var current = root;
+    for (var i = 0; i < segments.length - 1; i++) {
+      final seg = segments[i].trim();
+      if (seg.isEmpty) return null;
+      final next = current.viewModel(seg);
+      if (next == null) {
+        return null;
+      }
+      current = next;
+    }
+    return current;
+  }
+
+  ViewModelInstanceNumber? _findNumberPropertyByPath(ViewModelInstance root, String key) {
+    try {
+      final parts = key.split('/');
+      if (parts.length < 2) return null;
+      final parent = _traverseToParent(root, parts);
+      return parent?.number(parts.last);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  dynamic _findBoolPropertyByPath(ViewModelInstance root, String key) {
+    try {
+      final parts = key.split('/');
+      if (parts.length < 2) return null;
+      final parent = _traverseToParent(root, parts);
+      return parent?.boolean(parts.last);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  dynamic _findStringPropertyByPath(ViewModelInstance root, String key) {
+    try {
+      final parts = key.split('/');
+      if (parts.length < 2) return null;
+      final parent = _traverseToParent(root, parts);
+      return parent?.string(parts.last);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  dynamic _findColorPropertyByPath(ViewModelInstance root, String key) {
+    try {
+      final parts = key.split('/');
+      if (parts.length < 2) return null;
+      final parent = _traverseToParent(root, parts);
+      return parent?.color(parts.last);
+    } catch (_) {
+      return null;
+    }
   }
 }

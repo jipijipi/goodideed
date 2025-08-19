@@ -13,7 +13,10 @@ class RiveOverlayShow extends RiveOverlayCommand {
   final Duration? autoHideAfter;
   final Duration? minShowAfter;
   final int zone;
-  final Map<String, double>? bindings; // Data bindings by property name
+  final Map<String, double>? bindings; // Numeric bindings
+  final Map<String, bool>? bindingsBool; // Boolean bindings
+  final Map<String, String>? bindingsString; // String bindings
+  final Map<String, int>? bindingsColor; // Color bindings (ARGB int)
   final bool useDataBinding;
   final String? id; // Optional overlay id for targeting and concurrency
   final String policy; // 'replace' | 'queue' | 'ignore'
@@ -28,6 +31,9 @@ class RiveOverlayShow extends RiveOverlayCommand {
     this.minShowAfter,
     this.zone = 2,
     this.bindings,
+    this.bindingsBool,
+    this.bindingsString,
+    this.bindingsColor,
     this.useDataBinding = false,
     this.id,
     this.policy = 'replace',
@@ -44,12 +50,18 @@ class RiveOverlayHide extends RiveOverlayCommand {
 
 class RiveOverlayUpdate extends RiveOverlayCommand {
   final int zone;
-  final Map<String, double> bindings;
+  final Map<String, double>? bindings;
+  final Map<String, bool>? bindingsBool;
+  final Map<String, String>? bindingsString;
+  final Map<String, int>? bindingsColor;
   final String? id;
   final Duration? autoHideAfter; // Optional: schedule hide after update
   RiveOverlayUpdate({
     required this.zone,
-    required this.bindings,
+    this.bindings,
+    this.bindingsBool,
+    this.bindingsString,
+    this.bindingsColor,
     this.id,
     this.autoHideAfter,
   });
@@ -70,6 +82,9 @@ class RiveOverlayService {
     Duration? minShowAfter,
     int zone = 2,
     Map<String, double>? bindings,
+    Map<String, bool>? bindingsBool,
+    Map<String, String>? bindingsString,
+    Map<String, int>? bindingsColor,
     bool useDataBinding = false,
     String? id,
     String policy = 'replace',
@@ -85,6 +100,9 @@ class RiveOverlayService {
         minShowAfter: minShowAfter,
         zone: zone,
         bindings: bindings,
+        bindingsBool: bindingsBool,
+        bindingsString: bindingsString,
+        bindingsColor: bindingsColor,
         useDataBinding: useDataBinding,
         id: id,
         policy: policy,
@@ -99,7 +117,10 @@ class RiveOverlayService {
 
   void update({
     required int zone,
-    required Map<String, double> bindings,
+    Map<String, double>? bindings,
+    Map<String, bool>? bindingsBool,
+    Map<String, String>? bindingsString,
+    Map<String, int>? bindingsColor,
     String? id,
     Duration? autoHideAfter,
   }) {
@@ -107,6 +128,9 @@ class RiveOverlayService {
       RiveOverlayUpdate(
         zone: zone,
         bindings: bindings,
+        bindingsBool: bindingsBool,
+        bindingsString: bindingsString,
+        bindingsColor: bindingsColor,
         id: id,
         autoHideAfter: autoHideAfter,
       ),

@@ -19,6 +19,11 @@ class RiveOverlayShow extends RiveOverlayCommand {
   final Map<String, int>? bindingsColor; // Color bindings (ARGB int)
   final String? artboard; // Optional artboard name
   final String? stateMachine; // Optional state machine name
+  // Data model selection (view model)
+  final String? dataModel; // View model name
+  final String? dataInstance; // Instance name (when using byName)
+  final String? dataInstanceMode; // 'default' | 'blank' | 'byName' | 'byIndex'
+  final int? dataInstanceIndex; // Used when mode is 'byIndex'
   final bool useDataBinding;
   final String? id; // Optional overlay id for targeting and concurrency
   final String policy; // 'replace' | 'queue' | 'ignore'
@@ -38,6 +43,10 @@ class RiveOverlayShow extends RiveOverlayCommand {
     this.bindingsColor,
     this.artboard,
     this.stateMachine,
+    this.dataModel,
+    this.dataInstance,
+    this.dataInstanceMode,
+    this.dataInstanceIndex,
     this.useDataBinding = false,
     this.id,
     this.policy = 'replace',
@@ -91,6 +100,10 @@ class RiveOverlayService {
     Map<String, int>? bindingsColor,
     String? artboard,
     String? stateMachine,
+    String? dataModel,
+    String? dataInstance,
+    String? dataInstanceMode,
+    int? dataInstanceIndex,
     bool useDataBinding = false,
     String? id,
     String policy = 'replace',
@@ -111,6 +124,10 @@ class RiveOverlayService {
         bindingsColor: bindingsColor,
         artboard: artboard,
         stateMachine: stateMachine,
+        dataModel: dataModel,
+        dataInstance: dataInstance,
+        dataInstanceMode: dataInstanceMode,
+        dataInstanceIndex: dataInstanceIndex,
         useDataBinding: useDataBinding,
         id: id,
         policy: policy,

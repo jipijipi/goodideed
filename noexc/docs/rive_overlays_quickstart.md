@@ -16,6 +16,13 @@ Events
     - bindingsColor: { nameOrPath: ARGB int | hex string (#RRGGBB | #AARRGGBB | 0xAARRGGBB | template) }
     - useDataBinding: bool (default false; auto-enabled when any bindings are provided)
   - Identity: id: string (recommended when you plan to update/hide or run multiple overlays in a zone)
+  - Selection (optional):
+    - artboard: string (artboard name; default uses file/editor default)
+    - stateMachine: string (state machine name; default uses editor default)
+    - dataModel: string (view model name; default uses artboard’s default)
+    - dataInstanceMode: 'default' | 'blank' | 'byName' | 'byIndex' (default 'default')
+    - dataInstance: string (when using mode 'byName')
+    - dataInstanceIndex: number (when using mode 'byIndex')
   - Control:
     - policy: 'replace' | 'queue' | 'ignore' (default 'replace')
     - autoHideMs: int (optional, schedules hide)
@@ -75,7 +82,11 @@ Examples
     "bindings": {"ProgressBar/value": 0.75},
     "bindingsBool": {"Toggles/Sound/enabled": true},
     "bindingsString": {"Card/Title/text": "Hello {user.name}"},
-    "bindingsColor": {"Theme/accent": "#FF3366"}
+    "bindingsColor": {"Theme/accent": "#FF3366"},
+    "artboard": "Main",
+    "stateMachine": "Loop",
+    "dataModel": "HUD",
+    "dataInstanceMode": "default"
   }
 
 - Update a score binding and schedule hide in 1s:
@@ -129,6 +140,8 @@ Details
   - align/fit/margin: Position and scaling of the overlay.
   - zIndex: Higher zIndex draws above lower ones within the same zone.
   - bindings / bindingsBool / bindingsString / bindingsColor / useDataBinding: Properties to bind via Rive data model. Templates are supported and resolved via the templating service.
+  - artboard / stateMachine: Selectors to pick which artboard/state machine to run. If omitted, defaults from the Rive file are used.
+  - dataModel / dataInstanceMode / dataInstance / dataInstanceIndex: View model and instance selection. If omitted, the artboard’s default view model is used and a default instance is assumed.
   - autoHideMs: Schedules a hide after the given duration. Applies to show and can be applied at update time as well.
   - minShowMs: Prevents an overlay from hiding before the specified duration has elapsed since it was shown.
   - policy (show only): 'replace' | 'queue' | 'ignore'. Controls behavior when the same id is already active.
@@ -167,6 +180,7 @@ Authoring Patterns
 Rendering and Diagnostics
 - Overlays appear as soon as their controller is ready; host rebuilds on readiness to avoid invisible overlays.
 - When bindings fail to resolve, the system logs a one-time warning per instance and basic asset diagnostics (default artboard/state machine/view model presence).
+ - Note on data model instances: Instance selection fields are accepted and future-proofed. In the current pinned runtime version, binding is performed via auto-bind; property updates still apply by name/path. When the runtime exposes explicit instance binding, these fields will take effect without breaking changes.
 
 FAQ
 - Can a policy update a running animation instead of restarting on repeated overlay_rive?

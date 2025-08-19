@@ -279,6 +279,8 @@ class _OverlayInstance {
           _pendingBindingsString != null ||
           _pendingBindingsColor != null) {
         _initDataBinding();
+        // Attempt to select a specific data model/instance when requested
+        _applyRequestedViewModelSelection(show);
         if (_pendingBindings != null) {
           applyBindings(_pendingBindings!);
         }
@@ -373,6 +375,59 @@ class _OverlayInstance {
         component: LogComponent.ui,
       );
       _logRiveDiagnostics(context: 'dataBind-failure');
+    }
+  }
+
+  void _applyRequestedViewModelSelection(RiveOverlayShow show) {
+    // If no selection requested, keep auto-bound instance
+    if (_viewModelInstance == null) return;
+    final file = _file;
+    if (file == null) return;
+    try {
+      // Resolve the artboard currently in effect
+      final artboard = file.defaultArtboard();
+      // Resolve the requested view model
+      ViewModel? vm;
+      if (show.dataModel != null && show.dataModel!.trim().isNotEmpty) {
+        vm = file.viewModelByName(show.dataModel!.trim());
+      } else if (artboard != null) {
+        vm = file.defaultArtboardViewModel(artboard);
+      }
+      if (vm == null) return; // fallback to auto-bound instance
+
+      // Create the requested instance
+      final mode = (show.dataInstanceMode ?? 'default').toLowerCase();
+      ViewModelInstance? requested;
+      switch (mode) {
+        case 'blank':
+          requested = vm.createInstance();
+          break;
+        case 'byname':
+          if (show.dataInstance != null) {
+            requested = vm.createInstanceByName(show.dataInstance!);
+          }
+          break;
+        case 'byindex':
+          if (show.dataInstanceIndex != null) {
+            requested = vm.createInstanceByIndex(show.dataInstanceIndex!);
+          }
+          break;
+        case 'default':
+        default:
+          requested = vm.createDefaultInstance();
+          break;
+      }
+
+      if (requested == null) {
+        logger.warning('Rive data model selection failed to create instance (mode=${show.dataInstanceMode ?? 'default'})', component: LogComponent.ui);
+        return;
+      }
+
+      // Current runtime does not expose explicit instance binding via DataBind.
+      // Keep the auto-bound instance and dispose the requested one to avoid leaks.
+      requested.dispose();
+    } catch (e) {
+      logger.warning('Rive data model selection encountered an error: $e', component: LogComponent.ui);
     }
   }
 

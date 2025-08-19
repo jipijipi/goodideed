@@ -145,6 +145,10 @@ class ChatService {
       final zone = (data['zone'] as int?) ?? 2;
       final artboard = data['artboard'] as String?;
       final stateMachine = data['stateMachine'] as String?;
+      final dataModel = data['dataModel'] as String?;
+      final dataInstance = data['dataInstance'] as String?;
+      final dataInstanceMode = data['dataInstanceMode'] as String?;
+      final dataInstanceIndex = data['dataInstanceIndex'] as int?;
       final autoHideMs = data['autoHideMs'] as int?;
       final minShowMs = data['minShowMs'] as int?;
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
@@ -171,6 +175,10 @@ class ChatService {
         bindingsColor: bindingsColor,
         artboard: artboard,
         stateMachine: stateMachine,
+        dataModel: dataModel,
+        dataInstance: dataInstance,
+        dataInstanceMode: dataInstanceMode,
+        dataInstanceIndex: dataInstanceIndex,
         useDataBinding: useDataBinding,
         id: id,
         policy: policy,

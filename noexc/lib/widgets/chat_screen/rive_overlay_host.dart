@@ -254,7 +254,21 @@ class _OverlayInstance {
         _loading = false;
         return;
       }
-      final controller = RiveWidgetController(file);
+      // Build controller with optional selectors when provided
+      RiveWidgetController controller;
+      if (show.artboard != null || show.stateMachine != null) {
+        controller = RiveWidgetController(
+          file,
+          artboardSelector: show.artboard != null
+              ? ArtboardSelector.byName(show.artboard!)
+              : ArtboardSelector.byDefault(),
+          stateMachineSelector: show.stateMachine != null
+              ? StateMachineSelector.byName(show.stateMachine!)
+              : StateMachineSelector.byDefault(),
+        );
+      } else {
+        controller = RiveWidgetController(file);
+      }
       _file = file;
       _controller = controller;
       _loading = false;

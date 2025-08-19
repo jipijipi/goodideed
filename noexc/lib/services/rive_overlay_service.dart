@@ -17,6 +17,8 @@ class RiveOverlayShow extends RiveOverlayCommand {
   final Map<String, bool>? bindingsBool; // Boolean bindings
   final Map<String, String>? bindingsString; // String bindings
   final Map<String, int>? bindingsColor; // Color bindings (ARGB int)
+  final String? artboard; // Optional artboard name
+  final String? stateMachine; // Optional state machine name
   final bool useDataBinding;
   final String? id; // Optional overlay id for targeting and concurrency
   final String policy; // 'replace' | 'queue' | 'ignore'
@@ -34,6 +36,8 @@ class RiveOverlayShow extends RiveOverlayCommand {
     this.bindingsBool,
     this.bindingsString,
     this.bindingsColor,
+    this.artboard,
+    this.stateMachine,
     this.useDataBinding = false,
     this.id,
     this.policy = 'replace',
@@ -85,6 +89,8 @@ class RiveOverlayService {
     Map<String, bool>? bindingsBool,
     Map<String, String>? bindingsString,
     Map<String, int>? bindingsColor,
+    String? artboard,
+    String? stateMachine,
     bool useDataBinding = false,
     String? id,
     String policy = 'replace',
@@ -103,6 +109,8 @@ class RiveOverlayService {
         bindingsBool: bindingsBool,
         bindingsString: bindingsString,
         bindingsColor: bindingsColor,
+        artboard: artboard,
+        stateMachine: stateMachine,
         useDataBinding: useDataBinding,
         id: id,
         policy: policy,

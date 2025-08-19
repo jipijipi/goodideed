@@ -143,6 +143,8 @@ class ChatService {
       final fitStr = data['fit'] as String?;
       final fit = _parseRiveFit(fitStr) ?? Fit.contain;
       final zone = (data['zone'] as int?) ?? 2;
+      final artboard = data['artboard'] as String?;
+      final stateMachine = data['stateMachine'] as String?;
       final autoHideMs = data['autoHideMs'] as int?;
       final minShowMs = data['minShowMs'] as int?;
       final autoHide = autoHideMs != null ? Duration(milliseconds: autoHideMs) : null;
@@ -167,6 +169,8 @@ class ChatService {
         bindingsBool: bindingsBool,
         bindingsString: bindingsString,
         bindingsColor: bindingsColor,
+        artboard: artboard,
+        stateMachine: stateMachine,
         useDataBinding: useDataBinding,
         id: id,
         policy: policy,

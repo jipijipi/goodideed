@@ -356,17 +356,17 @@ off.
  default to file’s defaults.
 - 9. Asset loader hook (overlays): Optional `assetLoader` parameter for referenc
 ed assets (no behavior change by default).
-- 10. Bubble bindings: Add optional data bindings for inline Rive bubbles (apply
++ 10. Bubble bindings: Add optional data bindings for inline Rive bubbles (apply
  before first frame).
 - 11. Selection (bubbles): Add optional `artboard`/`stateMachine` in bubble wrap
 per; maintain current fallback.
-- 12. Data model selection: Add optional `dataModel` and instance management for
++ 12. Data model selection: Add optional `dataModel` and instance management for
  overlays and bubbles.
 - 13. Broaden bindings (images/lists): Add image and list binding support where
 needed.
-- 14. RiveWidgetBuilder adoption: Migrate loaders to `RiveWidgetBuilder` for uni
++ 14. RiveWidgetBuilder adoption: Migrate loaders to `RiveWidgetBuilder` for uni
 fied selection/asset handling.
-- 15. New message schema (non-breaking): Introduce optional `rive` payload along
++ 15. New message schema (non-breaking): Introduce optional `rive` payload along
 side `imagePath` for bubbles; keep `.riv` detection path working.
 - 16. Default layout behavior: Enable `Fit.layout` by default for assets authore
 d with Layouts (behind a feature flag first).

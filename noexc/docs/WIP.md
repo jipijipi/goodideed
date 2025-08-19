@@ -335,3 +335,42 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
   ----
 
 45+(h/(500))*(-45-45)
+
+codex
+**Step-by-Step Plan**
+
+- 1. Overlay readiness fix: Trigger host rebuild when controller becomes ready (
+small internal change).
+- 2. Bubble key tweak: Use `ValueKey(message.id)` instead of `GlobalObjectKey(me
+ssage)` (safer, lighter).
+- 3. Failure diagnostics: Log available artboards/state machines/view models on
+selection/binding errors.
+- 4. Layout options (overlays): Add optional `fit` and `layoutScaleFactor` with
+current defaults preserved.
+- 5. Overlay bindings breadth: Support bool/string/color (keep numeric path work
+ing).
+- 6. Nested binding paths: Allow slash-delimited paths for overlay bindings.
+- 7. Rive file cache: Add opt‑in cache service to reuse `File` objects; default
+off.
+- 8. Selection (overlays): Add optional `artboard` and `stateMachine` selectors;
+ default to file’s defaults.
+- 9. Asset loader hook (overlays): Optional `assetLoader` parameter for referenc
+ed assets (no behavior change by default).
+- 10. Bubble bindings: Add optional data bindings for inline Rive bubbles (apply
+ before first frame).
+- 11. Selection (bubbles): Add optional `artboard`/`stateMachine` in bubble wrap
+per; maintain current fallback.
+- 12. Data model selection: Add optional `dataModel` and instance management for
+ overlays and bubbles.
+- 13. Broaden bindings (images/lists): Add image and list binding support where
+needed.
+- 14. RiveWidgetBuilder adoption: Migrate loaders to `RiveWidgetBuilder` for uni
+fied selection/asset handling.
+- 15. New message schema (non-breaking): Introduce optional `rive` payload along
+side `imagePath` for bubbles; keep `.riv` detection path working.
+- 16. Default layout behavior: Enable `Fit.layout` by default for assets authore
+d with Layouts (behind a feature flag first).
+- 17. Schema consolidation (breaking): Deprecate `.riv` via `imagePath`; require
+ `type: rive` with explicit fields.
+- 18. Referenced assets default (breaking): Switch pipeline to referenced assets
+ + required `assetLoader` where applicable.

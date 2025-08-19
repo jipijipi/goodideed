@@ -82,6 +82,9 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
       margin: show.margin,
       zIndex: show.zIndex,
       fileLoader: widget.fileLoader,
+      onReady: () {
+        if (mounted) setState(() {});
+      },
     );
     _instances[id] = inst;
     setState(() {});
@@ -202,6 +205,7 @@ class _OverlayInstance {
   EdgeInsets? margin;
   final int zIndex;
   final RiveFileLoader? fileLoader;
+  final VoidCallback? onReady; // Notify host to rebuild when controller becomes ready
 
   File? _file;
   RiveWidgetController? _controller;
@@ -220,6 +224,7 @@ class _OverlayInstance {
     required this.margin,
     required this.zIndex,
     required this.fileLoader,
+    this.onReady,
   });
 
   Future<void> start(RiveOverlayShow show) async {
@@ -247,6 +252,9 @@ class _OverlayInstance {
           applyBindings(_pendingBindings!);
         }
       }
+
+      // Notify host that controller is ready so the overlay can rebuild immediately
+      onReady?.call();
     } catch (e) {
       logger.error('Overlay Rive load failed: $e', component: LogComponent.ui);
       _loading = false;

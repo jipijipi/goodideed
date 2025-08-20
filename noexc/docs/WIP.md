@@ -331,7 +331,49 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "autoHideMs": 1200
   }
 
+{
+  "asset": "assets/animations/stopwatch.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "clock",
+  "policy": "ignore",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "start": 0,
+    "end": 24,
+    "stopwatch_x":-0.5,
+    "stopwatch_y":0.5
 
+  }
+}
+
+{
+  "zone": 4,
+  "id": "clock",
+  "bindings": {
+    "stopwatch_x":0.5,
+    "stopwatch_y":0.33
+  }
+}
+{
+  "zone": 4,
+  "id": "clock",
+  "bindings": {
+    "stopwatch_x":-0.5,
+    "stopwatch_y":0.5
+  }
+}
+{
+  "zone": 4,
+  "id": "clock",
+  "bindings": {
+    "start": "{task.startTime}",
+    "end": 24,
+    "stopwatch_x":0.5,
+    "stopwatch_y":0.33
+  }
+}
   ----
 
 45+(h/(500))*(-45-45)

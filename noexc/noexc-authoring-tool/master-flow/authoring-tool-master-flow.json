@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-20T21:45:05.203Z",
+  "lastUpdated": "2025-08-20T22:15:25.529Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-20T21:45:05.192Z"
+    "timestamp": "2025-08-20T22:15:25.521Z"
   },
   "nodes": [
     {
@@ -614,8 +614,8 @@
     {
       "id": "363",
       "position": {
-        "x": 1035.144808209904,
-        "y": 4442.144753029714
+        "x": 1472.963741832672,
+        "y": 4421.296232381011
       },
       "data": {
         "label": "Group 363",
@@ -630,23 +630,23 @@
       },
       "type": "group",
       "style": {
-        "width": 2161.445567756008,
-        "height": 4958
+        "width": 2179.6127480810424,
+        "height": 5728.999999999999
       },
-      "width": 2161,
-      "height": 4958,
+      "width": 2180,
+      "height": 5729,
       "selected": false,
       "positionAbsolute": {
-        "x": 1035.144808209904,
-        "y": 4442.144753029714
+        "x": 1472.963741832672,
+        "y": 4421.296232381011
       },
       "dragging": false
     },
     {
       "id": "409",
       "position": {
-        "x": 3529.4916677958645,
-        "y": 4437.631477880301
+        "x": 4044.2431167240447,
+        "y": 4028.6934437115615
       },
       "data": {
         "label": "Group 409",
@@ -661,16 +661,16 @@
       },
       "type": "group",
       "style": {
-        "width": 1971.007119734662,
-        "height": 6994.999999999999
+        "width": 1961.9713623321732,
+        "height": 7895
       },
-      "width": 1971,
-      "height": 6995,
+      "width": 1962,
+      "height": 7895,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 3529.4916677958645,
-        "y": 4437.631477880301
+        "x": 4044.2431167240447,
+        "y": 4028.6934437115615
       }
     },
     {
@@ -4298,8 +4298,8 @@
     {
       "id": "338",
       "position": {
-        "x": 852.1343426120663,
-        "y": 1142.7496680684335
+        "x": 896.07499671285,
+        "y": 2068.7582674516025
       },
       "data": {
         "label": "Select option:",
@@ -4313,8 +4313,8 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 1887.2791508219705,
-        "y": 5584.894421098147
+        "x": 2369.038738545522,
+        "y": 6490.054499832613
       },
       "dragging": true,
       "parentId": "363",
@@ -4323,8 +4323,8 @@
     {
       "id": "339",
       "position": {
-        "x": 46.658766139041745,
-        "y": 2660.6558866065234
+        "x": 109.03791943527676,
+        "y": 3586.6644859896924
       },
       "data": {
         "label": "Select option:",
@@ -4338,8 +4338,8 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 1081.8035743489459,
-        "y": 7102.800639636237
+        "x": 1582.0016612679487,
+        "y": 8007.960718370703
       },
       "dragging": true,
       "parentId": "363",
@@ -4348,8 +4348,8 @@
     {
       "id": "340",
       "position": {
-        "x": 418.4743584292585,
-        "y": 2437.3069376642725
+        "x": 462.41501253004185,
+        "y": 3363.3155370474415
       },
       "data": {
         "label": "Select option:",
@@ -4363,8 +4363,8 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 1453.6191666391626,
-        "y": 6879.451690693986
+        "x": 1935.3787543627138,
+        "y": 7784.611769428452
       },
       "dragging": true,
       "parentId": "363",
@@ -4373,8 +4373,8 @@
     {
       "id": "341",
       "position": {
-        "x": 823.6970151768339,
-        "y": 2195.6271912296907
+        "x": 867.6376692776171,
+        "y": 3121.6357906128596
       },
       "data": {
         "label": "Select option:",
@@ -4388,8 +4388,8 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 1858.841823386738,
-        "y": 6637.771944259404
+        "x": 2340.601411110289,
+        "y": 7542.93202299387
       },
       "dragging": true,
       "parentId": "363",
@@ -4398,8 +4398,8 @@
     {
       "id": "342",
       "position": {
-        "x": 1579.2901035638224,
-        "y": 1708.3069205324746
+        "x": 1623.2307576646058,
+        "y": 2634.3155199156436
       },
       "data": {
         "label": "Select option:",
@@ -4413,8 +4413,8 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 2614.4349117737265,
-        "y": 6150.451673562188
+        "x": 3096.194499497278,
+        "y": 7055.611752296654
       },
       "dragging": true,
       "parentId": "363",
@@ -4423,8 +4423,8 @@
     {
       "id": "343",
       "position": {
-        "x": 43.8335180921938,
-        "y": 2357.5590339466353
+        "x": 109.03791943527676,
+        "y": 3283.5676333298043
       },
       "data": {
         "label": "Welcome!",
@@ -4438,8 +4438,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1078.978326302098,
-        "y": 6799.703786976349
+        "x": 1582.0016612679487,
+        "y": 7704.863865710815
       },
       "dragging": true,
       "parentId": "363",
@@ -4448,8 +4448,8 @@
     {
       "id": "344",
       "position": {
-        "x": 412.46453216515147,
-        "y": 2152.600766919011
+        "x": 456.40518626593484,
+        "y": 3078.60936630218
       },
       "data": {
         "label": "Welcome!",
@@ -4463,8 +4463,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1447.6093403750556,
-        "y": 6594.745519948725
+        "x": 1929.3689280986068,
+        "y": 7499.905598683191
       },
       "dragging": true,
       "parentId": "363",
@@ -4473,8 +4473,8 @@
     {
       "id": "345",
       "position": {
-        "x": 824.6000024828556,
-        "y": 1905.6079057897823
+        "x": 868.5406565836388,
+        "y": 2831.6165051729513
       },
       "data": {
         "label": "Welcome!",
@@ -4488,8 +4488,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1859.7448106927598,
-        "y": 6347.752658819496
+        "x": 2341.504398416311,
+        "y": 7252.912737553962
       },
       "dragging": true,
       "parentId": "363",
@@ -4498,8 +4498,8 @@
     {
       "id": "346",
       "position": {
-        "x": 1576.5952385869018,
-        "y": 1414.885013280099
+        "x": 1620.5358926876852,
+        "y": 2340.893612663268
       },
       "data": {
         "label": "Welcome!",
@@ -4513,8 +4513,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 2611.740046796806,
-        "y": 5857.029766309813
+        "x": 3093.499634520357,
+        "y": 6762.189845044279
       },
       "dragging": true,
       "parentId": "363",
@@ -4523,8 +4523,8 @@
     {
       "id": "349",
       "position": {
-        "x": 1236.210412996687,
-        "y": 1679.6269255679344
+        "x": 1280.1510670974703,
+        "y": 2605.6355249511034
       },
       "data": {
         "label": "Welcome!",
@@ -4538,8 +4538,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 2271.355221206591,
-        "y": 6121.771678597648
+        "x": 2753.1148089301423,
+        "y": 7026.931757332114
       },
       "dragging": true,
       "parentId": "363",
@@ -4548,8 +4548,8 @@
     {
       "id": "350",
       "position": {
-        "x": 1241.4573661632658,
-        "y": 1965.5640662473606
+        "x": 1285.3980202640491,
+        "y": 2891.5726656305296
       },
       "data": {
         "label": "Select option:",
@@ -4563,8 +4563,8 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 2276.60217437317,
-        "y": 6407.708819277074
+        "x": 2758.361762096721,
+        "y": 7312.86889801154
       },
       "dragging": true,
       "parentId": "363",
@@ -4573,8 +4573,8 @@
     {
       "id": "351",
       "position": {
-        "x": 52.27908584820193,
-        "y": 3011.336811077149
+        "x": 133.6506675163189,
+        "y": 3896.659619626261
       },
       "data": {
         "label": "Route condition",
@@ -4583,12 +4583,12 @@
         "nodeId": "351"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 1087.423894058106,
-        "y": 7453.481564106863
+        "x": 1606.6144093489909,
+        "y": 8317.955852007271
       },
       "dragging": true,
       "parentId": "363",
@@ -4597,8 +4597,8 @@
     {
       "id": "352",
       "position": {
-        "x": 327.01586324575464,
-        "y": 3016.5748020966585
+        "x": 408.3874449138716,
+        "y": 3901.8976106457694
       },
       "data": {
         "label": "Route condition",
@@ -4607,12 +4607,12 @@
         "nodeId": "352"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 1362.1606714556588,
-        "y": 7458.719555126372
+        "x": 1881.3511867465436,
+        "y": 8323.19384302678
       },
       "dragging": true,
       "parentId": "363",
@@ -4621,8 +4621,8 @@
     {
       "id": "353",
       "position": {
-        "x": 617.3124251961588,
-        "y": 3025.329772619849
+        "x": 698.684006864276,
+        "y": 3910.65258116896
       },
       "data": {
         "label": "Route condition",
@@ -4631,12 +4631,12 @@
         "nodeId": "353"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 1652.4572334060629,
-        "y": 7467.474525649563
+        "x": 2171.647748696948,
+        "y": 8331.94881354997
       },
       "dragging": true,
       "parentId": "363",
@@ -4645,8 +4645,8 @@
     {
       "id": "356",
       "position": {
-        "x": 901.4779752894449,
-        "y": 3027.4002398845623
+        "x": 982.8495569575616,
+        "y": 3912.7230484336733
       },
       "data": {
         "label": "Route condition",
@@ -4655,12 +4655,12 @@
         "nodeId": "356"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 1936.622783499349,
-        "y": 7469.544992914276
+        "x": 2455.8132987902336,
+        "y": 8334.019280814684
       },
       "dragging": true,
       "parentId": "363",
@@ -4669,8 +4669,8 @@
     {
       "id": "357",
       "position": {
-        "x": 1210.227473395903,
-        "y": 3031.9939831620104
+        "x": 1291.59905506402,
+        "y": 3917.3167917111214
       },
       "data": {
         "label": "Route condition",
@@ -4679,12 +4679,12 @@
         "nodeId": "357"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 2245.372281605807,
-        "y": 7474.138736191724
+        "x": 2764.562796896692,
+        "y": 8338.613024092132
       },
       "dragging": true,
       "parentId": "363",
@@ -4693,8 +4693,8 @@
     {
       "id": "358",
       "position": {
-        "x": 1508.5713056885406,
-        "y": 3031.332421710429
+        "x": 1589.9428873566576,
+        "y": 3916.65523025954
       },
       "data": {
         "label": "Route condition",
@@ -4703,12 +4703,12 @@
         "nodeId": "358"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 2543.7161138984447,
-        "y": 7473.477174740143
+        "x": 3062.9066291893296,
+        "y": 8337.95146264055
       },
       "dragging": true,
       "parentId": "363",
@@ -4717,8 +4717,8 @@
     {
       "id": "359",
       "position": {
-        "x": 950.3953175741105,
-        "y": 4540
+        "x": 1108.3953175741108,
+        "y": 5337.999999999999
       },
       "data": {
         "label": "Welcome!",
@@ -4732,8 +4732,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1985.5401257840147,
-        "y": 8982.144753029714
+        "x": 2581.3590594067828,
+        "y": 9759.29623238101
       },
       "dragging": true,
       "parentId": "363",
@@ -4742,8 +4742,8 @@
     {
       "id": "391",
       "position": {
-        "x": 1797.2790858482022,
-        "y": 3032.109950479761
+        "x": 1878.6506675163191,
+        "y": 3917.432759028873
       },
       "data": {
         "label": "Route condition",
@@ -4752,13 +4752,13 @@
         "nodeId": "391"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 2832.4238940581063,
-        "y": 7474.254703509475
+        "x": 3351.614409348991,
+        "y": 8338.728991409884
       },
       "parentId": "363",
       "extent": "parent"
@@ -4766,8 +4766,8 @@
     {
       "id": "410",
       "position": {
-        "x": 678.7185538444799,
-        "y": 3375.5240041175257
+        "x": 760.090135512597,
+        "y": 4260.846812666637
       },
       "data": {
         "label": "Data action",
@@ -4785,12 +4785,12 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 400,
+      "width": 310,
+      "height": 402,
       "selected": false,
       "positionAbsolute": {
-        "x": 1713.863362054384,
-        "y": 7817.668757147239
+        "x": 2233.053877345269,
+        "y": 8682.143045047647
       },
       "dragging": true,
       "parentId": "363",
@@ -4799,8 +4799,8 @@
     {
       "id": "428",
       "position": {
-        "x": 416.9572357636466,
-        "y": 0
+        "x": 818.9572357636466,
+        "y": 594
       },
       "data": {
         "label": "Data action",
@@ -4836,8 +4836,8 @@
       "height": 584,
       "selected": false,
       "positionAbsolute": {
-        "x": 1452.1020439735507,
-        "y": 4442.144753029714
+        "x": 2291.9209775963186,
+        "y": 5015.296232381011
       },
       "dragging": true,
       "parentId": "363",
@@ -4846,8 +4846,8 @@
     {
       "id": "429",
       "position": {
-        "x": 682.1459651364376,
-        "y": 3864.083058278191
+        "x": 763.5175468045545,
+        "y": 4749.405866827302
       },
       "data": {
         "label": "Data action",
@@ -4872,12 +4872,12 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 524,
+      "width": 310,
+      "height": 526,
       "selected": false,
       "positionAbsolute": {
-        "x": 1717.2907733463417,
-        "y": 8306.227811307905
+        "x": 2236.4812886372265,
+        "y": 9170.702099208313
       },
       "dragging": true,
       "parentId": "363",
@@ -4886,8 +4886,8 @@
     {
       "id": "460",
       "position": {
-        "x": 824.2429835126309,
-        "y": 417.71368514045207
+        "x": 808.2429835126309,
+        "y": 1421.713685140452
       },
       "data": {
         "label": "Data action",
@@ -4912,12 +4912,212 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 588,
+      "width": 308,
+      "height": 539,
       "selected": false,
       "positionAbsolute": {
-        "x": 1859.387791722535,
-        "y": 4859.858438170166
+        "x": 2281.206725345303,
+        "y": 5843.009917521463
+      },
+      "dragging": true,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "462",
+      "position": {
+        "x": 109.03791943527676,
+        "y": 2744.3548394816717
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "462",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": 3,
+                "end": 24
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1582.0016612679487,
+        "y": 7165.651071862682
+      },
+      "dragging": true,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "463",
+      "position": {
+        "x": 431.6646632006882,
+        "y": 2579.021469651847
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "463",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": 9,
+                "end": 24
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1904.6284050333602,
+        "y": 7000.317702032858
+      },
+      "dragging": true,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "464",
+      "position": {
+        "x": 917.2650615184793,
+        "y": 2344.4221566089873
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "464",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": 14,
+                "end": 24
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2390.2288033511513,
+        "y": 6765.718388989998
+      },
+      "dragging": true,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "465",
+      "position": {
+        "x": 1290.7338065891336,
+        "y": 2111.695694813431
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "465",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": 19,
+                "end": 24
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2763.6975484218055,
+        "y": 6532.991927194442
+      },
+      "dragging": true,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "466",
+      "position": {
+        "x": 1633.6187266450784,
+        "y": 1808.961227496322
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "466",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": 22,
+                "end": 24
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 3106.5824684777504,
+        "y": 6230.257459877333
       },
       "dragging": true,
       "parentId": "363",
@@ -4926,8 +5126,8 @@
     {
       "id": "193",
       "position": {
-        "x": 653.4155603872714,
-        "y": 3735.012516018479
+        "x": 577.4155603872714,
+        "y": 4425.012516018478
       },
       "data": {
         "label": "Data action",
@@ -4945,13 +5145,13 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 400,
+      "width": 310,
+      "height": 402,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 4133.781471306717,
-        "y": 8292.398535157292
+        "x": 4788.446842300942,
+        "y": 8662.191166217071
       },
       "parentId": "409",
       "extent": "parent"
@@ -4959,8 +5159,8 @@
     {
       "id": "360",
       "position": {
-        "x": 458.97276911547306,
-        "y": 4931.633636089134
+        "x": 398.97276911547306,
+        "y": 5943.633636089135
       },
       "data": {
         "label": "Select option:",
@@ -4969,22 +5169,22 @@
         "nodeId": "360"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
       "positionAbsolute": {
-        "x": 3939.338680034919,
-        "y": 9489.019655227947
+        "x": 4610.004051029144,
+        "y": 10180.812286287728
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "361",
       "position": {
-        "x": 311.83220235539966,
-        "y": 5282.893166089893
+        "x": 251.8322023553992,
+        "y": 6294.893166089894
       },
       "data": {
         "label": "Welcome!",
@@ -4994,22 +5194,22 @@
         "content": "All right!"
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
-        "x": 3792.1981132748456,
-        "y": 9840.279185228706
+        "x": 4462.86348426907,
+        "y": 10532.071816288488
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "362",
       "position": {
-        "x": 654.8781911702736,
-        "y": 5293.370530331679
+        "x": 594.8781911702736,
+        "y": 6305.37053033168
       },
       "data": {
         "label": "Welcome!",
@@ -5019,22 +5219,22 @@
         "content": "Oh boy..."
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
-        "x": 4135.2441020897195,
-        "y": 9850.756549470492
+        "x": 4805.909473083944,
+        "y": 10542.549180530274
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "365",
       "position": {
-        "x": 305.76819638284314,
-        "y": 6697.999999999999
+        "x": 261.7681963828436,
+        "y": 7636
       },
       "data": {
         "label": "Route condition",
@@ -5043,12 +5243,12 @@
         "nodeId": "365"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 3811.134107302289,
-        "y": 11280.386019138812
+        "x": 4472.799478296514,
+        "y": 11873.178650198593
       },
       "dragging": true,
       "parentId": "409",
@@ -5057,8 +5257,8 @@
     {
       "id": "366",
       "position": {
-        "x": 636.7273868450538,
-        "y": 5747.393258232333
+        "x": 576.7273868450538,
+        "y": 6759.393258232334
       },
       "data": {
         "label": "Data action",
@@ -5086,22 +5286,22 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 759,
+      "width": 310,
+      "height": 761,
       "selected": false,
       "positionAbsolute": {
-        "x": 4117.0932977645,
-        "y": 10304.779277371146
+        "x": 4787.7586687587245,
+        "y": 10996.571908430928
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "367",
       "position": {
-        "x": 674.5957678506002,
-        "y": 4344.746878006452
+        "x": 614.5957678506002,
+        "y": 5356.746878006452
       },
       "data": {
         "label": "Route condition",
@@ -5110,13 +5310,13 @@
         "nodeId": "367"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 4204.087435646465,
-        "y": 8275.737461481956
+        "x": 4825.627049764271,
+        "y": 9593.925528205045
       },
       "parentId": "409",
       "extent": "parent"
@@ -5124,8 +5324,8 @@
     {
       "id": "368",
       "position": {
-        "x": 1049.934921663269,
-        "y": 5078.903987854342
+        "x": 989.934921663269,
+        "y": 6090.903987854343
       },
       "data": {
         "label": "Welcome!",
@@ -5135,22 +5335,22 @@
         "content": "Your deadline is before your starting time, that's weird|||Try again"
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent",
       "positionAbsolute": {
-        "x": 4530.300832582715,
-        "y": 9636.290006993155
+        "x": 5200.96620357694,
+        "y": 10328.082638052936
       }
     },
     {
       "id": "378",
       "position": {
-        "x": 407.4559877875263,
-        "y": 25
+        "x": 621.4559877875263,
+        "y": 65
       },
       "data": {
         "label": "Welcome!",
@@ -5165,28 +5365,28 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3442.537666644422,
-        "y": 4682.215694647989
+        "x": 4832.487269701197,
+        "y": 4302.1786501985935
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "38",
       "position": {
-        "x": 456.0763422595228,
-        "y": 4603.241380753413
+        "x": 396.0763422595228,
+        "y": 5615.241380753412
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
-        "x": 3936.4422531789687,
-        "y": 9160.627399892226
+        "x": 4607.1076241731935,
+        "y": 9852.420030952006
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent",
       "data": {
@@ -5201,8 +5401,8 @@
     {
       "id": "380",
       "position": {
-        "x": 30.757502835373543,
-        "y": 2173.496714941284
+        "x": 136.7575028353731,
+        "y": 2697.496714941284
       },
       "data": {
         "label": "Welcome!",
@@ -5216,18 +5416,18 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3065.8391816922694,
-        "y": 6830.712409589273
+        "x": 4347.788784749044,
+        "y": 6934.675365139878
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "381",
       "position": {
-        "x": 308.50951665943876,
-        "y": 2031.1107381583188
+        "x": 508.5095166594383,
+        "y": 2681.110738158319
       },
       "data": {
         "label": "Welcome!",
@@ -5241,18 +5441,18 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3343.5911955163347,
-        "y": 6688.326432806308
+        "x": 4719.540798573109,
+        "y": 6918.289388356912
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "382",
       "position": {
-        "x": 611.9008543688651,
-        "y": 1900.9349883324276
+        "x": 847.9008543688651,
+        "y": 2680.9349883324276
       },
       "data": {
         "label": "Welcome!",
@@ -5266,18 +5466,18 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3646.982533225761,
-        "y": 6558.150682980417
+        "x": 5058.932136282536,
+        "y": 6918.113638531021
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "383",
       "position": {
-        "x": 913.7963502207999,
-        "y": 1799.7036175599987
+        "x": 1193.7963502208004,
+        "y": 2687.7036175599987
       },
       "data": {
         "label": "Welcome!",
@@ -5291,18 +5491,18 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3948.878029077696,
-        "y": 6456.919312207988
+        "x": 5404.827632134471,
+        "y": 6924.882267758592
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "385",
       "position": {
-        "x": 1189.731282186623,
-        "y": 1687.785328191635
+        "x": 1517.7312821866235,
+        "y": 2683.785328191635
       },
       "data": {
         "label": "Welcome!",
@@ -5312,22 +5512,22 @@
         "content": "When exactly?"
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
-        "x": 4224.812961043519,
-        "y": 6345.001022839624
+        "x": 5728.762564100294,
+        "y": 6920.9639783902285
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "386",
       "position": {
-        "x": 25,
-        "y": 1077.428898749521
+        "x": 191,
+        "y": 2075.428898749521
       },
       "data": {
         "label": "Select option:",
@@ -5338,22 +5538,22 @@
         "contentKey": "user.choose.deadline"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
       "positionAbsolute": {
-        "x": 3060.081678856896,
-        "y": 5734.64459339751
+        "x": 4402.031281913671,
+        "y": 6312.6075489481145
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "387",
       "position": {
-        "x": 335.79083971850514,
-        "y": 1079.732694345881
+        "x": 501.7908397185056,
+        "y": 2077.732694345881
       },
       "data": {
         "label": "Select option:",
@@ -5364,22 +5564,22 @@
         "contentKey": "user.choose.deadline"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
       "positionAbsolute": {
-        "x": 3370.872518575401,
-        "y": 5736.94838899387
+        "x": 4712.822121632176,
+        "y": 6314.911344544475
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "388",
       "position": {
-        "x": 623.7141141344309,
-        "y": 1077.7921595307416
+        "x": 789.7141141344309,
+        "y": 2075.7921595307416
       },
       "data": {
         "label": "Select option:",
@@ -5390,22 +5590,22 @@
         "contentKey": "user.choose.deadline"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
       "positionAbsolute": {
-        "x": 3658.795792991327,
-        "y": 5735.007854178731
+        "x": 5000.745396048102,
+        "y": 6312.970809729335
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "389",
       "position": {
-        "x": 914.8062359350197,
-        "y": 1068.0734265683313
+        "x": 1080.8062359350197,
+        "y": 2066.0734265683313
       },
       "data": {
         "label": "Select option:",
@@ -5416,22 +5616,22 @@
         "contentKey": "user.choose.deadline"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
       "positionAbsolute": {
-        "x": 3949.8879147919156,
-        "y": 5725.28912121632
+        "x": 5291.83751784869,
+        "y": 6303.252076766925
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "390",
       "position": {
-        "x": 1189.4470443721643,
-        "y": 1072.9727765379948
+        "x": 1355.4470443721639,
+        "y": 2070.972776537995
       },
       "data": {
         "label": "Select option:",
@@ -5442,13 +5642,13 @@
         "contentKey": "user.choose.deadline"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 4224.52872322906,
-        "y": 5730.188471185984
+        "x": 5566.478326285835,
+        "y": 6308.151426736588
       },
       "parentId": "409",
       "extent": "parent"
@@ -5456,8 +5656,8 @@
     {
       "id": "395",
       "position": {
-        "x": 413.1902356612809,
-        "y": 324.3391728347815
+        "x": 627.1902356612809,
+        "y": 1544.3391728347815
       },
       "data": {
         "label": "Route condition",
@@ -5470,18 +5670,18 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": 3448.271914518177,
-        "y": 4981.5548674827705
+        "x": 4838.221517574952,
+        "y": 5781.517823033375
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "396",
       "position": {
-        "x": 28.934289753077792,
-        "y": 2479.3642988549345
+        "x": 144.9342897530778,
+        "y": 3599.3642988549345
       },
       "data": {
         "label": "Select option:",
@@ -5495,18 +5695,18 @@
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": 3064.0159686099737,
-        "y": 7136.579993502924
+        "x": 4355.9655716667485,
+        "y": 7836.542949053528
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "397",
       "position": {
-        "x": 320.17984986923057,
-        "y": 2387.8076030827788
+        "x": 526.1798498692306,
+        "y": 3551.8076030827788
       },
       "data": {
         "label": "Select option:",
@@ -5516,22 +5716,22 @@
         "storeKey": "task.deadlineTime"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
       "positionAbsolute": {
-        "x": 3355.2615287261265,
-        "y": 7045.023297730768
+        "x": 4737.211131782901,
+        "y": 7788.986253281372
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "398",
       "position": {
-        "x": 608.4312429661318,
-        "y": 2321.1401857009805
+        "x": 854.4312429661313,
+        "y": 3549.1401857009805
       },
       "data": {
         "label": "Select option:",
@@ -5544,10 +5744,10 @@
       "width": 248,
       "height": 212,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 3643.5129218230277,
-        "y": 6978.35588034897
+        "x": 5065.462524879802,
+        "y": 7786.318835899574
       },
       "parentId": "409",
       "extent": "parent"
@@ -5555,8 +5755,8 @@
     {
       "id": "399",
       "position": {
-        "x": 904.4346389822467,
-        "y": 2233.2702349310157
+        "x": 1208.4346389822467,
+        "y": 3537.2702349310157
       },
       "data": {
         "label": "Select option:",
@@ -5569,10 +5769,10 @@
       "width": 248,
       "height": 212,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 3939.5163178391426,
-        "y": 6890.485929579005
+        "x": 5419.465920895917,
+        "y": 7774.448885129609
       },
       "parentId": "409",
       "extent": "parent"
@@ -5580,8 +5780,8 @@
     {
       "id": "400",
       "position": {
-        "x": 1192.2379072284698,
-        "y": 2221.984644814507
+        "x": 1532.2379072284693,
+        "y": 3527.984644814507
       },
       "data": {
         "label": "Select option:",
@@ -5591,13 +5791,13 @@
         "storeKey": "task.deadlineTime"
       },
       "type": "editable",
-      "width": 248,
-      "height": 212,
+      "width": 250,
+      "height": 214,
       "selected": false,
-      "dragging": false,
+      "dragging": true,
       "positionAbsolute": {
-        "x": 4227.319586085366,
-        "y": 6879.200339462496
+        "x": 5743.26918914214,
+        "y": 7765.163295013101
       },
       "parentId": "409",
       "extent": "parent"
@@ -5605,8 +5805,8 @@
     {
       "id": "402",
       "position": {
-        "x": 64.30403437223595,
-        "y": 2850.9425781603477
+        "x": 28.304034372235947,
+        "y": 4118.942578160348
       },
       "data": {
         "label": "Route condition",
@@ -5615,22 +5815,22 @@
         "nodeId": "402"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 3099.385713229132,
-        "y": 7508.158272808337
+        "x": 4239.335316285907,
+        "y": 8356.121228358941
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "403",
       "position": {
-        "x": 340.9570266060864,
-        "y": 2861.601049990367
+        "x": 320.9570266060864,
+        "y": 4115.601049990366
       },
       "data": {
         "label": "Route condition",
@@ -5639,22 +5839,22 @@
         "nodeId": "403"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 3376.0387054629823,
-        "y": 7518.816744638356
+        "x": 4531.988308519757,
+        "y": 8352.77970018896
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "404",
       "position": {
-        "x": 653.956649451351,
-        "y": 2865.556928187869
+        "x": 633.956649451351,
+        "y": 4119.556928187869
       },
       "data": {
         "label": "Route condition",
@@ -5663,22 +5863,22 @@
         "nodeId": "404"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 3689.038328308247,
-        "y": 7522.772622835858
+        "x": 4844.987931365022,
+        "y": 8356.735578386462
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "405",
       "position": {
-        "x": 964.5736542271084,
-        "y": 2867.1235960793447
+        "x": 944.5736542271079,
+        "y": 4121.123596079344
       },
       "data": {
         "label": "Route condition",
@@ -5687,22 +5887,22 @@
         "nodeId": "405"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 3999.6553330840043,
-        "y": 7524.339290727334
+        "x": 5155.604936140779,
+        "y": 8358.302246277937
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "406",
       "position": {
-        "x": 1278.7884937058038,
-        "y": 2872.4769693630924
+        "x": 1258.7884937058043,
+        "y": 4126.476969363093
       },
       "data": {
         "label": "Route condition",
@@ -5711,22 +5911,22 @@
         "nodeId": "406"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 4313.8701725627,
-        "y": 7529.692664011081
+        "x": 5469.819775619475,
+        "y": 8363.655619561687
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "408",
       "position": {
-        "x": 1588.007119734662,
-        "y": 2870.3557115554204
+        "x": 1568.0071197346624,
+        "y": 4124.3557115554195
       },
       "data": {
         "label": "Route condition",
@@ -5735,22 +5935,22 @@
         "nodeId": "408"
       },
       "type": "editable",
-      "width": 248,
-      "height": 162,
+      "width": 250,
+      "height": 164,
       "selected": false,
       "positionAbsolute": {
-        "x": 4623.088798591558,
-        "y": 7527.571406203409
+        "x": 5779.038401648333,
+        "y": 8361.534361754013
       },
-      "dragging": false,
+      "dragging": true,
       "parentId": "409",
       "extent": "parent"
     },
     {
       "id": "430",
       "position": {
-        "x": 177.71051853503604,
-        "y": 4027.4742950654772
+        "x": 577.7105185350356,
+        "y": 4889.474295065478
       },
       "data": {
         "label": "Data action",
@@ -5782,15 +5982,15 @@
       "parentId": "409",
       "extent": "parent",
       "positionAbsolute": {
-        "x": 3707.2021863309005,
-        "y": 7958.464878540982
+        "x": 4788.741800448706,
+        "y": 9126.652945264072
       }
     },
     {
       "id": "441",
       "position": {
-        "x": 913.813059922466,
-        "y": 293.8379585298899
+        "x": 596.0235796400684,
+        "y": 388.6792225242634
       },
       "data": {
         "label": "Data action",
@@ -5813,7 +6013,9 @@
               "useDataBinding": true,
               "bindings": {
                 "start": "{task.startTime}",
-                "end": 24
+                "end": 24,
+                "stopwatch_x": -0.5,
+                "stopwatch_y": 1
               }
             }
           }
@@ -5827,15 +6029,15 @@
       "parentId": "409",
       "extent": "parent",
       "positionAbsolute": {
-        "x": 4443.3047277183305,
-        "y": 4731.469436410191
+        "x": 4807.054861553739,
+        "y": 4625.857872722857
       }
     },
     {
       "id": "442",
       "position": {
-        "x": 271.6090692044663,
-        "y": 5926.66106571831
+        "x": 211.60906920446632,
+        "y": 6938.66106571831
       },
       "data": {
         "label": "Data action",
@@ -5861,16 +6063,256 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 544,
+      "width": 310,
+      "height": 546,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
-        "x": 3801.100737000331,
-        "y": 10364.29254359861
+        "x": 4422.640351118137,
+        "y": 11175.839715916904
       },
       "parentId": "409",
       "extent": "parent"
+    },
+    {
+      "id": "467",
+      "position": {
+        "x": 71.22969898741576,
+        "y": 2992.9139716963573
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "467",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": "{task.startTime}",
+                "end": 6
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 524,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4282.260980901086,
+        "y": 7230.092621894951
+      },
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "468",
+      "position": {
+        "x": 482.93662702315396,
+        "y": 3032.1238392813993
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "468",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": "{task.startTime}",
+                "end": 12
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 472,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4693.967908936825,
+        "y": 7269.302489479993
+      },
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "469",
+      "position": {
+        "x": 832.7307172044802,
+        "y": 3031.9296240731337
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "469",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": "{task.startTime}",
+                "end": 18
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5043.761999118151,
+        "y": 7269.108274271727
+      },
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "470",
+      "position": {
+        "x": 1175.6793184055477,
+        "y": 3028.037033699804
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "470",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": "{task.startTime}",
+                "end": 21
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5386.710600319218,
+        "y": 7265.215683898397
+      },
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "471",
+      "position": {
+        "x": 1520.275396704409,
+        "y": 3033.867096022158
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "471",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "start": "{task.startTime}",
+                "end": 23
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 472,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 5731.30667861808,
+        "y": 7271.045746220751
+      },
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent"
+    },
+    {
+      "id": "472",
+      "position": {
+        "x": 584.9849761870864,
+        "y": 1026.776642181946
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "472",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "clock",
+              "bindings": {
+                "stopwatch_x": 0.5,
+                "stopwatch_y": 0.33
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "dragging": true,
+      "parentId": "409",
+      "extent": "parent",
+      "positionAbsolute": {
+        "x": 4796.016258100757,
+        "y": 5263.9552923805395
+      }
     },
     {
       "id": "411",
@@ -9798,63 +10240,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "338",
-      "sourceHandle": null,
-      "target": "343",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Late night"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-338-343"
-    },
-    {
-      "zIndex": 1001,
-      "source": "338",
-      "sourceHandle": null,
-      "target": "344",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Morning"
-      },
-      "id": "reactflow__edge-338-344",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "338",
-      "sourceHandle": null,
-      "target": "345",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Afternoon"
-      },
-      "id": "reactflow__edge-338-345",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "338",
-      "sourceHandle": null,
-      "target": "349",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Evening"
-      },
-      "id": "reactflow__edge-338-349",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "343",
       "sourceHandle": null,
       "target": "339",
@@ -10258,24 +10643,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "338",
-      "sourceHandle": null,
-      "target": "346",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Night"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-338-346"
-    },
-    {
-      "zIndex": 1001,
       "source": "367",
       "sourceHandle": null,
       "target": "38",
@@ -10548,19 +10915,6 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-376-373",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "386",
-      "sourceHandle": null,
-      "target": "380",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Late night"
-      },
-      "id": "reactflow__edge-386-380",
       "selected": false
     },
     {
@@ -10887,61 +11241,6 @@
         "filter": "none"
       },
       "id": "reactflow__edge-395-390"
-    },
-    {
-      "zIndex": 1001,
-      "source": "380",
-      "sourceHandle": null,
-      "target": "396",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-380-396",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "381",
-      "sourceHandle": null,
-      "target": "397",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-381-397",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "382",
-      "sourceHandle": null,
-      "target": "398",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-382-398",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "383",
-      "sourceHandle": null,
-      "target": "399",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-383-399",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "385",
-      "sourceHandle": null,
-      "target": "400",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-385-400",
-      "selected": false
     },
     {
       "zIndex": 1001,
@@ -11906,17 +12205,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "441",
-      "sourceHandle": null,
-      "target": "395",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-441-395",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "366",
       "sourceHandle": null,
       "target": "365",
@@ -12484,6 +12772,331 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-337-428",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "338",
+      "sourceHandle": null,
+      "target": "462",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Late night"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-338-462"
+    },
+    {
+      "zIndex": 1001,
+      "source": "462",
+      "sourceHandle": null,
+      "target": "343",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-462-343",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "338",
+      "sourceHandle": null,
+      "target": "463",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Morning"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-338-463"
+    },
+    {
+      "zIndex": 1001,
+      "source": "463",
+      "sourceHandle": null,
+      "target": "344",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-463-344",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "338",
+      "sourceHandle": null,
+      "target": "464",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Afternoon"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-338-464"
+    },
+    {
+      "zIndex": 1001,
+      "source": "338",
+      "sourceHandle": null,
+      "target": "465",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Evening"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-338-465"
+    },
+    {
+      "zIndex": 1001,
+      "source": "338",
+      "sourceHandle": null,
+      "target": "466",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Night"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-338-466"
+    },
+    {
+      "zIndex": 1001,
+      "source": "464",
+      "sourceHandle": null,
+      "target": "345",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-464-345",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "465",
+      "sourceHandle": null,
+      "target": "349",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-465-349",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "466",
+      "sourceHandle": null,
+      "target": "346",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-466-346",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "386",
+      "sourceHandle": null,
+      "target": "380",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Late night"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-386-380"
+    },
+    {
+      "zIndex": 1001,
+      "source": "380",
+      "sourceHandle": null,
+      "target": "467",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-380-467"
+    },
+    {
+      "zIndex": 1001,
+      "source": "381",
+      "sourceHandle": null,
+      "target": "468",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-381-468"
+    },
+    {
+      "zIndex": 1001,
+      "source": "382",
+      "sourceHandle": null,
+      "target": "469",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-382-469"
+    },
+    {
+      "zIndex": 1001,
+      "source": "383",
+      "sourceHandle": null,
+      "target": "470",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-383-470"
+    },
+    {
+      "zIndex": 1001,
+      "source": "385",
+      "sourceHandle": null,
+      "target": "471",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-385-471"
+    },
+    {
+      "zIndex": 1001,
+      "source": "471",
+      "sourceHandle": null,
+      "target": "400",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-471-400",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "470",
+      "sourceHandle": null,
+      "target": "399",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-470-399",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "469",
+      "sourceHandle": null,
+      "target": "398",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-469-398",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "468",
+      "sourceHandle": null,
+      "target": "397",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-468-397",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "467",
+      "sourceHandle": null,
+      "target": "396",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-467-396",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "441",
+      "sourceHandle": null,
+      "target": "472",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-441-472"
+    },
+    {
+      "zIndex": 1001,
+      "source": "472",
+      "sourceHandle": null,
+      "target": "395",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-472-395",
       "selected": false
     }
   ]

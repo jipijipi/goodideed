@@ -215,6 +215,8 @@ class _OverlayInstance {
   bool _loading = false;
   Timer? _hideTimer;
   DateTime? _earliestHideAt;
+  bool _hasPainted = false;
+  int _framesPainted = 0;
   ViewModelInstance? _viewModelInstance;
   final Map<String, ViewModelInstanceNumber> _numberProps = {};
   final Map<String, dynamic> _boolProps = {};
@@ -224,6 +226,10 @@ class _OverlayInstance {
   Map<String, bool>? _pendingBindingsBool;
   Map<String, String>? _pendingBindingsString;
   Map<String, int>? _pendingBindingsColor;
+  Map<String, double>? _deferredBindings;
+  Map<String, bool>? _deferredBindingsBool;
+  Map<String, String>? _deferredBindingsString;
+  Map<String, int>? _deferredBindingsColor;
   bool _bindingUnsupported = false;
   bool _loggedMissingProps = false;
 
@@ -282,21 +288,39 @@ class _OverlayInstance {
         // Attempt to select a specific data model/instance when requested
         _applyRequestedViewModelSelection(show);
         if (_pendingBindings != null) {
-          applyBindings(_pendingBindings!);
+          // Apply initial bindings before first paint (do not defer)
+          applyBindings(_pendingBindings!, deferIfPrePaint: false);
         }
         if (_pendingBindingsBool != null) {
-          applyBoolBindings(_pendingBindingsBool!);
+          applyBoolBindings(_pendingBindingsBool!, deferIfPrePaint: false);
         }
         if (_pendingBindingsString != null) {
-          applyStringBindings(_pendingBindingsString!);
+          applyStringBindings(_pendingBindingsString!, deferIfPrePaint: false);
         }
         if (_pendingBindingsColor != null) {
-          applyColorBindings(_pendingBindingsColor!);
+          applyColorBindings(_pendingBindingsColor!, deferIfPrePaint: false);
         }
       }
 
       // Notify host that controller is ready so the overlay can rebuild immediately
       onReady?.call();
+
+      // Observe the next two frames: only allow updates after 2 paints to ensure
+      // the initial state is visible for at least one full frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _framesPainted++;
+        if (_framesPainted >= 2) {
+          _hasPainted = true;
+          _flushDeferredUpdates();
+        } else {
+          // schedule observation of the second frame
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _framesPainted++;
+            _hasPainted = true; // allow updates after second frame
+            _flushDeferredUpdates();
+          });
+        }
+      });
     } catch (e) {
       logger.error('Overlay Rive load failed: $e', component: LogComponent.ui);
       _loading = false;
@@ -431,15 +455,20 @@ class _OverlayInstance {
     }
   }
 
-  void applyBindings(Map<String, double> bindings) {
-    if (_controller == null) {
-      _pendingBindings = bindings;
+  void applyBindings(Map<String, double> bindings, {bool deferIfPrePaint = true}) {
+    if (_controller == null || (!_hasPainted && deferIfPrePaint)) {
+      // Defer updates until controller is ready and first frame has painted
+      _deferredBindings ??= <String, double>{};
+      _deferredBindings!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     _initDataBinding();
     final viewModel = _viewModelInstance;
     if (viewModel == null || _bindingUnsupported) {
-      _pendingBindings = bindings;
+      _deferredBindings ??= <String, double>{};
+      _deferredBindings!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     final missing = <String>[];
@@ -464,15 +493,19 @@ class _OverlayInstance {
     }
   }
 
-  void applyBoolBindings(Map<String, bool> bindings) {
-    if (_controller == null) {
-      _pendingBindingsBool = bindings;
+  void applyBoolBindings(Map<String, bool> bindings, {bool deferIfPrePaint = true}) {
+    if (_controller == null || (!_hasPainted && deferIfPrePaint)) {
+      _deferredBindingsBool ??= <String, bool>{};
+      _deferredBindingsBool!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     _initDataBinding();
     final viewModel = _viewModelInstance;
     if (viewModel == null || _bindingUnsupported) {
-      _pendingBindingsBool = bindings;
+      _deferredBindingsBool ??= <String, bool>{};
+      _deferredBindingsBool!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     final missing = <String>[];
@@ -494,15 +527,19 @@ class _OverlayInstance {
     }
   }
 
-  void applyStringBindings(Map<String, String> bindings) {
-    if (_controller == null) {
-      _pendingBindingsString = bindings;
+  void applyStringBindings(Map<String, String> bindings, {bool deferIfPrePaint = true}) {
+    if (_controller == null || (!_hasPainted && deferIfPrePaint)) {
+      _deferredBindingsString ??= <String, String>{};
+      _deferredBindingsString!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     _initDataBinding();
     final viewModel = _viewModelInstance;
     if (viewModel == null || _bindingUnsupported) {
-      _pendingBindingsString = bindings;
+      _deferredBindingsString ??= <String, String>{};
+      _deferredBindingsString!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     final missing = <String>[];
@@ -524,15 +561,19 @@ class _OverlayInstance {
     }
   }
 
-  void applyColorBindings(Map<String, int> bindings) {
-    if (_controller == null) {
-      _pendingBindingsColor = bindings;
+  void applyColorBindings(Map<String, int> bindings, {bool deferIfPrePaint = true}) {
+    if (_controller == null || (!_hasPainted && deferIfPrePaint)) {
+      _deferredBindingsColor ??= <String, int>{};
+      _deferredBindingsColor!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     _initDataBinding();
     final viewModel = _viewModelInstance;
     if (viewModel == null || _bindingUnsupported) {
-      _pendingBindingsColor = bindings;
+      _deferredBindingsColor ??= <String, int>{};
+      _deferredBindingsColor!.addAll(bindings);
+      _scheduleDeferredFlush();
       return;
     }
     final missing = <String>[];
@@ -552,6 +593,48 @@ class _OverlayInstance {
       logger.warning('Rive data binding: missing color properties ${missing.join(', ')}', component: LogComponent.ui);
       _logRiveDiagnostics(context: 'missing-colors');
     }
+  }
+
+  void _flushDeferredUpdates() {
+    if (_deferredBindings != null && _deferredBindings!.isNotEmpty) {
+      final map = _deferredBindings!;
+      _deferredBindings = null;
+      applyBindings(map);
+    }
+    if (_deferredBindingsBool != null && _deferredBindingsBool!.isNotEmpty) {
+      final map = _deferredBindingsBool!;
+      _deferredBindingsBool = null;
+      applyBoolBindings(map);
+    }
+    if (_deferredBindingsString != null && _deferredBindingsString!.isNotEmpty) {
+      final map = _deferredBindingsString!;
+      _deferredBindingsString = null;
+      applyStringBindings(map);
+    }
+    if (_deferredBindingsColor != null && _deferredBindingsColor!.isNotEmpty) {
+      final map = _deferredBindingsColor!;
+      _deferredBindingsColor = null;
+      applyColorBindings(map);
+    }
+    // If anything remains (e.g., view model still not ready), try again next frame
+    if ((_deferredBindings != null && _deferredBindings!.isNotEmpty) ||
+        (_deferredBindingsBool != null && _deferredBindingsBool!.isNotEmpty) ||
+        (_deferredBindingsString != null && _deferredBindingsString!.isNotEmpty) ||
+        (_deferredBindingsColor != null && _deferredBindingsColor!.isNotEmpty)) {
+      _scheduleDeferredFlush();
+    }
+  }
+
+  bool _deferredFlushScheduled = false;
+  void _scheduleDeferredFlush() {
+    if (_deferredFlushScheduled) return;
+    _deferredFlushScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _deferredFlushScheduled = false;
+      if (_hasPainted) {
+        _flushDeferredUpdates();
+      }
+    });
   }
 
   Widget build() {

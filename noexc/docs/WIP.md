@@ -447,3 +447,26 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "object_y": 0.33
   }
 }
+{
+  "asset": "assets/animations/throttle.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "throttle",
+  "policy": "ignore",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "start": 0,
+    "end": 24,
+    "object_x": -0.5,
+    "object_y": 1
+  }
+}
+{
+  "zone": 4,
+  "id": "throttle",
+  "bindings": {
+    "object_x": 0.5,
+    "object_y": 0.33
+  }
+}

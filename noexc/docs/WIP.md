@@ -470,3 +470,17 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "object_y": 0.33
   }
 }
+
+{
+  "asset": "assets/animations/artboard_test_fullscreen.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "test",
+  "policy": "ignore",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "x1": 0,
+    "y1": 0
+  }
+}

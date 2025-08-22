@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-21T17:19:18.280Z",
+  "lastUpdated": "2025-08-22T07:09:32.116Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-21T17:19:18.261Z"
+    "timestamp": "2025-08-22T07:09:32.073Z"
   },
   "nodes": [
     {
@@ -178,11 +178,11 @@
       },
       "type": "group",
       "style": {
-        "width": 694.3838086371661,
+        "width": 958.056404779657,
         "height": 2166.9182475500857,
         "zIndex": 999
       },
-      "width": 694,
+      "width": 958,
       "height": 2167,
       "selected": false,
       "dragging": false,
@@ -1693,6 +1693,51 @@
       "positionAbsolute": {
         "x": -2518.9451934867716,
         "y": -6017.6557399991425
+      },
+      "dragging": true,
+      "parentId": "148",
+      "extent": "parent"
+    },
+    {
+      "id": "475",
+      "position": {
+        "x": 551.8759091731818,
+        "y": 360.0869450577211
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "475",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive",
+            "data": {
+              "asset": "assets/animations/artboard_test_fullscreen.riv",
+              "zone": 2,
+              "align": "center",
+              "id": "test",
+              "policy": "ignore",
+              "fit": "contain",
+              "useDataBinding": true,
+              "bindings": {
+                "x1": 0,
+                "y1": 0
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 629,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -2210.307325892607,
+        "y": -5664.900569705238
       },
       "dragging": true,
       "parentId": "148",
@@ -4833,7 +4878,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 577,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 2236.9702666732633,
@@ -4872,8 +4917,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 472,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 2236.4812886372265,
@@ -4913,7 +4958,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 2281.206725345303,
@@ -6022,8 +6067,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 591,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "parentId": "409",
@@ -6064,7 +6109,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 514,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -6104,7 +6149,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 4282.260980901086,
@@ -6304,7 +6349,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "parentId": "409",
@@ -7026,7 +7071,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 525,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 8573.206215500846,
@@ -7071,7 +7116,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 608,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 8601.87703056726,
@@ -7112,7 +7157,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 566,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -7329,8 +7374,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 581,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 10705.7278389237,
@@ -7486,8 +7531,8 @@
         ]
       },
       "type": "editable",
-      "width": 309,
-      "height": 612,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -7552,7 +7597,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 8571.897748042365,
@@ -7728,7 +7773,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 561,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 6891.389341394707,
@@ -7767,7 +7812,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 6952.637397844791,
@@ -7944,7 +7989,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 6887.923393584819,
@@ -7984,7 +8029,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 6884.976441920133,
@@ -12752,22 +12797,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "292",
-      "sourceHandle": null,
-      "target": "290",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-292-290"
-    },
-    {
-      "zIndex": 1001,
       "source": "373",
       "sourceHandle": null,
       "target": "459",
@@ -13221,6 +13250,33 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-474-49",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "292",
+      "sourceHandle": null,
+      "target": "475",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-292-475"
+    },
+    {
+      "zIndex": 1001,
+      "source": "475",
+      "sourceHandle": null,
+      "target": "290",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-475-290",
       "selected": false
     }
   ]

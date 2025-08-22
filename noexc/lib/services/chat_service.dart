@@ -145,6 +145,13 @@ class ChatService {
       final zone = (data['zone'] as int?) ?? 2;
       final artboard = data['artboard'] as String?;
       final stateMachine = data['stateMachine'] as String?;
+      // Optional layout scale for Fit.layout
+      final layoutScaleFactor = () {
+        final raw = data['layoutScaleFactor'];
+        if (raw is num) return raw.toDouble();
+        if (raw is String) return double.tryParse(raw);
+        return null;
+      }();
       final dataModel = data['dataModel'] as String?;
       final dataInstance = data['dataInstance'] as String?;
       final dataInstanceMode = data['dataInstanceMode'] as String?;
@@ -166,6 +173,7 @@ class ChatService {
         asset: asset,
         align: align,
         fit: fit,
+        layoutScaleFactor: layoutScaleFactor,
         autoHideAfter: autoHide,
         minShowAfter: minShow,
         zone: zone,
@@ -393,6 +401,8 @@ class ChatService {
 
   Fit? _parseRiveFit(String? value) {
     switch (value) {
+      case 'layout':
+        return Fit.layout;
       case 'contain':
         return Fit.contain;
       case 'cover':

@@ -9,6 +9,8 @@ Events
 - overlay_rive: Show an overlay
   - Required: asset: string (path to .riv)
   - Common: zone: int (default 2), align: string, fit: string
+    - fit: supports "layout" for Rive Layouts, plus contain|cover|fill|fitWidth|fitHeight|none|scaleDown
+    - layoutScaleFactor: number (optional; scales content when using fit: "layout")
   - Data (all optional):
     - bindings: { nameOrPath: number | string }
     - bindingsBool: { nameOrPath: boolean | 0 | 1 | string('true'|'false'|'0'|'1'|template) }
@@ -86,7 +88,9 @@ Examples
     "artboard": "Main",
     "stateMachine": "Loop",
     "dataModel": "HUD",
-    "dataInstanceMode": "default"
+    "dataInstanceMode": "default",
+    "fit": "layout",
+    "layoutScaleFactor": 1.0
   }
 
 - Update a score binding and schedule hide in 1s:

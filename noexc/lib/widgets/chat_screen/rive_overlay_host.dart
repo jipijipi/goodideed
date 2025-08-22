@@ -79,6 +79,7 @@ class _RiveOverlayHostState extends State<RiveOverlayHost>
       id: id,
       align: show.align,
       fit: show.fit,
+      layoutScaleFactor: show.layoutScaleFactor,
       margin: show.margin,
       zIndex: show.zIndex,
       fileLoader: widget.fileLoader,
@@ -205,6 +206,7 @@ class _OverlayInstance {
   final String id;
   Alignment align;
   Fit fit;
+  final double? layoutScaleFactor;
   EdgeInsets? margin;
   final int zIndex;
   final RiveFileLoader? fileLoader;
@@ -237,6 +239,7 @@ class _OverlayInstance {
     required this.id,
     required this.align,
     required this.fit,
+    required this.layoutScaleFactor,
     required this.margin,
     required this.zIndex,
     required this.fileLoader,
@@ -643,7 +646,11 @@ class _OverlayInstance {
       alignment: align,
       child: _loading || _controller == null
           ? const SizedBox.shrink()
-          : RiveWidget(controller: _controller!, fit: fit),
+          : RiveWidget(
+              controller: _controller!,
+              fit: fit,
+              layoutScaleFactor: layoutScaleFactor ?? 1.0,
+            ),
     );
   }
 

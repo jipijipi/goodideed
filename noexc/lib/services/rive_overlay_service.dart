@@ -9,6 +9,7 @@ class RiveOverlayShow extends RiveOverlayCommand {
   final String asset;
   final Alignment align;
   final Fit fit;
+  final double? layoutScaleFactor;
   final EdgeInsets? margin;
   final Duration? autoHideAfter;
   final Duration? minShowAfter;
@@ -33,6 +34,7 @@ class RiveOverlayShow extends RiveOverlayCommand {
     required this.asset,
     this.align = Alignment.center,
     this.fit = Fit.contain,
+    this.layoutScaleFactor,
     this.margin,
     this.autoHideAfter,
     this.minShowAfter,
@@ -90,6 +92,7 @@ class RiveOverlayService {
     required String asset,
     Alignment align = Alignment.center,
     Fit fit = Fit.contain,
+    double? layoutScaleFactor,
     EdgeInsets? margin,
     Duration? autoHideAfter,
     Duration? minShowAfter,
@@ -114,6 +117,7 @@ class RiveOverlayService {
         asset: asset,
         align: align,
         fit: fit,
+        layoutScaleFactor: layoutScaleFactor,
         margin: margin,
         autoHideAfter: autoHideAfter,
         minShowAfter: minShowAfter,

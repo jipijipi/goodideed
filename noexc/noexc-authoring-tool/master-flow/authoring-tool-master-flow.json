@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-22T10:25:43.129Z",
+  "lastUpdated": "2025-08-22T13:49:42.814Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-22T10:25:43.110Z"
+    "timestamp": "2025-08-22T13:49:42.793Z"
   },
   "nodes": [
     {
@@ -178,11 +178,11 @@
       },
       "type": "group",
       "style": {
-        "width": 956.6290727599899,
+        "width": 948.0548850596997,
         "height": 2166.9182475500857,
         "zIndex": 999
       },
-      "width": 957,
+      "width": 948,
       "height": 2167,
       "selected": false,
       "dragging": false,
@@ -1701,8 +1701,8 @@
     {
       "id": "475",
       "position": {
-        "x": 550.4485771535146,
-        "y": 431.45354604109343
+        "x": 541.8743894532245,
+        "y": 516.1236495814601
       },
       "data": {
         "label": "Data action",
@@ -1716,28 +1716,30 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/artboard_test_fullscreen.riv",
+              "asset": "assets/animations/nesting.riv",
               "zone": 2,
               "align": "center",
-              "id": "test",
+              "id": "mom",
               "policy": "ignore",
-              "fit": "layout",
+              "artboard": "mom_artboard",
+              "dataModel": "mom_model",
+              "fit": "contain",
               "useDataBinding": true,
               "bindings": {
-                "x1": 0,
-                "y1": 0
+                "nested_child_model/opacity": 0.5,
+                "nested_sibling_model/opacity": 0
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 540,
+      "width": 310,
+      "height": 626,
       "selected": false,
       "positionAbsolute": {
-        "x": -2211.734657912274,
-        "y": -5593.533968721866
+        "x": -2220.3088456125643,
+        "y": -5508.863865181499
       },
       "dragging": true,
       "parentId": "148",
@@ -4878,8 +4880,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 505,
+      "width": 308,
+      "height": 503,
       "selected": false,
       "positionAbsolute": {
         "x": 2236.9702666732633,

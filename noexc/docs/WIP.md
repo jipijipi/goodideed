@@ -484,3 +484,28 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "y1": 0
   }
 }
+
+  "event": "overlay_rive",
+{
+  "asset": "assets/animations/nesting.riv",
+  "zone": 2,
+  "align": "center",
+  "id": "mom",
+  "policy": "ignore",
+  "artboard": "mom_artboard",
+  "dataModel": "mom_model",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "nested_child_model/opacity": 0.5,
+    "nested_sibling_model/opacity": 0
+  }
+}
+  "event": "overlay_rive_update",
+{
+  "zone": 4,
+  "id": "mom",
+  "bindings": {
+    "nested_child_model/opacity": 1
+  }
+}

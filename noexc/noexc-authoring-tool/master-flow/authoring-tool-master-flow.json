@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-22T13:49:42.814Z",
+  "lastUpdated": "2025-08-27T14:25:28.270Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-22T13:49:42.793Z"
+    "timestamp": "2025-08-27T14:25:28.262Z"
   },
   "nodes": [
     {
@@ -1716,7 +1716,7 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/nesting.riv",
+              "asset": "assets/animations/nestingr.riv",
               "zone": 2,
               "align": "center",
               "id": "mom",
@@ -1735,7 +1735,7 @@
       },
       "type": "editable",
       "width": 310,
-      "height": 626,
+      "height": 402,
       "selected": false,
       "positionAbsolute": {
         "x": -2220.3088456125643,
@@ -4881,7 +4881,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 503,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 2236.9702666732633,
@@ -6071,7 +6071,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "dragging": true,
       "parentId": "409",
@@ -7074,7 +7074,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 8573.206215500846,
@@ -7775,8 +7775,8 @@
         ]
       },
       "type": "editable",
-      "width": 309,
-      "height": 471,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 6891.389341394707,

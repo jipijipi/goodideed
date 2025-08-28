@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-27T14:25:28.270Z",
+  "lastUpdated": "2025-08-28T16:27:04.684Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-27T14:25:28.262Z"
+    "timestamp": "2025-08-28T16:27:04.652Z"
   },
   "nodes": [
     {
@@ -518,21 +518,21 @@
     {
       "id": "28",
       "position": {
-        "x": 1910.4248618925976,
-        "y": -4873.187460178299
+        "x": 1847.3852004070382,
+        "y": -4870.385697445608
       },
       "type": "group",
       "style": {
-        "width": 769.4030255654502,
+        "width": 804.1688816625301,
         "height": 2291,
         "zIndex": 999
       },
-      "width": 769,
+      "width": 804,
       "height": 2291,
       "selected": false,
       "positionAbsolute": {
-        "x": 1910.4248618925976,
-        "y": -4873.187460178299
+        "x": 1847.3852004070382,
+        "y": -4870.385697445608
       },
       "dragging": false,
       "data": {
@@ -1734,8 +1734,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 402,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": -2220.3088456125643,
@@ -3737,8 +3737,8 @@
         "y": 1898
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
         "x": 1327.0923454344913,
@@ -3752,45 +3752,55 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "165",
-        "content": "{user.name}? Really? |||All right {user.name}"
+        "content": "{user.name}? Really? |||All right {user.name}, I can work with that.|||Let's see if I can work with you."
       }
     },
     {
-      "id": "301",
+      "id": "476",
       "position": {
-        "x": 15.005646292776419,
-        "y": 1436.743432333692
+        "x": 396.1688816625301,
+        "y": 1084.9953695182776
       },
       "data": {
-        "label": "Data action",
-        "category": "dataAction",
-        "nodeLabel": "Data Action",
-        "nodeId": "301",
-        "dataActions": [
-          {
-            "type": "trigger",
-            "key": "fx",
-            "value": "",
-            "event": "overlay_rive_update",
-            "data": {
-              "zone": 4,
-              "bindings": {
-                "hand_x": 250,
-                "hand_y": 250
-              }
-            }
-          }
-        ]
+        "label": "Route condition",
+        "category": "autoroute",
+        "nodeLabel": "Conditional Route",
+        "nodeId": "476"
       },
       "type": "editable",
-      "width": 308,
-      "height": 400,
+      "width": 248,
+      "height": 162,
       "selected": false,
-      "dragging": true,
       "positionAbsolute": {
-        "x": 1925.430508185374,
-        "y": -3436.4440278446073
+        "x": 2306.5937435551277,
+        "y": -3788.1920906600217
       },
+      "dragging": true,
+      "parentId": "28",
+      "extent": "parent"
+    },
+    {
+      "id": "477",
+      "position": {
+        "x": 0,
+        "y": 295.49213038660764
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "477",
+        "content": "So you want to build habits?|||Adorable|||Gym for a week? Meditation for two days? Then straight back to procrastination?|||Well, lucky you, I’m here to help you stick to whatever you usually fail at"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1847.3852004070382,
+        "y": -4574.893567059
+      },
+      "dragging": true,
       "parentId": "28",
       "extent": "parent"
     },
@@ -3816,8 +3826,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "1",
-        "contentKey": "bot.introduce.character.casual",
-        "content": "Hi|||You must be new here"
+        "contentKey": "",
+        "content": "Hey you made it.|||I was beginning to think you’d never bother."
       }
     },
     {
@@ -3827,8 +3837,8 @@
         "y": 337.09050976456115
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 249,
+      "height": 259,
       "selected": false,
       "positionAbsolute": {
         "x": 225.4258121809866,
@@ -3842,8 +3852,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "160",
-        "contentKey": "bot.introduce.self.friendly",
-        "content": "I'm Tristopher|||But my friends call me Trist"
+        "contentKey": "",
+        "content": "I'm Tristopher|||But all my friends call me *Trist*"
       }
     },
     {
@@ -3911,7 +3921,7 @@
         "x": 1322.9982595547158,
         "y": -3223.6296405711923
       },
-      "dragging": true,
+      "dragging": false,
       "parentId": "28",
       "extent": "parent",
       "data": {
@@ -3920,7 +3930,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "163",
         "contentKey": "bot.request.name.casual",
-        "content": "So, what should I call you?"
+        "content": "And what shall I call you?"
       }
     },
     {
@@ -3930,8 +3940,8 @@
         "y": 25
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 249,
+      "height": 259,
       "selected": false,
       "positionAbsolute": {
         "x": 391.18752034472305,
@@ -3980,8 +3990,8 @@
         "y": 1356.903969369509
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -8304,14 +8314,6 @@
   ],
   "edges": [
     {
-      "id": "reactflow__edge-5-6",
-      "source": "5",
-      "target": "6",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
       "id": "reactflow__edge-6-7",
       "source": "6",
       "target": "7",
@@ -8327,21 +8329,8 @@
       "label": "Hi Tristopher!",
       "contentKey": "user.greet.character.friendly",
       "data": {
-        "label": "Hi Tristopher!",
-        "contentKey": "user.greet.character.friendly"
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-7-9",
-      "source": "7",
-      "target": "9",
-      "type": "custom",
-      "label": "Whatever",
-      "contentKey": "user.greet.character.snarky",
-      "data": {
-        "label": "Whatever",
-        "contentKey": "user.greet.character.snarky"
+        "label": "Hi Trist!",
+        "contentKey": ""
       },
       "selected": false
     },
@@ -8525,14 +8514,6 @@
       "id": "reactflow__edge-57-58",
       "source": "57",
       "target": "58",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-8-9",
-      "source": "8",
-      "target": "9",
       "type": "custom",
       "data": {},
       "selected": false
@@ -10349,33 +10330,6 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-146-299",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "9",
-      "target": "301",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-9-301",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "301",
-      "sourceHandle": null,
-      "target": "10",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-301-10",
       "selected": false
     },
     {
@@ -13280,6 +13234,97 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-475-290",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "8",
+      "target": "476",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-8-476",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "7",
+      "target": "476",
+      "type": "custom",
+      "label": "Whatever",
+      "contentKey": "user.greet.character.snarky",
+      "data": {
+        "label": "Nice to meet you Trist !",
+        "contentKey": ""
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-7-476",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "476",
+      "sourceHandle": null,
+      "target": "9",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-476-9",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "9",
+      "target": "10",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-9-10"
+    },
+    {
+      "zIndex": 1001,
+      "source": "5",
+      "target": "477",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-5-477",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "477",
+      "sourceHandle": null,
+      "target": "6",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-477-6",
       "selected": false
     }
   ]

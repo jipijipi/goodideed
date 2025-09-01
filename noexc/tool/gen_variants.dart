@@ -249,6 +249,7 @@ Future<_ProcessOutcome> _processTarget(
     exemplars: exemplars,
     existing: existing,
     prompt: prompt,
+    request: genResult.request,
     llmResult: genResult.raw,
     accepted: validated,
   );
@@ -667,7 +668,8 @@ class _PromptBuilder {
 class _GenResult {
   final List<String> variants;
   final Map<String, dynamic> raw;
-  _GenResult(this.variants, this.raw);
+  final Map<String, dynamic> request; // full request body sent to provider
+  _GenResult(this.variants, this.raw, this.request);
 }
 
 class _Generator {
@@ -684,11 +686,18 @@ class _Generator {
         n,
         (i) => '[$ck] Variant ${i + 1} at $now ||| Second bubble (optional)',
       );
+      final request = {
+        'model': config.provider.model,
+        'temperature': config.gen.temperature,
+        'top_p': config.gen.topP,
+        'n': config.gen.numVariants,
+        'prompt': prompt,
+      };
       return _GenResult(variants, {
         'mock': true,
         'prompt': prompt,
         'model': config.provider.model,
-      });
+      }, request);
     }
 
     final apiKey = Platform.environment[config.provider.apiKeyEnv] ?? '';
@@ -701,13 +710,14 @@ class _Generator {
     client.connectionTimeout = Duration(milliseconds: config.provider.timeoutMs);
 
     // Generic JSON contract: { model, temperature, top_p, prompt: <object> }
-    final payload = jsonEncode({
+    final payloadObj = {
       'model': config.provider.model,
       'temperature': config.gen.temperature,
       'top_p': config.gen.topP,
       'n': config.gen.numVariants,
       'prompt': prompt,
-    });
+    };
+    final payload = jsonEncode(payloadObj);
 
     for (int attempt = 0;; attempt++) {
       try {
@@ -720,7 +730,7 @@ class _Generator {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           final obj = jsonDecode(body) as Map<String, dynamic>;
           final variants = _extractVariants(obj);
-          return _GenResult(variants, obj);
+          return _GenResult(variants, obj, payloadObj);
         } else {
           throw HttpException('HTTP ${res.statusCode}: $body');
         }
@@ -838,6 +848,7 @@ class _ArchiveRecord {
     required List<String> exemplars,
     required List<String> existing,
     required Map<String, dynamic> prompt,
+    required Map<String, dynamic> request,
     required Map<String, dynamic> llmResult,
     required List<String> accepted,
   }) {
@@ -858,6 +869,7 @@ class _ArchiveRecord {
         'existingVariants': existing,
       },
       'prompt': prompt,
+      'request': request,
       'response': llmResult,
       'acceptedVariants': accepted,
     };

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-08-28T16:27:04.684Z",
+  "lastUpdated": "2025-09-01T10:35:02.299Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-08-28T16:27:04.652Z"
+    "timestamp": "2025-09-01T10:35:02.265Z"
   },
   "nodes": [
     {
@@ -3737,8 +3737,8 @@
         "y": 1898
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": 1327.0923454344913,
@@ -3837,8 +3837,8 @@
         "y": 337.09050976456115
       },
       "type": "editable",
-      "width": 249,
-      "height": 259,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": 225.4258121809866,
@@ -3990,8 +3990,8 @@
         "y": 1356.903969369509
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -9342,7 +9342,9 @@
       "target": "219",
       "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "label": "user.isOnboarded != true"
+      },
       "id": "reactflow__edge-232-219",
       "selected": false
     },
@@ -9367,7 +9369,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "user.isOnboarded != true"
+        "label": ""
       },
       "id": "reactflow__edge-232-12",
       "selected": false

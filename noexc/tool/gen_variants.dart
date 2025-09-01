@@ -40,7 +40,7 @@ void main(List<String> args) async {
   for (final t in targets) {
     stdout.writeln('→ Processing ${t.sequenceId}:${t.messageId}');
     try {
-      final result = await _processTarget(t, config, cli.writeMode);
+      final result = await _processTarget(t, config, cli.writeMode, cli.statePath);
       stdout.writeln('   Generated ${result.acceptedVariants.length} variants');
       success++;
     } catch (e, st) {
@@ -65,6 +65,7 @@ class _Cli {
   final String? listPath;
   final String configPath;
   final bool writeMode;
+  final String? statePath;
   final bool showHelp;
 
   _Cli({
@@ -73,6 +74,7 @@ class _Cli {
     this.listPath,
     required this.configPath,
     required this.writeMode,
+    this.statePath,
     required this.showHelp,
   });
 
@@ -82,6 +84,7 @@ class _Cli {
     String? listPath;
     String configPath = 'tool/variants_config.yaml';
     bool write = false;
+    String? statePath;
     bool help = false;
 
     for (int i = 0; i < args.length; i++) {
@@ -100,6 +103,9 @@ class _Cli {
           break;
         case '--config':
           configPath = _next(args, ++i, '--config') ?? configPath;
+          break;
+        case '--state':
+          statePath = _next(args, ++i, '--state');
           break;
         case '--write':
           write = true;
@@ -120,6 +126,7 @@ class _Cli {
       listPath: listPath,
       configPath: configPath,
       writeMode: write,
+      statePath: statePath,
       showHelp: help,
     );
   }
@@ -145,6 +152,7 @@ Options:
   --message <id>    Message ID integer within the sequence
   --list <file>     File with lines: <sequenceId>:<messageId>
   --config <file>   Path to YAML config (default: tool/variants_config.yaml)
+  --state <file>    Optional YAML state file to resolve a concrete path for context
   --write           Actually append to content files (otherwise dry-run)
   --help, -h        Show this help
 ''');
@@ -170,6 +178,7 @@ Future<_ProcessOutcome> _processTarget(
   _Target t,
   _Config config,
   bool writeMode,
+  String? statePath,
 ) async {
   // 1) Load sequence + message
   final seqPath = 'assets/sequences/${t.sequenceId}.json';
@@ -198,12 +207,34 @@ Future<_ProcessOutcome> _processTarget(
   }
   final targetFile = key.toFilePath();
 
-  // 3) Build context snapshot (previous K displayable messages)
-  final context = _ContextBuilder(
-    config: config,
-    sequenceId: t.sequenceId,
-    messagesJson: msgs.cast<Map<String, dynamic>>() ,
-  ).buildSnapshotAround(t.messageId);
+  // 3) Build context snapshot
+  List<_ContextMessageView> context;
+  _ResolvedPath? resolvedPath;
+  String? stateFileUsed;
+  if (statePath != null) {
+    // Load state and resolve a concrete path
+    final stateSpec = await _StateSpec.load(statePath);
+    stateFileUsed = statePath;
+    final index = _SequenceIndex();
+    final resolver = _PathResolver(index: index, config: config);
+    resolvedPath = await resolver.resolve(
+      state: stateSpec,
+      targetSeq: t.sequenceId,
+      targetId: t.messageId,
+    );
+    context = _ResolvedContextBuilder(
+      config: config,
+      index: index,
+      resolvedPath: resolvedPath,
+    ).buildWindow();
+  } else {
+    // Fallback: previous K displayable in same sequence
+    context = _ContextBuilder(
+      config: config,
+      sequenceId: t.sequenceId,
+      messagesJson: msgs.cast<Map<String, dynamic>>(),
+    ).buildSnapshotAround(t.messageId);
+  }
 
   // 4) Collect exemplars
   final exemplars = await _Exemplars.collect(key, config.context.maxExemplars);
@@ -252,6 +283,8 @@ Future<_ProcessOutcome> _processTarget(
     request: genResult.request,
     llmResult: genResult.raw,
     accepted: validated,
+    stateFile: stateFileUsed,
+    resolvedPath: resolvedPath,
   );
   await _ArchiveRecord.write(config.io.archiveDir, archiveRecord);
 
@@ -580,6 +613,509 @@ class _ContextBuilder {
   }
 }
 
+// ---------------- State-aware Path & Context ----------------
+
+class _StateSpec {
+  final String? startSequence;
+  final int? startMessage;
+  final String autoroutesMode; // 'resolve' or 'default'
+  final Map<String, dynamic> values;
+  final List<_ChoiceDirective> choices;
+  final int maxDepth;
+  final int maxPaths;
+
+  _StateSpec({
+    this.startSequence,
+    this.startMessage,
+    required this.autoroutesMode,
+    required this.values,
+    required this.choices,
+    required this.maxDepth,
+    required this.maxPaths,
+  });
+
+  static Future<_StateSpec> load(String path) async {
+    final file = File(path);
+    if (!await file.exists()) throw Exception('State file not found: $path');
+    final raw = await file.readAsString();
+    final data = _MiniYaml.parse(raw);
+    final entry = (data['entry'] as Map?)?.cast<String, dynamic>() ?? {};
+    final routing = (data['routing'] as Map?)?.cast<String, dynamic>() ?? {};
+    final values = (data['values'] as Map?)?.cast<String, dynamic>() ?? {};
+    final choicesRaw = (data['choices'] as List?) ?? const [];
+    final limits = (data['limits'] as Map?)?.cast<String, dynamic>() ?? {};
+
+    final choices = <_ChoiceDirective>[];
+    for (final c in choicesRaw) {
+      if (c is Map) {
+        final at = (c['at'] as Map?)?.cast<String, dynamic>() ?? {};
+        final by = (c['by'] as String?) ?? 'index';
+        final sel = c['select'];
+        final seq = at['sequenceId']?.toString();
+        final mid = at['messageId'] is int ? at['messageId'] as int : int.tryParse(at['messageId']?.toString() ?? '');
+        if (seq != null && mid != null) {
+          choices.add(_ChoiceDirective(sequenceId: seq, messageId: mid, by: by, select: sel));
+        }
+      }
+    }
+
+    return _StateSpec(
+      startSequence: entry['start_sequence']?.toString(),
+      startMessage: entry['start_message'] is int ? entry['start_message'] as int : int.tryParse(entry['start_message']?.toString() ?? ''),
+      autoroutesMode: (routing['autoroutes']?.toString() ?? 'resolve').toLowerCase(),
+      values: values,
+      choices: choices,
+      maxDepth: (limits['max_depth'] is int) ? limits['max_depth'] as int : (int.tryParse(limits['max_depth']?.toString() ?? '') ?? 60),
+      maxPaths: (limits['max_paths'] is int) ? limits['max_paths'] as int : (int.tryParse(limits['max_paths']?.toString() ?? '') ?? 20),
+    );
+  }
+}
+
+class _ChoiceDirective {
+  final String sequenceId;
+  final int messageId;
+  final String by; // 'index' | 'text' | 'contentKey'
+  final dynamic select; // int or string
+  _ChoiceDirective({required this.sequenceId, required this.messageId, required this.by, required this.select});
+}
+
+class _SequenceIndex {
+  final Map<String, Map<int, Map<String, dynamic>>> _seqCache = {};
+  final Map<String, int?> _firstIdCache = {};
+
+  Future<Map<String, dynamic>?> getMessage(String seq, int id) async {
+    await _ensureLoaded(seq);
+    return _seqCache[seq]?[id];
+  }
+
+  Future<bool> hasMessage(String seq, int id) async {
+    await _ensureLoaded(seq);
+    return _seqCache[seq]?.containsKey(id) ?? false;
+  }
+
+  Future<int?> firstMessageId(String seq) async {
+    await _ensureLoaded(seq);
+    return _firstIdCache[seq];
+  }
+
+  Future<void> _ensureLoaded(String seq) async {
+    if (_seqCache.containsKey(seq)) return;
+    final data = await _readJsonFile('assets/sequences/$seq.json');
+    final msgs = (data['messages'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
+    final map = <int, Map<String, dynamic>>{};
+    for (final m in msgs) {
+      final id = m['id'];
+      if (id is int) map[id] = m;
+    }
+    _seqCache[seq] = map;
+    _firstIdCache[seq] = msgs.isNotEmpty && msgs.first['id'] is int ? msgs.first['id'] as int : null;
+  }
+}
+
+class _ResolvedPathNode {
+  final String sequenceId;
+  final int messageId;
+  final String? type;
+  final Map<String, dynamic>? choiceSelected; // {index, text, contentKey}
+  _ResolvedPathNode({required this.sequenceId, required this.messageId, this.type, this.choiceSelected});
+
+  Map<String, dynamic> toJson() => {
+        'sequenceId': sequenceId,
+        'messageId': messageId,
+        if (type != null) 'type': type,
+        if (choiceSelected != null) 'choiceSelected': choiceSelected,
+      };
+}
+
+class _ResolvedPath {
+  final List<_ResolvedPathNode> nodes;
+  _ResolvedPath(this.nodes);
+  Map<String, dynamic> toJson() => {'nodes': nodes.map((n) => n.toJson()).toList()};
+}
+
+class _PathResolver {
+  final _SequenceIndex index;
+  final _Config config;
+  _PathResolver({required this.index, required this.config});
+
+  Future<_ResolvedPath> resolve({required _StateSpec state, required String targetSeq, required int targetId}) async {
+    final startSeq = state.startSequence ?? targetSeq;
+    final startId = state.startMessage ?? (await index.firstMessageId(startSeq)) ?? targetId;
+    final visited = <String,int>{};
+    final path = await _dfs(
+      state,
+      startSeq,
+      startId,
+      targetSeq,
+      targetId,
+      visited,
+      0,
+      [],
+    );
+    if (path == null) {
+      // As a fallback: return a minimal path just containing the target
+      return _ResolvedPath([_ResolvedPathNode(sequenceId: targetSeq, messageId: targetId, type: (await index.getMessage(targetSeq, targetId))?['type']?.toString())]);
+    }
+    return _ResolvedPath(path);
+  }
+
+  Future<List<_ResolvedPathNode>?> _dfs(
+    _StateSpec state,
+    String seq,
+    int id,
+    String targetSeq,
+    int targetId,
+    Map<String,int> visited,
+    int depth,
+    List<_ResolvedPathNode> acc,
+  ) async {
+    if (depth > state.maxDepth) return null;
+    final key = '$seq:$id';
+    if ((visited[key] ?? 0) > 2) return null; // basic loop guard
+    visited[key] = (visited[key] ?? 0) + 1;
+
+    final msg = await index.getMessage(seq, id);
+    if (msg == null) return null;
+    final type = (msg['type'] as String?) ?? 'bot';
+
+    final node = _ResolvedPathNode(sequenceId: seq, messageId: id, type: type);
+    final newAcc = List<_ResolvedPathNode>.from(acc)..add(node);
+    if (seq == targetSeq && id == targetId) return newAcc;
+
+    // Determine next edges
+    final edges = await _nextEdges(state, seq, id, msg);
+    for (final e in edges) {
+      final nextNode = e;
+      final chosenAcc = List<_ResolvedPathNode>.from(newAcc);
+      // Annotate choice selection if provided
+      if (e.choiceSelected != null) {
+        chosenAcc[chosenAcc.length - 1] = _ResolvedPathNode(
+          sequenceId: node.sequenceId,
+          messageId: node.messageId,
+          type: node.type,
+          choiceSelected: e.choiceSelected,
+        );
+      }
+      final result = await _dfs(
+        state,
+        nextNode.sequenceId,
+        nextNode.messageId,
+        targetSeq,
+        targetId,
+        visited,
+        depth + 1,
+        chosenAcc,
+      );
+      if (result != null) return result;
+    }
+    return null;
+  }
+
+  Future<List<_ResolvedPathNode>> _nextEdges(_StateSpec state, String seq, int id, Map<String, dynamic> msg) async {
+    final type = (msg['type'] as String?) ?? 'bot';
+
+    // Cross-sequence jump on message
+    if (msg['sequenceId'] != null) {
+      final toSeq = msg['sequenceId'].toString();
+      final first = await index.firstMessageId(toSeq);
+      if (first != null) return [_ResolvedPathNode(sequenceId: toSeq, messageId: first)];
+    }
+
+    if (type == 'autoroute') {
+      final routes = (msg['routes'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
+      if (routes.isEmpty) {
+        final next = await _fallbackNext(seq, id, msg);
+        return next == null ? const [] : [next];
+      }
+      if (state.autoroutesMode == 'resolve') {
+        // Try non-default with matching condition first
+        for (final r in routes) {
+          if (r['default'] == true) continue;
+          final cond = r['condition']?.toString();
+          if (cond != null && await _Condition(state.values).evaluateCompound(cond)) {
+            return [await _routeToNode(r, currentSeq: seq)];
+          }
+        }
+      }
+      // Default route
+      for (final r in routes) {
+        if (r['default'] == true) {
+          return [await _routeToNode(r, currentSeq: seq)];
+        }
+      }
+      // Fallback: first route
+      return [await _routeToNode(routes.first, currentSeq: seq)];
+    }
+
+    if (type == 'choice') {
+      final choices = (msg['choices'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
+      final directed = await _matchChoiceDirective(state, seq, id, choices);
+      if (directed != null) return [directed];
+      // Try all choices (DFS will pick first path reaching target)
+      final out = <_ResolvedPathNode>[];
+      for (int i = 0; i < choices.length; i++) {
+        final ch = choices[i];
+        final node = await _choiceToNode(ch, seq);
+        if (node != null) {
+          out.add(_ResolvedPathNode(
+            sequenceId: node.sequenceId,
+            messageId: node.messageId,
+            choiceSelected: {
+              'index': i,
+              if (ch['text'] != null) 'text': ch['text'],
+              if (ch['contentKey'] != null) 'contentKey': ch['contentKey'],
+            },
+          ));
+        }
+      }
+      return out;
+    }
+
+    // dataAction, text, etc.
+    final next = await _fallbackNext(seq, id, msg);
+    return next == null ? const [] : [next];
+  }
+
+  Future<_ResolvedPathNode?> _matchChoiceDirective(_StateSpec state, String seq, int id, List<Map<String, dynamic>> choices) async {
+    final dir = state.choices.firstWhere(
+      (c) => c.sequenceId == seq && c.messageId == id,
+      orElse: () => _ChoiceDirective(sequenceId: '', messageId: -1, by: '', select: null),
+    );
+    if (dir.messageId == -1) return null;
+    int index = -1;
+    if (dir.by == 'index' && dir.select is int) {
+      index = dir.select as int;
+    } else if (dir.by == 'text' && dir.select is String) {
+      index = choices.indexWhere((c) => (c['text']?.toString() ?? '') == (dir.select as String));
+    } else if (dir.by == 'contentKey' && dir.select is String) {
+      index = choices.indexWhere((c) => (c['contentKey']?.toString() ?? '') == (dir.select as String));
+    }
+    if (index < 0 || index >= choices.length) return null;
+    final ch = choices[index];
+    final next = await _choiceToNode(ch, seq);
+    if (next == null) return null;
+    return _ResolvedPathNode(
+      sequenceId: next.sequenceId,
+      messageId: next.messageId,
+      choiceSelected: {
+        'index': index,
+        if (ch['text'] != null) 'text': ch['text'],
+        if (ch['contentKey'] != null) 'contentKey': ch['contentKey'],
+      },
+    );
+  }
+
+  Future<_ResolvedPathNode> _routeToNode(Map<String, dynamic> route, {required String currentSeq}) async {
+    if (route['sequenceId'] != null) {
+      final s = route['sequenceId'].toString();
+      final first = await index.firstMessageId(s);
+      if (first == null) throw Exception('Sequence $s has no messages');
+      return _ResolvedPathNode(sequenceId: s, messageId: first);
+    }
+    final next = route['nextMessageId'] as int?;
+    if (next == null) throw Exception('Route missing nextMessageId/sequenceId');
+    return _ResolvedPathNode(sequenceId: currentSeq, messageId: next);
+  }
+
+  Future<_ResolvedPathNode?> _choiceToNode(Map<String, dynamic> ch, String currentSeq) async {
+    if (ch['sequenceId'] != null) {
+      final s = ch['sequenceId'].toString();
+      final first = await index.firstMessageId(s);
+      if (first == null) return null;
+      return _ResolvedPathNode(sequenceId: s, messageId: first);
+    }
+    final next = ch['nextMessageId'] as int?;
+    if (next != null) return _ResolvedPathNode(sequenceId: currentSeq, messageId: next);
+    return null;
+  }
+
+  Future<_ResolvedPathNode?> _fallbackNext(String seq, int id, Map<String, dynamic> msg) async {
+    if (msg['nextMessageId'] is int) {
+      return _ResolvedPathNode(sequenceId: seq, messageId: msg['nextMessageId'] as int);
+    }
+    // implicit id+1 if exists
+    if (await index.hasMessage(seq, id + 1)) {
+      return _ResolvedPathNode(sequenceId: seq, messageId: id + 1);
+    }
+    return null;
+  }
+}
+
+class _ResolvedContextBuilder {
+  final _Config config;
+  final _SequenceIndex index;
+  final _ResolvedPath? resolvedPath;
+  _ResolvedContextBuilder({required this.config, required this.index, required this.resolvedPath});
+
+  List<_ContextMessageView> buildWindow() {
+    if (resolvedPath == null) return const [];
+    final nodes = resolvedPath!.nodes;
+    if (nodes.isEmpty) return const [];
+    // Exclude the target node (last)
+    final prior = nodes.take(nodes.length - 1).toList();
+    // From prior nodes, project displayable context turns, including user choice selections
+    final turns = <_ContextMessageView>[];
+    for (final n in prior) {
+      final msg = index._seqCache[n.sequenceId]?[n.messageId];
+      final type = n.type ?? (msg?['type']?.toString() ?? 'bot');
+      if (type == 'choice') {
+        // Represent the user selection
+        final sel = n.choiceSelected;
+        final text = sel?['contentKey'] != null
+            ? 'contentKey:${sel!['contentKey']}'
+            : (sel?['text']?.toString() ?? 'user_choice');
+        turns.add(_ContextMessageView(id: n.messageId, type: 'user', sender: 'user', textOrKey: text));
+        continue;
+      }
+      if (type == 'autoroute' || type == 'dataAction') {
+        // Skip non-display
+        continue;
+      }
+      final contentKey = msg?['contentKey']?.toString();
+      final text = (msg?['text']?.toString() ?? '');
+      final sender = (msg?['sender']?.toString() ?? (type == 'user' ? 'user' : 'bot'));
+      final label = (contentKey != null && contentKey.isNotEmpty) ? 'contentKey:$contentKey' : text;
+      turns.add(_ContextMessageView(id: n.messageId, type: type, sender: sender, textOrKey: label));
+    }
+    // Window: last N
+    final N = config.context.historyBubbles;
+    if (turns.length <= N) return turns;
+    return turns.sublist(turns.length - N);
+  }
+}
+
+// Simple condition evaluator compatible with route format
+class _Condition {
+  final Map<String, dynamic> values;
+  _Condition(this.values);
+
+  Future<bool> evaluateCompound(String condition) async {
+    // OR first
+    if (_containsOutside(condition, '||')) {
+      for (final part in _splitOutside(condition, '||')) {
+        if (await evaluateCompound(part.trim())) return true;
+      }
+      return false;
+    }
+    // AND
+    if (_containsOutside(condition, '&&')) {
+      for (final part in _splitOutside(condition, '&&')) {
+        if (!await evaluateCompound(part.trim())) return false;
+      }
+      return true;
+    }
+    return await _evaluateSingle(condition.trim());
+  }
+
+  Future<bool> _evaluateSingle(String cond) async {
+    final ops = ['>=', '<=', '!=', '==', '>', '<'];
+    for (final op in ops) {
+      final idx = _findOutside(cond, op);
+      if (idx != -1) {
+        final left = cond.substring(0, idx).trim();
+        final right = cond.substring(idx + op.length).trim();
+        final lv = await _getValueOrParse(left);
+        final rv = await _getValueOrParse(right);
+        switch (op) {
+          case '==':
+            return _eq(lv, rv);
+          case '!=':
+            return !_eq(lv, rv);
+          case '>':
+            return _num(lv) != null && _num(rv) != null && _num(lv)! > _num(rv)!;
+          case '<':
+            return _num(lv) != null && _num(rv) != null && _num(lv)! < _num(rv)!;
+          case '>=':
+            return _num(lv) != null && _num(rv) != null && _num(lv)! >= _num(rv)!;
+          case '<=':
+            return _num(lv) != null && _num(rv) != null && _num(lv)! <= _num(rv)!;
+        }
+      }
+    }
+    // No operator: truthy test on variable
+    final v = await _getValueOrParse(cond);
+    return _truthy(v);
+  }
+
+  bool _containsOutside(String s, String op) => _findOutside(s, op) != -1;
+
+  int _findOutside(String s, String op) {
+    bool sQ = false, dQ = false;
+    for (int i = 0; i <= s.length - op.length; i++) {
+      final ch = s[i];
+      if (ch == "'" && !dQ) sQ = !sQ;
+      if (ch == '"' && !sQ) dQ = !dQ;
+      if (!sQ && !dQ && s.substring(i, i + op.length) == op) return i;
+    }
+    return -1;
+  }
+
+  List<String> _splitOutside(String s, String op) {
+    final parts = <String>[];
+    int last = 0;
+    bool sQ = false, dQ = false;
+    for (int i = 0; i <= s.length - op.length; i++) {
+      final ch = s[i];
+      if (ch == "'" && !dQ) sQ = !sQ;
+      if (ch == '"' && !sQ) dQ = !dQ;
+      if (!sQ && !dQ && s.substring(i, i + op.length) == op) {
+        parts.add(s.substring(last, i));
+        last = i + op.length;
+      }
+    }
+    parts.add(s.substring(last));
+    return parts;
+  }
+
+  Future<dynamic> _getValueOrParse(String token) async {
+    // Try variable lookup if contains dot
+    if (token.contains('.')) {
+      final v = values[token];
+      if (v != null) return v;
+    }
+    return _parseLiteral(token);
+  }
+
+  dynamic _parseLiteral(String s) {
+    final t = s.trim();
+    if (t == 'null') return null;
+    if (t == 'true') return true;
+    if (t == 'false') return false;
+    if ((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'"))) {
+      return t.substring(1, t.length - 1);
+    }
+    final i = int.tryParse(t);
+    if (i != null) return i;
+    final d = double.tryParse(t);
+    if (d != null) return d;
+    return t; // bare token treated as string
+  }
+
+  num? _num(dynamic v) {
+    if (v is num) return v;
+    if (v is String) return num.tryParse(v);
+    return null;
+  }
+
+  bool _eq(dynamic a, dynamic b) {
+    if (a == b) return true;
+    final an = _num(a), bn = _num(b);
+    if (an != null && bn != null) return an == bn;
+    if (a != null && b != null) return a.toString() == b.toString();
+    return false;
+  }
+
+  bool _truthy(dynamic v) {
+    if (v == null) return false;
+    if (v is bool) return v;
+    if (v is num) return v != 0;
+    if (v is String) return v.isNotEmpty;
+    if (v is List) return v.isNotEmpty;
+    if (v is Map) return v.isNotEmpty;
+    return true;
+  }
+}
+
 // ---------------- Exemplars ----------------
 
 class _Exemplars {
@@ -851,6 +1387,8 @@ class _ArchiveRecord {
     required Map<String, dynamic> request,
     required Map<String, dynamic> llmResult,
     required List<String> accepted,
+    String? stateFile,
+    _ResolvedPath? resolvedPath,
   }) {
     return {
       'timestamp': DateTime.now().toIso8601String(),
@@ -872,6 +1410,9 @@ class _ArchiveRecord {
       'request': request,
       'response': llmResult,
       'acceptedVariants': accepted,
+      if (stateFile != null) 'stateFile': stateFile,
+      if (resolvedPath != null)
+        'resolvedPath': resolvedPath.toJson(),
     };
   }
 

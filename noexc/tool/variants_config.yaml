@@ -16,8 +16,11 @@ gen:
 
 context:
   history_bubbles: 4
-  include_sibling_exemplars: true
+  include_sibling_exemplars: false
   max_exemplars: 10
+  include_node_samples: true
+  samples_per_node: 3
+  prefer_node_samples: true
 
 style:
   tone:

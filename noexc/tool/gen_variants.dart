@@ -374,8 +374,11 @@ gen:
 
 context:
   history_bubbles: 4
-  include_sibling_exemplars: true
+  include_sibling_exemplars: false
   max_exemplars: 10
+  include_node_samples: true
+  samples_per_node: 3
+  prefer_node_samples: true
 
 style:
   tone:
@@ -461,15 +464,24 @@ class _ContextConfig {
   final int historyBubbles;
   final bool includeSiblingExemplars;
   final int maxExemplars;
+  final bool includeNodeSamples;
+  final int samplesPerNode;
+  final bool preferNodeSamples;
   _ContextConfig({
     required this.historyBubbles,
     required this.includeSiblingExemplars,
     required this.maxExemplars,
+    required this.includeNodeSamples,
+    required this.samplesPerNode,
+    required this.preferNodeSamples,
   });
   factory _ContextConfig.fromJson(Map<String, dynamic> j) => _ContextConfig(
     historyBubbles: (j['history_bubbles'] as int?) ?? 4,
-    includeSiblingExemplars: (j['include_sibling_exemplars'] as bool?) ?? true,
+    includeSiblingExemplars: (j['include_sibling_exemplars'] as bool?) ?? false,
     maxExemplars: (j['max_exemplars'] as int?) ?? 10,
+    includeNodeSamples: (j['include_node_samples'] as bool?) ?? true,
+    samplesPerNode: (j['samples_per_node'] as int?) ?? 3,
+    preferNodeSamples: (j['prefer_node_samples'] as bool?) ?? true,
   );
 }
 
@@ -964,7 +976,7 @@ class _ResolvedContextBuilder {
         final text = sel?['contentKey'] != null
             ? 'contentKey:${sel!['contentKey']}'
             : (sel?['text']?.toString() ?? 'user_choice');
-        turns.add(_ContextMessageView(id: n.messageId, type: 'user', sender: 'user', textOrKey: text));
+        turns.add(_ContextMessageView(id: n.messageId, type: 'choice', sender: 'user', textOrKey: text));
         continue;
       }
       if (type == 'autoroute' || type == 'dataAction') {
@@ -1166,15 +1178,27 @@ class _PromptBuilder {
         '${config.style.forbidEmojis ? 'Do not use emojis.' : ''} '
         'Tone: ${config.style.tone.join(', ')}. Concise, natural, no marketing fluff.';
 
-    final context = contextSnapshot
-        .map((m) => {
-              'sender': m.sender,
-              'type': m.type,
-              'text': m.textOrKey,
-            })
-        .toList();
+    bool anyNodeExamples = false;
+    final context = contextSnapshot.map((m) {
+      final isKey = m.textOrKey.startsWith('contentKey:');
+      final ref = m.textOrKey; // keep same string label
+      final Map<String, dynamic> entry = <String, dynamic>{
+        'sender': m.sender,
+        'type': m.type,
+        'ref': ref,
+      };
+      if (config.context.includeNodeSamples && isKey) {
+        final key = m.textOrKey.substring('contentKey:'.length);
+        final samples = _sampleLinesForContentKeySync(key, config.context.samplesPerNode);
+        if (samples.isNotEmpty) {
+          anyNodeExamples = true;
+          entry['examples'] = samples;
+        }
+      }
+      return entry;
+    }).toList();
 
-    return {
+    final prompt = {
       'system': system,
       'task': {
         'contentKey': contentKey,
@@ -1187,15 +1211,32 @@ class _PromptBuilder {
         },
       },
       'context': context,
-      'exemplars': {
-        'existingVariants': existingVariants,
-        'siblingExemplars': siblingExemplars.take(config.context.maxExemplars).toList(),
-      },
+      if (!(config.context.preferNodeSamples && anyNodeExamples) && config.context.includeSiblingExemplars)
+        'exemplars': {
+          'existingVariants': existingVariants,
+          'siblingExemplars': siblingExemplars.take(config.context.maxExemplars).toList(),
+        },
       'output_format': {
         'type': 'json',
         'schema': {'variants': ['string']}
       }
     };
+    return prompt;
+  }
+}
+
+List<String> _sampleLinesForContentKeySync(String key, int k) {
+  try {
+    final ck = _ContentKey.parse(key);
+    if (!ck.isValid) return const [];
+    final path = ck.toFilePath();
+    final f = File(path);
+    if (!f.existsSync()) return const [];
+    final lines = f.readAsLinesSync().map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    if (lines.isEmpty) return const [];
+    return lines.take(k).toList();
+  } catch (_) {
+    return const [];
   }
 }
 

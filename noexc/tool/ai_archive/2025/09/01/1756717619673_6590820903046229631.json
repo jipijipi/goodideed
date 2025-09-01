@@ -1,0 +1,160 @@
+{
+  "timestamp": "2025-09-01T11:06:59.670448",
+  "target": {
+    "sequenceId": "onboarding_seq",
+    "messageId": 3,
+    "contentKey": "bot.explain.concept.detailed",
+    "targetFile": "assets/content/bot/explain/concept_detailed.txt"
+  },
+  "config": {
+    "provider": {
+      "name": "generic-json",
+      "base_url": "https://api.example.com/generate",
+      "model": "my-model",
+      "api_key_env": "LLM_API_KEY",
+      "mock": true,
+      "timeout_ms": 30000
+    },
+    "gen": {
+      "num_variants": 8,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "max_bubbles_per_line": 3,
+      "max_chars_per_bubble": 90,
+      "dedupe_threshold": 0.82
+    },
+    "context": {
+      "history_bubbles": 4,
+      "include_sibling_exemplars": true,
+      "max_exemplars": 10
+    },
+    "style": {
+      "tone": [
+        "friendly",
+        "concise",
+        "supportive"
+      ],
+      "forbid_emojis": true,
+      "allow_pipes": true,
+      "preserve_placeholders": true
+    },
+    "io": {
+      "archive_dir": "tool/ai_archive",
+      "dry_run": true,
+      "verbose": false,
+      "fail_fast": false
+    },
+    "rate_limit": {
+      "rpm": 30,
+      "retry_count": 2,
+      "retry_backoff_ms": 1000
+    },
+    "safety": {
+      "blocklist": [
+        "shit",
+        "fuck"
+      ],
+      "pii_regexes": []
+    }
+  },
+  "context": [],
+  "exemplars": {
+    "siblingSample": [
+      "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
+      "The concept is simple|||Choose one daily goal|||Just ONE|||And I'll help you stay on track",
+      "How this works|||Pick a single daily task|||ONE TASK|||I'll keep you accountable",
+      "The system is straightforward|||One daily objective|||JUST ONE|||And I'll make sure you follow through",
+      "Simple process|||Select one thing per day|||ONE THING ONLY|||I'll handle the rest"
+    ],
+    "existingVariants": [
+      "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
+      "The concept is simple|||Choose one daily goal|||Just ONE|||And I'll help you stay on track",
+      "How this works|||Pick a single daily task|||ONE TASK|||I'll keep you accountable",
+      "The system is straightforward|||One daily objective|||JUST ONE|||And I'll make sure you follow through",
+      "Simple process|||Select one thing per day|||ONE THING ONLY|||I'll handle the rest"
+    ]
+  },
+  "prompt": {
+    "system": "You are a UX writer for NOEXC, a friendly accountability bot. Write multiple alternative lines for the specified contentKey. Keep placeholders like {user.name} exactly unchanged. Use ||| to split long messages into multiple bubbles (max 3). Do not use emojis. Tone: friendly, concise, supportive. Concise, natural, no marketing fluff.",
+    "task": {
+      "contentKey": "bot.explain.concept.detailed",
+      "targetPath": "assets/content/bot/explain/concept_detailed.txt",
+      "constraints": {
+        "numVariants": 8,
+        "maxBubblesPerLine": 3,
+        "maxCharsPerBubble": 90,
+        "preservePlaceholders": true
+      }
+    },
+    "context": [],
+    "exemplars": {
+      "existingVariants": [
+        "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
+        "The concept is simple|||Choose one daily goal|||Just ONE|||And I'll help you stay on track",
+        "How this works|||Pick a single daily task|||ONE TASK|||I'll keep you accountable",
+        "The system is straightforward|||One daily objective|||JUST ONE|||And I'll make sure you follow through",
+        "Simple process|||Select one thing per day|||ONE THING ONLY|||I'll handle the rest"
+      ],
+      "siblingExemplars": [
+        "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
+        "The concept is simple|||Choose one daily goal|||Just ONE|||And I'll help you stay on track",
+        "How this works|||Pick a single daily task|||ONE TASK|||I'll keep you accountable",
+        "The system is straightforward|||One daily objective|||JUST ONE|||And I'll make sure you follow through",
+        "Simple process|||Select one thing per day|||ONE THING ONLY|||I'll handle the rest"
+      ]
+    },
+    "output_format": {
+      "type": "json",
+      "schema": {
+        "variants": [
+          "string"
+        ]
+      }
+    }
+  },
+  "response": {
+    "mock": true,
+    "prompt": {
+      "system": "You are a UX writer for NOEXC, a friendly accountability bot. Write multiple alternative lines for the specified contentKey. Keep placeholders like {user.name} exactly unchanged. Use ||| to split long messages into multiple bubbles (max 3). Do not use emojis. Tone: friendly, concise, supportive. Concise, natural, no marketing fluff.",
+      "task": {
+        "contentKey": "bot.explain.concept.detailed",
+        "targetPath": "assets/content/bot/explain/concept_detailed.txt",
+        "constraints": {
+          "numVariants": 8,
+          "maxBubblesPerLine": 3,
+          "maxCharsPerBubble": 90,
+          "preservePlaceholders": true
+        }
+      },
+      "context": [],
+      "exemplars": {
+        "existingVariants": [
+          "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
+          "The concept is simple|||Choose one daily goal|||Just ONE|||And I'll help you stay on track",
+          "How this works|||Pick a single daily task|||ONE TASK|||I'll keep you accountable",
+          "The system is straightforward|||One daily objective|||JUST ONE|||And I'll make sure you follow through",
+          "Simple process|||Select one thing per day|||ONE THING ONLY|||I'll handle the rest"
+        ],
+        "siblingExemplars": [
+          "Here is how it's going to work|||You pick one thing you want to achieve daily|||ONE THING|||And I'll be here to make sure you do it",
+          "The concept is simple|||Choose one daily goal|||Just ONE|||And I'll help you stay on track",
+          "How this works|||Pick a single daily task|||ONE TASK|||I'll keep you accountable",
+          "The system is straightforward|||One daily objective|||JUST ONE|||And I'll make sure you follow through",
+          "Simple process|||Select one thing per day|||ONE THING ONLY|||I'll handle the rest"
+        ]
+      },
+      "output_format": {
+        "type": "json",
+        "schema": {
+          "variants": [
+            "string"
+          ]
+        }
+      }
+    },
+    "model": "my-model"
+  },
+  "acceptedVariants": [
+    "[bot.explain.concept.detailed] Variant 1 at 1756717619661 ||| Second bubble (optional)"
+  ]
+}

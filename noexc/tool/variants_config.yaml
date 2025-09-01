@@ -1,0 +1,46 @@
+provider:
+  name: generic-json
+  base_url: https://api.example.com/generate
+  model: my-model
+  api_key_env: LLM_API_KEY
+  mock: true
+  timeout_ms: 30000
+
+gen:
+  num_variants: 8
+  temperature: 0.7
+  top_p: 0.9
+  max_bubbles_per_line: 3
+  max_chars_per_bubble: 90
+  dedupe_threshold: 0.82
+
+context:
+  history_bubbles: 4
+  include_sibling_exemplars: true
+  max_exemplars: 10
+
+style:
+  tone:
+    - friendly
+    - concise
+    - supportive
+  forbid_emojis: true
+  allow_pipes: true
+  preserve_placeholders: true
+
+io:
+  archive_dir: tool/ai_archive
+  dry_run: true
+  verbose: false
+  fail_fast: false
+
+rate_limit:
+  rpm: 30
+  retry_count: 2
+  retry_backoff_ms: 1000
+
+safety:
+  blocklist:
+    - shit
+    - fuck
+  pii_regexes: []

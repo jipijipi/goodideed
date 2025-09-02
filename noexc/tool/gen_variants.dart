@@ -1717,8 +1717,32 @@ Future<void> _appendLines(String path, List<String> lines) async {
   if (lines.isEmpty) return;
   final file = File(path);
   await file.create(recursive: true);
+  // Ensure we start on a new line if the existing file doesn't end with one
+  bool needsLeadingNewline = false;
+  if (await file.exists()) {
+    try {
+      final raf = await file.open();
+      final len = await raf.length();
+      if (len > 0) {
+        await raf.setPosition(len - 1);
+        final last = await raf.read(1);
+        if (last.isNotEmpty) {
+          final b = last.first;
+          // 10 = \n, 13 = \r
+          if (b != 10 && b != 13) needsLeadingNewline = true;
+        }
+      }
+      await raf.close();
+    } catch (_) {
+      // Best-effort; if we can't read, proceed without leading newline
+    }
+  }
+
   final sink = file.openWrite(mode: FileMode.append);
   try {
+    if (needsLeadingNewline) {
+      sink.writeln();
+    }
     for (final l in lines) {
       sink.writeln(l.trim());
     }

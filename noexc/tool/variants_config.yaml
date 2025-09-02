@@ -1,26 +1,30 @@
 provider:
   name: openai-chat
-  base_url: https://api.example.com/generate
-  model: gpt-5
+  # Leave empty to use default https://api.openai.com/v1/chat/completions
+  base_url: ""
+  model: gpt-4o-mini
   api_key_env: OPENAI_API_KEY
   mock: false
-  timeout_ms: 3000
+  timeout_ms: 20000
 
 gen:
   num_variants: 8
+  # sampling params are ignored for reasoning models like gpt-5
   temperature: 0.7
   top_p: 0.9
   max_bubbles_per_line: 3
   max_chars_per_bubble: 90
   dedupe_threshold: 0.82
+  max_tokens: 768
+  include_sampling_params: true
 
 context:
   history_bubbles: 4
-  include_sibling_exemplars: true
+  include_sibling_exemplars: false
   max_exemplars: 10
   include_node_samples: true
   samples_per_node: 3
-  prefer_node_samples: false
+  prefer_node_samples: true
 
 style:
   tone:
@@ -33,14 +37,14 @@ style:
 
 io:
   archive_dir: tool/ai_archive
-  dry_run: true
+  dry_run: false
   verbose: false
   fail_fast: false
 
 rate_limit:
-  rpm: 30
-  retry_count: 2
-  retry_backoff_ms: 1000
+  rpm: 60
+  retry_count: 3
+  retry_backoff_ms: 1500
 
 safety:
   blocklist:

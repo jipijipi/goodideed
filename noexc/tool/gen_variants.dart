@@ -455,6 +455,7 @@ class _GenConfig {
   final int maxCharsPerBubble;
   final double dedupeThreshold;
   final int maxTokens;
+  final bool includeSamplingParams; // temperature/top_p
   _GenConfig({
     required this.numVariants,
     required this.temperature,
@@ -463,6 +464,7 @@ class _GenConfig {
     required this.maxCharsPerBubble,
     required this.dedupeThreshold,
     required this.maxTokens,
+    required this.includeSamplingParams,
   });
   factory _GenConfig.fromJson(Map<String, dynamic> j) => _GenConfig(
     numVariants: (j['num_variants'] as int?) ?? 8,
@@ -472,6 +474,7 @@ class _GenConfig {
     maxCharsPerBubble: (j['max_chars_per_bubble'] as int?) ?? 90,
     dedupeThreshold: ((j['dedupe_threshold'] as num?) ?? 0.82).toDouble(),
     maxTokens: (j['max_tokens'] as int?) ?? 512,
+    includeSamplingParams: (j['include_sampling_params'] as bool?) ?? true,
   );
 }
 
@@ -957,25 +960,28 @@ class _ResolvedContextBuilder {
     if (resolvedPath == null) return const [];
     final nodes = resolvedPath!.nodes;
     if (nodes.isEmpty) return const [];
-    // Exclude the target node (last)
-    final prior = nodes.take(nodes.length - 1).toList();
-    // From prior nodes, project displayable context turns, including user choice selections
+    // From all nodes except the final target, project displayable context turns
     final turns = <_ContextMessageView>[];
-    for (final n in prior) {
+    for (int i = 0; i < nodes.length - 1; i++) {
+      final n = nodes[i];
       final msg = index._seqCache[n.sequenceId]?[n.messageId];
       final type = n.type ?? (msg?['type']?.toString() ?? 'bot');
       if (type == 'choice') {
-        // Represent the user selection
-        final sel = n.choiceSelected;
-        final text = sel?['contentKey'] != null
+        // Represent the user selection; if not on this node, look ahead to next node's choiceSelected
+        Map<String, dynamic>? sel = n.choiceSelected;
+        if (sel == null && i + 1 < nodes.length) {
+          sel = nodes[i + 1].choiceSelected;
+        }
+        final hasKey = sel != null && (sel['contentKey']?.toString().isNotEmpty ?? false);
+        final ref = hasKey
             ? 'contentKey:${sel!['contentKey']}'
-            : (sel?['text']?.toString() ?? 'user_choice');
+            : (sel != null ? (sel['text']?.toString() ?? 'user_choice') : 'user_choice');
         turns.add(_ContextMessageView(
           id: n.messageId,
           type: 'choice',
           sender: 'user',
-          textOrKey: text,
-          defaultText: sel?['text']?.toString(),
+          textOrKey: ref,
+          defaultText: sel != null ? sel['text']?.toString() : null,
         ));
         continue;
       }
@@ -1314,6 +1320,7 @@ class _Generator {
     Uri uri;
     String requestBody;
     Map<String, dynamic> payloadObj;
+    bool includeSampling = config.gen.includeSamplingParams;
     if (config.provider.name == 'openai-chat') {
       // OpenAI Chat Completions API
       final base = config.provider.baseUrl.isNotEmpty
@@ -1322,10 +1329,9 @@ class _Generator {
       uri = Uri.parse(base);
       payloadObj = {
         'model': config.provider.model,
-        'temperature': config.gen.temperature,
-        'top_p': config.gen.topP,
-        'n': 1, // Chat API returns n messages; we expect a single JSON object with variants
-        'max_tokens': config.gen.maxTokens,
+        'n': 1, // single JSON object with variants
+        // Some newer OpenAI models expect max_completion_tokens instead of max_tokens
+        'max_completion_tokens': config.gen.maxTokens,
         // JSON mode to enforce valid JSON response
         'response_format': {'type': 'json_object'},
         'messages': [
@@ -1339,6 +1345,10 @@ class _Generator {
           },
         ],
       };
+      if (includeSampling) {
+        payloadObj['temperature'] = config.gen.temperature;
+        payloadObj['top_p'] = config.gen.topP;
+      }
       requestBody = jsonEncode(payloadObj);
     } else {
       // Generic JSON contract: { model, temperature, top_p, prompt: <object> }
@@ -1366,6 +1376,26 @@ class _Generator {
           final variants = _extractVariants(obj);
           return _GenResult(variants, obj, payloadObj);
         } else {
+          // Handle OpenAI parameter compatibility gracefully
+          if (res.statusCode == 400) {
+            try {
+              final err = jsonDecode(responseBody) as Map<String, dynamic>;
+              final em = (err['error'] as Map?)?.cast<String, dynamic>();
+              final param = em?['param']?.toString() ?? '';
+              final code = em?['code']?.toString() ?? '';
+              if ((param == 'temperature' || param == 'top_p') && includeSampling) {
+                // Retry once without sampling params
+                includeSampling = false;
+                // Rebuild request body without temperature/top_p
+                if (config.provider.name == 'openai-chat') {
+                  payloadObj.remove('temperature');
+                  payloadObj.remove('top_p');
+                  requestBody = jsonEncode(payloadObj);
+                }
+                continue;
+              }
+            } catch (_) {}
+          }
           throw HttpException('HTTP ${res.statusCode}: $responseBody');
         }
       } catch (e) {

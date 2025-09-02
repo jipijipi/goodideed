@@ -20,6 +20,21 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Gen Variants (OpenAI)",
+            "type": "dart",
+            "request": "launch",
+            "program": "tool/gen_variants.dart",
+            "args": [
+                "--sequence", "overdue_seq",
+                "--message", "90",
+                "--state", "tool/state/onboarding_to_msg90.yaml",
+                "--write"
+            ],
+            "env": {
+                "OPENAI_API_KEY": "${env:OPENAI_API_KEY}"
+            }
         }
     ]
 }

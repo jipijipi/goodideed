@@ -1,0 +1,257 @@
+{
+  "timestamp": "2025-09-02T21:47:55.489687",
+  "target": {
+    "sequenceId": "overdue_seq",
+    "messageId": 90,
+    "contentKey": "bot.acknowledge.failure.supportive",
+    "targetFile": "assets/content/bot/acknowledge/failure_supportive.txt"
+  },
+  "config": {
+    "provider": {
+      "name": "openai-chat",
+      "base_url": "",
+      "model": "gpt-4o-mini",
+      "api_key_env": "OPENAI_API_KEY",
+      "mock": false,
+      "timeout_ms": 20000
+    },
+    "gen": {
+      "num_variants": 8,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "max_bubbles_per_line": 3,
+      "max_chars_per_bubble": 90,
+      "dedupe_threshold": 0.82
+    },
+    "context": {
+      "history_bubbles": 4,
+      "include_sibling_exemplars": false,
+      "max_exemplars": 10
+    },
+    "style": {
+      "tone": [
+        "friendly",
+        "concise",
+        "supportive"
+      ],
+      "forbid_emojis": true,
+      "allow_pipes": true,
+      "preserve_placeholders": true
+    },
+    "io": {
+      "archive_dir": "tool/ai_archive",
+      "dry_run": false,
+      "verbose": false,
+      "fail_fast": false
+    },
+    "rate_limit": {
+      "rpm": 60,
+      "retry_count": 3,
+      "retry_backoff_ms": 1500
+    },
+    "safety": {
+      "blocklist": [
+        "shit",
+        "fuck"
+      ],
+      "pii_regexes": []
+    }
+  },
+  "context": [
+    {
+      "id": 87,
+      "sender": "bot",
+      "type": "bot",
+      "text": "contentKey:bot.request.task_status.gentle"
+    },
+    {
+      "id": 88,
+      "sender": "user",
+      "type": "choice",
+      "text": "contentKey:user.choose.task_status.failed"
+    }
+  ],
+  "exemplars": {
+    "siblingSample": [
+      "Weekdays only - solid work schedule",
+      "Monday through Friday focus",
+      "Business days execution plan",
+      "Professional week dedication",
+      "Standard weekday commitment",
+      "Evening deadline set",
+      "End-of-day completion target",
+      "Wrapping up by evening",
+      "Good choice for evening finish",
+      "Day's end deadline confirmed"
+    ],
+    "existingVariants": [
+      "That's okay, these things happen.",
+      "Don't worry, we can try again.",
+      "No problem! Let's figure this out together.",
+      "It's alright, everyone has setbacks.",
+      "That's fine - we'll work through this."
+    ]
+  },
+  "prompt": {
+    "system": "You are a UX writer for NOEXC, a friendly accountability bot. Write multiple alternative lines for the specified contentKey. Keep placeholders like {user.name} exactly unchanged. Use ||| to split long messages into multiple bubbles (max 3). Do not use emojis. Tone: friendly, concise, supportive. Concise, natural, no marketing fluff.",
+    "task": {
+      "contentKey": "bot.acknowledge.failure.supportive",
+      "targetPath": "assets/content/bot/acknowledge/failure_supportive.txt",
+      "constraints": {
+        "numVariants": 8,
+        "maxBubblesPerLine": 3,
+        "maxCharsPerBubble": 90,
+        "preservePlaceholders": true
+      },
+      "defaultText": "Well, can't say I'm surprised...",
+      "existingVariants": [
+        "That's okay, these things happen.",
+        "Don't worry, we can try again.",
+        "No problem! Let's figure this out together.",
+        "It's alright, everyone has setbacks.",
+        "That's fine - we'll work through this."
+      ]
+    },
+    "context": [
+      {
+        "sender": "bot",
+        "type": "bot",
+        "ref": "contentKey:bot.request.task_status.gentle",
+        "default": "Ok, so did you manage to do your thing last time?",
+        "examples": [
+          "How did your task go on {task.dueDay:activeDays}?",
+          "Could you please share your {task.dueDay:activeDays} task status?",
+          "When you're ready, let me know how things went on {task.dueDay:activeDays}."
+        ]
+      },
+      {
+        "sender": "user",
+        "type": "choice",
+        "ref": "contentKey:user.choose.task_status.failed",
+        "default": "I... Did not..."
+      }
+    ],
+    "output_format": {
+      "type": "json",
+      "schema": {
+        "variants": [
+          "string"
+        ]
+      }
+    }
+  },
+  "request": {
+    "model": "gpt-4o-mini",
+    "n": 1,
+    "max_completion_tokens": 768,
+    "response_format": {
+      "type": "json_object"
+    },
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a UX writer for NOEXC, a friendly accountability bot. Write multiple alternative lines for the specified contentKey. Keep placeholders like {user.name} exactly unchanged. Use ||| to split long messages into multiple bubbles (max 3). Do not use emojis. Tone: friendly, concise, supportive. Concise, natural, no marketing fluff."
+      },
+      {
+        "role": "user",
+        "content": "{\"system\":\"You are a UX writer for NOEXC, a friendly accountability bot. Write multiple alternative lines for the specified contentKey. Keep placeholders like {user.name} exactly unchanged. Use ||| to split long messages into multiple bubbles (max 3). Do not use emojis. Tone: friendly, concise, supportive. Concise, natural, no marketing fluff.\",\"task\":{\"contentKey\":\"bot.acknowledge.failure.supportive\",\"targetPath\":\"assets/content/bot/acknowledge/failure_supportive.txt\",\"constraints\":{\"numVariants\":8,\"maxBubblesPerLine\":3,\"maxCharsPerBubble\":90,\"preservePlaceholders\":true},\"defaultText\":\"Well, can't say I'm surprised...\",\"existingVariants\":[\"That's okay, these things happen.\",\"Don't worry, we can try again.\",\"No problem! Let's figure this out together.\",\"It's alright, everyone has setbacks.\",\"That's fine - we'll work through this.\"]},\"context\":[{\"sender\":\"bot\",\"type\":\"bot\",\"ref\":\"contentKey:bot.request.task_status.gentle\",\"default\":\"Ok, so did you manage to do your thing last time?\",\"examples\":[\"How did your task go on {task.dueDay:activeDays}?\",\"Could you please share your {task.dueDay:activeDays} task status?\",\"When you're ready, let me know how things went on {task.dueDay:activeDays}.\"]},{\"sender\":\"user\",\"type\":\"choice\",\"ref\":\"contentKey:user.choose.task_status.failed\",\"default\":\"I... Did not...\"}],\"output_format\":{\"type\":\"json\",\"schema\":{\"variants\":[\"string\"]}}}"
+      }
+    ],
+    "temperature": 0.7,
+    "top_p": 0.9
+  },
+  "response": {
+    "id": "chatcmpl-CBRGrymY0j4HLdaFh9kuFtIybY9Wg",
+    "object": "chat.completion",
+    "created": 1756842473,
+    "model": "gpt-4o-mini-2024-07-18",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"variants\": [\n    \"It's okay, setbacks happen to everyone.\",\n    \"No worries, we can learn from this.\",\n    \"That’s alright, let’s explore what went wrong.\",\n    \"It's totally fine, we can tackle this together.\",\n    \"Don't be hard on yourself; we all face challenges.\",\n    \"It's all part of the process; let's keep moving forward.\",\n    \"That’s okay, we’ll find a way to improve next time.\",\n    \"No problem at all, we can reassess and try again.\"\n  ]\n}",
+          "refusal": null,
+          "annotations": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 413,
+      "completion_tokens": 113,
+      "total_tokens": 526,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "service_tier": "default",
+    "system_fingerprint": "fp_51db84afab"
+  },
+  "acceptedVariants": [
+    "It's okay, setbacks happen to everyone.",
+    "No worries, we can learn from this.",
+    "That’s alright, let’s explore what went wrong.",
+    "It's totally fine, we can tackle this together.",
+    "Don't be hard on yourself; we all face challenges.",
+    "It's all part of the process; let's keep moving forward.",
+    "That’s okay, we’ll find a way to improve next time.",
+    "No problem at all, we can reassess and try again."
+  ],
+  "stateFile": "tool/state/onboarding_to_msg90.yaml",
+  "resolvedPath": {
+    "nodes": [
+      {
+        "sequenceId": "welcome_seq",
+        "messageId": 1,
+        "type": "autoroute"
+      },
+      {
+        "sequenceId": "welcome_seq",
+        "messageId": 291,
+        "type": "dataAction"
+      },
+      {
+        "sequenceId": "welcome_seq",
+        "messageId": 222,
+        "type": "autoroute"
+      },
+      {
+        "sequenceId": "taskCheck_seq",
+        "messageId": 263,
+        "type": "autoroute"
+      },
+      {
+        "sequenceId": "taskCheck_seq",
+        "messageId": 286,
+        "type": "autoroute"
+      },
+      {
+        "sequenceId": "overdue_seq",
+        "messageId": 87
+      },
+      {
+        "sequenceId": "overdue_seq",
+        "messageId": 88,
+        "type": "choice"
+      },
+      {
+        "sequenceId": "overdue_seq",
+        "messageId": 90,
+        "choiceSelected": {
+          "index": 1,
+          "text": "I... Did not...",
+          "contentKey": "user.choose.task_status.failed"
+        }
+      }
+    ]
+  }
+}

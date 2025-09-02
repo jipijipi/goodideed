@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-01T18:13:17.402639",
+  "timestamp": "2025-09-02T16:59:00.334416",
   "target": {
     "sequenceId": "overdue_seq",
     "messageId": 90,
@@ -59,18 +59,6 @@
   },
   "context": [
     {
-      "id": 15,
-      "sender": "bot",
-      "type": "bot",
-      "text": "contentKey:bot.celebrate.success.enthusiastic"
-    },
-    {
-      "id": 274,
-      "sender": "bot",
-      "type": "bot",
-      "text": "What about today?||| You are game today?"
-    },
-    {
       "id": 87,
       "sender": "bot",
       "type": "bot",
@@ -80,7 +68,7 @@
       "id": 88,
       "sender": "user",
       "type": "choice",
-      "text": "contentKey:user.choose.task_status.failed"
+      "text": "user_choice"
     }
   ],
   "exemplars": {
@@ -120,21 +108,6 @@
       {
         "sender": "bot",
         "type": "bot",
-        "ref": "contentKey:bot.celebrate.success.enthusiastic",
-        "examples": [
-          "Great stuff buddy",
-          "Absolutely crushing it!",
-          "You're on fire today!"
-        ]
-      },
-      {
-        "sender": "bot",
-        "type": "bot",
-        "ref": "What about today?||| You are game today?"
-      },
-      {
-        "sender": "bot",
-        "type": "bot",
         "ref": "contentKey:bot.request.task_status.gentle",
         "examples": [
           "How did your task go on {task.dueDay:activeDays}?",
@@ -145,12 +118,7 @@
       {
         "sender": "user",
         "type": "choice",
-        "ref": "contentKey:user.choose.task_status.failed",
-        "examples": [
-          "❌ Didn't complete the task",
-          "❌ Task not finished",
-          "❌ Unable to complete"
-        ]
+        "ref": "user_choice"
       }
     ],
     "output_format": {
@@ -183,21 +151,6 @@
         {
           "sender": "bot",
           "type": "bot",
-          "ref": "contentKey:bot.celebrate.success.enthusiastic",
-          "examples": [
-            "Great stuff buddy",
-            "Absolutely crushing it!",
-            "You're on fire today!"
-          ]
-        },
-        {
-          "sender": "bot",
-          "type": "bot",
-          "ref": "What about today?||| You are game today?"
-        },
-        {
-          "sender": "bot",
-          "type": "bot",
           "ref": "contentKey:bot.request.task_status.gentle",
           "examples": [
             "How did your task go on {task.dueDay:activeDays}?",
@@ -208,12 +161,7 @@
         {
           "sender": "user",
           "type": "choice",
-          "ref": "contentKey:user.choose.task_status.failed",
-          "examples": [
-            "❌ Didn't complete the task",
-            "❌ Task not finished",
-            "❌ Unable to complete"
-          ]
+          "ref": "user_choice"
         }
       ],
       "output_format": {
@@ -244,21 +192,6 @@
         {
           "sender": "bot",
           "type": "bot",
-          "ref": "contentKey:bot.celebrate.success.enthusiastic",
-          "examples": [
-            "Great stuff buddy",
-            "Absolutely crushing it!",
-            "You're on fire today!"
-          ]
-        },
-        {
-          "sender": "bot",
-          "type": "bot",
-          "ref": "What about today?||| You are game today?"
-        },
-        {
-          "sender": "bot",
-          "type": "bot",
           "ref": "contentKey:bot.request.task_status.gentle",
           "examples": [
             "How did your task go on {task.dueDay:activeDays}?",
@@ -269,12 +202,7 @@
         {
           "sender": "user",
           "type": "choice",
-          "ref": "contentKey:user.choose.task_status.failed",
-          "examples": [
-            "❌ Didn't complete the task",
-            "❌ Task not finished",
-            "❌ Unable to complete"
-          ]
+          "ref": "user_choice"
         }
       ],
       "output_format": {
@@ -289,9 +217,9 @@
     "model": "my-model"
   },
   "acceptedVariants": [
-    "[bot.acknowledge.failure.supportive] Variant 1 at 1756743197393 ||| Second bubble (optional)"
+    "[bot.acknowledge.failure.supportive] Variant 1 at 1756825140326 ||| Second bubble (optional)"
   ],
-  "stateFile": "tool/state/onboarding_to_msg3.yaml",
+  "stateFile": "tool/state/onboarding_to_msg90.yaml",
   "resolvedPath": {
     "nodes": [
       {
@@ -321,153 +249,21 @@
       },
       {
         "sequenceId": "overdue_seq",
-        "messageId": 87,
-        "type": "bot"
+        "messageId": 87
       },
       {
         "sequenceId": "overdue_seq",
         "messageId": 88,
-        "type": "choice",
-        "choiceSelected": {
-          "index": 0,
-          "text": "As a matter of fact, I did!",
-          "contentKey": "user.choose.task_status.completed"
-        }
+        "type": "choice"
       },
       {
         "sequenceId": "overdue_seq",
-        "messageId": 89,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 280,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 279,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "success_seq",
-        "messageId": 15,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "success_seq",
-        "messageId": 126,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "success_seq",
-        "messageId": 458,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "catchup_seq",
-        "messageId": 273,
-        "type": "autoroute"
-      },
-      {
-        "sequenceId": "catchup_seq",
-        "messageId": 274,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "taskCheck_seq",
-        "messageId": 263,
-        "type": "autoroute"
-      },
-      {
-        "sequenceId": "taskCheck_seq",
-        "messageId": 286,
-        "type": "autoroute"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 87,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 88,
-        "type": "choice",
-        "choiceSelected": {
-          "index": 0,
-          "text": "As a matter of fact, I did!",
-          "contentKey": "user.choose.task_status.completed"
-        }
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 89,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 280,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 279,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "success_seq",
-        "messageId": 15,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "success_seq",
-        "messageId": 126,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "success_seq",
-        "messageId": 458,
-        "type": "dataAction"
-      },
-      {
-        "sequenceId": "catchup_seq",
-        "messageId": 273,
-        "type": "autoroute"
-      },
-      {
-        "sequenceId": "catchup_seq",
-        "messageId": 274,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "taskCheck_seq",
-        "messageId": 263,
-        "type": "autoroute"
-      },
-      {
-        "sequenceId": "taskCheck_seq",
-        "messageId": 286,
-        "type": "autoroute"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 87,
-        "type": "bot"
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 88,
-        "type": "choice",
+        "messageId": 90,
         "choiceSelected": {
           "index": 1,
           "text": "I... Did not...",
           "contentKey": "user.choose.task_status.failed"
         }
-      },
-      {
-        "sequenceId": "overdue_seq",
-        "messageId": 90,
-        "type": "bot"
       }
     ]
   }

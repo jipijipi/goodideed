@@ -753,77 +753,54 @@ class _PathResolver {
   Future<_ResolvedPath> resolve({required _StateSpec state, required String targetSeq, required int targetId}) async {
     final startSeq = state.startSequence ?? targetSeq;
     final startId = state.startMessage ?? (await index.firstMessageId(startSeq)) ?? targetId;
-    final visited = <String,int>{};
-    final path = await _dfs(
-      state,
-      startSeq,
-      startId,
-      targetSeq,
-      targetId,
-      visited,
-      0,
-      [],
-    );
-    if (path == null) {
-      // As a fallback: return a minimal path just containing the target
+
+    // BFS for shortest path
+    final startMsg = await index.getMessage(startSeq, startId);
+    if (startMsg == null) {
       return _ResolvedPath([_ResolvedPathNode(sequenceId: targetSeq, messageId: targetId, type: (await index.getMessage(targetSeq, targetId))?['type']?.toString())]);
     }
-    return _ResolvedPath(path);
-  }
 
-  Future<List<_ResolvedPathNode>?> _dfs(
-    _StateSpec state,
-    String seq,
-    int id,
-    String targetSeq,
-    int targetId,
-    Map<String,int> visited,
-    int depth,
-    List<_ResolvedPathNode> acc,
-  ) async {
-    if (depth > state.maxDepth) return null;
-    final key = '$seq:$id';
-    if ((visited[key] ?? 0) > 2) return null; // basic loop guard
-    visited[key] = (visited[key] ?? 0) + 1;
+    final queue = <List<_ResolvedPathNode>>[];
+    queue.add([_ResolvedPathNode(sequenceId: startSeq, messageId: startId, type: (startMsg['type'] as String?) ?? 'bot')]);
+    final seen = <String>{};
 
-    final msg = await index.getMessage(seq, id);
-    if (msg == null) return null;
-    final type = (msg['type'] as String?) ?? 'bot';
-
-    final node = _ResolvedPathNode(sequenceId: seq, messageId: id, type: type);
-    final newAcc = List<_ResolvedPathNode>.from(acc)..add(node);
-    if (seq == targetSeq && id == targetId) return newAcc;
-
-    // Determine next edges
-    final edges = await _nextEdges(state, seq, id, msg);
-    for (final e in edges) {
-      final nextNode = e;
-      final chosenAcc = List<_ResolvedPathNode>.from(newAcc);
-      // Annotate choice selection if provided
-      if (e.choiceSelected != null) {
-        chosenAcc[chosenAcc.length - 1] = _ResolvedPathNode(
-          sequenceId: node.sequenceId,
-          messageId: node.messageId,
-          type: node.type,
-          choiceSelected: e.choiceSelected,
-        );
+    while (queue.isNotEmpty) {
+      final path = queue.removeAt(0);
+      final last = path.last;
+      if (last.sequenceId == targetSeq && last.messageId == targetId) {
+        return _ResolvedPath(path);
       }
-      final result = await _dfs(
-        state,
-        nextNode.sequenceId,
-        nextNode.messageId,
-        targetSeq,
-        targetId,
-        visited,
-        depth + 1,
-        chosenAcc,
-      );
-      if (result != null) return result;
+      final key = '${last.sequenceId}:${last.messageId}';
+      if (seen.contains(key) || path.length > state.maxDepth) continue;
+      seen.add(key);
+
+      final msg = await index.getMessage(last.sequenceId, last.messageId);
+      if (msg == null) continue;
+      final neighbors = await _neighbors(state, last.sequenceId, last.messageId, msg);
+      // Minor goal-directed ordering: push neighbor that is exactly the target first
+      neighbors.sort((a, b) {
+        final at = (a.sequenceId == targetSeq && a.messageId == targetId) ? 0 : 1;
+        final bt = (b.sequenceId == targetSeq && b.messageId == targetId) ? 0 : 1;
+        return at.compareTo(bt);
+      });
+      for (final n in neighbors) {
+        final nextMsg = await index.getMessage(n.sequenceId, n.messageId);
+        final typed = _ResolvedPathNode(
+          sequenceId: n.sequenceId,
+          messageId: n.messageId,
+          type: nextMsg?['type']?.toString(),
+          choiceSelected: n.choiceSelected,
+        );
+        final nextPath = List<_ResolvedPathNode>.from(path)..add(typed);
+        queue.add(nextPath);
+      }
     }
-    return null;
+
+    // Fallback: just target
+    return _ResolvedPath([_ResolvedPathNode(sequenceId: targetSeq, messageId: targetId, type: (await index.getMessage(targetSeq, targetId))?['type']?.toString())]);
   }
 
-  Future<List<_ResolvedPathNode>> _nextEdges(_StateSpec state, String seq, int id, Map<String, dynamic> msg) async {
+  Future<List<_ResolvedPathNode>> _neighbors(_StateSpec state, String seq, int id, Map<String, dynamic> msg) async {
     final type = (msg['type'] as String?) ?? 'bot';
 
     // Cross-sequence jump on message
@@ -1189,7 +1166,11 @@ class _PromptBuilder {
       };
       if (config.context.includeNodeSamples && isKey) {
         final key = m.textOrKey.substring('contentKey:'.length);
-        final samples = _sampleLinesForContentKeySync(key, config.context.samplesPerNode);
+        final samples = _sampleLinesForContentKeySync(
+          key,
+          config.context.samplesPerNode,
+          forbidEmojis: config.style.forbidEmojis,
+        );
         if (samples.isNotEmpty) {
           anyNodeExamples = true;
           entry['examples'] = samples;
@@ -1225,19 +1206,31 @@ class _PromptBuilder {
   }
 }
 
-List<String> _sampleLinesForContentKeySync(String key, int k) {
+List<String> _sampleLinesForContentKeySync(String key, int k, {bool forbidEmojis = false}) {
   try {
     final ck = _ContentKey.parse(key);
     if (!ck.isValid) return const [];
     final path = ck.toFilePath();
     final f = File(path);
     if (!f.existsSync()) return const [];
-    final lines = f.readAsLinesSync().map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+    final raw = f.readAsLinesSync().map((e) => e.trim()).where((e) => e.isNotEmpty);
+    final lines = <String>[];
+    for (final l in raw) {
+      if (forbidEmojis && !_isAscii(l)) continue;
+      lines.add(l);
+    }
     if (lines.isEmpty) return const [];
     return lines.take(k).toList();
   } catch (_) {
     return const [];
   }
+}
+
+bool _isAscii(String s) {
+  for (final code in s.runes) {
+    if (code > 0x7F) return false;
+  }
+  return true;
 }
 
 // ---------------- Generator (LLM REST) ----------------

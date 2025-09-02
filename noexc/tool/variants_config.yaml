@@ -1,10 +1,10 @@
 provider:
-  name: generic-json
+  name: openai-chat
   base_url: https://api.example.com/generate
-  model: my-model
-  api_key_env: LLM_API_KEY
+  model: gpt-5
+  api_key_env: OPENAI_API_KEY
   mock: true
-  timeout_ms: 30000
+  timeout_ms: 3000
 
 gen:
   num_variants: 8

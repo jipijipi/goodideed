@@ -366,10 +366,12 @@ class _Config {
     await file.create(recursive: true);
     const yaml = '''
 provider:
-  name: generic-json
-  base_url: https://api.example.com/generate
-  model: my-model
-  api_key_env: LLM_API_KEY
+  # Use 'openai-chat' for Chat Completions API
+  name: openai-chat
+  # Leave base_url empty to use default https://api.openai.com/v1/chat/completions
+  base_url: ""
+  model: gpt-4o-mini
+  api_key_env: OPENAI_API_KEY
   mock: true
   timeout_ms: 30000
 
@@ -380,6 +382,7 @@ gen:
   max_bubbles_per_line: 3
   max_chars_per_bubble: 90
   dedupe_threshold: 0.82
+  max_tokens: 512
 
 context:
   history_bubbles: 4
@@ -451,6 +454,7 @@ class _GenConfig {
   final int maxBubblesPerLine;
   final int maxCharsPerBubble;
   final double dedupeThreshold;
+  final int maxTokens;
   _GenConfig({
     required this.numVariants,
     required this.temperature,
@@ -458,6 +462,7 @@ class _GenConfig {
     required this.maxBubblesPerLine,
     required this.maxCharsPerBubble,
     required this.dedupeThreshold,
+    required this.maxTokens,
   });
   factory _GenConfig.fromJson(Map<String, dynamic> j) => _GenConfig(
     numVariants: (j['num_variants'] as int?) ?? 8,
@@ -466,6 +471,7 @@ class _GenConfig {
     maxBubblesPerLine: (j['max_bubbles_per_line'] as int?) ?? 3,
     maxCharsPerBubble: (j['max_chars_per_bubble'] as int?) ?? 90,
     dedupeThreshold: ((j['dedupe_threshold'] as num?) ?? 0.82).toDouble(),
+    maxTokens: (j['max_tokens'] as int?) ?? 512,
   );
 }
 
@@ -1301,34 +1307,66 @@ class _Generator {
       throw Exception('Missing API key env: ${config.provider.apiKeyEnv}');
     }
 
-    final uri = Uri.parse(config.provider.baseUrl);
     final client = HttpClient();
     client.connectionTimeout = Duration(milliseconds: config.provider.timeoutMs);
 
-    // Generic JSON contract: { model, temperature, top_p, prompt: <object> }
-    final payloadObj = {
-      'model': config.provider.model,
-      'temperature': config.gen.temperature,
-      'top_p': config.gen.topP,
-      'n': config.gen.numVariants,
-      'prompt': prompt,
-    };
-    final payload = jsonEncode(payloadObj);
+    // Build request based on provider
+    Uri uri;
+    String requestBody;
+    Map<String, dynamic> payloadObj;
+    if (config.provider.name == 'openai-chat') {
+      // OpenAI Chat Completions API
+      final base = config.provider.baseUrl.isNotEmpty
+          ? config.provider.baseUrl
+          : 'https://api.openai.com/v1/chat/completions';
+      uri = Uri.parse(base);
+      payloadObj = {
+        'model': config.provider.model,
+        'temperature': config.gen.temperature,
+        'top_p': config.gen.topP,
+        'n': 1, // Chat API returns n messages; we expect a single JSON object with variants
+        'max_tokens': config.gen.maxTokens,
+        // JSON mode to enforce valid JSON response
+        'response_format': {'type': 'json_object'},
+        'messages': [
+          {
+            'role': 'system',
+            'content': (prompt['system'] ?? '').toString(),
+          },
+          {
+            'role': 'user',
+            'content': jsonEncode(prompt), // provide structured task/context as JSON string
+          },
+        ],
+      };
+      requestBody = jsonEncode(payloadObj);
+    } else {
+      // Generic JSON contract: { model, temperature, top_p, prompt: <object> }
+      uri = Uri.parse(config.provider.baseUrl);
+      payloadObj = {
+        'model': config.provider.model,
+        'temperature': config.gen.temperature,
+        'top_p': config.gen.topP,
+        'n': config.gen.numVariants,
+        'prompt': prompt,
+      };
+      requestBody = jsonEncode(payloadObj);
+    }
 
     for (int attempt = 0;; attempt++) {
       try {
         final req = await client.postUrl(uri);
         req.headers.set('content-type', 'application/json');
         req.headers.set('authorization', 'Bearer $apiKey');
-        req.write(payload);
+        req.write(requestBody);
         final res = await req.close();
-        final body = await utf8.decodeStream(res);
+        final responseBody = await utf8.decodeStream(res);
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          final obj = jsonDecode(body) as Map<String, dynamic>;
+          final obj = jsonDecode(responseBody) as Map<String, dynamic>;
           final variants = _extractVariants(obj);
           return _GenResult(variants, obj, payloadObj);
         } else {
-          throw HttpException('HTTP ${res.statusCode}: $body');
+          throw HttpException('HTTP ${res.statusCode}: $responseBody');
         }
       } catch (e) {
         if (attempt >= config.rateLimit.retryCount) rethrow;
@@ -1345,6 +1383,22 @@ class _Generator {
     // Fallbacks: some providers return { choices: [ { text: ... } ] }
     if (obj['choices'] is List) {
       final choices = obj['choices'] as List;
+      if (choices.isEmpty) return [];
+      final first = choices.first;
+      // OpenAI chat: choices[].message.content
+      if (first is Map && first['message'] is Map) {
+        final content = (first['message'] as Map)['content']?.toString() ?? '';
+        try {
+          final parsed = jsonDecode(content);
+          if (parsed is Map && parsed['variants'] is List) {
+            return (parsed['variants'] as List).map((e) => e.toString()).toList();
+          }
+        } catch (_) {
+          // Not JSON; fall through to treat as single variant
+        }
+        return content.isNotEmpty ? [content] : [];
+      }
+      // Generic choices with 'text'
       return choices
           .map((c) => (c is Map && c['text'] != null) ? c['text'].toString() : null)
           .whereType<String>()

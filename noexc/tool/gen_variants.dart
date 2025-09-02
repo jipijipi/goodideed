@@ -252,6 +252,15 @@ Future<_ProcessOutcome> _processTarget(
     config: config,
   ).build();
 
+  // Attach target's default text and existing variants to the task in prompt
+  final targetDefaultText = (msg['text'] as String?) ?? '';
+  if (targetDefaultText.isNotEmpty) {
+    (prompt['task'] as Map<String, dynamic>)['defaultText'] = targetDefaultText;
+  }
+  if (existing.isNotEmpty) {
+    (prompt['task'] as Map<String, dynamic>)['existingVariants'] = existing;
+  }
+
   // 7) Generate via LLM client (or mock)
   final generator = _Generator(config);
   final genResult = await generator.generate(prompt);
@@ -587,7 +596,8 @@ class _ContextMessageView {
   final String type;
   final String sender;
   final String textOrKey; // Prefer resolved text if available; else contentKey or text
-  _ContextMessageView({required this.id, required this.type, required this.sender, required this.textOrKey});
+  final String? defaultText; // Script default text for messages or selected choice text
+  _ContextMessageView({required this.id, required this.type, required this.sender, required this.textOrKey, this.defaultText});
 }
 
 class _ContextBuilder {
@@ -613,6 +623,7 @@ class _ContextBuilder {
           type: type,
           sender: sender,
           textOrKey: (contentKey != null && contentKey.isNotEmpty) ? 'contentKey:$contentKey' : text,
+          defaultText: (type == 'choice') ? null : (m['text'] as String? ?? ''),
         );
         out.add(view);
       }
@@ -953,7 +964,13 @@ class _ResolvedContextBuilder {
         final text = sel?['contentKey'] != null
             ? 'contentKey:${sel!['contentKey']}'
             : (sel?['text']?.toString() ?? 'user_choice');
-        turns.add(_ContextMessageView(id: n.messageId, type: 'choice', sender: 'user', textOrKey: text));
+        turns.add(_ContextMessageView(
+          id: n.messageId,
+          type: 'choice',
+          sender: 'user',
+          textOrKey: text,
+          defaultText: sel?['text']?.toString(),
+        ));
         continue;
       }
       if (type == 'autoroute' || type == 'dataAction') {
@@ -964,7 +981,13 @@ class _ResolvedContextBuilder {
       final text = (msg?['text']?.toString() ?? '');
       final sender = (msg?['sender']?.toString() ?? (type == 'user' ? 'user' : 'bot'));
       final label = (contentKey != null && contentKey.isNotEmpty) ? 'contentKey:$contentKey' : text;
-      turns.add(_ContextMessageView(id: n.messageId, type: type, sender: sender, textOrKey: label));
+      turns.add(_ContextMessageView(
+        id: n.messageId,
+        type: type,
+        sender: sender,
+        textOrKey: label,
+        defaultText: msg?['text']?.toString(),
+      ));
     }
     // Window: last N
     final N = config.context.historyBubbles;
@@ -1164,6 +1187,9 @@ class _PromptBuilder {
         'type': m.type,
         'ref': ref,
       };
+      if (m.defaultText != null && m.defaultText!.isNotEmpty) {
+        entry['default'] = m.defaultText;
+      }
       if (config.context.includeNodeSamples && isKey) {
         final key = m.textOrKey.substring('contentKey:'.length);
         final samples = _sampleLinesForContentKeySync(

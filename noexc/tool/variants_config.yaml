@@ -3,7 +3,7 @@ provider:
   base_url: https://api.example.com/generate
   model: gpt-5
   api_key_env: OPENAI_API_KEY
-  mock: true
+  mock: false
   timeout_ms: 3000
 
 gen:

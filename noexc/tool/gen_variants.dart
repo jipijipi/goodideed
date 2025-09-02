@@ -811,7 +811,9 @@ class _PathResolver {
 
       final msg = await index.getMessage(last.sequenceId, last.messageId);
       if (msg == null) continue;
-      final neighbors = await _neighbors(state, last.sequenceId, last.messageId, msg);
+      final neighborsRaw = await _neighbors(state, last.sequenceId, last.messageId, msg);
+      // Work on a modifiable copy to avoid sorting unmodifiable lists
+      final neighbors = List<_ResolvedPathNode>.from(neighborsRaw);
       // Minor goal-directed ordering: push neighbor that is exactly the target first
       neighbors.sort((a, b) {
         final at = (a.sequenceId == targetSeq && a.messageId == targetId) ? 0 : 1;

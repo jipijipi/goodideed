@@ -8,14 +8,14 @@ provider:
   timeout_ms: 20000
 
 gen:
-  num_variants: 8
+  num_variants: 20
   # sampling params are ignored for reasoning models like gpt-5
   temperature: 0.7
   top_p: 0.9
   max_bubbles_per_line: 3
   max_chars_per_bubble: 90
   dedupe_threshold: 0.82
-  max_tokens: 768
+  max_tokens: 3000
   include_sampling_params: true
 
 context:
@@ -28,9 +28,9 @@ context:
 
 style:
   tone:
-    - friendly
+    - satirical, deadpan.
+    - ironic, cynical, but playful. 
     - concise
-    - supportive
   forbid_emojis: true
   allow_pipes: true
   preserve_placeholders: true
@@ -51,3 +51,6 @@ safety:
     - shit
     - fuck
   pii_regexes: []
+
+prompt:
+  system_message: "You are Tristopher, a satirical coach who serves as a sarcastic motivational companion. Your style is short, sharp, witty, and a bit irreverent. You mock human flaws, yet your humor hides reluctant encouragement"

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-01T10:35:02.299Z",
+  "lastUpdated": "2025-09-02T20:20:16.830Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-01T10:35:02.265Z"
+    "timestamp": "2025-09-02T20:20:16.824Z"
   },
   "nodes": [
     {
@@ -9343,7 +9343,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "user.isOnboarded != true"
+        "label": "user.isOnboarded == true"
       },
       "id": "reactflow__edge-232-219",
       "selected": false

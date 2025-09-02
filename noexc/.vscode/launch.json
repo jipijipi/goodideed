@@ -27,9 +27,9 @@
             "request": "launch",
             "program": "tool/gen_variants.dart",
             "args": [
-                "--sequence", "overdue_seq",
-                "--message", "90",
-                "--state", "tool/state/onboarding_to_msg90.yaml",
+                "--sequence", "settask_seq",
+                "--message", "26",
+                "--state", "tool/state/task_setting.yaml",
                 "--write"
             ],
             "env": {

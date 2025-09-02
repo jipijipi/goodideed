@@ -333,6 +333,7 @@ class _Config {
   final _IoConfig io;
   final _RateLimitConfig rateLimit;
   final _SafetyConfig safety;
+  final _PromptTextConfig promptCfg;
 
   _Config(
     this.provider,
@@ -342,6 +343,7 @@ class _Config {
     this.io,
     this.rateLimit,
     this.safety,
+    this.promptCfg,
   );
 
   static Future<_Config> load(String path) async {
@@ -359,6 +361,7 @@ class _Config {
       _IoConfig.fromJson(data['io'] as Map<String, dynamic>? ?? const {}),
       _RateLimitConfig.fromJson(data['rate_limit'] as Map<String, dynamic>? ?? const {}),
       _SafetyConfig.fromJson(data['safety'] as Map<String, dynamic>? ?? const {}),
+      _PromptTextConfig.fromJson(data['prompt'] as Map<String, dynamic>? ?? const {}),
     );
   }
   static Future<void> _writeDefaultConfigYaml(String path) async {
@@ -417,6 +420,9 @@ safety:
     - shit
     - fuck
   pii_regexes: []
+
+prompt:
+  system_message: "You are a UX writer for NOEXC, a friendly accountability bot."
 ''';
     await file.writeAsString(yaml);
   }
@@ -565,6 +571,15 @@ class _SafetyConfig {
     blocklist: (j['blocklist'] as List?)?.cast<String>() ?? const [],
     piiRegexes: (j['pii_regexes'] as List?)?.cast<String>() ?? const [],
   );
+}
+
+class _PromptTextConfig {
+  final String systemMessage;
+  _PromptTextConfig({required this.systemMessage});
+  factory _PromptTextConfig.fromJson(Map<String, dynamic> j) => _PromptTextConfig(
+        systemMessage: (j['system_message'] as String?) ??
+            'You are a UX writer for NOEXC, a friendly accountability bot.',
+      );
 }
 
 // ---------------- ContentKey ----------------
@@ -1183,7 +1198,7 @@ class _PromptBuilder {
   });
 
   Map<String, dynamic> build() {
-    final system = 'You are a UX writer for NOEXC, a friendly accountability bot. '
+    final system = '${config.promptCfg.systemMessage} '
         'Write multiple alternative lines for the specified contentKey. '
         'Keep placeholders like {user.name} exactly unchanged. '
         'Use ||| to split long messages into multiple bubbles (max ${config.gen.maxBubblesPerLine}). '

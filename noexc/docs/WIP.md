@@ -509,3 +509,13 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "nested_child_model/opacity": 1
   }
 }
+
+{
+  "asset": "assets/animations/success.riv",
+  "zone": 2,
+  "align": "center",
+  "id": "success",
+  "fit": "contain",
+  "useDataBinding": true,
+  "autoHideMs": 2500
+}

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-03T13:06:48.334Z",
+  "lastUpdated": "2025-09-03T15:42:55.746Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-03T13:06:48.329Z"
+    "timestamp": "2025-09-03T15:42:55.719Z"
   },
   "nodes": [
     {
@@ -518,21 +518,21 @@
     {
       "id": "28",
       "position": {
-        "x": 1201.050652157155,
-        "y": -6055.33236923706
+        "x": 1234.1209203691726,
+        "y": -5954.176254706183
       },
       "type": "group",
       "style": {
-        "width": 804.1688816625301,
+        "width": 1057.382830736228,
         "height": 2291,
         "zIndex": 999
       },
-      "width": 804,
+      "width": 1057,
       "height": 2291,
       "selected": false,
       "positionAbsolute": {
-        "x": 1201.050652157155,
-        "y": -6055.33236923706
+        "x": 1234.1209203691726,
+        "y": -5954.176254706183
       },
       "dragging": false,
       "data": {
@@ -550,21 +550,21 @@
     {
       "id": "30",
       "position": {
-        "x": 3277.0248509168136,
-        "y": -9686.542832443949
+        "x": 3332.629829104235,
+        "y": -9690.018143580663
       },
       "type": "group",
       "style": {
-        "width": 1025.9927219781948,
+        "width": 1217.9540637796413,
         "height": 7175,
         "zIndex": 999
       },
-      "width": 1026,
+      "width": 1218,
       "height": 7175,
       "selected": false,
       "positionAbsolute": {
-        "x": 3277.0248509168136,
-        "y": -9686.542832443949
+        "x": 3332.629829104235,
+        "y": -9690.018143580663
       },
       "dragging": false,
       "data": {
@@ -3782,8 +3782,8 @@
     {
       "id": "477",
       "position": {
-        "x": 0,
-        "y": 295.49213038660764
+        "x": 414.3510075976337,
+        "y": 204.062565329853
       },
       "data": {
         "label": "Welcome!",
@@ -3797,8 +3797,49 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1847.3852004070382,
-        "y": -4574.893567059
+        "x": 1648.4719279668063,
+        "y": -5750.11368937633
+      },
+      "dragging": true,
+      "parentId": "28",
+      "extent": "parent"
+    },
+    {
+      "id": "491",
+      "position": {
+        "x": 642.382830736228,
+        "y": 515.4177116292376
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "491",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive",
+            "data": {
+              "asset": "assets/animations/wave.riv",
+              "zone": 2,
+              "align": "center",
+              "id": "success",
+              "fit": "contain",
+              "useDataBinding": true,
+              "autoHideMs": 3500
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 591,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 1876.5037511054006,
+        "y": -5438.758543076945
       },
       "dragging": true,
       "parentId": "28",
@@ -4484,6 +4525,47 @@
       "positionAbsolute": {
         "x": 3753.671357800634,
         "y": -5293.417438983657
+      },
+      "dragging": true,
+      "parentId": "30",
+      "extent": "parent"
+    },
+    {
+      "id": "490",
+      "position": {
+        "x": 749.9540637796413,
+        "y": 2430.559797776733
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "490",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive",
+            "data": {
+              "asset": "assets/animations/success.riv",
+              "zone": 2,
+              "align": "center",
+              "id": "success",
+              "fit": "contain",
+              "useDataBinding": true,
+              "autoHideMs": 3500
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 470,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 4026.978914696455,
+        "y": -7255.983034667216
       },
       "dragging": true,
       "parentId": "30",
@@ -8585,14 +8667,6 @@
     }
   ],
   "edges": [
-    {
-      "id": "reactflow__edge-6-7",
-      "source": "6",
-      "target": "7",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
     {
       "id": "reactflow__edge-7-8",
       "source": "7",
@@ -13549,22 +13623,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "5",
-      "target": "477",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-5-477",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
       "source": "477",
       "sourceHandle": null,
       "target": "6",
@@ -13573,24 +13631,6 @@
       "data": {},
       "id": "reactflow__edge-477-6",
       "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "479",
-      "sourceHandle": null,
-      "target": "480",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "I completed my objective !"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-479-480"
     },
     {
       "zIndex": 1001,
@@ -13610,7 +13650,9 @@
       "target": "481",
       "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "delay": 1000
+      },
       "id": "reactflow__edge-480-481",
       "selected": false
     },
@@ -13770,6 +13812,78 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-487-18",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "479",
+      "sourceHandle": null,
+      "target": "490",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "I completed my objective !"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-479-490"
+    },
+    {
+      "zIndex": 1001,
+      "source": "490",
+      "sourceHandle": null,
+      "target": "480",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-490-480",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "5",
+      "target": "477",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-5-477"
+    },
+    {
+      "zIndex": 1001,
+      "source": "6",
+      "target": "491",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-6-491",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "491",
+      "sourceHandle": null,
+      "target": "7",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-491-7",
       "selected": false
     }
   ]

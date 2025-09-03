@@ -2,7 +2,7 @@
 
 ---
 
-## 1. First Launch – Hook
+## 1. First Launch – Hook 
 - 🎭 **Antagonist Introduction**
   - Animated entrance (jester/robot pops onto screen, overly dramatic).
   - Quip: *“Oh, look who decided to show up. Don’t worry, I’m not impressed… yet.”*  

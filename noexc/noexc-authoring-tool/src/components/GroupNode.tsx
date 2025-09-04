@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useState } from 'react';
-import { Handle, Position, NodeProps } from 'reactflow';
+import { Handle, Position, NodeProps, NodeResizer } from 'reactflow';
 import { NodeData } from '../constants/nodeTypes';
 
 interface GroupNodeProps extends NodeProps {
@@ -12,6 +12,7 @@ interface GroupNodeProps extends NodeProps {
     onTitleChange?: (nodeId: string, newTitle: string) => void;
     onDescriptionChange?: (nodeId: string, newDescription: string) => void;
     onColorChange?: (nodeId: string, newColor: string) => void;
+    onFitToContents?: (nodeId: string) => void;
   };
 }
 
@@ -56,6 +57,10 @@ const GroupNode = ({ data, selected, id, zIndex }: GroupNodeProps) => {
 
   const handleColorChange = useCallback((newColor: string) => {
     data.onColorChange?.(id, newColor);
+  }, [data, id]);
+
+  const handleFitToContents = useCallback(() => {
+    data.onFitToContents?.(id);
   }, [data, id]);
 
   return (
@@ -193,6 +198,33 @@ const GroupNode = ({ data, selected, id, zIndex }: GroupNodeProps) => {
             </div>
           )}
         </div>
+
+        {/* Fit to Contents Button */}
+        <div style={{ marginTop: '6px', textAlign: 'center' }}>
+          <button
+            onClick={handleFitToContents}
+            style={{
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              border: '1px solid rgba(59, 130, 246, 0.3)',
+              borderRadius: '4px',
+              padding: '3px 6px',
+              fontSize: '9px',
+              cursor: 'pointer',
+              color: '#3b82f6',
+              fontWeight: 'bold',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+            }}
+            title="Resize group to fit all child nodes"
+          >
+            📐 Fit
+          </button>
+        </div>
       </div>
       
       {/* Color Selection Panel - Shows when selected */}
@@ -253,6 +285,26 @@ const GroupNode = ({ data, selected, id, zIndex }: GroupNodeProps) => {
         pointerEvents: 'none'
       }}>
       </div>
+
+      {/* Manual Resize Handles - Show when selected */}
+      {selected && (
+        <NodeResizer
+          minWidth={200}
+          minHeight={120}
+          isVisible={selected}
+          handleStyle={{
+            backgroundColor: 'var(--bg-primary, #ffffff)',
+            border: '2px solid var(--border-primary, #3b82f6)',
+            borderRadius: '3px',
+            width: '10px',
+            height: '10px',
+          }}
+          lineStyle={{
+            borderColor: 'var(--border-primary, #3b82f6)',
+            borderWidth: '2px',
+          }}
+        />
+      )}
     </>
   );
 };

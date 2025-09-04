@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-03T15:42:55.746Z",
+  "lastUpdated": "2025-09-04T07:42:02.111Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-03T15:42:55.719Z"
+    "timestamp": "2025-09-04T07:42:02.098Z"
   },
   "nodes": [
     {
@@ -555,12 +555,12 @@
       },
       "type": "group",
       "style": {
-        "width": 1217.9540637796413,
-        "height": 7175,
+        "width": 1604,
+        "height": 7691,
         "zIndex": 999
       },
-      "width": 1218,
-      "height": 7175,
+      "width": 1604,
+      "height": 7691,
       "selected": false,
       "positionAbsolute": {
         "x": 3332.629829104235,
@@ -577,7 +577,8 @@
         "title": "Onboarding Sequence",
         "description": "The bot explains the core concept",
         "color": "rgba(33, 150, 243, 0.025)"
-      }
+      },
+      "resizing": false
     },
     {
       "id": "31",
@@ -3834,8 +3835,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 591,
+      "width": 308,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 1876.5037511054006,
@@ -4031,8 +4032,8 @@
         "y": 1397.7554771608247
       },
       "type": "editable",
-      "width": 249,
-      "height": 259,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "dragging": true,
       "positionAbsolute": {
@@ -4139,7 +4140,7 @@
       "width": 248,
       "height": 162,
       "selected": false,
-      "dragging": true,
+      "dragging": false,
       "positionAbsolute": {
         "x": 3583.6840277182228,
         "y": -2808.542832443949
@@ -4533,8 +4534,8 @@
     {
       "id": "490",
       "position": {
-        "x": 749.9540637796413,
-        "y": 2430.559797776733
+        "x": 895.9540637796417,
+        "y": 2290.559797776733
       },
       "data": {
         "label": "Data action",
@@ -4561,13 +4562,13 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
-        "x": 4026.978914696455,
-        "y": -7255.983034667216
+        "x": 4228.583892883877,
+        "y": -7399.45834580393
       },
-      "dragging": true,
+      "dragging": false,
       "parentId": "30",
       "extent": "parent"
     },
@@ -8179,7 +8180,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 6952.637397844791,
@@ -8356,7 +8357,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 470,
+      "height": 400,
       "selected": false,
       "positionAbsolute": {
         "x": 6887.923393584819,

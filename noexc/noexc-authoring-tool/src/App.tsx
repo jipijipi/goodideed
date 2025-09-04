@@ -504,7 +504,7 @@ function Flow() {
     };
   }, [selectedNodes, createGroupFromSelectedNodes, ungroupSelectedNodes, removeNodesFromGroup]);
 
-  // Track selected nodes and edges, handle auto-resize
+  // Track selected nodes and edges
   const handleNodesChange = useCallback((changes: any) => {
     onNodesChange(changes);
     
@@ -513,20 +513,8 @@ function Flow() {
     const selected = currentNodes.filter(node => node.selected);
     setSelectedNodes(selected);
     
-    // Auto-resize groups when node positions change
-    const finishedDrags = changes.filter((change: any) => 
-      change.type === 'position' && 
-      change.dragging === false &&
-      change.id
-    );
-
-    if (finishedDrags.length > 0) {
-      // Simple timeout to batch multiple changes
-      setTimeout(() => {
-        resizeGroupsForNodes(finishedDrags.map((c: any) => c.id));
-      }, 100);
-    }
-  }, [onNodesChange, getNodes, resizeGroupsForNodes]);
+    // Note: Removed finicky auto-resize logic - users now have manual control via resize handles
+  }, [onNodesChange, getNodes]);
 
   const handleEdgesChange = useCallback((changes: any) => {
     onEdgesChange(changes);
@@ -652,6 +640,30 @@ function Flow() {
       })
     );
   }, [setNodes]);
+
+  const onFitToContents = useCallback((nodeId: string) => {
+    const groupNode = nodes.find(node => node.id === nodeId);
+    if (!groupNode) return;
+
+    const childNodes = nodes.filter(child => child.parentId === nodeId);
+    const newSize = calculateGroupSize(childNodes);
+    
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.id === nodeId) {
+          return {
+            ...node,
+            style: {
+              ...node.style,
+              width: newSize.width,
+              height: newSize.height,
+            }
+          };
+        }
+        return node;
+      })
+    );
+  }, [nodes, setNodes, calculateGroupSize]);
 
   const onConnect = useCallback(
     (params: Connection) => {
@@ -1081,6 +1093,7 @@ function Flow() {
       onTitleChange,
       onDescriptionChange,
       onColorChange: onGroupColorChange,
+      onFitToContents,
     },
   }));
 

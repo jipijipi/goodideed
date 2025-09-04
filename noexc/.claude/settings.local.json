@@ -54,7 +54,8 @@
       "Bash(date:*)",
       "WebFetch(domain:pub.dev)",
       "WebFetch(domain:developer.android.com)",
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:reactflow.dev)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

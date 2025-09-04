@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
 import { NodeData, NodeCategory, DataActionItem } from '../constants/nodeTypes';
 import HelpTooltip from './HelpTooltip';
 import { helpContent } from '../constants/helpContent';
 import VariableInput from './VariableInput';
-import { COLORS } from '../styles/styleConstants';
 
 const getCategoryColor = (category: NodeCategory): string => {
   const colors: Record<NodeCategory, string> = {
@@ -34,8 +33,56 @@ const getNodeTitle = (category: NodeCategory): string => {
   return titles[category] || 'Node';
 };
 
+const getActionTypeEmoji = (type: DataActionItem['type']): string => {
+  const emojis: Record<DataActionItem['type'], string> = {
+    set: '📝',
+    increment: '➕',
+    decrement: '➖',
+    reset: '🔄',
+    trigger: '⚡',
+    append: '➕📝',
+    remove: '➖📝'
+  };
+  return emojis[type] || '⚙️';
+};
+
+const formatDataActionValue = (value: any): string => {
+  if (value === null) return 'null';
+  if (value === true) return 'true';
+  if (value === false) return 'false';
+  if (typeof value === 'object') {
+    const str = JSON.stringify(value);
+    return str.length > 20 ? str.substring(0, 20) + '...' : str;
+  }
+  const str = String(value);
+  return str.length > 15 ? str.substring(0, 15) + '...' : str;
+};
+
+const createDataActionSummary = (action: DataActionItem): string => {
+  const emoji = getActionTypeEmoji(action.type);
+  const key = action.key || 'undefined';
+  
+  switch (action.type) {
+    case 'set':
+      return `${emoji} set ${key} → ${formatDataActionValue(action.value)}`;
+    case 'increment':
+    case 'decrement':
+      const amount = action.value ? formatDataActionValue(action.value) : '1';
+      return `${emoji} ${action.type} ${key} → ${amount}`;
+    case 'reset':
+      return `${emoji} reset ${key}`;
+    case 'trigger':
+      const event = action.event || 'event';
+      return `${emoji} trigger ${event} → ${key}`;
+    case 'append':
+    case 'remove':
+      return `${emoji} ${action.type} ${key} → ${formatDataActionValue(action.value)}`;
+    default:
+      return `${emoji} ${action.type} ${key}`;
+  }
+};
+
 const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => {
-  const [expandedAction, setExpandedAction] = useState<number | null>(null);
 
   const handleNodeIdChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     data.onNodeIdChange(id, e.target.value);
@@ -54,35 +101,6 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
       data.onImagePathChange(id, e.target.value);
     }
   }, [id, data]);
-
-  const handleDataActionsChange = useCallback((newDataActions: DataActionItem[]) => {
-    if (data.onDataActionsChange) {
-      data.onDataActionsChange(id, newDataActions);
-    }
-  }, [id, data]);
-
-  const addDataAction = useCallback(() => {
-    const currentActions = data.dataActions || [];
-    const newAction: DataActionItem = {
-      type: 'set',
-      key: 'user.property',
-      value: ''
-    };
-    handleDataActionsChange([...currentActions, newAction]);
-  }, [data.dataActions, handleDataActionsChange]);
-
-  const updateDataAction = useCallback((index: number, updatedAction: DataActionItem) => {
-    const currentActions = data.dataActions || [];
-    const newActions = [...currentActions];
-    newActions[index] = updatedAction;
-    handleDataActionsChange(newActions);
-  }, [data.dataActions, handleDataActionsChange]);
-
-  const removeDataAction = useCallback((index: number) => {
-    const currentActions = data.dataActions || [];
-    const newActions = currentActions.filter((_, i) => i !== index);
-    handleDataActionsChange(newActions);
-  }, [data.dataActions, handleDataActionsChange]);
 
   const renderFields = () => {
     switch (data.category) {
@@ -452,6 +470,7 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
         );
         
       case 'dataAction':
+        const dataActions = data.dataActions || [];
         return (
           <>
             {/* ID Field */}
@@ -476,270 +495,63 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
               />
             </div>
 
-            {/* Content Key Field */}
-            <div style={{ marginBottom: '8px' }}>
-              <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                Content Key:
-                <HelpTooltip content={helpContent.contentKey} />
-              </label>
-              <input
-                type="text"
-                value={data.contentKey || ''}
-                onChange={handleContentKeyChange}
-                style={{
-                  width: '100%',
-                  padding: '4px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  background: 'white',
-                }}
-                onClick={(e) => e.stopPropagation()}
-                placeholder="e.g., increment_streak, reset_score..."
-              />
-            </div>
-            
-            {/* Data Actions */}
+            {/* Compact Data Actions Summary */}
             <div style={{ marginBottom: '8px' }}>
               <label style={{ fontSize: '11px', color: '#666', display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
-                Data Actions:
+                Data Actions ({dataActions.length}):
                 <HelpTooltip content={helpContent.dataAction} />
               </label>
               
-              {(data.dataActions || []).map((action, index) => (
-                <div key={index} style={{ 
-                  border: '1px solid #ddd', 
-                  borderRadius: '4px', 
-                  padding: '8px', 
-                  marginBottom: '4px',
-                  background: COLORS.lightGray
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                    <span style={{ fontSize: '10px', fontWeight: 'bold', color: '#555' }}>Action {index + 1}</span>
-                    <div>
-                      {action.type === 'trigger' && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setExpandedAction(expandedAction === index ? null : index);
-                          }}
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            fontSize: '9px',
-                            cursor: 'pointer',
-                            color: '#666',
-                            marginRight: '4px',
-                            padding: '2px 4px'
-                          }}
-                          title={expandedAction === index ? 'Hide Data field' : 'Show Data field'}
-                        >
-                          {expandedAction === index ? '▼ Data' : '▶ Data'}
-                        </button>
-                      )}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeDataAction(index);
-                        }}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          fontSize: '10px',
-                          cursor: 'pointer',
-                          color: '#f44336'
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                  
-                  {/* Action Type */}
-                  <div style={{ marginBottom: '4px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                      <span style={{ fontSize: '9px', color: '#666' }}>Type:</span>
-                      <HelpTooltip content={helpContent.dataActionType} />
-                    </div>
-                    <select
-                      value={action.type}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                        const newType = e.target.value as DataActionItem['type'];
-                        const updatedAction = { ...action, type: newType };
-                        
-                        // Reset fields when changing type
-                        if (newType === 'trigger') {
-                          updatedAction.event = updatedAction.event || '';
-                          updatedAction.data = updatedAction.data || {};
-                        } else {
-                          delete updatedAction.event;
-                          delete updatedAction.data;
-                        }
-                        
-                        updateDataAction(index, updatedAction);
-                      }}
-                      style={{
-                        width: '100%',
-                        padding: '2px',
-                        border: '1px solid #ccc',
-                        borderRadius: '3px',
-                        fontSize: '10px',
-                        background: COLORS.white
-                      }}
-                    >
-                      <option value="set">Set</option>
-                      <option value="increment">Increment</option>
-                      <option value="decrement">Decrement</option>
-                      <option value="reset">Reset</option>
-                      <option value="trigger">Trigger</option>
-                      <option value="append">Append</option>
-                      <option value="remove">Remove</option>
-                    </select>
-                  </div>
-                  
-                  {/* Key Field */}
-                  <div style={{ marginBottom: '4px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                      <span style={{ fontSize: '9px', color: '#666' }}>Key:</span>
-                      <HelpTooltip content={helpContent.dataActionKey} />
-                    </div>
-                    <VariableInput
-                      value={action.key}
-                      onChange={(value) => {
-                        updateDataAction(index, { ...action, key: value });
-                      }}
-                      placeholder="Key (e.g., user.score)"
-                      style={{
-                        width: '100%',
-                        padding: '2px',
-                        border: '1px solid #ccc',
-                        borderRadius: '3px',
-                        fontSize: '10px',
-                        background: COLORS.white
-                      }}
-                    />
-                  </div>
-                  
-                  {/* Value Field (for non-trigger actions) */}
-                  {action.type !== 'trigger' && (
-                    <div style={{ marginBottom: expandedAction === index ? '4px' : '0' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                        <span style={{ fontSize: '9px', color: '#666' }}>Value:</span>
-                        <HelpTooltip content={helpContent.dataActionValue} />
-                      </div>
-                      <input
-                        type="text"
-                        value={action.value === null ? 'null' : action.value === false ? 'false' : action.value === true ? 'true' : action.value ?? ''}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          let value: any = e.target.value;
-                          
-                          // Try to parse as number for increment/decrement
-                          if ((action.type === 'increment' || action.type === 'decrement') && !isNaN(Number(value))) {
-                            value = Number(value);
-                          }
-                          // Try to parse as boolean
-                          else if (value === 'true') value = true;
-                          else if (value === 'false') value = false;
-                          else if (value === 'null') value = null;
-                          
-                          updateDataAction(index, { ...action, value });
-                        }}
-                        placeholder="Value"
-                        style={{
-                          width: '100%',
-                          padding: '2px',
-                          border: '1px solid #ccc',
-                          borderRadius: '3px',
-                          fontSize: '10px',
-                          background: COLORS.white
-                        }}
-                      />
-                    </div>
-                  )}
-                  
-                  {/* Event Field (always visible for trigger actions) */}
-                  {action.type === 'trigger' && (
-                    <div style={{ marginBottom: '4px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                        <span style={{ fontSize: '9px', color: '#666' }}>Event:</span>
-                        <HelpTooltip content={helpContent.triggerEvent} />
-                      </div>
-                      <input
-                        type="text"
-                        value={action.event || ''}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          updateDataAction(index, { ...action, event: e.target.value });
-                        }}
-                        placeholder="Event type (e.g., achievement_unlocked)"
-                        style={{
-                          width: '100%',
-                          padding: '2px',
-                          border: '1px solid #ccc',
-                          borderRadius: '3px',
-                          fontSize: '10px',
-                          background: COLORS.white
-                        }}
-                      />
-                    </div>
-                  )}
-                  
-                  {/* Expanded Data field for trigger actions */}
-                  {action.type === 'trigger' && expandedAction === index && (
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2px' }}>
-                        <span style={{ fontSize: '9px', color: '#666' }}>Data:</span>
-                        <HelpTooltip content={helpContent.triggerData} />
-                      </div>
-                      <textarea
-                        value={typeof action.data === 'object' ? JSON.stringify(action.data, null, 2) : (action.data || '')}
-                        onChange={(e) => {
-                          e.stopPropagation();
-                          try {
-                            const parsedData = JSON.parse(e.target.value);
-                            updateDataAction(index, { ...action, data: parsedData });
-                          } catch {
-                            // Keep raw string if JSON parsing fails
-                            updateDataAction(index, { ...action, data: e.target.value });
-                          }
-                        }}
-                        placeholder='{"key": "value"}'
-                        style={{
-                          width: '100%',
-                          padding: '2px',
-                          border: '1px solid #ccc',
-                          borderRadius: '3px',
-                          fontSize: '10px',
-                          background: COLORS.white,
-                          minHeight: '40px',
-                          resize: 'vertical'
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-              
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addDataAction();
-                }}
-                style={{
-                  width: '100%',
-                  padding: '6px',
-                  border: '1px dashed #ccc',
+              {dataActions.length === 0 ? (
+                <div style={{
+                  padding: '8px',
+                  backgroundColor: '#f8f9fa',
+                  border: '1px dashed #ddd',
                   borderRadius: '4px',
-                  background: COLORS.lightGray,
-                  cursor: 'pointer',
+                  textAlign: 'center',
                   fontSize: '10px',
                   color: '#666'
-                }}
-              >
-                + Add Data Action
-              </button>
+                }}>
+                  No data actions configured
+                </div>
+              ) : (
+                <div style={{
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  backgroundColor: '#fafafa',
+                  maxHeight: '100px',
+                  overflowY: 'auto'
+                }}>
+                  {dataActions.map((action, index) => (
+                    <div
+                      key={index}
+                      style={{
+                        padding: '4px 8px',
+                        fontSize: '10px',
+                        borderBottom: index < dataActions.length - 1 ? '1px solid #eee' : 'none',
+                        fontFamily: 'monospace',
+                        lineHeight: '1.3',
+                        color: '#333'
+                      }}
+                      title={`Action ${index + 1}: ${action.type} operation`}
+                    >
+                      {createDataActionSummary(action)}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div style={{
+                marginTop: '4px',
+                padding: '4px',
+                backgroundColor: '#e3f2fd',
+                borderRadius: '3px',
+                fontSize: '9px',
+                color: '#1976d2',
+                textAlign: 'center'
+              }}>
+                💡 Edit data actions in Properties Panel →
+              </div>
             </div>
           </>
         );

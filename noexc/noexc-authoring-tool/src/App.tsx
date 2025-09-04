@@ -2352,6 +2352,44 @@ function Flow() {
         );
 
       case 'dataAction':
+        const dataActions = node.data.dataActions || [];
+        
+        const addDataAction = () => {
+          const newAction: DataActionItem = {
+            type: 'set',
+            key: 'user.property',
+            value: ''
+          };
+          const updatedActions = [...dataActions, newAction];
+          onDataActionsChange(node.id, updatedActions);
+          setSelectedNodes(prev => prev.map(n => 
+            n.id === node.id 
+              ? { ...n, data: { ...n.data, dataActions: updatedActions } }
+              : n
+          ));
+        };
+
+        const updateDataAction = (index: number, updatedAction: DataActionItem) => {
+          const updatedActions = [...dataActions];
+          updatedActions[index] = updatedAction;
+          onDataActionsChange(node.id, updatedActions);
+          setSelectedNodes(prev => prev.map(n => 
+            n.id === node.id 
+              ? { ...n, data: { ...n.data, dataActions: updatedActions } }
+              : n
+          ));
+        };
+
+        const removeDataAction = (index: number) => {
+          const updatedActions = dataActions.filter((_, i) => i !== index);
+          onDataActionsChange(node.id, updatedActions);
+          setSelectedNodes(prev => prev.map(n => 
+            n.id === node.id 
+              ? { ...n, data: { ...n.data, dataActions: updatedActions } }
+              : n
+          ));
+        };
+
         return (
           <>
             {renderExternalIdField()}
@@ -2359,15 +2397,172 @@ function Flow() {
             {/* Data Actions Section */}
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontSize: '14px', fontWeight: 'bold', marginBottom: '8px', color: '#333' }}>
-                ⚙️ Data Actions
+                ⚙️ Data Actions ({dataActions.length})
               </label>
-              <div style={{ fontSize: '11px', color: '#666', marginBottom: '8px' }}>
-                Actions to modify user data. Trigger actions show event field by default.
+              <div style={{ fontSize: '11px', color: '#666', marginBottom: '12px' }}>
+                Actions to modify user data. Configure each action's type, key, and value.
               </div>
-              {/* Note: Data actions are complex and handled by inline node editing */}
-              <div style={{ padding: '8px', backgroundColor: '#f8f9fa', borderRadius: '4px', fontSize: '11px', color: '#666' }}>
-                💡 Edit data actions directly in the node. Trigger events are now visible by default.
-              </div>
+
+              {dataActions.map((action, index) => (
+                <div key={index} style={{ 
+                  border: '1px solid #ddd', 
+                  borderRadius: '6px', 
+                  padding: '12px', 
+                  marginBottom: '8px',
+                  background: '#fafafa'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#555' }}>Action {index + 1}</span>
+                    <button
+                      onClick={() => removeDataAction(index)}
+                      style={{
+                        background: 'none',
+                        border: '1px solid #f44336',
+                        borderRadius: '3px',
+                        fontSize: '10px',
+                        cursor: 'pointer',
+                        color: '#f44336',
+                        padding: '2px 6px'
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  
+                  {/* Action Type */}
+                  <div style={{ marginBottom: '8px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
+                      Type
+                    </label>
+                    <select
+                      value={action.type}
+                      onChange={(e) => {
+                        const newType = e.target.value as DataActionItem['type'];
+                        const updatedAction = { ...action, type: newType };
+                        
+                        // Reset fields when changing type
+                        if (newType === 'trigger') {
+                          updatedAction.event = updatedAction.event || '';
+                          updatedAction.data = updatedAction.data || {};
+                        } else {
+                          delete updatedAction.event;
+                          delete updatedAction.data;
+                        }
+                        
+                        updateDataAction(index, updatedAction);
+                      }}
+                      style={commonStyles.inputStyle}
+                    >
+                      <option value="set">Set</option>
+                      <option value="increment">Increment</option>
+                      <option value="decrement">Decrement</option>
+                      <option value="reset">Reset</option>
+                      <option value="trigger">Trigger</option>
+                      <option value="append">Append</option>
+                      <option value="remove">Remove</option>
+                    </select>
+                  </div>
+                  
+                  {/* Key Field */}
+                  <div style={{ marginBottom: '8px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
+                      Key
+                    </label>
+                    <input
+                      type="text"
+                      value={action.key}
+                      onChange={(e) => updateDataAction(index, { ...action, key: e.target.value })}
+                      placeholder="Key (e.g., user.score)"
+                      style={commonStyles.inputStyle}
+                    />
+                  </div>
+                  
+                  {/* Value Field (for non-trigger actions) */}
+                  {action.type !== 'trigger' && (
+                    <div style={{ marginBottom: '8px' }}>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
+                        Value
+                      </label>
+                      <input
+                        type="text"
+                        value={action.value === null ? 'null' : action.value === false ? 'false' : action.value === true ? 'true' : action.value ?? ''}
+                        onChange={(e) => {
+                          let value: any = e.target.value;
+                          
+                          // Try to parse as number for increment/decrement
+                          if ((action.type === 'increment' || action.type === 'decrement') && !isNaN(Number(value))) {
+                            value = Number(value);
+                          }
+                          // Try to parse as boolean
+                          else if (value === 'true') value = true;
+                          else if (value === 'false') value = false;
+                          else if (value === 'null') value = null;
+                          
+                          updateDataAction(index, { ...action, value });
+                        }}
+                        placeholder="Value"
+                        style={commonStyles.inputStyle}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Event Field (for trigger actions) */}
+                  {action.type === 'trigger' && (
+                    <div style={{ marginBottom: '8px' }}>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
+                        Event
+                      </label>
+                      <input
+                        type="text"
+                        value={action.event || ''}
+                        onChange={(e) => updateDataAction(index, { ...action, event: e.target.value })}
+                        placeholder="Event type (e.g., achievement_unlocked)"
+                        style={commonStyles.inputStyle}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Data Field (for trigger actions) */}
+                  {action.type === 'trigger' && (
+                    <div style={{ marginBottom: '8px' }}>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
+                        Data (JSON)
+                      </label>
+                      <textarea
+                        value={typeof action.data === 'object' ? JSON.stringify(action.data, null, 2) : (action.data || '')}
+                        onChange={(e) => {
+                          try {
+                            const parsedData = JSON.parse(e.target.value);
+                            updateDataAction(index, { ...action, data: parsedData });
+                          } catch {
+                            // Keep raw string if JSON parsing fails
+                            updateDataAction(index, { ...action, data: e.target.value });
+                          }
+                        }}
+                        placeholder='{"key": "value"}'
+                        style={{...commonStyles.textareaStyle, minHeight: '60px'}}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+              
+              <button
+                onClick={addDataAction}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  border: '1px dashed #ccc',
+                  borderRadius: '6px',
+                  background: '#f8f9fa',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  color: '#666',
+                  fontWeight: 'bold'
+                }}
+              >
+                + Add Data Action
+              </button>
             </div>
 
             {renderContentKeyField()}

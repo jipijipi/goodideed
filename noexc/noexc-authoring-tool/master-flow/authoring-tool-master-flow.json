@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-04T08:19:48.258Z",
+  "lastUpdated": "2025-09-04T09:21:45.716Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-04T08:19:48.246Z"
+    "timestamp": "2025-09-04T09:21:45.690Z"
   },
   "nodes": [
     {
@@ -395,7 +395,7 @@
       "id": "265",
       "position": {
         "x": -6450.896666059564,
-        "y": -4758.175112896752
+        "y": -4854.175112896752
       },
       "data": {
         "label": "Group 265",
@@ -410,17 +410,18 @@
       },
       "type": "group",
       "style": {
-        "width": 606.3510707247251,
-        "height": 1959.738480796354
+        "width": 772,
+        "height": 2054
       },
-      "width": 606,
-      "height": 1960,
+      "width": 772,
+      "height": 2054,
       "selected": false,
       "positionAbsolute": {
         "x": -6450.896666059564,
         "y": -4758.175112896752
       },
-      "dragging": false
+      "dragging": false,
+      "resizing": false
     },
     {
       "id": "266",
@@ -709,7 +710,7 @@
       "id": "47",
       "position": {
         "x": 8208.4779491195,
-        "y": -4141.526561019161
+        "y": -4514.177139293886
       },
       "type": "group",
       "style": {
@@ -722,7 +723,7 @@
       "selected": false,
       "positionAbsolute": {
         "x": 8208.4779491195,
-        "y": -4141.526561019161
+        "y": -4514.177139293886
       },
       "dragging": false,
       "data": {
@@ -3390,8 +3391,8 @@
     {
       "id": "263",
       "position": {
-        "x": 200.6489292752749,
-        "y": 50.535629476847134
+        "x": 206.6489292752749,
+        "y": 150.53562947684713
       },
       "data": {
         "label": "Route condition",
@@ -3404,8 +3405,8 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": -5624.936996379529,
-        "y": -4697.899440734473
+        "x": -6244.247736784289,
+        "y": -4703.6394834199045
       },
       "dragging": false,
       "parentId": "265",
@@ -3414,8 +3415,8 @@
     {
       "id": "286",
       "position": {
-        "x": 332.52301673050533,
-        "y": 390.73680067456917
+        "x": 344.52301673050533,
+        "y": 466.73680067456917
       },
       "data": {
         "label": "Route condition",
@@ -3428,8 +3429,8 @@
       "height": 162,
       "selected": false,
       "positionAbsolute": {
-        "x": -5925.520804157497,
-        "y": -4377.178354907615
+        "x": -6106.373649329059,
+        "y": -4387.4383122221825
       },
       "dragging": false,
       "parentId": "265",

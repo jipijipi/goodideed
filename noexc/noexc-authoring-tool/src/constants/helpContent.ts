@@ -183,18 +183,18 @@ export const helpContent: Record<string, HelpContent> = {
 
   triggerEvent: {
     title: "Trigger Event",
-    description: "Event name to fire when this trigger action executes. Choose from predefined events or create custom ones.",
+    description: "Event name to fire when this trigger action executes. Choose from predefined events that match the Flutter app.",
     examples: [
-      "achievement_unlocked - User unlocks achievement",
-      "level_up - User advances to next level",
-      "task_completed - User finishes a task",
-      "daily_reminder - Send daily notification"
+      "overlay_rive - Show Rive animation overlay",
+      "refresh_task_calculations - Recalculate task status",
+      "daily_reminder - Daily task reminder notification",
+      "achievement - Achievement notification"
     ],
     tips: [
       "Choose from organized event categories in the dropdown",
-      "Use 'Custom Event' option for specialized events",
-      "Follow snake_case naming convention",
-      "Predefined events include helpful descriptions"
+      "Events match actual Flutter app functionality",
+      "All events include helpful descriptions",
+      "Rive Overlays control app animations"
     ]
   },
 

@@ -101,6 +101,3 @@ export const findEventByValue = (value: string): EventType | undefined => {
 export const isPreDefinedEvent = (value: string): boolean => {
   return ALL_EVENT_TYPES.some(event => event.value === value);
 };
-
-// Special value for custom events
-export const CUSTOM_EVENT_VALUE = '__custom__';

@@ -46,6 +46,19 @@ const getActionTypeEmoji = (type: DataActionItem['type']): string => {
   return emojis[type] || '⚙️';
 };
 
+const getActionTypeColor = (type: DataActionItem['type']): string => {
+  const colors: Record<DataActionItem['type'], string> = {
+    set: '#1976d2',      // Blue - setting values
+    increment: '#2e7d32', // Green - adding/positive
+    decrement: '#d32f2f', // Red - subtracting/negative  
+    reset: '#f57c00',     // Orange - resetting/clearing
+    trigger: '#7b1fa2',   // Purple - events/triggers
+    append: '#00796b',    // Teal - adding to lists
+    remove: '#c62828'     // Dark red - removing from lists
+  };
+  return colors[type] || '#666';
+};
+
 const formatDataActionValue = (value: any): string => {
   if (value === null) return 'null';
   if (value === true) return 'true';
@@ -531,7 +544,8 @@ const EditableNode: React.FC<NodeProps<NodeData>> = ({ id, data, selected }) => 
                         borderBottom: index < dataActions.length - 1 ? '1px solid #eee' : 'none',
                         fontFamily: 'monospace',
                         lineHeight: '1.3',
-                        color: '#333'
+                        color: getActionTypeColor(action.type),
+                        fontWeight: '500'
                       }}
                       title={`Action ${index + 1}: ${action.type} operation`}
                     >

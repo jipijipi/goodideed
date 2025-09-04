@@ -28,6 +28,7 @@ import VariableManager from './components/VariableManager';
 import HelpTooltip from './components/HelpTooltip';
 import { createButtonStyle, createPanelStyle, COLORS, mergeStyles } from './styles/styleConstants';
 import { helpContent } from './constants/helpContent';
+import { EVENT_CATEGORIES, CUSTOM_EVENT_VALUE, findEventByValue, isPreDefinedEvent } from './constants/eventTypes';
 import { saveMasterFlow, loadMasterFlow, importMasterFlow, exportMasterFlow } from './utils/masterFlowPersistence';
 
 const nodeTypes = {
@@ -2507,20 +2508,78 @@ function Flow() {
                   )}
                   
                   {/* Event Field (for trigger actions) */}
-                  {action.type === 'trigger' && (
-                    <div style={{ marginBottom: '8px' }}>
-                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
-                        Event
-                      </label>
-                      <input
-                        type="text"
-                        value={action.event || ''}
-                        onChange={(e) => updateDataAction(index, { ...action, event: e.target.value })}
-                        placeholder="Event type (e.g., achievement_unlocked)"
-                        style={commonStyles.inputStyle}
-                      />
-                    </div>
-                  )}
+                  {action.type === 'trigger' && (() => {
+                    const currentEvent = action.event || '';
+                    const isCustomEvent = !isPreDefinedEvent(currentEvent) && currentEvent !== '';
+                    const selectValue = isCustomEvent ? CUSTOM_EVENT_VALUE : currentEvent;
+                    
+                    return (
+                      <div style={{ marginBottom: '8px' }}>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 'bold', marginBottom: '4px', color: '#333' }}>
+                          Event
+                        </label>
+                        <select
+                          value={selectValue}
+                          onChange={(e) => {
+                            if (e.target.value === CUSTOM_EVENT_VALUE) {
+                              // Switch to custom event mode - keep current value if it's custom
+                              const newEvent = isCustomEvent ? currentEvent : '';
+                              updateDataAction(index, { ...action, event: newEvent });
+                            } else {
+                              // Use predefined event
+                              updateDataAction(index, { ...action, event: e.target.value });
+                            }
+                          }}
+                          style={commonStyles.inputStyle}
+                        >
+                          <option value="">Select an event type...</option>
+                          {EVENT_CATEGORIES.map(category => (
+                            <optgroup key={category.name} label={category.name}>
+                              {category.events.map(event => (
+                                <option key={event.value} value={event.value} title={event.description}>
+                                  {event.label}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ))}
+                          <option value={CUSTOM_EVENT_VALUE}>🎯 Custom Event...</option>
+                        </select>
+                        
+                        {/* Custom event input - shown when custom option is selected */}
+                        {(selectValue === CUSTOM_EVENT_VALUE || isCustomEvent) && (
+                          <div style={{ marginTop: '8px' }}>
+                            <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', marginBottom: '4px', color: '#666' }}>
+                              Custom Event Name
+                            </label>
+                            <input
+                              type="text"
+                              value={currentEvent}
+                              onChange={(e) => updateDataAction(index, { ...action, event: e.target.value })}
+                              placeholder="Enter custom event name..."
+                              style={{
+                                ...commonStyles.inputStyle,
+                                fontSize: '12px',
+                                fontFamily: 'monospace'
+                              }}
+                            />
+                            <div style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>
+                              Use snake_case format (e.g., custom_achievement_unlocked)
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Event description for predefined events */}
+                        {selectValue && selectValue !== CUSTOM_EVENT_VALUE && !isCustomEvent && (() => {
+                          const eventInfo = findEventByValue(selectValue);
+                          return eventInfo ? (
+                            <div style={{ fontSize: '10px', color: '#666', marginTop: '4px', fontStyle: 'italic' }}>
+                              {eventInfo.description}
+                            </div>
+                          ) : null;
+                        })()}
+                      </div>
+                    );
+                  })()}
                   
                   {/* Data Field (for trigger actions) */}
                   {action.type === 'trigger' && (

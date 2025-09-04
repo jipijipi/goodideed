@@ -183,18 +183,18 @@ export const helpContent: Record<string, HelpContent> = {
 
   triggerEvent: {
     title: "Trigger Event",
-    description: "Event name to fire when this trigger action executes. Used for achievements, notifications, etc.",
+    description: "Event name to fire when this trigger action executes. Choose from predefined events or create custom ones.",
     examples: [
-      "achievement_unlocked",
-      "level_up",
-      "milestone_reached",
-      "user_registered"
+      "achievement_unlocked - User unlocks achievement",
+      "level_up - User advances to next level",
+      "task_completed - User finishes a task",
+      "daily_reminder - Send daily notification"
     ],
     tips: [
-      "Use descriptive event names",
-      "Follow consistent naming patterns",
-      "Consider what the app should do",
-      "Document custom events"
+      "Choose from organized event categories in the dropdown",
+      "Use 'Custom Event' option for specialized events",
+      "Follow snake_case naming convention",
+      "Predefined events include helpful descriptions"
     ]
   },
 

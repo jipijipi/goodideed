@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-05T18:35:10.981Z",
+  "lastUpdated": "2025-09-05T21:35:26.254Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-05T18:35:10.952Z"
+    "timestamp": "2025-09-05T21:35:26.242Z"
   },
   "nodes": [
     {
@@ -552,8 +552,8 @@
     {
       "id": "30",
       "position": {
-        "x": 2786.289452954821,
-        "y": -9719.447793890293
+        "x": 2332.289452954821,
+        "y": -9771.447793890293
       },
       "type": "group",
       "style": {
@@ -565,8 +565,8 @@
       "height": 7691,
       "selected": false,
       "positionAbsolute": {
-        "x": 2786.289452954821,
-        "y": -9719.447793890293
+        "x": 2332.289452954821,
+        "y": -9771.447793890293
       },
       "dragging": false,
       "data": {
@@ -3778,15 +3778,23 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/hands_animations.riv",
+              "asset": "assets/animations/binding_test.riv",
               "zone": 2,
               "align": "center",
-              "id": "hand",
+              "id": "bdt",
               "fit": "contain",
               "useDataBinding": true,
-              "debugDump": true,
+              "bindingsEnum": {
+                "enum": "two"
+              },
               "bindingsString": {
-                "hand_animation": "rest"
+                "str": "Yolo"
+              },
+              "bindings": {
+                "num": 4
+              },
+              "bindingsBool": {
+                "bool": "true"
               }
             }
           }
@@ -3807,8 +3815,8 @@
     {
       "id": "492",
       "position": {
-        "x": 597.9144723776724,
-        "y": 890.9984338730192
+        "x": 547.1041413007636,
+        "y": 809.9483031106893
       },
       "data": {
         "label": "Data action",
@@ -3823,21 +3831,31 @@
             "event": "overlay_rive_update",
             "data": {
               "zone": 2,
-              "id": "hand",
+              "id": "bdt",
+              "bindingsEnum": {
+                "enum": "three"
+              },
               "bindingsString": {
-                "hand_animation": "wave"
-              }
+                "str": "Yoloooo"
+              },
+              "bindings": {
+                "num": 41
+              },
+              "bindingsBoo": {
+                "bool": "false"
+              },
+              "autoHideMs": 3500
             }
           }
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 191,
+      "width": 308,
+      "height": 189,
       "selected": false,
       "positionAbsolute": {
-        "x": 1832.035392746845,
-        "y": -5063.177820833163
+        "x": 1791.2250616699362,
+        "y": -5130.227951595493
       },
       "dragging": false,
       "parentId": "28",
@@ -4554,12 +4572,29 @@
               "useDataBinding": true,
               "autoHideMs": 3500
             }
+          },
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive",
+            "data": {
+              "asset": "assets/animations/achievement_simple_txt.riv",
+              "zone": 4,
+              "align": "center",
+              "id": "achievement",
+              "fit": "contain",
+              "useDataBinding": true,
+              "bindingsString": {
+                "anim_status": "hidden"
+              }
+            }
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 189,
+      "height": 211,
       "selected": false,
       "positionAbsolute": {
         "x": 3452.5838928838766,
@@ -4587,10 +4622,11 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 2,
-              "id": "hand",
-              "bindings": {
-                "hand_animation": "ok"
+              "zone": 4,
+              "id": "achievement",
+              "bindingsString": {
+                "anim_status": "unlock",
+                "content": "smarty pants"
               }
             }
           }
@@ -4604,6 +4640,46 @@
       "positionAbsolute": {
         "x": 4012.226214601171,
         "y": -5292.17543005336
+      },
+      "parentId": "30",
+      "extent": "parent"
+    },
+    {
+      "id": "494",
+      "position": {
+        "x": 892.4989912734986,
+        "y": 5862.16339124833
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "494",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "achievement",
+              "bindingsString": {
+                "anim_status": "lock",
+                "status": "LOCKED BACK"
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 191,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 3224.78844422832,
+        "y": -3909.2844026419625
       },
       "parentId": "30",
       "extent": "parent"
@@ -8734,14 +8810,6 @@
       "data": {
         "label": "How will you make sure?"
       },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-18-19",
-      "source": "18",
-      "target": "19",
-      "type": "custom",
-      "data": {},
       "selected": false
     },
     {
@@ -13617,22 +13685,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "9",
-      "target": "10",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "sourceHandle": null,
-      "targetHandle": null,
-      "id": "reactflow__edge-9-10"
-    },
-    {
-      "zIndex": 1001,
       "source": "478",
       "sourceHandle": null,
       "target": "479",
@@ -13833,54 +13885,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "6",
-      "target": "492",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "sourceHandle": null,
-      "targetHandle": null,
-      "id": "reactflow__edge-6-492"
-    },
-    {
-      "zIndex": 1001,
-      "source": "492",
-      "sourceHandle": null,
-      "target": "7",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-492-7"
-    },
-    {
-      "zIndex": 1001,
-      "source": "491",
-      "sourceHandle": null,
-      "target": "6",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-491-6"
-    },
-    {
-      "zIndex": 1001,
       "source": "485",
       "sourceHandle": null,
       "target": "493",
@@ -13942,6 +13946,92 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-292-290",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "6",
+      "target": "7",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-6-7"
+    },
+    {
+      "zIndex": 1001,
+      "source": "9",
+      "target": "10",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-9-10"
+    },
+    {
+      "zIndex": 1001,
+      "source": "491",
+      "sourceHandle": null,
+      "target": "492",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-491-492"
+    },
+    {
+      "zIndex": 1001,
+      "source": "492",
+      "sourceHandle": null,
+      "target": "6",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-492-6",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "18",
+      "target": "494",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-18-494",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "494",
+      "sourceHandle": null,
+      "target": "19",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-494-19",
       "selected": false
     }
   ]

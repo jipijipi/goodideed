@@ -55,7 +55,8 @@
       "WebFetch(domain:pub.dev)",
       "WebFetch(domain:developer.android.com)",
       "WebSearch",
-      "WebFetch(domain:reactflow.dev)"
+      "WebFetch(domain:reactflow.dev)",
+      "Read(//Users/jpl/.pub-cache/hosted/pub.dev/**)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

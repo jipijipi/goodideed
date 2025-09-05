@@ -564,3 +564,75 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "nested_sibling_model/opacity": 0
   }
 }
+
+{
+  "asset": "assets/animations/binding_test.riv",
+  "zone": 2,
+  "align": "center",
+  "id": "hand",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindingsEnum": {
+    "enum": "two"
+  },
+  "bindingsString": {
+    "str": "Yolo"
+  },
+  "bindings": {
+    "num": 4
+  },
+  "bindingsColor": {
+    "color": "0xFF112233"
+  },
+  "bindingsBool": {
+    "bool": "true"
+  }
+}
+
+{
+  "zone": 2,
+  "id": "hand",
+"bindingsEnum": {
+    "enum": "three"
+  },
+  "bindingsString": {
+    "str": "Yoloooo"
+  },
+  "bindings": {
+    "num": 41
+  },
+  "bindingsColor": {
+    "color": "0xFF992233"
+  },
+  "bindingsBoo": {
+    "bool": "false"
+  }
+}
+
+{
+  "asset": "assets/animations/achievement_simple_txt.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "achievement",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindingsString": {
+    "anim_status": "hidden"
+  }
+}
+{
+  "zone": 4,
+  "id": "achievement",
+  "bindingsString": {
+    "anim_status": "unlock",
+    "content": "smarty pants"
+  }
+}
+{
+  "zone": 4,
+  "id": "achievement",
+  "bindingsString": {
+    "anim_status": "lock"
+  }
+}
+

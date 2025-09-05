@@ -554,7 +554,22 @@ Alternatively, you may prefer to use auto-binding. This will automatically bind 
 *   Unity
 *   React Native
 
-Flutter (rive\_native) does not support auto-binding at this time. Higher level widgets will expose this functionality in the future.See the `RivePlayer.dart` file in the example app for a demo of how this will be presented.
+// Get reference to the File
+file = await File.asset(
+    'assets/rewards.riv',
+    riveFactory: Factory.rive,
+);
+
+// Create a controller
+controller = RiveWidgetController(file!);
+
+// Auto data bind
+viewModelInstance = controller.dataBind(DataBind.auto());
+
+// Dispose of objects you created when no longer needed
+viewModelInstance.dispose();
+controller.dispose();
+file.dispose();
 
 [​
 

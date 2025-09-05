@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-05T14:13:58.965Z",
+  "lastUpdated": "2025-09-05T18:35:10.981Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-05T14:13:58.933Z"
+    "timestamp": "2025-09-05T18:35:10.952Z"
   },
   "nodes": [
     {
@@ -3763,8 +3763,8 @@
     {
       "id": "491",
       "position": {
-        "x": 671.4816038461231,
-        "y": 484.22078773427074
+        "x": 702.3487457528154,
+        "y": 439.84927124340084
       },
       "data": {
         "label": "Data action",
@@ -3784,8 +3784,9 @@
               "id": "hand",
               "fit": "contain",
               "useDataBinding": true,
-              "bindings": {
-                "hand_animation": "wave"
+              "debugDump": true,
+              "bindingsString": {
+                "hand_animation": "rest"
               }
             }
           }
@@ -3796,8 +3797,8 @@
       "height": 189,
       "selected": false,
       "positionAbsolute": {
-        "x": 1905.6025242152957,
-        "y": -5469.955466971912
+        "x": 1946.469666121988,
+        "y": -5500.326983462782
       },
       "dragging": false,
       "parentId": "28",
@@ -3823,7 +3824,7 @@
             "data": {
               "zone": 2,
               "id": "hand",
-              "bindings": {
+              "bindingsString": {
                 "hand_animation": "wave"
               }
             }
@@ -3831,8 +3832,8 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 189,
+      "width": 310,
+      "height": 191,
       "selected": false,
       "positionAbsolute": {
         "x": 1832.035392746845,

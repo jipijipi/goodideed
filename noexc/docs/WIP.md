@@ -519,3 +519,48 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
   "useDataBinding": true,
   "autoHideMs": 2500
 }
+
+{
+  "asset": "assets/animations/wave.riv",
+  "zone": 2,
+  "align": "center",
+  "id": "wave",
+  "fit": "contain",
+  "useDataBinding": true,
+  "autoHideMs": 3500
+}
+
+{
+  "asset": "assets/animations/hands_animations.riv",
+  "zone": 2,
+  "align": "center",
+  "id": "hand",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "hand_animation": "rest"
+  }
+}
+{
+  "zone": 2,
+  "id": "hand",
+  "bindings": {
+        "hand_animation": "wave"
+  }
+}
+#nesting node
+{
+  "asset": "assets/animations/nestingr.riv",
+  "zone": 2,
+  "align": "center",
+  "id": "mom",
+  "policy": "ignore",
+  "artboard": "mom_artboard",
+  "dataModel": "mom_model",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindings": {
+    "nested_child_model/opacity": 0.5,
+    "nested_sibling_model/opacity": 0
+  }
+}

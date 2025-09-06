@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-05T21:35:26.254Z",
+  "lastUpdated": "2025-09-06T06:55:59.970Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-05T21:35:26.242Z"
+    "timestamp": "2025-09-06T06:55:59.947Z"
   },
   "nodes": [
     {
@@ -519,8 +519,8 @@
     {
       "id": "28",
       "position": {
-        "x": 1244.1209203691726,
-        "y": -5940.176254706183
+        "x": 795.3399059007445,
+        "y": -6239.363597685135
       },
       "type": "group",
       "style": {
@@ -532,8 +532,8 @@
       "height": 3009,
       "selected": false,
       "positionAbsolute": {
-        "x": 1244.1209203691726,
-        "y": -5940.176254706183
+        "x": 795.3399059007445,
+        "y": -6239.363597685135
       },
       "dragging": false,
       "data": {
@@ -552,8 +552,8 @@
     {
       "id": "30",
       "position": {
-        "x": 2332.289452954821,
-        "y": -9771.447793890293
+        "x": 2830.935024586408,
+        "y": -9796.380072471871
       },
       "type": "group",
       "style": {
@@ -565,8 +565,8 @@
       "height": 7691,
       "selected": false,
       "positionAbsolute": {
-        "x": 2332.289452954821,
-        "y": -9771.447793890293
+        "x": 2830.935024586408,
+        "y": -9796.380072471871
       },
       "dragging": false,
       "data": {
@@ -3778,23 +3778,14 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/binding_test.riv",
-              "zone": 2,
+              "asset": "assets/animations/hand_states.riv",
+              "zone": 3,
               "align": "center",
-              "id": "bdt",
+              "id": "hands",
               "fit": "contain",
               "useDataBinding": true,
-              "bindingsEnum": {
-                "enum": "two"
-              },
               "bindingsString": {
-                "str": "Yolo"
-              },
-              "bindings": {
-                "num": 4
-              },
-              "bindingsBool": {
-                "bool": "true"
+                "hand_animation": "rest"
               }
             }
           }
@@ -3815,8 +3806,8 @@
     {
       "id": "492",
       "position": {
-        "x": 547.1041413007636,
-        "y": 809.9483031106893
+        "x": 699.893707724324,
+        "y": 676.7471426388674
       },
       "data": {
         "label": "Data action",
@@ -3830,32 +3821,22 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 2,
-              "id": "bdt",
-              "bindingsEnum": {
-                "enum": "three"
-              },
+              "zone": 3,
+              "id": "hands",
               "bindingsString": {
-                "str": "Yoloooo"
-              },
-              "bindings": {
-                "num": 41
-              },
-              "bindingsBoo": {
-                "bool": "false"
-              },
-              "autoHideMs": 3500
+                "hand_animation": "wave"
+              }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 189,
+      "width": 310,
+      "height": 191,
       "selected": false,
       "positionAbsolute": {
-        "x": 1791.2250616699362,
-        "y": -5130.227951595493
+        "x": 1495.2336136250685,
+        "y": -5562.616455046267
       },
       "dragging": false,
       "parentId": "28",
@@ -4579,14 +4560,14 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/achievement_simple_txt.riv",
+              "asset": "assets/animations/achievement.riv",
               "zone": 4,
               "align": "center",
               "id": "achievement",
               "fit": "contain",
               "useDataBinding": true,
               "bindingsString": {
-                "anim_status": "hidden"
+                "animation_status": "hidden"
               }
             }
           }
@@ -4622,10 +4603,23 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
+              "zone": 3,
+              "id": "hands",
+              "bindingsString": {
+                "hand_animation": "ok"
+              }
+            }
+          },
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
               "zone": 4,
               "id": "achievement",
               "bindingsString": {
-                "anim_status": "unlock",
+                "animation_status": "unlock",
                 "content": "smarty pants"
               }
             }
@@ -4634,7 +4628,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 189,
+      "height": 211,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -4665,7 +4659,7 @@
               "zone": 4,
               "id": "achievement",
               "bindingsString": {
-                "anim_status": "lock",
+                "animation_status": "lock",
                 "status": "LOCKED BACK"
               }
             }
@@ -4673,8 +4667,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 191,
+      "width": 308,
+      "height": 189,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {

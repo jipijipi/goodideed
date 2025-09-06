@@ -636,3 +636,42 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
   }
 }
 
+
+{
+  "asset": "assets/animations/hands_states.riv",
+  "zone": 3,
+  "align": "center",
+  "id": "hands",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindingsString": {
+    "hand_animation": "rest"
+  }
+}
+{
+  "zone": 3,
+  "id": "hands",
+  "bindingsString": {
+    "hand_animation": "wave"
+  }
+}
+
+{
+  "asset": "assets/animations/achievement.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "achievement",
+  "fit": "contain",
+  "useDataBinding": true,
+  "bindingsString": {
+    "animation_status": "hidden"
+  }
+}
+{
+  "zone": 4,
+  "id": "achievement",
+  "bindingsString": {
+    "animation_status": "unlock",
+    "content": "smarty pants"
+  }
+}

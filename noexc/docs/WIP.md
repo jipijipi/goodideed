@@ -675,3 +675,111 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "content": "smarty pants"
   }
 }
+{
+  "asset": "assets/animations/stopwatch.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "clock",
+  "policy": "ignore",
+  "fit": "layout",
+  "layoutScaleFactor": 1,
+  "useDataBinding": true,
+  "bindings": {
+    "start": 0,
+    "end": 24,
+    "object_x": -0.5,
+    "object_y": 1
+  }
+}
+
+assets/animations/hands_mono_components.riv
+
+{
+  "asset": "assets/animations/hands_mono_components.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "hands",
+  "fit": "layout",
+  "artboard": "hand_artboard",
+  "useDataBinding": true,
+  "bindingsString": {
+    "nested_hand_model/hand_animation": "reset"
+  },
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1
+  }
+}
+{
+  "asset": "assets/animations/hands_mono_components_objects.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "hands",
+  "fit": "layout",
+  "artboard": "hand_artboard",
+  "useDataBinding": true,
+  "bindingsString": {
+    "nested_hand_model/hand_animation": "reset"
+  },
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1
+  }
+}
+
+{
+  "zone": 4,
+  "id": "hands",
+  "bindingsString": {
+    "nested_hand_model/hand_animation": "wave",
+    "nested_hand_model/hand_shape": "open",
+    "arm_swing_animation":"center"
+  },
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1
+  }
+}
+{
+  "zone": 4,
+  "id": "hands",
+  "bindingsString": {
+    "nested_hand_model/hand_animation": "wave",
+    "nested_hand_model/hand_shape": "open",
+    "arm_swing_animation":"center"
+  },
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1
+  }
+}
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "free_target_is_active":1,
+    "swing_target_is_active":0,
+    "free_target_x":1,
+    "free_target_y":1
+  },
+  "bindingsString": {
+    "nested_hand_model/hand_shape": "pointer"
+  }
+}
+
+{
+  "asset": "assets/animations/stopwatch.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "clock",
+  "policy": "ignore",
+  "fit": "layout",
+  "layoutScaleFactor": 1,
+  "useDataBinding": true,
+  "bindings": {
+    "start": 0,
+    "end": 24,
+    "object_x": -0.5,
+    "object_y": 1
+  }
+}

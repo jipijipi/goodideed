@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-06T06:55:59.970Z",
+  "lastUpdated": "2025-09-08T14:20:59.483Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-06T06:55:59.947Z"
+    "timestamp": "2025-09-08T14:20:59.472Z"
   },
   "nodes": [
     {
@@ -3778,14 +3778,19 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/hand_states.riv",
-              "zone": 3,
+              "asset": "assets/animations/hands_mono_components.riv",
+              "zone": 4,
               "align": "center",
               "id": "hands",
-              "fit": "contain",
+              "fit": "layout",
+              "artboard": "hand_artboard",
               "useDataBinding": true,
               "bindingsString": {
-                "hand_animation": "rest"
+                "nested_hand_model/hand_animation": "reset"
+              },
+              "bindings": {
+                "free_target_is_active": 0,
+                "swing_target_is_active": 1
               }
             }
           }
@@ -3821,18 +3826,24 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 3,
+              "zone": 4,
               "id": "hands",
               "bindingsString": {
-                "hand_animation": "wave"
+                "nested_hand_model/hand_animation": "wave",
+                "nested_hand_model/hand_shape": "open",
+                "arm_swing_animation": "center"
+              },
+              "bindings": {
+                "free_target_is_active": 0,
+                "swing_target_is_active": 1
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 191,
+      "width": 308,
+      "height": 189,
       "selected": false,
       "positionAbsolute": {
         "x": 1495.2336136250685,
@@ -4603,10 +4614,16 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 3,
+              "zone": 4,
               "id": "hands",
+              "bindings": {
+                "free_target_is_active": 1,
+                "swing_target_is_active": 0,
+                "free_target_x": 1,
+                "free_target_y": 1
+              },
               "bindingsString": {
-                "hand_animation": "ok"
+                "nested_hand_model/hand_shape": "pointer"
               }
             }
           },

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-08T14:20:59.483Z",
+  "lastUpdated": "2025-09-08T23:20:24.764Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-08T14:20:59.472Z"
+    "timestamp": "2025-09-08T23:20:24.746Z"
   },
   "nodes": [
     {
@@ -3778,27 +3778,28 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/hands_mono_components.riv",
+              "asset": "assets/animations/hands_mono_components_objects.riv",
               "zone": 4,
-              "align": "center",
               "id": "hands",
               "fit": "layout",
-              "artboard": "hand_artboard",
+              "artboard": "arm_artboard",
+              "layoutScaleFactor": 0.6,
               "useDataBinding": true,
-              "bindingsString": {
-                "nested_hand_model/hand_animation": "reset"
-              },
               "bindings": {
                 "free_target_is_active": 0,
-                "swing_target_is_active": 1
+                "swing_target_is_active": 1,
+                "swing_distance": 60
+              },
+              "bindingsString": {
+                "nested_hand_model/hand_shape": "stopwatch"
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 189,
+      "width": 310,
+      "height": 191,
       "selected": false,
       "positionAbsolute": {
         "x": 1946.469666121988,
@@ -3828,14 +3829,10 @@
             "data": {
               "zone": 4,
               "id": "hands",
-              "bindingsString": {
-                "nested_hand_model/hand_animation": "wave",
-                "nested_hand_model/hand_shape": "open",
-                "arm_swing_animation": "center"
-              },
               "bindings": {
-                "free_target_is_active": 0,
-                "swing_target_is_active": 1
+                "swing_distance": 25,
+                "nested_stopwatch_model/start": 2,
+                "nested_stopwatch_model/end": 14
               }
             }
           }
@@ -4572,7 +4569,7 @@
             "event": "overlay_rive",
             "data": {
               "asset": "assets/animations/achievement.riv",
-              "zone": 4,
+              "zone": 2,
               "align": "center",
               "id": "achievement",
               "fit": "contain",
@@ -4614,16 +4611,13 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 4,
-              "id": "hands",
+              "zone": 3,
+              "id": "handds",
               "bindings": {
-                "free_target_is_active": 1,
-                "swing_target_is_active": 0,
-                "free_target_x": 1,
-                "free_target_y": 1
+                "swing_distance": 25
               },
               "bindingsString": {
-                "nested_hand_model/hand_shape": "pointer"
+                "nested_hand_model/hand_shape": "stopwatch"
               }
             }
           },
@@ -4633,7 +4627,7 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 4,
+              "zone": 2,
               "id": "achievement",
               "bindingsString": {
                 "animation_status": "unlock",
@@ -4673,7 +4667,7 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 4,
+              "zone": 2,
               "id": "achievement",
               "bindingsString": {
                 "animation_status": "lock",

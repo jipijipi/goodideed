@@ -716,19 +716,64 @@ assets/animations/hands_mono_components.riv
   "align": "center",
   "id": "hands",
   "fit": "layout",
-  "artboard": "hand_artboard",
+  "artboard": "arm_artboard",
   "useDataBinding": true,
-  "bindingsString": {
-    "nested_hand_model/hand_animation": "reset"
-  },
   "bindings": {
     "free_target_is_active":0,
-    "swing_target_is_active":1
+    "swing_target_is_active":1,
+    "swing_distance":60
+  },
+  "bindingsString": {
+    "nested_hand_model/hand_shape": "stopwatch"
   }
+}
+{
+  "asset": "assets/animations/hands_mono_components_objects.riv",
+  "zone": 4,
+  "align": "center",
+  "id": "hands",
+  "fit": "layout",
+  "artboard": "arm_artboard",
+  "useDataBinding": true,
+  "layoutScaleFactor": 0.6,
+  "bindings": {
+    "free_target_is_active":1,
+    "swing_target_is_active":0,
+    "free_target_x":-0.5,
+    "free_target_y":0.6
+  },
+  "bindingsString": {
+    "nested_hand_model/hand_shape": "stopwatch"
+  }
+}
+{
+  "zone": 4,
+  "align": "center",
+  "id": "hands",
+  "bindings": {
+    "free_target_x":0.5,
+    "free_target_y":0.3,
+    "nested_stopwatch_model/start": 4,
+    "nested_stopwatch_model/end": 14
+  }
+}
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "swing_distance":25
+  },
+  "bindingsString": {
+    "nested_hand_model/hand_shape": "stopwatch"
+  }
+}
+{
+  "zone": 4,
+  "id": "hands"
 }
 
 {
-  "zone": 4,
+  "zone": 3,
   "id": "hands",
   "bindingsString": {
     "nested_hand_model/hand_animation": "wave",
@@ -781,5 +826,34 @@ assets/animations/hands_mono_components.riv
     "end": 24,
     "object_x": -0.5,
     "object_y": 1
+  }
+}
+
+___
+
+{
+  "asset": "assets/animations/hands_mono_components_objects.riv",
+  "zone": 4,
+  "id": "hands",
+  "fit": "layout",
+  "artboard": "arm_artboard",
+  "layoutScaleFactor": 0.6,
+  "useDataBinding": true,
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1,
+    "swing_distance":60
+  },
+  "bindingsString": {
+    "nested_hand_model/hand_shape": "stopwatch"
+  }
+}
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "swing_distance":25,
+    "nested_stopwatch_model/start": 2,
+    "nested_stopwatch_model/end": 14
   }
 }

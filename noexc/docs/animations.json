@@ -1,0 +1,262 @@
+{
+    
+    
+"initial setup":
+
+{
+  "asset": "assets/animations/arm_and_tools.riv",
+  "zone": 4,
+  "id": "hands",
+  "fit": "layout",
+  "artboard": "arm_artboard",
+  "layoutScaleFactor": 0.7,
+  "useDataBinding": true,
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1,
+    "free_target_x":-0.5,
+    "swing_distance":60,
+    "nested_stopwatch_model/start":9,
+    "nested_stopwatch_model/end":18,
+    "nested_calendar_model/monday":0,
+    "nested_throttle_model/level":0
+  },
+  "bindingsString": {
+    "nested_hand_model/hand_shape": "open",
+    "nested_hand_model/hand_animation":"reset",
+    "arm_swing_animation":"reset"
+  }
+}
+
+,"hello wave":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "nested_hand_model/hand_shape": "open",
+    "nested_hand_model/hand_animation":"wave",
+    "arm_swing_animation":"center"
+  }
+}
+,"ok hand":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "nested_hand_model/hand_shape": "ok",
+    "nested_hand_model/hand_animation":"reset",
+    "arm_swing_animation":"center"
+  }
+}
+,"stopwatch in":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "nested_hand_model/hand_shape": "stopwatch",
+    "swing_distance":25
+  }
+}
+
+,"stopwatch start updates":[
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": 3,
+    "nested_stopwatch_model/end": 24
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": 9,
+    "nested_stopwatch_model/end": 24
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": 14,
+    "nested_stopwatch_model/end": 24
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": 19,
+    "nested_stopwatch_model/end": 24
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": 22,
+    "nested_stopwatch_model/end": 24
+  }
+}
+
+]
+,"stopwatch end updates":[
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": "{task.startTime}",
+    "nested_stopwatch_model/end": 6
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": "{task.startTime}",
+    "nested_stopwatch_model/end": 12
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": "{task.startTime}",
+    "nested_stopwatch_model/end": 18
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": "{task.startTime}",
+    "nested_stopwatch_model/end": 21
+  }
+},
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": "{task.startTime}",
+    "nested_stopwatch_model/end": 23
+  }
+}
+
+]
+,"stopwatch end deadline ":
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": "{task.startTime}",
+    "nested_stopwatch_model/end": "{task.startTime}"
+  }
+}
+
+
+,"stopwatch set start time":
+
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": "{task.startTime}",
+    "nested_stopwatch_model/end": 24
+  }
+}
+
+
+,"stopwatch out":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "swing_distance":60
+  }
+}
+,"calendar in":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "nested_hand_model/hand_shape": "calendar",
+    "swing_distance":25
+  }
+}
+,"calendar updates":[
+
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_calendar_model/monday": "{session.mon_active}",
+    "nested_calendar_model/tuesday": "{session.tue_active}",
+    "nested_calendar_model/wednesday": "{session.wed_active}",
+    "nested_calendar_model/thursday": "{session.thu_active}",
+    "nested_calendar_model/friday": "{session.fri_active}",
+    "nested_calendar_model/saturday": "{session.sat_active}",
+    "nested_calendar_model/sunday": "{session.sun_active}"
+  }
+}
+
+]
+
+,"calendar out":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "swing_distance":60
+  }
+}
+,"throttle in":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "nested_hand_model/hand_shape": "throttle",
+    "swing_distance":25
+  }
+},
+
+"throttle updates":[
+
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_throttle_model/level": "{task.remindersIntensity}"
+  }
+}
+
+]   
+
+,"throttle out":
+
+{
+  "zone": 4,
+  "id": "hands",
+ "bindingsString": {
+    "swing_distance":60
+  }
+},
+
+"test":
+{
+  "zone": 4,
+  "id": "hands",
+  "bindings": {
+    "nested_stopwatch_model/start": 19,
+    "nested_stopwatch_model/end": 24
+  }
+}
+
+}

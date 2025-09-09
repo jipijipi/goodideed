@@ -1,4 +1,4 @@
-Let's rethink how everything is calculated to make the following behaviors possible : 
+Let's rethink how everything is calculated to make the following behaviors possible :
 
 1) IMMEDIATE
 The user sets his task on Monday, active for *week days only*, starting the *SAME* day.
@@ -79,74 +79,77 @@ After setting the task, if the user *FIRST* checks in on :
     Next Monday before the day deadline : previous task autofailed, current task pending
     Next Monday after the day deadline : previous task autofailed, current task overdue
 
-
 1) Variables computed at launch (SessionService:11-20)
 
   Session Variables:
-  - session.visitCount - Daily visit counter (resets each day)
-  - session.totalVisitCount - Total visits (never resets)
-  - session.timeOfDay - Time period (1=morning, 2=afternoon, 3=evening,
+
+- session.visitCount - Daily visit counter (resets each day)
+- session.totalVisitCount - Total visits (never resets)
+- session.timeOfDay - Time period (1=morning, 2=afternoon, 3=evening,
   4=night)
-  - session.lastVisitDate - Last visit date (YYYY-MM-DD format)
-  - session.firstVisitDate - First app visit date
-  - session.daysSinceFirstVisit - Days since first visit
-  - session.isWeekend - Boolean for Saturday/Sunday
+- session.lastVisitDate - Last visit date (YYYY-MM-DD format)
+- session.firstVisitDate - First app visit date
+- session.daysSinceFirstVisit - Days since first visit
+- session.isWeekend - Boolean for Saturday/Sunday
 
   Task Variables:
-  - task.currentStatus - Task status (pending/completed/failed/overdue)
-  - task.isActiveDay - Boolean if today matches scheduled task date +
+
+- task.currentStatus - Task status (pending/completed/failed/overdue)
+- task.isActiveDay - Boolean if today matches scheduled task date +
   active weekdays
-  - task.isBeforeStart - Boolean if current time < start time
-  - task.isInTimeRange - Boolean if between start and deadline times
-  - task.isPastDeadline - Boolean if current time > deadline
+- task.isBeforeStart - Boolean if current time < start time
+- task.isInTimeRange - Boolean if between start and deadline times
+- task.isPastDeadline - Boolean if current time > deadline
 
   2) Variables that can be computed from script triggers (DataAction)
 
   DataAction Types:
-  - set - Set any key to a value or template function
-  - increment - Add to numeric values
-  - decrement - Subtract from numeric values
-  - reset - Reset to default value
-  - trigger - Fire events with custom data
+
+- set - Set any key to a value or template function
+- increment - Add to numeric values
+- decrement - Subtract from numeric values
+- reset - Reset to default value
+- trigger - Fire events with custom data
 
   Template Functions Available:
-  - TODAY_DATE - Current date as YYYY-MM-DD
-  - NEXT_ACTIVE_DATE - Next date matching user's active days configuration
-  - NEXT_ACTIVE_WEEKDAY - Weekday number of next active date
+
+- TODAY_DATE - Current date as YYYY-MM-DD
+- NEXT_ACTIVE_DATE - Next date matching user's active days configuration
+- NEXT_ACTIVE_WEEKDAY - Weekday number of next active date
 
   Recalculable Variables:
-  - task.isActiveDay - Via sessionService.recalculateActiveDay()
-  - task.isPastDeadline - Via sessionService.recalculatePastDeadline()
+
+- task.isActiveDay - Via sessionService.recalculateActiveDay()
+- task.isPastDeadline - Via sessionService.recalculatePastDeadline()
 
   3) Templated functions available from script
 
   Template Syntax:
-  - {key|fallback} - Basic template with fallback
-  - {key:formatter|fallback} - Template with formatter and fallback
+
+- {key|fallback} - Basic template with fallback
+- {key:formatter|fallback} - Template with formatter and fallback
 
   Available Formatters:
-  - timeOfDay - Format time periods (1→"morning", 2→"afternoon",
+
+- timeOfDay - Format time periods (1→"morning", 2→"afternoon",
   3→"evening", 4→"night")
-  - activeDays - Format weekday lists ([1,2,3,4,5]→"weekdays",
+- activeDays - Format weekday lists ([1,2,3,4,5]→"weekdays",
   [6,7]→"weekends")
-  - intensity - Format intensity levels (0→"off", 1→"low", 2→"high",
+- intensity - Format intensity levels (0→"off", 1→"low", 2→"high",
   3→"maximum")
-  - timePeriod - Format time strings ("10:00"→"morning deadline",
+- timePeriod - Format time strings ("10:00"→"morning deadline",
   "14:00"→"afternoon deadline")
 
   All User Storage Keys Available for Templates:
-  - Session: session.visitCount, session.timeOfDay, session.isWeekend, etc.
-  - User: user.name, user.task, user.streak, user.isOnboarded, etc.
-  - Task: task.startTime, task.deadlineTime, task.activeDays,
-  task.currentStatus, etc.
 
-  
+- Session: session.visitCount, session.timeOfDay, session.isWeekend, etc.
+- User: user.name, user.task, user.streak, user.isOnboarded, etc.
+- Task: task.startTime, task.deadlineTime, task.activeDays,
+  task.currentStatus, etc.
 
 flutter test --machine | dart tool/test_failure_extractor.dart > failures.json
 
-
-
-In effect, here is what a week of notifications would look like for a user (using intensity 1 for simplicity) setting a task on Monday at 11am with Start time at 10:00 and Deadline time at 18:00. His active days are monday to friday : 
+In effect, here is what a week of notifications would look like for a user (using intensity 1 for simplicity) setting a task on Monday at 11am with Start time at 10:00 and Deadline time at 18:00. His active days are monday to friday :
 
 Assuming the user never checks in afterward and therefore does not trigger a rescheduling:
 
@@ -170,20 +173,19 @@ Friday/and following active days past end date : Possibly third comeback notific
 Saturday : Not an active day, no notifications
 Sunday : Not an active day, no notifications
 
-I want to trigger rive animations in different zones of the screen depending on context. 
+I want to trigger rive animations in different zones of the screen depending on context.
+
 1) Rive animations are already used inline in chat bubbles. Start by reviewing how they are implemented, check that they use the correct API as the new version is a major prerelease (rive: ^0.14.0-dev.5)
 2) The second of 4 zones for rive animations will be overlaid on top of everything. This zone will be used to display animations like achievements / trophies. These animations will be triggered directly from the script. Explain the best and most straightforward way to achieve it.
 
 Do not code until plan validation
 
-{ "asset": "assets/animations/test-spere.riv", "zone": 3, "align": "center", "fit": "contain", "bindings": { "posx": 100, "posy": 200 } } 
+{ "asset": "assets/animations/test-spere.riv", "zone": 3, "align": "center", "fit": "contain", "bindings": { "posx": 100, "posy": 200 } }
 
 { "asset": "assets/animations/intro_logo_animated.riv", "autoHideMs": 1800, "align": "center", "fit": "contain", "zone": 2 }
 { "asset": "assets/animations/test-spere.riv", "autoHideMs": 1800, "align": "center", "fit": "contain", "zone": 2 }
 
-
 The last zone will be very similar to the background zone (3), except that it will sit above the message bubbles but beneath any panel or UI. Animations here will react mostly to actions performed by the user (changing parameters for example). One example would be an animated clock reacting to the user adjusting a slider. Discuss how to best implement it by reusing whats already in place as much as possible. Propose refactoring as you feel necessary. Do not code until plan approval.
-
 
 {
   "asset": "assets/animations/arm_rig_test.riv",
@@ -226,6 +228,7 @@ The last zone will be very similar to the background zone (3), except that it wi
 
 TASK SUMMARY
   --------
+
 task : {user.task}
 days : {task.activeDays}
 start : {task.startTime}
@@ -233,8 +236,6 @@ deadline : {task.deadlineTime}
 reminders : {task.remindersIntensity}
 
 TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nstart : {task.startTime}\n\ndeadline : {task.deadlineTime}\n\nreminders : {task.remindersIntensity}
-
-
 
 {
   "asset": "assets/animations/radial_range_test.riv",
@@ -301,7 +302,6 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "sunday": "{session.sun_active}"
   }
 }
-
 
 {
   "asset": "assets/animations/calendar.riv",
@@ -548,7 +548,7 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
         "hand_animation": "wave"
   }
 }
-#nesting node
+# nesting node
 {
   "asset": "assets/animations/nestingr.riv",
   "zone": 2,
@@ -635,7 +635,6 @@ TASK SUMMARY\n\n--------\n\ntask : {user.task}\n\ndays : {task.activeDays}\n\nst
     "anim_status": "lock"
   }
 }
-
 
 {
   "asset": "assets/animations/hands_states.riv",
@@ -855,5 +854,26 @@ ___
     "swing_distance":25,
     "nested_stopwatch_model/start": 2,
     "nested_stopwatch_model/end": 14
+  }
+}
+
+----------
+
+{
+  "asset": "assets/animations/arm_and_tools.riv",
+  "zone": 4,
+  "id": "hands",
+  "fit": "layout",
+  "artboard": "arm_artboard",
+  "layoutScaleFactor": 0.6,
+  "useDataBinding": true,
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1,
+
+  },
+  "bindingsString": {
+    "nested_hand_model/hand_shape": "open",
+    "nested_hand_model/hand_animation":"reset"
   }
 }

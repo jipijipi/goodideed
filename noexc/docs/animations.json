@@ -55,8 +55,14 @@
 {
   "zone": 4,
   "id": "hands",
- "bindingsString": {
+  "bindingsString": {
     "nested_hand_model/hand_shape": "stopwatch",
+    "arm_swing_animation":"reset"
+
+},
+  "bindings": {
+    "free_target_is_active":0,
+    "swing_target_is_active":1,
     "swing_distance":25
   }
 }
@@ -175,7 +181,7 @@
 {
   "zone": 4,
   "id": "hands",
- "bindingsString": {
+ "bindings": {
     "swing_distance":60
   }
 }
@@ -185,7 +191,9 @@
   "zone": 4,
   "id": "hands",
  "bindingsString": {
-    "nested_hand_model/hand_shape": "calendar",
+    "nested_hand_model/hand_shape": "calendar"
+  },
+  "bindings": {
     "swing_distance":25
   }
 }
@@ -212,7 +220,7 @@
 {
   "zone": 4,
   "id": "hands",
- "bindingsString": {
+ "bindings": {
     "swing_distance":60
   }
 }
@@ -222,7 +230,9 @@
   "zone": 4,
   "id": "hands",
  "bindingsString": {
-    "nested_hand_model/hand_shape": "throttle",
+    "nested_hand_model/hand_shape": "throttle"
+  },
+  "bindings": {
     "swing_distance":25
   }
 },
@@ -244,7 +254,7 @@
 {
   "zone": 4,
   "id": "hands",
- "bindingsString": {
+ "bindings": {
     "swing_distance":60
   }
 },

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-09T14:58:38.528Z",
+  "lastUpdated": "2025-09-09T16:37:57.476Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-09T14:58:38.486Z"
+    "timestamp": "2025-09-09T16:37:57.467Z"
   },
   "nodes": [
     {
@@ -710,8 +710,8 @@
     {
       "id": "47",
       "position": {
-        "x": 8208.4779491195,
-        "y": -4514.177139293886
+        "x": 8058.778249799378,
+        "y": -5705.865535197503
       },
       "type": "group",
       "style": {
@@ -723,8 +723,8 @@
       "height": 9751,
       "selected": false,
       "positionAbsolute": {
-        "x": 8208.4779491195,
-        "y": -4514.177139293886
+        "x": 8058.778249799378,
+        "y": -5705.865535197503
       },
       "dragging": false,
       "data": {
@@ -5441,7 +5441,9 @@
               "zone": 4,
               "id": "hands",
               "bindingsString": {
-                "nested_hand_model/hand_shape": "stopwatch",
+                "nested_hand_model/hand_shape": "stopwatch"
+              },
+              "bindings": {
                 "swing_distance": 25
               }
             }
@@ -5489,8 +5491,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 191,
+      "width": 308,
+      "height": 189,
       "selected": false,
       "positionAbsolute": {
         "x": 1582.0016612679487,
@@ -6543,7 +6545,7 @@
             "data": {
               "zone": 4,
               "id": "hands",
-              "bindingsString": {
+              "bindings": {
                 "swing_distance": 60
               }
             }
@@ -6551,8 +6553,8 @@
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 189,
+      "width": 310,
+      "height": 191,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -6784,6 +6786,11 @@
               "id": "hands",
               "bindingsString": {
                 "nested_hand_model/hand_shape": "stopwatch",
+                "arm_swing_animation": "reset"
+              },
+              "bindings": {
+                "free_target_is_active": 0,
+                "swing_target_is_active": 1,
                 "swing_distance": 25
               }
             }
@@ -7537,8 +7544,8 @@
             "data": {
               "zone": 4,
               "id": "hands",
-              "bindingsString": {
-                "swing_distance": 60
+              "bindings": {
+                "swing_distance": 25
               }
             }
           }
@@ -7977,7 +7984,9 @@
               "zone": 4,
               "id": "hands",
               "bindingsString": {
-                "nested_hand_model/hand_shape": "calendar",
+                "nested_hand_model/hand_shape": "calendar"
+              },
+              "bindings": {
                 "swing_distance": 25
               }
             }
@@ -8321,7 +8330,7 @@
             "data": {
               "zone": 4,
               "id": "hands",
-              "bindingsString": {
+              "bindings": {
                 "swing_distance": 60
               }
             }
@@ -8361,8 +8370,10 @@
               "zone": 4,
               "id": "hands",
               "bindingsString": {
-                "nested_hand_model/hand_shape": "throttle",
-                "swing_distance": 25
+                "nested_hand_model/hand_shape": "throttle"
+              },
+              "bindings": {
+                "swing_distance": 60
               }
             }
           }

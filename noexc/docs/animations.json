@@ -56,14 +56,14 @@
   "zone": 4,
   "id": "hands",
   "bindingsString": {
-    "nested_hand_model/hand_shape": "stopwatch",
-    "arm_swing_animation":"reset"
+    "nested_hand_model/hand_shape": "stopwatch"
 
 },
   "bindings": {
-    "free_target_is_active":0,
-    "swing_target_is_active":1,
-    "swing_distance":25
+    "free_target_is_active":1,
+    "swing_target_is_active":0,
+    "free_target_x":0.5,
+    "free_target_y":0.3
   }
 }
 
@@ -159,7 +159,7 @@
   "id": "hands",
   "bindings": {
     "nested_stopwatch_model/start": "{task.startTime}",
-    "nested_stopwatch_model/end": "{task.startTime}"
+    "nested_stopwatch_model/end": "{task.deadlineTime}"
   }
 }
 
@@ -181,8 +181,9 @@
 {
   "zone": 4,
   "id": "hands",
- "bindings": {
-    "swing_distance":60
+   "bindings": {
+    "free_target_x":-0.5,
+    "free_target_y":0.3
   }
 }
 ,"calendar in":

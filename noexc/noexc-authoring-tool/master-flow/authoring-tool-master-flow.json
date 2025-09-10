@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-09T16:37:57.476Z",
+  "lastUpdated": "2025-09-09T19:23:17.551Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-09T16:37:57.467Z"
+    "timestamp": "2025-09-09T19:23:17.544Z"
   },
   "nodes": [
     {
@@ -5444,7 +5444,10 @@
                 "nested_hand_model/hand_shape": "stopwatch"
               },
               "bindings": {
-                "swing_distance": 25
+                "free_target_is_active": 1,
+                "swing_target_is_active": 0,
+                "free_target_x": 0.5,
+                "free_target_y": 0.3
               }
             }
           }
@@ -6507,7 +6510,7 @@
               "id": "hands",
               "bindings": {
                 "nested_stopwatch_model/start": "{task.startTime}",
-                "nested_stopwatch_model/end": "{task.startTime}"
+                "nested_stopwatch_model/end": "{task.deadlineTime}"
               }
             }
           }
@@ -6546,15 +6549,16 @@
               "zone": 4,
               "id": "hands",
               "bindings": {
-                "swing_distance": 60
+                "free_target_x": -0.5,
+                "free_target_y": 0.3
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 191,
+      "width": 308,
+      "height": 189,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -6785,13 +6789,13 @@
               "zone": 4,
               "id": "hands",
               "bindingsString": {
-                "nested_hand_model/hand_shape": "stopwatch",
-                "arm_swing_animation": "reset"
+                "nested_hand_model/hand_shape": "stopwatch"
               },
               "bindings": {
-                "free_target_is_active": 0,
-                "swing_target_is_active": 1,
-                "swing_distance": 25
+                "free_target_is_active": 1,
+                "swing_target_is_active": 0,
+                "free_target_x": 0.5,
+                "free_target_y": 0.3
               }
             }
           }
@@ -7545,7 +7549,8 @@
               "zone": 4,
               "id": "hands",
               "bindings": {
-                "swing_distance": 25
+                "free_target_x": -0.5,
+                "free_target_y": 0.3
               }
             }
           }
@@ -7987,7 +7992,10 @@
                 "nested_hand_model/hand_shape": "calendar"
               },
               "bindings": {
-                "swing_distance": 25
+                "free_target_is_active": 1,
+                "swing_target_is_active": 0,
+                "free_target_x": 0.5,
+                "free_target_y": 0.3
               }
             }
           }
@@ -8331,7 +8339,8 @@
               "zone": 4,
               "id": "hands",
               "bindings": {
-                "swing_distance": 60
+                "free_target_x": -0.5,
+                "free_target_y": 0.3
               }
             }
           }
@@ -8373,15 +8382,18 @@
                 "nested_hand_model/hand_shape": "throttle"
               },
               "bindings": {
-                "swing_distance": 60
+                "free_target_is_active": 1,
+                "swing_target_is_active": 0,
+                "free_target_x": 0.5,
+                "free_target_y": 0.3
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 189,
+      "width": 310,
+      "height": 191,
       "selected": false,
       "positionAbsolute": {
         "x": 6884.976441920133,

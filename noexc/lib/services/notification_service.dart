@@ -515,7 +515,15 @@ class NotificationService {
 
       final deadlineTimeString = await _getDeadlineTimeAsString();
       final startTimeString = await _getStartTimeAsString();
-      _logger.info('Start=$startTimeString, Deadline=$deadlineTimeString');
+      _logger.info('Retrieved times - Start=$startTimeString, Deadline=$deadlineTimeString');
+      
+      // Validate time format before proceeding
+      if (!_isValidTimeFormat(startTimeString)) {
+        _logger.error('Invalid start time format: "$startTimeString"');
+      }
+      if (!_isValidTimeFormat(deadlineTimeString)) {
+        _logger.error('Invalid deadline time format: "$deadlineTimeString"');
+      }
 
       // Ensure timezone is initialized before scheduling
       await _ensureTimezoneInitialized();
@@ -577,15 +585,27 @@ class NotificationService {
 
       // Schedule multi-stage per planned day
       int scheduledCount = 0;
+      int failedDays = 0;
       for (final dateStr in datesToPlan) {
-        scheduledCount += await _scheduleDaySlots(
+        _logger.info('Processing date: $dateStr');
+        final dayCount = await _scheduleDaySlots(
           dateStr,
           startTimeString,
           deadlineTimeString,
           remindersIntensity,
           onlyFinalTodayGlobal: onlyFinalTodayFlag,
         );
+        
+        if (dayCount > 0) {
+          scheduledCount += dayCount;
+          _logger.info('Successfully scheduled $dayCount notifications for $dateStr');
+        } else {
+          failedDays++;
+          _logger.warning('Failed to schedule any notifications for $dateStr');
+        }
       }
+      
+      _logger.info('Scheduling summary: $scheduledCount notifications across ${datesToPlan.length - failedDays} successful days, $failedDays failed days');
 
       // Post-end come-back nudges (three one-shots on consecutive active days after endDate)
       if (endDate != null && endDate.isNotEmpty) {
@@ -663,8 +683,16 @@ class NotificationService {
 
       final start = _composeLocal(date, startTime);
       final end = _composeLocal(date, deadlineTime);
+      
+      // Handle time parsing failures
+      if (start == null || end == null) {
+        _logger.warning('Failed to parse times for $dateStr: start=$startTime, deadline=$deadlineTime');
+        return 0; // Skip this day entirely rather than scheduling fallback
+      }
+      
       if (end.isBefore(start)) {
         // Guard: if misconfigured, schedule only deadline
+        _logger.warning('Invalid time configuration for $dateStr: deadline ($deadlineTime) before start ($startTime)');
         return await _scheduleSlot(
           dateStr,
           'deadline',
@@ -736,7 +764,11 @@ class NotificationService {
       for (int i = 0; i < maxShots; i++) {
         cursor = _nextActiveDateAfter(cursor);
         final t = _composeLocal(cursor, startTime);
-        shots.add(t);
+        if (t != null) {
+          shots.add(t);
+        } else {
+          _logger.warning('Failed to parse comeback start time "$startTime" for date ${_fmtDate(cursor)}');
+        }
       }
       int count = 0;
       var i = 0;
@@ -764,6 +796,10 @@ class NotificationService {
   ) async {
     try {
       final first = _composeLocal(_nextActiveDateAfter(DateTime.parse(endDateStr)), startTime);
+      if (first == null) {
+        _logger.warning('Failed to parse weekly comeback start time "$startTime"');
+        return;
+      }
       if (first.isBefore(DateTime.now())) return;
 
       final id = await _buildSafeId(_fmtDate(first), 'comeback_weekly');
@@ -1246,12 +1282,52 @@ class NotificationService {
     }
   }
 
-  DateTime _composeLocal(DateTime day, String hhmm) {
-    final p = hhmm.split(':');
-    final h = int.parse(p[0]);
-    final m = int.parse(p[1]);
-    return DateTime(day.year, day.month, day.day, h, m);
+  /// Validates time format without throwing exceptions
+  bool _isValidTimeFormat(String timeString) {
+    try {
+      final parts = timeString.split(':');
+      if (parts.length != 2) return false;
+      
+      final hour = int.tryParse(parts[0]);
+      final minute = int.tryParse(parts[1]);
+      
+      if (hour == null || minute == null) return false;
+      if (hour < 0 || hour > 23) return false;
+      if (minute < 0 || minute > 59) return false;
+      
+      return true;
+    } catch (e) {
+      return false;
     }
+  }
+
+  DateTime? _composeLocal(DateTime day, String hhmm) {
+    try {
+      final p = hhmm.split(':');
+      if (p.length != 2) {
+        _logger.warning('Invalid time format "$hhmm": expected HH:MM format');
+        return null;
+      }
+      
+      final h = int.tryParse(p[0]);
+      final m = int.tryParse(p[1]);
+      
+      if (h == null || m == null) {
+        _logger.warning('Invalid time format "$hhmm": non-numeric hour or minute');
+        return null;
+      }
+      
+      if (h < 0 || h > 23 || m < 0 || m > 59) {
+        _logger.warning('Invalid time format "$hhmm": hour must be 0-23, minute must be 0-59');
+        return null;
+      }
+      
+      return DateTime(day.year, day.month, day.day, h, m);
+    } catch (e) {
+      _logger.warning('Failed to parse time "$hhmm" for date ${day.toString().substring(0, 10)}: $e');
+      return null;
+    }
+  }
 
   bool _sameDate(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;

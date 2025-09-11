@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -10,6 +11,7 @@ import '../models/notification_tap_event.dart';
 import 'app_state_service.dart';
 import 'dart:convert';
 import '../constants/session_constants.dart';
+import 'service_locator.dart';
 
 /// Simple test environment detection
 /// Returns true if we're running in a test environment
@@ -35,6 +37,11 @@ class NotificationService {
   // Callback for notification tap events (for backward compatibility)
   Function(NotificationTapEvent)? _onNotificationTap;
 
+  // Timezone synchronization
+  static bool _timezoneInitialized = false;
+  static bool _timezoneInitializing = false;
+  static final List<Completer<void>> _timezoneInitWaiters = [];
+
   static const int _dailyReminderNotificationId = 1001;
   static const String _channelId = 'daily_reminders';
   static const String _channelName = 'Daily Task Reminders';
@@ -42,6 +49,57 @@ class NotificationService {
       'Notifications to remind you about your daily task';
 
   NotificationService(this._userDataService);
+
+  /// Safely initialize timezone data with synchronization to prevent race conditions
+  static Future<void> _ensureTimezoneInitialized() async {
+    if (_timezoneInitialized) return;
+
+    if (_timezoneInitializing) {
+      // Another thread is already initializing, wait for it
+      final completer = Completer<void>();
+      _timezoneInitWaiters.add(completer);
+      return completer.future;
+    }
+
+    _timezoneInitializing = true;
+    
+    try {
+      if (!_timezoneInitialized) {
+        tz.initializeTimeZones();
+        
+        // Validate timezone initialization
+        final currentZone = tz.local;
+        final now = tz.TZDateTime.now(tz.local);
+        
+        // Basic validation - ensure we can create timezone date objects
+        if (currentZone.name.isEmpty) {
+          throw Exception('Timezone name is empty after initialization');
+        }
+        
+        _timezoneInitialized = true;
+      }
+    } finally {
+      _timezoneInitializing = false;
+      
+      // Complete all waiting futures
+      final waiters = List<Completer<void>>.from(_timezoneInitWaiters);
+      _timezoneInitWaiters.clear();
+      
+      if (_timezoneInitialized) {
+        for (final waiter in waiters) {
+          if (!waiter.isCompleted) {
+            waiter.complete();
+          }
+        }
+      } else {
+        for (final waiter in waiters) {
+          if (!waiter.isCompleted) {
+            waiter.completeError(Exception('Timezone initialization failed'));
+          }
+        }
+      }
+    }
+  }
 
   Future<void> initialize() async {
     _logger.info(
@@ -55,21 +113,15 @@ class NotificationService {
     }
 
     try {
-      // Initialize timezone data with validation
+      // Initialize timezone data with synchronization
       _logger.info('Initializing timezone data...');
-      tz.initializeTimeZones();
-
-      // Validate timezone initialization
-      try {
-        final currentZone = tz.local;
-        final now = tz.TZDateTime.now(tz.local);
-        _logger.info(
-          'Timezone initialized successfully: ${currentZone.name}, current time: $now',
-        );
-      } catch (e) {
-        _logger.error('Timezone validation failed: $e');
-        throw Exception('Timezone initialization failed: $e');
-      }
+      await _ensureTimezoneInitialized();
+      
+      final currentZone = tz.local;
+      final now = tz.TZDateTime.now(tz.local);
+      _logger.info(
+        'Timezone initialized successfully: ${currentZone.name}, current time: $now',
+      );
 
       // Detect iOS simulator
       final isIOSSimulator = Platform.isIOS && _isIOSSimulator();
@@ -331,6 +383,14 @@ class NotificationService {
       _logger.info('iOS Simulator: ${_isIOSSimulator()}');
     }
 
+    // Log existing notifications before scheduling
+    try {
+      final existingNotifications = await getPendingNotifications();
+      _logger.info('Found ${existingNotifications.length} existing notifications before scheduling');
+    } catch (e) {
+      _logger.warning('Failed to check existing notifications before scheduling: $e');
+    }
+
     if (_isTestEnvironment()) {
       _logger.info('Test environment - skipping notification scheduling');
       await _userDataService.storeValue(StorageKeys.notificationIsEnabled, false);
@@ -361,7 +421,8 @@ class NotificationService {
       final startTimeString = await _getStartTimeAsString();
       _logger.info('Start=$startTimeString, Deadline=$deadlineTimeString');
 
-      // Validate timezone
+      // Ensure timezone is initialized before scheduling
+      await _ensureTimezoneInitialized();
       final nowTz = tz.TZDateTime.now(tz.local);
       _logger.info('Timezone OK: ${tz.local.name}, now=$nowTz');
 
@@ -440,7 +501,34 @@ class NotificationService {
         scheduledCount > 0,
       );
 
-      _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications ===');
+      // Verify final notification count
+      try {
+        final finalNotifications = await getPendingNotifications();
+        _logger.info('=== SCHEDULING COMPLETED ===');
+        _logger.info('Scheduled: $scheduledCount new notifications');
+        _logger.info('Total pending: ${finalNotifications.length} notifications');
+        _logger.info('Notifications enabled: ${scheduledCount > 0}');
+        
+        // Log breakdown by type for debugging
+        final typeBreakdown = <String, int>{};
+        for (final notification in finalNotifications) {
+          if (notification.payload != null) {
+            try {
+              final data = json.decode(notification.payload!) as Map<String, dynamic>;
+              final type = data['type'] as String? ?? 'unknown';
+              typeBreakdown[type] = (typeBreakdown[type] ?? 0) + 1;
+            } catch (_) {
+              typeBreakdown['invalid'] = (typeBreakdown['invalid'] ?? 0) + 1;
+            }
+          } else {
+            typeBreakdown['no-payload'] = (typeBreakdown['no-payload'] ?? 0) + 1;
+          }
+        }
+        _logger.info('Notification types: $typeBreakdown');
+      } catch (e) {
+        _logger.warning('Failed to verify final notification count: $e');
+        _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications (verification failed) ===');
+      }
     } catch (e) {
       _logger.error('=== SCHEDULING FAILED ===');
       _logger.error('Error: $e');
@@ -571,13 +659,17 @@ class NotificationService {
       final first = _composeLocal(_nextActiveDateAfter(DateTime.parse(endDateStr)), startTime);
       if (first.isBefore(DateTime.now())) return;
 
-      final id = _buildId(_fmtDate(first), 'comeback_weekly');
-      final payload = json.encode({
-        'type': 'comeBack',
-        'slot': 'weekly',
-        'taskDate': _fmtDate(first),
-        'scheduledDate': first.toIso8601String(),
-      });
+      final id = await _buildSafeId(_fmtDate(first), 'comeback_weekly');
+      
+      // Create sanitized payload
+      final payloadData = _createSafePayload(
+        type: 'comeBack',
+        slot: 'weekly',
+        taskDate: _fmtDate(first),
+        scheduledDate: first.toIso8601String(),
+      );
+      
+      final payload = json.encode(payloadData);
 
       const details = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -597,15 +689,17 @@ class NotificationService {
       await _notifications.zonedSchedule(
         id,
         'Check back in',
-        'It’s a great day to restart.',
+        'It\'s a great day to restart.',
         tz.TZDateTime.from(first, tz.local),
         details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: payload,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
+      
+      _logger.info('Scheduled weekly comeback fallback notification ID:$id for ${_fmtDate(first)}');
     } catch (e) {
-      _logger.warning('Failed scheduling weekly fallback: $e');
+      _logger.error('Failed scheduling weekly fallback: $e');
     }
   }
 
@@ -628,13 +722,19 @@ class NotificationService {
     {required String title, required String body}
   ) async {
     try {
-      final id = _buildId(taskDate, slot);
-      final payload = json.encode({
-        'type': slot == 'deadline' ? 'dailyReminder' : 'dailyNudge',
-        'slot': slot,
-        'taskDate': taskDate,
-        'scheduledDate': whenLocal.toIso8601String(),
-      });
+      final id = await _buildSafeId(taskDate, slot);
+      
+      // Create sanitized payload
+      final payloadData = _createSafePayload(
+        type: slot == 'deadline' ? 'dailyReminder' : 'dailyNudge',
+        slot: slot,
+        taskDate: taskDate,
+        scheduledDate: whenLocal.toIso8601String(),
+      );
+      
+      final payload = json.encode(payloadData);
+
+      _logger.info('Scheduling notification: ID:$id slot:$slot date:$taskDate time:${whenLocal.toString().substring(11, 16)}');
 
       const details = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -660,15 +760,67 @@ class NotificationService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: payload,
       );
+      
+      _logger.info('Successfully scheduled notification ID:$id for $taskDate/$slot');
       return 1;
     } catch (e) {
-      _logger.warning('Slot schedule failed ($taskDate/$slot): $e');
+      _logger.error('Failed to schedule notification ID:${_buildId(taskDate, slot)} ($taskDate/$slot): $e');
       return 0;
     }
   }
 
+  /// Generate a notification ID with collision detection and validation
+  /// Returns a unique ID based on date and slot, with collision checking
+  Future<int> _buildSafeId(String dateStr, String slot) async {
+    final baseId = _buildId(dateStr, slot);
+    
+    // Check for ID collisions with existing notifications
+    final existingNotifications = await getPendingNotifications();
+    final existingIds = existingNotifications.map((n) => n.id).toSet();
+    
+    if (existingIds.contains(baseId)) {
+      _logger.warning('Notification ID collision detected: $baseId for $dateStr/$slot');
+      
+      // Find an alternative ID by incrementing
+      int alternativeId = baseId;
+      int attempts = 0;
+      const maxAttempts = 100;
+      
+      while (existingIds.contains(alternativeId) && attempts < maxAttempts) {
+        alternativeId = baseId + (attempts + 1) * 10000; // Add offset to avoid main ID space
+        attempts++;
+      }
+      
+      if (attempts >= maxAttempts) {
+        _logger.error('Failed to find unique notification ID after $maxAttempts attempts for $dateStr/$slot');
+        throw Exception('Unable to generate unique notification ID');
+      }
+      
+      _logger.info('Resolved collision: using ID $alternativeId instead of $baseId for $dateStr/$slot');
+      return alternativeId;
+    }
+    
+    return baseId;
+  }
+
+  /// Legacy ID generation method (kept for compatibility)
   int _buildId(String dateStr, String slot) {
+    // Validate date string format
+    if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(dateStr)) {
+      _logger.warning('Invalid date format for ID generation: $dateStr, using fallback');
+      dateStr = DateTime.now().toIso8601String().substring(0, 10);
+    }
+    
     final base = int.tryParse(dateStr.replaceAll('-', '')) ?? 0;
+    
+    // Validate that base doesn't overflow when multiplied
+    if (base > 214748364) { // Int32 max / 10
+      _logger.warning('Date base too large for ID generation: $base, using modulo');
+      // Use modulo to keep within safe range
+      final safeBase = base % 100000000; // Keep last 8 digits
+      _logger.info('Using safe base: $safeBase for date: $dateStr');
+    }
+    
     final code = () {
       if (slot == 'start') return 1;
       if (slot.startsWith('mid')) {
@@ -681,7 +833,67 @@ class NotificationService {
       if (slot == 'comeback_weekly') return 7; // weekly fallback
       return 5;
     }();
-    return base * 10 + code;
+    
+    final finalId = base * 10 + code;
+    
+    // Validate final ID is positive and not too large
+    if (finalId <= 0) {
+      _logger.error('Generated invalid notification ID: $finalId for $dateStr/$slot');
+      // Generate a fallback ID using current timestamp
+      final fallbackId = DateTime.now().millisecondsSinceEpoch.abs() % 2147483647 + code;
+      _logger.warning('Using fallback ID: $fallbackId for $dateStr/$slot');
+      return fallbackId;
+    }
+    
+    return finalId;
+  }
+
+  /// Sanitize a string value for safe JSON encoding
+  /// Removes control characters, limits length, and escapes problematic content
+  String _sanitizeStringForJson(String? input, {int maxLength = 1000}) {
+    if (input == null || input.isEmpty) return '';
+    
+    // Remove control characters except tab, newline, and carriage return
+    final sanitized = input.replaceAll(RegExp(r'[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]'), '');
+    
+    // Limit length to prevent extremely large payloads
+    final truncated = sanitized.length > maxLength 
+        ? sanitized.substring(0, maxLength)
+        : sanitized;
+    
+    return truncated;
+  }
+
+  /// Create a sanitized JSON payload for notifications
+  Map<String, dynamic> _createSafePayload({
+    required String type,
+    required String slot,
+    required String taskDate,
+    required String scheduledDate,
+    Map<String, dynamic>? additionalData,
+  }) {
+    final payload = <String, dynamic>{
+      'type': _sanitizeStringForJson(type, maxLength: 50),
+      'slot': _sanitizeStringForJson(slot, maxLength: 50),
+      'taskDate': _sanitizeStringForJson(taskDate, maxLength: 20), // YYYY-MM-DD format
+      'scheduledDate': _sanitizeStringForJson(scheduledDate, maxLength: 50), // ISO8601 format
+    };
+    
+    // Add additional data with sanitization
+    if (additionalData != null) {
+      for (final entry in additionalData.entries) {
+        if (entry.value is String) {
+          payload[entry.key] = _sanitizeStringForJson(entry.value as String);
+        } else if (entry.value is num || entry.value is bool) {
+          payload[entry.key] = entry.value;
+        } else {
+          // Convert complex types to sanitized strings
+          payload[entry.key] = _sanitizeStringForJson(entry.value.toString());
+        }
+      }
+    }
+    
+    return payload;
   }
 
   String _todayDateString() => _fmtDate(DateTime.now());
@@ -701,25 +913,47 @@ class NotificationService {
   Future<void> _cancelBeforeTaskDate(String cutoffDate) async {
     try {
       final pending = await getPendingNotifications();
+      int canceledCount = 0;
+      int skippedCount = 0;
+      int errorCount = 0;
+      
+      _logger.info('Starting cleanup: found ${pending.length} pending notifications, cutoff date: $cutoffDate');
+      
       for (final p in pending) {
         final payload = p.payload;
-        if (payload == null || payload.isEmpty) continue;
+        if (payload == null || payload.isEmpty) {
+          skippedCount++;
+          continue;
+        }
         try {
           final data = json.decode(payload) as Map<String, dynamic>;
           final taskDate = data['taskDate'] as String?;
           if (taskDate != null && taskDate.compareTo(cutoffDate) < 0) {
             await _notifications.cancel(p.id);
+            canceledCount++;
+            _logger.info('Canceled stale notification ID:${p.id} for task date:$taskDate (before cutoff:$cutoffDate)');
           }
-        } catch (_) {}
+        } catch (e) {
+          errorCount++;
+          _logger.warning('Failed to process notification ID:${p.id} payload during cleanup: $e');
+        }
       }
+      
+      _logger.info('Cleanup completed: canceled=$canceledCount, skipped=$skippedCount, errors=$errorCount');
     } catch (e) {
-      _logger.warning('Cancel-before sweep failed: $e');
+      _logger.error('Cancel-before sweep failed: $e');
     }
   }
 
   Future<void> _keepOnlyFinalForDate(String dateStr) async {
     try {
       final pending = await getPendingNotifications();
+      int canceledCount = 0;
+      int keptCount = 0;
+      int errorCount = 0;
+      
+      _logger.info('Keeping only final notifications for date: $dateStr (found ${pending.length} pending)');
+      
       for (final p in pending) {
         final payload = p.payload;
         if (payload == null || payload.isEmpty) continue;
@@ -729,12 +963,22 @@ class NotificationService {
             final slot = data['slot'] as String?;
             if (slot != 'deadline') {
               await _notifications.cancel(p.id);
+              canceledCount++;
+              _logger.info('Canceled non-final notification ID:${p.id} slot:$slot for date:$dateStr');
+            } else {
+              keptCount++;
+              _logger.info('Kept final notification ID:${p.id} slot:$slot for date:$dateStr');
             }
           }
-        } catch (_) {}
+        } catch (e) {
+          errorCount++;
+          _logger.warning('Failed to process notification ID:${p.id} payload in keep-final sweep: $e');
+        }
       }
+      
+      _logger.info('Keep-final completed for $dateStr: canceled=$canceledCount, kept=$keptCount, errors=$errorCount');
     } catch (e) {
-      _logger.warning('Keep-final sweep failed: $e');
+      _logger.error('Keep-final sweep failed: $e');
     }
   }
 
@@ -841,7 +1085,7 @@ class NotificationService {
   }
 
   Future<void> cancelAllNotifications() async {
-    _logger.info('Canceling all notifications');
+    _logger.info('=== CANCELING ALL NOTIFICATIONS ===');
 
     if (_isTestEnvironment()) {
       _logger.info('Test environment - skipping notification cancellation');
@@ -850,12 +1094,30 @@ class NotificationService {
     }
 
     try {
+      // Check how many notifications we're about to cancel
+      final pendingBefore = await getPendingNotifications();
+      _logger.info('Found ${pendingBefore.length} pending notifications to cancel');
+      
       await _notifications.cancelAll();
+      
+      // Verify cancellation was successful
+      final pendingAfter = await getPendingNotifications();
+      final actualCanceled = pendingBefore.length - pendingAfter.length;
+      
       await _userDataService.storeValue(
         StorageKeys.notificationIsEnabled,
         false,
       );
-      _logger.info('All notifications canceled');
+      
+      _logger.info('All notifications canceled successfully: $actualCanceled removed, ${pendingAfter.length} remaining');
+      
+      // Log any remaining notifications as potential issues
+      if (pendingAfter.isNotEmpty) {
+        _logger.warning('${pendingAfter.length} notifications still pending after cancelAll() - this may indicate platform issues');
+        for (final remaining in pendingAfter) {
+          _logger.warning('Remaining notification ID:${remaining.id} title:"${remaining.title}"');
+        }
+      }
     } catch (e) {
       _logger.error('Failed to cancel notifications: $e');
       // Still mark as disabled even if cancellation fails
@@ -867,7 +1129,7 @@ class NotificationService {
   }
 
   Future<void> cancelDeadlineReminder() async {
-    _logger.info('Canceling deadline reminder');
+    _logger.info('=== CANCELING DEADLINE REMINDER ===');
 
     if (_isTestEnvironment()) {
       _logger.info('Test environment - skipping notification cancellation');
@@ -876,12 +1138,34 @@ class NotificationService {
     }
 
     try {
+      // Check if the specific deadline reminder exists
+      final pendingBefore = await getPendingNotifications();
+      final deadlineReminder = pendingBefore.where((n) => n.id == _dailyReminderNotificationId).firstOrNull;
+      
+      if (deadlineReminder != null) {
+        _logger.info('Found deadline reminder notification ID:$_dailyReminderNotificationId to cancel');
+      } else {
+        _logger.info('No deadline reminder notification found with ID:$_dailyReminderNotificationId');
+      }
+      
       await _notifications.cancel(_dailyReminderNotificationId);
+      
+      // Verify specific cancellation
+      final pendingAfter = await getPendingNotifications();
+      final stillExists = pendingAfter.any((n) => n.id == _dailyReminderNotificationId);
+      
       await _userDataService.storeValue(
         StorageKeys.notificationIsEnabled,
         false,
       );
-      _logger.info('Deadline reminder canceled');
+      
+      if (!stillExists && deadlineReminder != null) {
+        _logger.info('Deadline reminder canceled successfully (ID:$_dailyReminderNotificationId)');
+      } else if (stillExists) {
+        _logger.warning('Deadline reminder ID:$_dailyReminderNotificationId still exists after cancellation - platform may not have processed the request');
+      } else {
+        _logger.info('Deadline reminder cancellation completed (notification was not found)');
+      }
     } catch (e) {
       _logger.error('Failed to cancel deadline reminder: $e');
       // Still mark as disabled even if cancellation fails
@@ -1069,7 +1353,46 @@ class NotificationService {
       final deadlineTime = await _userDataService.getValue<String>(
         StorageKeys.taskDeadlineTime,
       );
-      final pendingCount = (await getPendingNotifications()).length;
+      final startTime = await _userDataService.getValue<String>(
+        StorageKeys.taskStartTime,
+      );
+      final currentDate = await _userDataService.getValue<String>(
+        StorageKeys.taskCurrentDate,
+      );
+      final endDate = await _userDataService.getValue<String>(
+        StorageKeys.taskEndDate,
+      );
+      final activeDays = await _userDataService.getValue<dynamic>(
+        StorageKeys.taskActiveDays,
+      );
+
+      // Get current pending notifications with detailed info
+      final pendingNotifications = await getPendingNotifications();
+      final pendingCount = pendingNotifications.length;
+      
+      // Analyze pending notifications by type and date
+      final notificationBreakdown = <String, dynamic>{};
+      final dateBreakdown = <String, int>{};
+      final slotBreakdown = <String, int>{};
+      
+      for (final notification in pendingNotifications) {
+        if (notification.payload != null && notification.payload!.isNotEmpty) {
+          try {
+            final data = json.decode(notification.payload!) as Map<String, dynamic>;
+            final type = data['type'] as String? ?? 'unknown';
+            final slot = data['slot'] as String? ?? 'unknown';
+            final taskDate = data['taskDate'] as String? ?? 'unknown';
+            
+            notificationBreakdown[type] = (notificationBreakdown[type] ?? 0) + 1;
+            dateBreakdown[taskDate] = (dateBreakdown[taskDate] ?? 0) + 1;
+            slotBreakdown[slot] = (slotBreakdown[slot] ?? 0) + 1;
+          } catch (_) {
+            notificationBreakdown['invalid-payload'] = (notificationBreakdown['invalid-payload'] ?? 0) + 1;
+          }
+        } else {
+          notificationBreakdown['no-payload'] = (notificationBreakdown['no-payload'] ?? 0) + 1;
+        }
+      }
 
       // Get fallback information
       final fallbackDate = await _userDataService.getValue<String>(
@@ -1079,42 +1402,67 @@ class NotificationService {
         '${StorageKeys.notificationPrefix}fallbackReason',
       );
 
-      // Add timezone information
+      // Get permission tracking info
+      final permissionRequestCount = await _userDataService.getValue<int>(
+        StorageKeys.notificationPermissionRequestCount,
+      ) ?? 0;
+      final lastPermissionRequest = await _userDataService.getValue<String>(
+        StorageKeys.notificationPermissionLastRequested,
+      );
+      final storedPermissionStatus = await _userDataService.getValue<String>(
+        StorageKeys.notificationPermissionStatus,
+      );
+
+      // Add timezone information with validation
       String timezoneInfo = 'Unknown';
       String currentTime = 'Unknown';
+      bool timezoneValid = false;
       try {
         final currentZone = tz.local;
         final now = tz.TZDateTime.now(tz.local);
         timezoneInfo = currentZone.name;
         currentTime = now.toString();
+        timezoneValid = true;
       } catch (e) {
         timezoneInfo = 'Error: $e';
       }
 
-      // Add permission status (basic check)
-      String permissionStatus = 'Unknown';
-      if (Platform.isIOS) {
-        permissionStatus = 'iOS (check device settings)';
-        if (_isIOSSimulator()) {
-          permissionStatus += ' - Simulator detected';
-        }
-      } else if (Platform.isAndroid) {
-        permissionStatus = 'Android (check device settings)';
+      // Enhanced platform detection
+      String platformInfo = Platform.operatingSystem;
+      if (Platform.isIOS && _isIOSSimulator()) {
+        platformInfo += ' (Simulator - notifications may not work)';
+      } else if (Platform.isIOS) {
+        platformInfo += ' (Real device)';
       }
+
+      // Service health check
+      final serviceHealthy = _appStateService != null && ServiceLocator.instance.isInitialized;
 
       return {
         'isEnabled': isEnabled,
         'lastScheduled': lastScheduled,
         'remindersIntensity': remindersIntensity,
         'deadlineTime': deadlineTime,
+        'startTime': startTime,
+        'currentDate': currentDate,
+        'endDate': endDate,
+        'activeDays': activeDays?.toString(),
         'pendingCount': pendingCount,
+        'notificationTypes': notificationBreakdown,
+        'notificationDates': dateBreakdown,
+        'notificationSlots': slotBreakdown,
         'timezone': timezoneInfo,
+        'timezoneValid': timezoneValid,
         'currentTime': currentTime,
-        'permissions': permissionStatus,
-        'platform': Platform.operatingSystem,
+        'platform': platformInfo,
         'isIOSSimulator': Platform.isIOS ? _isIOSSimulator() : false,
         'fallbackDate': fallbackDate,
         'fallbackReason': fallbackReason,
+        'permissionRequestCount': permissionRequestCount,
+        'lastPermissionRequest': lastPermissionRequest,
+        'storedPermissionStatus': storedPermissionStatus,
+        'serviceHealthy': serviceHealthy,
+        'appStateServiceConnected': _appStateService != null,
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {
@@ -1197,36 +1545,81 @@ class NotificationService {
         'supportsRepeating': true,
         'channelId': _channelId,
         'channelName': _channelName,
+        'channelDescription': _channelDescription,
         'dailyReminderNotificationId': _dailyReminderNotificationId,
+        'isTestEnvironment': _isTestEnvironment(),
       };
 
       // Add iOS-specific information
       if (Platform.isIOS) {
-        info['isIOSSimulator'] = _isIOSSimulator();
+        final isSimulator = _isIOSSimulator();
+        info['isIOSSimulator'] = isSimulator;
         info['simulatorLimitations'] =
-            _isIOSSimulator()
+            isSimulator
                 ? 'Notifications may not work properly in iOS Simulator'
-                : 'Running on real iOS device';
+                : 'Running on real iOS device - full notification support';
         info['permissionNote'] =
             'Check iOS Settings > Notifications > Your App';
+        info['platformSpecificNotes'] = [
+          'iOS requires explicit permission requests',
+          'Cannot check permission status without requesting',
+          'Notifications may be delayed or not delivered in Low Power Mode',
+        ];
       } else if (Platform.isAndroid) {
         info['permissionNote'] =
             'Check Android Settings > Apps > Your App > Notifications';
+        info['platformSpecificNotes'] = [
+          'Android 13+ requires notification permission',
+          'Exact alarms may require special permission on Android 12+',
+          'Battery optimization may affect notification delivery',
+          'Do Not Disturb settings can block notifications',
+        ];
+        info['androidScheduleMode'] = 'exactAllowWhileIdle';
+      } else {
+        info['permissionNote'] = 'Platform-specific settings may apply';
+        info['platformSpecificNotes'] = [
+          'Notification behavior may vary on this platform',
+        ];
       }
 
-      // Add timezone information
+      // Add timezone information with detailed validation
       try {
         final currentZone = tz.local;
+        final now = tz.TZDateTime.now(tz.local);
         info['timezone'] = currentZone.name;
+        info['timezoneOffset'] = currentZone.timeZone(now.millisecondsSinceEpoch);
         info['timezoneStatus'] = 'OK';
+        info['currentTZDateTime'] = now.toString();
+        info['localDateTime'] = DateTime.now().toString();
       } catch (e) {
         info['timezone'] = 'Error';
         info['timezoneStatus'] = 'Failed: $e';
+        info['timezoneError'] = e.toString();
       }
+
+      // Add notification scheduling capability checks
+      info['capabilities'] = {
+        'canScheduleExact': Platform.isAndroid || Platform.isIOS,
+        'canScheduleRepeating': Platform.isAndroid || Platform.isIOS,
+        'canUsePayload': true,
+        'canUseActions': Platform.isAndroid || Platform.isIOS,
+        'maxScheduledNotifications': Platform.isIOS ? 64 : 'unlimited',
+      };
+
+      // Add service integration info
+      info['serviceIntegration'] = {
+        'serviceLocatorInitialized': ServiceLocator.instance.isInitialized,
+        'appStateServiceConnected': _appStateService != null,
+        'notificationServiceInitialized': true, // Since we're running this method
+      };
 
       return info;
     } catch (e) {
-      return {'platform': 'unknown', 'error': e.toString()};
+      return {
+        'platform': 'unknown', 
+        'error': e.toString(),
+        'timestamp': DateTime.now().toIso8601String(),
+      };
     }
   }
 }

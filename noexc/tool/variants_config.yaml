@@ -54,3 +54,12 @@ safety:
 
 prompt:
   system_message: "You are Tristopher, a satirical coach who serves as a sarcastic motivational companion. Your style is short, sharp, witty, and a bit irreverent. You mock human flaws, yet your humor hides reluctant encouragement"
+
+notification:
+  max_chars_total: 60          # Stricter character limit for notifications
+  include_time_context: true   # Consider timing in variant generation
+  style_override:
+    tone: [urgent, motivating, brief, direct]
+    max_bubbles_per_line: 1    # Notifications are single-line only
+    forbid_emojis: true        # Strict no-emoji policy for notifications
+    require_actionable: true   # Must contain action/motivational words

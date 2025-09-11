@@ -1,7 +1,7 @@
 # NOEXC Variant Generation Tool — Quick Guide
 
 ## What It Does
-Generate multiple high‑quality text variants for a specific chat message using the new semantic content system.
+Generate multiple high‑quality text variants for chat messages OR mobile notifications using the semantic content system.
 
 ## Key Paths
 - CLI: `tool/gen_variants.dart`
@@ -71,6 +71,15 @@ safety:
 
 prompt:
   system_message: "You are a UX writer for NOEXC, a friendly accountability bot."
+
+notification:
+  max_chars_total: 60          # Stricter character limit for notifications
+  include_time_context: true   # Consider timing in variant generation
+  style_override:
+    tone: [urgent, motivating, brief, direct]
+    max_bubbles_per_line: 1    # Notifications are single-line only
+    forbid_emojis: true        # Strict no-emoji policy for notifications
+    require_actionable: true   # Must contain action/motivational words
 ```
 
 ### Reasoning Model (OpenAI gpt‑5) Notes
@@ -130,6 +139,15 @@ prompt:
 ### safety
 - `blocklist`: Substrings to filter out from accepted variants.
 - `pii_regexes`: Optional regex patterns to drop variants containing sensitive info.
+
+### notification
+- `max_chars_total`: Character limit for notification variants (default: 60).
+- `include_time_context`: Whether to consider timing context in generation.
+- `style_override`: Notification-specific style settings that override general style config:
+  - `tone`: Tone tags for notifications (e.g., urgent, motivating, brief, direct).
+  - `max_bubbles_per_line`: Always 1 for notifications (no pipe splits).
+  - `forbid_emojis`: Strict no-emoji policy for mobile notifications.
+  - `require_actionable`: Ensures variants contain action/motivational words.
 
 ### How Prompt Assembly Works (FYI)
 - `prompt.system` uses `prompt.system_message` + tone/constraints from `style`/`gen`.
@@ -294,11 +312,44 @@ limits:
 - [ ] `choices` provided where necessary to disambiguate.
 - [ ] Target message has a `contentKey` and its content file exists (for examples).
 
-## Run (Dry‑Run vs Write)
+## Usage
+
+### Chat Messages
 - Dry‑run (preview + archive):
   - `dart tool/gen_variants.dart --sequence <seq> --message <id> --state <file.yaml>`
 - Append variants to content file:
   - `dart tool/gen_variants.dart --sequence <seq> --message <id> --state <file.yaml> --write`
+
+### Notifications
+- Single notification dry‑run:
+  - `dart tool/gen_variants.dart --notification app.remind.start`
+- Write notification variants:
+  - `dart tool/gen_variants.dart --notification app.remind.start --write`
+- Batch notifications from file:
+  - `dart tool/gen_variants.dart --notification-list notification_targets.txt --write`
+
+#### Notification Target File Format
+Create a text file with one semantic key per line:
+```
+app.remind.start
+app.remind.deadline  
+app.remind.progress
+app.remind.comeback
+```
+
+#### Available Notification Types
+- `app.remind.start` - Task start notifications
+- `app.remind.deadline` - Deadline approach/overdue notifications  
+- `app.remind.progress` - Progress check notifications
+- `app.remind.comeback` - Re-engagement notifications
+
+#### Notification Examples
+```
+Time to pretend you're productive, start now!
+Final call! Your deadline is knocking.
+Deadline alert! Time to panic like a pro.
+Your future self called; they want you to start.
+```
 
 Notes:
 - On `--write`, the tool appends lines and ensures newlines are correct.
@@ -321,25 +372,50 @@ Notes:
   - Consider lower `gen.max_tokens` and avoid strict JSON mode if you see empty responses.
 
 ## Troubleshooting
-- “Missing API key env”: ensure `echo $OPENAI_API_KEY` prints in the same terminal; or set it in VS Code launch.
+
+### General Issues
+- "Missing API key env": ensure `echo $OPENAI_API_KEY` prints in the same terminal; or set it in VS Code launch.
 - 400 `max_tokens` error: the tool uses `max_completion_tokens` for OpenAI chat.
-- 400 temperature/top_p: the tool retries without those for models that don’t support sampling.
+- 400 temperature/top_p: the tool retries without those for models that don't support sampling.
 - Empty `acceptedVariants`: check archive `response` → content; adjust model/params; ensure `contentKey` exists and content files have lines.
 
+### Notification-Specific Issues
+- "Notification file not found": ensure the semantic key maps to an existing file in `assets/content/` (e.g., `app.remind.start` → `assets/content/app/remind/start.txt`).
+- Variants too long: check `notification.max_chars_total` setting (default: 60 characters).
+- Variants contain pipe splits: notification validator automatically rejects variants with `|||` separators.
+- No actionable content: ensure `notification.style_override.require_actionable: true` is set to enforce motivational language.
+
 ## VS Code Quick Launch (optional)
-Add a launch to `.vscode/launch.json`:
+Add launches to `.vscode/launch.json`:
 ```json
 {
-  "name": "Gen Variants (OpenAI)",
+  "name": "Gen Variants - Chat Messages",
   "type": "dart",
   "request": "launch",
   "program": "tool/gen_variants.dart",
   "args": ["--sequence","overdue_seq","--message","90","--state","tool/state/onboarding_to_msg90.yaml","--write"],
   "env": { "OPENAI_API_KEY": "<PASTE_KEY_HERE>" }
+},
+{
+  "name": "Gen Variants - Notifications",
+  "type": "dart",
+  "request": "launch",
+  "program": "tool/gen_variants.dart",
+  "args": ["--notification","app.remind.start","--write"],
+  "env": { "OPENAI_API_KEY": "<PASTE_KEY_HERE>" }
 }
 ```
 
 ## Best Practices
+
+### Chat Messages
 - Generate 5–12 variants per call; ask for more than needed since dedupe removes near‑duplicates.
 - Keep choice options authored with `contentKey` so the tool can attach examples.
 - Keep sibling exemplars off by default; rely on per‑node examples from content files.
+
+### Notifications
+- Use shorter variant counts (5-8) since notifications have stricter constraints.
+- Keep notification content files updated with good examples to improve generation quality.
+- Test generated variants on actual devices to ensure they fit notification UI properly.
+- Consider timing context—deadline notifications should feel more urgent than start notifications.
+- Maintain the app's personality (satirical, deadpan) while keeping notifications actionable.

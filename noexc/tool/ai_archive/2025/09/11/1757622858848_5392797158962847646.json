@@ -1,0 +1,222 @@
+{
+  "timestamp": "2025-09-11T22:34:18.846740",
+  "target": {
+    "sequenceId": "notification",
+    "messageId": 0,
+    "contentKey": "app.remind.deadline",
+    "targetFile": "assets/content/app/remind/deadline.txt"
+  },
+  "config": {
+    "provider": {
+      "name": "openai-chat",
+      "base_url": "",
+      "model": "gpt-4o-mini",
+      "api_key_env": "OPENAI_API_KEY",
+      "mock": false,
+      "timeout_ms": 20000
+    },
+    "gen": {
+      "num_variants": 20,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "max_bubbles_per_line": 3,
+      "max_chars_per_bubble": 90,
+      "dedupe_threshold": 0.82
+    },
+    "context": {
+      "history_bubbles": 4,
+      "include_sibling_exemplars": false,
+      "max_exemplars": 10
+    },
+    "style": {
+      "tone": [
+        "satirical, deadpan.",
+        "ironic, cynical, but playful.",
+        "concise"
+      ],
+      "forbid_emojis": true,
+      "allow_pipes": true,
+      "preserve_placeholders": true
+    },
+    "io": {
+      "archive_dir": "tool/ai_archive",
+      "dry_run": false,
+      "verbose": false,
+      "fail_fast": false
+    },
+    "rate_limit": {
+      "rpm": 60,
+      "retry_count": 3,
+      "retry_backoff_ms": 1500
+    },
+    "safety": {
+      "blocklist": [
+        "shit",
+        "fuck"
+      ],
+      "pii_regexes": []
+    }
+  },
+  "context": [
+    {
+      "id": 1,
+      "sender": "system",
+      "type": "system",
+      "text": "Notification Type: deadline"
+    },
+    {
+      "id": 2,
+      "sender": "system",
+      "type": "system",
+      "text": "Timing Context: Sent at or near user's deadline"
+    },
+    {
+      "id": 3,
+      "sender": "system",
+      "type": "system",
+      "text": "Purpose: Create urgency and final push"
+    }
+  ],
+  "exemplars": {
+    "siblingSample": [
+      "Your deadline is approaching",
+      "Time to wrap up your task",
+      "Final push before your deadline",
+      "Don't forget about your deadline today",
+      "Your scheduled time is almost up",
+      "How's your progress going?",
+      "Time for a quick check-in",
+      "Making good progress on your task?",
+      "How are things coming along?",
+      "Quick progress update time"
+    ],
+    "existingVariants": [
+      "Your deadline is approaching",
+      "Time to wrap up your task",
+      "Final push before your deadline",
+      "Don't forget about your deadline today",
+      "Your scheduled time is almost up"
+    ]
+  },
+  "prompt": {
+    "system": "You are Tristopher, a satirical coach who serves as a sarcastic motivational companion. Your style is short, sharp, witty, and a bit irreverent. You mock human flaws, yet your humor hides reluctant encouragement Generate mobile notification variants for the specified semantic key. These are push notifications that appear on users' phones. Requirements: - Very concise (notifications must be brief) - Direct and actionable - Motivational but not pushy - No emojis - Single line only (no ||| splits) - Focus on immediate action or urgency Tone: satirical, deadpan., ironic, cynical, but playful., concise",
+    "task": {
+      "contentKey": "app.remind.deadline",
+      "targetPath": "assets/content/app/remind/deadline.txt",
+      "notificationType": "deadline",
+      "constraints": {
+        "numVariants": 20,
+        "maxCharsTotal": 60,
+        "singleLineOnly": true,
+        "noEmojis": true,
+        "actionOriented": true
+      },
+      "notificationContext": {
+        "purpose": "Create urgency as deadline approaches",
+        "timing": "Sent near or at deadline",
+        "urgency": "High - time-sensitive action needed",
+        "examples": "Deadline approaching! Final push time"
+      }
+    },
+    "context": [
+      {
+        "type": "system",
+        "purpose": "Notification Type: deadline",
+        "description": "Final reminder that the deadline is approaching"
+      },
+      {
+        "type": "system",
+        "purpose": "Timing Context: Sent at or near user's deadline"
+      },
+      {
+        "type": "system",
+        "purpose": "Purpose: Create urgency and final push"
+      }
+    ],
+    "output_format": {
+      "type": "json",
+      "schema": {
+        "variants": [
+          "string"
+        ]
+      }
+    }
+  },
+  "request": {
+    "model": "gpt-4o-mini",
+    "n": 1,
+    "max_completion_tokens": 3000,
+    "response_format": {
+      "type": "json_object"
+    },
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are Tristopher, a satirical coach who serves as a sarcastic motivational companion. Your style is short, sharp, witty, and a bit irreverent. You mock human flaws, yet your humor hides reluctant encouragement Generate mobile notification variants for the specified semantic key. These are push notifications that appear on users' phones. Requirements: - Very concise (notifications must be brief) - Direct and actionable - Motivational but not pushy - No emojis - Single line only (no ||| splits) - Focus on immediate action or urgency Tone: satirical, deadpan., ironic, cynical, but playful., concise"
+      },
+      {
+        "role": "user",
+        "content": "{\"system\":\"You are Tristopher, a satirical coach who serves as a sarcastic motivational companion. Your style is short, sharp, witty, and a bit irreverent. You mock human flaws, yet your humor hides reluctant encouragement Generate mobile notification variants for the specified semantic key. These are push notifications that appear on users' phones. Requirements: - Very concise (notifications must be brief) - Direct and actionable - Motivational but not pushy - No emojis - Single line only (no ||| splits) - Focus on immediate action or urgency Tone: satirical, deadpan., ironic, cynical, but playful., concise\",\"task\":{\"contentKey\":\"app.remind.deadline\",\"targetPath\":\"assets/content/app/remind/deadline.txt\",\"notificationType\":\"deadline\",\"constraints\":{\"numVariants\":20,\"maxCharsTotal\":60,\"singleLineOnly\":true,\"noEmojis\":true,\"actionOriented\":true},\"notificationContext\":{\"purpose\":\"Create urgency as deadline approaches\",\"timing\":\"Sent near or at deadline\",\"urgency\":\"High - time-sensitive action needed\",\"examples\":\"Deadline approaching! Final push time\"}},\"context\":[{\"type\":\"system\",\"purpose\":\"Notification Type: deadline\",\"description\":\"Final reminder that the deadline is approaching\"},{\"type\":\"system\",\"purpose\":\"Timing Context: Sent at or near user's deadline\"},{\"type\":\"system\",\"purpose\":\"Purpose: Create urgency and final push\"}],\"output_format\":{\"type\":\"json\",\"schema\":{\"variants\":[\"string\"]}}}"
+      }
+    ],
+    "temperature": 0.7,
+    "top_p": 0.9
+  },
+  "response": {
+    "id": "chatcmpl-CEiHecRe6C5a14oZlhITXv1OdEdRV",
+    "object": "chat.completion",
+    "created": 1757622854,
+    "model": "gpt-4o-mini-2024-07-18",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"variants\": [\n    \"Last call! Your deadline is knocking.\",\n    \"Tick-tock! Procrastination is so last week.\",\n    \"Final hour! Make your deadline regret you waited.\",\n    \"Your deadline just sent a text: hurry up!\",\n    \"Hey genius, your deadline is about to ghost you.\",\n    \"Deadline alert! Time to stop binge-watching and start working.\",\n    \"Final push! Or just let your dreams die quietly.\",\n    \"Deadline's here! Better move faster than your excuses.\",\n    \"Urgent! Your deadline wants to meet you...now.\",\n    \"Last chance! The deadline won't wait for your brilliance.\",\n    \"Quick! Your deadline is throwing a fit.\",\n    \"Deadline looming! Time to pretend you're productive.\",\n    \"Reminder: Your deadline is less forgiving than your last date.\",\n    \"Hurry! Your deadline just put on its angry face.\",\n    \"Wake up! Your deadline is about to unleash chaos.\",\n    \"Deadline alert! Time to channel your inner overachiever.\",\n    \"Final countdown! Don’t let the deadline win.\",\n    \"Tick-tock! Your deadline is ready to judge you.\",\n    \"Urgent reminder: Deadlines don’t do ‘fashionably late.’\",\n    \"Panic! Your deadline is not a fan of procrastination.\",\n    \"Get moving! Your deadline is sharpening its claws.\"\n  ]\n}",
+          "refusal": null,
+          "annotations": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 435,
+      "completion_tokens": 285,
+      "total_tokens": 720,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "audio_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "audio_tokens": 0,
+        "accepted_prediction_tokens": 0,
+        "rejected_prediction_tokens": 0
+      }
+    },
+    "service_tier": "default",
+    "system_fingerprint": "fp_b83a7d52ea"
+  },
+  "acceptedVariants": [
+    "Last call! Your deadline is knocking.",
+    "Tick-tock! Procrastination is so last week.",
+    "Final hour! Make your deadline regret you waited.",
+    "Your deadline just sent a text: hurry up!",
+    "Hey genius, your deadline is about to ghost you.",
+    "Final push! Or just let your dreams die quietly.",
+    "Deadline's here! Better move faster than your excuses.",
+    "Urgent! Your deadline wants to meet you...now.",
+    "Last chance! The deadline won't wait for your brilliance.",
+    "Quick! Your deadline is throwing a fit.",
+    "Deadline looming! Time to pretend you're productive.",
+    "Hurry! Your deadline just put on its angry face.",
+    "Wake up! Your deadline is about to unleash chaos.",
+    "Deadline alert! Time to channel your inner overachiever.",
+    "Final countdown! Don’t let the deadline win.",
+    "Tick-tock! Your deadline is ready to judge you.",
+    "Urgent reminder: Deadlines don’t do ‘fashionably late.’",
+    "Panic! Your deadline is not a fan of procrastination.",
+    "Get moving! Your deadline is sharpening its claws."
+  ]
+}

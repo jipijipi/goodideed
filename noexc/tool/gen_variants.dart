@@ -26,10 +26,14 @@ void main(List<String> args) async {
   final targets = <_Target>[];
   if (cli.listPath != null) {
     targets.addAll(await _loadTargetsFromList(cli.listPath!));
+  } else if (cli.notificationListPath != null) {
+    targets.addAll(await _loadNotificationTargetsFromList(cli.notificationListPath!));
   } else if (cli.sequenceId != null && cli.messageId != null) {
-    targets.add(_Target(cli.sequenceId!, cli.messageId!));
+    targets.add(_MessageTarget(cli.sequenceId!, cli.messageId!));
+  } else if (cli.notificationKey != null) {
+    targets.add(_NotificationTarget(cli.notificationKey!));
   } else {
-    stderr.writeln('ERROR: Provide --sequence and --message, or --list <file>.');
+    stderr.writeln('ERROR: Provide --sequence and --message, --notification <key>, or a list file.');
     _printHelp();
     exit(2);
   }
@@ -38,7 +42,10 @@ void main(List<String> args) async {
   int failures = 0;
 
   for (final t in targets) {
-    stdout.writeln('→ Processing ${t.sequenceId}:${t.messageId}');
+    final description = t is _MessageTarget 
+        ? '${t.sequenceId}:${t.messageId}'
+        : (t as _NotificationTarget).semanticKey;
+    stdout.writeln('→ Processing $description');
     try {
       final result = await _processTarget(t, config, cli.writeMode, cli.statePath);
       stdout.writeln('   Generated ${result.acceptedVariants.length} variants');
@@ -63,6 +70,8 @@ class _Cli {
   final String? sequenceId;
   final int? messageId;
   final String? listPath;
+  final String? notificationKey;
+  final String? notificationListPath;
   final String configPath;
   final bool writeMode;
   final String? statePath;
@@ -72,6 +81,8 @@ class _Cli {
     this.sequenceId,
     this.messageId,
     this.listPath,
+    this.notificationKey,
+    this.notificationListPath,
     required this.configPath,
     required this.writeMode,
     this.statePath,
@@ -82,6 +93,8 @@ class _Cli {
     String? sequenceId;
     int? messageId;
     String? listPath;
+    String? notificationKey;
+    String? notificationListPath;
     String configPath = 'tool/variants_config.yaml';
     bool write = false;
     String? statePath;
@@ -100,6 +113,12 @@ class _Cli {
           break;
         case '--list':
           listPath = _next(args, ++i, '--list');
+          break;
+        case '--notification':
+          notificationKey = _next(args, ++i, '--notification');
+          break;
+        case '--notification-list':
+          notificationListPath = _next(args, ++i, '--notification-list');
           break;
         case '--config':
           configPath = _next(args, ++i, '--config') ?? configPath;
@@ -124,6 +143,8 @@ class _Cli {
       sequenceId: sequenceId,
       messageId: messageId,
       listPath: listPath,
+      notificationKey: notificationKey,
+      notificationListPath: notificationListPath,
       configPath: configPath,
       writeMode: write,
       statePath: statePath,
@@ -143,27 +164,44 @@ void _printHelp() {
   stdout.writeln('''
 NOEXC Variant Generator
 
-Usage:
+Usage (Chat Messages):
   dart tool/gen_variants.dart --sequence <id> --message <id> [--config <file>] [--write]
   dart tool/gen_variants.dart --list targets.txt [--config <file>] [--write]
 
+Usage (Notifications):
+  dart tool/gen_variants.dart --notification <semantic_key> [--config <file>] [--write]
+  dart tool/gen_variants.dart --notification-list targets.txt [--config <file>] [--write]
+
 Options:
-  --sequence <id>   Sequence ID (e.g., onboarding_seq)
-  --message <id>    Message ID integer within the sequence
-  --list <file>     File with lines: <sequenceId>:<messageId>
-  --config <file>   Path to YAML config (default: tool/variants_config.yaml)
-  --state <file>    Optional YAML state file to resolve a concrete path for context
-  --write           Actually append to content files (otherwise dry-run)
-  --help, -h        Show this help
+  --sequence <id>       Sequence ID (e.g., onboarding_seq)
+  --message <id>        Message ID integer within the sequence
+  --list <file>         File with lines: <sequenceId>:<messageId>
+  --notification <key>  Notification semantic key (e.g., app.remind.start)
+  --notification-list   File with lines: <semantic_key>
+  --config <file>       Path to YAML config (default: tool/variants_config.yaml)
+  --state <file>        Optional YAML state file to resolve a concrete path for context
+  --write               Actually append to content files (otherwise dry-run)
+  --help, -h            Show this help
+
+Examples:
+  dart tool/gen_variants.dart --notification app.remind.start --write
+  dart tool/gen_variants.dart --notification app.remind.deadline --write
 ''');
 }
 
 // ---------------- Processing ----------------
 
-class _Target {
+abstract class _Target {}
+
+class _MessageTarget extends _Target {
   final String sequenceId;
   final int messageId;
-  _Target(this.sequenceId, this.messageId);
+  _MessageTarget(this.sequenceId, this.messageId);
+}
+
+class _NotificationTarget extends _Target {
+  final String semanticKey;
+  _NotificationTarget(this.semanticKey);
 }
 
 class _ProcessOutcome {
@@ -176,6 +214,21 @@ class _ProcessOutcome {
 
 Future<_ProcessOutcome> _processTarget(
   _Target t,
+  _Config config,
+  bool writeMode,
+  String? statePath,
+) async {
+  if (t is _MessageTarget) {
+    return await _processMessageTarget(t, config, writeMode, statePath);
+  } else if (t is _NotificationTarget) {
+    return await _processNotificationTarget(t, config, writeMode);
+  } else {
+    throw Exception('Unknown target type: ${t.runtimeType}');
+  }
+}
+
+Future<_ProcessOutcome> _processMessageTarget(
+  _MessageTarget t,
   _Config config,
   bool writeMode,
   String? statePath,
@@ -300,6 +353,81 @@ Future<_ProcessOutcome> _processTarget(
   return _ProcessOutcome(contentKey, targetFile, validated, archiveRecord);
 }
 
+Future<_ProcessOutcome> _processNotificationTarget(
+  _NotificationTarget t,
+  _Config config,
+  bool writeMode,
+) async {
+  final contentKey = t.semanticKey;
+  
+  // 1) Resolve content path
+  final key = _ContentKey.parse(contentKey);
+  if (!key.isValid) {
+    throw Exception('Invalid notification semantic key format: $contentKey');
+  }
+  final targetFile = key.toFilePath();
+
+  // 2) Build notification-specific context
+  final context = _NotificationContextBuilder(
+    config: config,
+    semanticKey: contentKey,
+  ).buildContext();
+
+  // 3) Collect exemplars from other notification files
+  final exemplars = await _Exemplars.collect(key, config.context.maxExemplars);
+
+  // 4) Load existing variants for this file
+  final existing = await _readLinesIfExists(targetFile);
+
+  // 5) Build notification-specific prompt
+  final prompt = _NotificationPromptBuilder(
+    contentKey: contentKey,
+    targetPath: targetFile,
+    contextSnapshot: context,
+    siblingExemplars: exemplars,
+    existingVariants: existing,
+    config: config,
+  ).build();
+
+  // 6) Generate via LLM client (or mock)
+  final generator = _Generator(config);
+  final genResult = await generator.generate(prompt);
+
+  // 7) Validate & dedupe with notification-specific rules
+  final validator = _NotificationValidator(config);
+  final validated = validator.validateBatch(genResult.variants, existing);
+
+  // 8) Append (if write mode)
+  if (writeMode) {
+    await _appendLines(targetFile, validated);
+  } else {
+    stdout.writeln('   (dry-run) Would append to: $targetFile');
+    for (final v in validated) {
+      stdout.writeln('   + $v');
+    }
+  }
+
+  // 9) Archive record (simplified for notifications)
+  final archiveRecord = _ArchiveRecord.create(
+    config: config,
+    target: _MessageTarget('notification', 0), // Placeholder for archive compatibility
+    contentKey: contentKey,
+    targetFile: targetFile,
+    contextSnapshot: context,
+    exemplars: exemplars,
+    existing: existing,
+    prompt: prompt,
+    request: genResult.request,
+    llmResult: genResult.raw,
+    accepted: validated,
+    stateFile: null,
+    resolvedPath: null,
+  );
+  await _ArchiveRecord.write(config.io.archiveDir, archiveRecord);
+
+  return _ProcessOutcome(contentKey, targetFile, validated, archiveRecord);
+}
+
 Future<List<_Target>> _loadTargetsFromList(String path) async {
   final file = File(path);
   if (!await file.exists()) {
@@ -318,7 +446,26 @@ Future<List<_Target>> _loadTargetsFromList(String path) async {
     if (msgId == null) {
       throw Exception('Invalid message id in line: $line');
     }
-    targets.add(_Target(parts[0], msgId));
+    targets.add(_MessageTarget(parts[0], msgId));
+  }
+  return targets;
+}
+
+Future<List<_Target>> _loadNotificationTargetsFromList(String path) async {
+  final file = File(path);
+  if (!await file.exists()) {
+    throw Exception('Notification targets file not found: $path');
+  }
+  final lines = await file.readAsLines();
+  final targets = <_Target>[];
+  for (final raw in lines) {
+    final line = raw.trim();
+    if (line.isEmpty || line.startsWith('#')) continue;
+    // Validate semantic key format
+    if (!line.startsWith('app.remind.')) {
+      throw Exception('Invalid notification semantic key (expected app.remind.*): $line');
+    }
+    targets.add(_NotificationTarget(line));
   }
   return targets;
 }
@@ -334,6 +481,7 @@ class _Config {
   final _RateLimitConfig rateLimit;
   final _SafetyConfig safety;
   final _PromptTextConfig promptCfg;
+  final _NotificationConfig notification;
 
   _Config(
     this.provider,
@@ -344,6 +492,7 @@ class _Config {
     this.rateLimit,
     this.safety,
     this.promptCfg,
+    this.notification,
   );
 
   static Future<_Config> load(String path) async {
@@ -362,6 +511,7 @@ class _Config {
       _RateLimitConfig.fromJson(data['rate_limit'] as Map<String, dynamic>? ?? const {}),
       _SafetyConfig.fromJson(data['safety'] as Map<String, dynamic>? ?? const {}),
       _PromptTextConfig.fromJson(data['prompt'] as Map<String, dynamic>? ?? const {}),
+      _NotificationConfig.fromJson(data['notification'] as Map<String, dynamic>? ?? const {}),
     );
   }
   static Future<void> _writeDefaultConfigYaml(String path) async {
@@ -582,6 +732,47 @@ class _PromptTextConfig {
       );
 }
 
+class _NotificationConfig {
+  final int maxCharsTotal;
+  final bool includeTimeContext;
+  final _NotificationStyleOverride styleOverride;
+
+  _NotificationConfig({
+    required this.maxCharsTotal,
+    required this.includeTimeContext,
+    required this.styleOverride,
+  });
+
+  factory _NotificationConfig.fromJson(Map<String, dynamic> j) => _NotificationConfig(
+        maxCharsTotal: (j['max_chars_total'] as int?) ?? 60,
+        includeTimeContext: (j['include_time_context'] as bool?) ?? true,
+        styleOverride: _NotificationStyleOverride.fromJson(
+          (j['style_override'] as Map<String, dynamic>?) ?? const {},
+        ),
+      );
+}
+
+class _NotificationStyleOverride {
+  final List<String> tone;
+  final int maxBubblesPerLine;
+  final bool forbidEmojis;
+  final bool requireActionable;
+
+  _NotificationStyleOverride({
+    required this.tone,
+    required this.maxBubblesPerLine,
+    required this.forbidEmojis,
+    required this.requireActionable,
+  });
+
+  factory _NotificationStyleOverride.fromJson(Map<String, dynamic> j) => _NotificationStyleOverride(
+        tone: (j['tone'] as List?)?.cast<String>() ?? ['urgent', 'motivating', 'brief', 'direct'],
+        maxBubblesPerLine: (j['max_bubbles_per_line'] as int?) ?? 1,
+        forbidEmojis: (j['forbid_emojis'] as bool?) ?? true,
+        requireActionable: (j['require_actionable'] as bool?) ?? true,
+      );
+}
+
 // ---------------- ContentKey ----------------
 
 class _ContentKey {
@@ -657,6 +848,103 @@ class _ContextBuilder {
 
   bool _isDisplayable(String type) {
     return type != 'autoroute' && type != 'dataAction';
+  }
+}
+
+// ---------------- Notification Context Builder ----------------
+
+class _NotificationContextBuilder {
+  final _Config config;
+  final String semanticKey;
+  
+  _NotificationContextBuilder({
+    required this.config,
+    required this.semanticKey,
+  });
+  
+  List<_ContextMessageView> buildContext() {
+    // Build notification-specific context based on semantic key
+    final context = <_ContextMessageView>[];
+    
+    // Parse semantic key to understand notification type
+    final keyParts = semanticKey.split('.');
+    if (keyParts.length >= 3 && keyParts[0] == 'app' && keyParts[1] == 'remind') {
+      final notificationType = keyParts[2]; // start, progress, deadline, comeback
+      
+      // Add context information about notification purpose
+      context.add(_ContextMessageView(
+        id: 1,
+        type: 'system',
+        sender: 'system',
+        textOrKey: 'Notification Type: $notificationType',
+        defaultText: _getNotificationDescription(notificationType),
+      ));
+      
+      // Add timing context
+      context.add(_ContextMessageView(
+        id: 2,
+        type: 'system',
+        sender: 'system',
+        textOrKey: 'Timing Context: ${_getTimingContext(notificationType)}',
+        defaultText: null,
+      ));
+      
+      // Add user engagement context
+      context.add(_ContextMessageView(
+        id: 3,
+        type: 'system', 
+        sender: 'system',
+        textOrKey: 'Purpose: ${_getPurpose(notificationType)}',
+        defaultText: null,
+      ));
+    }
+    
+    return context;
+  }
+  
+  String _getNotificationDescription(String type) {
+    switch (type) {
+      case 'start':
+        return 'Reminds user to begin their focused work session';
+      case 'progress':
+        return 'Mid-session check-in to maintain momentum';
+      case 'deadline':
+        return 'Final reminder that the deadline is approaching';
+      case 'comeback':
+        return 'Encourages user to return after missing a session';
+      default:
+        return 'General notification reminder';
+    }
+  }
+  
+  String _getTimingContext(String type) {
+    switch (type) {
+      case 'start':
+        return 'Sent at user\'s designated start time';
+      case 'progress':
+        return 'Sent during active work session';
+      case 'deadline':
+        return 'Sent at or near user\'s deadline';
+      case 'comeback':
+        return 'Sent when user hasn\'t been active';
+      default:
+        return 'Context-dependent timing';
+    }
+  }
+  
+  String _getPurpose(String type) {
+    switch (type) {
+      case 'start':
+        return 'Motivate immediate action and focus';
+      case 'progress':
+        return 'Maintain engagement and momentum';
+      case 'deadline':
+        return 'Create urgency and final push';
+      case 'comeback':
+        return 'Re-engage and encourage return';
+      default:
+        return 'General engagement';
+    }
   }
 }
 
@@ -1261,6 +1549,122 @@ class _PromptBuilder {
   }
 }
 
+// ---------------- Notification Prompt Builder ----------------
+
+class _NotificationPromptBuilder {
+  final String contentKey;
+  final String targetPath;
+  final List<_ContextMessageView> contextSnapshot;
+  final List<String> siblingExemplars;
+  final List<String> existingVariants;
+  final _Config config;
+  
+  _NotificationPromptBuilder({
+    required this.contentKey,
+    required this.targetPath,
+    required this.contextSnapshot,
+    required this.siblingExemplars,
+    required this.existingVariants,
+    required this.config,
+  });
+
+  Map<String, dynamic> build() {
+    // Notification-specific system message
+    final system = '${config.promptCfg.systemMessage} '
+        'Generate mobile notification variants for the specified semantic key. '
+        'These are push notifications that appear on users\' phones. '
+        'Requirements: '
+        '- Very concise (notifications must be brief) '
+        '- Direct and actionable '
+        '- Motivational but not pushy '
+        '- No emojis '
+        '- Single line only (no ||| splits) '
+        '- Focus on immediate action or urgency '
+        'Tone: ${config.style.tone.join(', ')}';
+
+    // Process context for notifications
+    final context = contextSnapshot.map((m) {
+      return {
+        'type': m.type,
+        'purpose': m.textOrKey,
+        if (m.defaultText != null) 'description': m.defaultText,
+      };
+    }).toList();
+
+    // Extract notification type from semantic key
+    final keyParts = contentKey.split('.');
+    final notificationType = keyParts.length >= 3 ? keyParts[2] : 'unknown';
+
+    final prompt = {
+      'system': system,
+      'task': {
+        'contentKey': contentKey,
+        'targetPath': targetPath,
+        'notificationType': notificationType,
+        'constraints': {
+          'numVariants': config.gen.numVariants,
+          'maxCharsTotal': 60, // Typical notification character limit
+          'singleLineOnly': true,
+          'noEmojis': true,
+          'actionOriented': true,
+        },
+        'notificationContext': _getNotificationGuidelines(notificationType),
+      },
+      'context': context,
+      if (config.context.includeSiblingExemplars && siblingExemplars.isNotEmpty)
+        'exemplars': {
+          'existingVariants': existingVariants,
+          'siblingExemplars': siblingExemplars.take(config.context.maxExemplars).toList(),
+        },
+      'output_format': {
+        'type': 'json',
+        'schema': {'variants': ['string']}
+      }
+    };
+    return prompt;
+  }
+
+  Map<String, String> _getNotificationGuidelines(String type) {
+    switch (type) {
+      case 'start':
+        return {
+          'purpose': 'Prompt immediate action to begin work session',
+          'timing': 'Sent at designated start time',
+          'urgency': 'Medium - encouraging but not pressuring',
+          'examples': 'Ready to focus? Time to start your session'
+        };
+      case 'progress':
+        return {
+          'purpose': 'Maintain engagement during active session',
+          'timing': 'Sent mid-session',
+          'urgency': 'Low - supportive check-in',
+          'examples': 'How\'s your progress? Keep up the good work'
+        };
+      case 'deadline':
+        return {
+          'purpose': 'Create urgency as deadline approaches',
+          'timing': 'Sent near or at deadline',
+          'urgency': 'High - time-sensitive action needed',
+          'examples': 'Deadline approaching! Final push time'
+        };
+      case 'comeback':
+        return {
+          'purpose': 'Re-engage user who missed sessions',
+          'timing': 'Sent when user is inactive',
+          'urgency': 'Medium - encouraging return',
+          'examples': 'Ready to get back on track? Let\'s restart'
+        };
+      default:
+        return {
+          'purpose': 'General notification reminder',
+          'timing': 'Context-dependent',
+          'urgency': 'Medium',
+          'examples': 'Time to check in with your goals'
+        };
+    }
+  }
+}
+
 List<String> _sampleLinesForContentKeySync(String key, int k, {bool forbidEmojis = false}) {
   try {
     final ck = _ContentKey.parse(key);
@@ -1533,6 +1937,139 @@ class _Validator {
   }
 }
 
+// ---------------- Notification Validator ----------------
+
+class _NotificationValidator {
+  final _Config config;
+  _NotificationValidator(this.config);
+
+  List<String> validateBatch(List<String> raw, List<String> existingBase) {
+    final out = <String>[];
+    final seen = <String>[]; // For intra-batch dedupe
+    for (final r in raw) {
+      var s = r.trim();
+      if (s.isEmpty) continue;
+      s = s.replaceAll('\t', ' ');
+      
+      // Notification-specific validations
+      if (!_isValidNotificationFormat(s)) continue;
+      if (!_placeholdersOk(s)) continue;
+      if (_containsBlocked(s)) continue;
+      if (_isNearDuplicate(s, existingBase)) continue;
+      if (_isNearDuplicate(s, seen)) continue;
+      
+      out.add(s);
+      seen.add(s);
+    }
+    return out;
+  }
+
+  bool _isValidNotificationFormat(String s) {
+    // Notification-specific format checks
+    
+    // No pipe splits allowed in notifications
+    if (s.contains('|||')) return false;
+    
+    // Length limit for notifications (stricter than chat bubbles)
+    if (s.length > 60) return false;
+    
+    // Must be actionable - should contain action words or be motivational
+    if (!_isActionableOrMotivational(s)) return false;
+    
+    // No emoji check (should be handled by style config, but double-check)
+    if (_containsEmoji(s)) return false;
+    
+    return true;
+  }
+
+  bool _isActionableOrMotivational(String s) {
+    final lowerS = s.toLowerCase();
+    
+    // Check for action words
+    final actionWords = [
+      'start', 'begin', 'focus', 'time', 'ready', 'go', 'continue', 
+      'finish', 'complete', 'push', 'commit', 'dive', 'tackle',
+      'let\'s', 'come on', 'get', 'make', 'take', 'keep'
+    ];
+    
+    // Check for motivational words
+    final motivationalWords = [
+      'great', 'good', 'awesome', 'amazing', 'fantastic', 'excellent',
+      'progress', 'momentum', 'forward', 'ahead', 'success', 'achieve'
+    ];
+    
+    // Check for urgency words
+    final urgencyWords = [
+      'now', 'today', 'urgent', 'deadline', 'approaching', 'final',
+      'last', 'quickly', 'soon', 'immediate'
+    ];
+    
+    // Check for question patterns that engage
+    final hasEngagingQuestion = lowerS.contains('?') && (
+        lowerS.contains('ready') || lowerS.contains('how') || 
+        lowerS.contains('time') || lowerS.contains('let\'s')
+    );
+    
+    // Must contain at least one category of words or be an engaging question
+    return actionWords.any((word) => lowerS.contains(word)) ||
+           motivationalWords.any((word) => lowerS.contains(word)) ||
+           urgencyWords.any((word) => lowerS.contains(word)) ||
+           hasEngagingQuestion;
+  }
+
+  bool _containsEmoji(String s) {
+    // Simple emoji detection - check for non-ASCII characters that might be emojis
+    for (final char in s.runes) {
+      if (char > 0x1F000) return true; // Emoji range starts around here
+    }
+    return false;
+  }
+
+  bool _placeholdersOk(String s) {
+    // Simple brace balance check; ensure we don't break { ... }
+    int open = 0;
+    for (final r in s.runes) {
+      if (r == 123) open++; // '{'
+      if (r == 125) open--; // '}'
+      if (open < 0) return false;
+    }
+    return open == 0;
+  }
+
+  bool _containsBlocked(String s) {
+    final lowered = s.toLowerCase();
+    for (final w in config.safety.blocklist) {
+      if (lowered.contains(w.toLowerCase())) return true;
+    }
+    return false;
+  }
+
+  bool _isNearDuplicate(String s, List<String> pool) {
+    for (final p in pool) {
+      if (_similarity(s, p) >= config.gen.dedupeThreshold) return true;
+    }
+    return false;
+  }
+
+  double _similarity(String a, String b) {
+    final ta = _tokenSet(a);
+    final tb = _tokenSet(b);
+    final inter = ta.intersection(tb).length.toDouble();
+    final union = (ta.length + tb.length - inter).toDouble();
+    if (union <= 0) return 0;
+    return inter / union;
+  }
+
+  Set<String> _tokenSet(String s) {
+    return s
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9\s]'), ' ')
+        .split(RegExp(r'\s+'))
+        .where((e) => e.isNotEmpty)
+        .toSet();
+  }
+}
+
 // ---------------- Archive ----------------
 
 class _ArchiveRecord {
@@ -1554,8 +2091,12 @@ class _ArchiveRecord {
     return {
       'timestamp': DateTime.now().toIso8601String(),
       'target': {
-        'sequenceId': target.sequenceId,
-        'messageId': target.messageId,
+        if (target is _MessageTarget) ...{
+          'sequenceId': target.sequenceId,
+          'messageId': target.messageId,
+        } else if (target is _NotificationTarget) ...{
+          'semanticKey': target.semanticKey,
+        },
         'contentKey': contentKey,
         'targetFile': targetFile,
       },

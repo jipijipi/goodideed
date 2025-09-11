@@ -35,6 +35,19 @@
             "env": {
                 "OPENAI_API_KEY": "${env:OPENAI_API_KEY}"
             }
+        },
+        {
+            "name": "Gen Notification Variants",
+            "type": "dart",
+            "request": "launch",
+            "program": "tool/gen_variants.dart",
+            "args": [
+                "--notification", "app.remind.progress",
+                "--write"
+            ],
+            "env": {
+                "OPENAI_API_KEY": "${env:OPENAI_API_KEY}"
+            }
         }
     ]
 }

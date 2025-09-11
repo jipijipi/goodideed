@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../services/service_locator.dart';
+import '../../models/notification_tap_event.dart';
 import 'debug_status_area.dart';
 
 /// Debug widget for displaying and controlling notification state
@@ -162,6 +163,42 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
       _loadNotificationData();
     } catch (e) {
       widget.statusController?.addError('Failed to clear app state: $e');
+    }
+  }
+
+  Future<void> _simulateNotificationTap() async {
+    try {
+      final appStateService = ServiceLocator.instance.appStateService;
+      
+      // Create a simulated notification tap event
+      final simulatedEvent = NotificationTapEvent(
+        notificationId: 999999,
+        payload: '{"type":"dailyReminder","slot":"test","taskDate":"${DateTime.now().toIso8601String().substring(0, 10)}","scheduledDate":"${DateTime.now().toIso8601String()}"}',
+        actionId: null,
+        input: null,
+        tapTime: DateTime.now(),
+        platformData: {'simulated': true},
+      );
+      
+      await appStateService.handleNotificationTap(simulatedEvent);
+      
+      widget.statusController?.addSuccess('Simulated notification tap event');
+      _loadNotificationData();
+    } catch (e) {
+      widget.statusController?.addError('Failed to simulate notification tap: $e');
+    }
+  }
+
+  Future<void> _checkAppLaunchDetails() async {
+    try {
+      widget.statusController?.addInfo('Checking app launch details...');
+      // Note: This is primarily for debugging and won't show historic launch details
+      // as they are consumed during app initialization. Check the logs for app launch details.
+      
+      widget.statusController?.addInfo('App launch details checked - see logs for details');
+      _loadNotificationData();
+    } catch (e) {
+      widget.statusController?.addError('Failed to check app launch details: $e');
     }
   }
 
@@ -563,7 +600,7 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
               if (persistedEvent != null)
                 _buildInfoRow('Persisted Event:', persistedEvent.toString()),
 
-              // Show state actions
+              // Show state actions and debugging info
               if (hasNotificationTapEvent) ...[
                 const SizedBox(height: 12),
                 Container(
@@ -575,16 +612,69 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                       color: Colors.green.withValues(alpha: 0.3),
                     ),
                   ),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.info_outline, color: Colors.green, size: 16),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Notification tap event detected - use "Clear State" to reset',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: Colors.green.shade800),
-                        ),
+                      Row(
+                        children: [
+                          Icon(Icons.info_outline, color: Colors.green, size: 16),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Notification tap event detected',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                color: Colors.green.shade800,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Use "Clear State" to reset or "Simulate Tap" to test',
+                        style: Theme.of(context).textTheme.bodySmall
+                            ?.copyWith(color: Colors.green.shade800),
+                      ),
+                    ],
+                  ),
+                ),
+              ] else ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(
+                      color: Colors.grey.withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.info_outline, color: Colors.grey, size: 16),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'No notification tap detected',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                color: Colors.grey.shade800,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Use "Simulate Tap" to test notification detection',
+                        style: Theme.of(context).textTheme.bodySmall
+                            ?.copyWith(color: Colors.grey.shade800),
                       ),
                     ],
                   ),
@@ -667,6 +757,26 @@ class _NotificationDebugWidgetState extends State<NotificationDebugWidget> {
                     onPressed: _isLoading ? null : _loadNotificationData,
                     icon: const Icon(Icons.refresh, size: 16),
                     label: const Text('Refresh'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _simulateNotificationTap,
+                    icon: const Icon(Icons.touch_app, size: 16),
+                    label: const Text('Simulate Tap'),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _isLoading ? null : _checkAppLaunchDetails,
+                    icon: const Icon(Icons.launch, size: 16),
+                    label: const Text('Check Launch'),
                   ),
                 ),
               ],

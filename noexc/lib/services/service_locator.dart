@@ -89,6 +89,9 @@ class ServiceLocator {
       // Connect notification service to app state service
       _notificationService.setAppStateService(_appStateService);
 
+      // Check for pending notification taps from previous sessions
+      await _loadPendingNotificationState();
+
       _initialized = true;
       logger.info('All services initialized successfully');
     } catch (e) {
@@ -179,6 +182,26 @@ class ServiceLocator {
       throw StateError(
         'ServiceLocator not initialized. Call initialize() first.',
       );
+    }
+  }
+
+  /// Load any pending notification state from previous sessions
+  /// This ensures notification taps are preserved across app restarts
+  Future<void> _loadPendingNotificationState() async {
+    try {
+      logger.info('Checking for pending notification state from previous sessions...');
+      
+      final pendingEvent = await _appStateService.consumePendingNotification();
+      
+      if (pendingEvent != null) {
+        logger.info('Found pending notification tap from previous session: $pendingEvent');
+        logger.info('Notification state restored - user came from notification tap');
+      } else {
+        logger.info('No pending notification state found');
+      }
+    } catch (e) {
+      logger.error('Failed to load pending notification state: $e');
+      // Don't rethrow - this is not critical for app functionality
     }
   }
 }

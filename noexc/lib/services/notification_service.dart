@@ -184,6 +184,9 @@ class NotificationService {
         await _createNotificationChannel();
       }
 
+      // Check if app was launched from a notification
+      await _checkAppLaunchFromNotification();
+
       _logger.info('NotificationService initialized successfully');
     } catch (e) {
       _logger.error('Failed to initialize NotificationService: $e');
@@ -1780,6 +1783,62 @@ class NotificationService {
       }
     } catch (e) {
       _logger.error('Failed to process notification tap: $e');
+    }
+  }
+
+  /// Check if the app was launched from a notification tap
+  /// This handles the case when the app is not running and user taps a notification
+  Future<void> _checkAppLaunchFromNotification() async {
+    try {
+      _logger.info('Checking if app was launched from notification...');
+      
+      final launchDetails = await _notifications.getNotificationAppLaunchDetails();
+      
+      if (launchDetails == null) {
+        _logger.info('No notification app launch details available');
+        return;
+      }
+      
+      _logger.info('App launch details: didNotificationLaunchApp=${launchDetails.didNotificationLaunchApp}');
+      
+      if (launchDetails.didNotificationLaunchApp) {
+        final response = launchDetails.notificationResponse;
+        if (response != null) {
+          _logger.info('App launched from notification: ID=${response.id}, payload=${response.payload}');
+          
+          // Create notification tap event for app launch
+          final tapEvent = NotificationTapEvent.fromResponse(
+            response.id ?? 0,
+            response.payload,
+            response.actionId,
+            response.input,
+            response.data,
+          );
+          
+          _logger.info('Created NotificationTapEvent from app launch: $tapEvent');
+          
+          // Track the event using AppStateService if available
+          if (_appStateService != null) {
+            await _appStateService!.handleNotificationTap(tapEvent);
+            _logger.info('App launch notification tap event tracked by AppStateService');
+          } else {
+            _logger.warning('AppStateService not set - cannot track app launch tap event');
+          }
+          
+          // Fire callback if set (for backward compatibility)
+          if (_onNotificationTap != null) {
+            _onNotificationTap!(tapEvent);
+            _logger.info('App launch notification tap event fired to callback');
+          }
+        } else {
+          _logger.warning('App launched from notification but no response details available');
+        }
+      } else {
+        _logger.info('App was not launched from a notification');
+      }
+    } catch (e) {
+      _logger.error('Failed to check app launch from notification: $e');
+      // Don't rethrow - this is not critical for app functionality
     }
   }
 

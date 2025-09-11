@@ -708,9 +708,6 @@ class NotificationService {
           }
         }
         _logger.info('Notification types: $typeBreakdown');
-        
-        // Emergency cleanup if duplicate notifications detected
-        await _performEmergencyCleanupIfNeeded(finalNotifications, scheduledCount);
       } catch (e) {
         _logger.warning('Failed to verify final notification count: $e');
         _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications (verification failed) ===');
@@ -727,57 +724,6 @@ class NotificationService {
     }
   }
 
-  /// Emergency cleanup if duplicate notifications are detected
-  Future<void> _performEmergencyCleanupIfNeeded(List<PendingNotificationRequest> finalNotifications, int expectedCount) async {
-    try {
-      // Detect potential duplicates by checking for notifications with same scheduled time
-      final timeGroups = <String, List<PendingNotificationRequest>>{};
-      final taskReminderCount = finalNotifications.where((n) => n.title?.contains('Task Reminder') == true).length;
-      
-      for (final notification in finalNotifications) {
-        // Group by scheduled time (hour:minute)
-        final timeKey = '${notification.id % 100000000}'; // Extract date/time portion
-        timeGroups[timeKey] = (timeGroups[timeKey] ?? [])..add(notification);
-      }
-      
-      // Count duplicates (groups with more than 1 notification)
-      final duplicateGroups = timeGroups.entries.where((entry) => entry.value.length > 1).toList();
-      final totalFinal = finalNotifications.length;
-      final expectedRange = expectedCount;
-      
-      _logger.info('Duplicate detection: ${duplicateGroups.length} duplicate groups, $taskReminderCount task reminders, $totalFinal total vs $expectedRange expected');
-      
-      // Emergency cleanup triggers
-      final hasDuplicates = duplicateGroups.isNotEmpty;
-      final hasTaskReminders = taskReminderCount > 0;
-      final tooManyNotifications = totalFinal > expectedRange * 1.5; // 50% more than expected
-      
-      if (hasDuplicates || hasTaskReminders || tooManyNotifications) {
-        _logger.warning('🚨 EMERGENCY CLEANUP TRIGGERED 🚨');
-        _logger.warning('Reasons: duplicates=$hasDuplicates, taskReminders=$hasTaskReminders, tooMany=$tooManyNotifications');
-        
-        // Cancel all notifications and reschedule
-        _logger.warning('Performing emergency cleanup - canceling all notifications');
-        await cancelAllNotifications();
-        
-        // Force disable complete cleanup to avoid recursion
-        await _userDataService.storeValue('feature.completeNotificationCleanup', false);
-        
-        _logger.warning('Emergency cleanup complete - rescheduling with simplified cleanup');
-        // Re-trigger scheduling with simplified cleanup
-        await scheduleDeadlineReminder(caller: 'emergency_cleanup');
-        
-        // Re-enable complete cleanup for future use
-        await _userDataService.storeValue('feature.completeNotificationCleanup', true);
-        
-        _logger.warning('Emergency cleanup and re-scheduling completed');
-      } else {
-        _logger.info('No emergency cleanup needed - notifications appear correct');
-      }
-    } catch (e) {
-      _logger.error('Emergency cleanup detection failed: $e');
-    }
-  }
 
   // Compute and schedule one day's slots (start/mid/deadline)
   Future<int> _scheduleDaySlots(
@@ -922,15 +868,15 @@ class NotificationService {
       }
       if (first.isBefore(DateTime.now())) return;
 
-      final id = await _buildSafeId(_fmtDate(first), 'comeback_weekly');
+      final id = _buildId(_fmtDate(first), 'comeback_weekly');
       
-      // Create sanitized payload
-      final payloadData = _createSafePayload(
-        type: 'comeBack',
-        slot: 'weekly',
-        taskDate: _fmtDate(first),
-        scheduledDate: first.toIso8601String(),
-      );
+      // Create payload data
+      final payloadData = {
+        'type': 'comeBack',
+        'slot': 'weekly',
+        'taskDate': _fmtDate(first),
+        'scheduledDate': first.toIso8601String(),
+      };
       
       final payload = json.encode(payloadData);
 
@@ -992,7 +938,7 @@ class NotificationService {
     {required String title, required String body}
   ) async {
     try {
-      final id = await _buildSafeId(taskDate, slot);
+      final id = _buildId(taskDate, slot);
       
       // Resolve notification text using semantic content based on slot type
       String semanticKey;
@@ -1013,13 +959,13 @@ class NotificationService {
       final resolvedTitle = title; // Keep original title for now
       final resolvedBody = resolvedText;
       
-      // Create sanitized payload
-      final payloadData = _createSafePayload(
-        type: slot == 'deadline' ? 'dailyReminder' : 'dailyNudge',
-        slot: slot,
-        taskDate: taskDate,
-        scheduledDate: whenLocal.toIso8601String(),
-      );
+      // Create payload data
+      final payloadData = {
+        'type': slot == 'deadline' ? 'dailyReminder' : 'dailyNudge',
+        'slot': slot,
+        'taskDate': taskDate,
+        'scheduledDate': whenLocal.toIso8601String(),
+      };
       
       final payload = json.encode(payloadData);
 
@@ -1058,41 +1004,8 @@ class NotificationService {
     }
   }
 
-  /// Generate a notification ID with collision detection and validation
-  /// Returns a unique ID based on date and slot, with collision checking
-  Future<int> _buildSafeId(String dateStr, String slot) async {
-    final baseId = _buildId(dateStr, slot);
-    
-    // Check for ID collisions with existing notifications
-    final existingNotifications = await getPendingNotifications();
-    final existingIds = existingNotifications.map((n) => n.id).toSet();
-    
-    if (existingIds.contains(baseId)) {
-      _logger.warning('Notification ID collision detected: $baseId for $dateStr/$slot');
-      
-      // Find an alternative ID by incrementing
-      int alternativeId = baseId;
-      int attempts = 0;
-      const maxAttempts = 100;
-      
-      while (existingIds.contains(alternativeId) && attempts < maxAttempts) {
-        alternativeId = baseId + (attempts + 1) * 10000; // Add offset to avoid main ID space
-        attempts++;
-      }
-      
-      if (attempts >= maxAttempts) {
-        _logger.error('Failed to find unique notification ID after $maxAttempts attempts for $dateStr/$slot');
-        throw Exception('Unable to generate unique notification ID');
-      }
-      
-      _logger.info('Resolved collision: using ID $alternativeId instead of $baseId for $dateStr/$slot');
-      return alternativeId;
-    }
-    
-    return baseId;
-  }
 
-  /// Legacy ID generation method (kept for compatibility)
+  /// Generate a notification ID based on date and slot
   int _buildId(String dateStr, String slot) {
     // Validate date string format
     if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(dateStr)) {
@@ -1137,131 +1050,7 @@ class NotificationService {
     return finalId;
   }
 
-  /// Sanitize a string value for safe JSON encoding
-  /// Removes control characters, limits length, and escapes problematic content
-  String _sanitizeStringForJson(String? input, {int maxLength = 1000}) {
-    if (input == null || input.isEmpty) return '';
-    
-    // Remove control characters except tab, newline, and carriage return
-    final sanitized = input.replaceAll(RegExp(r'[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]'), '');
-    
-    // Limit length to prevent extremely large payloads
-    final truncated = sanitized.length > maxLength 
-        ? sanitized.substring(0, maxLength)
-        : sanitized;
-    
-    return truncated;
-  }
 
-  /// Create a sanitized JSON payload for notifications
-  Map<String, dynamic> _createSafePayload({
-    required String type,
-    required String slot,
-    required String taskDate,
-    required String scheduledDate,
-    Map<String, dynamic>? additionalData,
-  }) {
-    final payload = <String, dynamic>{
-      'type': _sanitizeStringForJson(type, maxLength: 50),
-      'slot': _sanitizeStringForJson(slot, maxLength: 50),
-      'taskDate': _sanitizeStringForJson(taskDate, maxLength: 20), // YYYY-MM-DD format
-      'scheduledDate': _sanitizeStringForJson(scheduledDate, maxLength: 50), // ISO8601 format
-    };
-    
-    // Add additional data with sanitization
-    if (additionalData != null) {
-      for (final entry in additionalData.entries) {
-        if (entry.value is String) {
-          payload[entry.key] = _sanitizeStringForJson(entry.value as String);
-        } else if (entry.value is num || entry.value is bool) {
-          payload[entry.key] = entry.value;
-        } else {
-          // Convert complex types to sanitized strings
-          payload[entry.key] = _sanitizeStringForJson(entry.value.toString());
-        }
-      }
-    }
-    
-    return payload;
-  }
-
-  /// Legacy method - will be removed in cleanup
-  /// Perform complete notification cleanup before scheduling new notifications
-  /// This ensures no stale notifications accumulate over time
-  // ignore: unused_element
-  Future<void> _performCompleteNotificationCleanup() async {
-    try {
-      _logger.info('Starting complete notification cleanup');
-      final startTime = DateTime.now();
-      
-      // Get all pending notifications
-      final pendingNotifications = await getPendingNotifications();
-      _logger.info('Found ${pendingNotifications.length} pending notifications to evaluate');
-      
-      if (pendingNotifications.isEmpty) {
-        _logger.info('No pending notifications to clean up');
-        return;
-      }
-      
-      int canceledCount = 0;
-      int preservedCount = 0;
-      int errorCount = 0;
-      final preservedReasons = <String, int>{};
-      
-      for (final notification in pendingNotifications) {
-        try {
-          final shouldPreserve = await _shouldPreserveNotification(notification);
-          
-          if (shouldPreserve.preserve) {
-            preservedCount++;
-            final reason = shouldPreserve.reason;
-            preservedReasons[reason] = (preservedReasons[reason] ?? 0) + 1;
-            _logger.info('Preserving notification ID:${notification.id} - $reason');
-          } else {
-            final cancelSuccess = await _cancelNotificationWithRetry(
-              notification.id,
-              maxRetries: 3,
-              reason: shouldPreserve.reason,
-            );
-            if (cancelSuccess) {
-              canceledCount++;
-            } else {
-              errorCount++;
-              _logger.error('Failed to cancel notification ID:${notification.id} after retries');
-            }
-          }
-        } catch (e) {
-          errorCount++;
-          _logger.error('Error processing notification ID:${notification.id}: $e');
-        }
-      }
-      
-      final duration = DateTime.now().difference(startTime);
-      _logger.info('Complete cleanup finished in ${duration.inMilliseconds}ms');
-      _logger.info('Results: canceled=$canceledCount, preserved=$preservedCount, errors=$errorCount');
-      
-      if (preservedReasons.isNotEmpty) {
-        _logger.info('Preservation reasons: $preservedReasons');
-      }
-      
-      // Verify cleanup was successful
-      final remainingNotifications = await getPendingNotifications();
-      final actualRemoved = pendingNotifications.length - remainingNotifications.length;
-      
-      if (actualRemoved != canceledCount) {
-        _logger.warning('Cleanup discrepancy: expected to remove $canceledCount, actually removed $actualRemoved');
-      } else {
-        _logger.info('Cleanup verification successful: $actualRemoved notifications removed');
-      }
-      
-    } catch (e) {
-      _logger.error('Complete notification cleanup failed: $e');
-      // Fall back to legacy cleanup on failure
-      _logger.info('Falling back to legacy cleanup');
-      final currentDate = _todayDateString();
-      await _cancelBeforeTaskDate(currentDate);
-    }
-  }
   
   /// Cancel a notification with retry mechanism and verification
   /// Uses exponential backoff and verifies cancellation was successful
@@ -1320,72 +1109,6 @@ class NotificationService {
     return false; // All attempts failed
   }
   
-  /// Determine if a notification should be preserved during cleanup
-  /// Returns preservation decision with reason
-  Future<({bool preserve, String reason})> _shouldPreserveNotification(
-    PendingNotificationRequest notification,
-  ) async {
-    try {
-      // Always preserve notifications without payload (external/system notifications)
-      if (notification.payload == null || notification.payload!.isEmpty) {
-        return (preserve: true, reason: 'no payload - external notification');
-      }
-      
-      // Parse notification payload to understand its purpose
-      late final Map<String, dynamic> data;
-      try {
-        data = json.decode(notification.payload!) as Map<String, dynamic>;
-      } catch (e) {
-        return (preserve: true, reason: 'invalid JSON payload - external notification');
-      }
-      
-      final type = data['type'] as String?;
-      final taskDate = data['taskDate'] as String?;
-      final slot = data['slot'] as String?;
-      
-      // Preserve non-task-related notifications
-      if (type == null || !['dailyReminder', 'dailyNudge', 'comeBack'].contains(type)) {
-        return (preserve: true, reason: 'non-task notification type: $type');
-      }
-      
-      // For task-related notifications, check if they're still relevant
-      if (taskDate != null) {
-        try {
-          final notificationDate = DateTime.parse(taskDate);
-          final today = DateTime.now();
-          final daysDifference = notificationDate.difference(today).inDays;
-          
-          // Preserve notifications for today and future dates
-          if (daysDifference >= 0) {
-            return (preserve: true, reason: 'future/current date: $taskDate');
-          }
-          
-          // Cancel notifications more than 1 day in the past
-          if (daysDifference < -1) {
-            return (preserve: false, reason: 'stale date: $taskDate (${daysDifference.abs()} days ago)');
-          }
-          
-          // For notifications 1 day in the past, preserve only deadline notifications
-          // (in case user hasn't completed yesterday's task yet)
-          if (slot == 'deadline') {
-            return (preserve: true, reason: 'recent deadline notification: $taskDate');
-          }
-          
-          return (preserve: false, reason: 'stale non-deadline from yesterday: $taskDate/$slot');
-          
-        } catch (e) {
-          return (preserve: true, reason: 'invalid date format: $taskDate');
-        }
-      }
-      
-      // If we can't determine the date, preserve to be safe
-      return (preserve: true, reason: 'no taskDate found in payload');
-      
-    } catch (e) {
-      _logger.warning('Error evaluating notification preservation for ID:${notification.id}: $e');
-      return (preserve: true, reason: 'evaluation error - preserving for safety');
-    }
-  }
 
   String _todayDateString() => _fmtDate(DateTime.now());
   String _fmtDate(DateTime d) =>

@@ -93,6 +93,8 @@ flutter:
     - assets/content/system/check/
     - assets/content/system/set/
     - assets/content/system/reset/
+    - assets/content/app/
+    - assets/content/app/remind/
     # UI assets (prepared for future use)
     - assets/images/
     - assets/animations/

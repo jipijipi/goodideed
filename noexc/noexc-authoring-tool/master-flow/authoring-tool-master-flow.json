@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-09T19:23:17.551Z",
+  "lastUpdated": "2025-09-11T11:58:53.518Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-09T19:23:17.544Z"
+    "timestamp": "2025-09-11T11:58:53.506Z"
   },
   "nodes": [
     {
@@ -6549,8 +6549,8 @@
               "zone": 4,
               "id": "hands",
               "bindings": {
-                "free_target_x": -0.5,
-                "free_target_y": 0.3
+                "free_target_x": 0.5,
+                "free_target_y": 0.25
               }
             }
           }
@@ -6795,7 +6795,7 @@
                 "free_target_is_active": 1,
                 "swing_target_is_active": 0,
                 "free_target_x": 0.5,
-                "free_target_y": 0.3
+                "free_target_y": 0.25
               }
             }
           }
@@ -7549,7 +7549,7 @@
               "zone": 4,
               "id": "hands",
               "bindings": {
-                "free_target_x": -0.5,
+                "free_target_x": 0.5,
                 "free_target_y": 0.3
               }
             }
@@ -8340,15 +8340,16 @@
               "id": "hands",
               "bindings": {
                 "free_target_x": -0.5,
-                "free_target_y": 0.3
+                "free_target_y": 0.3,
+                "nested_throttle_model/level": 0
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 308,
-      "height": 189,
+      "width": 310,
+      "height": 191,
       "selected": false,
       "positionAbsolute": {
         "x": 6887.923393584819,
@@ -8385,15 +8386,15 @@
                 "free_target_is_active": 1,
                 "swing_target_is_active": 0,
                 "free_target_x": 0.5,
-                "free_target_y": 0.3
+                "free_target_y": 0.35
               }
             }
           }
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 191,
+      "width": 308,
+      "height": 189,
       "selected": false,
       "positionAbsolute": {
         "x": 6884.976441920133,

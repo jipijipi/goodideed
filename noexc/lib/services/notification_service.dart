@@ -12,6 +12,7 @@ import 'app_state_service.dart';
 import 'dart:convert';
 import '../constants/session_constants.dart';
 import 'service_locator.dart';
+import 'semantic_content_service.dart';
 
 /// Simple test environment detection
 /// Returns true if we're running in a test environment
@@ -30,6 +31,7 @@ class NotificationService {
       FlutterLocalNotificationsPlugin();
   final UserDataService _userDataService;
   final LoggerService _logger = LoggerService.instance;
+  final SemanticContentService _semanticContentService;
 
   // App state service for tracking notification taps
   AppStateService? _appStateService;
@@ -48,7 +50,10 @@ class NotificationService {
   static const String _channelDescription =
       'Notifications to remind you about your daily task';
 
-  NotificationService(this._userDataService);
+  NotificationService(
+    this._userDataService, {
+    SemanticContentService? semanticContentService,
+  }) : _semanticContentService = semanticContentService ?? SemanticContentService.instance;
 
   /// Safely initialize timezone data with synchronization to prevent race conditions
   static Future<void> _ensureTimezoneInitialized() async {
@@ -788,10 +793,17 @@ class NotificationService {
         ),
       );
 
+      // Resolve comeback notification text using semantic content
+      const fallbackTitle = 'Check back in';
+      const fallbackBody = 'It\'s a great day to restart.';
+      final resolvedText = await _getNotificationText('app.remind.comeback', fallbackBody);
+      final resolvedTitle = fallbackTitle; // Keep original title for now
+      final resolvedBody = resolvedText;
+
       await _notifications.zonedSchedule(
         id,
-        'Check back in',
-        'It\'s a great day to restart.',
+        resolvedTitle,
+        resolvedBody,
         tz.TZDateTime.from(first, tz.local),
         details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -826,6 +838,25 @@ class NotificationService {
     try {
       final id = await _buildSafeId(taskDate, slot);
       
+      // Resolve notification text using semantic content based on slot type
+      String semanticKey;
+      if (slot == 'start') {
+        semanticKey = 'app.remind.start';
+      } else if (slot.startsWith('mid')) {
+        semanticKey = 'app.remind.progress';
+      } else if (slot == 'deadline') {
+        semanticKey = 'app.remind.deadline';
+      } else if (slot.startsWith('comeback')) {
+        semanticKey = 'app.remind.comeback';
+      } else {
+        semanticKey = 'app.remind.generic';
+      }
+      
+      // Resolve notification text using semantic content (use same key for both title and body)
+      final resolvedText = await _getNotificationText(semanticKey, body);
+      final resolvedTitle = title; // Keep original title for now
+      final resolvedBody = resolvedText;
+      
       // Create sanitized payload
       final payloadData = _createSafePayload(
         type: slot == 'deadline' ? 'dailyReminder' : 'dailyNudge',
@@ -836,7 +867,7 @@ class NotificationService {
       
       final payload = json.encode(payloadData);
 
-      _logger.info('Scheduling notification: ID:$id slot:$slot date:$taskDate time:${whenLocal.toString().substring(11, 16)}');
+      _logger.info('Scheduling notification: ID:$id slot:$slot date:$taskDate time:${whenLocal.toString().substring(11, 16)} title:"$resolvedTitle"');
 
       const details = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -855,8 +886,8 @@ class NotificationService {
 
       await _notifications.zonedSchedule(
         id,
-        title,
-        body,
+        resolvedTitle,
+        resolvedBody,
         tz.TZDateTime.from(whenLocal, tz.local),
         details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -1201,6 +1232,19 @@ class NotificationService {
   String _todayDateString() => _fmtDate(DateTime.now());
   String _fmtDate(DateTime d) =>
       '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  /// Resolve notification text using semantic content service
+  /// Falls back to provided fallback text if semantic resolution fails
+  Future<String> _getNotificationText(String semanticKey, String fallbackText) async {
+    try {
+      final resolvedText = await _semanticContentService.getContent(semanticKey, fallbackText);
+      _logger.info('Resolved notification text for key "$semanticKey": "$resolvedText"');
+      return resolvedText;
+    } catch (e) {
+      _logger.warning('Failed to resolve semantic key "$semanticKey", using fallback: $e');
+      return fallbackText;
+    }
+  }
 
   DateTime _composeLocal(DateTime day, String hhmm) {
     final p = hhmm.split(':');

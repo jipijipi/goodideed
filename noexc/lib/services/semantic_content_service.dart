@@ -10,7 +10,9 @@ class SemanticContentService {
   SemanticContentService._internal();
 
   /// Resolve content using semantic key with fallback to original text
-  Future<String> getContent(String? semanticKey, String originalText) async {
+  /// 
+  /// [randomize] - When true, bypasses cache to get a fresh random variant each time
+  Future<String> getContent(String? semanticKey, String originalText, {bool randomize = false}) async {
     // Handle null or empty semantic keys
     if (semanticKey == null || semanticKey.isEmpty) {
       return originalText;
@@ -19,6 +21,7 @@ class SemanticContentService {
     return await SemanticContentResolver.resolveContent(
       semanticKey,
       originalText,
+      bypassCache: randomize,
     );
   }
 

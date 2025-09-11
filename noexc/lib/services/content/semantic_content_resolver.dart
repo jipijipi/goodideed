@@ -7,10 +7,11 @@ class SemanticContentResolver {
 
   static Future<String> resolveContent(
     String semanticKey,
-    String originalText,
-  ) async {
-    // Check cache first
-    if (_cache.containsKey(semanticKey)) {
+    String originalText, {
+    bool bypassCache = false,
+  }) async {
+    // Check cache first (unless bypassing)
+    if (!bypassCache && _cache.containsKey(semanticKey)) {
       return _cache[semanticKey]!;
     }
 
@@ -24,7 +25,10 @@ class SemanticContentResolver {
         'Invalid key format: "$semanticKey"',
         level: LogLevel.warning,
       );
-      _cache[semanticKey] = originalText;
+      // Only cache result if not bypassing cache
+      if (!bypassCache) {
+        _cache[semanticKey] = originalText;
+      }
       return originalText;
     }
 
@@ -45,7 +49,10 @@ class SemanticContentResolver {
     for (String path in fallbackPaths) {
       String? content = await _tryLoadFile(path);
       if (content != null) {
-        _cache[semanticKey] = content;
+        // Only cache result if not bypassing cache
+        if (!bypassCache) {
+          _cache[semanticKey] = content;
+        }
         return content;
       }
     }
@@ -55,7 +62,10 @@ class SemanticContentResolver {
       'No content found for "$semanticKey", using fallback',
       level: LogLevel.warning,
     );
-    _cache[semanticKey] = originalText;
+    // Only cache result if not bypassing cache
+    if (!bypassCache) {
+      _cache[semanticKey] = originalText;
+    }
     return originalText;
   }
 

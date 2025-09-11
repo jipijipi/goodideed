@@ -59,7 +59,7 @@ class MockSemanticContentService implements SemanticContentService {
   }
 
   @override
-  Future<String> getContent(String? semanticKey, String originalText) async {
+  Future<String> getContent(String? semanticKey, String originalText, {bool randomize = false}) async {
     _calledKeys.add(semanticKey ?? 'null');
     
     if (_shouldThrowError) {

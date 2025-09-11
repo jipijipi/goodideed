@@ -1237,7 +1237,7 @@ class NotificationService {
   /// Falls back to provided fallback text if semantic resolution fails
   Future<String> _getNotificationText(String semanticKey, String fallbackText) async {
     try {
-      final resolvedText = await _semanticContentService.getContent(semanticKey, fallbackText);
+      final resolvedText = await _semanticContentService.getContent(semanticKey, fallbackText, randomize: true);
       _logger.info('Resolved notification text for key "$semanticKey": "$resolvedText"');
       return resolvedText;
     } catch (e) {

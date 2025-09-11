@@ -44,6 +44,10 @@ class NotificationService {
   static bool _timezoneInitializing = false;
   static final List<Completer<void>> _timezoneInitWaiters = [];
 
+  // Scheduling synchronization to prevent concurrent notification scheduling
+  static Completer<void>? _schedulingCompleter;
+  static bool _isScheduling = false;
+
   static const int _dailyReminderNotificationId = 1001;
   static const String _channelId = 'daily_reminders';
   static const String _channelName = 'Daily Task Reminders';
@@ -472,8 +476,45 @@ class NotificationService {
     }
   }
 
-  Future<void> scheduleDeadlineReminder() async {
-    _logger.info('=== SCHEDULING DAILY PLAN ===');
+  Future<void> scheduleDeadlineReminder({String? caller}) async {
+    final callerInfo = caller ?? 'unknown';
+    _logger.info('Scheduling request from: $callerInfo (waiting for lock...)');
+    
+    // Wait for any ongoing scheduling to complete
+    while (_isScheduling) {
+      if (_schedulingCompleter != null) {
+        await _schedulingCompleter!.future;
+      }
+    }
+    
+    // Acquire the lock
+    _isScheduling = true;
+    _schedulingCompleter = Completer<void>();
+    
+    _logger.info('Scheduling lock acquired by: $callerInfo');
+    final startTime = DateTime.now();
+    
+    try {
+      await _scheduleDeadlineReminderImpl(caller: caller);
+      final duration = DateTime.now().difference(startTime);
+      _logger.info('Scheduling completed by: $callerInfo in ${duration.inMilliseconds}ms');
+    } catch (e) {
+      final duration = DateTime.now().difference(startTime);
+      _logger.error('Scheduling failed by: $callerInfo after ${duration.inMilliseconds}ms - $e');
+      rethrow;
+    } finally {
+      // Release the lock
+      _isScheduling = false;
+      if (_schedulingCompleter != null && !_schedulingCompleter!.isCompleted) {
+        _schedulingCompleter!.complete();
+      }
+      _schedulingCompleter = null;
+    }
+  }
+
+  Future<void> _scheduleDeadlineReminderImpl({String? caller}) async {
+    final callerInfo = caller != null ? ' (called by: $caller)' : '';
+    _logger.info('=== SCHEDULING DAILY PLAN$callerInfo ===');
     _logger.info('Platform: ${Platform.operatingSystem}');
     if (Platform.isIOS) {
       _logger.info('iOS Simulator: ${_isIOSSimulator()}');
@@ -536,8 +577,8 @@ class NotificationService {
       ) ?? true; // Default to true for better reliability
       
       if (enableCompleteCleanup) {
-        _logger.info('Complete notification cleanup enabled - clearing all pending notifications');
-        await _performCompleteNotificationCleanup();
+        _logger.info('Complete notification cleanup enabled - canceling ALL notifications');
+        await cancelAllNotifications();
       } else {
         _logger.info('Using legacy cleanup - only removing stale notifications');
         // Legacy cleanup: only sweep stale notifications for past task days
@@ -795,7 +836,16 @@ class NotificationService {
     String startTime,
   ) async {
     try {
-      final first = _composeLocal(_nextActiveDateAfter(DateTime.parse(endDateStr)), startTime);
+      // Skip the first 3 active dates used by comeback series to avoid collision
+      DateTime cursor = DateTime.parse(endDateStr);
+      for (int i = 0; i < 3; i++) {
+        cursor = _nextActiveDateAfter(cursor);
+      }
+      // Now get the 4th active date for weekly fallback
+      final fourthActiveDate = _nextActiveDateAfter(cursor);
+      _logger.info('Weekly comeback fallback scheduled for ${_fmtDate(fourthActiveDate)} (skipping first 3 comeback dates to avoid collision)');
+      
+      final first = _composeLocal(fourthActiveDate, startTime);
       if (first == null) {
         _logger.warning('Failed to parse weekly comeback start time "$startTime"');
         return;

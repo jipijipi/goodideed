@@ -78,7 +78,7 @@ class NotificationService {
         
         // Validate timezone initialization
         final currentZone = tz.local;
-        final now = tz.TZDateTime.now(tz.local);
+        // Ensure we can create timezone date objects for validation
         
         // Basic validation - ensure we can create timezone date objects
         if (currentZone.name.isEmpty) {
@@ -287,9 +287,6 @@ class NotificationService {
           }
           
           // Check if we've attempted to schedule but couldn't (indication of denial)
-          final lastScheduledAttempt = await _userDataService.getValue<String>(
-            StorageKeys.notificationLastScheduled,
-          );
           if (!notificationEnabled && hasBeenRequested) {
             // We requested permissions but can't schedule - likely denied
             _logger.info('Inferring denied status from inability to schedule after permission request');
@@ -578,7 +575,22 @@ class NotificationService {
       
       if (enableCompleteCleanup) {
         _logger.info('Complete notification cleanup enabled - canceling ALL notifications');
+        final pendingBefore = await getPendingNotifications();
+        _logger.info('Found ${pendingBefore.length} notifications before complete cleanup');
+        
         await cancelAllNotifications();
+        
+        final pendingAfter = await getPendingNotifications();
+        _logger.info('Cleanup verification: ${pendingAfter.length} notifications remain after complete cleanup');
+        
+        if (pendingAfter.isNotEmpty) {
+          _logger.warning('Complete cleanup failed - ${pendingAfter.length} notifications still exist');
+          for (final remaining in pendingAfter) {
+            _logger.warning('Surviving notification ID:${remaining.id} title:"${remaining.title}"');
+          }
+        } else {
+          _logger.info('Complete cleanup successful - all notifications removed');
+        }
       } else {
         _logger.info('Using legacy cleanup - only removing stale notifications');
         // Legacy cleanup: only sweep stale notifications for past task days
@@ -693,6 +705,9 @@ class NotificationService {
           }
         }
         _logger.info('Notification types: $typeBreakdown');
+        
+        // Emergency cleanup if duplicate notifications detected
+        await _performEmergencyCleanupIfNeeded(finalNotifications, scheduledCount);
       } catch (e) {
         _logger.warning('Failed to verify final notification count: $e');
         _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications (verification failed) ===');
@@ -709,7 +724,59 @@ class NotificationService {
     }
   }
 
-  // Compute and schedule one day’s slots (start/mid/deadline)
+  /// Emergency cleanup if duplicate notifications are detected
+  Future<void> _performEmergencyCleanupIfNeeded(List<PendingNotificationRequest> finalNotifications, int expectedCount) async {
+    try {
+      // Detect potential duplicates by checking for notifications with same scheduled time
+      final timeGroups = <String, List<PendingNotificationRequest>>{};
+      final taskReminderCount = finalNotifications.where((n) => n.title?.contains('Task Reminder') == true).length;
+      
+      for (final notification in finalNotifications) {
+        // Group by scheduled time (hour:minute)
+        final timeKey = '${notification.id % 100000000}'; // Extract date/time portion
+        timeGroups[timeKey] = (timeGroups[timeKey] ?? [])..add(notification);
+      }
+      
+      // Count duplicates (groups with more than 1 notification)
+      final duplicateGroups = timeGroups.entries.where((entry) => entry.value.length > 1).toList();
+      final totalFinal = finalNotifications.length;
+      final expectedRange = expectedCount;
+      
+      _logger.info('Duplicate detection: ${duplicateGroups.length} duplicate groups, $taskReminderCount task reminders, $totalFinal total vs $expectedRange expected');
+      
+      // Emergency cleanup triggers
+      final hasDuplicates = duplicateGroups.isNotEmpty;
+      final hasTaskReminders = taskReminderCount > 0;
+      final tooManyNotifications = totalFinal > expectedRange * 1.5; // 50% more than expected
+      
+      if (hasDuplicates || hasTaskReminders || tooManyNotifications) {
+        _logger.warning('🚨 EMERGENCY CLEANUP TRIGGERED 🚨');
+        _logger.warning('Reasons: duplicates=$hasDuplicates, taskReminders=$hasTaskReminders, tooMany=$tooManyNotifications');
+        
+        // Cancel all notifications and reschedule
+        _logger.warning('Performing emergency cleanup - canceling all notifications');
+        await cancelAllNotifications();
+        
+        // Force disable complete cleanup to avoid recursion
+        await _userDataService.storeValue('feature.completeNotificationCleanup', false);
+        
+        _logger.warning('Emergency cleanup complete - rescheduling with simplified cleanup');
+        // Re-trigger scheduling with simplified cleanup
+        await scheduleDeadlineReminder(caller: 'emergency_cleanup');
+        
+        // Re-enable complete cleanup for future use
+        await _userDataService.storeValue('feature.completeNotificationCleanup', true);
+        
+        _logger.warning('Emergency cleanup and re-scheduling completed');
+      } else {
+        _logger.info('No emergency cleanup needed - notifications appear correct');
+      }
+    } catch (e) {
+      _logger.error('Emergency cleanup detection failed: $e');
+    }
+  }
+
+  // Compute and schedule one day's slots (start/mid/deadline)
   Future<int> _scheduleDaySlots(
     String dateStr,
     String startTime,
@@ -1115,8 +1182,10 @@ class NotificationService {
     return payload;
   }
 
+  /// Legacy method - will be removed in cleanup
   /// Perform complete notification cleanup before scheduling new notifications
   /// This ensures no stale notifications accumulate over time
+  // ignore: unused_element
   Future<void> _performCompleteNotificationCleanup() async {
     try {
       _logger.info('Starting complete notification cleanup');

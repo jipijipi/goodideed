@@ -2119,7 +2119,7 @@ class NotificationService {
                 type = 'Mid reminder';
               } else if (slot == 'deadline') {
                 type = 'Deadline check';
-              } else if (slot.startsWith('comeback')) {
+              } else if (slot.startsWith('comeback') || slot.startsWith('weekly_')) {
                 type = 'Come back';
               }
             } else if (typeStr != null) {

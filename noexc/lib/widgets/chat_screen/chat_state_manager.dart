@@ -163,7 +163,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Switch to a different chat sequence
   Future<void> switchSequence(String sequenceId) async {
-    logger.info('🔄 switchSequence called: from $_currentSequenceId to $sequenceId', component: LogComponent.ui);
+    logger.debug('switchSequence from=$_currentSequenceId to=$sequenceId', component: LogComponent.ui);
     
     if (_disposed) {
       logger.warning('❌ switchSequence: ChatStateManager is disposed', component: LogComponent.ui);
@@ -172,19 +172,19 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     
     final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
     if (sequenceId == _currentSequenceId && activeSeq == sequenceId) {
-      logger.info('⚠️ switchSequence: Already on active sequence $sequenceId, skipping', component: LogComponent.ui);
+      logger.debug('switchSequence skip (already on $sequenceId)', component: LogComponent.ui);
       return;
     }
 
     try {
-      logger.info('🧹 Clearing current messages...', component: LogComponent.ui);
+      logger.debug('switchSequence clearing messages', component: LogComponent.ui);
       // Clear current state
       _messageDisplayManager.clearMessages();
       
-      logger.info('📝 Setting current sequence ID to: $sequenceId', component: LogComponent.ui);
+      logger.debug('switchSequence set currentSequenceId=$sequenceId', component: LogComponent.ui);
       _currentSequenceId = sequenceId;
 
-      logger.info('📥 Loading and displaying messages for: $sequenceId', component: LogComponent.ui);
+      logger.debug('switchSequence load/display for $sequenceId', component: LogComponent.ui);
       // Load new sequence
       await _messageDisplayManager.loadAndDisplayMessages(
         ServiceLocator.instance.chatService,
@@ -192,11 +192,10 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
         _currentSequenceId,
         notifyListeners,
       );
-
-      logger.info('🔔 Calling notifyListeners to update UI...', component: LogComponent.ui);
+      logger.debug('switchSequence notifyListeners', component: LogComponent.ui);
       notifyListeners();
       
-      logger.info('✅ switchSequence completed successfully to: $_currentSequenceId', component: LogComponent.ui);
+      logger.debug('switchSequence done -> $_currentSequenceId', component: LogComponent.ui);
     } catch (e) {
       logger.error('❌ Error switching sequence: $e', component: LogComponent.ui);
     }

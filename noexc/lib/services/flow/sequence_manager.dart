@@ -40,11 +40,11 @@ class SequenceManager implements MessageProvider {
   /// This operation is atomic - either succeeds completely or throws an exception.
   /// If it throws, the previous sequence state is preserved.
   Future<void> loadSequence(String sequenceId) async {
-    logger.info('Loading sequence: $sequenceId');
+    logger.debug('Loading sequence: $sequenceId');
 
     try {
       final sequence = await _sequenceLoader.loadSequence(sequenceId);
-      logger.info(
+      logger.debug(
         'Successfully loaded sequence: $sequenceId with ${sequence.messages.length} messages',
       );
       // Notify listeners about sequence change

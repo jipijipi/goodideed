@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'session_service.dart';
 import 'logger_service.dart';
 import 'dart:async';
+import '../constants/app_constants.dart';
 
 /// Manages app lifecycle events and triggers re-engagement when returning from end states
 class AppLifecycleManager {
@@ -11,7 +12,8 @@ class AppLifecycleManager {
   
   bool _wasInBackground = false;
   Timer? _resumeDebounce;
-  static const Duration _resumeDebounceDuration = Duration(milliseconds: 400);
+  static final Duration _resumeDebounceDuration =
+      Duration(milliseconds: AppConstants.resumeDebounceMs);
 
   AppLifecycleManager({
     required this.sessionService,

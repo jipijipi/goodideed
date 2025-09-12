@@ -2462,10 +2462,26 @@ class NotificationService {
       final currentDate = (await _userDataService.getValue<String>(StorageKeys.taskCurrentDate) ?? '').trim();
       final startTime = (await _getStartTimeAsString()).trim();
       final deadlineTime = (await _getDeadlineTimeAsString()).trim(); 
-      final activeDays = await _userDataService.getValue<List<String>>('task.activeDays') ?? [];
+      // Handle activeDays with flexible parsing (could be List<dynamic> or List<String>)
+      List<String> activeDaysList = [];
+      try {
+        final rawActiveDays = await _userDataService.getValue('task.activeDays');
+        if (rawActiveDays != null) {
+          if (rawActiveDays is List) {
+            // Convert any list to List<String>
+            activeDaysList = rawActiveDays.map((e) => e.toString()).toList();
+          } else if (rawActiveDays is String && rawActiveDays.isNotEmpty) {
+            // Handle as string representation
+            activeDaysList = [rawActiveDays];
+          }
+        }
+      } catch (e) {
+        _logger.warning('Failed to parse activeDays for hash generation: $e');
+        activeDaysList = [];
+      }
       
       // Sort active days for consistency and filter out empty/null values
-      final sortedActiveDays = activeDays
+      final sortedActiveDays = activeDaysList
           .where((day) => day.isNotEmpty)
           .map((day) => day.trim())
           .toList()..sort();

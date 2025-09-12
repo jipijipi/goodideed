@@ -675,6 +675,7 @@ class NotificationService {
           deadlineTimeString,
           remindersIntensity,
           onlyFinalTodayGlobal: onlyFinalTodayFlag,
+          totalDaysCount: datesToPlan.length,
         );
         
         if (dayCount > 0) {
@@ -756,7 +757,8 @@ class NotificationService {
     String startTime,
     String deadlineTime,
     int intensity,
-    {bool onlyFinalTodayGlobal = false}
+    {bool onlyFinalTodayGlobal = false,
+    int totalDaysCount = 1}
   ) async {
     try {
       final date = DateTime.parse(dateStr);
@@ -800,6 +802,17 @@ class NotificationService {
 
       // Mid-window reminders based on intensity using new distribution system
       final window = end.difference(start).inMinutes;
+      
+      _logger.info('=== PRE-LOOP DEBUG INFO ===');
+      _logger.info('Date: $dateStr, isToday: $isToday');
+      _logger.info('Start time: $start (${start.hour}:${start.minute.toString().padLeft(2, '0')})');
+      _logger.info('End time: $end (${end.hour}:${end.minute.toString().padLeft(2, '0')})');
+      _logger.info('Window duration: $window minutes (${(window / 60).toStringAsFixed(1)} hours)');
+      _logger.info('Current time: $now');
+      _logger.info('Intensity level: $intensity');
+      _logger.info('onlyFinalTodayGlobal: $onlyFinalTodayGlobal');
+      _logger.info('Total days count: $totalDaysCount');
+      
       if (window > 0 && intensity > 0 && !(onlyFinalTodayGlobal && isToday)) {
         List<double> midFractions;
         
@@ -809,25 +822,73 @@ class NotificationService {
         } else {
           // Level 2 & 3: Use new quadratic distribution
           final availableBudget = _calculateNotificationBudget();
-          final midNotificationCount = _getNotificationCountForIntensity(intensity, availableBudget, _maxTaskDays);
+          final midNotificationCount = _getNotificationCountForIntensity(intensity, availableBudget, totalDaysCount);
           final windowHours = (window / 60).round();
+          
+          _logger.info('=== QUADRATIC DISTRIBUTION DEBUG ===');
+          _logger.info('Available budget: $availableBudget');
+          _logger.info('Mid notification count for intensity $intensity: $midNotificationCount');
+          _logger.info('Window: $window minutes ($windowHours hours)');
+          
           midFractions = _generateQuadraticDistribution(midNotificationCount, windowHours);
+          
+          _logger.info('Generated ${midFractions.length} quadratic fractions: $midFractions');
+          
+          // Calculate actual time intervals for debugging
+          if (midFractions.length > 1) {
+            final intervals = <int>[];
+            for (int i = 0; i < midFractions.length - 1; i++) {
+              final intervalMinutes = ((midFractions[i + 1] - midFractions[i]) * window).round();
+              intervals.add(intervalMinutes);
+            }
+            _logger.info('Time intervals between notifications (minutes): $intervals');
+          }
         }
         
+        _logger.info('=== NOTIFICATION SCHEDULING LOOP ===');
+        _logger.info('Starting to schedule ${midFractions.length} mid notifications');
+        
         var idx = 0;
+        var skippedCount = 0;
+        var scheduledCount = 0;
+        
         for (final f in midFractions) {
           idx += 1;
           final minutesFromStart = (window * f).round();
           final midTime = start.add(Duration(minutes: minutesFromStart));
-          if (isToday && midTime.isBefore(now)) continue;
-          count += await _scheduleSlot(
+          
+          _logger.info('Processing mid$idx: fraction=${f.toStringAsFixed(3)}, minutesFromStart=$minutesFromStart, scheduledTime=${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')}');
+          
+          if (isToday && midTime.isBefore(now)) {
+            skippedCount++;
+            _logger.info('  SKIPPED - notification time ${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')} is before current time ${now.hour}:${now.minute.toString().padLeft(2, '0')}');
+            continue;
+          }
+          
+          _logger.info('  SCHEDULING - notification time ${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')} is valid');
+          final result = await _scheduleSlot(
             dateStr,
             'mid$idx',
             midTime,
             title: 'Stay on track',
             body: 'Quick check-in toward your goal.',
           );
+          
+          if (result > 0) {
+            scheduledCount++;
+            _logger.info('  SUCCESS - notification mid$idx scheduled');
+          } else {
+            _logger.info('  FAILED - notification mid$idx scheduling failed');
+          }
+          
+          count += result;
         }
+        
+        _logger.info('=== SCHEDULING LOOP SUMMARY ===');
+        _logger.info('Total fractions processed: ${midFractions.length}');
+        _logger.info('Successfully scheduled: $scheduledCount');
+        _logger.info('Skipped (past time): $skippedCount');
+        _logger.info('Failed to schedule: ${midFractions.length - scheduledCount - skippedCount}');
       }
 
       // Deadline completion check (skip only if in the past today)
@@ -993,31 +1054,51 @@ class NotificationService {
 
   /// Generate quadratic distribution for notifications - more frequent early, less frequent toward deadline
   List<double> _generateQuadraticDistribution(int notificationCount, int windowHours) {
-    if (notificationCount <= 1) return [0.5];
+    _logger.info('=== QUADRATIC DISTRIBUTION GENERATION ===');
+    _logger.info('Input notificationCount: $notificationCount');
+    _logger.info('Input windowHours: $windowHours');
+    _logger.info('Minimum window hours: $_minTimeWindowHours');
+    
+    if (notificationCount <= 1) {
+      _logger.info('NotificationCount <= 1, returning [0.5]');
+      return [0.5];
+    }
     
     final fractions = <double>[];
     
-    // Use quadratic formula: f(x) = a * x^2 + b * x where x goes from 0 to 1
-    // We want more notifications early (smaller values), fewer late (larger values)
-    // Reverse quadratic: density decreases as we approach deadline
+    // Use quadratic formula to create decreasing density (more notifications early, fewer later)
+    // We want smaller intervals early (more frequent) and larger intervals later (less frequent)
     
+    _logger.info('Generating $notificationCount quadratic positions:');
     for (int i = 0; i < notificationCount; i++) {
-      // Position from 0 to 1 (0 = start, 1 = deadline)
-      final position = (i + 1) / (notificationCount + 1);
+      // Uniform position from 0 to 1 (0 = start, 1 = deadline)
+      final uniformPosition = (i + 1) / (notificationCount + 1);
       
-      // Apply reverse quadratic transformation for decreasing density
-      // Formula: 1 - (1 - x)^2 gives more density early, less late
-      final transformedPosition = 1 - (1 - position) * (1 - position);
+      // Apply quadratic transformation for decreasing density
+      // Formula: x^2 creates smaller gaps early, larger gaps later
+      // This gives more notifications early in the time window
+      final transformedPosition = uniformPosition * uniformPosition;
       
       fractions.add(transformedPosition);
+      
+      _logger.info('  Position $i: uniform=${uniformPosition.toStringAsFixed(3)} -> quadratic=${transformedPosition.toStringAsFixed(3)}');
     }
+    
+    _logger.info('Generated ${fractions.length} raw fractions: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
     
     // If original window is less than minimum, filter to only notifications within actual window
     if (windowHours < _minTimeWindowHours) {
       final windowRatio = windowHours / _minTimeWindowHours;
-      return fractions.where((f) => f <= windowRatio).toList();
+      final originalLength = fractions.length;
+      fractions.retainWhere((f) => f <= windowRatio);
+      _logger.info('Window $windowHours < minimum $_minTimeWindowHours hours');
+      _logger.info('Window ratio: $windowRatio, filtered ${originalLength - fractions.length} positions');
+      _logger.info('Remaining after filter: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
+    } else {
+      _logger.info('Window $windowHours >= minimum $_minTimeWindowHours hours, no filtering applied');
     }
     
+    _logger.info('Final quadratic fractions returned: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
     return fractions;
   }
 
@@ -1025,25 +1106,45 @@ class NotificationService {
   int _getNotificationCountForIntensity(int intensity, int availableBudget, int daysCount) {
     final budgetPerDay = availableBudget ~/ daysCount;
     
+    _logger.info('=== NOTIFICATION COUNT CALCULATION ===');
+    _logger.info('Total available budget: $availableBudget');
+    _logger.info('Days count: $daysCount');
+    _logger.info('Budget per day: $budgetPerDay');
+    _logger.info('Intensity level: $intensity');
+    
+    int midNotificationCount;
     switch (intensity) {
       case 1:
         // Level 1: 3 total (start + 1 mid + deadline)
-        return (budgetPerDay >= 3) ? 1 : 0; // 1 mid notification
+        midNotificationCount = (budgetPerDay >= 3) ? 1 : 0; // 1 mid notification
+        _logger.info('Level 1: Using $midNotificationCount mid notification');
+        break;
       case 2:
         // Level 2: Half of level 3 capacity
         final level3Count = _calculateLevel3NotificationCount(budgetPerDay);
-        return level3Count ~/ 2;
+        midNotificationCount = level3Count ~/ 2;
+        _logger.info('Level 2: Level 3 would be $level3Count, using half = $midNotificationCount');
+        break;
       case 3:
       default:
         // Level 3: Use all available capacity
-        return _calculateLevel3NotificationCount(budgetPerDay);
+        midNotificationCount = _calculateLevel3NotificationCount(budgetPerDay);
+        _logger.info('Level 3: Using all available capacity = $midNotificationCount mid notifications');
+        break;
     }
+    
+    final totalPerDay = midNotificationCount + 2; // +2 for start and deadline
+    _logger.info('Total notifications per day: $totalPerDay ($midNotificationCount mid + 1 start + 1 deadline)');
+    
+    return midNotificationCount;
   }
   
   int _calculateLevel3NotificationCount(int budgetPerDay) {
     // Reserve 2 slots for start and deadline notifications
     final availableForMid = budgetPerDay - 2;
-    return availableForMid > 0 ? availableForMid : 0;
+    final result = availableForMid > 0 ? availableForMid : 0;
+    _logger.info('Level 3 calculation: $budgetPerDay budget - 2 reserved = $availableForMid available for mid = $result');
+    return result;
   }
 
   Future<int> _scheduleSlot(
@@ -1054,6 +1155,11 @@ class NotificationService {
   ) async {
     try {
       final id = _buildId(taskDate, slot);
+      
+      _logger.info('=== _scheduleSlot DEBUG ===');
+      _logger.info('Scheduling slot: $slot for date: $taskDate');
+      _logger.info('Notification ID: $id');
+      _logger.info('Scheduled time: ${whenLocal.hour}:${whenLocal.minute.toString().padLeft(2, '0')} on ${whenLocal.day}/${whenLocal.month}');
       
       // Resolve notification text using semantic content based on slot type
       String semanticKey;
@@ -1069,10 +1175,15 @@ class NotificationService {
         semanticKey = 'app.remind.generic';
       }
       
+      _logger.info('Using semantic key: $semanticKey');
+      
       // Resolve notification text using semantic content (use same key for both title and body)
       final resolvedText = await _getNotificationText(semanticKey, body);
       final resolvedTitle = title; // Keep original title for now
       final resolvedBody = resolvedText;
+      
+      _logger.info('Resolved title: "$resolvedTitle"');
+      _logger.info('Resolved body: "$resolvedBody"');
       
       // Create payload data
       final payloadData = {

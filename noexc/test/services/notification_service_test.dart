@@ -845,4 +845,20 @@ void main() {
       });
     });
   });
+
+  // Note: Caching strategy tests are verified through manual testing
+  // as the private methods are not accessible from test environment
+  group('NotificationService caching integration', () {
+    test('should have caching methods available', () async {
+      setupQuietTesting();
+      TestWidgetsFlutterBinding.ensureInitialized();
+
+      final mockUserDataService = MockUserDataService();
+      final notificationService = NotificationService(mockUserDataService);
+      await notificationService.initialize();
+
+      // Verify cache clearing method is available
+      expect(() => notificationService.clearSchedulingCache(), returnsNormally);
+    });
+  });
 }

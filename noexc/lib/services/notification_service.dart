@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -736,6 +737,14 @@ class NotificationService {
       } catch (e) {
         _logger.warning('Failed to verify final notification count: $e');
         _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications (verification failed) ===');
+      }
+      
+      // Update scheduling cache after successful completion
+      try {
+        final finalHash = await _generateSchedulingHash();
+        _updateSchedulingCache(finalHash);
+      } catch (e) {
+        _logger.warning('Failed to update scheduling cache after completion: $e');
       }
     } catch (e) {
       _logger.error('=== SCHEDULING FAILED ===');
@@ -2442,26 +2451,38 @@ class NotificationService {
   }
 
   /// Generate a hash of key scheduling parameters to detect when rescheduling is needed
+  @visibleForTesting
   Future<String> _generateSchedulingHash() async {
     try {
       // Collect all parameters that affect notification scheduling
       final intensity = await _userDataService.getValue<int>('task.remindersIntensity') ?? 0;
-      final currentDate = await _userDataService.getValue<String>(StorageKeys.taskCurrentDate) ?? '';
-      final startTime = await _getStartTimeAsString();
-      final deadlineTime = await _getDeadlineTimeAsString(); 
+      final currentDate = (await _userDataService.getValue<String>(StorageKeys.taskCurrentDate) ?? '').trim();
+      final startTime = (await _getStartTimeAsString()).trim();
+      final deadlineTime = (await _getDeadlineTimeAsString()).trim(); 
       final activeDays = await _userDataService.getValue<List<String>>('task.activeDays') ?? [];
       
-      // Create a stable hash input
+      // Sort active days for consistency and filter out empty/null values
+      final sortedActiveDays = activeDays
+          .where((day) => day.isNotEmpty)
+          .map((day) => day.trim())
+          .toList()..sort();
+      
+      // Create a stable hash input with normalized values
       final hashInput = [
         'intensity:$intensity',
-        'currentDate:$currentDate',
-        'startTime:$startTime',
-        'deadlineTime:$deadlineTime',
-        'activeDays:${activeDays.join(',')}',
+        'currentDate:${currentDate.isEmpty ? 'none' : currentDate}',
+        'startTime:${startTime.isEmpty ? 'default' : startTime}',
+        'deadlineTime:${deadlineTime.isEmpty ? 'default' : deadlineTime}',
+        'activeDays:${sortedActiveDays.isEmpty ? 'none' : sortedActiveDays.join(',')}',
       ].join('|');
       
-      // Generate simple hash of the input string
-      return hashInput.hashCode.toString();
+      final hash = hashInput.hashCode.toString();
+      
+      // Debug logging (can be controlled via flag if needed)
+      _logger.debug('Hash input: $hashInput');
+      _logger.debug('Generated hash: $hash');
+      
+      return hash;
     } catch (e) {
       _logger.warning('Failed to generate scheduling hash: $e');
       // Return timestamp as fallback to force rescheduling on error
@@ -2470,30 +2491,44 @@ class NotificationService {
   }
   
   /// Check if notifications need to be rescheduled based on parameter changes
+  @visibleForTesting
   Future<bool> _shouldSkipScheduling() async {
     try {
       final currentHash = await _generateSchedulingHash();
       final now = DateTime.now();
       
-      // Skip if hash hasn't changed and we scheduled recently (within last 5 minutes)
+      // Skip if hash hasn't changed and we scheduled recently (within last 3 minutes)
       if (_lastSchedulingHash == currentHash && _lastSchedulingTime != null) {
         final timeSinceLastScheduling = now.difference(_lastSchedulingTime!);
-        if (timeSinceLastScheduling.inMinutes < 5) {
-          _logger.info('Skipping notification scheduling - no relevant changes detected (hash: ${currentHash.substring(0, 8)}...)');
+        if (timeSinceLastScheduling.inMinutes < 3) {
+          _logger.info('Skipping notification scheduling - no relevant changes detected (hash: ${currentHash.substring(0, 8)}..., last scheduled: ${timeSinceLastScheduling.inSeconds}s ago)');
           return true;
+        } else {
+          _logger.info('Hash unchanged but time window expired (${timeSinceLastScheduling.inMinutes}min), proceeding with scheduling');
+        }
+      } else {
+        if (_lastSchedulingHash != null) {
+          final oldHash = _lastSchedulingHash!.length > 8 ? _lastSchedulingHash!.substring(0, 8) : _lastSchedulingHash!;
+          final newHash = currentHash.length > 8 ? currentHash.substring(0, 8) : currentHash;
+          _logger.info('Hash changed - Old: $oldHash, New: $newHash - proceeding with scheduling');
+        } else {
+          _logger.info('First scheduling attempt - proceeding (hash: ${currentHash.substring(0, 8)}...)');
         }
       }
       
-      // Update cache
-      _lastSchedulingHash = currentHash;
-      _lastSchedulingTime = now;
-      
-      _logger.info('Proceeding with notification scheduling (hash: ${currentHash.substring(0, 8)}...)');
-      return false;
+      return false; // Don't skip - we need to schedule
     } catch (e) {
       _logger.warning('Failed to check scheduling cache: $e - proceeding with scheduling');
       return false;
     }
+  }
+  
+  /// Update the scheduling cache after successful scheduling
+  @visibleForTesting
+  void _updateSchedulingCache(String hash) {
+    _lastSchedulingHash = hash;
+    _lastSchedulingTime = DateTime.now();
+    _logger.info('Updated scheduling cache with hash: ${hash.substring(0, 8)}...');
   }
   
   /// Clear scheduling cache (useful for debugging or manual refresh)

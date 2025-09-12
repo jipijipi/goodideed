@@ -7,6 +7,7 @@ import '../../services/logger_service.dart';
 import '../../services/service_locator.dart';
 import '../../services/app_lifecycle_manager.dart';
 import '../../constants/app_constants.dart';
+import '../../services/engagement_policy.dart';
 import 'state_management/message_display_manager.dart';
 import 'state_management/user_interaction_handler.dart';
 
@@ -124,13 +125,18 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
       logger.debug('active_seq=${activeSeq ?? 'none'} ui_seq=$currentSequenceId', component: LogComponent.ui);
 
-      // Busy guard: don't interrupt if user is mid-interaction
+      // Busy guard via policy (existing guards only)
       final hasTextInput = _messageDisplayManager.currentTextInputMessage != null;
       final hasUnansweredChoice = _messageDisplayManager.displayedMessages.any(
         (m) => m.type == MessageType.choice && m.selectedChoiceText == null,
       );
       final panelOpen = _isPanelVisible;
-      if (hasTextInput || hasUnansweredChoice || panelOpen) {
+      final canReengage = EngagementPolicy.shouldReengage(
+        panelOpen: panelOpen,
+        hasTextInput: hasTextInput,
+        hasUnansweredChoice: hasUnansweredChoice,
+      );
+      if (!canReengage) {
         logger.info('reengage_skipped busy input=$hasTextInput choice=$hasUnansweredChoice panel=$panelOpen', component: LogComponent.ui);
         return;
       }

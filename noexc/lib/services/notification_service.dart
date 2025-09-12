@@ -114,6 +114,8 @@ class NotificationService {
     _logger.info(
       'Initializing NotificationService for platform: ${Platform.operatingSystem}',
     );
+    _logger.info('Flutter version: ${Platform.version}');
+    _logger.info('Is test environment: ${_isTestEnvironment()}');
 
     // Skip initialization in test environment
     if (_isTestEnvironment()) {
@@ -173,10 +175,15 @@ class NotificationService {
       );
 
       _logger.info('Initializing flutter_local_notifications plugin...');
+      _logger.info('iOS Settings: requestAlertPermission=false, requestBadgePermission=false, requestSoundPermission=false');
+      _logger.info('Android Settings: icon=@mipmap/ic_launcher');
+      
       await _notifications.initialize(
         initSettings,
         onDidReceiveNotificationResponse: _onNotificationTapped,
       );
+      
+      _logger.info('flutter_local_notifications plugin initialized successfully');
 
       // Create notification channel for Android
       if (Platform.isAndroid) {
@@ -970,6 +977,8 @@ class NotificationService {
       final payload = json.encode(payloadData);
 
       _logger.info('Scheduling notification: ID:$id slot:$slot date:$taskDate time:${whenLocal.toString().substring(11, 16)} title:"$resolvedTitle"');
+      _logger.info('Notification payload: $payload');
+      _logger.info('Payload data structure: $payloadData');
 
       const details = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -1478,6 +1487,8 @@ class NotificationService {
     _logger.info(
       'Notification tapped: ID=${response.id}, payload=${response.payload}',
     );
+    _logger.info('Response details: actionId=${response.actionId}, input=${response.input}, data=${response.data}');
+    _logger.info('Platform: ${Platform.operatingSystem}');
 
     try {
       // Create notification tap event
@@ -1528,6 +1539,8 @@ class NotificationService {
         final response = launchDetails.notificationResponse;
         if (response != null) {
           _logger.info('App launched from notification: ID=${response.id}, payload=${response.payload}');
+          _logger.info('Launch response details: actionId=${response.actionId}, input=${response.input}, data=${response.data}');
+          _logger.info('Platform: ${Platform.operatingSystem}');
           
           // Create notification tap event for app launch
           final tapEvent = NotificationTapEvent.fromResponse(

@@ -53,6 +53,13 @@ class NotificationService {
   static const String _channelName = 'Daily Task Reminders';
   static const String _channelDescription =
       'Notifications to remind you about your daily task';
+  
+  // Configuration constants for new notification system
+  static const int _maxIOSNotifications = 64;
+  static const int _maxTaskDays = 2;
+  static const int _minTimeWindowHours = 4;
+  static const int _defaultDailyComebackCount = 3;
+  static const int _defaultWeeklyComebackCount = 3;
 
   NotificationService(
     this._userDataService, {
@@ -620,7 +627,7 @@ class NotificationService {
       // Prime activeDays cache
       await _primeActiveDaysCache();
 
-      // Build day-plan horizon from currentDate to endDate (inclusive)
+      // Build day-plan horizon from currentDate to endDate (inclusive) - Limited to 2 days maximum
       final endDate = await _userDataService.getValue<String>(
         StorageKeys.taskEndDate,
       );
@@ -633,18 +640,29 @@ class NotificationService {
             : startDate; // fallback: only current day
         if (end.isBefore(startDate)) end = startDate;
 
+        // Limit to maximum 2 days for task notifications
+        int daysAdded = 0;
         for (var d = startDate;
-            !d.isAfter(end);
+            !d.isAfter(end) && daysAdded < _maxTaskDays;
             d = d.add(const Duration(days: 1))) {
           if (_isActiveDay(d)) {
             datesToPlan.add(_fmtDate(d));
+            daysAdded++;
           }
         }
+        
+        _logger.info('Task scheduling limited to ${datesToPlan.length} days (max $_maxTaskDays)');
       } catch (e) {
         _logger.warning('Failed building horizon: $e');
         datesToPlan.clear();
         datesToPlan.add(currentDateString);
       }
+
+      // Log notification budget information
+      final availableBudget = _calculateNotificationBudget();
+      final budgetPerDay = availableBudget ~/ datesToPlan.length;
+      _logger.info('Notification budget: $availableBudget total ($_maxIOSNotifications iOS limit - ${_defaultDailyComebackCount + _defaultWeeklyComebackCount} comeback notifications)');
+      _logger.info('Budget per day: $budgetPerDay notifications across ${datesToPlan.length} days');
 
       // Schedule multi-stage per planned day
       int scheduledCount = 0;
@@ -780,10 +798,22 @@ class NotificationService {
         }
       }
 
-      // Mid-window reminders based on intensity
+      // Mid-window reminders based on intensity using new distribution system
       final window = end.difference(start).inMinutes;
       if (window > 0 && intensity > 0 && !(onlyFinalTodayGlobal && isToday)) {
-        final midFractions = _fractionsForIntensity(intensity);
+        List<double> midFractions;
+        
+        if (intensity == 1) {
+          // Level 1: Keep legacy behavior (1 mid at 50%)
+          midFractions = _fractionsForIntensity(intensity);
+        } else {
+          // Level 2 & 3: Use new quadratic distribution
+          final availableBudget = _calculateNotificationBudget();
+          final midNotificationCount = _getNotificationCountForIntensity(intensity, availableBudget, _maxTaskDays);
+          final windowHours = (window / 60).round();
+          midFractions = _generateQuadraticDistribution(midNotificationCount, windowHours);
+        }
+        
         var idx = 0;
         for (final f in midFractions) {
           idx += 1;
@@ -861,68 +891,83 @@ class NotificationService {
     try {
       // Skip the first 3 active dates used by comeback series to avoid collision
       DateTime cursor = DateTime.parse(endDateStr);
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < _defaultDailyComebackCount; i++) {
         cursor = _nextActiveDateAfter(cursor);
       }
-      // Now get the 4th active date for weekly fallback
-      final fourthActiveDate = _nextActiveDateAfter(cursor);
-      _logger.info('Weekly comeback fallback scheduled for ${_fmtDate(fourthActiveDate)} (skipping first 3 comeback dates to avoid collision)');
       
-      final first = _composeLocal(fourthActiveDate, startTime);
-      if (first == null) {
-        _logger.warning('Failed to parse weekly comeback start time "$startTime"');
-        return;
+      // Schedule weekly comeback notifications
+      final weeklyDates = <DateTime>[];
+      for (int week = 0; week < _defaultWeeklyComebackCount; week++) {
+        // Find next active date that's 7 days after previous
+        cursor = _nextActiveDateAfter(cursor.add(const Duration(days: 6))); // 6 days + 1 from nextActiveDateAfter = 7 days
+        weeklyDates.add(cursor);
       }
-      if (first.isBefore(DateTime.now())) return;
-
-      final id = _buildId(_fmtDate(first), 'comeback_weekly');
       
-      // Create payload data
-      final payloadData = {
-        'type': 'comeBack',
-        'slot': 'weekly',
-        'taskDate': _fmtDate(first),
-        'scheduledDate': first.toIso8601String(),
-      };
-      
-      final payload = json.encode(payloadData);
+      _logger.info('Scheduling ${weeklyDates.length} weekly comeback notifications starting ${_fmtDate(weeklyDates.first)}');
 
-      const details = NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDescription,
-          importance: Importance.high,
-          priority: Priority.high,
-        ),
-        iOS: DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      );
+      for (int i = 0; i < weeklyDates.length; i++) {
+        final weeklyDate = weeklyDates[i];
+        final weeklyTime = _composeLocal(weeklyDate, startTime);
+        
+        if (weeklyTime == null) {
+          _logger.warning('Failed to parse weekly comeback start time "$startTime" for week ${i + 1}');
+          continue;
+        }
+        
+        if (weeklyTime.isBefore(DateTime.now())) {
+          _logger.info('Skipping past weekly comeback notification for week ${i + 1}');
+          continue;
+        }
 
-      // Resolve comeback notification text using semantic content
-      const fallbackTitle = 'Check back in';
-      const fallbackBody = 'It\'s a great day to restart.';
-      final resolvedText = await _getNotificationText('app.remind.comeback', fallbackBody);
-      final resolvedTitle = fallbackTitle; // Keep original title for now
-      final resolvedBody = resolvedText;
+        final id = _buildId(_fmtDate(weeklyDate), 'comeback_weekly_${i + 1}');
+        
+        // Create payload data
+        final payloadData = {
+          'type': 'comeBack',
+          'slot': 'weekly_${i + 1}',
+          'taskDate': _fmtDate(weeklyDate),
+          'scheduledDate': weeklyTime.toIso8601String(),
+        };
+        
+        final payload = json.encode(payloadData);
 
-      await _notifications.zonedSchedule(
-        id,
-        resolvedTitle,
-        resolvedBody,
-        tz.TZDateTime.from(first, tz.local),
-        details,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: payload,
-        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
-      );
-      
-      _logger.info('Scheduled weekly comeback fallback notification ID:$id for ${_fmtDate(first)}');
+        const details = NotificationDetails(
+          android: AndroidNotificationDetails(
+            _channelId,
+            _channelName,
+            channelDescription: _channelDescription,
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        );
+
+        // Resolve comeback notification text using semantic content
+        const fallbackTitle = 'Check back in';
+        const fallbackBody = 'It\'s a great day to restart.';
+        final resolvedText = await _getNotificationText('app.remind.comeback', fallbackBody);
+        final resolvedTitle = fallbackTitle; // Keep original title for now
+        final resolvedBody = resolvedText;
+
+        await _notifications.zonedSchedule(
+          id,
+          resolvedTitle,
+          resolvedBody,
+          tz.TZDateTime.from(weeklyTime, tz.local),
+          details,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          payload: payload,
+          matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+        );
+        
+        _logger.info('Scheduled weekly comeback notification ${i + 1} ID:$id for ${_fmtDate(weeklyDate)}');
+      }
     } catch (e) {
-      _logger.error('Failed scheduling weekly fallback: $e');
+      _logger.error('Failed scheduling weekly comeback notifications: $e');
     }
   }
 
@@ -936,6 +981,69 @@ class NotificationService {
       default:
         return [0.25, 0.5, 0.75];
     }
+  }
+
+  /// Calculate available notification budget after accounting for comeback notifications
+  int _calculateNotificationBudget() {
+    final dailyComebackCount = _defaultDailyComebackCount;
+    final weeklyComebackCount = _defaultWeeklyComebackCount;
+    final totalComebackNotifications = dailyComebackCount + weeklyComebackCount;
+    return _maxIOSNotifications - totalComebackNotifications;
+  }
+
+  /// Generate quadratic distribution for notifications - more frequent early, less frequent toward deadline
+  List<double> _generateQuadraticDistribution(int notificationCount, int windowHours) {
+    if (notificationCount <= 1) return [0.5];
+    
+    final fractions = <double>[];
+    
+    // Use quadratic formula: f(x) = a * x^2 + b * x where x goes from 0 to 1
+    // We want more notifications early (smaller values), fewer late (larger values)
+    // Reverse quadratic: density decreases as we approach deadline
+    
+    for (int i = 0; i < notificationCount; i++) {
+      // Position from 0 to 1 (0 = start, 1 = deadline)
+      final position = (i + 1) / (notificationCount + 1);
+      
+      // Apply reverse quadratic transformation for decreasing density
+      // Formula: 1 - (1 - x)^2 gives more density early, less late
+      final transformedPosition = 1 - (1 - position) * (1 - position);
+      
+      fractions.add(transformedPosition);
+    }
+    
+    // If original window is less than minimum, filter to only notifications within actual window
+    if (windowHours < _minTimeWindowHours) {
+      final windowRatio = windowHours / _minTimeWindowHours;
+      return fractions.where((f) => f <= windowRatio).toList();
+    }
+    
+    return fractions;
+  }
+
+  /// Get notification count for given intensity level and available budget
+  int _getNotificationCountForIntensity(int intensity, int availableBudget, int daysCount) {
+    final budgetPerDay = availableBudget ~/ daysCount;
+    
+    switch (intensity) {
+      case 1:
+        // Level 1: 3 total (start + 1 mid + deadline)
+        return (budgetPerDay >= 3) ? 1 : 0; // 1 mid notification
+      case 2:
+        // Level 2: Half of level 3 capacity
+        final level3Count = _calculateLevel3NotificationCount(budgetPerDay);
+        return level3Count ~/ 2;
+      case 3:
+      default:
+        // Level 3: Use all available capacity
+        return _calculateLevel3NotificationCount(budgetPerDay);
+    }
+  }
+  
+  int _calculateLevel3NotificationCount(int budgetPerDay) {
+    // Reserve 2 slots for start and deadline notifications
+    final availableForMid = budgetPerDay - 2;
+    return availableForMid > 0 ? availableForMid : 0;
   }
 
   Future<int> _scheduleSlot(

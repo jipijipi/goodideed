@@ -855,12 +855,13 @@ class NotificationService {
         for (final f in midFractions) {
           idx += 1;
           
-          // Calculate minutes from start - fractions are already filtered to fit the actual window
-          final minutesFromStart = (window * f).round();
+          // Calculate minutes from start using 4-hour reference window for short windows, actual window for long windows
+          final referenceWindow = windowHours <= _minTimeWindowHours ? _minTimeWindowHours * 60 : window;
+          final minutesFromStart = (referenceWindow * f).round();
           
           final midTime = start.add(Duration(minutes: minutesFromStart));
           
-          _logger.info('Processing mid$idx: fraction=${f.toStringAsFixed(3)}, minutesFromStart=$minutesFromStart, scheduledTime=${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')}');
+          _logger.info('Processing mid$idx: fraction=${f.toStringAsFixed(3)}, referenceWindow=${referenceWindow}min (${windowHours <= _minTimeWindowHours ? '4h ref' : 'actual'}), minutesFromStart=$minutesFromStart, scheduledTime=${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')}');
           
           if (isToday && midTime.isBefore(now)) {
             skippedCount++;
@@ -1099,26 +1100,16 @@ class NotificationService {
     
     _logger.info('Generated ${fractions.length} raw fractions: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
     
-    // Apply proper window logic: use 4-hour reference for shorter windows, actual window for longer ones
-    List<double> finalFractions;
+    // For shorter windows (<=4 hours), we use the 4-hour reference pattern and filter during scheduling
+    // For longer windows (>4 hours), we use the actual window distribution
     if (windowHours <= _minTimeWindowHours) {
-      _logger.info('Window $windowHours <= minimum $_minTimeWindowHours hours: using 4-hour reference pattern');
-      
-      // Filter fractions to only those that fall within the actual window
-      final windowRatio = windowHours / _minTimeWindowHours;
-      final originalLength = fractions.length;
-      finalFractions = fractions.where((f) => f <= windowRatio).toList();
-      
-      _logger.info('Window ratio: ${windowRatio.toStringAsFixed(3)}, filtered ${originalLength - finalFractions.length} fractions beyond actual window');
-      _logger.info('Remaining fractions after filtering: ${finalFractions.map((f) => f.toStringAsFixed(3)).toList()}');
+      _logger.info('Window $windowHours <= minimum $_minTimeWindowHours hours: using 4-hour reference pattern (will filter during scheduling)');
     } else {
       _logger.info('Window $windowHours > minimum $_minTimeWindowHours hours: using actual window distribution');
-      // For longer windows, we already generated for the actual window, so no changes needed
-      finalFractions = fractions;
     }
     
-    _logger.info('Final quadratic fractions returned: ${finalFractions.map((f) => f.toStringAsFixed(3)).toList()}');
-    return finalFractions;
+    _logger.info('Final quadratic fractions returned: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
+    return fractions;
   }
 
   /// Get notification count for given intensity level and available budget

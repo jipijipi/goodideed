@@ -629,6 +629,21 @@ class SessionService {
     }
   }
 
+  /// Check if the session is currently at an end state
+  Future<bool> isAtEndState() async {
+    return await userDataService.getValue<bool>(StorageKeys.sessionIsAtEndState) ?? false;
+  }
+
+  /// Set the end state flag
+  Future<void> setEndState(bool isAtEnd) async {
+    await userDataService.storeValue(StorageKeys.sessionIsAtEndState, isAtEnd);
+  }
+
+  /// Clear the end state flag (convenience method for setEndState(false))
+  Future<void> clearEndState() async {
+    await setEndState(false);
+  }
+
   /// Helper method to format date consistently
   String _formatDate(DateTime date) {
     return '${date.year}${SessionConstants.dateFormatSeparator}'

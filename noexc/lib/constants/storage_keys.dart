@@ -19,6 +19,7 @@ class StorageKeys {
   static const String sessionFriActive = '${sessionPrefix}fri_active';
   static const String sessionSatActive = '${sessionPrefix}sat_active';
   static const String sessionSunActive = '${sessionPrefix}sun_active';
+  static const String sessionIsAtEndState = '${sessionPrefix}isAtEndState';
 
   // User data keys
   static const String userPrefix = 'user.';

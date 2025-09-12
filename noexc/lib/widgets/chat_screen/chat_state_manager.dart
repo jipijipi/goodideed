@@ -5,16 +5,18 @@ import '../../models/choice.dart';
 import '../../models/chat_sequence.dart';
 import '../../services/logger_service.dart';
 import '../../services/service_locator.dart';
+import '../../services/app_lifecycle_manager.dart';
 import '../../constants/app_constants.dart';
 import 'state_management/message_display_manager.dart';
 import 'state_management/user_interaction_handler.dart';
 
 /// Orchestrates chat state management by coordinating focused components
 /// Main controller that handles initialization, user actions, and debug controls
-class ChatStateManager extends ChangeNotifier {
+class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
   // Component managers - use ServiceLocator for dependency injection
   late final MessageDisplayManager _messageDisplayManager;
   late final UserInteractionHandler _userInteractionHandler;
+  late final AppLifecycleManager _lifecycleManager;
 
   // State
   bool _isPanelVisible = false;
@@ -37,6 +39,7 @@ class ChatStateManager extends ChangeNotifier {
 
   // Service access
   get userDataService => ServiceLocator.instance.userDataService;
+  AppLifecycleManager get lifecycleManager => _lifecycleManager;
 
   /// Initialize the chat state manager
   Future<void> initialize() async {
@@ -49,6 +52,15 @@ class ChatStateManager extends ChangeNotifier {
       chatService: ServiceLocator.instance.chatService,
       messageQueue: ServiceLocator.instance.messageQueue,
     );
+
+    // Initialize lifecycle manager
+    _lifecycleManager = AppLifecycleManager(
+      sessionService: ServiceLocator.instance.sessionService,
+      onAppResumedFromEndState: _handleAppResumedFromEndState,
+    );
+
+    // Register as lifecycle observer
+    WidgetsBinding.instance.addObserver(this);
 
     await _messageDisplayManager.loadAndDisplayMessages(
       ServiceLocator.instance.chatService,
@@ -87,6 +99,24 @@ class ChatStateManager extends ChangeNotifier {
   /// Handle sequence change notifications
   void _onSequenceChange(String sequenceId) {
     _currentSequenceId = sequenceId;
+  }
+
+  /// Handle app lifecycle state changes
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (!_disposed) {
+      await _lifecycleManager.didChangeAppLifecycleState(state);
+    }
+  }
+
+  /// Handle app resuming from end state - trigger re-engagement
+  Future<void> _handleAppResumedFromEndState() async {
+    try {
+      logger.info('App resumed from end state, triggering re-engagement', component: LogComponent.ui);
+      await switchSequence('welcome_seq');
+    } catch (e) {
+      logger.error('Failed to handle app resume from end state: $e', component: LogComponent.ui);
+    }
   }
 
   /// Toggle the user variables panel visibility
@@ -194,6 +224,9 @@ class ChatStateManager extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+
+    // Unregister lifecycle observer
+    WidgetsBinding.instance.removeObserver(this);
 
     // Dispose component managers (ServiceLocator disposed at app level)
     _messageDisplayManager.dispose();

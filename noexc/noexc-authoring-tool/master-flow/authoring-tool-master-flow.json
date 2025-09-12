@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-11T13:07:43.449Z",
+  "lastUpdated": "2025-09-12T14:45:36.861Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-11T13:07:43.427Z"
+    "timestamp": "2025-09-12T14:45:36.853Z"
   },
   "nodes": [
     {
@@ -779,12 +779,12 @@
       },
       "type": "group",
       "style": {
-        "width": 685.3272063420899,
-        "height": 1128.7178780824943,
+        "width": 685,
+        "height": 1433,
         "zIndex": 999
       },
       "width": 685,
-      "height": 1129,
+      "height": 1433,
       "selected": false,
       "positionAbsolute": {
         "x": -3145.5743524225527,
@@ -801,7 +801,8 @@
         "title": "Sendoff Sequence",
         "description": "Last sequence in an interaction, goodbyes",
         "color": "rgba(255, 152, 0, 0.025)"
-      }
+      },
+      "resizing": false
     },
     {
       "id": "109",
@@ -1742,12 +1743,17 @@
                 "arm_swing_animation": "reset"
               }
             }
+          },
+          {
+            "type": "set",
+            "key": "session.isAtEndState",
+            "value": false
           }
         ]
       },
       "type": "editable",
       "width": 308,
-      "height": 189,
+      "height": 211,
       "selected": false,
       "positionAbsolute": {
         "x": -2455.0708232602865,
@@ -4918,8 +4924,8 @@
         "storeKey": "task.startTime"
       },
       "type": "editable",
-      "width": 250,
-      "height": 214,
+      "width": 248,
+      "height": 212,
       "selected": false,
       "positionAbsolute": {
         "x": 1582.0016612679487,
@@ -8584,6 +8590,37 @@
         "nodeId": "54",
         "contentKey": "bot.warn.reminders.serious",
         "content": "You chose, notification intensity : {task.remindersIntensity}|||Correct?"
+      }
+    },
+    {
+      "id": "498",
+      "position": {
+        "x": 215.9863228832719,
+        "y": 1116.533067682196
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "498",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "session.isAtEndState",
+            "value": true
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 308,
+      "height": 189,
+      "selected": false,
+      "dragging": false,
+      "parentId": "59",
+      "extent": "parent",
+      "positionAbsolute": {
+        "x": -2929.588029539281,
+        "y": 10817.782919563031
       }
     },
     {
@@ -13891,6 +13928,17 @@
       "sourceHandle": null,
       "targetHandle": null,
       "id": "reactflow__edge-48-474"
+    },
+    {
+      "zIndex": 1001,
+      "source": "58",
+      "sourceHandle": null,
+      "target": "498",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-58-498",
+      "selected": false
     }
   ]
 }

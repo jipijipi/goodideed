@@ -529,11 +529,6 @@ class NotificationService {
       _logger.info('iOS Simulator: ${_isIOSSimulator()}');
     }
 
-    // Check if we can skip scheduling due to caching
-    if (await _shouldSkipScheduling()) {
-      return;
-    }
-
     // Log existing notifications before scheduling
     try {
       final existingNotifications = await getPendingNotifications();
@@ -549,7 +544,7 @@ class NotificationService {
     }
 
     try {
-      // Check intensity
+      // Check intensity first before doing expensive cache work
       final remindersIntensity =
           await _userDataService.getValue<int>('task.remindersIntensity') ?? 0;
       _logger.info('Reminders intensity: $remindersIntensity');
@@ -558,6 +553,14 @@ class NotificationService {
         await cancelAllNotifications();
         return;
       }
+
+      // Now check if we can skip scheduling due to caching (only for actual work)
+      _logger.info('CACHE: Checking if scheduling can be skipped...');
+      if (await _shouldSkipScheduling()) {
+        _logger.info('CACHE: Scheduling skipped due to cache hit');
+        return;
+      }
+      _logger.info('CACHE: Cache miss - proceeding with scheduling');
 
       // Resolve times and dates
       final currentDateString = await _userDataService.getValue<String>(
@@ -2478,9 +2481,9 @@ class NotificationService {
       
       final hash = hashInput.hashCode.toString();
       
-      // Debug logging (can be controlled via flag if needed)
-      _logger.debug('Hash input: $hashInput');
-      _logger.debug('Generated hash: $hash');
+      // Debug logging for cache troubleshooting
+      _logger.info('CACHE: Hash input: $hashInput');
+      _logger.info('CACHE: Generated hash: $hash');
       
       return hash;
     } catch (e) {
@@ -2501,7 +2504,7 @@ class NotificationService {
       if (_lastSchedulingHash == currentHash && _lastSchedulingTime != null) {
         final timeSinceLastScheduling = now.difference(_lastSchedulingTime!);
         if (timeSinceLastScheduling.inMinutes < 3) {
-          _logger.info('Skipping notification scheduling - no relevant changes detected (hash: ${currentHash.substring(0, 8)}..., last scheduled: ${timeSinceLastScheduling.inSeconds}s ago)');
+          _logger.info('CACHE: Skipping notification scheduling - no relevant changes detected (hash: ${currentHash.substring(0, 8)}..., last scheduled: ${timeSinceLastScheduling.inSeconds}s ago)');
           return true;
         } else {
           _logger.info('Hash unchanged but time window expired (${timeSinceLastScheduling.inMinutes}min), proceeding with scheduling');
@@ -2510,9 +2513,9 @@ class NotificationService {
         if (_lastSchedulingHash != null) {
           final oldHash = _lastSchedulingHash!.length > 8 ? _lastSchedulingHash!.substring(0, 8) : _lastSchedulingHash!;
           final newHash = currentHash.length > 8 ? currentHash.substring(0, 8) : currentHash;
-          _logger.info('Hash changed - Old: $oldHash, New: $newHash - proceeding with scheduling');
+          _logger.info('CACHE: Hash changed - Old: $oldHash, New: $newHash - proceeding with scheduling');
         } else {
-          _logger.info('First scheduling attempt - proceeding (hash: ${currentHash.substring(0, 8)}...)');
+          _logger.info('CACHE: First scheduling attempt - proceeding (hash: ${currentHash.substring(0, 8)}...)');
         }
       }
       
@@ -2528,7 +2531,7 @@ class NotificationService {
   void _updateSchedulingCache(String hash) {
     _lastSchedulingHash = hash;
     _lastSchedulingTime = DateTime.now();
-    _logger.info('Updated scheduling cache with hash: ${hash.substring(0, 8)}...');
+    _logger.info('CACHE: Updated scheduling cache with hash: ${hash.substring(0, 8)}...');
   }
   
   /// Clear scheduling cache (useful for debugging or manual refresh)

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-12T20:59:21.516Z",
+  "lastUpdated": "2025-09-12T22:13:56.929Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-12T20:59:21.506Z"
+    "timestamp": "2025-09-12T22:13:56.903Z"
   },
   "nodes": [
     {
@@ -4631,7 +4631,7 @@
             "data": {
               "asset": "assets/animations/achievement.riv",
               "zone": 2,
-              "align": "center",
+              "align": "top",
               "id": "achievement",
               "fit": "contain",
               "useDataBinding": true,
@@ -4672,21 +4672,6 @@
             "value": "",
             "event": "overlay_rive_update",
             "data": {
-              "zone": 4,
-              "id": "hands",
-              "bindingsString": {
-                "nested_hand_model/hand_shape": "ok",
-                "nested_hand_model/hand_animation": "reset",
-                "arm_swing_animation": "center"
-              }
-            }
-          },
-          {
-            "type": "trigger",
-            "key": "fx",
-            "value": "",
-            "event": "overlay_rive_update",
-            "data": {
               "zone": 2,
               "id": "achievement",
               "bindingsString": {
@@ -4699,7 +4684,7 @@
       },
       "type": "editable",
       "width": 308,
-      "height": 211,
+      "height": 189,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {

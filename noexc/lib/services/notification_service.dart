@@ -14,6 +14,32 @@ import '../constants/session_constants.dart';
 import 'service_locator.dart';
 import 'semantic_content_service.dart';
 
+/// Configuration constants for notification system behavior
+class NotificationConfig {
+  /// Maximum number of notifications iOS allows to be scheduled simultaneously
+  static const int maxIOSNotifications = 64;
+  
+  /// Maximum number of task days to schedule notifications for
+  static const int maxTaskDays = 2;
+  
+  /// Minimum time window (hours) below which 4-hour reference pattern is used
+  static const int minTimeWindowHours = 4;
+  
+  /// Default number of daily comeback notifications after task completion
+  static const int defaultDailyComebackCount = 3;
+  
+  /// Default number of weekly comeback notifications after task completion  
+  static const int defaultWeeklyComebackCount = 3;
+  
+  /// Primary notification ID for daily reminders
+  static const int dailyReminderNotificationId = 1001;
+  
+  /// Android notification channel configuration
+  static const String channelId = 'daily_reminders';
+  static const String channelName = 'Daily Task Reminders';
+  static const String channelDescription = 'Notifications to remind you about your daily task';
+}
+
 /// Simple test environment detection
 /// Returns true if we're running in a test environment
 bool _isTestEnvironment() {
@@ -48,18 +74,6 @@ class NotificationService {
   static Completer<void>? _schedulingCompleter;
   static bool _isScheduling = false;
 
-  static const int _dailyReminderNotificationId = 1001;
-  static const String _channelId = 'daily_reminders';
-  static const String _channelName = 'Daily Task Reminders';
-  static const String _channelDescription =
-      'Notifications to remind you about your daily task';
-  
-  // Configuration constants for new notification system
-  static const int _maxIOSNotifications = 64;
-  static const int _maxTaskDays = 2;
-  static const int _minTimeWindowHours = 4;
-  static const int _defaultDailyComebackCount = 3;
-  static const int _defaultWeeklyComebackCount = 3;
 
   NotificationService(
     this._userDataService, {
@@ -210,9 +224,9 @@ class NotificationService {
 
   Future<void> _createNotificationChannel() async {
     const androidChannel = AndroidNotificationChannel(
-      _channelId,
-      _channelName,
-      description: _channelDescription,
+      NotificationConfig.channelId,
+      NotificationConfig.channelName,
+      description: NotificationConfig.channelDescription,
       importance: Importance.high,
       playSound: true,
     );
@@ -643,7 +657,7 @@ class NotificationService {
         // Limit to maximum 2 days for task notifications
         int daysAdded = 0;
         for (var d = startDate;
-            !d.isAfter(end) && daysAdded < _maxTaskDays;
+            !d.isAfter(end) && daysAdded < NotificationConfig.maxTaskDays;
             d = d.add(const Duration(days: 1))) {
           if (_isActiveDay(d)) {
             datesToPlan.add(_fmtDate(d));
@@ -651,7 +665,7 @@ class NotificationService {
           }
         }
         
-        _logger.info('Task scheduling limited to ${datesToPlan.length} days (max $_maxTaskDays)');
+        _logger.info('Task scheduling limited to ${datesToPlan.length} days (max ${NotificationConfig.maxTaskDays})');
       } catch (e) {
         _logger.warning('Failed building horizon: $e');
         datesToPlan.clear();
@@ -661,7 +675,7 @@ class NotificationService {
       // Log notification budget information
       final availableBudget = _calculateNotificationBudget();
       final budgetPerDay = availableBudget ~/ datesToPlan.length;
-      _logger.info('Notification budget: $availableBudget total ($_maxIOSNotifications iOS limit - ${_defaultDailyComebackCount + _defaultWeeklyComebackCount} comeback notifications)');
+      _logger.info('Notification budget: $availableBudget total ($NotificationConfig.maxIOSNotifications iOS limit - ${NotificationConfig.defaultDailyComebackCount + NotificationConfig.defaultWeeklyComebackCount} comeback notifications)');
       _logger.info('Budget per day: $budgetPerDay notifications across ${datesToPlan.length} days');
 
       // Schedule multi-stage per planned day
@@ -803,15 +817,7 @@ class NotificationService {
       // Mid-window reminders based on intensity using new distribution system
       final window = end.difference(start).inMinutes;
       
-      _logger.info('=== PRE-LOOP DEBUG INFO ===');
-      _logger.info('Date: $dateStr, isToday: $isToday');
-      _logger.info('Start time: $start (${start.hour}:${start.minute.toString().padLeft(2, '0')})');
-      _logger.info('End time: $end (${end.hour}:${end.minute.toString().padLeft(2, '0')})');
-      _logger.info('Window duration: $window minutes (${(window / 60).toStringAsFixed(1)} hours)');
-      _logger.info('Current time: $now');
-      _logger.info('Intensity level: $intensity');
-      _logger.info('onlyFinalTodayGlobal: $onlyFinalTodayGlobal');
-      _logger.info('Total days count: $totalDaysCount');
+      _logger.info('Scheduling $dateStr: ${(window / 60).toStringAsFixed(1)}h window (${_formatNotificationTime(start)} to ${_formatNotificationTime(end)}), intensity $intensity');
       
       if (window > 0 && intensity > 0 && !(onlyFinalTodayGlobal && isToday)) {
         final windowHours = (window / 60).round(); // Move this outside the intensity check
@@ -825,28 +831,20 @@ class NotificationService {
           final availableBudget = _calculateNotificationBudget();
           final midNotificationCount = _getNotificationCountForIntensity(intensity, availableBudget, totalDaysCount);
           
-          _logger.info('=== QUADRATIC DISTRIBUTION DEBUG ===');
-          _logger.info('Available budget: $availableBudget');
-          _logger.info('Mid notification count for intensity $intensity: $midNotificationCount');
-          _logger.info('Window: $window minutes ($windowHours hours)');
-          
           midFractions = _generateQuadraticDistribution(midNotificationCount, windowHours);
           
-          _logger.info('Generated ${midFractions.length} quadratic fractions: $midFractions');
+          _logger.info('Generated ${midFractions.length} quadratic fractions for intensity $intensity ($windowHours hour window)');
           
-          // Calculate actual time intervals for debugging
-          if (midFractions.length > 1) {
-            final intervals = <int>[];
-            for (int i = 0; i < midFractions.length - 1; i++) {
-              final intervalMinutes = ((midFractions[i + 1] - midFractions[i]) * window).round();
-              intervals.add(intervalMinutes);
-            }
-            _logger.info('Time intervals between notifications (minutes): $intervals');
+          // Debug: Show notification spread
+          if (midFractions.isNotEmpty) {
+            final referenceWindow = _calculateReferenceWindowMinutes(windowHours);
+            final firstTime = (referenceWindow * midFractions.first).round();
+            final lastTime = (referenceWindow * midFractions.last).round();
+            _logger.info('Notification spread: ${firstTime}min to ${lastTime}min');
           }
         }
         
-        _logger.info('=== NOTIFICATION SCHEDULING LOOP ===');
-        _logger.info('Starting to schedule ${midFractions.length} mid notifications');
+        _logger.info('Scheduling ${midFractions.length} mid notifications');
         
         var idx = 0;
         var skippedCount = 0;
@@ -855,27 +853,27 @@ class NotificationService {
         for (final f in midFractions) {
           idx += 1;
           
-          // Calculate minutes from start using 4-hour reference window for short windows, actual window for long windows
-          final referenceWindow = windowHours <= _minTimeWindowHours ? _minTimeWindowHours * 60 : window;
+          // Calculate minutes from start using helper method for reference window calculation
+          final referenceWindow = _calculateReferenceWindowMinutes(windowHours);
           final minutesFromStart = (referenceWindow * f).round();
           
           final midTime = start.add(Duration(minutes: minutesFromStart));
           
-          _logger.info('Processing mid$idx: fraction=${f.toStringAsFixed(3)}, referenceWindow=${referenceWindow}min (${windowHours <= _minTimeWindowHours ? '4h ref' : 'actual'}), minutesFromStart=$minutesFromStart, scheduledTime=${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')}');
+          _logger.info('  SCHEDULING - notification time ${_formatNotificationTime(midTime)} (${minutesFromStart}min from start)');
           
           if (isToday && midTime.isBefore(now)) {
             skippedCount++;
-            _logger.info('  SKIPPED - notification time ${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')} is before current time ${now.hour}:${now.minute.toString().padLeft(2, '0')}');
+            _logger.info('  SKIPPED - notification time ${_formatNotificationTime(midTime)} is before current time ${_formatNotificationTime(now)}');
             continue;
           }
           
           if (midTime.isAfter(end)) {
             skippedCount++;
-            _logger.info('  SKIPPED - notification time ${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')} is after deadline ${end.hour}:${end.minute.toString().padLeft(2, '0')}');
+            _logger.info('  SKIPPED - notification time ${_formatNotificationTime(midTime)} is after deadline ${_formatNotificationTime(end)}');
             continue;
           }
           
-          _logger.info('  SCHEDULING - notification time ${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')} is valid');
+          _logger.info('  VALID - notification time ${_formatNotificationTime(midTime)} is valid');
           final result = await _scheduleSlot(
             dateStr,
             'mid$idx',
@@ -962,13 +960,13 @@ class NotificationService {
     try {
       // Skip the first 3 active dates used by comeback series to avoid collision
       DateTime cursor = DateTime.parse(endDateStr);
-      for (int i = 0; i < _defaultDailyComebackCount; i++) {
+      for (int i = 0; i < NotificationConfig.defaultDailyComebackCount; i++) {
         cursor = _nextActiveDateAfter(cursor);
       }
       
       // Schedule weekly comeback notifications
       final weeklyDates = <DateTime>[];
-      for (int week = 0; week < _defaultWeeklyComebackCount; week++) {
+      for (int week = 0; week < NotificationConfig.defaultWeeklyComebackCount; week++) {
         // Find next active date that's 7 days after previous
         cursor = _nextActiveDateAfter(cursor.add(const Duration(days: 6))); // 6 days + 1 from nextActiveDateAfter = 7 days
         weeklyDates.add(cursor);
@@ -1004,9 +1002,9 @@ class NotificationService {
 
         const details = NotificationDetails(
           android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
-            channelDescription: _channelDescription,
+            NotificationConfig.channelId,
+            NotificationConfig.channelName,
+            channelDescription: NotificationConfig.channelDescription,
             importance: Importance.high,
             priority: Priority.high,
           ),
@@ -1056,18 +1054,65 @@ class NotificationService {
 
   /// Calculate available notification budget after accounting for comeback notifications
   int _calculateNotificationBudget() {
-    final dailyComebackCount = _defaultDailyComebackCount;
-    final weeklyComebackCount = _defaultWeeklyComebackCount;
+    final dailyComebackCount = NotificationConfig.defaultDailyComebackCount;
+    final weeklyComebackCount = NotificationConfig.defaultWeeklyComebackCount;
     final totalComebackNotifications = dailyComebackCount + weeklyComebackCount;
-    return _maxIOSNotifications - totalComebackNotifications;
+    return NotificationConfig.maxIOSNotifications - totalComebackNotifications;
   }
 
-  /// Generate quadratic distribution for notifications - more frequent early, less frequent toward deadline
+  /// Calculate the reference window duration for notification distribution.
+  /// 
+  /// **Logic**: 
+  /// - Windows ≤4 hours: Use 4-hour reference (240 minutes) for consistent frequency
+  /// - Windows ≥5 hours: Use actual window duration
+  /// 
+  /// This ensures short windows maintain the same notification frequency as the 
+  /// beginning portion of a 4-hour window, preventing compressed/rushed scheduling.
+  /// 
+  /// [windowHours] The actual notification window duration in hours
+  /// Returns reference window duration in minutes for fraction-to-time conversion
+  int _calculateReferenceWindowMinutes(int windowHours) {
+    return windowHours <= NotificationConfig.minTimeWindowHours ? NotificationConfig.minTimeWindowHours * 60 : windowHours * 60;
+  }
+
+  /// Check if a window should use the 4-hour reference pattern.
+  /// 
+  /// Returns true for windows ≤4 hours, false for longer windows.
+  /// Used for conditional logic and logging throughout the scheduling system.
+  bool _usesFourHourReference(int windowHours) {
+    return windowHours <= NotificationConfig.minTimeWindowHours;
+  }
+
+  /// Format DateTime to HH:MM string for consistent time logging.
+  /// 
+  /// Provides uniform time formatting across all notification logging,
+  /// ensuring consistent display format (e.g., "09:05" not "9:5").
+  String _formatNotificationTime(DateTime dateTime) {
+    return '${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  /// Generate quadratic distribution for notifications with smart window handling.
+  /// 
+  /// This method creates a quadratic distribution of notification times that:
+  /// - Places more notifications early in the time window (higher density)
+  /// - Places fewer notifications toward the deadline (lower density)
+  /// - Uses a 4-hour reference pattern for windows ≤4 hours to maintain consistent frequency
+  /// - Uses actual window duration for longer windows (≥5 hours)
+  /// 
+  /// **Quadratic Formula**: Each notification position is transformed using x² where x is the
+  /// uniform position (0-1). This creates smaller gaps early and larger gaps later.
+  /// 
+  /// **Window Strategy**:
+  /// - Short windows (≤4h): Generate using 4-hour reference, filter during scheduling
+  /// - Long windows (≥5h): Generate for actual window duration
+  /// 
+  /// **Example**: 2-hour window gets same early frequency as first 2 hours of 4-hour window
+  /// 
+  /// [notificationCount] Number of notifications to distribute
+  /// [windowHours] Duration of the notification window in hours
+  /// Returns list of fractions (0.0-1.0) representing positions within reference window
   List<double> _generateQuadraticDistribution(int notificationCount, int windowHours) {
-    _logger.info('=== QUADRATIC DISTRIBUTION GENERATION ===');
-    _logger.info('Input notificationCount: $notificationCount');
-    _logger.info('Input windowHours: $windowHours');
-    _logger.info('Minimum window hours: $_minTimeWindowHours');
+    _logger.info('Generating quadratic distribution: $notificationCount notifications for ${windowHours}h window');
     
     if (notificationCount <= 1) {
       _logger.info('NotificationCount <= 1, returning [0.5]');
@@ -1077,38 +1122,38 @@ class NotificationService {
     final fractions = <double>[];
     
     // Determine which window duration to use for generation
-    final generationWindowHours = windowHours <= _minTimeWindowHours ? _minTimeWindowHours : windowHours;
+    final generationWindowHours = windowHours <= NotificationConfig.minTimeWindowHours ? NotificationConfig.minTimeWindowHours : windowHours;
     _logger.info('Using $generationWindowHours hours for quadratic generation (actual window: $windowHours hours)');
     
     // Use quadratic formula to create decreasing density (more notifications early, fewer later)
     // We want smaller intervals early (more frequent) and larger intervals later (less frequent)
     
-    _logger.info('Generating $notificationCount quadratic positions for ${generationWindowHours}h reference:');
     for (int i = 0; i < notificationCount; i++) {
-      // Uniform position from 0 to 1 (0 = start, 1 = deadline)
+      // Calculate uniform position from 0 to 1 (0 = start, 1 = deadline)
+      // Using (i+1)/(n+1) ensures no notifications exactly at start/end boundaries
       final uniformPosition = (i + 1) / (notificationCount + 1);
       
-      // Apply quadratic transformation for decreasing density
-      // Formula: x^2 creates smaller gaps early, larger gaps later
-      // This gives more notifications early in the time window
+      // Apply quadratic transformation for decreasing density over time
+      // Formula: f(x) = x² where x ∈ [0,1]
+      // 
+      // Mathematical effect:
+      // - Early positions (x < 0.5) become even earlier (x² < x)
+      // - Later positions (x > 0.7) become much later (x² >> x)
+      // - Creates exponentially increasing gaps between notifications
+      // 
+      // Example with 4 notifications:
+      // Uniform:   [0.20, 0.40, 0.60, 0.80]
+      // Quadratic: [0.04, 0.16, 0.36, 0.64] → More notifications in first half
       final transformedPosition = uniformPosition * uniformPosition;
       
       fractions.add(transformedPosition);
-      
-      _logger.info('  Position $i: uniform=${uniformPosition.toStringAsFixed(3)} -> quadratic=${transformedPosition.toStringAsFixed(3)}');
     }
     
-    _logger.info('Generated ${fractions.length} raw fractions: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
+    _logger.info('Generated ${fractions.length} quadratic fractions');
     
     // For shorter windows (<=4 hours), we use the 4-hour reference pattern and filter during scheduling
     // For longer windows (>4 hours), we use the actual window distribution
-    if (windowHours <= _minTimeWindowHours) {
-      _logger.info('Window $windowHours <= minimum $_minTimeWindowHours hours: using 4-hour reference pattern (will filter during scheduling)');
-    } else {
-      _logger.info('Window $windowHours > minimum $_minTimeWindowHours hours: using actual window distribution');
-    }
-    
-    _logger.info('Final quadratic fractions returned: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
+    _logger.info('Using ${_usesFourHourReference(windowHours) ? '4h reference' : 'actual window'} distribution');
     return fractions;
   }
 
@@ -1211,9 +1256,9 @@ class NotificationService {
 
       const details = NotificationDetails(
         android: AndroidNotificationDetails(
-          _channelId,
-          _channelName,
-          channelDescription: _channelDescription,
+          NotificationConfig.channelId,
+          NotificationConfig.channelName,
+          channelDescription: NotificationConfig.channelDescription,
           importance: Importance.high,
           priority: Priority.high,
         ),
@@ -1669,19 +1714,19 @@ class NotificationService {
     try {
       // Check if the specific deadline reminder exists
       final pendingBefore = await getPendingNotifications();
-      final deadlineReminder = pendingBefore.where((n) => n.id == _dailyReminderNotificationId).firstOrNull;
+      final deadlineReminder = pendingBefore.where((n) => n.id == NotificationConfig.dailyReminderNotificationId).firstOrNull;
       
       if (deadlineReminder != null) {
-        _logger.info('Found deadline reminder notification ID:$_dailyReminderNotificationId to cancel');
+        _logger.info('Found deadline reminder notification ID:$NotificationConfig.dailyReminderNotificationId to cancel');
       } else {
-        _logger.info('No deadline reminder notification found with ID:$_dailyReminderNotificationId');
+        _logger.info('No deadline reminder notification found with ID:$NotificationConfig.dailyReminderNotificationId');
       }
       
-      await _notifications.cancel(_dailyReminderNotificationId);
+      await _notifications.cancel(NotificationConfig.dailyReminderNotificationId);
       
       // Verify specific cancellation
       final pendingAfter = await getPendingNotifications();
-      final stillExists = pendingAfter.any((n) => n.id == _dailyReminderNotificationId);
+      final stillExists = pendingAfter.any((n) => n.id == NotificationConfig.dailyReminderNotificationId);
       
       await _userDataService.storeValue(
         StorageKeys.notificationIsEnabled,
@@ -1689,9 +1734,9 @@ class NotificationService {
       );
       
       if (!stillExists && deadlineReminder != null) {
-        _logger.info('Deadline reminder canceled successfully (ID:$_dailyReminderNotificationId)');
+        _logger.info('Deadline reminder canceled successfully (ID:$NotificationConfig.dailyReminderNotificationId)');
       } else if (stillExists) {
-        _logger.warning('Deadline reminder ID:$_dailyReminderNotificationId still exists after cancellation - platform may not have processed the request');
+        _logger.warning('Deadline reminder ID:$NotificationConfig.dailyReminderNotificationId still exists after cancellation - platform may not have processed the request');
       } else {
         _logger.info('Deadline reminder cancellation completed (notification was not found)');
       }
@@ -2330,10 +2375,10 @@ class NotificationService {
         'supportsRepeating': true,
         'supportsExactAlarms': _supportsExactAlarms(),
         'requiresNotificationPermission': _requiresNotificationPermission(),
-        'channelId': _channelId,
-        'channelName': _channelName,
-        'channelDescription': _channelDescription,
-        'dailyReminderNotificationId': _dailyReminderNotificationId,
+        'channelId': NotificationConfig.channelId,
+        'channelName': NotificationConfig.channelName,
+        'channelDescription': NotificationConfig.channelDescription,
+        'dailyReminderNotificationId': NotificationConfig.dailyReminderNotificationId,
         'isTestEnvironment': _isTestEnvironment(),
         'platformLimitations': limitations,
       };

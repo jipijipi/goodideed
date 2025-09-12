@@ -56,17 +56,17 @@ void main() {
         expect(callbackLog, contains('onAppResumedFromEndState'));
       });
 
-      test('should clear end state flag when callback is triggered', () async {
+      test('should not clear end state flag in lifecycle (script clears later)', () async {
         // Set up: mark as at end state
         await sessionService.setEndState(true);
         expect(await sessionService.isAtEndState(), true);
-        
+
         // App goes to background and returns
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.paused);
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.resumed);
-        
-        // End state should be cleared
-        expect(await sessionService.isAtEndState(), false);
+
+        // Lifecycle no longer clears the flag; script does it when sequence runs
+        expect(await sessionService.isAtEndState(), true);
       });
 
       test('should handle inactive state as background state', () async {

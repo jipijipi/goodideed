@@ -113,12 +113,19 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
   Future<void> _handleAppResumedFromEndState() async {
     try {
       logger.info('🔄 App resumed from end state, triggering re-engagement', component: LogComponent.ui);
-      logger.info('📱 Current sequence before switch: $_currentSequenceId', component: LogComponent.ui);
-      
-      await switchSequence('welcome_seq');
-      
-      logger.info('✅ Successfully switched to welcome_seq', component: LogComponent.ui);
-      logger.info('📱 Current sequence after switch: $_currentSequenceId', component: LogComponent.ui);
+      final defaultSeq = AppConstants.defaultSequenceId;
+      final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
+      logger.info('📱 Active sequence on resume: ${activeSeq ?? 'none'}; UI seq: $_currentSequenceId', component: LogComponent.ui);
+
+      if (activeSeq == defaultSeq) {
+        logger.info('🔁 Already on default sequence → refreshing', component: LogComponent.ui);
+        await resetChat(); // Refresh current default sequence like a relaunch
+      } else {
+        logger.info('➡️ Switching to default sequence: $defaultSeq', component: LogComponent.ui);
+        await switchSequence(defaultSeq);
+      }
+
+      logger.info('✅ Resume handling complete. UI seq: $_currentSequenceId', component: LogComponent.ui);
     } catch (e) {
       logger.error('❌ Failed to handle app resume from end state: $e', component: LogComponent.ui);
     }

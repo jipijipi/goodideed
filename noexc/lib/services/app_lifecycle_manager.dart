@@ -1,10 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'session_service.dart';
+import 'logger_service.dart';
 
 /// Manages app lifecycle events and triggers re-engagement when returning from end states
 class AppLifecycleManager {
   final SessionService sessionService;
   final Future<void> Function() onAppResumedFromEndState;
+  final LoggerService _logger = LoggerService.instance;
   
   bool _wasInBackground = false;
 
@@ -15,24 +17,24 @@ class AppLifecycleManager {
 
   /// Handle app lifecycle state changes
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    print('🔄 AppLifecycleManager: State changed to $state');
+    _logger.info('App lifecycle state: $state', component: LogComponent.ui);
     
     switch (state) {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
       case AppLifecycleState.hidden:
-        print('📱 AppLifecycleManager: App went to background (state: $state)');
+        _logger.debug('App moved to background ($state)', component: LogComponent.ui);
         _wasInBackground = true;
         break;
       case AppLifecycleState.resumed:
-        print('📱 AppLifecycleManager: App resumed, wasInBackground: $_wasInBackground');
+        _logger.debug('App resumed. wasInBackground=$_wasInBackground', component: LogComponent.ui);
         if (_wasInBackground) {
           await _handleAppResumed();
           _wasInBackground = false;
         }
         break;
       case AppLifecycleState.detached:
-        print('📱 AppLifecycleManager: App detached');
+        _logger.debug('App detached', component: LogComponent.ui);
         break;
     }
   }
@@ -41,20 +43,16 @@ class AppLifecycleManager {
   Future<void> _handleAppResumed() async {
     final isAtEndState = await sessionService.isAtEndState();
     
-    print('🔍 AppLifecycleManager: Checking end state - isAtEndState: $isAtEndState');
+    _logger.semantic('resume_detected isAtEndState=$isAtEndState');
     
     if (isAtEndState) {
-      print('✅ AppLifecycleManager: At end state, triggering re-engagement');
-      
-      // Clear the end state flag first
-      await sessionService.clearEndState();
-      print('🧹 AppLifecycleManager: Cleared end state flag');
-      
+      _logger.info('At end state on resume → trigger re-engage', component: LogComponent.ui);
+      // Let the script clear the flag via dataAction; do not clear here.
       // Trigger the re-engagement callback
       await onAppResumedFromEndState();
-      print('🎯 AppLifecycleManager: Re-engagement callback completed');
+      _logger.info('Re-engagement callback completed', component: LogComponent.ui);
     } else {
-      print('❌ AppLifecycleManager: Not at end state, no action needed');
+      _logger.debug('Not at end state on resume → no action', component: LogComponent.ui);
     }
   }
 }

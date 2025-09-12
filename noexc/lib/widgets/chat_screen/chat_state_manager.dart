@@ -105,8 +105,6 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     );
   }
 
-  /// Handle sequence change notifications (engine-driven)
-  void _onSequenceChange(String sequenceId) {}
 
   /// Handle app lifecycle state changes
   @override

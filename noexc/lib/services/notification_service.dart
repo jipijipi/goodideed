@@ -13,32 +13,8 @@ import 'dart:convert';
 import '../constants/session_constants.dart';
 import 'service_locator.dart';
 import 'semantic_content_service.dart';
+import '../constants/notification_constants.dart';
 
-/// Configuration constants for notification system behavior
-class NotificationConfig {
-  /// Maximum number of notifications iOS allows to be scheduled simultaneously
-  static const int maxIOSNotifications = 64;
-  
-  /// Maximum number of task days to schedule notifications for
-  static const int maxTaskDays = 2;
-  
-  /// Minimum time window (hours) below which 4-hour reference pattern is used
-  static const int minTimeWindowHours = 4;
-  
-  /// Default number of daily comeback notifications after task completion
-  static const int defaultDailyComebackCount = 3;
-  
-  /// Default number of weekly comeback notifications after task completion  
-  static const int defaultWeeklyComebackCount = 3;
-  
-  /// Primary notification ID for daily reminders
-  static const int dailyReminderNotificationId = 1001;
-  
-  /// Android notification channel configuration
-  static const String channelId = 'daily_reminders';
-  static const String channelName = 'Daily Task Reminders';
-  static const String channelDescription = 'Notifications to remind you about your daily task';
-}
 
 /// Simple test environment detection
 /// Returns true if we're running in a test environment
@@ -73,6 +49,10 @@ class NotificationService {
   // Scheduling synchronization to prevent concurrent notification scheduling
   static Completer<void>? _schedulingCompleter;
   static bool _isScheduling = false;
+
+  // Notification caching to prevent unnecessary recalculation
+  String? _lastSchedulingHash;
+  DateTime? _lastSchedulingTime;
 
 
   NotificationService(
@@ -546,6 +526,11 @@ class NotificationService {
     _logger.info('Platform: ${Platform.operatingSystem}');
     if (Platform.isIOS) {
       _logger.info('iOS Simulator: ${_isIOSSimulator()}');
+    }
+
+    // Check if we can skip scheduling due to caching
+    if (await _shouldSkipScheduling()) {
+      return;
     }
 
     // Log existing notifications before scheduling
@@ -2454,5 +2439,67 @@ class NotificationService {
         'timestamp': DateTime.now().toIso8601String(),
       };
     }
+  }
+
+  /// Generate a hash of key scheduling parameters to detect when rescheduling is needed
+  Future<String> _generateSchedulingHash() async {
+    try {
+      // Collect all parameters that affect notification scheduling
+      final intensity = await _userDataService.getValue<int>('task.remindersIntensity') ?? 0;
+      final currentDate = await _userDataService.getValue<String>(StorageKeys.taskCurrentDate) ?? '';
+      final startTime = await _getStartTimeAsString();
+      final deadlineTime = await _getDeadlineTimeAsString(); 
+      final activeDays = await _userDataService.getValue<List<String>>('task.activeDays') ?? [];
+      
+      // Create a stable hash input
+      final hashInput = [
+        'intensity:$intensity',
+        'currentDate:$currentDate',
+        'startTime:$startTime',
+        'deadlineTime:$deadlineTime',
+        'activeDays:${activeDays.join(',')}',
+      ].join('|');
+      
+      // Generate simple hash of the input string
+      return hashInput.hashCode.toString();
+    } catch (e) {
+      _logger.warning('Failed to generate scheduling hash: $e');
+      // Return timestamp as fallback to force rescheduling on error
+      return DateTime.now().millisecondsSinceEpoch.toString();
+    }
+  }
+  
+  /// Check if notifications need to be rescheduled based on parameter changes
+  Future<bool> _shouldSkipScheduling() async {
+    try {
+      final currentHash = await _generateSchedulingHash();
+      final now = DateTime.now();
+      
+      // Skip if hash hasn't changed and we scheduled recently (within last 5 minutes)
+      if (_lastSchedulingHash == currentHash && _lastSchedulingTime != null) {
+        final timeSinceLastScheduling = now.difference(_lastSchedulingTime!);
+        if (timeSinceLastScheduling.inMinutes < 5) {
+          _logger.info('Skipping notification scheduling - no relevant changes detected (hash: ${currentHash.substring(0, 8)}...)');
+          return true;
+        }
+      }
+      
+      // Update cache
+      _lastSchedulingHash = currentHash;
+      _lastSchedulingTime = now;
+      
+      _logger.info('Proceeding with notification scheduling (hash: ${currentHash.substring(0, 8)}...)');
+      return false;
+    } catch (e) {
+      _logger.warning('Failed to check scheduling cache: $e - proceeding with scheduling');
+      return false;
+    }
+  }
+  
+  /// Clear scheduling cache (useful for debugging or manual refresh)
+  void clearSchedulingCache() {
+    _lastSchedulingHash = null;
+    _lastSchedulingTime = null;
+    _logger.info('Notification scheduling cache cleared');
   }
 }

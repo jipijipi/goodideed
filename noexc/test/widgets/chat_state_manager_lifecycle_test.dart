@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noexc/widgets/chat_screen/chat_state_manager.dart';
 import 'package:noexc/services/service_locator.dart';
-import 'package:noexc/services/app_lifecycle_manager.dart';
 import '../test_helpers.dart';
 
 void main() {
@@ -55,9 +54,6 @@ void main() {
         
         // Set end state
         await ServiceLocator.instance.sessionService.setEndState(true);
-        
-        // Track current sequence before and after
-        final initialSequence = stateManager.currentSequenceId;
         
         // Simulate app going to background and returning
         await stateManager.didChangeAppLifecycleState(AppLifecycleState.paused);

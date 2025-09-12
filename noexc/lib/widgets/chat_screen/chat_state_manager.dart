@@ -33,7 +33,11 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       _messageDisplayManager.scrollController;
   GlobalKey<AnimatedListState> get animatedListKey =>
       _messageDisplayManager.animatedListKey;
-  String get currentSequenceId => _currentSequenceId;
+  String get currentSequenceId {
+    // Prefer the authoritative sequence from ChatService to avoid drift
+    return ServiceLocator.instance.chatService.currentSequence?.sequenceId ??
+        _currentSequenceId;
+  }
   ChatSequence? get currentSequence =>
       ServiceLocator.instance.chatService.currentSequence;
 
@@ -115,7 +119,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       logger.info('🔄 App resumed from end state, triggering re-engagement', component: LogComponent.ui);
       final defaultSeq = AppConstants.defaultSequenceId;
       final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
-      logger.info('📱 Active sequence on resume: ${activeSeq ?? 'none'}; UI seq: $_currentSequenceId', component: LogComponent.ui);
+      logger.info('📱 Active sequence on resume: ${activeSeq ?? 'none'}; UI seq: $currentSequenceId', component: LogComponent.ui);
 
       if (activeSeq == defaultSeq) {
         logger.info('🔁 Already on default sequence → refreshing', component: LogComponent.ui);
@@ -125,7 +129,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
         await switchSequence(defaultSeq);
       }
 
-      logger.info('✅ Resume handling complete. UI seq: $_currentSequenceId', component: LogComponent.ui);
+      logger.info('✅ Resume handling complete. UI seq: $currentSequenceId', component: LogComponent.ui);
     } catch (e) {
       logger.error('❌ Failed to handle app resume from end state: $e', component: LogComponent.ui);
     }
@@ -146,8 +150,9 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       return;
     }
     
-    if (sequenceId == _currentSequenceId) {
-      logger.info('⚠️ switchSequence: Already on sequence $sequenceId, skipping', component: LogComponent.ui);
+    final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
+    if (sequenceId == _currentSequenceId && activeSeq == sequenceId) {
+      logger.info('⚠️ switchSequence: Already on active sequence $sequenceId, skipping', component: LogComponent.ui);
       return;
     }
 

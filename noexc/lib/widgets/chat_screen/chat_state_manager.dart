@@ -123,10 +123,11 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
   /// Handle app resuming from end state - trigger re-engagement
   Future<void> _handleAppResumedFromEndState() async {
     try {
-      logger.info('🔄 App resumed from end state, triggering re-engagement', component: LogComponent.ui);
+      // Essential log only
+      logger.info('resume_reengage_handling', component: LogComponent.ui);
       final defaultSeq = AppConstants.defaultSequenceId;
       final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
-      logger.info('📱 Active sequence on resume: ${activeSeq ?? 'none'}; UI seq: $currentSequenceId', component: LogComponent.ui);
+      logger.debug('active_seq=${activeSeq ?? 'none'} ui_seq=$currentSequenceId', component: LogComponent.ui);
 
       // Busy guard: don't interrupt if user is mid-interaction
       final hasTextInput = _messageDisplayManager.currentTextInputMessage != null;
@@ -135,12 +136,12 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       );
       final panelOpen = _isPanelVisible;
       if (hasTextInput || hasUnansweredChoice || panelOpen) {
-        logger.info('⏸️ Resume skipped (busy: input=${hasTextInput}, choice=${hasUnansweredChoice}, panel=$panelOpen)', component: LogComponent.ui);
+        logger.info('reengage_skipped busy input=$hasTextInput choice=$hasUnansweredChoice panel=$panelOpen', component: LogComponent.ui);
         return;
       }
 
       // Append mode: start default sequence and append its messages without clearing
-      logger.info('➕ Appending default sequence: $defaultSeq', component: LogComponent.ui);
+      logger.info('reengage_target append sequence=$defaultSeq', component: LogComponent.ui);
       final flow = await ServiceLocator.instance.chatService.start(defaultSeq);
       await _messageDisplayManager.displayMessages(
         flow.messages,
@@ -148,9 +149,9 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
         notifyListeners,
       );
 
-      logger.info('✅ Resume handling complete. UI seq: $currentSequenceId', component: LogComponent.ui);
+      logger.info('reengage_completed seq=$currentSequenceId', component: LogComponent.ui);
     } catch (e) {
-      logger.error('❌ Failed to handle app resume from end state: $e', component: LogComponent.ui);
+      logger.error('reengage_failed error=$e', component: LogComponent.ui);
     }
   }
 
@@ -280,6 +281,11 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
 
     // Unregister lifecycle observer
     WidgetsBinding.instance.removeObserver(this);
+
+    // Dispose lifecycle manager debounce timers
+    try {
+      _lifecycleManager.dispose();
+    } catch (_) {}
 
     // Dispose component managers (ServiceLocator disposed at app level)
     _messageDisplayManager.dispose();

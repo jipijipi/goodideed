@@ -20,17 +20,23 @@ class AppLifecycleManager {
 
   /// Handle app lifecycle state changes
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
-    _logger.info('App lifecycle state: $state', component: LogComponent.ui);
+    // Keep lifecycle noise minimal; only log resume at info level
+    if (state == AppLifecycleState.resumed) {
+      _logger.info('lifecycle_resumed', component: LogComponent.ui);
+    } else {
+      _logger.debug('lifecycle_state=$state', component: LogComponent.ui);
+    }
     
     switch (state) {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
       case AppLifecycleState.hidden:
-        _logger.debug('App moved to background ($state)', component: LogComponent.ui);
+        // Background states logged at debug level only
+        _logger.debug('background_state=$state', component: LogComponent.ui);
         _wasInBackground = true;
         break;
       case AppLifecycleState.resumed:
-        _logger.debug('App resumed. wasInBackground=$_wasInBackground', component: LogComponent.ui);
+        _logger.debug('resumed wasInBackground=$_wasInBackground', component: LogComponent.ui);
         if (_wasInBackground) {
           // Debounce resume handling to avoid flapping
           _resumeDebounce?.cancel();
@@ -54,17 +60,24 @@ class AppLifecycleManager {
   /// Handle app resuming from background
   Future<void> _handleAppResumed() async {
     final isAtEndState = await sessionService.isAtEndState();
-    
-    _logger.semantic('resume_detected isAtEndState=$isAtEndState');
-    
+
+    _logger.semantic('resume_detected end_state=$isAtEndState');
+
     if (isAtEndState) {
-      _logger.info('At end state on resume → trigger re-engage', component: LogComponent.ui);
+      _logger.info('reengage_start', component: LogComponent.ui);
       // Let the script clear the flag via dataAction; do not clear here.
       // Trigger the re-engagement callback
       await onAppResumedFromEndState();
-      _logger.info('Re-engagement callback completed', component: LogComponent.ui);
+      _logger.info('reengage_done', component: LogComponent.ui);
     } else {
-      _logger.debug('Not at end state on resume → no action', component: LogComponent.ui);
+      // No action needed if not at end-state
+      _logger.debug('reengage_skip end_state=false', component: LogComponent.ui);
     }
+  }
+
+  /// Dispose and cancel any pending timers
+  void dispose() {
+    _resumeDebounce?.cancel();
+    _resumeDebounce = null;
   }
 }

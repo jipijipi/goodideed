@@ -29,12 +29,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _onStateChanged() {
-    print('🔔 ChatScreen: _onStateChanged called, mounted: $mounted');
-    print('📱 ChatScreen: Current sequence: ${_stateManager.currentSequenceId}');
-    print('📝 ChatScreen: Message count: ${_stateManager.displayedMessages.length}');
-    
+    // Reduce noise: avoid print; rely on LoggerService where necessary
     if (mounted) {
-      print('✅ ChatScreen: Calling setState to rebuild UI');
       setState(() {
         // Trigger rebuild when state manager notifies changes
       });
@@ -43,8 +39,6 @@ class _ChatScreenState extends State<ChatScreen> {
       if (_stateManager.isPanelVisible) {
         _panelKey.currentState?.refreshData();
       }
-    } else {
-      print('❌ ChatScreen: Widget not mounted, skipping setState');
     }
   }
 

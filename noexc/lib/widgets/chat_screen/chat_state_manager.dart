@@ -21,7 +21,6 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
   // State
   bool _isPanelVisible = false;
   bool _disposed = false;
-  String _currentSequenceId = AppConstants.defaultSequenceId;
 
   // Getters - delegate to appropriate managers
   List<ChatMessage> get displayedMessages =>
@@ -34,9 +33,9 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
   GlobalKey<AnimatedListState> get animatedListKey =>
       _messageDisplayManager.animatedListKey;
   String get currentSequenceId {
-    // Prefer the authoritative sequence from ChatService to avoid drift
+    // Authoritative sequence from engine; fallback to default for UI
     return ServiceLocator.instance.chatService.currentSequence?.sequenceId ??
-        _currentSequenceId;
+        AppConstants.defaultSequenceId;
   }
   ChatSequence? get currentSequence =>
       ServiceLocator.instance.chatService.currentSequence;
@@ -66,7 +65,6 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     // Keep UI sequence in sync with engine transitions
     ServiceLocator.instance.chatService.setOnSequenceChanged((seqId) {
       logger.debug('Sequence changed (engine) → $seqId', component: LogComponent.ui);
-      _onSequenceChange(seqId);
       notifyListeners();
     });
 
@@ -76,7 +74,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     await _messageDisplayManager.loadAndDisplayMessages(
       ServiceLocator.instance.chatService,
       ServiceLocator.instance.messageQueue,
-      _currentSequenceId,
+      AppConstants.defaultSequenceId,
       notifyListeners,
     );
   }
@@ -89,8 +87,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     await _userInteractionHandler.handleChoiceSelection(
       choice,
       choiceMessage,
-      _currentSequenceId,
-      _onSequenceChange,
+      currentSequenceId,
       notifyListeners,
     );
   }
@@ -107,10 +104,8 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     );
   }
 
-  /// Handle sequence change notifications
-  void _onSequenceChange(String sequenceId) {
-    _currentSequenceId = sequenceId;
-  }
+  /// Handle sequence change notifications (engine-driven)
+  void _onSequenceChange(String sequenceId) {}
 
   /// Handle app lifecycle state changes
   @override
@@ -163,7 +158,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Switch to a different chat sequence
   Future<void> switchSequence(String sequenceId) async {
-    logger.debug('switchSequence from=$_currentSequenceId to=$sequenceId', component: LogComponent.ui);
+    logger.debug('switchSequence to=$sequenceId', component: LogComponent.ui);
     
     if (_disposed) {
       logger.warning('❌ switchSequence: ChatStateManager is disposed', component: LogComponent.ui);
@@ -171,7 +166,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     }
     
     final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
-    if (sequenceId == _currentSequenceId && activeSeq == sequenceId) {
+    if (activeSeq == sequenceId) {
       logger.debug('switchSequence skip (already on $sequenceId)', component: LogComponent.ui);
       return;
     }
@@ -181,21 +176,18 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       // Clear current state
       _messageDisplayManager.clearMessages();
       
-      logger.debug('switchSequence set currentSequenceId=$sequenceId', component: LogComponent.ui);
-      _currentSequenceId = sequenceId;
-
       logger.debug('switchSequence load/display for $sequenceId', component: LogComponent.ui);
       // Load new sequence
       await _messageDisplayManager.loadAndDisplayMessages(
         ServiceLocator.instance.chatService,
         ServiceLocator.instance.messageQueue,
-        _currentSequenceId,
+        sequenceId,
         notifyListeners,
       );
       logger.debug('switchSequence notifyListeners', component: LogComponent.ui);
       notifyListeners();
       
-      logger.debug('switchSequence done -> $_currentSequenceId', component: LogComponent.ui);
+      logger.debug('switchSequence done -> $sequenceId', component: LogComponent.ui);
     } catch (e) {
       logger.error('❌ Error switching sequence: $e', component: LogComponent.ui);
     }
@@ -206,10 +198,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     if (_disposed) return;
 
     try {
-      logger.debug(
-        'Resetting chat sequence: $_currentSequenceId',
-        component: LogComponent.ui,
-      );
+      logger.debug('Resetting chat sequence: $currentSequenceId', component: LogComponent.ui);
 
       // Clear current state
       _messageDisplayManager.clearMessages();
@@ -218,7 +207,7 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       await _messageDisplayManager.loadAndDisplayMessages(
         ServiceLocator.instance.chatService,
         ServiceLocator.instance.messageQueue,
-        _currentSequenceId,
+        currentSequenceId,
         notifyListeners,
       );
 
@@ -244,16 +233,13 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
     try {
       // Force reload sequence from JSON file
       await ServiceLocator.instance.chatService.loadSequence(
-        _currentSequenceId,
+        currentSequenceId,
       );
 
       // Reset chat with newly loaded sequence
       await resetChat();
 
-      logger.info(
-        'Sequence reloaded: $_currentSequenceId',
-        component: LogComponent.ui,
-      );
+      logger.info('Sequence reloaded: $currentSequenceId', component: LogComponent.ui);
     } catch (e) {
       logger.error('Failed to reload sequence: $e', component: LogComponent.ui);
     }

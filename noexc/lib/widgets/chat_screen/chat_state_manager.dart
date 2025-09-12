@@ -112,10 +112,15 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
   /// Handle app resuming from end state - trigger re-engagement
   Future<void> _handleAppResumedFromEndState() async {
     try {
-      logger.info('App resumed from end state, triggering re-engagement', component: LogComponent.ui);
+      logger.info('🔄 App resumed from end state, triggering re-engagement', component: LogComponent.ui);
+      logger.info('📱 Current sequence before switch: $_currentSequenceId', component: LogComponent.ui);
+      
       await switchSequence('welcome_seq');
+      
+      logger.info('✅ Successfully switched to welcome_seq', component: LogComponent.ui);
+      logger.info('📱 Current sequence after switch: $_currentSequenceId', component: LogComponent.ui);
     } catch (e) {
-      logger.error('Failed to handle app resume from end state: $e', component: LogComponent.ui);
+      logger.error('❌ Failed to handle app resume from end state: $e', component: LogComponent.ui);
     }
   }
 
@@ -127,13 +132,27 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Switch to a different chat sequence
   Future<void> switchSequence(String sequenceId) async {
-    if (_disposed || sequenceId == _currentSequenceId) return;
+    logger.info('🔄 switchSequence called: from $_currentSequenceId to $sequenceId', component: LogComponent.ui);
+    
+    if (_disposed) {
+      logger.warning('❌ switchSequence: ChatStateManager is disposed', component: LogComponent.ui);
+      return;
+    }
+    
+    if (sequenceId == _currentSequenceId) {
+      logger.info('⚠️ switchSequence: Already on sequence $sequenceId, skipping', component: LogComponent.ui);
+      return;
+    }
 
     try {
+      logger.info('🧹 Clearing current messages...', component: LogComponent.ui);
       // Clear current state
       _messageDisplayManager.clearMessages();
+      
+      logger.info('📝 Setting current sequence ID to: $sequenceId', component: LogComponent.ui);
       _currentSequenceId = sequenceId;
 
+      logger.info('📥 Loading and displaying messages for: $sequenceId', component: LogComponent.ui);
       // Load new sequence
       await _messageDisplayManager.loadAndDisplayMessages(
         ServiceLocator.instance.chatService,
@@ -142,9 +161,12 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
         notifyListeners,
       );
 
+      logger.info('🔔 Calling notifyListeners to update UI...', component: LogComponent.ui);
       notifyListeners();
+      
+      logger.info('✅ switchSequence completed successfully to: $_currentSequenceId', component: LogComponent.ui);
     } catch (e) {
-      logger.error('Error switching sequence: $e', component: LogComponent.ui);
+      logger.error('❌ Error switching sequence: $e', component: LogComponent.ui);
     }
   }
 

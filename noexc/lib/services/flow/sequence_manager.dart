@@ -19,6 +19,7 @@ import '../logger_service.dart';
 class SequenceManager implements MessageProvider {
   final SequenceLoader _sequenceLoader;
   final logger = LoggerService.instance;
+  void Function(String sequenceId)? _onSequenceChanged;
 
   /// Currently loaded sequence (null if none loaded)
   ChatSequence? get currentSequence => _sequenceLoader.currentSequence;
@@ -29,18 +30,29 @@ class SequenceManager implements MessageProvider {
   SequenceManager({required SequenceLoader sequenceLoader})
     : _sequenceLoader = sequenceLoader;
 
+  /// Subscribe to sequence change events
+  void setOnSequenceChanged(void Function(String sequenceId) callback) {
+    _onSequenceChanged = callback;
+  }
+
   /// Load a sequence by ID
   ///
   /// This operation is atomic - either succeeds completely or throws an exception.
   /// If it throws, the previous sequence state is preserved.
   Future<void> loadSequence(String sequenceId) async {
-    logger.info('Loading sequence: $sequenceId');
+    logger.debug('Loading sequence: $sequenceId');
 
     try {
       final sequence = await _sequenceLoader.loadSequence(sequenceId);
-      logger.info(
+      logger.debug(
         'Successfully loaded sequence: $sequenceId with ${sequence.messages.length} messages',
       );
+      // Notify listeners about sequence change
+      try {
+        _onSequenceChanged?.call(sequenceId);
+      } catch (e) {
+        logger.warning('Sequence change callback failed: $e');
+      }
     } catch (e) {
       logger.error('Failed to load sequence $sequenceId: $e');
       rethrow;

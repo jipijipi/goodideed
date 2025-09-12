@@ -27,7 +27,6 @@ class UserInteractionHandler {
     Choice choice,
     ChatMessage choiceMessage,
     String currentSequenceId,
-    Function(String) onSequenceChange,
     VoidCallback notifyListeners,
   ) async {
     // Persist and continue flow via facade
@@ -38,10 +37,9 @@ class UserInteractionHandler {
     notifyListeners();
 
     try {
-      // Track sequence change intent for UI state
+      // If choice targets a new sequence, engine will notify via sequence-changed callback
       if (choice.sequenceId != null && choice.sequenceId!.isNotEmpty) {
         _messageDisplayManager.currentTextInputMessage = null;
-        onSequenceChange(choice.sequenceId!);
       }
 
       final flow = await _chatService.applyChoiceAndContinue(

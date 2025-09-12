@@ -83,7 +83,7 @@ class FlowOrchestrator {
   /// 4. Render messages for display
   /// 5. Return result with continuation information
   Future<FlowResponse> processFrom(int startId) async {
-    logger.info('Starting flow processing from message ID: $startId');
+    logger.debug('flow_start from_id=$startId');
 
     int currentStartId = startId;
     int processingCycles = 0;
@@ -172,7 +172,7 @@ class FlowOrchestrator {
       }
 
       // Natural end - no more processing needed
-      logger.info('Flow processing completed naturally');
+      logger.debug('flow_complete natural');
       break;
     }
 

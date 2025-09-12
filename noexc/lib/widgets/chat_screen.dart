@@ -29,6 +29,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _onStateChanged() {
+    // Reduce noise: avoid print; rely on LoggerService where necessary
     if (mounted) {
       setState(() {
         // Trigger rebuild when state manager notifies changes

@@ -22,6 +22,9 @@ class AppConstants {
   // Choice options delay (production mode)
   static const int choiceDisplayDelayMs = 1300;
 
+  // Lifecycle / Resume handling
+  static const int resumeDebounceMs = 400; // Debounce for AppLifecycleState.resumed
+
   // Chat Sequences
   static const String sequencesAssetPath = 'assets/sequences/';
   static const String defaultSequenceId = 'welcome_seq';

@@ -1225,6 +1225,16 @@ class NotificationService {
       );
       
       _logger.info('Successfully scheduled notification ID:$id for $taskDate/$slot');
+      
+      // Immediately check if the notification appears in pending requests (debug)
+      try {
+        final pending = await _notifications.pendingNotificationRequests();
+        final found = pending.any((req) => req.id == id);
+        _logger.debug('Notification ID:$id immediate pending check: ${found ? "FOUND" : "NOT FOUND"} (${pending.length} total pending)');
+      } catch (e) {
+        _logger.debug('Failed to check immediate pending status for ID:$id: $e');
+      }
+      
       return 1;
     } catch (e) {
       _logger.error('Failed to schedule notification ID:${_buildId(taskDate, slot)} ($taskDate/$slot): $e');
@@ -1243,28 +1253,30 @@ class NotificationService {
     
     final base = int.tryParse(dateStr.replaceAll('-', '')) ?? 0;
     
-    // Validate that base doesn't overflow when multiplied
-    if (base > 214748364) { // Int32 max / 10
-      _logger.warning('Date base too large for ID generation: $base, using modulo');
-      // Use modulo to keep within safe range
-      final safeBase = base % 100000000; // Keep last 8 digits
-      _logger.info('Using safe base: $safeBase for date: $dateStr');
-    }
-    
     final code = () {
       if (slot == 'start') return 1;
       if (slot.startsWith('mid')) {
         final raw = int.tryParse(slot.substring(3)) ?? 1;
-        final idx = raw < 1 ? 1 : (raw > 7 ? 7 : raw);
-        return 2 + idx; // 3..9
+        final idx = raw < 1 ? 1 : raw; // Remove the upper limit to prevent collisions
+        return 100 + idx; // 101, 102, 103, etc.
       }
-      if (slot == 'deadline') return 9;
-      if (slot.startsWith('comeback')) return 6; // series
-      if (slot == 'comeback_weekly') return 7; // weekly fallback
-      return 5;
+      if (slot == 'deadline') return 2; // Keep simple
+      if (slot.startsWith('comeback')) return 3; // series
+      if (slot == 'comeback_weekly') return 4; // weekly fallback
+      return 5; // default
     }();
     
-    final finalId = base * 10 + code;
+    // Validate that base doesn't overflow when multiplied by 1000
+    if (base > 2147483) { // Int32 max / 1000
+      _logger.warning('Date base too large for ID generation: $base, using modulo');
+      // Use modulo to keep within safe range
+      final safeBase = base % 100000; // Keep last 5 digits to fit in Int32 when multiplied by 1000
+      _logger.info('Using safe base: $safeBase for date: $dateStr');
+      final finalId = safeBase * 1000 + code;
+      return finalId;
+    }
+    
+    final finalId = base * 1000 + code; // Use 1000 multiplier to have room for larger codes
     
     // Validate final ID is positive and not too large
     if (finalId <= 0) {
@@ -1690,7 +1702,38 @@ class NotificationService {
     }
     
     try {
-      return await _notifications.pendingNotificationRequests();
+      final pendingRequests = await _notifications.pendingNotificationRequests();
+      _logger.debug('Platform returned ${pendingRequests.length} pending notifications');
+      
+      // Group by type for detailed logging
+      final byType = <String, int>{};
+      for (final req in pendingRequests) {
+        String type = 'unknown';
+        try {
+          if (req.payload != null && req.payload!.isNotEmpty) {
+            final data = json.decode(req.payload!) as Map<String, dynamic>;
+            final slot = data['slot'] as String?;
+            if (slot != null) {
+              if (slot == 'start') {
+                type = 'start';
+              } else if (slot.startsWith('mid')) {
+                type = 'mid';
+              } else if (slot == 'deadline') {
+                type = 'deadline';
+              } else if (slot.startsWith('comeback') || slot.startsWith('weekly_')) {
+                type = 'comeback';
+              } else {
+                type = slot;
+              }
+            }
+          }
+        } catch (_) {}
+        byType[type] = (byType[type] ?? 0) + 1;
+      }
+      
+      _logger.debug('Platform pending notifications by type: $byType');
+      
+      return pendingRequests;
     } catch (e) {
       _logger.error('Failed to get pending notifications: $e');
       return [];
@@ -2205,6 +2248,8 @@ class NotificationService {
   Future<List<Map<String, dynamic>>> getScheduledNotificationDetails() async {
     try {
       final pending = await getPendingNotifications();
+      _logger.debug('getScheduledNotificationDetails: Converting ${pending.length} platform notifications to debug format');
+      
       return pending.map((notification) {
         String scheduledTime = 'Unknown';
         String? timeUntil;

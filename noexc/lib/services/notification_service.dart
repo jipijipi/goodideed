@@ -1086,17 +1086,9 @@ class NotificationService {
     
     _logger.info('Generated ${fractions.length} raw fractions: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
     
-    // If original window is less than minimum, filter to only notifications within actual window
-    if (windowHours < _minTimeWindowHours) {
-      final windowRatio = windowHours / _minTimeWindowHours;
-      final originalLength = fractions.length;
-      fractions.retainWhere((f) => f <= windowRatio);
-      _logger.info('Window $windowHours < minimum $_minTimeWindowHours hours');
-      _logger.info('Window ratio: $windowRatio, filtered ${originalLength - fractions.length} positions');
-      _logger.info('Remaining after filter: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
-    } else {
-      _logger.info('Window $windowHours >= minimum $_minTimeWindowHours hours, no filtering applied');
-    }
+    // Always use the full window duration - no filtering based on minimum hours
+    // This ensures notifications are distributed across the entire actual time window
+    _logger.info('Distributing notifications across full $windowHours hour window (minimum $_minTimeWindowHours hours is for other purposes only)');
     
     _logger.info('Final quadratic fractions returned: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
     return fractions;

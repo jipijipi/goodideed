@@ -19,6 +19,7 @@ import '../logger_service.dart';
 class SequenceManager implements MessageProvider {
   final SequenceLoader _sequenceLoader;
   final logger = LoggerService.instance;
+  void Function(String sequenceId)? _onSequenceChanged;
 
   /// Currently loaded sequence (null if none loaded)
   ChatSequence? get currentSequence => _sequenceLoader.currentSequence;
@@ -28,6 +29,11 @@ class SequenceManager implements MessageProvider {
 
   SequenceManager({required SequenceLoader sequenceLoader})
     : _sequenceLoader = sequenceLoader;
+
+  /// Subscribe to sequence change events
+  void setOnSequenceChanged(void Function(String sequenceId) callback) {
+    _onSequenceChanged = callback;
+  }
 
   /// Load a sequence by ID
   ///
@@ -41,6 +47,12 @@ class SequenceManager implements MessageProvider {
       logger.info(
         'Successfully loaded sequence: $sequenceId with ${sequence.messages.length} messages',
       );
+      // Notify listeners about sequence change
+      try {
+        _onSequenceChanged?.call(sequenceId);
+      } catch (e) {
+        logger.warning('Sequence change callback failed: $e');
+      }
     } catch (e) {
       logger.error('Failed to load sequence $sequenceId: $e');
       rethrow;

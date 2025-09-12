@@ -77,6 +77,11 @@ class ChatService {
     }
   }
 
+  /// Subscribe to sequence change notifications
+  void setOnSequenceChanged(void Function(String sequenceId) callback) {
+    _sequenceManager.setOnSequenceChanged(callback);
+  }
+
   /// Set callback for event notifications from dataAction triggers
   void setEventCallback(
     Future<void> Function(String eventType, Map<String, dynamic> data) callback,

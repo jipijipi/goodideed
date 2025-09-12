@@ -63,6 +63,13 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       onAppResumedFromEndState: _handleAppResumedFromEndState,
     );
 
+    // Keep UI sequence in sync with engine transitions
+    ServiceLocator.instance.chatService.setOnSequenceChanged((seqId) {
+      logger.debug('Sequence changed (engine) → $seqId', component: LogComponent.ui);
+      _onSequenceChange(seqId);
+      notifyListeners();
+    });
+
     // Register as lifecycle observer
     WidgetsBinding.instance.addObserver(this);
 
@@ -120,6 +127,16 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       final defaultSeq = AppConstants.defaultSequenceId;
       final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
       logger.info('📱 Active sequence on resume: ${activeSeq ?? 'none'}; UI seq: $currentSequenceId', component: LogComponent.ui);
+
+      // Busy guard: don't interrupt if user is mid-interaction
+      final hasTextInput = _messageDisplayManager.currentTextInputMessage != null;
+      final hasUnansweredChoice = _messageDisplayManager.displayedMessages.any(
+        (m) => m.type == MessageType.choice && m.selectedChoiceText == null,
+      );
+      if (hasTextInput || hasUnansweredChoice) {
+        logger.info('⏸️ Resume skipped (busy: input=${hasTextInput}, choice=${hasUnansweredChoice})', component: LogComponent.ui);
+        return;
+      }
 
       if (activeSeq == defaultSeq) {
         logger.info('🔁 Already on default sequence → refreshing', component: LogComponent.ui);

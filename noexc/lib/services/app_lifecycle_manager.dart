@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'session_service.dart';
 import 'logger_service.dart';
+import 'dart:async';
 
 /// Manages app lifecycle events and triggers re-engagement when returning from end states
 class AppLifecycleManager {
@@ -9,6 +10,8 @@ class AppLifecycleManager {
   final LoggerService _logger = LoggerService.instance;
   
   bool _wasInBackground = false;
+  Timer? _resumeDebounce;
+  static const Duration _resumeDebounceDuration = Duration(milliseconds: 400);
 
   AppLifecycleManager({
     required this.sessionService,
@@ -29,8 +32,17 @@ class AppLifecycleManager {
       case AppLifecycleState.resumed:
         _logger.debug('App resumed. wasInBackground=$_wasInBackground', component: LogComponent.ui);
         if (_wasInBackground) {
-          await _handleAppResumed();
-          _wasInBackground = false;
+          // Debounce resume handling to avoid flapping
+          _resumeDebounce?.cancel();
+          _resumeDebounce = Timer(_resumeDebounceDuration, () async {
+            try {
+              if (_wasInBackground) {
+                await _handleAppResumed();
+              }
+            } finally {
+              _wasInBackground = false;
+            }
+          });
         }
         break;
       case AppLifecycleState.detached:

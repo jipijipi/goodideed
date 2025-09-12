@@ -133,18 +133,20 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       final hasUnansweredChoice = _messageDisplayManager.displayedMessages.any(
         (m) => m.type == MessageType.choice && m.selectedChoiceText == null,
       );
-      if (hasTextInput || hasUnansweredChoice) {
-        logger.info('⏸️ Resume skipped (busy: input=${hasTextInput}, choice=${hasUnansweredChoice})', component: LogComponent.ui);
+      final panelOpen = _isPanelVisible;
+      if (hasTextInput || hasUnansweredChoice || panelOpen) {
+        logger.info('⏸️ Resume skipped (busy: input=${hasTextInput}, choice=${hasUnansweredChoice}, panel=$panelOpen)', component: LogComponent.ui);
         return;
       }
 
-      if (activeSeq == defaultSeq) {
-        logger.info('🔁 Already on default sequence → refreshing', component: LogComponent.ui);
-        await resetChat(); // Refresh current default sequence like a relaunch
-      } else {
-        logger.info('➡️ Switching to default sequence: $defaultSeq', component: LogComponent.ui);
-        await switchSequence(defaultSeq);
-      }
+      // Append mode: start default sequence and append its messages without clearing
+      logger.info('➕ Appending default sequence: $defaultSeq', component: LogComponent.ui);
+      final flow = await ServiceLocator.instance.chatService.start(defaultSeq);
+      await _messageDisplayManager.displayMessages(
+        flow.messages,
+        ServiceLocator.instance.messageQueue,
+        notifyListeners,
+      );
 
       logger.info('✅ Resume handling complete. UI seq: $currentSequenceId', component: LogComponent.ui);
     } catch (e) {

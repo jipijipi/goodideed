@@ -814,6 +814,7 @@ class NotificationService {
       _logger.info('Total days count: $totalDaysCount');
       
       if (window > 0 && intensity > 0 && !(onlyFinalTodayGlobal && isToday)) {
+        final windowHours = (window / 60).round(); // Move this outside the intensity check
         List<double> midFractions;
         
         if (intensity == 1) {
@@ -823,7 +824,6 @@ class NotificationService {
           // Level 2 & 3: Use new quadratic distribution
           final availableBudget = _calculateNotificationBudget();
           final midNotificationCount = _getNotificationCountForIntensity(intensity, availableBudget, totalDaysCount);
-          final windowHours = (window / 60).round();
           
           _logger.info('=== QUADRATIC DISTRIBUTION DEBUG ===');
           _logger.info('Available budget: $availableBudget');
@@ -854,7 +854,10 @@ class NotificationService {
         
         for (final f in midFractions) {
           idx += 1;
+          
+          // Calculate minutes from start - fractions are already filtered to fit the actual window
           final minutesFromStart = (window * f).round();
+          
           final midTime = start.add(Duration(minutes: minutesFromStart));
           
           _logger.info('Processing mid$idx: fraction=${f.toStringAsFixed(3)}, minutesFromStart=$minutesFromStart, scheduledTime=${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')}');
@@ -862,6 +865,12 @@ class NotificationService {
           if (isToday && midTime.isBefore(now)) {
             skippedCount++;
             _logger.info('  SKIPPED - notification time ${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')} is before current time ${now.hour}:${now.minute.toString().padLeft(2, '0')}');
+            continue;
+          }
+          
+          if (midTime.isAfter(end)) {
+            skippedCount++;
+            _logger.info('  SKIPPED - notification time ${midTime.hour}:${midTime.minute.toString().padLeft(2, '0')} is after deadline ${end.hour}:${end.minute.toString().padLeft(2, '0')}');
             continue;
           }
           
@@ -1066,10 +1075,14 @@ class NotificationService {
     
     final fractions = <double>[];
     
+    // Determine which window duration to use for generation
+    final generationWindowHours = windowHours <= _minTimeWindowHours ? _minTimeWindowHours : windowHours;
+    _logger.info('Using $generationWindowHours hours for quadratic generation (actual window: $windowHours hours)');
+    
     // Use quadratic formula to create decreasing density (more notifications early, fewer later)
     // We want smaller intervals early (more frequent) and larger intervals later (less frequent)
     
-    _logger.info('Generating $notificationCount quadratic positions:');
+    _logger.info('Generating $notificationCount quadratic positions for ${generationWindowHours}h reference:');
     for (int i = 0; i < notificationCount; i++) {
       // Uniform position from 0 to 1 (0 = start, 1 = deadline)
       final uniformPosition = (i + 1) / (notificationCount + 1);
@@ -1086,12 +1099,26 @@ class NotificationService {
     
     _logger.info('Generated ${fractions.length} raw fractions: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
     
-    // Always use the full window duration - no filtering based on minimum hours
-    // This ensures notifications are distributed across the entire actual time window
-    _logger.info('Distributing notifications across full $windowHours hour window (minimum $_minTimeWindowHours hours is for other purposes only)');
+    // Apply proper window logic: use 4-hour reference for shorter windows, actual window for longer ones
+    List<double> finalFractions;
+    if (windowHours <= _minTimeWindowHours) {
+      _logger.info('Window $windowHours <= minimum $_minTimeWindowHours hours: using 4-hour reference pattern');
+      
+      // Filter fractions to only those that fall within the actual window
+      final windowRatio = windowHours / _minTimeWindowHours;
+      final originalLength = fractions.length;
+      finalFractions = fractions.where((f) => f <= windowRatio).toList();
+      
+      _logger.info('Window ratio: ${windowRatio.toStringAsFixed(3)}, filtered ${originalLength - finalFractions.length} fractions beyond actual window');
+      _logger.info('Remaining fractions after filtering: ${finalFractions.map((f) => f.toStringAsFixed(3)).toList()}');
+    } else {
+      _logger.info('Window $windowHours > minimum $_minTimeWindowHours hours: using actual window distribution');
+      // For longer windows, we already generated for the actual window, so no changes needed
+      finalFractions = fractions;
+    }
     
-    _logger.info('Final quadratic fractions returned: ${fractions.map((f) => f.toStringAsFixed(3)).toList()}');
-    return fractions;
+    _logger.info('Final quadratic fractions returned: ${finalFractions.map((f) => f.toStringAsFixed(3)).toList()}');
+    return finalFractions;
   }
 
   /// Get notification count for given intensity level and available budget

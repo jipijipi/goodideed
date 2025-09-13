@@ -43,13 +43,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<!-- Notification permissions -->
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-		<string>background-processing</string>
-	</array>
+		<!-- Notification permissions: UIBackgroundModes not required for local notifications -->
 	<!-- Required for local notifications -->
 	<key>UIApplicationSupportsLocalNotifications</key>
 	<true/>

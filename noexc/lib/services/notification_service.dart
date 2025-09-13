@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -2454,7 +2453,19 @@ class NotificationService {
   }
 
   /// Generate a hash of key scheduling parameters to detect when rescheduling is needed
-  @visibleForTesting
+  ///
+  /// Creates a stable hash from notification scheduling parameters including:
+  /// - remindersIntensity: Number of notifications to schedule (0-3)
+  /// - currentDate: Task date for scheduling (YYYY-MM-DD format)
+  /// - startTime: User's daily start time (HH:MM format)
+  /// - deadlineTime: User's daily deadline time (HH:MM format) 
+  /// - activeDays: List of active weekdays (1-7, Monday-Sunday)
+  ///
+  /// The hash is used to determine if notification parameters have changed
+  /// and whether expensive notification rescheduling can be skipped.
+  ///
+  /// Returns a string hash that's stable for identical parameters.
+  /// On error, returns timestamp-based hash to force rescheduling.
   Future<String> _generateSchedulingHash() async {
     try {
       // Collect all parameters that affect notification scheduling
@@ -2497,9 +2508,9 @@ class NotificationService {
       
       final hash = hashInput.hashCode.toString();
       
-      // Debug logging for cache troubleshooting
-      _logger.info('CACHE: Hash input: $hashInput');
-      _logger.info('CACHE: Generated hash: $hash');
+      // Debug logging for cache troubleshooting (reduced verbosity)
+      _logger.debug('CACHE: Hash input: $hashInput');
+      _logger.debug('CACHE: Generated hash: $hash');
       
       return hash;
     } catch (e) {
@@ -2510,7 +2521,22 @@ class NotificationService {
   }
   
   /// Check if notifications need to be rescheduled based on parameter changes
-  @visibleForTesting
+  ///
+  /// Compares current scheduling parameters with cached values to determine
+  /// if the expensive notification scheduling process can be skipped.
+  ///
+  /// Returns true (skip scheduling) if:
+  /// - Parameter hash is unchanged from last scheduling
+  /// - Less than [NotificationConfig.cacheWindowMinutes] have passed since last scheduling
+  ///
+  /// Returns false (proceed with scheduling) if:
+  /// - This is the first scheduling attempt (no cached hash)
+  /// - Parameter hash has changed (user modified settings)
+  /// - Cache window has expired (time-based invalidation)
+  /// - Error occurred during cache checking (fail-safe behavior)
+  ///
+  /// Cache misses trigger full notification rescheduling (2+ second operation).
+  /// Cache hits skip expensive work entirely, improving performance.
   Future<bool> _shouldSkipScheduling() async {
     try {
       final currentHash = await _generateSchedulingHash();
@@ -2519,7 +2545,7 @@ class NotificationService {
       // Skip if hash hasn't changed and we scheduled recently (within last 3 minutes)
       if (_lastSchedulingHash == currentHash && _lastSchedulingTime != null) {
         final timeSinceLastScheduling = now.difference(_lastSchedulingTime!);
-        if (timeSinceLastScheduling.inMinutes < 3) {
+        if (timeSinceLastScheduling.inMinutes < NotificationConfig.cacheWindowMinutes) {
           _logger.info('CACHE: Skipping notification scheduling - no relevant changes detected (hash: ${currentHash.substring(0, 8)}..., last scheduled: ${timeSinceLastScheduling.inSeconds}s ago)');
           return true;
         } else {
@@ -2543,11 +2569,19 @@ class NotificationService {
   }
   
   /// Update the scheduling cache after successful scheduling
-  @visibleForTesting
+  ///
+  /// Stores the parameter hash and timestamp after successful notification scheduling
+  /// to enable cache hits on subsequent calls with identical parameters.
+  ///
+  /// Should only be called after notification scheduling completes successfully.
+  /// Failed scheduling attempts should not update the cache to ensure retry behavior.
+  ///
+  /// [hash] The parameter hash from _generateSchedulingHash() representing
+  /// the current scheduling configuration.
   void _updateSchedulingCache(String hash) {
     _lastSchedulingHash = hash;
     _lastSchedulingTime = DateTime.now();
-    _logger.info('CACHE: Updated scheduling cache with hash: ${hash.substring(0, 8)}...');
+    _logger.debug('CACHE: Updated scheduling cache with hash: ${hash.substring(0, 8)}...');
   }
   
   /// Clear scheduling cache (useful for debugging or manual refresh)

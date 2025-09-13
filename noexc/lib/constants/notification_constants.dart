@@ -23,6 +23,10 @@ class NotificationConfig {
   static const String channelName = 'Daily Task Reminders';
   static const String channelDescription = 'Notifications to remind you about your daily task';
   
+  /// Notification caching configuration
+  /// Time window (minutes) to cache notification scheduling decisions
+  static const int cacheWindowMinutes = 3;
+  
   /// Private constructor to prevent instantiation
   NotificationConfig._();
 }

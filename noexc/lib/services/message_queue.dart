@@ -10,6 +10,7 @@ class MessageQueue {
   bool _disposed = false;
   final List<Timer> _activeTimers = [];
   final MessageDelayPolicy _delayPolicy;
+  ChatMessage? _lastDisplayed;
 
   MessageQueue({MessageDelayPolicy? delayPolicy})
     : _delayPolicy = delayPolicy ?? MessageDelayPolicy();
@@ -50,8 +51,8 @@ class MessageQueue {
     for (final message in batch.messages) {
       if (_disposed) break;
 
-      // Apply effective delay per policy
-      final effective = _delayPolicy.effectiveDelay(message);
+      // Apply delay based on previous displayed message (reading-based)
+      final effective = _delayPolicy.delayBefore(_lastDisplayed, message);
       if (effective > 0) {
         final completer = Completer<void>();
         final timer = Timer(Duration(milliseconds: effective), () {
@@ -66,6 +67,9 @@ class MessageQueue {
 
       // Display the message
       await batch.onDisplay(message);
+
+      // Update last displayed after successful display
+      _lastDisplayed = message;
     }
   }
 

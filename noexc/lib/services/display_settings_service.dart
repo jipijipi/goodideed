@@ -6,7 +6,8 @@ class DisplaySettingsService extends ChangeNotifier {
   final _logger = LoggerService.instance;
 
   /// When true, bot messages display instantly (no delays).
-  bool _instantDisplay = false; // Default: instant mode ON for now
+  // Default: true in debug for faster TDD, false in release
+  bool _instantDisplay = kDebugMode;
 
   bool get instantDisplay => _instantDisplay;
 

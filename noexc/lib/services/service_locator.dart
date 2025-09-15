@@ -1,4 +1,5 @@
 import 'user_data_service.dart';
+import 'package:flutter/foundation.dart';
 import 'text_templating_service.dart';
 import 'text_variants_service.dart';
 import 'chat_service.dart';
@@ -70,7 +71,7 @@ class ServiceLocator {
 
       _displaySettingsService =
           DisplaySettingsService()
-            ..instantDisplay = true; // Default to instant mode for now
+            ..instantDisplay = kDebugMode; // Instant in debug, adaptive in release
       _messageQueue = MessageQueue(
         delayPolicy: MessageDelayPolicy(settings: _displaySettingsService),
       );

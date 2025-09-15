@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:rive/rive.dart';
 import '../../models/chat_message.dart';
@@ -62,12 +63,17 @@ class MessageBubble extends StatelessWidget {
 
   /// Builds a regular text message bubble (bot or user)
   Widget _buildRegularBubble(BuildContext context) {
+    final isBot = message.isFromBot;
+
+    // Typing placeholder: render a lightweight three-dots indicator
+    if (isBot && message.type == MessageType.bot && message.text == "\u200B") {
+      return const _TypingIndicatorBubble(key: ValueKey('typing_indicator_bubble'));
+    }
+
     // Don't display messages with empty text
     if (message.text.trim().isEmpty) {
       return const SizedBox.shrink();
     }
-
-    final isBot = message.isFromBot;
 
     return Padding(
       padding: DesignTokens.messageBubbleMargin,
@@ -210,6 +216,111 @@ class MessageBubble extends StatelessWidget {
     );
   }
 }
+
+/// A lightweight three-dots typing indicator styled like a bot bubble.
+class _TypingIndicatorBubble extends StatefulWidget {
+  const _TypingIndicatorBubble({super.key});
+
+  @override
+  State<_TypingIndicatorBubble> createState() => _TypingIndicatorBubbleState();
+}
+
+class _TypingIndicatorBubbleState extends State<_TypingIndicatorBubble>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    final bgColor = DesignTokens.botMessageBackgroundLightWithAlpha;
+    final radius = BorderRadius.circular(DesignTokens.messageBubbleRadius);
+
+    return Padding(
+      padding: DesignTokens.messageBubbleMargin,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          if (DesignTokens.showAvatars) ...[
+            CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Icon(Icons.smart_toy, color: Colors.white),
+            ),
+            const SizedBox(width: DesignTokens.avatarSpacing),
+          ],
+          Flexible(
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width *
+                    DesignTokens.messageMaxWidthFactor,
+              ),
+              padding: DesignTokens.messageBubblePadding,
+              decoration: BoxDecoration(color: bgColor, borderRadius: radius),
+              child: Semantics(
+                label: 'Assistant is typing',
+                liveRegion: true,
+                child: AnimatedBuilder(
+                  animation: _controller,
+                  builder: (context, _) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(3, (i) {
+                        final v = (_controller.value + i * 0.2) % 1.0;
+                        // Smooth wave for scale/opacity in [0,1]
+                        final wave = 0.5 * (math.cos(2 * math.pi * v) + 1.0);
+                        final scale = 0.7 + 0.3 * wave; // 0.7..1.0
+                        final opacity = 0.4 + 0.6 * wave; // 0.4..1.0
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3),
+                          child: Opacity(
+                            opacity: opacity,
+                            child: Transform.scale(
+                              scale: scale,
+                              child: Container(
+                                width: 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// End typing indicator helpers
 
 /// Wrapper widget for Rive animations with error handling
 class _RiveAnimationWrapper extends StatefulWidget {

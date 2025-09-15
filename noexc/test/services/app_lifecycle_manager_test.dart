@@ -19,13 +19,17 @@ void main() {
       userDataService = UserDataService();
       sessionService = SessionService(userDataService);
       callbackLog = [];
-      
+
       lifecycleManager = AppLifecycleManager(
         sessionService: sessionService,
         onAppResumedFromEndState: () async {
           callbackLog.add('onAppResumedFromEndState');
         },
       );
+    });
+
+    tearDown(() async {
+      lifecycleManager.dispose();
     });
 
     group('lifecycle state changes', () {
@@ -46,13 +50,16 @@ void main() {
       test('should trigger callback when resuming from background while at end state', () async {
         // Set up: mark as at end state
         await sessionService.setEndState(true);
-        
+
         // App goes to background
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.paused);
-        
+
         // App comes back to foreground
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.resumed);
-        
+
+        // Wait for debounced callback to complete
+        await Future.delayed(Duration(milliseconds: 500)); // Wait for debounce (400ms) + processing
+
         expect(callbackLog, contains('onAppResumedFromEndState'));
       });
 
@@ -72,11 +79,14 @@ void main() {
       test('should handle inactive state as background state', () async {
         // Set up: mark as at end state
         await sessionService.setEndState(true);
-        
+
         // App goes inactive then resumes
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.inactive);
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.resumed);
-        
+
+        // Wait for debounced callback to complete
+        await Future.delayed(Duration(milliseconds: 500)); // Wait for debounce (400ms) + processing
+
         expect(callbackLog, contains('onAppResumedFromEndState'));
       });
 
@@ -102,26 +112,35 @@ void main() {
     group('edge cases', () {
       test('should handle rapid state changes correctly', () async {
         await sessionService.setEndState(true);
-        
-        // Rapid state changes
+
+        // Rapid state changes - all background states should still result in single callback
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.paused);
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.inactive);
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.resumed);
-        
-        // Should only trigger once
+
+        // Wait for debounced callback to complete
+        await Future.delayed(Duration(milliseconds: 500)); // Wait for debounce (400ms) + processing
+
+        // Should only trigger once despite rapid state changes
         expect(callbackLog.length, 1);
       });
 
       test('should reset background flag after triggering callback', () async {
         await sessionService.setEndState(true);
-        
+
         // First cycle
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.paused);
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.resumed);
-        
+
+        // Wait for debounced callback to complete
+        await Future.delayed(Duration(milliseconds: 500)); // Wait for debounce (400ms) + processing
+
         // Second resume without background should not trigger
         await lifecycleManager.didChangeAppLifecycleState(AppLifecycleState.resumed);
-        
+
+        // Wait a bit more to ensure no additional callbacks
+        await Future.delayed(Duration(milliseconds: 100));
+
         expect(callbackLog.length, 1);
       });
     });

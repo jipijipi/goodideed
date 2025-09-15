@@ -19,10 +19,11 @@ class MessageQueue {
   Future<void> enqueue(
     List<ChatMessage> messages,
     Future<void> Function(ChatMessage) onDisplay,
+    {Future<void> Function(ChatMessage)? onPlaceholder}
   ) async {
     if (_disposed || messages.isEmpty) return;
 
-    _queue.add(MessageBatch(messages, onDisplay));
+    _queue.add(MessageBatch(messages, onDisplay, onPlaceholder));
 
     // Start processing if not already processing
     if (!_isProcessing) {
@@ -50,9 +51,21 @@ class MessageQueue {
   Future<void> _processBatch(MessageBatch batch) async {
     for (final message in batch.messages) {
       if (_disposed) break;
-
-      // Apply delay based on previous displayed message (reading-based)
+      
+      // Compute delay based on previous displayed message (reading-based)
       final effective = _delayPolicy.delayBefore(_lastDisplayed, message);
+
+      // Optionally show a placeholder immediately for bot text messages when delay > 0
+      final shouldShowPlaceholder =
+          effective > 0 &&
+          batch.onPlaceholder != null &&
+          message.isFromBot &&
+          message.type == MessageType.bot;
+      if (shouldShowPlaceholder) {
+        await batch.onPlaceholder!(message);
+      }
+
+      // Wait for the effective delay if any
       if (effective > 0) {
         final completer = Completer<void>();
         final timer = Timer(Duration(milliseconds: effective), () {
@@ -90,6 +103,7 @@ class MessageQueue {
 class MessageBatch {
   final List<ChatMessage> messages;
   final Future<void> Function(ChatMessage) onDisplay;
+  final Future<void> Function(ChatMessage)? onPlaceholder;
 
-  MessageBatch(this.messages, this.onDisplay);
+  MessageBatch(this.messages, this.onDisplay, this.onPlaceholder);
 }

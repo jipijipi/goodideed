@@ -72,19 +72,31 @@ class MessageDisplayManager {
     await messageQueue.enqueue(filteredMessages, (message) async {
       if (_disposed) return;
 
-      // Add message to list
-      _displayedMessages.add(message);
+      // If a placeholder for this message exists (same id, bot placeholder), replace it
+      final placeholderIndex = _displayedMessages.indexWhere(
+        (m) => m.id == message.id && m.isFromBot && m.type == MessageType.bot && m.text == '\u200B',
+      );
+      if (placeholderIndex != -1) {
+        _displayedMessages[placeholderIndex] = message;
+      } else {
+        // Add message to list
+        _displayedMessages.add(message);
+      }
 
       // Only animate bot messages, skip animation for user messages
       final animatedListState = _animatedListKey.currentState;
       if (animatedListState != null && message.isFromBot) {
-        // Insert at the correct index for reverse list
-        // Since we add to end of _displayedMessages but display in reverse,
-        // the new message appears at index 0 in the reversed view
-        animatedListState.insertItem(
-          0,
-          duration: DesignTokens.messageSlideAnimationDuration,
-        );
+        if (placeholderIndex != -1) {
+          // Do not insert again when replacing a placeholder
+        } else {
+          // Insert at the correct index for reverse list
+          // Since we add to end of _displayedMessages but display in reverse,
+          // the new message appears at index 0 in the reversed view
+          animatedListState.insertItem(
+            0,
+            duration: DesignTokens.messageSlideAnimationDuration,
+          );
+        }
       }
 
       notifyListeners();
@@ -96,6 +108,25 @@ class MessageDisplayManager {
       if (message.type == MessageType.textInput) {
         currentTextInputMessage = message;
         notifyListeners();
+      }
+    }, onPlaceholder: (message) async {
+      if (_disposed) return;
+
+      // Only for bot text messages: create a minimal placeholder bubble
+      if (message.isFromBot && message.type == MessageType.bot) {
+        final placeholder = message.copyWith(text: "\u200B");
+        _displayedMessages.add(placeholder);
+
+        final animatedListState = _animatedListKey.currentState;
+        if (animatedListState != null) {
+          animatedListState.insertItem(
+            0,
+            duration: DesignTokens.messageSlideAnimationDuration,
+          );
+        }
+
+        notifyListeners();
+        _scrollToBottom();
       }
     });
   }

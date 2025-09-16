@@ -238,6 +238,14 @@ class DesignTokens {
   static const Color statusSuccessTextDark = Color(0xFFA5D6A7);
   static const Color statusSuccessBorderDark = Color(0xFF2C5D2C);
 
+  /// System Message Colors - Light Theme
+  static const Color systemMessageBackgroundLight = Color(0xFFF8F8F8);
+  static const Color systemMessageBorderLight = Color(0xFFE8E8E8);
+
+  /// System Message Colors - Dark Theme  
+  static const Color systemMessageBackgroundDark = Color(0xFF3A3A3A);
+  static const Color systemMessageBorderDark = Color(0xFF4A4A4A);
+
   /// Selected Choice Shadow Properties (strongest - elevated)
   static const Color selectedChoiceShadowColorLight = Color(
     0x66484B85,
@@ -821,6 +829,19 @@ class DesignTokens {
         : brandBlack.withValues(alpha: debugCardShadowOpacity * 0.5);
   }
 
+  /// System Message Theme-Aware Getters
+  static Color getSystemMessageBackground(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? systemMessageBackgroundLight
+        : systemMessageBackgroundDark;
+  }
+
+  static Color getSystemMessageBorder(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? systemMessageBorderLight
+        : systemMessageBorderDark;
+  }
+
   // ==================== MARKDOWN STYLES ====================
 
   /// Creates a MarkdownStyleSheet for regular messages
@@ -869,22 +890,24 @@ class DesignTokens {
     final textColor = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
     
     return MarkdownStyleSheet(
-      // Base text style - monospace font, smaller size, center aligned
+      // Base text style - monospace font, smaller size, reduced line spacing
       p: GoogleFonts.inconsolata(
         fontSize: messageFontSize * 0.85, // Slightly smaller than regular messages
         color: textColor,
-        height: 1.3,
+        height: 1.1, // Reduced line spacing for tighter appearance
       ),
       // Disable styling variations for system messages
       strong: GoogleFonts.inconsolata(
         fontSize: messageFontSize * 0.85,
         color: textColor,
         fontWeight: FontWeight.normal, // No bold in system messages
+        height: 1.1, // Consistent reduced line spacing
       ),
       em: GoogleFonts.inconsolata(
         fontSize: messageFontSize * 0.85,
         color: textColor,
         fontStyle: FontStyle.normal, // No italic in system messages
+        height: 1.1, // Consistent reduced line spacing
       ),
       // Disable all other markdown elements
       h1: const TextStyle(fontSize: 0, height: 0),
@@ -894,7 +917,11 @@ class DesignTokens {
       h5: const TextStyle(fontSize: 0, height: 0),
       h6: const TextStyle(fontSize: 0, height: 0),
       blockquote: const TextStyle(fontSize: 0, height: 0),
-      code: GoogleFonts.inconsolata(fontSize: messageFontSize * 0.85, color: textColor),
+      code: GoogleFonts.inconsolata(
+        fontSize: messageFontSize * 0.85, 
+        color: textColor,
+        height: 1.1, // Consistent reduced line spacing
+      ),
       codeblockDecoration: const BoxDecoration(),
     );
   }

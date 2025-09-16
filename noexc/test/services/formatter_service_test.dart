@@ -138,5 +138,125 @@ void main() {
         equals('morning'),
       );
     });
+
+    group('Array joining with :join flag', () {
+      test('should join weekday numbers to day names with proper grammar', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', [1, 2, 4]),
+          equals('Monday, Tuesday and Thursday'),
+        );
+      });
+
+      test('should handle string array format "[1,2,3]"', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', '[1,2,3]'),
+          equals('Monday, Tuesday and Wednesday'),
+        );
+      });
+
+      test('should prioritize direct mappings over array parsing', () async {
+        // "6,7" has a direct mapping to "weekends" in activeDays.json, so it uses that
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', '6,7'),
+          equals('weekends'),
+        );
+      });
+
+      test('should handle comma-separated format without direct mapping', () async {
+        // "1,3" doesn't have a direct mapping, so it parses as array
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', '1,3'),
+          equals('Monday and Wednesday'),
+        );
+      });
+
+      test('should handle single element array', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', [1]),
+          equals('Monday'),
+        );
+      });
+
+      test('should handle two element array', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', [1, 5]),
+          equals('Monday and Friday'),
+        );
+      });
+
+      test('should handle empty array', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', []),
+          equals(''),
+        );
+      });
+
+      test('should skip unmapped elements gracefully', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', [1, 99, 3]),
+          equals('Monday and Wednesday'),
+        );
+      });
+
+      test('should fall back to standard formatter for non-arrays', () async {
+        // Should use existing activeDays mapping for "1,2,3,4,5"
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', '1,2,3,4,5'),
+          equals('weekdays'),
+        );
+      });
+
+      test('should handle mixed number types in arrays', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', ['1', 2, '3']),
+          equals('Monday, Tuesday and Wednesday'),
+        );
+      });
+
+      test('should work with other formatters besides activeDays', () async {
+        expect(
+          await formatterService.getFormattedValue('timeOfDay:join', [1, 3]),
+          equals('morning and evening'),
+        );
+      });
+
+      test('should return null for non-existent formatter with join flag', () async {
+        expect(
+          await formatterService.getFormattedValue('nonExistent:join', [1, 2]),
+          isNull,
+        );
+      });
+
+      test('should handle whitespace in comma-separated strings', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', ' 1 , 2 , 3 '),
+          equals('Monday, Tuesday and Wednesday'),
+        );
+      });
+
+      test('should handle malformed JSON array gracefully', () async {
+        // Should fall back to comma-separated parsing
+        expect(
+          await formatterService.getFormattedValue('activeDays:join', '[1,2,3'),
+          equals('Tuesday and Wednesday'),  // "[1" doesn't map, "2" maps to Tuesday, "3" maps to Wednesday
+        );
+      });
+    });
+
+    group('Multiple flags support', () {
+      test('should ignore unknown flags and process join flag', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:unknown:join', [1, 2]),
+          equals('Monday and Tuesday'),
+        );
+      });
+
+      test('should work without join flag (standard behavior)', () async {
+        expect(
+          await formatterService.getFormattedValue('activeDays:other', '1,2,3,4,5'),
+          equals('weekdays'),
+        );
+      });
+    });
   });
 }

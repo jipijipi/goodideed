@@ -8,6 +8,7 @@ This guide covers all available formatters for use in conversation sequences and
 ```
 {key:formatter}           # Apply formatter to stored value
 {key:formatter|fallback}  # Apply formatter with fallback if key not found
+{key:formatter:join}      # Apply formatter and join arrays with grammar
 ```
 
 ### Examples
@@ -16,7 +17,28 @@ This guide covers all available formatters for use in conversation sequences and
 {task.deadlineTime:timePeriod}                   # "evening deadline"
 {task.activeDays:activeDays|daily}               # "weekdays" or "daily" if not set
 {task.remindersIntensity:intensity|off}          # "high" or "off" if not set
+{task.activeDays:activeDays:join}                # "Monday, Tuesday and Wednesday"
+{task.activeDays:activeDays:join|daily}          # Array joining with fallback
 ```
+
+### Array Joining with `:join` Flag
+
+The `:join` flag enables smart conversion of arrays into grammatically correct sentences:
+
+**Array Formats Supported:**
+- `[1,2,4]` → `"Monday, Tuesday and Thursday"`
+- `"[1,2,4]"` → `"Monday, Tuesday and Thursday"`
+- `"1,3,5"` → `"Monday, Wednesday and Friday"`
+
+**Grammar Rules:**
+- Single element: `[1]` → `"Monday"`
+- Two elements: `[1,2]` → `"Monday and Tuesday"`
+- Three+ elements: `[1,2,3]` → `"Monday, Tuesday and Wednesday"`
+
+**Fallback Behavior:**
+- If the string has a direct mapping (like `"6,7"` → `"weekends"`), uses that
+- If elements don't map, skips them gracefully
+- If formatter doesn't exist, returns null
 
 ## Available Formatters
 
@@ -84,6 +106,7 @@ This guide covers all available formatters for use in conversation sequences and
 ### 4. `activeDays`
 **Purpose:** Convert weekday arrays to human-readable schedules
 
+#### Standard Formatting
 **Input → Output:**
 - `"1,2,3,4,5"` / `"[1,2,3,4,5]"` → `"weekdays"`
 - `"6,7"` / `"[6,7]"` → `"weekends"`
@@ -98,10 +121,24 @@ This guide covers all available formatters for use in conversation sequences and
 - `"1,3,5"` → `"Monday, Wednesday, Friday"`
 - `"2,4"` → `"Tuesday and Thursday"`
 
+#### Array Joining with `:join` Flag
+**Array Input → Grammatical Output:**
+- `[1,2,4]` → `"Monday, Tuesday and Thursday"`
+- `[6,7]` → `"Saturday and Sunday"`
+- `[1,3,5,7]` → `"Monday, Wednesday, Friday and Sunday"`
+- `[2]` → `"Tuesday"`
+
+**Priority Rules:**
+1. Direct mappings take precedence (e.g., `"6,7"` → `"weekends"`)
+2. Arrays without direct mappings get parsed and joined
+3. Unknown day numbers are skipped gracefully
+
 **Common Usage:**
 ```
-"Your active days are {task.activeDays:activeDays}."
-"Come back on {task.activeDays:activeDays}."
+"Your active days are {task.activeDays:activeDays}."           # "weekdays"
+"Come back on {task.activeDays:activeDays}."                  # "weekends"
+"Your schedule is {task.activeDays:activeDays:join}."         # "Monday, Tuesday and Thursday"
+"Train on {task.activeDays:activeDays:join|any day}."         # With fallback
 ```
 
 **Data Source:** `task.activeDays`
@@ -142,9 +179,18 @@ This guide covers all available formatters for use in conversation sequences and
 ### Schedule Information
 ```
 "Your task schedule is {task.activeDays:activeDays} with {task.remindersIntensity:intensity} reminders."
+"You're scheduled for {task.activeDays:activeDays:join}."
+"Train {task.activeDays:activeDays:join|every day} this week."
 ```
 
-### Time Range Messages  
+### Array Joining Examples
+```
+"Your workout days are {task.activeDays:activeDays:join}."        # "Monday, Tuesday and Thursday"
+"Complete your habits on {task.activeDays:activeDays:join}."      # "weekdays" (direct mapping)
+"Available periods: {session.availableTimes:timeOfDay:join}."     # "morning and evening"
+```
+
+### Time Range Messages
 ```
 "You can work on this from {task.startTime:timePeriod} until your {task.deadlineTime:timePeriod}."
 ```
@@ -160,6 +206,8 @@ This guide covers all available formatters for use in conversation sequences and
 - **`{key:formatter}` shows literally**: Formatter name misspelled or doesn't exist
 - **Shows fallback instead of formatted value**: Data key doesn't exist or has wrong format
 - **Empty output**: Data exists but doesn't match any formatter mappings
+- **`:join` not working**: Check that data is in array format or contains commas
+- **Getting direct mapping instead of joined**: String has exact match in formatter (intended behavior)
 
 ### Testing Formatters
 Use debug scenarios to test formatter behavior:

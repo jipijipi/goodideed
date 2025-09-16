@@ -137,22 +137,26 @@ class MessageBubble extends StatelessWidget {
     );
   }
 
-  /// Builds a system message with centered text, no bubble, and monospace font
+  /// Builds a system message with full width, lighter background, faint border, and monospace font
   Widget _buildSystemMessage(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
-      child: Center(
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.8,
+      padding: DesignTokens.messageBubbleMargin,
+      child: Container(
+        width: double.infinity, // Full width
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        decoration: BoxDecoration(
+          color: DesignTokens.getSystemMessageBackground(context),
+          borderRadius: BorderRadius.circular(DesignTokens.radiusXS),
+          border: Border.all(
+            color: DesignTokens.getSystemMessageBorder(context),
+            width: DesignTokens.borderThin,
           ),
-          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-          child: MarkdownBody(
-            data: message.text,
-            styleSheet: DesignTokens.getSystemMessageMarkdownStyle(context),
-            shrinkWrap: true,
-            selectable: false,
-          ),
+        ),
+        child: MarkdownBody(
+          data: message.text,
+          styleSheet: DesignTokens.getSystemMessageMarkdownStyle(context),
+          shrinkWrap: true,
+          selectable: false,
         ),
       ),
     );

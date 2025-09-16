@@ -40,7 +40,13 @@ class TextTemplatingService {
             formatter,
             storedValue,
           );
-          finalValue = formattedValue ?? storedValue.toString();
+          if (formattedValue != null) {
+            finalValue = formattedValue;
+          } else if (fallback != null) {
+            // Formatter failed, use fallback if available
+            finalValue = fallback;
+          }
+          // If formatter failed and no fallback, finalValue remains null
         } else {
           finalValue = storedValue.toString();
         }

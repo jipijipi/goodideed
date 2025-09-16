@@ -157,6 +157,8 @@ The `:join` flag enables smart conversion of arrays into grammatically correct s
 ❌ Bad:  {task.deadlineTime:timePeriod}
 ```
 
+**Important**: Fallbacks work consistently for both missing data AND missing/failed formatters. If a formatter doesn't exist or fails to format a value, the fallback will be used instead of showing raw data.
+
 ### 3. Use Appropriate Formatters for Data Types
 ```
 ✅ Good: {session.timeOfDay:timeOfDay}        # For session periods
@@ -203,11 +205,25 @@ The `:join` flag enables smart conversion of arrays into grammatically correct s
 3. **Check data format** - Ensure input matches expected format
 
 ### Common Issues
-- **`{key:formatter}` shows literally**: Formatter name misspelled or doesn't exist
-- **Shows fallback instead of formatted value**: Data key doesn't exist or has wrong format
+- **`{key:formatter}` shows literally**: Formatter name misspelled/doesn't exist AND no fallback provided
+- **Shows fallback instead of formatted value**: Data key doesn't exist, formatter missing, or formatting failed (consistent behavior)
 - **Empty output**: Data exists but doesn't match any formatter mappings
 - **`:join` not working**: Check that data is in array format or contains commas
 - **Getting direct mapping instead of joined**: String has exact match in formatter (intended behavior)
+
+### Fallback Behavior (Updated)
+**Consistent Rule**: Fallbacks are used whenever the final formatted result cannot be determined, whether due to:
+- Missing data key
+- Missing/invalid formatter
+- Formatter exists but fails to format the value
+
+**Examples:**
+```
+{missing.key|fallback}           → "fallback" (missing data)
+{existing.key:badFormatter|safe} → "safe" (bad formatter)
+{existing.key:goodFormatter}     → formatted result (success)
+{missing.key:badFormatter}       → {missing.key:badFormatter} (no fallback)
+```
 
 ### Testing Formatters
 Use debug scenarios to test formatter behavior:

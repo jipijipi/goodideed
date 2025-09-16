@@ -909,14 +909,30 @@ class DesignTokens {
         fontStyle: FontStyle.italic, // Enable italic in system messages
         height: 1.1, // Consistent reduced line spacing
       ),
-      // Disable all other markdown elements
-      h1: const TextStyle(fontSize: 0, height: 0),
+      // Enable H1 with center alignment, disable other headers
+      h1: GoogleFonts.inconsolata(
+        fontSize: messageFontSize * 0.85, // Same size as regular text
+        color: textColor,
+        fontWeight: FontWeight.bold, // Bold for header emphasis
+        height: 1.1, // Consistent reduced line spacing
+      ),
+      h1Align: WrapAlignment.center, // Center the H1 text
+      // Disable other markdown elements
       h2: const TextStyle(fontSize: 0, height: 0),
       h3: const TextStyle(fontSize: 0, height: 0),
       h4: const TextStyle(fontSize: 0, height: 0),
       h5: const TextStyle(fontSize: 0, height: 0),
       h6: const TextStyle(fontSize: 0, height: 0),
       blockquote: const TextStyle(fontSize: 0, height: 0),
+      // Enable horizontal rules
+      horizontalRuleDecoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: textColor.withValues(alpha: 0.5), // Semi-transparent white line
+            width: 1.0,
+          ),
+        ),
+      ),
       code: GoogleFonts.inconsolata(
         fontSize: messageFontSize * 0.85, 
         color: textColor,

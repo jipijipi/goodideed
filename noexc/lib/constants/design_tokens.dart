@@ -239,8 +239,8 @@ class DesignTokens {
   static const Color statusSuccessBorderDark = Color(0xFF2C5D2C);
 
   /// System Message Colors - Light Theme
-  static const Color systemMessageBackgroundLight = Color(0xFFE5BE8E);
-  static const Color systemMessageBorderLight = Color(0xFFFFEED8);
+  static const Color systemMessageBackgroundLight = Color(0xFFDBC7AE);
+  static const Color systemMessageBorderLight = Color(0xFFECE2D5);
 
   /// System Message Colors - Dark Theme  
   static const Color systemMessageBackgroundDark = Color(0xFF3A3A3A);

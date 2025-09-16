@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-16T14:09:14.010Z",
+  "lastUpdated": "2025-09-16T14:28:51.945Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-16T14:09:13.989Z"
+    "timestamp": "2025-09-16T14:28:51.933Z"
   },
   "nodes": [
     {
@@ -679,8 +679,8 @@
     {
       "id": "423",
       "position": {
-        "x": -1642.3162629361827,
-        "y": 4272.266840446032
+        "x": -1870.9101555936668,
+        "y": 4262.580658553766
       },
       "data": {
         "label": "Group 423",
@@ -703,8 +703,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": -1642.3162629361827,
-        "y": 4272.266840446032
+        "x": -1870.9101555936668,
+        "y": 4262.580658553766
       }
     },
     {
@@ -7045,17 +7045,58 @@
         "category": "system",
         "nodeLabel": "System Message",
         "nodeId": "427",
-        "content": "# • TASK SUMMARY •\\n\\n  -----\\n\\n***TASK***: {user.task}\\n\\n_***DAYS***_ : {task.activeDays}\\n\\n***START***: {task.startTime}\\n\\n***DEADLINE***: {task.deadlineTime}\\n\\n***REMINDERS***: {task.remindersIntensity}"
+        "content": "# TASK SUMMARY ☟\\n\\n  -----\\n\\n***TASK***: {user.task}\\n\\n_***DAYS***_ : {task.activeDays}\\n\\n***START***: {task.startTime}\\n\\n***DEADLINE***: {task.deadlineTime}\\n\\n***REMINDERS***: {task.remindersIntensity}"
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": -991.0463001032581,
         "y": 5226.11925475223
       },
       "dragging": false,
+      "parentId": "423",
+      "extent": "parent"
+    },
+    {
+      "id": "499",
+      "position": {
+        "x": 696.2324123161252,
+        "y": 193.898379861791
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "499",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "hands",
+              "bindings": {
+                "free_target_x": -0.5,
+                "free_target_y": 0.3,
+                "nested_throttle_model/level": 0
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 191,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -1174.6777432775416,
+        "y": 4456.479038415557
+      },
       "parentId": "423",
       "extent": "parent"
     },
@@ -12261,17 +12302,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "411",
-      "sourceHandle": null,
-      "target": "422",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-411-422",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "422",
       "sourceHandle": null,
       "target": "415",
@@ -13922,6 +13952,33 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-58-498",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "411",
+      "sourceHandle": null,
+      "target": "499",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-411-499"
+    },
+    {
+      "zIndex": 1001,
+      "source": "499",
+      "sourceHandle": null,
+      "target": "422",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-499-422",
       "selected": false
     }
   ]

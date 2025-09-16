@@ -239,8 +239,8 @@ class DesignTokens {
   static const Color statusSuccessBorderDark = Color(0xFF2C5D2C);
 
   /// System Message Colors - Light Theme
-  static const Color systemMessageBackgroundLight = Color(0xFFF8F8F8);
-  static const Color systemMessageBorderLight = Color(0xFFE8E8E8);
+  static const Color systemMessageBackgroundLight = Color(0xFFE5BE8E);
+  static const Color systemMessageBorderLight = Color(0xFFFFEED8);
 
   /// System Message Colors - Dark Theme  
   static const Color systemMessageBackgroundDark = Color(0xFF3A3A3A);
@@ -887,7 +887,7 @@ class DesignTokens {
 
   /// Creates a MarkdownStyleSheet for system messages
   static MarkdownStyleSheet getSystemMessageMarkdownStyle(BuildContext context) {
-    final textColor = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6);
+    const textColor = Colors.white; // White text for system messages
     
     return MarkdownStyleSheet(
       // Base text style - monospace font, smaller size, reduced line spacing

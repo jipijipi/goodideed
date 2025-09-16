@@ -570,6 +570,11 @@ class NotificationService {
         return;
       }
 
+      // Fetch user task for personalized notification titles
+      final userTask = await _userDataService.getValue<String>(StorageKeys.userTask);
+      final hasTask = userTask != null && userTask.isNotEmpty;
+      _logger.info('User task for notifications: ${hasTask ? '"$userTask"' : 'none (using fallback titles)'}');
+
       final deadlineTimeString = await _getDeadlineTimeAsString();
       final startTimeString = await _getStartTimeAsString();
       _logger.info('Retrieved times - Start=$startTimeString, Deadline=$deadlineTimeString');
@@ -677,6 +682,7 @@ class NotificationService {
           startTimeString,
           deadlineTimeString,
           remindersIntensity,
+          userTask: userTask,
           onlyFinalTodayGlobal: onlyFinalTodayFlag,
           totalDaysCount: datesToPlan.length,
         );
@@ -697,6 +703,7 @@ class NotificationService {
         scheduledCount += await _scheduleComeBackSeries(
           endDate,
           startTimeString,
+          userTask: userTask,
           maxShots: 3,
         );
 
@@ -768,7 +775,8 @@ class NotificationService {
     String startTime,
     String deadlineTime,
     int intensity,
-    {bool onlyFinalTodayGlobal = false,
+    {String? userTask,
+    bool onlyFinalTodayGlobal = false,
     int totalDaysCount = 1}
   ) async {
     try {
@@ -788,14 +796,21 @@ class NotificationService {
       if (end.isBefore(start)) {
         // Guard: if misconfigured, schedule only deadline
         _logger.warning('Invalid time configuration for $dateStr: deadline ($deadlineTime) before start ($startTime)');
+        final hasTask = userTask != null && userTask.isNotEmpty;
         return await _scheduleSlot(
           dateStr,
           'deadline',
           end,
-          title: 'Task Reminder',
+          title: hasTask ? 'Deadline: $userTask' : 'Task Reminder',
           body: 'Time to check in on your task!',
         );
       }
+
+      // Create personalized notification titles
+      final hasTask = userTask != null && userTask.isNotEmpty;
+      final startTitle = hasTask ? userTask : 'Let\'s get it started';
+      final midTitle = hasTask ? userTask : 'Stay on track';
+      final deadlineTitle = hasTask ? 'Deadline: $userTask' : 'Deadline check';
 
       int count = 0;
       // Start encouragement (skip if today and in the past, or if only-final-today is set)
@@ -805,7 +820,7 @@ class NotificationService {
             dateStr,
             'start',
             start,
-            title: 'Let’s get it started',
+            title: startTitle,
             body: 'Quick nudge: your task window opens now.',
           );
         }
@@ -875,7 +890,7 @@ class NotificationService {
             dateStr,
             'mid$idx',
             midTime,
-            title: 'Stay on track',
+            title: midTitle,
             body: 'Quick check-in toward your goal.',
           );
           
@@ -902,7 +917,7 @@ class NotificationService {
           dateStr,
           'deadline',
           end,
-          title: 'Deadline check',
+          title: deadlineTitle,
           body: 'Did you complete your task today?',
         );
       }
@@ -916,7 +931,8 @@ class NotificationService {
   Future<int> _scheduleComeBackSeries(
     String endDateStr,
     String startTime,
-    {int maxShots = 3}
+    {String? userTask,
+    int maxShots = 3}
   ) async {
     try {
       final shots = <DateTime>[];
@@ -930,6 +946,10 @@ class NotificationService {
           _logger.warning('Failed to parse comeback start time "$startTime" for date ${_fmtDate(cursor)}');
         }
       }
+      // Create personalized comeback title
+      final hasTask = userTask != null && userTask.isNotEmpty;
+      final comebackTitle = hasTask ? 'Get back to $userTask' : 'Come back to your habit';
+
       int count = 0;
       var i = 0;
       for (final t in shots) {
@@ -939,7 +959,7 @@ class NotificationService {
           _fmtDate(t),
           'comeback$i',
           t,
-          title: 'Come back to your habit',
+          title: comebackTitle,
           body: 'Pick it back up today.',
         );
       }
@@ -2420,6 +2440,7 @@ class NotificationService {
   /// - deadlineTime: User's daily deadline time (HH:MM format)
   /// - activeDays: List of active weekdays (1-7, Monday-Sunday)
   /// - onlyFinalOnDate: Snooze flag date (TODAY_DATE when snoozed, empty otherwise)
+  /// - userTask: User's task name (affects notification titles)
   ///
   /// The hash is used to determine if notification parameters have changed
   /// and whether expensive notification rescheduling can be skipped.
@@ -2462,6 +2483,9 @@ class NotificationService {
         '${StorageKeys.notificationPrefix}onlyFinalOnDate',
       ) ?? '').trim();
 
+      // Get user task for personalized title changes
+      final userTask = (await _userDataService.getValue<String>(StorageKeys.userTask) ?? '').trim();
+
       // Create a stable hash input with normalized values
       final hashInput = [
         'intensity:$intensity',
@@ -2470,6 +2494,7 @@ class NotificationService {
         'deadlineTime:${deadlineTime.isEmpty ? 'default' : deadlineTime}',
         'activeDays:${sortedActiveDays.isEmpty ? 'none' : sortedActiveDays.join(',')}',
         'onlyFinalOnDate:${onlyFinalOnDate.isEmpty ? 'none' : onlyFinalOnDate}',
+        'userTask:${userTask.isEmpty ? 'none' : userTask}',
       ].join('|');
       
       final hash = hashInput.hashCode.toString();

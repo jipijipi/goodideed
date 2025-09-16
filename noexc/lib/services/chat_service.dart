@@ -91,6 +91,8 @@ class ChatService {
 
   /// Handle events from dataActionProcessor
   Future<void> _handleEvent(String eventType, Map<String, dynamic> data) async {
+    logger.debug('ChatService received event: $eventType with data: $data');
+
     // Handle specific event types
     switch (eventType) {
       case 'recalculate_active_day':
@@ -474,6 +476,11 @@ class ChatService {
 
     // Recalculate task.endDate and task.isPastEndDate
     try {
+      // Show typing indicator for testing
+      if (_onEvent != null) {
+        await _onEvent!('show_typing_indicator', {'reason': 'recalculating_task_data'});
+      }
+
       await sessionService.recalculateTaskEndDate();
       logger.info(
         'Successfully recalculated task.endDate and task.isPastEndDate',
@@ -539,6 +546,11 @@ class ChatService {
       logger.info('Successfully rescheduled notifications after task refresh');
     } catch (e) {
       logger.error('Failed to reschedule notifications after task refresh: $e');
+    } finally {
+      // Hide typing indicator when all calculations are complete
+      if (_onEvent != null) {
+        await _onEvent!('hide_typing_indicator', {'reason': 'recalculating_task_data'});
+      }
     }
   }
 
@@ -568,11 +580,21 @@ class ChatService {
   /// Handle notification_reschedule event from dataAction trigger
   Future<void> _handleNotificationReschedule() async {
     try {
+      // Show typing indicator while scheduling notifications
+      if (_onEvent != null) {
+        await _onEvent!('show_typing_indicator', {'reason': 'scheduling_notifications'});
+      }
+
       final notificationService = ServiceLocator.instance.notificationService;
       await notificationService.scheduleDeadlineReminder();
       logger.info('Successfully rescheduled notifications');
     } catch (e) {
       logger.error('Failed to reschedule notifications: $e');
+    } finally {
+      // Hide typing indicator when done
+      if (_onEvent != null) {
+        await _onEvent!('hide_typing_indicator', {'reason': 'scheduling_notifications'});
+      }
     }
   }
 

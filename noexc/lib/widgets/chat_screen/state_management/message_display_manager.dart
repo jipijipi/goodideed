@@ -209,6 +209,57 @@ class MessageDisplayManager {
     }
   }
 
+  /// Show temporary typing indicator for system operations
+  void showTypingIndicator(VoidCallback notifyListeners, {String reason = 'processing'}) {
+    if (_disposed) return;
+
+    // Create a temporary typing indicator message
+    final typingMessage = ChatMessage(
+      id: -1, // Use negative ID to avoid conflicts
+      text: '\u200B', // Zero-width space triggers typing indicator
+      sender: 'bot',
+      type: MessageType.bot,
+    );
+
+    _displayedMessages.add(typingMessage);
+
+    final animatedListState = _animatedListKey.currentState;
+    if (animatedListState != null) {
+      animatedListState.insertItem(
+        0,
+        duration: DesignTokens.messageSlideAnimationDuration,
+      );
+    }
+
+    notifyListeners();
+    _scrollToBottom();
+  }
+
+  /// Hide temporary typing indicator
+  void hideTypingIndicator(VoidCallback notifyListeners, {String reason = 'processing'}) {
+    if (_disposed) return;
+
+    // Find and remove the typing indicator message (ID: -1)
+    final typingIndex = _displayedMessages.indexWhere(
+      (m) => m.id == -1 && m.isFromBot && m.type == MessageType.bot && m.text == '\u200B',
+    );
+
+    if (typingIndex != -1) {
+      _displayedMessages.removeAt(typingIndex);
+
+      final animatedListState = _animatedListKey.currentState;
+      if (animatedListState != null) {
+        animatedListState.removeItem(
+          0, // Since messages are displayed in reverse, typing indicator is at index 0
+          (context, animation) => const SizedBox.shrink(),
+          duration: DesignTokens.messageSlideAnimationDuration,
+        );
+      }
+
+      notifyListeners();
+    }
+  }
+
   /// Dispose of resources
   void dispose() {
     _disposed = true;

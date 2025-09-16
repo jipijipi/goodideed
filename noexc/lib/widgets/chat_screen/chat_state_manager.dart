@@ -69,6 +69,9 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       notifyListeners();
     });
 
+    // Set up event callback for typing indicators and other UI events
+    ServiceLocator.instance.chatService.setEventCallback(_handleChatServiceEvent);
+
     // Register as lifecycle observer
     WidgetsBinding.instance.addObserver(this);
 
@@ -260,6 +263,29 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
       logger.info('All user data cleared', component: LogComponent.ui);
     } catch (e) {
       logger.error('Failed to clear user data: $e', component: LogComponent.ui);
+    }
+  }
+
+  /// Handle events from ChatService (typing indicators, etc.)
+  Future<void> _handleChatServiceEvent(String eventType, Map<String, dynamic> data) async {
+    if (_disposed) return;
+
+    logger.debug('ChatStateManager received event: $eventType with data: $data', component: LogComponent.ui);
+
+    switch (eventType) {
+      case 'show_typing_indicator':
+        _messageDisplayManager.showTypingIndicator(notifyListeners,
+          reason: data['reason'] ?? 'processing');
+        logger.debug('Showing typing indicator: ${data['reason']}', component: LogComponent.ui);
+        break;
+      case 'hide_typing_indicator':
+        _messageDisplayManager.hideTypingIndicator(notifyListeners,
+          reason: data['reason'] ?? 'processing');
+        logger.debug('Hiding typing indicator: ${data['reason']}', component: LogComponent.ui);
+        break;
+      default:
+        logger.debug('Unhandled ChatService event: $eventType', component: LogComponent.ui);
+        break;
     }
   }
 

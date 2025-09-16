@@ -616,14 +616,15 @@ class NotificationService {
         await _cancelBeforeTaskDate(currentDateString);
       }
 
-      // If scripts requested to keep only final today (date-scoped), enforce it
+      // Check for snooze flag before scheduling (moved from after cleanup)
       final onlyFinalOnDate = await _userDataService.getValue<String>(
         '${StorageKeys.notificationPrefix}onlyFinalOnDate',
       );
       final todayStr = _todayDateString();
       final onlyFinalTodayFlag = (onlyFinalOnDate != null && onlyFinalOnDate == todayStr);
+
       if (onlyFinalTodayFlag) {
-        await _keepOnlyFinalForDate(todayStr);
+        _logger.info('Snooze mode active - will only schedule deadline notifications for $todayStr');
       }
 
       // Prime activeDays cache
@@ -1509,48 +1510,6 @@ class NotificationService {
     }
   }
 
-  Future<void> _keepOnlyFinalForDate(String dateStr) async {
-    try {
-      final pending = await getPendingNotifications();
-      int canceledCount = 0;
-      int keptCount = 0;
-      int errorCount = 0;
-      
-      _logger.info('Keeping only final notifications for date: $dateStr (found ${pending.length} pending)');
-      
-      for (final p in pending) {
-        final payload = p.payload;
-        if (payload == null || payload.isEmpty) continue;
-        try {
-          final data = json.decode(payload) as Map<String, dynamic>;
-          if (data['taskDate'] == dateStr) {
-            final slot = data['slot'] as String?;
-            if (slot != 'deadline') {
-              final success = await _cancelNotificationWithRetry(
-                p.id,
-                reason: 'non-final slot: $slot for date: $dateStr',
-              );
-              if (success) {
-                canceledCount++;
-              } else {
-                errorCount++;
-              }
-            } else {
-              keptCount++;
-              _logger.info('Kept final notification ID:${p.id} slot:$slot for date:$dateStr');
-            }
-          }
-        } catch (e) {
-          errorCount++;
-          _logger.warning('Failed to process notification ID:${p.id} payload in keep-final sweep: $e');
-        }
-      }
-      
-      _logger.info('Keep-final completed for $dateStr: canceled=$canceledCount, kept=$keptCount, errors=$errorCount');
-    } catch (e) {
-      _logger.error('Keep-final sweep failed: $e');
-    }
-  }
 
   // ACTIVE DAY helpers
   bool _isActiveDay(DateTime date) {

@@ -95,6 +95,7 @@ flutter:
     - assets/content/system/reset/
     - assets/content/app/
     - assets/content/app/remind/
+    - assets/content/app/encourage/
     # UI assets (prepared for future use)
     - assets/images/
     - assets/animations/

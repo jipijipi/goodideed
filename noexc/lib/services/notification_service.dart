@@ -996,8 +996,12 @@ class NotificationService {
         // Resolve 3-part notification content for weekly comeback
         const fallbackTitle = 'Check back in';
         const fallbackSnarky = 'It\'s a great day to restart.';
-        final resolvedSnarkyText = await _getNotificationText('app.remind.comeback', fallbackSnarky);
-        final resolvedMotivationalText = await _getNotificationText('app.encourage.comeback', 'Every comeback starts with a single step.');
+        final results = await Future.wait([
+          _getNotificationText('app.remind.comeback', fallbackSnarky),
+          _getNotificationText('app.encourage.comeback', 'Every comeback starts with a single step.'),
+        ]);
+        final resolvedSnarkyText = results[0];
+        final resolvedMotivationalText = results[1];
 
         final resolvedTitle = fallbackTitle; // Generic title for weekly
         final resolvedSubtitle = resolvedSnarkyText; // Snarky message
@@ -1239,9 +1243,13 @@ class NotificationService {
         motivationalKey = 'app.encourage.start'; // fallback
       }
 
-      // Resolve both content types
-      final resolvedSnarkyText = await _getNotificationText(snarkyKey, body); // Fallback to old body
-      final resolvedMotivationalText = await _getNotificationText(motivationalKey, 'You can do this!'); // Simple fallback
+      // Resolve both content types in parallel
+      final results = await Future.wait([
+        _getNotificationText(snarkyKey, body), // Fallback to old body
+        _getNotificationText(motivationalKey, 'You can do this!'), // Simple fallback
+      ]);
+      final resolvedSnarkyText = results[0];
+      final resolvedMotivationalText = results[1];
 
       final resolvedTitle = title; // User task name
       final resolvedSubtitle = resolvedSnarkyText; // Snarky message

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-16T13:34:48.142Z",
+  "lastUpdated": "2025-09-16T13:43:12.097Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-16T13:34:48.110Z"
+    "timestamp": "2025-09-16T13:43:12.078Z"
   },
   "nodes": [
     {
@@ -7045,7 +7045,7 @@
         "category": "system",
         "nodeLabel": "System Message",
         "nodeId": "427",
-        "content": " • TASK SUMMARY •\\n\\n*task* : {user.task}\\n\\n*days* : {task.activeDays}\\n\\n*start* : {task.startTime}\\n\\n*deadline* : {task.deadlineTime}\\n\\n*reminders* : {task.remindersIntensity}"
+        "content": " • TASK SUMMARY •\\n\\n_task_ : {user.task}\\n\\n_*days*_ : {task.activeDays}\\n\\n*start* : {task.startTime}\\n\\n*deadline* : {task.deadlineTime}\\n\\n*reminders* : {task.remindersIntensity}"
       },
       "type": "editable",
       "width": 250,

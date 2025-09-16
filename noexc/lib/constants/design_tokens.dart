@@ -896,17 +896,17 @@ class DesignTokens {
         color: textColor,
         height: 1.1, // Reduced line spacing for tighter appearance
       ),
-      // Disable styling variations for system messages
+      // Enable styling variations for system messages
       strong: GoogleFonts.inconsolata(
         fontSize: messageFontSize * 0.85,
         color: textColor,
-        fontWeight: FontWeight.normal, // No bold in system messages
+        fontWeight: FontWeight.bold, // Enable bold in system messages
         height: 1.1, // Consistent reduced line spacing
       ),
       em: GoogleFonts.inconsolata(
         fontSize: messageFontSize * 0.85,
         color: textColor,
-        fontStyle: FontStyle.normal, // No italic in system messages
+        fontStyle: FontStyle.italic, // Enable italic in system messages
         height: 1.1, // Consistent reduced line spacing
       ),
       // Disable all other markdown elements

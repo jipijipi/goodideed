@@ -503,7 +503,8 @@ class NotificationService {
     final startTime = DateTime.now();
     
     try {
-      await _scheduleDeadlineReminderImpl(caller: caller);
+      // Run the heavy scheduling work in background to avoid UI blocking
+      await _scheduleInBackground(caller: caller);
       final duration = DateTime.now().difference(startTime);
       _logger.info('Scheduling completed by: $callerInfo in ${duration.inMilliseconds}ms');
     } catch (e) {
@@ -520,6 +521,13 @@ class NotificationService {
     }
   }
 
+  /// Background scheduling wrapper to prevent UI blocking
+  Future<void> _scheduleInBackground({String? caller}) async {
+    // Use microtasks to yield control back to UI thread during heavy operations
+    await Future.microtask(() {});
+    return _scheduleDeadlineReminderImpl(caller: caller);
+  }
+
   Future<void> _scheduleDeadlineReminderImpl({String? caller}) async {
     final callerInfo = caller != null ? ' (called by: $caller)' : '';
     _logger.info('=== SCHEDULING DAILY PLAN$callerInfo ===');
@@ -528,13 +536,7 @@ class NotificationService {
       _logger.info('iOS Simulator: ${_isIOSSimulator()}');
     }
 
-    // Log existing notifications before scheduling
-    try {
-      final existingNotifications = await getPendingNotifications();
-      _logger.info('Found ${existingNotifications.length} existing notifications before scheduling');
-    } catch (e) {
-      _logger.warning('Failed to check existing notifications before scheduling: $e');
-    }
+    // Skip redundant verification - checked during cleanup if enabled
 
     if (_isTestEnvironment()) {
       _logger.info('Test environment - skipping notification scheduling');
@@ -598,22 +600,17 @@ class NotificationService {
       ) ?? true; // Default to true for better reliability
       
       if (enableCompleteCleanup) {
-        _logger.info('Complete notification cleanup enabled - canceling ALL notifications');
         final pendingBefore = await getPendingNotifications();
-        _logger.info('Found ${pendingBefore.length} notifications before complete cleanup');
-        
+        _logger.info('Cleaning ${pendingBefore.length} existing notifications');
+
         await cancelAllNotifications();
-        
+
         final pendingAfter = await getPendingNotifications();
-        _logger.info('Cleanup verification: ${pendingAfter.length} notifications remain after complete cleanup');
-        
         if (pendingAfter.isNotEmpty) {
-          _logger.warning('Complete cleanup failed - ${pendingAfter.length} notifications still exist');
+          _logger.warning('Cleanup incomplete - ${pendingAfter.length} notifications remain');
           for (final remaining in pendingAfter) {
-            _logger.warning('Surviving notification ID:${remaining.id} title:"${remaining.title}"');
+            _logger.warning('Remaining notification ID:${remaining.id}');
           }
-        } else {
-          _logger.info('Complete cleanup successful - all notifications removed');
         }
       } else {
         _logger.info('Using legacy cleanup - only removing stale notifications');
@@ -676,7 +673,9 @@ class NotificationService {
       int scheduledCount = 0;
       int failedDays = 0;
       for (final dateStr in datesToPlan) {
-        _logger.info('Processing date: $dateStr');
+        // Yield to UI thread before each day's scheduling
+        await Future.microtask(() {});
+
         final dayCount = await _scheduleDaySlots(
           dateStr,
           startTimeString,
@@ -686,10 +685,9 @@ class NotificationService {
           onlyFinalTodayGlobal: onlyFinalTodayFlag,
           totalDaysCount: datesToPlan.length,
         );
-        
+
         if (dayCount > 0) {
           scheduledCount += dayCount;
-          _logger.info('Successfully scheduled $dayCount notifications for $dateStr');
         } else {
           failedDays++;
           _logger.warning('Failed to schedule any notifications for $dateStr');
@@ -720,34 +718,8 @@ class NotificationService {
         scheduledCount > 0,
       );
 
-      // Verify final notification count
-      try {
-        final finalNotifications = await getPendingNotifications();
-        _logger.info('=== SCHEDULING COMPLETED ===');
-        _logger.info('Scheduled: $scheduledCount new notifications');
-        _logger.info('Total pending: ${finalNotifications.length} notifications');
-        _logger.info('Notifications enabled: ${scheduledCount > 0}');
-        
-        // Log breakdown by type for debugging
-        final typeBreakdown = <String, int>{};
-        for (final notification in finalNotifications) {
-          if (notification.payload != null) {
-            try {
-              final data = json.decode(notification.payload!) as Map<String, dynamic>;
-              final type = data['type'] as String? ?? 'unknown';
-              typeBreakdown[type] = (typeBreakdown[type] ?? 0) + 1;
-            } catch (_) {
-              typeBreakdown['invalid'] = (typeBreakdown['invalid'] ?? 0) + 1;
-            }
-          } else {
-            typeBreakdown['no-payload'] = (typeBreakdown['no-payload'] ?? 0) + 1;
-          }
-        }
-        _logger.info('Notification types: $typeBreakdown');
-      } catch (e) {
-        _logger.warning('Failed to verify final notification count: $e');
-        _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications (verification failed) ===');
-      }
+      // Simplified completion logging - skip expensive verification
+      _logger.info('=== SCHEDULING COMPLETED: $scheduledCount notifications ===');
       
       // Update scheduling cache after successful completion
       try {
@@ -886,6 +858,10 @@ class NotificationService {
           }
           
           _logger.info('  VALID - notification time ${_formatNotificationTime(midTime)} is valid');
+
+          // Yield to UI thread before each notification
+          await Future.microtask(() {});
+
           final result = await _scheduleSlot(
             dateStr,
             'mid$idx',
@@ -1228,10 +1204,7 @@ class NotificationService {
     try {
       final id = _buildId(taskDate, slot);
       
-      _logger.info('=== _scheduleSlot DEBUG ===');
-      _logger.info('Scheduling slot: $slot for date: $taskDate');
-      _logger.info('Notification ID: $id');
-      _logger.info('Scheduled time: ${whenLocal.hour}:${whenLocal.minute.toString().padLeft(2, '0')} on ${whenLocal.day}/${whenLocal.month}');
+      _logger.debug('Scheduling $slot for $taskDate at ${whenLocal.hour}:${whenLocal.minute.toString().padLeft(2, '0')} (ID:$id)');
       
       // Resolve notification text using semantic content based on slot type
       String semanticKey;
@@ -1247,15 +1220,10 @@ class NotificationService {
         semanticKey = 'app.remind.generic';
       }
       
-      _logger.info('Using semantic key: $semanticKey');
-      
       // Resolve notification text using semantic content (use same key for both title and body)
       final resolvedText = await _getNotificationText(semanticKey, body);
       final resolvedTitle = title; // Keep original title for now
       final resolvedBody = resolvedText;
-      
-      _logger.info('Resolved title: "$resolvedTitle"');
-      _logger.info('Resolved body: "$resolvedBody"');
       
       // Create payload data
       final payloadData = {
@@ -1266,10 +1234,6 @@ class NotificationService {
       };
       
       final payload = json.encode(payloadData);
-
-      _logger.info('Scheduling notification: ID:$id slot:$slot date:$taskDate time:${whenLocal.toString().substring(11, 16)} title:"$resolvedTitle"');
-      _logger.info('Notification payload: $payload');
-      _logger.info('Payload data structure: $payloadData');
 
       const details = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -1296,16 +1260,7 @@ class NotificationService {
         payload: payload,
       );
       
-      _logger.info('Successfully scheduled notification ID:$id for $taskDate/$slot');
-      
-      // Immediately check if the notification appears in pending requests (debug)
-      try {
-        final pending = await _notifications.pendingNotificationRequests();
-        final found = pending.any((req) => req.id == id);
-        _logger.debug('Notification ID:$id immediate pending check: ${found ? "FOUND" : "NOT FOUND"} (${pending.length} total pending)');
-      } catch (e) {
-        _logger.debug('Failed to check immediate pending status for ID:$id: $e');
-      }
+      _logger.debug('Scheduled notification ID:$id for $taskDate/$slot');
       
       return 1;
     } catch (e) {

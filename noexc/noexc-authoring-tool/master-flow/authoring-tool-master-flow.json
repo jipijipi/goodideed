@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-16T16:48:47.421Z",
+  "lastUpdated": "2025-09-16T17:24:12.401Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-16T16:48:47.402Z"
+    "timestamp": "2025-09-16T17:24:12.380Z"
   },
   "nodes": [
     {
@@ -1396,12 +1396,13 @@
             "value": "",
             "event": "overlay_rive",
             "data": {
-              "asset": "assets/animations/tristopher_simple.riv",
-              "zone": 3,
+              "asset": "assets/animations/success.riv",
+              "zone": 2,
+              "align": "center",
               "id": "success",
-              "policy": "queue",
-              "minShowMs": 1000,
-              "autoHideMs": 1200
+              "fit": "contain",
+              "useDataBinding": true,
+              "autoHideMs": 3500
             }
           }
         ]
@@ -1445,9 +1446,40 @@
       }
     },
     {
+      "id": "500",
+      "position": {
+        "x": 474,
+        "y": 0
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "500",
+        "dataActions": [
+          {
+            "type": "set",
+            "key": "task.nextActiveDay",
+            "value": "NEXT_ACTIVE_WEEKDAY"
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 324,
+      "height": 191,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -1781.2023957266233,
+        "y": -1932.159845937542
+      },
+      "dragging": false,
+      "parentId": "147",
+      "extent": "parent"
+    },
+    {
       "id": "65",
       "position": {
-        "x": 217.1345086000276,
+        "x": 187.67032074212557,
         "y": 142.1195780129076
       },
       "type": "editable",
@@ -1455,8 +1487,8 @@
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 219.41383879210363,
-        "y": -574.1017153253979
+        "x": -2067.5320749844977,
+        "y": -1790.0402679246345
       },
       "dragging": false,
       "parentId": "147",
@@ -5302,8 +5334,8 @@
         "content": "So {task.startTime:timeDisplay}, good."
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": 2527.956695454307,
@@ -10258,22 +10290,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "63",
-      "sourceHandle": null,
-      "target": "65",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-63-65"
-    },
-    {
-      "zIndex": 1001,
       "source": "80",
       "sourceHandle": null,
       "target": "116",
@@ -13979,6 +13995,33 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-499-422",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "63",
+      "sourceHandle": null,
+      "target": "500",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-63-500"
+    },
+    {
+      "zIndex": 1001,
+      "source": "500",
+      "sourceHandle": null,
+      "target": "65",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-500-65",
       "selected": false
     }
   ]

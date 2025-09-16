@@ -993,27 +993,32 @@ class NotificationService {
         
         final payload = json.encode(payloadData);
 
-        const details = NotificationDetails(
+        // Resolve 3-part notification content for weekly comeback
+        const fallbackTitle = 'Check back in';
+        const fallbackSnarky = 'It\'s a great day to restart.';
+        final resolvedSnarkyText = await _getNotificationText('app.remind.comeback', fallbackSnarky);
+        final resolvedMotivationalText = await _getNotificationText('app.encourage.comeback', 'Every comeback starts with a single step.');
+
+        final resolvedTitle = fallbackTitle; // Generic title for weekly
+        final resolvedSubtitle = resolvedSnarkyText; // Snarky message
+        final resolvedBody = resolvedMotivationalText; // Motivational encouragement
+
+        final details = NotificationDetails(
           android: AndroidNotificationDetails(
             NotificationConfig.channelId,
             NotificationConfig.channelName,
             channelDescription: NotificationConfig.channelDescription,
             importance: Importance.high,
             priority: Priority.high,
+            subText: resolvedSubtitle, // Snarky message as subtitle
           ),
           iOS: DarwinNotificationDetails(
             presentAlert: true,
             presentBadge: true,
             presentSound: true,
+            subtitle: resolvedSubtitle, // Snarky message as subtitle
           ),
         );
-
-        // Resolve comeback notification text using semantic content
-        const fallbackTitle = 'Check back in';
-        const fallbackBody = 'It\'s a great day to restart.';
-        final resolvedText = await _getNotificationText('app.remind.comeback', fallbackBody);
-        final resolvedTitle = fallbackTitle; // Keep original title for now
-        final resolvedBody = resolvedText;
 
         await _notifications.zonedSchedule(
           id,
@@ -1206,24 +1211,41 @@ class NotificationService {
       
       _logger.debug('Scheduling $slot for $taskDate at ${whenLocal.hour}:${whenLocal.minute.toString().padLeft(2, '0')} (ID:$id)');
       
-      // Resolve notification text using semantic content based on slot type
-      String semanticKey;
+      // Resolve snarky subtitle content using existing semantic content
+      String snarkyKey;
       if (slot == 'start') {
-        semanticKey = 'app.remind.start';
+        snarkyKey = 'app.remind.start';
       } else if (slot.startsWith('mid')) {
-        semanticKey = 'app.remind.progress';
+        snarkyKey = 'app.remind.progress';
       } else if (slot == 'deadline') {
-        semanticKey = 'app.remind.deadline';
+        snarkyKey = 'app.remind.deadline';
       } else if (slot.startsWith('comeback')) {
-        semanticKey = 'app.remind.comeback';
+        snarkyKey = 'app.remind.comeback';
       } else {
-        semanticKey = 'app.remind.generic';
+        snarkyKey = 'app.remind.generic';
       }
-      
-      // Resolve notification text using semantic content (use same key for both title and body)
-      final resolvedText = await _getNotificationText(semanticKey, body);
-      final resolvedTitle = title; // Keep original title for now
-      final resolvedBody = resolvedText;
+
+      // Resolve motivational body content using new encouragement system
+      String motivationalKey;
+      if (slot == 'start') {
+        motivationalKey = 'app.encourage.start';
+      } else if (slot.startsWith('mid')) {
+        motivationalKey = 'app.encourage.progress';
+      } else if (slot == 'deadline') {
+        motivationalKey = 'app.encourage.deadline';
+      } else if (slot.startsWith('comeback')) {
+        motivationalKey = 'app.encourage.comeback';
+      } else {
+        motivationalKey = 'app.encourage.start'; // fallback
+      }
+
+      // Resolve both content types
+      final resolvedSnarkyText = await _getNotificationText(snarkyKey, body); // Fallback to old body
+      final resolvedMotivationalText = await _getNotificationText(motivationalKey, 'You can do this!'); // Simple fallback
+
+      final resolvedTitle = title; // User task name
+      final resolvedSubtitle = resolvedSnarkyText; // Snarky message
+      final resolvedBody = resolvedMotivationalText; // Motivational encouragement
       
       // Create payload data
       final payloadData = {
@@ -1235,25 +1257,27 @@ class NotificationService {
       
       final payload = json.encode(payloadData);
 
-      const details = NotificationDetails(
+      final details = NotificationDetails(
         android: AndroidNotificationDetails(
           NotificationConfig.channelId,
           NotificationConfig.channelName,
           channelDescription: NotificationConfig.channelDescription,
           importance: Importance.high,
           priority: Priority.high,
+          subText: resolvedSubtitle, // Snarky message as subtitle
         ),
         iOS: DarwinNotificationDetails(
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
+          subtitle: resolvedSubtitle, // Snarky message as subtitle
         ),
       );
 
       await _notifications.zonedSchedule(
         id,
-        resolvedTitle,
-        resolvedBody,
+        resolvedTitle,  // User task name
+        resolvedBody,   // Motivational encouragement
         tz.TZDateTime.from(whenLocal, tz.local),
         details,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,

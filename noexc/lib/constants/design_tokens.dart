@@ -916,7 +916,8 @@ class DesignTokens {
         fontWeight: FontWeight.bold, // Bold for header emphasis
         height: 1.1, // Consistent reduced line spacing
       ),
-      h1Align: WrapAlignment.center, // Center the H1 text
+      h1Padding: const EdgeInsets.symmetric(vertical: 4.0),
+      // Remove textAlign as it doesn't work for centering in MarkdownStyleSheet
       // Disable other markdown elements
       h2: const TextStyle(fontSize: 0, height: 0),
       h3: const TextStyle(fontSize: 0, height: 0),
@@ -924,7 +925,7 @@ class DesignTokens {
       h5: const TextStyle(fontSize: 0, height: 0),
       h6: const TextStyle(fontSize: 0, height: 0),
       blockquote: const TextStyle(fontSize: 0, height: 0),
-      // Enable horizontal rules
+      // Enable short horizontal rules with margin to make them shorter
       horizontalRuleDecoration: BoxDecoration(
         border: Border(
           top: BorderSide(

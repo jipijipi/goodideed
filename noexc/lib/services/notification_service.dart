@@ -2417,8 +2417,9 @@ class NotificationService {
   /// - remindersIntensity: Number of notifications to schedule (0-3)
   /// - currentDate: Task date for scheduling (YYYY-MM-DD format)
   /// - startTime: User's daily start time (HH:MM format)
-  /// - deadlineTime: User's daily deadline time (HH:MM format) 
+  /// - deadlineTime: User's daily deadline time (HH:MM format)
   /// - activeDays: List of active weekdays (1-7, Monday-Sunday)
+  /// - onlyFinalOnDate: Snooze flag date (TODAY_DATE when snoozed, empty otherwise)
   ///
   /// The hash is used to determine if notification parameters have changed
   /// and whether expensive notification rescheduling can be skipped.
@@ -2455,7 +2456,12 @@ class NotificationService {
           .where((day) => day.isNotEmpty)
           .map((day) => day.trim())
           .toList()..sort();
-      
+
+      // Check snooze flag state for cache invalidation
+      final onlyFinalOnDate = (await _userDataService.getValue<String>(
+        '${StorageKeys.notificationPrefix}onlyFinalOnDate',
+      ) ?? '').trim();
+
       // Create a stable hash input with normalized values
       final hashInput = [
         'intensity:$intensity',
@@ -2463,6 +2469,7 @@ class NotificationService {
         'startTime:${startTime.isEmpty ? 'default' : startTime}',
         'deadlineTime:${deadlineTime.isEmpty ? 'default' : deadlineTime}',
         'activeDays:${sortedActiveDays.isEmpty ? 'none' : sortedActiveDays.join(',')}',
+        'onlyFinalOnDate:${onlyFinalOnDate.isEmpty ? 'none' : onlyFinalOnDate}',
       ].join('|');
       
       final hash = hashInput.hashCode.toString();

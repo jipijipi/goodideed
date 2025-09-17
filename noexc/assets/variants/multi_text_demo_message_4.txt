@@ -1,4 +1,0 @@
-This uses the same delay for all messages. ||| Much simpler when you don't need custom timing. ||| Perfect for rapid-fire explanations!
-Same timing for every part. ||| Keeps things consistent and simple. ||| Great for quick information delivery!
-Uniform delays throughout. ||| Makes the flow predictable. ||| Ideal for educational content!
-Consistent pacing here. ||| No complex timing needed. ||| Works perfectly for tutorials!

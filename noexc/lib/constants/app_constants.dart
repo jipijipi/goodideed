@@ -29,35 +29,22 @@ class AppConstants {
   static const String sequencesAssetPath = 'assets/sequences/';
   static const String defaultSequenceId = 'welcome_seq';
   static const List<String> availableSequences = [
+    // Core sequences (documented in CLAUDE.md)
     'welcome_seq',
     'onboarding_seq',
-    'taskChecking_seq',
-    'taskSetting_seq',
     'sendoff_seq',
     'success_seq',
     'failure_seq',
-    'task_config_seq',
-    'task_config_test_seq',
-    'day_tracking_test_seq',
-    'richtext_demo_seq',
-    'image_demo_seq',
-    // Missing sequences that exist in assets
+    // Actual sequence files that exist
     'intro_seq',
     'inactive_seq',
-    'active_seq',
     'settask_seq',
     'excuse_seq',
-    'completed_seq',
     'deadline_seq',
-    'failed_seq',
-    'notice_seq',
     'overdue_seq',
     'pending_seq',
-    'previous_seq',
     'reminders_seq',
     'weekdays_seq',
-    'task_start_timing_seq',
-    // Fix for validation test failures
     'taskCheck_seq',
     'taskparam_seq',
     'autoFailed_seq',

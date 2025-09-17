@@ -29,13 +29,11 @@ class AppConstants {
   static const String sequencesAssetPath = 'assets/sequences/';
   static const String defaultSequenceId = 'welcome_seq';
   static const List<String> availableSequences = [
-    // Core sequences (documented in CLAUDE.md)
     'welcome_seq',
     'onboarding_seq',
     'sendoff_seq',
     'success_seq',
     'failure_seq',
-    // Actual sequence files that exist
     'intro_seq',
     'inactive_seq',
     'settask_seq',
@@ -58,7 +56,6 @@ class AppConstants {
     'startTime_seq',
     'deadlineTime_seq',
     'taskConfirm_seq',
-    'system_demo_seq',
   ];
 
   // User Response ID Offset

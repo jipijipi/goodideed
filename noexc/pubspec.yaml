@@ -69,7 +69,6 @@ flutter:
   assets:
     # Core application assets
     - assets/sequences/
-    - assets/variants/
     - assets/debug/
     - assets/content/
     - assets/content/formatters/

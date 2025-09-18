@@ -43,8 +43,8 @@ class TextTemplatingService {
           if (formattedValue != null) {
             finalValue = formattedValue;
           } else if (fallback != null) {
-            // Formatter failed, use fallback if available
-            finalValue = fallback;
+            // Formatter failed, try to apply case transformations to fallback if formatter contains case flags
+            finalValue = await _applyFormatterToFallback(formatter, fallback);
           }
           // If formatter failed and no fallback, finalValue remains null
         } else {
@@ -52,7 +52,12 @@ class TextTemplatingService {
         }
       } else if (fallback != null) {
         // Use fallback value if no stored value exists
-        finalValue = fallback;
+        if (formatter != null) {
+          // Apply case transformations to fallback if formatter contains case flags
+          finalValue = await _applyFormatterToFallback(formatter, fallback);
+        } else {
+          finalValue = fallback;
+        }
       }
 
       // Replace the template variable with the final value
@@ -63,5 +68,28 @@ class TextTemplatingService {
     }
 
     return result;
+  }
+
+  /// Apply case transformations from a formatter string to a fallback value
+  /// Only applies case transformations (upper, lower, proper, sentence), ignores other formatter parts
+  Future<String> _applyFormatterToFallback(String formatter, String fallback) async {
+    // Check if the formatter contains case transformations
+    final parts = formatter.split(':');
+    final caseFlags = ['upper', 'lower', 'proper', 'sentence'];
+
+    // Look for case flags in any part of the formatter
+    final foundCaseFlags = parts.where((part) => caseFlags.contains(part)).toList();
+
+    if (foundCaseFlags.isNotEmpty) {
+      // Try to get formatted value using the case flags
+      final caseFormatter = foundCaseFlags.first; // Use first case flag found
+      final formattedFallback = await _formatterService.getFormattedValue(
+        caseFormatter,
+        fallback,
+      );
+      return formattedFallback ?? fallback;
+    }
+
+    return fallback;
   }
 }

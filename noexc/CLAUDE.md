@@ -85,6 +85,8 @@ Visual tool in `noexc-authoring-tool/` for creating conversation sequences:
 - **Local Storage**: shared_preferences for user data persistence
 - **Template System**: `{key|fallback}` syntax for dynamic text substitution
 - **Formatter Support**: `{key:formatter}` and `{key:formatter|fallback}` syntax (timeOfDay, intensity, activeDays, timePeriod)
+- **Case Transformations**: `{key:upper}`, `{key:lower}`, `{key:proper}`, `{key:sentence}` for text formatting
+- **Combined Formatting**: `{key:formatter:case}` and `{key:formatter:join:case}` for complex transformations
 - **Key Task Variables**: `task.currentDate`, `task.currentStatus`, `task.startTime`, `task.deadlineTime`, `task.isActiveDay`, `task.isBeforeStart`, `task.isInTimeRange`, `task.isPastDeadline`
 
 ### Message System
@@ -212,6 +214,52 @@ JSON format for modifying user data:
   }
 }
 ```
+
+## Case Transformations
+
+The templating system supports case transformations that can be applied to any template variable:
+
+### Case Transformation Types
+- **`upper`**: ALL UPPERCASE
+- **`lower`**: all lowercase
+- **`proper`**: First Letter Of Each Word Capitalized
+- **`sentence`**: First letter only capitalized
+
+### Usage Examples
+
+#### Basic Case Transformations
+```
+{user.name:upper} → "JOHN DOE"
+{user.name:lower} → "john doe"
+{user.name:proper} → "John Doe"
+{user.name:sentence} → "John doe"
+```
+
+#### Combined with Formatters
+```
+{session.timeOfDay:timeOfDay:upper} → "MORNING"
+{user.intensity:intensity:proper} → "High"
+```
+
+#### Combined with Array Joining
+```
+{task.activeDays:activeDays:join:upper} → "MONDAY, TUESDAY AND WEDNESDAY"
+{task.activeDays:activeDays:join:proper} → "Monday, Tuesday And Wednesday"
+{task.activeDays:activeDays:join:lower} → "monday, tuesday and wednesday"
+```
+
+#### With Fallback Values
+```
+{user.name:upper|ANONYMOUS} → "ANONYMOUS" (if user.name missing)
+{missing.key:lower|default text} → "default text" (case applied to fallback)
+```
+
+### Processing Order
+1. **Get raw value** from storage
+2. **Apply base formatter** (timeOfDay, activeDays, etc.)
+3. **Apply join flag** (if array, create grammatical sentence)
+4. **Apply case transformation** (upper, lower, proper, sentence)
+5. **Use fallback** (if any step failed, case transformation applied to fallback too)
 
 ## Quick Reference
 - **Default sequence**: `welcome_seq` 

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-17T16:01:53.026Z",
+  "lastUpdated": "2025-09-18T14:47:36.674Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-17T16:01:52.989Z"
+    "timestamp": "2025-09-18T14:47:36.647Z"
   },
   "nodes": [
     {
@@ -3786,8 +3786,8 @@
         "y": 4181.223535033685
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
         "x": 1692.6005353037508,
@@ -3801,7 +3801,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "165",
-        "content": "{user.name}? Really? |||All right {user.name}, I can work with that.|||But let's see if I can work with you."
+        "content": "{user.name:proper}? Really? |||All right {user.name:proper}, I can work with that.|||But let's see if I can work with you."
       }
     },
     {
@@ -7102,7 +7102,7 @@
         "category": "system",
         "nodeLabel": "System Message",
         "nodeId": "427",
-        "content": "# TASK SUMMARY ☟\\n\\n  -----\\n\\n***TASK***: {user.task}\\n\\n_***DAYS***_ : {task.activeDays:activeDays:join}\\n\\n***START***: {task.startTime:timeDisplay}\\n\\n***DEADLINE***: {task.deadlineTime:timeDisplay}\\n\\n***REMINDERS***: {task.remindersIntensity:intensity}"
+        "content": "# TASK SUMMARY ☟\\n\\n  -----\\n\\n***TASK***: {user.task:proper}\\n\\n_***DAYS***_ : {task.activeDays:activeDays:join:proper}\\n\\n***START***: {task.startTime:timeDisplay}\\n\\n***DEADLINE***: {task.deadlineTime:timeDisplay}\\n\\n***REMINDERS***: {task.remindersIntensity:intensity:proper}"
       },
       "type": "editable",
       "width": 248,
@@ -8789,8 +8789,8 @@
         ]
       },
       "type": "editable",
-      "width": 310,
-      "height": 191,
+      "width": 308,
+      "height": 189,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {

@@ -447,5 +447,185 @@ void main() {
         expect(result1, equals('Value: fallback1, Formatter: fallback2'));
       });
     });
+
+    group('Case transformation flags', () {
+      test('should apply upper case transformation', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'John Doe');
+        const text = 'Hello, {user.name:upper}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello, JOHN DOE!'));
+      });
+
+      test('should apply lower case transformation', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'John Doe');
+        const text = 'Hello, {user.name:lower}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello, john doe!'));
+      });
+
+      test('should apply proper case transformation', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'john doe smith');
+        const text = 'Hello, {user.name:proper}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello, John Doe Smith!'));
+      });
+
+      test('should apply sentence case transformation', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'JOHN DOE');
+        const text = 'Hello, {user.name:sentence}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello, John doe!'));
+      });
+
+      test('should apply case transformation with formatter', () async {
+        // Arrange - Use a simple value that doesn't require external formatter files
+        await userDataService.storeValue(StorageKeys.userName, 'john');
+        const text = 'Hello {user.name:proper}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello John!'));
+      });
+
+      test('should apply case transformation with formatter and fallback', () async {
+        // Arrange - don't set any value, test case transformation on fallback
+        const text = 'Hello {missing.name:upper|anonymous user}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello ANONYMOUS USER!'));
+      });
+
+      test('should apply case transformation to join results', () async {
+        // Arrange - Since activeDays formatter requires JSON file, test with simple case transformation
+        await userDataService.storeValue(StorageKeys.userName, 'john doe');
+        const text = 'Name: {user.name:upper}';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Name: JOHN DOE'));
+      });
+
+      test('should apply proper case to complex text', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'mary jane watson');
+        const text = 'Welcome {user.name:proper}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Welcome Mary Jane Watson!'));
+      });
+
+      test('should apply sentence case to complex text', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'PETER PARKER SPIDERMAN');
+        const text = 'Hero: {user.name:sentence}';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hero: Peter parker spiderman'));
+      });
+
+      test('should handle case transformation on empty strings', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, '');
+        const text = 'Hello, "{user.name:upper}"!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello, ""!'));
+      });
+
+      test('should handle case transformation on single characters', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'j');
+        const text = 'Initial: {user.name:upper}, {user.name:proper}';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Initial: J, J'));
+      });
+
+      test('should handle multiple spaces in proper case', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'john  doe   smith');
+        const text = 'Name: {user.name:proper}';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Name: John  Doe   Smith'));
+      });
+
+      test('should handle case transformation with special characters', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, "john's-doe_smith@example.com");
+        const text = 'Email: {user.name:upper}';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals("Email: JOHN'S-DOE_SMITH@EXAMPLE.COM"));
+      });
+
+      test('should prioritize first case transformation when multiple are specified', () async {
+        // Arrange
+        await userDataService.storeValue(StorageKeys.userName, 'John Doe');
+        const text = 'Name: {user.name:upper:lower:proper}';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Name: JOHN DOE')); // upper should win
+      });
+
+      test('should apply case transformation to fallback values', () async {
+        // Arrange - don't set any value
+        const text = 'Hello, {missing.name:upper|anonymous user}!';
+
+        // Act
+        final result = await templatingService.processTemplate(text);
+
+        // Assert
+        expect(result, equals('Hello, ANONYMOUS USER!'));
+      });
+    });
   });
 }

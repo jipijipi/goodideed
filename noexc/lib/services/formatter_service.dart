@@ -48,7 +48,8 @@ class FormatterService {
 
   /// Format a value using the specified formatter
   /// Returns the formatted string or null if formatter/value not found
-  /// Supports flags like 'join' for array processing: 'activeDays:join'
+  /// Supports flags like 'join' for array processing and case transformations
+  /// Examples: 'activeDays:join', 'timeOfDay:upper', 'activeDays:join:proper'
   Future<String?> getFormattedValue(
     String formatterName,
     dynamic rawValue,
@@ -58,23 +59,47 @@ class FormatterService {
     final baseFormatter = parts[0];
     final flags = parts.length > 1 ? parts.sublist(1) : <String>[];
 
-    // Handle join flag for arrays
-    if (flags.contains('join')) {
-      return await _processArrayWithJoin(baseFormatter, rawValue);
+    String? result;
+
+    // Check if baseFormatter is actually a case transformation flag
+    final caseFlags = ['upper', 'lower', 'proper', 'sentence'];
+    final isCaseOnly = caseFlags.contains(baseFormatter);
+
+    if (isCaseOnly) {
+      // Handle case-only transformations (e.g., {user.name:upper})
+      result = rawValue.toString();
+      // Add the baseFormatter to flags for processing
+      final allFlags = [baseFormatter, ...flags];
+      result = _applyCaseTransformations(result, allFlags);
+    } else if (flags.contains('join')) {
+      // Handle join flag for arrays
+      result = await _processArrayWithJoin(baseFormatter, rawValue);
+      // Apply case transformations as final step
+      if (result != null) {
+        result = _applyCaseTransformations(result, flags);
+      }
+    } else {
+      // Fall back to existing logic for standard formatting
+      final formatter = await _loadFormatter(baseFormatter);
+      if (formatter == null) {
+        return null;
+      }
+
+      final String key = rawValue.toString();
+      result = formatter[key];
+
+      // Apply case transformations as final step
+      if (result != null) {
+        result = _applyCaseTransformations(result, flags);
+      }
     }
 
-    // Fall back to existing logic for standard formatting
-    final formatter = await _loadFormatter(baseFormatter);
-    if (formatter == null) {
-      return null;
-    }
-
-    final String key = rawValue.toString();
-    return formatter[key];
+    return result;
   }
 
   /// Process an array value with join flag to create a grammatically correct sentence
   /// Handles multiple array formats: `[1,2,3]`, `"[1,2,3]"`, `"1,2,3"`
+  /// Note: Case transformations are applied by the caller after this method returns
   Future<String?> _processArrayWithJoin(
     String formatterName,
     dynamic rawValue,
@@ -155,6 +180,43 @@ class FormatterService {
     final allButLast = elements.sublist(0, elements.length - 1);
     final last = elements.last;
     return '${allButLast.join(', ')} and $last';
+  }
+
+  /// Apply case transformations based on flags
+  /// Supports: upper, lower, proper, sentence
+  /// Applied as the final step after all other formatting
+  String _applyCaseTransformations(String text, List<String> flags) {
+    String result = text;
+
+    // Apply case transformations in order of precedence
+    if (flags.contains('upper')) {
+      result = result.toUpperCase();
+    } else if (flags.contains('lower')) {
+      result = result.toLowerCase();
+    } else if (flags.contains('proper')) {
+      result = _toProperCase(result);
+    } else if (flags.contains('sentence')) {
+      result = _toSentenceCase(result);
+    }
+
+    return result;
+  }
+
+  /// Convert text to Proper Case (First Letter Of Each Word Capitalized)
+  String _toProperCase(String text) {
+    if (text.isEmpty) return text;
+
+    return text.split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
+  }
+
+  /// Convert text to Sentence case (First letter capitalized, rest lowercase)
+  String _toSentenceCase(String text) {
+    if (text.isEmpty) return text;
+
+    return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
 
   /// Clear the cached formatters (primarily for testing)

@@ -109,29 +109,14 @@ class ChoiceButtons extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: MarkdownBody(
-              data: choice.text,
-              styleSheet: DesignTokens.getChoiceMarkdownStyle(
-                context,
-                state: state,
-              ),
-              shrinkWrap: true,
-              selectable: false,
-            ),
-          ),
-          if (state == ChoiceState.selected) ...[
-            const SizedBox(width: DesignTokens.iconSpacing),
-            const Icon(
-              Icons.check_circle,
-              color: DesignTokens.userMessageTextColor,
-              size: DesignTokens.checkIconSize,
-            ),
-          ],
-        ],
+      child: MarkdownBody(
+        data: choice.text,
+        styleSheet: DesignTokens.getChoiceMarkdownStyle(
+          context,
+          state: state,
+        ),
+        shrinkWrap: true,
+        selectable: false,
       ),
     );
   }

@@ -72,12 +72,7 @@ class DesignTokens {
     255,
   ); // Full opacity white
   static const Color selectedChoiceTextLight = brandBlack;
-  static const Color selectedChoiceBorderLight = Color.fromARGB(
-    30,
-    255,
-    255,
-    255,
-  ); // Brand blue #484B85
+  static const Color selectedChoiceBorderLight = Color.fromARGB(57, 77, 42, 0); 
 
   /// Unselected Choice Button Colors - Light Theme (with direct alpha)
   static const Color unselectedChoiceColorLight = Color.fromARGB(
@@ -489,7 +484,7 @@ class DesignTokens {
   static const double borderThick = 4.0;
 
   /// Component-specific border widths
-  static const double selectedChoiceBorderWidth = borderMedium;
+  static const double selectedChoiceBorderWidth = borderThin;
   static const double unselectedChoiceBorderWidth = borderThin;
 
   // ==================== PREDEFINED EDGE INSETS ====================

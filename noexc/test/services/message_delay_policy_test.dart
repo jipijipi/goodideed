@@ -105,5 +105,61 @@ void main() {
       final delay = policy.delayBefore(prev, choiceNext);
       expect(delay, 0);
     });
+
+    test('no delay for image messages', () {
+      final policy = MessageDelayPolicy();
+      final prev = ChatMessage(id: 1, text: 'Previous message', delay: 0, sender: 'bot');
+      final imageNext = ChatMessage(
+        id: 12,
+        text: '',
+        type: MessageType.image,
+        sender: 'bot',
+      );
+
+      final delay = policy.delayBefore(prev, imageNext);
+      expect(delay, 0, reason: 'Image messages should have no delay for fast resume');
+    });
+
+    test('no delay for dataAction messages', () {
+      final policy = MessageDelayPolicy();
+      final prev = ChatMessage(id: 1, text: 'Previous message', delay: 0, sender: 'bot');
+      final dataActionNext = ChatMessage(
+        id: 13,
+        text: '',
+        type: MessageType.dataAction,
+        sender: 'bot',
+      );
+
+      final delay = policy.delayBefore(prev, dataActionNext);
+      expect(delay, 0, reason: 'DataAction messages should have no delay for fast resume');
+    });
+
+    test('no delay for autoroute messages', () {
+      final policy = MessageDelayPolicy();
+      final prev = ChatMessage(id: 1, text: 'Previous message', delay: 0, sender: 'bot');
+      final autorouteNext = ChatMessage(
+        id: 14,
+        text: '',
+        type: MessageType.autoroute,
+        sender: 'bot',
+      );
+
+      final delay = policy.delayBefore(prev, autorouteNext);
+      expect(delay, 0, reason: 'Autoroute messages should have no delay for fast resume');
+    });
+
+    test('bot text messages still get reading delays in adaptive mode', () {
+      final policy = MessageDelayPolicy();
+      final prev = ChatMessage(id: 1, text: 'Previous with some words here', delay: 0, sender: 'bot');
+      final botTextNext = ChatMessage(
+        id: 15,
+        text: 'This is a bot text message',
+        type: MessageType.bot,
+        sender: 'bot',
+      );
+
+      final delay = policy.delayBefore(prev, botTextNext);
+      expect(delay, greaterThan(0), reason: 'Bot text messages should still have reading delays for natural conversation');
+    });
   });
 }

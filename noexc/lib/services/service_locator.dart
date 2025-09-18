@@ -55,7 +55,6 @@ class ServiceLocator {
 
     final overallStopwatch = Stopwatch()..start();
     final timings = <String, int>{};
-    var currentTime = 0;
 
     logger.info('🔧 ServiceLocator initialization started');
 
@@ -64,25 +63,21 @@ class ServiceLocator {
       var stepStopwatch = Stopwatch()..start();
       _userDataService = UserDataService();
       timings['UserDataService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['UserDataService']!;
       logger.debug('✓ UserDataService: ${timings['UserDataService']}ms');
 
       stepStopwatch.reset();
       _templatingService = TextTemplatingService(_userDataService);
       timings['TextTemplatingService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['TextTemplatingService']!;
       logger.debug('✓ TextTemplatingService: ${timings['TextTemplatingService']}ms');
 
       stepStopwatch.reset();
       _variantsService = TextVariantsService();
       timings['TextVariantsService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['TextVariantsService']!;
       logger.debug('✓ TextVariantsService: ${timings['TextVariantsService']}ms');
 
       stepStopwatch.reset();
       _sessionService = SessionService(_userDataService);
       timings['SessionService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['SessionService']!;
       logger.debug('✓ SessionService: ${timings['SessionService']}ms');
 
       stepStopwatch.reset();
@@ -93,7 +88,6 @@ class ServiceLocator {
         sessionService: _sessionService,
       );
       timings['ChatService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['ChatService']!;
       logger.debug('✓ ChatService: ${timings['ChatService']}ms');
 
       stepStopwatch.reset();
@@ -104,7 +98,6 @@ class ServiceLocator {
         delayPolicy: MessageDelayPolicy(settings: _displaySettingsService),
       );
       timings['DisplaySettings+MessageQueue'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['DisplaySettings+MessageQueue']!;
       logger.debug('✓ DisplaySettings+MessageQueue: ${timings['DisplaySettings+MessageQueue']}ms');
 
       // Initialize notification service (async)
@@ -112,7 +105,6 @@ class ServiceLocator {
       _notificationService = NotificationService(_userDataService);
       await _notificationService.initialize();
       timings['NotificationService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['NotificationService']!;
       logger.debug('✓ NotificationService: ${timings['NotificationService']}ms');
 
       // Initialize app state service (async)
@@ -120,28 +112,24 @@ class ServiceLocator {
       _appStateService = AppStateService(_userDataService);
       await _appStateService.initialize();
       timings['AppStateService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['AppStateService']!;
       logger.debug('✓ AppStateService: ${timings['AppStateService']}ms');
 
       // Initialize overlay service
       stepStopwatch.reset();
       _riveOverlayService = RiveOverlayService();
       timings['RiveOverlayService'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['RiveOverlayService']!;
       logger.debug('✓ RiveOverlayService: ${timings['RiveOverlayService']}ms');
 
       // Connect notification service to app state service
       stepStopwatch.reset();
       _notificationService.setAppStateService(_appStateService);
       timings['ServiceConnections'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['ServiceConnections']!;
       logger.debug('✓ ServiceConnections: ${timings['ServiceConnections']}ms');
 
       // Check for pending notification taps from previous sessions (async)
       stepStopwatch.reset();
       await _loadPendingNotificationState();
       timings['PendingNotificationState'] = stepStopwatch.elapsedMilliseconds;
-      currentTime += timings['PendingNotificationState']!;
       logger.debug('✓ PendingNotificationState: ${timings['PendingNotificationState']}ms');
 
       _initialized = true;

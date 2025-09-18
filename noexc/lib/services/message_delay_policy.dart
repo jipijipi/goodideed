@@ -23,8 +23,14 @@ class MessageDelayPolicy {
       return 0;
     }
 
-    // No delay before user-authored messages
-    if (next.type == MessageType.user) return 0;
+    // No delay for non-conversational message types
+    // These should appear instantly as they're system actions, not chat content
+    if (next.type == MessageType.user ||
+        next.type == MessageType.image ||
+        next.type == MessageType.dataAction ||
+        next.type == MessageType.autoroute) {
+      return 0;
+    }
 
     // Explicit delay on the next message takes precedence
     if (next.hasExplicitDelay || next.delay != AppConstants.defaultMessageDelay) {
@@ -37,6 +43,7 @@ class MessageDelayPolicy {
     }
 
     // Reading-based delay derived from previous message's content
+    // Only applies to bot text messages for natural conversation flow
     final words = _wordCount(previous?.text ?? '');
     final raw = AppConstants.dynamicDelayBaseMs +
         words * AppConstants.dynamicDelayPerWordMs;

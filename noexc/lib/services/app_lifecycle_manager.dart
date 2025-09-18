@@ -61,19 +61,38 @@ class AppLifecycleManager {
 
   /// Handle app resuming from background
   Future<void> _handleAppResumed() async {
-    final isAtEndState = await sessionService.isAtEndState();
+    final resumeStopwatch = Stopwatch()..start();
+    final timings = <String, int>{};
 
-    _logger.semantic('resume_detected end_state=$isAtEndState');
+    try {
+      _logger.info('🔄 App resume handling started', component: LogComponent.ui);
 
-    if (isAtEndState) {
-      _logger.info('reengage_start', component: LogComponent.ui);
-      // Let the script clear the flag via dataAction; do not clear here.
-      // Trigger the re-engagement callback
-      await onAppResumedFromEndState();
-      _logger.info('reengage_done', component: LogComponent.ui);
-    } else {
-      // No action needed if not at end-state
-      _logger.debug('reengage_skip end_state=false', component: LogComponent.ui);
+      var stepStopwatch = Stopwatch()..start();
+      final isAtEndState = await sessionService.isAtEndState();
+      timings['CheckEndState'] = stepStopwatch.elapsedMilliseconds;
+
+      _logger.semantic('resume_detected end_state=$isAtEndState');
+
+      if (isAtEndState) {
+        _logger.info('🎯 Starting re-engagement (end state detected)', component: LogComponent.ui);
+
+        stepStopwatch.reset();
+        // Let the script clear the flag via dataAction; do not clear here.
+        // Trigger the re-engagement callback
+        await onAppResumedFromEndState();
+        timings['ReengagementCallback'] = stepStopwatch.elapsedMilliseconds;
+
+        final totalTime = resumeStopwatch.elapsedMilliseconds;
+        _logger.info('✅ Resume re-engagement completed in ${totalTime}ms', component: LogComponent.ui);
+        _logger.debug('🐌 Resume timing: CheckEndState=${timings['CheckEndState']}ms, Callback=${timings['ReengagementCallback']}ms', component: LogComponent.ui);
+      } else {
+        final totalTime = resumeStopwatch.elapsedMilliseconds;
+        _logger.info('⏭️  Resume skipped (not at end state) after ${totalTime}ms', component: LogComponent.ui);
+      }
+
+    } catch (e) {
+      final totalTime = resumeStopwatch.elapsedMilliseconds;
+      _logger.error('❌ Resume handling failed after ${totalTime}ms: $e', component: LogComponent.ui);
     }
   }
 

@@ -6,6 +6,7 @@ import 'widgets/chat_screen.dart';
 //import 'widgets/rive_arm_test_widget.dart';
 import 'services/service_locator.dart';
 import 'services/session_service.dart';
+import 'services/logger_service.dart';
 import 'themes/app_themes.dart';
 import 'constants/app_constants.dart';
 
@@ -34,19 +35,46 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initializeApp() async {
-    // Initialize all application services first
-    await ServiceLocator.instance.initialize();
+    final logger = LoggerService.instance;
+    final overallStopwatch = Stopwatch()..start();
+    final timings = <String, int>{};
 
-    // Get session service from ServiceLocator and initialize it
-    _sessionService = ServiceLocator.instance.sessionService;
-    await _sessionService.initializeSession();
+    logger.info('🚀 App initialization started');
 
-    await _loadThemePreference();
+    try {
+      // Initialize all application services first
+      final serviceStopwatch = Stopwatch()..start();
+      await ServiceLocator.instance.initialize();
+      timings['ServiceLocator'] = serviceStopwatch.elapsedMilliseconds;
+      logger.info('⚙️  ServiceLocator initialized: ${timings['ServiceLocator']}ms');
 
-    // Mark initialization as complete
-    setState(() {
-      _isInitialized = true;
-    });
+      // Get session service from ServiceLocator and initialize it
+      final sessionStopwatch = Stopwatch()..start();
+      _sessionService = ServiceLocator.instance.sessionService;
+      await _sessionService.initializeSession();
+      timings['SessionService'] = sessionStopwatch.elapsedMilliseconds;
+      logger.info('📊 SessionService initialized: ${timings['SessionService']}ms');
+
+      // Load theme preference
+      final themeStopwatch = Stopwatch()..start();
+      await _loadThemePreference();
+      timings['ThemePreference'] = themeStopwatch.elapsedMilliseconds;
+      logger.info('🎨 Theme preference loaded: ${timings['ThemePreference']}ms');
+
+      // Mark initialization as complete
+      setState(() {
+        _isInitialized = true;
+      });
+
+      final totalTime = overallStopwatch.elapsedMilliseconds;
+      logger.info('✅ App initialization completed in ${totalTime}ms');
+      logger.info('📈 Timing breakdown: ServiceLocator=${timings['ServiceLocator']}ms, SessionService=${timings['SessionService']}ms, Theme=${timings['ThemePreference']}ms');
+
+    } catch (e) {
+      final totalTime = overallStopwatch.elapsedMilliseconds;
+      logger.error('❌ App initialization failed after ${totalTime}ms: $e');
+      rethrow;
+    }
   }
 
   Future<void> _loadThemePreference() async {

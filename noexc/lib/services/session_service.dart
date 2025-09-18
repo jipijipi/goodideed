@@ -10,17 +10,65 @@ class SessionService {
 
   /// Initialize session data on app start
   Future<void> initializeSession() async {
-    // Capture the original session date before any updates
-    final originalLastVisitDate = await userDataService.getValue<String>(
-      StorageKeys.sessionLastVisitDate,
-    );
+    final overallStopwatch = Stopwatch()..start();
+    final timings = <String, int>{};
+    final logger = ServiceLocator.instance.logger;
 
-    await _updateVisitCount();
-    await _updateTotalVisitCount();
-    await _updateTimeOfDay();
-    await _updateDateInfo();
-    await _updateTaskInfo(originalLastVisitDate);
-    await _scheduleNotifications();
+    logger.info('📊 SessionService initialization started');
+
+    try {
+      // Capture the original session date before any updates
+      var stepStopwatch = Stopwatch()..start();
+      final originalLastVisitDate = await userDataService.getValue<String>(
+        StorageKeys.sessionLastVisitDate,
+      );
+      timings['GetOriginalDate'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ GetOriginalDate: ${timings['GetOriginalDate']}ms');
+
+      stepStopwatch.reset();
+      await _updateVisitCount();
+      timings['UpdateVisitCount'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ UpdateVisitCount: ${timings['UpdateVisitCount']}ms');
+
+      stepStopwatch.reset();
+      await _updateTotalVisitCount();
+      timings['UpdateTotalVisitCount'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ UpdateTotalVisitCount: ${timings['UpdateTotalVisitCount']}ms');
+
+      stepStopwatch.reset();
+      await _updateTimeOfDay();
+      timings['UpdateTimeOfDay'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ UpdateTimeOfDay: ${timings['UpdateTimeOfDay']}ms');
+
+      stepStopwatch.reset();
+      await _updateDateInfo();
+      timings['UpdateDateInfo'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ UpdateDateInfo: ${timings['UpdateDateInfo']}ms');
+
+      stepStopwatch.reset();
+      await _updateTaskInfo(originalLastVisitDate);
+      timings['UpdateTaskInfo'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ UpdateTaskInfo: ${timings['UpdateTaskInfo']}ms');
+
+      stepStopwatch.reset();
+      await _scheduleNotifications();
+      timings['ScheduleNotifications'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ ScheduleNotifications: ${timings['ScheduleNotifications']}ms');
+
+      final totalTime = overallStopwatch.elapsedMilliseconds;
+      logger.info('🎯 SessionService initialization completed in ${totalTime}ms');
+
+      // Log timing breakdown for slowest operations
+      final topOperations = timings.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+      final topOperationsStr = topOperations.take(3).map((e) => '${e.key}=${e.value}ms').join(', ');
+      logger.info('🐌 Slowest operations: $topOperationsStr');
+
+    } catch (e) {
+      final totalTime = overallStopwatch.elapsedMilliseconds;
+      logger.error('❌ SessionService initialization failed after ${totalTime}ms: $e');
+      rethrow;
+    }
   }
 
   /// Update visit count (daily counter that resets each day)

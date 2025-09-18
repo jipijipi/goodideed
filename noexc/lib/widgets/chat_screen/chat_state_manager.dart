@@ -47,40 +47,72 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Initialize the chat state manager
   Future<void> initialize() async {
-    // Services are already initialized at app level via ServiceLocator
+    final overallStopwatch = Stopwatch()..start();
+    final timings = <String, int>{};
 
-    // Initialize component managers
-    _messageDisplayManager = MessageDisplayManager();
-    _userInteractionHandler = UserInteractionHandler(
-      messageDisplayManager: _messageDisplayManager,
-      chatService: ServiceLocator.instance.chatService,
-      messageQueue: ServiceLocator.instance.messageQueue,
-    );
+    logger.info('💬 ChatStateManager initialization started');
 
-    // Initialize lifecycle manager
-    _lifecycleManager = AppLifecycleManager(
-      sessionService: ServiceLocator.instance.sessionService,
-      onAppResumedFromEndState: _handleAppResumedFromEndState,
-    );
+    try {
+      // Services are already initialized at app level via ServiceLocator
 
-    // Keep UI sequence in sync with engine transitions
-    ServiceLocator.instance.chatService.setOnSequenceChanged((seqId) {
-      logger.debug('Sequence changed (engine) → $seqId', component: LogComponent.ui);
-      notifyListeners();
-    });
+      // Initialize component managers
+      var stepStopwatch = Stopwatch()..start();
+      _messageDisplayManager = MessageDisplayManager();
+      _userInteractionHandler = UserInteractionHandler(
+        messageDisplayManager: _messageDisplayManager,
+        chatService: ServiceLocator.instance.chatService,
+        messageQueue: ServiceLocator.instance.messageQueue,
+      );
+      timings['ComponentManagers'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ ComponentManagers: ${timings['ComponentManagers']}ms');
 
-    // Set up event callback for typing indicators and other UI events
-    ServiceLocator.instance.chatService.setEventCallback(_handleChatServiceEvent);
+      // Initialize lifecycle manager
+      stepStopwatch.reset();
+      _lifecycleManager = AppLifecycleManager(
+        sessionService: ServiceLocator.instance.sessionService,
+        onAppResumedFromEndState: _handleAppResumedFromEndState,
+      );
+      timings['LifecycleManager'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ LifecycleManager: ${timings['LifecycleManager']}ms');
 
-    // Register as lifecycle observer
-    WidgetsBinding.instance.addObserver(this);
+      // Keep UI sequence in sync with engine transitions
+      stepStopwatch.reset();
+      ServiceLocator.instance.chatService.setOnSequenceChanged((seqId) {
+        logger.debug('Sequence changed (engine) → $seqId', component: LogComponent.ui);
+        notifyListeners();
+      });
 
-    await _messageDisplayManager.loadAndDisplayMessages(
-      ServiceLocator.instance.chatService,
-      ServiceLocator.instance.messageQueue,
-      AppConstants.defaultSequenceId,
-      notifyListeners,
-    );
+      // Set up event callback for typing indicators and other UI events
+      ServiceLocator.instance.chatService.setEventCallback(_handleChatServiceEvent);
+
+      // Register as lifecycle observer
+      WidgetsBinding.instance.addObserver(this);
+      timings['EventCallbacks+Observer'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ EventCallbacks+Observer: ${timings['EventCallbacks+Observer']}ms');
+
+      // Load and display initial messages (most expensive operation)
+      stepStopwatch.reset();
+      await _messageDisplayManager.loadAndDisplayMessages(
+        ServiceLocator.instance.chatService,
+        ServiceLocator.instance.messageQueue,
+        AppConstants.defaultSequenceId,
+        notifyListeners,
+      );
+      timings['LoadAndDisplayMessages'] = stepStopwatch.elapsedMilliseconds;
+      logger.debug('✓ LoadAndDisplayMessages: ${timings['LoadAndDisplayMessages']}ms');
+
+      final totalTime = overallStopwatch.elapsedMilliseconds;
+      logger.info('🎯 ChatStateManager initialization completed in ${totalTime}ms');
+
+      // Highlight the most expensive operation
+      final maxEntry = timings.entries.reduce((a, b) => a.value > b.value ? a : b);
+      logger.info('🐌 Slowest operation: ${maxEntry.key} (${maxEntry.value}ms, ${(maxEntry.value / totalTime * 100).toStringAsFixed(1)}% of total)');
+
+    } catch (e) {
+      final totalTime = overallStopwatch.elapsedMilliseconds;
+      logger.error('❌ ChatStateManager initialization failed after ${totalTime}ms: $e');
+      rethrow;
+    }
   }
 
   /// Handle user choice selection
@@ -119,14 +151,18 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
 
   /// Handle app resuming from end state - trigger re-engagement
   Future<void> _handleAppResumedFromEndState() async {
+    final reengageStopwatch = Stopwatch()..start();
+    final timings = <String, int>{};
+
     try {
       // Essential log only
-      logger.info('resume_reengage_handling', component: LogComponent.ui);
+      logger.info('🔄 Resume re-engagement started', component: LogComponent.ui);
       final defaultSeq = AppConstants.defaultSequenceId;
       final activeSeq = ServiceLocator.instance.chatService.currentSequence?.sequenceId;
       logger.debug('active_seq=${activeSeq ?? 'none'} ui_seq=$currentSequenceId', component: LogComponent.ui);
 
       // Busy guard via policy (existing guards only)
+      var stepStopwatch = Stopwatch()..start();
       final hasTextInput = _messageDisplayManager.currentTextInputMessage != null;
       final hasUnansweredChoice = _messageDisplayManager.displayedMessages.any(
         (m) => m.type == MessageType.choice && m.selectedChoiceText == null,
@@ -137,23 +173,35 @@ class ChatStateManager extends ChangeNotifier with WidgetsBindingObserver {
         hasTextInput: hasTextInput,
         hasUnansweredChoice: hasUnansweredChoice,
       );
+      timings['BusyGuardCheck'] = stepStopwatch.elapsedMilliseconds;
+
       if (!canReengage) {
-        logger.info('reengage_skipped busy input=$hasTextInput choice=$hasUnansweredChoice panel=$panelOpen', component: LogComponent.ui);
+        final totalTime = reengageStopwatch.elapsedMilliseconds;
+        logger.info('⏭️  Re-engagement skipped after ${totalTime}ms: input=$hasTextInput choice=$hasUnansweredChoice panel=$panelOpen', component: LogComponent.ui);
         return;
       }
 
       // Append mode: start default sequence and append its messages without clearing
-      logger.info('reengage_target append sequence=$defaultSeq', component: LogComponent.ui);
+      stepStopwatch.reset();
+      logger.info('🎯 Starting re-engagement with sequence=$defaultSeq', component: LogComponent.ui);
       final flow = await ServiceLocator.instance.chatService.start(defaultSeq);
+      timings['StartSequence'] = stepStopwatch.elapsedMilliseconds;
+
+      stepStopwatch.reset();
       await _messageDisplayManager.displayMessages(
         flow.messages,
         ServiceLocator.instance.messageQueue,
         notifyListeners,
       );
+      timings['DisplayMessages'] = stepStopwatch.elapsedMilliseconds;
 
-      logger.info('reengage_completed seq=$currentSequenceId', component: LogComponent.ui);
+      final totalTime = reengageStopwatch.elapsedMilliseconds;
+      logger.info('✅ Re-engagement completed in ${totalTime}ms', component: LogComponent.ui);
+      logger.debug('🐌 Re-engagement timing: BusyCheck=${timings['BusyGuardCheck']}ms, StartSeq=${timings['StartSequence']}ms, DisplayMsg=${timings['DisplayMessages']}ms', component: LogComponent.ui);
+
     } catch (e) {
-      logger.error('reengage_failed error=$e', component: LogComponent.ui);
+      final totalTime = reengageStopwatch.elapsedMilliseconds;
+      logger.error('❌ Re-engagement failed after ${totalTime}ms: $e', component: LogComponent.ui);
     }
   }
 

@@ -1,7 +1,7 @@
 {
     "metadata": {
-        "extracted_at": "2025-09-17T07:33:52.268231",
-        "total_failures": 4,
+        "extracted_at": "2025-09-18T13:13:01.250116",
+        "total_failures": 2,
         "extractor_version": "1.0.0"
     },
     "failures": [
@@ -11,55 +11,27 @@
             "suite": "widget_tester.dart",
             "group": "SystemMessageBubble",
             "error": "Test failed. See exception logs above.\nThe test description was: should handle empty system message",
-            "testId": 1200,
+            "testId": 1213,
             "line": 175,
             "column": 5,
             "stackTrace": "",
             "isFailure": false,
-            "timestamp": 21932,
+            "timestamp": 24275,
             "category": "unknown"
         },
         {
-            "name": "loading /Users/jpl/Dev/Apps/noexc/test/validation/sequence_validator_test.dart",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/validation/sequence_validator_test.dart",
-            "suite": "sequence_validator",
-            "group": "",
-            "error": "Failed to load \"/Users/jpl/Dev/Apps/noexc/test/validation/sequence_validator_test.dart\":\nCompilation failed for testPath=/Users/jpl/Dev/Apps/noexc/test/validation/sequence_validator_test.dart: test/validation/sequence_validator_test.dart:2:8: Error: Error when reading 'lib/validation/sequence_validator.dart': No such file or directory\nimport 'package:noexc/validation/sequence_validator.dart';\n       ^\ntest/validation/sequence_validator_test.dart:3:8: Error: Error when reading 'lib/validation/models/validation_models.dart': No such file or directory\nimport 'package:noexc/validation/models/validation_models.dart';\n       ^\ntest/validation/sequence_validator_test.dart:11:10: Error: 'SequenceValidator' isn't a type.\n    late SequenceValidator validator;\n         ^^^^^^^^^^^^^^^^^\ntest/validation/sequence_validator_test.dart:14:19: Error: Method not found: 'SequenceValidator'.\n      validator = SequenceValidator();\n                  ^^^^^^^^^^^^^^^^^\ntest/validation/sequence_validator_test.dart:503:11: Error: Method not found: 'ValidationError'.\n          ValidationError(\n          ^^^^^^^^^^^^^^^\ntest/validation/sequence_validator_test.dart:512:11: Error: Method not found: 'ValidationError'.\n          ValidationError(\n          ^^^^^^^^^^^^^^^\ntest/validation/sequence_validator_test.dart:519:24: Error: Method not found: 'ValidationResult'.\n        final result = ValidationResult(\n                       ^^^^^^^^^^^^^^^^\n.",
-            "testId": 1280,
-            "line": null,
-            "column": null,
-            "stackTrace": "",
-            "isFailure": false,
-            "timestamp": 24756,
-            "category": "unknown"
-        },
-        {
-            "name": "loading /Users/jpl/Dev/Apps/noexc/test/validation/asset_validator_test.dart",
+            "name": "AssetValidator Asset File Access should check asset file accessibility",
             "file": "/Users/jpl/Dev/Apps/noexc/test/validation/asset_validator_test.dart",
             "suite": "asset_validator",
-            "group": "",
-            "error": "Failed to load \"/Users/jpl/Dev/Apps/noexc/test/validation/asset_validator_test.dart\":\nCompilation failed for testPath=/Users/jpl/Dev/Apps/noexc/test/validation/asset_validator_test.dart: test/validation/asset_validator_test.dart:2:8: Error: Error when reading 'lib/validation/asset_validator.dart': No such file or directory\nimport 'package:noexc/validation/asset_validator.dart';\n       ^\ntest/validation/asset_validator_test.dart:3:8: Error: Error when reading 'lib/validation/models/validation_models.dart': No such file or directory\nimport 'package:noexc/validation/models/validation_models.dart';\n       ^\ntest/validation/asset_validator_test.dart:8:10: Error: 'AssetValidator' isn't a type.\n    late AssetValidator validator;\n         ^^^^^^^^^^^^^^\ntest/validation/asset_validator_test.dart:13:19: Error: Method not found: 'AssetValidator'.\n      validator = AssetValidator();\n                  ^^^^^^^^^^^^^^\ntest/validation/asset_validator_test.dart:57:40: Error: 'ValidationError' isn't a type.\n        expect(result, isA<Future<List<ValidationError>>>());\n                                       ^^^^^^^^^^^^^^^\n.",
-            "testId": 1284,
-            "line": null,
-            "column": null,
-            "stackTrace": "",
-            "isFailure": false,
-            "timestamp": 25918,
-            "category": "unknown"
-        },
-        {
-            "name": "loading /Users/jpl/Dev/Apps/noexc/test/validation/additional_validators_test.dart",
-            "file": "/Users/jpl/Dev/Apps/noexc/test/validation/additional_validators_test.dart",
-            "suite": "additional_validators",
-            "group": "",
-            "error": "Failed to load \"/Users/jpl/Dev/Apps/noexc/test/validation/additional_validators_test.dart\":\nCompilation failed for testPath=/Users/jpl/Dev/Apps/noexc/test/validation/additional_validators_test.dart: test/validation/additional_validators_test.dart:5:8: Error: Error when reading 'lib/validation/sequence_validator.dart': No such file or directory\nimport 'package:noexc/validation/sequence_validator.dart';\n       ^\ntest/validation/additional_validators_test.dart:25:19: Error: Method not found: 'SequenceValidator'.\n      final res = SequenceValidator().validateSequence(seq);\n                  ^^^^^^^^^^^^^^^^^\ntest/validation/additional_validators_test.dart:52:19: Error: Method not found: 'SequenceValidator'.\n      final res = SequenceValidator().validateSequence(seq);\n                  ^^^^^^^^^^^^^^^^^\ntest/validation/additional_validators_test.dart:83:19: Error: Method not found: 'SequenceValidator'.\n      final res = SequenceValidator().validateSequence(seq);\n                  ^^^^^^^^^^^^^^^^^\ntest/validation/additional_validators_test.dart:105:19: Error: Method not found: 'SequenceValidator'.\n      final res = SequenceValidator().validateSequence(seq);\n                  ^^^^^^^^^^^^^^^^^\n.",
-            "testId": 1287,
-            "line": null,
-            "column": null,
-            "stackTrace": "",
-            "isFailure": false,
-            "timestamp": 26796,
-            "category": "unknown"
+            "group": "AssetValidator > AssetValidator Asset File Access",
+            "error": "Expected: a value less than or equal to <15>\n  Actual: <16>\n   Which: is not a value less than or equal to <15>\n",
+            "testId": 1337,
+            "line": 62,
+            "column": 7,
+            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/validation/asset_validator_test.dart 67:9      main.<fn>.<fn>.<fn>\n",
+            "isFailure": true,
+            "timestamp": 27942,
+            "category": "assertion"
         }
     ]
 }

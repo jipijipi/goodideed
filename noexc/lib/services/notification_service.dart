@@ -2323,6 +2323,33 @@ class NotificationService {
     await scheduleDeadlineReminder();
   }
 
+  /// Schedule a single test notification for demonstration purposes
+  Future<void> scheduleTestNotification({
+    required String title,
+    required String body,
+    int delaySeconds = 3,
+  }) async {
+    try {
+      final scheduleTime = DateTime.now().add(Duration(seconds: delaySeconds));
+      final dateStr = scheduleTime.toIso8601String().substring(0, 10);
+
+      _logger.info('Scheduling test notification: "$title" in ${delaySeconds}s');
+
+      await _scheduleSlot(
+        dateStr,
+        'demo',
+        scheduleTime,
+        title: title,
+        body: body,
+      );
+
+      _logger.info('Test notification scheduled successfully');
+    } catch (e) {
+      _logger.error('Failed to schedule test notification: $e');
+      rethrow;
+    }
+  }
+
   /// Get platform-specific notification capabilities info
   Map<String, dynamic> getPlatformInfo() {
     try {

@@ -125,6 +125,9 @@ class ChatService {
       case 'overlay_rive_hide':
         await _handleOverlayRiveHide(data);
         break;
+      case 'show_test_notification':
+        await _handleShowTestNotification(data);
+        break;
       default:
         // Forward unknown events to UI callback
         if (_onEvent != null) {
@@ -606,6 +609,31 @@ class ChatService {
       logger.info('Successfully disabled all notifications');
     } catch (e) {
       logger.error('Failed to disable notifications: $e');
+    }
+  }
+
+  /// Handle show_test_notification event - schedules a demo notification
+  Future<void> _handleShowTestNotification(Map<String, dynamic> data) async {
+    try {
+      final notificationService = ServiceLocator.instance.notificationService;
+
+      // Extract parameters from data with fallbacks
+      final title = data['title'] as String? ?? 'Demo Notification';
+      final body = data['body'] as String? ?? 'This is how notifications look on your device!';
+      final delaySeconds = data['delaySeconds'] as int? ?? 3;
+
+      logger.info('Scheduling test notification: "$title" in ${delaySeconds}s');
+
+      // Use the notification service's public test notification method
+      await notificationService.scheduleTestNotification(
+        title: title,
+        body: body,
+        delaySeconds: delaySeconds,
+      );
+
+      logger.info('Test notification scheduled successfully');
+    } catch (e) {
+      logger.error('Failed to schedule test notification: $e');
     }
   }
 

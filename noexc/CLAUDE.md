@@ -215,6 +215,39 @@ JSON format for modifying user data:
 }
 ```
 
+### Test Notification Showcase
+Use the `show_test_notification` trigger to demonstrate notifications to users:
+```json
+{
+  "id": "demo_notification",
+  "type": "dataAction",
+  "action": {
+    "type": "trigger",
+    "event": "show_test_notification",
+    "data": {
+      "title": "Demo Notification",
+      "body": "This is how notifications look on your device!",
+      "delaySeconds": 3
+    }
+  }
+}
+```
+
+**Parameters:**
+- `title` (optional): Notification title, defaults to "Demo Notification"
+- `body` (optional): Notification body, defaults to "This is how notifications look on your device!"
+- `delaySeconds` (optional): Delay before showing notification, defaults to 3 seconds
+
+**Usage in conversation flow:**
+1. Bot message: "Let me show you what a notification looks like..."
+2. Data action triggers test notification
+3. Follow-up message: "Check your device - you should see a notification!"
+
+**Requirements:**
+- Must test on real device (notifications don't work in simulator)
+- User must have notification permissions granted
+- Works while app is running or in background
+
 ## Case Transformations
 
 The templating system supports case transformations that can be applied to any template variable:

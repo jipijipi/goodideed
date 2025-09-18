@@ -32,27 +32,27 @@ const RIVE_OVERLAY_EVENTS: EventType[] = [
   }
 ];
 
-// System and notification events - based on Flutter NotificationType enum
+// Notification management and demonstration events - implemented in ChatService
 const NOTIFICATION_EVENTS: EventType[] = [
   {
-    value: 'daily_reminder',
-    label: 'Daily Reminder',
-    description: 'Daily task reminder notification (NotificationType.dailyReminder)'
+    value: 'notification_request_permissions',
+    label: 'Request Notification Permissions',
+    description: 'Request notification permissions from the user'
   },
   {
-    value: 'achievement',
-    label: 'Achievement',
-    description: 'Achievement or milestone notification (NotificationType.achievement)'
+    value: 'notification_reschedule',
+    label: 'Reschedule Notifications',
+    description: 'Force reschedule all pending notifications based on current user settings'
   },
   {
-    value: 'warning',
-    label: 'Warning',
-    description: 'Warning or alert notification (NotificationType.warning)'
+    value: 'notification_disable',
+    label: 'Disable Notifications',
+    description: 'Cancel and disable all scheduled notifications'
   },
   {
-    value: 'system',
-    label: 'System',
-    description: 'System or maintenance notification (NotificationType.system)'
+    value: 'show_test_notification',
+    label: 'Show Test Notification',
+    description: 'Display a demo notification to showcase how notifications appear to users'
   }
 ];
 
@@ -84,7 +84,7 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   },
   {
     name: 'Notifications',
-    description: 'System notification events (matches Flutter NotificationType)',
+    description: 'Notification management and demonstration events',
     events: NOTIFICATION_EVENTS
   }
 ];

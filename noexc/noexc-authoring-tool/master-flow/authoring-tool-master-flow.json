@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-18T15:17:13.169Z",
-  "gitBranch": "chat-behavior-2",
-  "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
+  "lastUpdated": "2025-09-18T15:31:08.925Z",
+  "gitBranch": "unknown",
+  "gitCommit": "unknown",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
-    "branch": "chat-behavior-2",
-    "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-18T15:17:13.142Z"
+    "branch": "unknown",
+    "commit": "unknown",
+    "timestamp": "2025-09-18T15:31:08.898Z"
   },
   "nodes": [
     {
@@ -4035,7 +4035,7 @@
             "type": "trigger",
             "key": "demo.notification",
             "value": "",
-            "event": "daily_reminder",
+            "event": "show_test_notification",
             "data": {
               "title": "Demo Notification",
               "body": "This is how notifications look on your device!",
@@ -4045,8 +4045,8 @@
         ]
       },
       "type": "editable",
-      "width": 311,
-      "height": 189,
+      "width": 361,
+      "height": 191,
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
@@ -8206,7 +8206,7 @@
         "dataActions": [
           {
             "type": "trigger",
-            "key": "notification.isEnabled",
+            "key": "notification.isDisabled",
             "value": false,
             "event": "notification_disable",
             "data": {}
@@ -8214,7 +8214,7 @@
         ]
       },
       "type": "editable",
-      "width": 377,
+      "width": 383,
       "height": 189,
       "selected": false,
       "dragging": false,

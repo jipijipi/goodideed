@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-16T17:54:01.177Z",
+  "lastUpdated": "2025-09-17T16:01:53.026Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-16T17:54:01.173Z"
+    "timestamp": "2025-09-17T16:01:52.989Z"
   },
   "nodes": [
     {
@@ -585,8 +585,8 @@
     {
       "id": "31",
       "position": {
-        "x": 433.95524529228715,
-        "y": 4685.636128412676
+        "x": 65.88033338616866,
+        "y": 4652.703109978971
       },
       "type": "group",
       "style": {
@@ -599,8 +599,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 433.95524529228715,
-        "y": 4685.636128412676
+        "x": 65.88033338616866,
+        "y": 4652.703109978971
       },
       "data": {
         "label": "Group 31",
@@ -617,8 +617,8 @@
     {
       "id": "363",
       "position": {
-        "x": 1472.963741832672,
-        "y": 4421.296232381011
+        "x": 610.963741832672,
+        "y": 4459.296232381011
       },
       "data": {
         "label": "Group 363",
@@ -640,8 +640,8 @@
       "height": 5729,
       "selected": false,
       "positionAbsolute": {
-        "x": 1472.963741832672,
-        "y": 4421.296232381011
+        "x": 610.963741832672,
+        "y": 4459.296232381011
       },
       "dragging": false
     },
@@ -742,8 +742,8 @@
     {
       "id": "55",
       "position": {
-        "x": 6388.435338126461,
-        "y": 646.578459669664
+        "x": 6025.099765352512,
+        "y": 597.7430332215524
       },
       "type": "group",
       "style": {
@@ -756,8 +756,8 @@
       "selected": false,
       "dragging": false,
       "positionAbsolute": {
-        "x": 6388.435338126461,
-        "y": 646.578459669664
+        "x": 6025.099765352512,
+        "y": 597.7430332215524
       },
       "data": {
         "label": "Group 55",
@@ -774,21 +774,21 @@
     {
       "id": "59",
       "position": {
-        "x": -3145.5743524225527,
-        "y": 9701.249851880835
+        "x": -3443.9835219893716,
+        "y": 9697.915671215284
       },
       "type": "group",
       "style": {
         "width": 685,
-        "height": 1433,
+        "height": 1913,
         "zIndex": 999
       },
       "width": 685,
-      "height": 1433,
+      "height": 1913,
       "selected": false,
       "positionAbsolute": {
-        "x": -3145.5743524225527,
-        "y": 9701.249851880835
+        "x": -3443.9835219893716,
+        "y": 9697.915671215284
       },
       "dragging": false,
       "data": {
@@ -1465,8 +1465,8 @@
         ]
       },
       "type": "editable",
-      "width": 324,
-      "height": 191,
+      "width": 322,
+      "height": 189,
       "selected": false,
       "positionAbsolute": {
         "x": -1781.2023957266233,
@@ -1841,7 +1841,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "136",
-        "content": "All right, see you by {task.deadlineTime}"
+        "content": "All right, see you by {task.deadlineTime:timeDisplay}"
       }
     },
     {
@@ -2011,16 +2011,16 @@
     {
       "id": "84",
       "position": {
-        "x": 364.4060324576294,
-        "y": 31
+        "x": 342.3594560802321,
+        "y": 29.36692026834089
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -4881.925928702683,
-        "y": -1888.2479885856017
+        "x": -5085.41125725932,
+        "y": -2141.810711237874
       },
       "dragging": false,
       "parentId": "150",
@@ -2031,7 +2031,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "16",
         "contentKey": "bot.request.task_status.casual",
-        "content": "Did it already?"
+        "content": "You finished already?"
       }
     },
     {
@@ -2045,7 +2045,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "183",
-        "content": "Today is an active day for you, we are before the deadline, did you plan to start today ?"
+        "content": "Today should be an active day for you and we are before the deadline, do you plan to start today ?"
       },
       "type": "editable",
       "width": 248,
@@ -2243,7 +2243,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "196",
-        "content": "Today is an active day but you are already past your deadline|||So I guess you are off the hook..."
+        "content": "Today should be an active day for you but you are already past your deadline time|||So I guess you are off the hook..."
       },
       "type": "editable",
       "width": 248,
@@ -3056,7 +3056,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "256",
-        "content": "Nothing to do here champion"
+        "content": "Nothing to do here champion, not before {task.dueDay:activeDays|next time}"
       },
       "type": "editable",
       "width": 248,
@@ -3738,7 +3738,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "274",
-        "content": "What about today?||| You are game today?"
+        "content": "What about today?||| Did you manage your objective today?"
       },
       "type": "editable",
       "width": 248,
@@ -3801,53 +3801,29 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "165",
-        "content": "{user.name}? Really? |||All right {user.name}, I can work with that.|||Let's see if I can work with you."
+        "content": "{user.name}? Really? |||All right {user.name}, I can work with that.|||But let's see if I can work with you."
       }
-    },
-    {
-      "id": "476",
-      "position": {
-        "x": 363.2618385585572,
-        "y": 3167.057254426882
-      },
-      "data": {
-        "label": "Route condition",
-        "category": "autoroute",
-        "nodeLabel": "Conditional Route",
-        "nodeId": "476"
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 162,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 1686.7592294897072,
-        "y": -2759.226790459065
-      },
-      "dragging": false,
-      "parentId": "28",
-      "extent": "parent"
     },
     {
       "id": "477",
       "position": {
-        "x": 332.5832628976102,
-        "y": 1329.074894876354
+        "x": 410.5832628976102,
+        "y": 1323.074894876354
       },
       "data": {
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "477",
-        "content": "So you want to build habits?|||Adorable|||Gym for a week? Meditation for two days? Then straight back to procrastination?|||Well, lucky you, I’m here to help you stick to whatever you usually fail at"
+        "content": "So you want to build habits?"
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1656.0806538287602,
-        "y": -4597.209150009593
+        "x": 1734.0806538287602,
+        "y": -4603.209150009593
       },
       "dragging": false,
       "parentId": "28",
@@ -3905,7 +3881,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "1",
-        "content": "Hello,"
+        "content": "Hello"
       },
       "type": "editable",
       "width": 248,
@@ -3970,6 +3946,55 @@
       }
     },
     {
+      "id": "501",
+      "position": {
+        "x": 928.5367150285235,
+        "y": 1556.8724155040372
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "501"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2252.0341059596735,
+        "y": -4369.41162938191
+      },
+      "dragging": false,
+      "parentId": "28",
+      "extent": "parent"
+    },
+    {
+      "id": "502",
+      "position": {
+        "x": 916.506961064789,
+        "y": 1847.4930146006245
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "502",
+        "content": "Adorable|||Gym for a week? Meditation for two days? Then straight back to procrastination?|||Well, lucky you, I’m here to help you stick to whatever you usually fail at"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 2240.004351995939,
+        "y": -4078.7910302853224
+      },
+      "dragging": false,
+      "parentId": "28",
+      "extent": "parent"
+    },
+    {
       "id": "6",
       "position": {
         "x": 337.1225328258938,
@@ -4023,16 +4048,16 @@
     {
       "id": "8",
       "position": {
-        "x": 129.61982874879527,
-        "y": 2791.670979719005
+        "x": 345.61982874879527,
+        "y": 2915.670979719005
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 1453.1172196799453,
-        "y": -3134.613065166942
+        "x": 1669.1172196799453,
+        "y": -3010.613065166942
       },
       "dragging": false,
       "parentId": "28",
@@ -4095,7 +4120,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "3",
         "contentKey": "bot.explain.concept.detailed",
-        "content": "The concept is super simple|||Choose one daily goal|||Just ONE|||And I'll make sure you follow through"
+        "content": "The concept is super simple|||Choose one daily goal|||Just ONE|||ONE !|||And I'll make sure you follow through"
       }
     },
     {
@@ -4144,7 +4169,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "167",
-        "content": "Well for one I can nag you.|||And that's pretty much it for now.|||But I can nag you A LOT."
+        "content": "Well I'm getting there|||If you stop interrupting that is "
       }
     },
     {
@@ -4169,7 +4194,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "169",
-        "content": "First thing first, think about what you want to accomplish everyday"
+        "content": "But first things first|||Think about what you want to accomplish everyday"
       }
     },
     {
@@ -4194,7 +4219,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "170",
-        "content": "It can be anything really, study, exercise, world domination you name it."
+        "content": "It can be anything really, study, exercise, overthrowing the government...|||Whatever you usually have a hard time doing consistently "
       }
     },
     {
@@ -4267,7 +4292,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "172",
-        "content": "Well yes, I can ask you everyday."
+        "content": "Well yes, I'll ask you everyday|||Stop stalling"
       }
     },
     {
@@ -4342,7 +4367,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "478",
-        "content": "Every day that you complete your goal, your streak grows|||Try it now"
+        "content": "But every day I'll check if you completed your objective|||Try it now|||Pretend you accomplished something"
       },
       "type": "editable",
       "width": 248,
@@ -4416,7 +4441,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "481",
-        "content": "So did you understand everything?"
+        "content": "So did you understand everything so far?"
       },
       "type": "editable",
       "width": 248,
@@ -4465,7 +4490,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "483",
-        "content": "There you go, my expectations for you are going up|||Slightly"
+        "content": "Look at that, your first achievement, you're unstoppable today 🔥"
       },
       "type": "editable",
       "width": 248,
@@ -4490,7 +4515,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "484",
-        "content": "Don't worry you got this. Maybe."
+        "content": "Look at that, your first achievement, you're unstoppable today 🔥"
       },
       "type": "editable",
       "width": 248,
@@ -4515,7 +4540,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "485",
-        "content": "Now tell me, how are you feeling it? Ready?"
+        "content": "Now tell me, do you have a plan to achieve your goal every day?"
       },
       "type": "editable",
       "width": 248,
@@ -4564,7 +4589,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "487",
-        "content": "Yeah right, we'll see about that."
+        "content": "No you don't.|||Chill."
       },
       "type": "editable",
       "width": 248,
@@ -4579,50 +4604,25 @@
       "extent": "parent"
     },
     {
-      "id": "488",
-      "position": {
-        "x": 931.7694439256293,
-        "y": 6207.741609194359
-      },
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "488",
-        "content": "Yeah right, we'll see about that."
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": 3688.5480943474977,
-        "y": -4490.941008939205
-      },
-      "dragging": false,
-      "parentId": "30",
-      "extent": "parent"
-    },
-    {
       "id": "489",
       "position": {
-        "x": 624.6738232284838,
-        "y": 6222.043791338416
+        "x": 762.6738232284838,
+        "y": 6126.043791338416
       },
       "data": {
         "label": "Welcome!",
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "489",
-        "content": "Yeah right, we'll see about that."
+        "content": "Well here is your problem right there.|||But don't worry you'll get there."
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": 3381.452473650352,
-        "y": -4476.638826795148
+        "x": 3519.452473650352,
+        "y": -4572.638826795148
       },
       "dragging": false,
       "parentId": "30",
@@ -4887,7 +4887,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "337",
-        "content": "At what time can your task begin?"
+        "content": "Now, the most important part of any task is to get it started"
       },
       "type": "editable",
       "width": 248,
@@ -5684,6 +5684,31 @@
         "y": 6230.257459877333
       },
       "dragging": false,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "503",
+      "position": {
+        "x": 1245.0326458258594,
+        "y": 275.363695093587
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "503",
+        "content": "At what time can your task begin?"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": 1855.9963876585314,
+        "y": 4734.659927474598
+      },
       "parentId": "363",
       "extent": "parent"
     },
@@ -6846,7 +6871,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "411",
-        "content": "All right, let's recap|||You'll do :"
+        "content": "Let's recap :"
       },
       "type": "editable",
       "width": 248,
@@ -6871,7 +6896,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "415",
-        "content": "Starting today"
+        "content": "Starting asap :"
       },
       "type": "editable",
       "width": 248,
@@ -6896,7 +6921,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "416",
-        "content": "From {task.dueDay:activeDay}"
+        "content": "Starting {task.dueDay:activeDay} :"
       },
       "type": "editable",
       "width": 248,
@@ -8490,7 +8515,7 @@
         "nodeLabel": "Welcome Message",
         "nodeId": "7",
         "contentKey": "bot.request.reminders.casual",
-        "content": "How hardcore do you need me to be in reminding you?"
+        "content": "I can notify when your task should be starting, how hardcore do you need me to be in reminding you?"
       }
     },
     {
@@ -8543,6 +8568,31 @@
         "nodeId": "50",
         "contentKey": "bot.acknowledge.reminder_intensity.extreme",
         "content": "Oh boy, that's gonna be fun."
+      }
+    },
+    {
+      "id": "507",
+      "position": {
+        "x": 1170.7887421777941,
+        "y": 977.566632350264
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "507",
+        "content": "You can snooze them at any time during your task window if you managed to start."
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "dragging": false,
+      "parentId": "55",
+      "extent": "parent",
+      "positionAbsolute": {
+        "x": 7195.888507530306,
+        "y": 1575.3096655718164
       }
     },
     {
@@ -8652,8 +8702,8 @@
     {
       "id": "498",
       "position": {
-        "x": 215.9863228832719,
-        "y": 1116.533067682196
+        "x": 143.4086765881193,
+        "y": 1703.0389120673499
       },
       "data": {
         "label": "Data action",
@@ -8676,9 +8726,79 @@
       "parentId": "59",
       "extent": "parent",
       "positionAbsolute": {
-        "x": -2929.588029539281,
-        "y": 10817.782919563031
+        "x": -3002.1656758344334,
+        "y": 11404.288763948185
       }
+    },
+    {
+      "id": "504",
+      "position": {
+        "x": 203.5745970507246,
+        "y": 1387.2939190771103
+      },
+      "data": {
+        "label": "[ System: Status update ]",
+        "category": "system",
+        "nodeLabel": "System Message",
+        "nodeId": "504",
+        "content": "• tristopher has logged off •"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 258,
+      "selected": false,
+      "dragging": false,
+      "parentId": "59",
+      "extent": "parent",
+      "positionAbsolute": {
+        "x": -2941.999755371828,
+        "y": 11088.543770957946
+      }
+    },
+    {
+      "id": "505",
+      "position": {
+        "x": 238.57411729567684,
+        "y": 1106.6978411337186
+      },
+      "data": {
+        "label": "Data action",
+        "category": "dataAction",
+        "nodeLabel": "Data Action",
+        "nodeId": "505",
+        "dataActions": [
+          {
+            "type": "trigger",
+            "key": "fx",
+            "value": "",
+            "event": "overlay_rive_update",
+            "data": {
+              "zone": 4,
+              "id": "hands",
+              "bindings": {
+                "free_target_is_active": 0,
+                "swing_target_is_active": 1
+              },
+              "bindingsString": {
+                "nested_hand_model/hand_shape": "open",
+                "nested_hand_model/hand_animation": "wave",
+                "arm_swing_animation": "center"
+              }
+            }
+          }
+        ]
+      },
+      "type": "editable",
+      "width": 310,
+      "height": 191,
+      "selected": false,
+      "dragging": false,
+      "positionAbsolute": {
+        "x": -3205.409404693695,
+        "y": 10804.613512349002
+      },
+      "parentId": "59",
+      "extent": "parent"
     },
     {
       "id": "56",
@@ -8901,7 +9021,7 @@
       "type": "custom",
       "label": "session.visitCount < 2",
       "data": {
-        "label": "session.visitCount < 2"
+        "label": "session.visitCount > 12"
       },
       "selected": false
     },
@@ -11051,7 +11171,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Sure why not..."
+        "label": "Looks good!"
       },
       "id": "reactflow__edge-360-361",
       "selected": false
@@ -13451,54 +13571,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "8",
-      "target": "476",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-8-476",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "7",
-      "target": "476",
-      "type": "custom",
-      "label": "Whatever",
-      "contentKey": "user.greet.character.snarky",
-      "data": {
-        "label": "Nice to meet you Trist !",
-        "contentKey": ""
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-7-476",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "476",
-      "sourceHandle": null,
-      "target": "9",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-476-9",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "478",
       "sourceHandle": null,
       "target": "479",
@@ -13516,7 +13588,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "delay": 1000
+        "delay": 2000,
+        "label": ""
       },
       "id": "reactflow__edge-480-481",
       "selected": false
@@ -13540,7 +13613,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Yes, set goal, do goal, easy"
+        "label": "Yes, set goal, do goal, easy",
+        "delay": 1500
       },
       "id": "reactflow__edge-482-483",
       "selected": false
@@ -13553,7 +13627,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Yes... I think so... ?"
+        "label": "Yes... I think so... ?",
+        "delay": 1500
       },
       "id": "reactflow__edge-482-484",
       "selected": false
@@ -13588,7 +13663,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "I'm going to crush it, I'm so ready !"
+        "label": "Absolutely, I'm stoked !"
       },
       "id": "reactflow__edge-486-487",
       "selected": false
@@ -13601,22 +13676,9 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Hell yeah I'm ready! Let's do this !"
+        "label": "Not... Not really..."
       },
       "id": "reactflow__edge-486-489",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "486",
-      "sourceHandle": null,
-      "target": "488",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Easy, it's like it's done already !"
-      },
-      "id": "reactflow__edge-486-488",
       "selected": false
     },
     {
@@ -13637,23 +13699,15 @@
     },
     {
       "zIndex": 1001,
-      "source": "488",
-      "sourceHandle": null,
-      "target": "18",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-488-18",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "489",
       "sourceHandle": null,
       "target": "18",
       "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "delay": 1500,
+        "label": ""
+      },
       "id": "reactflow__edge-489-18",
       "selected": false
     },
@@ -13664,7 +13718,10 @@
       "target": "18",
       "targetHandle": null,
       "type": "custom",
-      "data": {},
+      "data": {
+        "delay": 1500,
+        "label": ""
+      },
       "id": "reactflow__edge-487-18",
       "selected": false
     },
@@ -13852,7 +13909,7 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Hi,"
+        "label": "Hi..."
       },
       "id": "reactflow__edge-497-5",
       "selected": false
@@ -13886,33 +13943,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "477",
-      "sourceHandle": null,
-      "target": "6",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-477-6",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "337",
-      "sourceHandle": null,
-      "target": "460",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-337-460"
-    },
-    {
-      "zIndex": 1001,
       "source": "378",
       "sourceHandle": null,
       "target": "472",
@@ -13942,33 +13972,6 @@
       "sourceHandle": null,
       "targetHandle": null,
       "id": "reactflow__edge-40-473"
-    },
-    {
-      "zIndex": 1001,
-      "source": "48",
-      "target": "474",
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "sourceHandle": null,
-      "targetHandle": null,
-      "id": "reactflow__edge-48-474"
-    },
-    {
-      "zIndex": 1001,
-      "source": "58",
-      "sourceHandle": null,
-      "target": "498",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-58-498",
-      "selected": false
     },
     {
       "zIndex": 1001,
@@ -14022,6 +14025,165 @@
       "type": "custom",
       "data": {},
       "id": "reactflow__edge-500-65",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "501",
+      "sourceHandle": null,
+      "target": "502",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Yes, that's why i'm here."
+      },
+      "id": "reactflow__edge-501-502",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "477",
+      "sourceHandle": null,
+      "target": "501",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-477-501"
+    },
+    {
+      "zIndex": 1001,
+      "source": "502",
+      "sourceHandle": null,
+      "target": "6",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-502-6",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "8",
+      "target": "9",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-8-9"
+    },
+    {
+      "zIndex": 1001,
+      "source": "337",
+      "sourceHandle": null,
+      "target": "503",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-337-503"
+    },
+    {
+      "zIndex": 1001,
+      "source": "503",
+      "sourceHandle": null,
+      "target": "460",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-503-460",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "111",
+      "sourceHandle": null,
+      "target": "273",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-111-273",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "504",
+      "sourceHandle": null,
+      "target": "498",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-504-498",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "58",
+      "sourceHandle": null,
+      "target": "505",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-58-505"
+    },
+    {
+      "zIndex": 1001,
+      "source": "505",
+      "sourceHandle": null,
+      "target": "504",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-505-504",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "48",
+      "target": "507",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-48-507"
+    },
+    {
+      "zIndex": 1001,
+      "source": "507",
+      "sourceHandle": null,
+      "target": "474",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-507-474",
       "selected": false
     }
   ]

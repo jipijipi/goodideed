@@ -1,1 +1,37 @@
-{"metadata":{"extracted_at":"2025-09-16T19:55:17.862498","total_failures":1,"extractor_version":"1.0.0"},"failures":[{"name":"SystemMessageBubble should handle empty system message","file":"package:flutter_test/src/widget_tester.dart","suite":"widget_tester.dart","group":"SystemMessageBubble","error":"Test failed. See exception logs above.\nThe test description was: should handle empty system message","testId":1197,"line":175,"column":5,"stackTrace":"","isFailure":false,"timestamp":23131,"category":"unknown"}]}
+{
+    "metadata": {
+        "extracted_at": "2025-09-18T13:13:01.250116",
+        "total_failures": 2,
+        "extractor_version": "1.0.0"
+    },
+    "failures": [
+        {
+            "name": "SystemMessageBubble should handle empty system message",
+            "file": "package:flutter_test/src/widget_tester.dart",
+            "suite": "widget_tester.dart",
+            "group": "SystemMessageBubble",
+            "error": "Test failed. See exception logs above.\nThe test description was: should handle empty system message",
+            "testId": 1213,
+            "line": 175,
+            "column": 5,
+            "stackTrace": "",
+            "isFailure": false,
+            "timestamp": 24275,
+            "category": "unknown"
+        },
+        {
+            "name": "AssetValidator Asset File Access should check asset file accessibility",
+            "file": "/Users/jpl/Dev/Apps/noexc/test/validation/asset_validator_test.dart",
+            "suite": "asset_validator",
+            "group": "AssetValidator > AssetValidator Asset File Access",
+            "error": "Expected: a value less than or equal to <15>\n  Actual: <16>\n   Which: is not a value less than or equal to <15>\n",
+            "testId": 1337,
+            "line": 62,
+            "column": 7,
+            "stackTrace": "package:matcher                                     expect\npackage:flutter_test/src/widget_tester.dart 474:18  expect\ntest/validation/asset_validator_test.dart 67:9      main.<fn>.<fn>.<fn>\n",
+            "isFailure": true,
+            "timestamp": 27942,
+            "category": "assertion"
+        }
+    ]
+}

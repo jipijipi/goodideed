@@ -1,3 +1,17 @@
+# Work in Progress Notes
+
+**Status**: This file contains specifications and development notes. Core content has been extracted and organized into proper documentation.
+
+## Extracted Content
+
+The following specifications have been moved to organized documentation:
+
+- **Task Calculation Logic** → [Task Calculation System](architecture/task-calculation-system.md)
+- **Notification Scheduling** → [Notification Scheduling](architecture/notification-scheduling.md)
+- **Rive Animation Specifications** → [Rive Animation Zones](reference/rive-animation-zones.md)
+
+## Remaining Development Notes
+
 Let's rethink how everything is calculated to make the following behaviors possible :
 
 1) IMMEDIATE

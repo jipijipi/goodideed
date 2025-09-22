@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-22T15:11:14.232Z",
+  "lastUpdated": "2025-09-22T15:31:10.180Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-22T15:11:14.205Z"
+    "timestamp": "2025-09-22T15:31:10.176Z"
   },
   "nodes": [
     {
@@ -5137,7 +5137,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "343",
-        "content": "You want to be more precise?"
+        "content": "You want to be more precise?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -5162,7 +5163,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "344",
-        "content": "You want to be more precise?"
+        "content": "You want to be more precise?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -5187,7 +5189,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "345",
-        "content": "You want to be more precise?"
+        "content": "You want to be more precise?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -5212,7 +5215,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "346",
-        "content": "You want to be more precise?"
+        "content": "You want to be more precise?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -5237,7 +5241,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "349",
-        "content": "You want to be more precise?"
+        "content": "You want to be more precise?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -5431,7 +5436,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "359",
-        "content": "So {task.startTime:timeDisplay}, good."
+        "content": "So {task.startTime:timeDisplay}, good.",
+        "contentKey": "bot.acknowledge.starttime.casual"
       },
       "type": "editable",
       "width": 248,
@@ -5798,7 +5804,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "503",
-        "content": "At what time can your task begin?"
+        "content": "At what time can your task begin?",
+        "contentKey": "bot.request.starttime.casual"
       },
       "type": "editable",
       "width": 248,
@@ -5995,7 +6002,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "361",
-        "content": "All right!"
+        "content": "All right!",
+        "contentKey": "bot.react.positive"
       },
       "type": "editable",
       "width": 248,
@@ -6020,7 +6028,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "362",
-        "content": "Oh boy..."
+        "content": "Oh boy...",
+        "contentKey": "bot.react.annoyed"
       },
       "type": "editable",
       "width": 248,
@@ -6136,7 +6145,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "368",
-        "content": "Your deadline is before your starting time, that's weird|||Try again"
+        "content": "Your deadline is before your starting time, that's weird|||Try again",
+        "contentKey": "bot.warn.deadline.error"
       },
       "type": "editable",
       "width": 248,
@@ -6213,7 +6223,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "380",
-        "content": "When exactly?"
+        "content": "When exactly?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -6238,7 +6249,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "381",
-        "content": "When exactly?"
+        "content": "When exactly?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -6263,7 +6275,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "382",
-        "content": "When exactly?"
+        "content": "When exactly?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -6288,7 +6301,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "383",
-        "content": "When exactly?"
+        "content": "When exactly?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -6313,7 +6327,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "385",
-        "content": "When exactly?"
+        "content": "When exactly?",
+        "contentKey": "bot.request.precisions.casual"
       },
       "type": "editable",
       "width": 248,
@@ -11826,7 +11841,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Looks good!"
+        "label": "Looks good!",
+        "contentKey": "user.confirm.affirmative"
       },
       "id": "reactflow__edge-360-361",
       "selected": false
@@ -11839,7 +11855,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "I changed my mind"
+        "label": "I changed my mind",
+        "contentKey": "user.confirm.negative"
       },
       "id": "reactflow__edge-360-362",
       "selected": false

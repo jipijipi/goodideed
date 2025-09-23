@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T14:06:03.222Z",
+  "lastUpdated": "2025-09-23T14:17:11.108Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T14:06:03.201Z"
+    "timestamp": "2025-09-23T14:17:11.090Z"
   },
   "nodes": [
     {
@@ -880,7 +880,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "111",
-        "content": "Right... That's ok for now, but next time I won't be so lenient."
+        "content": "Right... That's ok for now, but next time I won't be so lenient.",
+        "contentKey": "bot.warn.on_notice"
       }
     },
     {
@@ -905,7 +906,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "112",
-        "content": "Too bad."
+        "content": "Too bad.",
+        "contentKey": "bot.acknowledge.failure"
       }
     },
     {
@@ -944,7 +946,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "287",
-        "content": "That's twice in a row, no more excuses..."
+        "content": "That's twice in a row, no more excuses...",
+        "contentKey": "bot.warn.strikes"
       },
       "type": "editable",
       "width": 248,
@@ -1004,7 +1007,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "117",
-        "content": "You've done it this time. And by done it I mean you didn't. You failed."
+        "content": "You've done it this time. And by done it I mean you didn't. You failed.",
+        "contentKey": "bot.react.failure"
       }
     },
     {
@@ -3780,11 +3784,12 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "274",
-        "content": "What about today? Did you manage your to do your task today?"
+        "content": "What about today? Did you manage your to do your task today?",
+        "contentKey": "bot.request.catchup"
       },
       "type": "editable",
-      "width": 248,
-      "height": 258,
+      "width": 250,
+      "height": 260,
       "selected": false,
       "positionAbsolute": {
         "x": -7486.420902067268,

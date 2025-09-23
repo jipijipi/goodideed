@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T08:49:50.294Z",
+  "lastUpdated": "2025-09-23T12:57:37.399Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T08:49:50.266Z"
+    "timestamp": "2025-09-23T12:57:37.394Z"
   },
   "nodes": [
     {
@@ -7576,7 +7576,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "305",
-        "content": "Uuuugh, of course..."
+        "content": "Uuuugh, of course...",
+        "contentKey": "bot.react.annoyed"
       },
       "type": "editable",
       "width": 248,
@@ -7601,7 +7602,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "335",
-        "content": "All right, got it."
+        "content": "All right, got it.",
+        "contentKey": "bot.acknowledge.active_days_custom"
       },
       "type": "editable",
       "width": 248,
@@ -7650,7 +7652,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "371",
-        "content": "Fantastic"
+        "content": "Fantastic",
+        "contentKey": "bot.react.positive"
       },
       "type": "editable",
       "width": 248,
@@ -7675,7 +7678,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "372",
-        "content": "Arf"
+        "content": "Arf",
+        "contentKey": "bot.react.annoyed"
       },
       "type": "editable",
       "width": 248,
@@ -7779,7 +7783,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "376",
-        "content": "You've not choosen anything..."
+        "content": "You've not choosen anything...",
+        "contentKey": "bot.warn.empty"
       },
       "type": "editable",
       "width": 248,
@@ -8024,7 +8029,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "448",
-        "content": "What about {session.customWeekIndex:activeDays}?"
+        "content": "What about {session.customWeekIndex:activeDays}?",
+        "contentKey": "bot.request.day"
       },
       "type": "editable",
       "width": 248,
@@ -8379,7 +8385,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "46",
-        "content": "I guess I'll expect great things from you {task.activeDays:activeDays:join}"
+        "content": "I guess I'll expect great things from you {task.activeDays:activeDays:join}",
+        "contentKey": "bot.acknowledge.active_days"
       }
     },
     {
@@ -8578,7 +8585,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "546",
-        "content": "Of course..."
+        "content": "Of course...",
+        "contentKey": "bot.react.annoyed"
       },
       "type": "editable",
       "width": 248,
@@ -12092,7 +12100,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "No let's start over"
+        "label": "No let's start over",
+        "contentKey": "user.confirm.negative"
       },
       "id": "reactflow__edge-370-372",
       "selected": false
@@ -13445,7 +13454,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "That's correct"
+        "label": "That's correct",
+        "contentKey": "user.confirm.affirmative"
       },
       "selected": false,
       "style": {

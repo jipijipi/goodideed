@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T13:30:11.490Z",
+  "lastUpdated": "2025-09-23T14:06:03.222Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T13:30:11.479Z"
+    "timestamp": "2025-09-23T14:06:03.201Z"
   },
   "nodes": [
     {
@@ -1065,32 +1065,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "100",
-        "content": "Right, the deadline is past you know?"
-      }
-    },
-    {
-      "id": "156",
-      "position": {
-        "x": 477,
-        "y": 320.79480635860455
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": -3005.842215416095,
-        "y": 190.10027374268134
-      },
-      "dragging": false,
-      "parentId": "135",
-      "extent": "parent",
-      "data": {
-        "label": "User response",
-        "category": "user",
-        "nodeLabel": "Response",
-        "nodeId": "156",
-        "content": "Let me see..."
+        "content": "Right, the deadline is past you know?",
+        "contentKey": "bot.warn.deadline"
       }
     },
     {
@@ -1322,16 +1298,16 @@
     {
       "id": "97",
       "position": {
-        "x": 474.75900906666993,
-        "y": 625.0174860414652
+        "x": 470.75900906666993,
+        "y": 411.0174860414652
       },
       "type": "editable",
       "width": 248,
       "height": 212,
       "selected": false,
       "positionAbsolute": {
-        "x": -3008.083206349425,
-        "y": 494.322953425542
+        "x": -6148.562680852263,
+        "y": -1479.565658142155
       },
       "dragging": false,
       "parentId": "135",
@@ -1617,7 +1593,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "231",
-        "content": "Oops, looks like we forgot something..."
+        "content": "Oops, looks like we forgot something...",
+        "contentKey": "bot.warn.oversight"
       },
       "type": "editable",
       "width": 248,
@@ -1843,7 +1820,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "136",
-        "content": "All right, see you by {task.deadlineTime:timeDisplay}"
+        "content": "All right, see you by {task.deadlineTime:timeDisplay}",
+        "contentKey": "bot.acknowledge.idle"
       }
     },
     {
@@ -1876,15 +1854,15 @@
       "id": "146",
       "position": {
         "x": 409.2042709186444,
-        "y": 758.4175832919971
+        "y": 771.6945155518406
       },
       "type": "editable",
       "width": 248,
       "height": 258,
       "selected": false,
       "positionAbsolute": {
-        "x": -5016.604884412931,
-        "y": -1367.6442140307443
+        "x": -4942.065680109801,
+        "y": -1346.5210497389921
       },
       "dragging": false,
       "parentId": "150",
@@ -1894,8 +1872,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "146",
-        "contentKey": "",
-        "content": "Nice, keep it up"
+        "contentKey": "bot.acknowledge.started.snooze",
+        "content": "Nice, keep it up, see you at {task.deadlineTime:timeDisplay}"
       }
     },
     {
@@ -2021,7 +1999,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "544",
-        "content": "All right, keep going"
+        "content": "All right, keep going",
+        "contentKey": "bot.acknowledge.started"
       },
       "type": "editable",
       "width": 248,
@@ -3035,56 +3014,6 @@
       "extent": "parent"
     },
     {
-      "id": "151",
-      "position": {
-        "x": 481.73729651072927,
-        "y": 843.5121453216939
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": -3988.0472981756734,
-        "y": -2388.92233524732
-      },
-      "dragging": false,
-      "parentId": "261",
-      "extent": "parent",
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "151",
-        "content": "You absolute winner"
-      }
-    },
-    {
-      "id": "152",
-      "position": {
-        "x": 906.6895249201193,
-        "y": 1042.2230365743922
-      },
-      "type": "editable",
-      "width": 248,
-      "height": 258,
-      "selected": false,
-      "positionAbsolute": {
-        "x": -3563.0950697662834,
-        "y": -2190.2114439946217
-      },
-      "dragging": false,
-      "parentId": "261",
-      "extent": "parent",
-      "data": {
-        "label": "Welcome!",
-        "category": "bot",
-        "nodeLabel": "Welcome Message",
-        "nodeId": "152",
-        "content": "*as if*"
-      }
-    },
-    {
       "id": "240",
       "position": {
         "x": 454.1194369591667,
@@ -3119,7 +3048,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "256",
-        "content": "Nothing to do here champion, not before {task.dueDay:activeDays|next time}"
+        "content": "Nothing to do here champion, not before {task.dueDay:activeDays|next time}",
+        "contentKey": "bot.inform.idle"
       },
       "type": "editable",
       "width": 248,
@@ -10163,38 +10093,6 @@
       "selected": false
     },
     {
-      "id": "reactflow__edge-82-151",
-      "source": "82",
-      "target": "151",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-83-152",
-      "source": "83",
-      "target": "152",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-156-97",
-      "source": "156",
-      "target": "97",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-75-156",
-      "source": "75",
-      "target": "156",
-      "type": "custom",
-      "data": {},
-      "selected": false
-    },
-    {
       "zIndex": 1001,
       "source": "178",
       "sourceHandle": null,
@@ -10925,28 +10823,6 @@
         "label": "task.lastStatus == completed"
       },
       "id": "reactflow__edge-240-82",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "152",
-      "sourceHandle": null,
-      "target": "262",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-152-262",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "151",
-      "sourceHandle": null,
-      "target": "262",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-151-262",
       "selected": false
     },
     {
@@ -15714,7 +15590,7 @@
       "data": {
         "label": "I'm on it as we speak, and stop reminding me today",
         "value": "pending",
-        "contentKey": "user.choose.task_status.dontremind"
+        "contentKey": "user.choose.task_status.snooze"
       },
       "selected": false,
       "style": {
@@ -15804,6 +15680,54 @@
       "data": {},
       "id": "reactflow__edge-549-503",
       "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "82",
+      "target": "262",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-82-262",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "83",
+      "target": "262",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-83-262",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "75",
+      "target": "97",
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-75-97",
+      "sourceHandle": null,
+      "targetHandle": null
     }
   ]
 }

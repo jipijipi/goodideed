@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T12:57:37.399Z",
+  "lastUpdated": "2025-09-23T13:01:47.012Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T12:57:37.394Z"
+    "timestamp": "2025-09-23T13:01:46.990Z"
   },
   "nodes": [
     {
@@ -5879,7 +5879,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "519",
-        "content": "Fine !"
+        "content": "Ok fine !"
       },
       "type": "editable",
       "width": 248,
@@ -5929,6 +5929,55 @@
       "positionAbsolute": {
         "x": 1031.2183962436632,
         "y": 4535.287092050596
+      },
+      "dragging": false,
+      "parentId": "363",
+      "extent": "parent"
+    },
+    {
+      "id": "548",
+      "position": {
+        "x": 255.05177363506732,
+        "y": 1098.8856381722917
+      },
+      "data": {
+        "label": "Select option:",
+        "category": "choice",
+        "nodeLabel": "Choice Menu",
+        "nodeId": "548"
+      },
+      "type": "editable",
+      "width": 248,
+      "height": 212,
+      "selected": false,
+      "dragging": false,
+      "parentId": "363",
+      "extent": "parent",
+      "positionAbsolute": {
+        "x": 867.9850476996874,
+        "y": 5634.172730222887
+      }
+    },
+    {
+      "id": "549",
+      "position": {
+        "x": 246.3372906753649,
+        "y": 1360.7448725817967
+      },
+      "data": {
+        "label": "Welcome!",
+        "category": "bot",
+        "nodeLabel": "Welcome Message",
+        "nodeId": "549",
+        "content": "_FINE!_"
+      },
+      "type": "editable",
+      "width": 250,
+      "height": 260,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 859.2705647399849,
+        "y": 5896.031964632392
       },
       "dragging": false,
       "parentId": "363",
@@ -14801,17 +14850,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "519",
-      "sourceHandle": null,
-      "target": "503",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "id": "reactflow__edge-519-503",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "520",
       "sourceHandle": null,
       "target": "521",
@@ -15701,6 +15739,46 @@
         "filter": "none"
       },
       "id": "reactflow__edge-546-372"
+    },
+    {
+      "zIndex": 1001,
+      "source": "548",
+      "sourceHandle": null,
+      "target": "549",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Fine!"
+      },
+      "id": "reactflow__edge-548-549",
+      "selected": false
+    },
+    {
+      "zIndex": 1001,
+      "source": "519",
+      "sourceHandle": null,
+      "target": "548",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-519-548"
+    },
+    {
+      "zIndex": 1001,
+      "source": "549",
+      "sourceHandle": null,
+      "target": "503",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "id": "reactflow__edge-549-503",
+      "selected": false
     }
   ]
 }

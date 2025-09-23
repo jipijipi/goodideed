@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T13:01:47.012Z",
+  "lastUpdated": "2025-09-23T13:22:30.144Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T13:01:46.990Z"
+    "timestamp": "2025-09-23T13:22:30.133Z"
   },
   "nodes": [
     {
@@ -2096,7 +2096,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "183",
-        "content": "Today should be an active day for you and we are before the deadline, do you plan to start today ?"
+        "content": "Today should be an active day for you and we are before the deadline, do you plan to start today ?",
+        "contentKey": "bot.request.start_today"
       },
       "type": "editable",
       "width": 248,
@@ -2170,7 +2171,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "186",
-        "content": "Alright, next task is on {task.dueDay:activeDays} !"
+        "content": "Alright, next task is on {task.dueDay:activeDays} !",
+        "contentKey": "bot.inform.next_day"
       },
       "type": "editable",
       "width": 248,
@@ -2195,7 +2197,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "187",
-        "content": "Inspiring"
+        "content": "Inspiring",
+        "contentKey": "bot.react.underwhelmed"
       },
       "type": "editable",
       "width": 248,
@@ -2220,7 +2223,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "188",
-        "content": "Right on !"
+        "content": "Right on !",
+        "contentKey": "bot.react.positive"
       },
       "type": "editable",
       "width": 248,
@@ -2245,7 +2249,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "192",
-        "content": "You're all set !"
+        "content": "You're all set !",
+        "contentKey": "bot.acknowledge.completion"
       },
       "type": "editable",
       "width": 248,
@@ -2294,7 +2299,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "196",
-        "content": "Today should be an active day for you but you are already past your deadline time|||So I guess you are off the hook..."
+        "content": "Today should be an active day for you but you are already past your deadline time|||So I guess you are off the hook...",
+        "contentKey": "bot.inform.start_today"
       },
       "type": "editable",
       "width": 248,
@@ -5972,8 +5978,8 @@
         "content": "_FINE!_"
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": 859.2705647399849,
@@ -7295,7 +7301,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "411",
-        "content": "Let's recap."
+        "content": "Let's recap.",
+        "contentKey": "bot.inform.summary"
       },
       "type": "editable",
       "width": 248,
@@ -7370,7 +7377,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "418",
-        "content": "Is that correct?"
+        "content": "Is that correct?",
+        "contentKey": "bot.request.confirm"
       },
       "type": "editable",
       "width": 248,
@@ -7419,7 +7427,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "420",
-        "content": "Well don't gloat yet"
+        "content": "Well don't gloat yet",
+        "contentKey": "bot.warn.overconfidence"
       },
       "type": "editable",
       "width": 248,
@@ -7444,7 +7453,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "421",
-        "content": "K."
+        "content": "K.",
+        "contentKey": "bot.react.annoyed"
       },
       "type": "editable",
       "width": 248,
@@ -10209,7 +10219,8 @@
       "type": "custom",
       "data": {
         "label": "I'll start today !",
-        "value": "today"
+        "value": "today",
+        "contentKey": "user.choose.today"
       },
       "id": "reactflow__edge-184-188",
       "selected": false
@@ -10223,7 +10234,8 @@
       "type": "custom",
       "data": {
         "label": "I'll do it next time",
-        "value": "next_active"
+        "value": "next_active",
+        "contentKey": "user.choose.next_time"
       },
       "id": "reactflow__edge-184-187",
       "selected": false
@@ -13184,7 +13196,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Not quite..."
+        "label": "Not quite...",
+        "value": "user.confirm.negative"
       },
       "id": "reactflow__edge-419-421",
       "selected": false
@@ -13246,7 +13259,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Perfect"
+        "label": "Perfect",
+        "value": "user.confirm.affirmative"
       },
       "selected": false,
       "style": {

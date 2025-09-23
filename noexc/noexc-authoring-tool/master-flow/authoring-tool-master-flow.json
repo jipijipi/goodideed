@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T13:22:30.144Z",
+  "lastUpdated": "2025-09-23T13:30:11.490Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T13:22:30.133Z"
+    "timestamp": "2025-09-23T13:30:11.479Z"
   },
   "nodes": [
     {
@@ -2449,7 +2449,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "198",
-        "content": "What do you wish to update ? "
+        "content": "What do you wish to update ? ",
+        "contentKey": "bot.request.update"
       },
       "type": "editable",
       "width": 248,
@@ -2498,7 +2499,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "200",
-        "content": "All right, let's start fresh"
+        "content": "All right, let's start fresh",
+        "contentKey": "bot.acknowledge.update_all"
       },
       "type": "editable",
       "width": 248,
@@ -2523,7 +2525,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "201",
-        "content": "Ok, new days"
+        "content": "Ok, new days",
+        "contentKey": "bot.acknowledge.update_days"
       },
       "type": "editable",
       "width": 248,
@@ -2548,7 +2551,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "202",
-        "content": "New time frame"
+        "content": "New time frame",
+        "contentKey": "bot.acknowledge.update_times"
       },
       "type": "editable",
       "width": 248,
@@ -2573,7 +2577,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "203",
-        "content": "New goal, new you"
+        "content": "New goal, new you",
+        "contentKey": "bot.acknowledge.update_task"
       },
       "type": "editable",
       "width": 248,
@@ -2716,7 +2721,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "208",
-        "content": "As you wish"
+        "content": "As you wish",
+        "contentKey": "bot.acknowledge.update_nothing"
       },
       "type": "editable",
       "width": 248,
@@ -10349,7 +10355,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "My task"
+        "label": "My task",
+        "contentKey": "user.choose.update_task"
       },
       "id": "reactflow__edge-199-203",
       "selected": false
@@ -10362,7 +10369,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "My times"
+        "label": "My times",
+        "contentKey": "user.choose.update_times"
       },
       "id": "reactflow__edge-199-202",
       "selected": false
@@ -10375,7 +10383,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "My active days"
+        "label": "My active days",
+        "contentKey": "user.choose.update_days"
       },
       "id": "reactflow__edge-199-201",
       "selected": false
@@ -10388,7 +10397,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Everything"
+        "label": "Everything",
+        "contentKey": "user.choose.update_all"
       },
       "id": "reactflow__edge-199-200",
       "selected": false
@@ -10434,7 +10444,8 @@
       "targetHandle": null,
       "type": "custom",
       "data": {
-        "label": "Nothing... Nevermind"
+        "label": "Nothing... Nevermind",
+        "contentKey": "user.choose.update_nothing"
       },
       "id": "reactflow__edge-199-208",
       "selected": false

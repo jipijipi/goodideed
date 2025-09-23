@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T14:17:11.108Z",
+  "lastUpdated": "2025-09-23T14:23:52.118Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T14:17:11.090Z"
+    "timestamp": "2025-09-23T14:23:52.093Z"
   },
   "nodes": [
     {
@@ -3672,7 +3672,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "141",
-        "content": "Do you want to update your task or are you happy with your current one?"
+        "content": "Do you want to update your task or are you happy with your current one?",
+        "contentKey": "bot.request."
       }
     },
     {
@@ -3721,7 +3722,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "143",
-        "content": "Fantastic"
+        "content": "Fantastic",
+        "contentKey": "bot.react.positive"
       }
     },
     {
@@ -3746,7 +3748,8 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "144",
-        "content": "Right away sir"
+        "content": "Right away sir",
+        "contentKey": "bot.react.comply"
       }
     },
     {
@@ -3788,8 +3791,8 @@
         "contentKey": "bot.request.catchup"
       },
       "type": "editable",
-      "width": 250,
-      "height": 260,
+      "width": 248,
+      "height": 258,
       "selected": false,
       "positionAbsolute": {
         "x": -7486.420902067268,

@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T14:23:52.118Z",
+  "lastUpdated": "2025-09-23T14:30:27.487Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T14:23:52.093Z"
+    "timestamp": "2025-09-23T14:30:27.473Z"
   },
   "nodes": [
     {
@@ -4169,7 +4169,7 @@
         "category": "bot",
         "nodeLabel": "Welcome Message",
         "nodeId": "3",
-        "contentKey": "bot.explain.concept.detailed",
+        "contentKey": "",
         "content": "The concept is super simple|||Choose one daily goal|||Just ONE|||***ONE !***|||And I'll make sure you follow through"
       }
     },

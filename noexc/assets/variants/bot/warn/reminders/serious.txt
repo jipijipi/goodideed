@@ -1,0 +1,8 @@
+You chose, notification intensity : {task.remindersIntensity:intensity}|||Correct?
+So you've selected intensity level: {task.remindersIntensity:intensity}|||Shall we proceed with this delightful arrangement?
+Your chosen level of torment: {task.remindersIntensity:intensity}|||Is this truly what your heart desires?
+Notification intensity set to: {task.remindersIntensity:intensity}|||Are we in agreement, my dear victim?
+The die is cast at: {task.remindersIntensity:intensity}|||Ready to seal this pact with the devil... er, genie?
+Level of sardonic encouragement: {task.remindersIntensity:intensity}|||Shall I commence the festivities?
+Your selected dose of motivation: {task.remindersIntensity:intensity}|||Prepared for what you've unleashed?
+Reminder intensity locked in at: {task.remindersIntensity:intensity}|||Final answer, no takebacks?

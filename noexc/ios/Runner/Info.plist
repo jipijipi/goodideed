@@ -42,5 +42,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>This app sends notifications to remind you about your daily tasks and celebrate your progress.</string>
 </dict>
 </plist>

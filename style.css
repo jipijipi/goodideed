@@ -208,6 +208,54 @@ footer {
     box-shadow: 0 6px 20px rgba(45, 80, 22, 0.2);
 }
 
+.coming-soon-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.notify-section {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.notify-card {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    border: 1px solid rgba(168, 213, 186, 0.4);
+    backdrop-filter: blur(8px);
+}
+
+.notify-card h3 {
+    font-size: 1.8rem;
+    color: #2d5016;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.notify-card p {
+    font-size: 1.2rem;
+    color: #5d6d42;
+    line-height: 1.7;
+}
+
+.email-link-inline {
+    color: #2d5016;
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(168, 213, 186, 0.5);
+    transition: all 0.3s ease;
+}
+
+.email-link-inline:hover {
+    border-bottom-color: #a8d5ba;
+    color: #1a3009;
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;
@@ -218,12 +266,18 @@ footer {
     }
 
     .features,
-    .contact-info {
+    .contact-info,
+    .coming-soon-content {
         grid-template-columns: 1fr;
     }
 
     .navigation a {
         margin: 0 5px;
         padding: 8px 16px;
+    }
+
+    .notify-card {
+        padding: 30px;
+        margin: 0 10px;
     }
 }

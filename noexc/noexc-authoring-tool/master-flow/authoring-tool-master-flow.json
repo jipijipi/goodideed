@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-24T13:17:27.740Z",
+  "lastUpdated": "2025-09-24T13:35:03.619Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-24T13:17:27.707Z"
+    "timestamp": "2025-09-24T13:35:03.608Z"
   },
   "nodes": [
     {
@@ -711,8 +711,8 @@
     {
       "id": "47",
       "position": {
-        "x": 6953.216987132009,
-        "y": -10190.262155814427
+        "x": 7223.216987132009,
+        "y": -10194.262155814427
       },
       "type": "group",
       "style": {
@@ -724,8 +724,8 @@
       "height": 9751,
       "selected": false,
       "positionAbsolute": {
-        "x": 6953.216987132009,
-        "y": -10190.262155814427
+        "x": 7223.216987132009,
+        "y": -10194.262155814427
       },
       "dragging": false,
       "data": {
@@ -12051,20 +12051,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "370",
-      "sourceHandle": null,
-      "target": "372",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "No let's start over",
-        "contentKey": "user.confirm.negative"
-      },
-      "id": "reactflow__edge-370-372",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "372",
       "sourceHandle": null,
       "target": "373",
@@ -13271,34 +13257,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "436",
-      "sourceHandle": null,
-      "target": "437",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Actually...",
-        "contentKey": "user.confirm.negative"
-      },
-      "id": "reactflow__edge-436-437",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "436",
-      "sourceHandle": null,
-      "target": "438",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "Correct",
-        "contentKey": "user.confirm.affirmative"
-      },
-      "id": "reactflow__edge-436-438",
-      "selected": false
-    },
-    {
-      "zIndex": 1001,
       "source": "439",
       "sourceHandle": null,
       "target": "219",
@@ -13404,25 +13362,6 @@
       "data": {},
       "id": "reactflow__edge-182-444",
       "selected": false
-    },
-    {
-      "zIndex": 1001,
-      "source": "370",
-      "sourceHandle": null,
-      "target": "371",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "That's correct",
-        "contentKey": "user.confirm.affirmative"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-370-371"
     },
     {
       "zIndex": 1001,
@@ -15636,22 +15575,6 @@
     },
     {
       "zIndex": 1001,
-      "source": "546",
-      "sourceHandle": null,
-      "target": "372",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {},
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-546-372"
-    },
-    {
-      "zIndex": 1001,
       "source": "548",
       "sourceHandle": null,
       "target": "549",
@@ -15737,6 +15660,98 @@
       "id": "reactflow__edge-75-97",
       "sourceHandle": null,
       "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "370",
+      "sourceHandle": null,
+      "target": "371",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "That's correct",
+        "contentKey": "user.confirm.affirmative"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-370-371"
+    },
+    {
+      "zIndex": 1001,
+      "source": "370",
+      "sourceHandle": null,
+      "target": "372",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "No let's start over",
+        "contentKey": "user.confirm.negative"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-370-372"
+    },
+    {
+      "zIndex": 1001,
+      "source": "546",
+      "sourceHandle": null,
+      "target": "372",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {},
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-546-372"
+    },
+    {
+      "zIndex": 1001,
+      "source": "436",
+      "sourceHandle": null,
+      "target": "438",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Correct",
+        "contentKey": "user.confirm.affirmative"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-436-438"
+    },
+    {
+      "zIndex": 1001,
+      "source": "436",
+      "sourceHandle": null,
+      "target": "437",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "Actually...",
+        "contentKey": "user.confirm.negative"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-436-437"
     }
   ]
 }

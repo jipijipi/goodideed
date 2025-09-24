@@ -1253,7 +1253,7 @@ class NotificationService {
 
       final resolvedTitle = title; // User task name
       final resolvedSubtitle = subtitle ?? resolvedSnarkyText; // Custom subtitle or snarky message
-      final resolvedBody = resolvedMotivationalText; // Motivational encouragement
+      final resolvedBody = slot == 'demo' ? body : resolvedMotivationalText; // Custom body for test notifications, semantic content for regular notifications
       
       // Create payload data
       final payloadData = {

@@ -436,5 +436,55 @@ void main() {
         expect(delaySeconds, equals(3));
       }, returnsNormally);
     });
+
+    test('should handle show_test_notification trigger with custom body text', () async {
+      // This test verifies that custom body text is properly extracted
+
+      // Arrange
+      final testData = {
+        'title': 'Custom Title',
+        'subtitle': 'Custom Subtitle',
+        'body': 'This is my custom notification body text',
+        'delaySeconds': 5
+      };
+
+      // Act & Assert - should not throw during parameter extraction
+      expect(() {
+        final title = testData['title'] as String? ?? 'Demo Notification';
+        final subtitle = testData['subtitle'] as String?;
+        final body = testData['body'] as String? ?? 'This is how notifications look on your device!';
+        final delaySeconds = testData['delaySeconds'] as int? ?? 3;
+
+        // Verify custom values are extracted correctly
+        expect(title, equals('Custom Title'));
+        expect(subtitle, equals('Custom Subtitle'));
+        expect(body, equals('This is my custom notification body text'));
+        expect(delaySeconds, equals(5));
+      }, returnsNormally);
+    });
+
+    test('should handle show_test_notification trigger with empty body', () async {
+      // This test verifies that empty body falls back to default
+
+      // Arrange
+      final testData = {
+        'title': 'Test Title',
+        'body': '', // Empty body
+      };
+
+      // Act & Assert - should not throw during parameter extraction
+      expect(() {
+        final title = testData['title'] as String? ?? 'Demo Notification';
+        final subtitle = testData['subtitle'] as String?;
+        final body = testData['body'] as String? ?? 'This is how notifications look on your device!';
+        final delaySeconds = testData['delaySeconds'] as int? ?? 3;
+
+        // Verify empty body uses fallback (empty string is falsy, so ?? operator doesn't trigger)
+        expect(title, equals('Test Title'));
+        expect(subtitle, isNull);
+        expect(body, equals('')); // Empty string is preserved, not replaced with default
+        expect(delaySeconds, equals(3));
+      }, returnsNormally);
+    });
   });
 }

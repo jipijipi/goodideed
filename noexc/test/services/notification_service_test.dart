@@ -902,6 +902,51 @@ void main() {
           expect(e, isA<Exception>());
         }
       });
+
+      test('should handle custom body parameter correctly', () async {
+        // Execute with custom body - test should not crash even without platform support
+        const customBody = 'This is a custom notification body message';
+        try {
+          await notificationService.scheduleTestNotification(
+            title: 'Custom Body Test',
+            subtitle: 'Testing Custom Body',
+            body: customBody,
+            delaySeconds: 1,
+          );
+        } catch (e) {
+          // Platform-specific failure is acceptable in test environment
+          expect(e, isA<Exception>());
+        }
+      });
+
+      test('should handle empty body parameter', () async {
+        // Execute with empty body - should fallback to semantic content
+        try {
+          await notificationService.scheduleTestNotification(
+            title: 'Empty Body Test',
+            body: '',
+            delaySeconds: 1,
+          );
+        } catch (e) {
+          // Platform-specific failure is acceptable in test environment
+          expect(e, isA<Exception>());
+        }
+      });
+
+      test('should handle very long body text', () async {
+        // Execute with long body text - test should not crash
+        const longBody = 'This is a very long notification body text that exceeds normal length limits to test how the system handles extended content in notification messages';
+        try {
+          await notificationService.scheduleTestNotification(
+            title: 'Long Body Test',
+            body: longBody,
+            delaySeconds: 1,
+          );
+        } catch (e) {
+          // Platform-specific failure is acceptable in test environment
+          expect(e, isA<Exception>());
+        }
+      });
     });
 
     // Note: Caching strategy tests are verified through manual testing

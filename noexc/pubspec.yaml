@@ -84,6 +84,7 @@ flutter:
     - assets/content/user/
     - assets/content/user/choose/
     - assets/content/user/provide/
+    - assets/content/user/confirm/
     - assets/content/system/
     - assets/content/system/check/
     - assets/content/system/set/
@@ -91,6 +92,9 @@ flutter:
     - assets/content/app/
     - assets/content/app/remind/
     - assets/content/app/encourage/
+    - assets/content/app/incite/
+    - assets/content/app/inspire/
+    - assets/content/app/motivate/
     # UI assets (prepared for future use)
     - assets/images/
     - assets/animations/

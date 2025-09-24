@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-24T13:35:03.619Z",
+  "lastUpdated": "2025-09-24T14:04:23.244Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-24T13:35:03.608Z"
+    "timestamp": "2025-09-24T14:04:23.233Z"
   },
   "nodes": [
     {
@@ -9912,29 +9912,6 @@
       "selected": false
     },
     {
-      "id": "reactflow__edge-66-67",
-      "source": "66",
-      "target": "67",
-      "type": "custom",
-      "label": "I want to update my task",
-      "data": {
-        "label": "I want to update my task !",
-        "contentKey": ""
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-66-68",
-      "source": "66",
-      "target": "68",
-      "type": "custom",
-      "label": "My mistake, sorry..!.",
-      "data": {
-        "label": "My mistake, sorry..!."
-      },
-      "selected": false
-    },
-    {
       "id": "reactflow__edge-65-66",
       "source": "65",
       "target": "66",
@@ -9958,32 +9935,6 @@
       "target": "88",
       "type": "custom",
       "data": {},
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-88-89",
-      "source": "88",
-      "target": "89",
-      "type": "custom",
-      "label": "As a matter of fact, I did!",
-      "contentKey": "user.choose.task_status.completed",
-      "data": {
-        "label": "As a matter of fact, I did!",
-        "contentKey": "user.choose.task_status.completed"
-      },
-      "selected": false
-    },
-    {
-      "id": "reactflow__edge-88-90",
-      "source": "88",
-      "target": "90",
-      "type": "custom",
-      "label": "I... Did not...",
-      "contentKey": "user.choose.task_status.failed",
-      "data": {
-        "label": "I... Did not...",
-        "contentKey": "user.choose.task_status.failed"
-      },
       "selected": false
     },
     {
@@ -15418,118 +15369,6 @@
     {
       "zIndex": 1001,
       "source": "101",
-      "target": "136",
-      "type": "custom",
-      "label": "not yet",
-      "value": "pending",
-      "contentKey": "user.choose.task_status.pending",
-      "data": {
-        "label": "not yet",
-        "value": "pending",
-        "contentKey": "user.choose.task_status.pending"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-101-136",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "101",
-      "sourceHandle": null,
-      "target": "544",
-      "targetHandle": null,
-      "type": "custom",
-      "data": {
-        "label": "I'm on it, but keep the notifications going",
-        "value": "pending",
-        "contentKey": "user.choose.task_status.started"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 4,
-        "stroke": "#ff6b35",
-        "filter": "drop-shadow(0 0 6px rgba(255, 107, 53, 0.6))"
-      },
-      "id": "reactflow__edge-101-544"
-    },
-    {
-      "zIndex": 1001,
-      "source": "97",
-      "target": "100",
-      "type": "custom",
-      "label": "I'm on it!",
-      "value": "overdue",
-      "contentKey": "user.choose.task_status.started",
-      "data": {
-        "label": "I'm on it!",
-        "value": "pending",
-        "contentKey": "user.choose.task_status.started"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-97-100",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "97",
-      "target": "95",
-      "type": "custom",
-      "label": "I failed...",
-      "value": "failed",
-      "contentKey": "user.choose.task_status.failed",
-      "data": {
-        "label": "I failed...",
-        "value": "failed",
-        "contentKey": "user.choose.task_status.failed"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "id": "reactflow__edge-97-95",
-      "sourceHandle": null,
-      "targetHandle": null
-    },
-    {
-      "zIndex": 1001,
-      "source": "101",
-      "target": "137",
-      "type": "custom",
-      "label": "You bet",
-      "value": "completed",
-      "contentKey": "user.choose.task_status.completed",
-      "data": {
-        "label": "You bet",
-        "value": "completed",
-        "contentKey": "user.choose.task_status.completed"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "sourceHandle": null,
-      "targetHandle": null,
-      "id": "reactflow__edge-101-137"
-    },
-    {
-      "zIndex": 1001,
-      "source": "101",
       "target": "146",
       "type": "custom",
       "label": "I'm on it as we speak",
@@ -15549,29 +15388,6 @@
       "sourceHandle": null,
       "targetHandle": null,
       "id": "reactflow__edge-101-146"
-    },
-    {
-      "zIndex": 1001,
-      "source": "97",
-      "target": "94",
-      "type": "custom",
-      "label": "I did it!",
-      "value": "completed",
-      "contentKey": "user.choose.task_status.completed",
-      "data": {
-        "label": "I did it!",
-        "value": "completed",
-        "contentKey": "user.choose.task_status.completed"
-      },
-      "selected": false,
-      "style": {
-        "strokeWidth": 2,
-        "stroke": "#999",
-        "filter": "none"
-      },
-      "sourceHandle": null,
-      "targetHandle": null,
-      "id": "reactflow__edge-97-94"
     },
     {
       "zIndex": 1001,
@@ -15752,6 +15568,223 @@
         "filter": "none"
       },
       "id": "reactflow__edge-436-437"
+    },
+    {
+      "zIndex": 1001,
+      "source": "66",
+      "target": "68",
+      "type": "custom",
+      "label": "My mistake, sorry..!.",
+      "data": {
+        "label": "My mistake, sorry..!.",
+        "contentKey": "user.choose.inactive_checkin"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-66-68"
+    },
+    {
+      "zIndex": 1001,
+      "source": "66",
+      "target": "67",
+      "type": "custom",
+      "label": "I want to update my task",
+      "data": {
+        "label": "I want to update my task !",
+        "contentKey": "user.choose.task_action.update"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-66-67"
+    },
+    {
+      "zIndex": 1001,
+      "source": "101",
+      "target": "137",
+      "type": "custom",
+      "label": "You bet",
+      "value": "completed",
+      "contentKey": "user.choose.task_status.completed",
+      "data": {
+        "label": "You bet",
+        "value": "completed",
+        "contentKey": "user.choose.task_status.completed"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-101-137"
+    },
+    {
+      "zIndex": 1001,
+      "source": "101",
+      "sourceHandle": null,
+      "target": "544",
+      "targetHandle": null,
+      "type": "custom",
+      "data": {
+        "label": "I'm on it, but keep the notifications going",
+        "value": "pending",
+        "contentKey": "user.choose.task_status.started"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-101-544"
+    },
+    {
+      "zIndex": 1001,
+      "source": "101",
+      "target": "136",
+      "type": "custom",
+      "label": "not yet",
+      "value": "pending",
+      "contentKey": "user.choose.task_status.pending",
+      "data": {
+        "label": "not yet",
+        "value": "pending",
+        "contentKey": "user.choose.task_status.pending"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-101-136"
+    },
+    {
+      "zIndex": 1001,
+      "source": "97",
+      "target": "94",
+      "type": "custom",
+      "label": "I did it!",
+      "value": "completed",
+      "contentKey": "user.choose.task_status.completed",
+      "data": {
+        "label": "I did it!",
+        "value": "completed",
+        "contentKey": "user.choose.task_status.completed"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-97-94"
+    },
+    {
+      "zIndex": 1001,
+      "source": "97",
+      "target": "100",
+      "type": "custom",
+      "label": "I'm on it!",
+      "value": "overdue",
+      "contentKey": "user.choose.task_status.started",
+      "data": {
+        "label": "I'm on it!",
+        "value": "pending",
+        "contentKey": "user.choose.task_status.started"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-97-100"
+    },
+    {
+      "zIndex": 1001,
+      "source": "97",
+      "target": "95",
+      "type": "custom",
+      "label": "I failed...",
+      "value": "failed",
+      "contentKey": "user.choose.task_status.failed",
+      "data": {
+        "label": "I failed...",
+        "value": "failed",
+        "contentKey": "user.choose.task_status.failed"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "sourceHandle": null,
+      "targetHandle": null,
+      "id": "reactflow__edge-97-95"
+    },
+    {
+      "zIndex": 1001,
+      "source": "88",
+      "target": "89",
+      "type": "custom",
+      "label": "As a matter of fact, I did!",
+      "contentKey": "user.choose.task_status.completed",
+      "data": {
+        "label": "As a matter of fact, I did!",
+        "contentKey": "user.choose.task_status.completed"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-88-89",
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "zIndex": 1001,
+      "source": "88",
+      "target": "90",
+      "type": "custom",
+      "label": "I... Did not...",
+      "contentKey": "user.choose.task_status.failed",
+      "data": {
+        "label": "I... Did not...",
+        "contentKey": "user.choose.task_status.failed"
+      },
+      "selected": false,
+      "style": {
+        "strokeWidth": 2,
+        "stroke": "#999",
+        "filter": "none"
+      },
+      "id": "reactflow__edge-88-90",
+      "sourceHandle": null,
+      "targetHandle": null
     }
   ]
 }

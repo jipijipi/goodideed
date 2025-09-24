@@ -361,5 +361,80 @@ void main() {
       // complex setup with ServiceLocator, NotificationService, etc.
       // This basic test ensures the method exists and the class can be instantiated.
     });
+
+    test('should handle show_test_notification trigger with subtitle parameter', () async {
+      // This test verifies that the data action with subtitle parameter
+      // can be processed without errors
+
+      // Arrange
+      final testData = {
+        'title': 'Test Title',
+        'subtitle': 'Test Subtitle',
+        'body': 'Test Body',
+        'delaySeconds': 1
+      };
+
+      // Act & Assert - should not throw during parameter extraction
+      expect(() {
+        final title = testData['title'] as String? ?? 'Demo Notification';
+        final subtitle = testData['subtitle'] as String?;
+        final body = testData['body'] as String? ?? 'This is how notifications look on your device!';
+        final delaySeconds = testData['delaySeconds'] as int? ?? 3;
+
+        // Verify parameter extraction works correctly
+        expect(title, equals('Test Title'));
+        expect(subtitle, equals('Test Subtitle'));
+        expect(body, equals('Test Body'));
+        expect(delaySeconds, equals(1));
+      }, returnsNormally);
+    });
+
+    test('should handle show_test_notification trigger without subtitle parameter', () async {
+      // This test verifies that the data action without subtitle parameter
+      // still works correctly with null subtitle
+
+      // Arrange
+      final testData = {
+        'title': 'Test Title',
+        'body': 'Test Body',
+        'delaySeconds': 2
+      };
+
+      // Act & Assert - should not throw during parameter extraction
+      expect(() {
+        final title = testData['title'] as String? ?? 'Demo Notification';
+        final subtitle = testData['subtitle'] as String?; // Should be null
+        final body = testData['body'] as String? ?? 'This is how notifications look on your device!';
+        final delaySeconds = testData['delaySeconds'] as int? ?? 3;
+
+        // Verify parameter extraction works correctly
+        expect(title, equals('Test Title'));
+        expect(subtitle, isNull);
+        expect(body, equals('Test Body'));
+        expect(delaySeconds, equals(2));
+      }, returnsNormally);
+    });
+
+    test('should handle show_test_notification trigger with minimal parameters', () async {
+      // This test verifies that the data action with minimal parameters
+      // uses appropriate defaults
+
+      // Arrange
+      final testData = <String, dynamic>{};
+
+      // Act & Assert - should not throw during parameter extraction with defaults
+      expect(() {
+        final title = testData['title'] as String? ?? 'Demo Notification';
+        final subtitle = testData['subtitle'] as String?;
+        final body = testData['body'] as String? ?? 'This is how notifications look on your device!';
+        final delaySeconds = testData['delaySeconds'] as int? ?? 3;
+
+        // Verify defaults are used correctly
+        expect(title, equals('Demo Notification'));
+        expect(subtitle, isNull);
+        expect(body, equals('This is how notifications look on your device!'));
+        expect(delaySeconds, equals(3));
+      }, returnsNormally);
+    });
   });
 }

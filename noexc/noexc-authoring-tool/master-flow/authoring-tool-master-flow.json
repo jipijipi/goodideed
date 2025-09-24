@@ -1,13 +1,13 @@
 {
   "version": "1.0.0",
-  "lastUpdated": "2025-09-23T14:38:25.006Z",
+  "lastUpdated": "2025-09-24T13:17:27.740Z",
   "gitBranch": "chat-behavior-2",
   "gitCommit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
   "appVersion": "flutter-chat-app",
   "gitInfo": {
     "branch": "chat-behavior-2",
     "commit": "0eadf2d813d9cc6369795cc8eb4c5bb26622ea3f",
-    "timestamp": "2025-09-23T14:38:24.993Z"
+    "timestamp": "2025-09-24T13:17:27.707Z"
   },
   "nodes": [
     {
@@ -9474,7 +9474,8 @@
             "event": "show_test_notification",
             "data": {
               "title": "Ahahahah",
-              "body": "No one can stop me now !",
+              "subtitle": "No one can stop me now !",
+              "body": "I'm invincible !",
               "delaySeconds": 1
             }
           }

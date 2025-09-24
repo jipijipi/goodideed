@@ -619,6 +619,7 @@ class ChatService {
 
       // Extract parameters from data with fallbacks
       final title = data['title'] as String? ?? 'Demo Notification';
+      final subtitle = data['subtitle'] as String?;
       final body = data['body'] as String? ?? 'This is how notifications look on your device!';
       final delaySeconds = data['delaySeconds'] as int? ?? 3;
 
@@ -627,6 +628,7 @@ class ChatService {
       // Use the notification service's public test notification method
       await notificationService.scheduleTestNotification(
         title: title,
+        subtitle: subtitle,
         body: body,
         delaySeconds: delaySeconds,
       );

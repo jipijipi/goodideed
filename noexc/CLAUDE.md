@@ -226,6 +226,7 @@ Use the `show_test_notification` trigger to demonstrate notifications to users:
     "event": "show_test_notification",
     "data": {
       "title": "Demo Notification",
+      "subtitle": "Custom subtitle text",
       "body": "This is how notifications look on your device!",
       "delaySeconds": 3
     }
@@ -235,6 +236,7 @@ Use the `show_test_notification` trigger to demonstrate notifications to users:
 
 **Parameters:**
 - `title` (optional): Notification title, defaults to "Demo Notification"
+- `subtitle` (optional): Notification subtitle, defaults to semantic content based on notification type
 - `body` (optional): Notification body, defaults to "This is how notifications look on your device!"
 - `delaySeconds` (optional): Delay before showing notification, defaults to 3 seconds
 

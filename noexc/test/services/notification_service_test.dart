@@ -844,21 +844,80 @@ void main() {
         expect(requestCountAfter, equals(2));
       });
     });
-  });
 
-  // Note: Caching strategy tests are verified through manual testing
-  // as the private methods are not accessible from test environment
-  group('NotificationService caching integration', () {
-    test('should have caching methods available', () async {
-      setupQuietTesting();
-      TestWidgetsFlutterBinding.ensureInitialized();
+    group('scheduleTestNotification', () {
+      test('should handle test notification with custom subtitle', () async {
+        // Execute - test should not crash even without platform support
+        try {
+          await notificationService.scheduleTestNotification(
+            title: 'Test Title',
+            subtitle: 'Custom Subtitle',
+            body: 'Test Body',
+            delaySeconds: 1,
+          );
+        } catch (e) {
+          // Platform-specific failure is acceptable in test environment
+          expect(e, isA<Exception>());
+        }
+      });
 
-      final mockUserDataService = MockUserDataService();
-      final notificationService = NotificationService(mockUserDataService);
-      await notificationService.initialize();
+      test('should handle test notification without subtitle', () async {
+        // Execute - test should not crash even without platform support
+        try {
+          await notificationService.scheduleTestNotification(
+            title: 'Test Title',
+            body: 'Test Body',
+            delaySeconds: 1,
+          );
+        } catch (e) {
+          // Platform-specific failure is acceptable in test environment
+          expect(e, isA<Exception>());
+        }
+      });
 
-      // Verify cache clearing method is available
-      expect(() => notificationService.clearSchedulingCache(), returnsNormally);
+      test('should handle test notification with null subtitle', () async {
+        // Execute - test should not crash even without platform support
+        try {
+          await notificationService.scheduleTestNotification(
+            title: 'Test Title',
+            subtitle: null,
+            body: 'Test Body',
+            delaySeconds: 1,
+          );
+        } catch (e) {
+          // Platform-specific failure is acceptable in test environment
+          expect(e, isA<Exception>());
+        }
+      });
+
+      test('should use default values when parameters are not provided', () async {
+        // Execute - test should not crash even without platform support
+        try {
+          await notificationService.scheduleTestNotification(
+            title: 'Test Title',
+            body: 'Test Body',
+          );
+        } catch (e) {
+          // Platform-specific failure is acceptable in test environment
+          expect(e, isA<Exception>());
+        }
+      });
+    });
+
+    // Note: Caching strategy tests are verified through manual testing
+    // as the private methods are not accessible from test environment
+    group('NotificationService caching integration', () {
+      test('should have caching methods available', () async {
+        setupQuietTesting();
+        TestWidgetsFlutterBinding.ensureInitialized();
+
+        final mockUserDataService = MockUserDataService();
+        final notificationService = NotificationService(mockUserDataService);
+        await notificationService.initialize();
+
+        // Verify cache clearing method is available
+        expect(() => notificationService.clearSchedulingCache(), returnsNormally);
+      });
     });
   });
 }

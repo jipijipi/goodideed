@@ -1208,7 +1208,7 @@ class NotificationService {
     String taskDate,
     String slot,
     DateTime whenLocal,
-    {required String title, required String body}
+    {required String title, String? subtitle, required String body}
   ) async {
     try {
       final id = _buildId(taskDate, slot);
@@ -1252,7 +1252,7 @@ class NotificationService {
       final resolvedMotivationalText = results[1];
 
       final resolvedTitle = title; // User task name
-      final resolvedSubtitle = resolvedSnarkyText; // Snarky message
+      final resolvedSubtitle = subtitle ?? resolvedSnarkyText; // Custom subtitle or snarky message
       final resolvedBody = resolvedMotivationalText; // Motivational encouragement
       
       // Create payload data
@@ -2326,6 +2326,7 @@ class NotificationService {
   /// Schedule a single test notification for demonstration purposes
   Future<void> scheduleTestNotification({
     required String title,
+    String? subtitle,
     required String body,
     int delaySeconds = 3,
   }) async {
@@ -2340,6 +2341,7 @@ class NotificationService {
         'demo',
         scheduleTime,
         title: title,
+        subtitle: subtitle,
         body: body,
       );
 

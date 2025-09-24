@@ -1,6 +1,0 @@
-[submodule "noexc/assets/sequences"]
-	path = noexc/assets/sequences
-	url = https://github.com/jipijipi/noexp-sequences.git
-[submodule "noexc/assets/content"]
-	path = noexc/assets/content
-	url = https://github.com/jipijipi/noexp-content.git

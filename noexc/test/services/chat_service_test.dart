@@ -376,9 +376,9 @@ void main() {
 
       // Act & Assert - should not throw during parameter extraction
       expect(() {
-        final title = testData['title'] as String? ?? 'Demo Notification';
-        final subtitle = testData['subtitle'] as String?;
-        final body = testData['body'] as String? ?? 'This is how notifications look on your device!';
+        final title = testData['title'] ?? 'Demo Notification';
+        final subtitle = testData['subtitle'] ?? 'This is a subtitle';
+        final body = testData['body'] ?? 'This is how notifications look on your device!';
         final delaySeconds = testData['delaySeconds'] as int? ?? 3;
 
         // Verify parameter extraction works correctly
@@ -474,9 +474,9 @@ void main() {
 
       // Act & Assert - should not throw during parameter extraction
       expect(() {
-        final title = testData['title'] as String? ?? 'Demo Notification';
-        final subtitle = testData['subtitle'] as String?;
-        final body = testData['body'] as String? ?? 'This is how notifications look on your device!';
+        final title = testData['title'] ?? 'Demo Notification';
+        final subtitle = testData['subtitle'] ?? 'This is a subtitle';
+        final body = testData['body'] ?? 'This is how notifications look on your device!';
         final delaySeconds = testData['delaySeconds'] as int? ?? 3;
 
         // Verify empty body uses fallback (empty string is falsy, so ?? operator doesn't trigger)

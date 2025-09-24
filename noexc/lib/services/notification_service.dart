@@ -780,9 +780,9 @@ class NotificationService {
 
       // Create personalized notification titles
       final hasTask = userTask != null && userTask.isNotEmpty;
-      final startTitle = hasTask ? userTask : 'Let\'s get it started';
-      final midTitle = hasTask ? userTask : 'Stay on track';
-      final deadlineTitle = hasTask ? 'Deadline: $userTask' : 'Deadline check';
+      final startTitle = hasTask ? _toProperCase(userTask) : 'Let\'s get it started';
+      final midTitle = hasTask ? _toProperCase(userTask) : 'Stay on track';
+      final deadlineTitle = hasTask ? 'Deadline: ${_toProperCase(userTask)}' : 'Deadline check';
 
       int count = 0;
       // Start encouragement (skip if today and in the past, or if only-final-today is set)
@@ -1220,7 +1220,7 @@ class NotificationService {
       if (slot == 'start') {
         snarkyKey = 'app.remind.start';
       } else if (slot.startsWith('mid')) {
-        snarkyKey = 'app.remind.progress';
+        snarkyKey = 'app.incite.progress';
       } else if (slot == 'deadline') {
         snarkyKey = 'app.remind.deadline';
       } else if (slot.startsWith('comeback')) {
@@ -1234,7 +1234,7 @@ class NotificationService {
       if (slot == 'start') {
         motivationalKey = 'app.encourage.start';
       } else if (slot.startsWith('mid')) {
-        motivationalKey = 'app.encourage.progress';
+        motivationalKey = 'app.encourage.action';
       } else if (slot == 'deadline') {
         motivationalKey = 'app.encourage.deadline';
       } else if (slot.startsWith('comeback')) {
@@ -2596,5 +2596,15 @@ class NotificationService {
     _lastSchedulingHash = null;
     _lastSchedulingTime = null;
     _logger.info('Notification scheduling cache cleared');
+  }
+
+  /// Convert text to Proper Case (First Letter Of Each Word Capitalized)
+  String _toProperCase(String text) {
+    if (text.isEmpty) return text;
+
+    return text.split(' ').map((word) {
+      if (word.isEmpty) return word;
+      return word[0].toUpperCase() + word.substring(1).toLowerCase();
+    }).join(' ');
   }
 }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Excuse you - goodideed</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
                 <defs>
                     <style>
                         .cls-1 {
-                            fill: #2d5016;
+                            fill: var(--light-primary);
                         }
                     </style>
                 </defs>
@@ -41,14 +41,14 @@
 
         <main>
             <section class="hero">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 30px; margin-bottom: 30px;">
-                    <img src="app-icon.png" alt="Excuse you app icon" style="width: 100px; height: 100px; border-radius: 22px; box-shadow: 0 8px 25px rgba(45, 80, 22, 0.2);" onerror="this.style.display='none'">
-                    <div style="text-align: left;">
-                        <h2 style="margin-bottom: 10px; font-size: 2.5rem;">Excuse you</h2>
-                        <p style="font-size: 1.2rem; color: #5d6d42; margin: 0;">The satirical habit-forming app with zero excuses</p>
+                <div class="app-hero">
+                    <img src="app-icon.png" alt="Excuse you app icon" class="app-icon">
+                    <div class="app-info">
+                        <h2>Excuse you</h2>
+                        <p class="subtitle">The satirical habit-forming app with zero excuses</p>
                     </div>
                 </div>
-                <p style="font-size: 1.3rem; color: #5d6d42; line-height: 1.8; max-width: 800px; margin: 0 auto;">A conversational habit tracker that challenges you through humor, gamification, and witty interactions. No excuses allowed.</p>
+                <p>A conversational habit tracker that challenges you through humor, gamification, and witty interactions. No excuses allowed.</p>
             </section>
 
             <section class="features">
@@ -89,10 +89,10 @@
                 </div>
             </section>
 
-            <section style="text-align: center; margin-top: 50px; padding: 30px;">
-                <h3 style="color: #2d5016; margin-bottom: 20px;">Privacy First</h3>
-                <p style="color: #5d6d42; margin-bottom: 20px;">Your habit data stays on your device. We believe privacy is fundamental to building trust and lasting habits.</p>
-                <a href="privacy/" class="email-link" style="text-decoration: none;">View Privacy Policy</a>
+            <section class="privacy-section">
+                <h3>Privacy First</h3>
+                <p>Your habit data stays on your device. We believe privacy is fundamental to building trust and lasting habits.</p>
+                <a href="privacy/" class="email-link">View Privacy Policy</a>
             </section>
         </main>
 

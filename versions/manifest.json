@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2025-02-02T00:00:00Z",
+  "app": {
+    "bundleId": "com.goodideed.noexc",
+    "minVersion": "1.0.0",
+    "softVersion": "1.1.0",
+    "storeUrl": {
+      "ios": "https://apps.apple.com/app/id0000000000",
+      "android": "https://play.google.com/store/apps/details?id=com.goodideed.noexc"
+    },
+    "message": "Baseline release."
+  },
+  "content": {
+    "minVersion": "2025.02.02",
+    "latestVersion": "2025.02.02",
+    "bundles": [
+      {
+        "id": "default_sequences",
+        "version": "2025.02.02",
+        "url": "https://goodideed.com/apps/noexc/sequences/default_sequences.json",
+        "hash": "sha256-PLACEHOLDER"
+      }
+    ]
+  }
+}

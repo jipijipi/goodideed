@@ -33,19 +33,18 @@
         <main>
             <section class="hero">
                 <h2>Privacy Policy for "Excuse You" App</h2>
-                <strong>Last Updated: September 2025</strong></p>
+                <p><strong>Effective Date: January 2025</strong></p>
             </section>
 
             <section class="privacy-content">
 
                 <h3>Data Protection Summary</h3>
                 <div class="privacy-summary">
-                    <p>✅ <strong>All data stored locally on your device</strong><br>
-                    ✅ <strong>No data transmitted to servers</strong><br>
-                    ✅ <strong>No personal information collected</strong><br>
-                    ✅ <strong>No tracking or analytics</strong><br>
-                    ✅ <strong>No advertising or marketing use</strong><br>
-                    ✅ <strong>Complete user control over data</strong><br>
+                    <p>✅ <strong>All personal data stored locally on your device</strong><br>
+                    ✅ <strong>Optional analytics – disabled by default</strong><br>
+                    ✅ <strong>No personal identification collected</strong><br>
+                    ✅ <strong>No advertising or data sales</strong><br>
+                    ✅ <strong>Complete user control over data sharing</strong><br>
                     ✅ <strong>No account required</strong><br>
                     ✅ <strong>GDPR, CCPA, and COPPA compliant</strong></p>
                 </div>
@@ -73,8 +72,56 @@
                     <li>Contacts or address book information</li>
                     <li>Financial or payment information</li>
                     <li>Health or fitness data beyond habit tracking</li>
-                    <li>Usage analytics or behavioral tracking data</li>
+                    <li>Device identifiers linked to your identity</li>
                 </ul>
+
+                <h3>Third-Party Services and Data Collection</h3>
+
+                <h4>Firebase Services by Google</h4>
+                <p>To improve app stability, performance, and user experience, we use Firebase services provided by Google LLC. These services process limited technical data as described below:</p>
+
+                <h4>1. Crashlytics (Crash Reporting)</h4>
+                <p><strong>Purpose:</strong> Automatically detect and diagnose app crashes to improve stability.</p>
+                <p><strong>Data Collected:</strong></p>
+                <ul>
+                    <li>Crash logs and stack traces (technical error information)</li>
+                    <li>Device model, operating system version</li>
+                    <li>App version and build number</li>
+                    <li>Timestamp of crash occurrence</li>
+                    <li>Anonymous instance identifier (not linked to personal identity)</li>
+                </ul>
+                <p><strong>User Control:</strong> Crash reporting is enabled automatically in production builds. This data is essential for maintaining app stability and cannot be disabled.</p>
+
+                <h4>2. Performance Monitoring</h4>
+                <p><strong>Purpose:</strong> Monitor app performance metrics to optimize speed and responsiveness.</p>
+                <p><strong>Data Collected:</strong></p>
+                <ul>
+                    <li>App startup time and screen load duration</li>
+                    <li>Custom performance traces (animation loading, notification scheduling)</li>
+                    <li>Network request latency (for content updates only)</li>
+                    <li>Device model and OS version</li>
+                    <li>Anonymous instance identifier</li>
+                </ul>
+                <p><strong>User Control:</strong> Performance monitoring is enabled automatically in production builds and cannot be disabled individually.</p>
+
+                <h4>3. Analytics (Optional)</h4>
+                <p><strong>Purpose:</strong> Understand how users interact with app features to improve user experience.</p>
+                <p><strong>Data Collected (Only if Enabled):</strong></p>
+                <ul>
+                    <li>App screen views and navigation patterns</li>
+                    <li>Feature usage events (e.g., "settings opened," "reminder scheduled")</li>
+                    <li>Session duration and frequency</li>
+                    <li>Device type, OS version, app version</li>
+                    <li>Anonymous user identifier (not linked to personal identity)</li>
+                </ul>
+                <p><strong>User Control:</strong> <span style="color: #2d5016; font-weight: 600;">Analytics is DISABLED by default.</span> You can opt-in by toggling "Share Usage Data" in the app's Quick Settings panel under "Data & Privacy." You can disable it at any time.</p>
+
+                <h4>Firebase Data Processing</h4>
+                <p><strong>Third-Party Processor:</strong> Google LLC (Firebase)<br>
+                <strong>Data Retention:</strong> Firebase retains crash and performance data for 90 days; analytics data for 14 months<br>
+                <strong>Data Location:</strong> Processed on Google Cloud servers (multi-region)<br>
+                <strong>Privacy Policy:</strong> <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer">https://firebase.google.com/support/privacy</a><br>
+                <strong>Important:</strong> No personally identifiable information (PII) is transmitted to Firebase. All identifiers are anonymized and cannot be linked to your identity.</p>
 
                 <h3>How We Use Your Information</h3>
                 <p>All data processing occurs locally on your device to:</p>
@@ -86,13 +133,27 @@
                 </ul>
 
                 <h3>Information Sharing and Disclosure</h3>
-                <p><strong>We do not share, sell, rent, or disclose your personal information to third parties.</strong> </p>
+                <p><strong>We do not sell, rent, or share your personal information with third parties for marketing purposes.</strong></p>
+
+                <h4>Limited Data Sharing</h4>
+                <p>The only data sharing occurs through Firebase services (described above) for the following purposes:</p>
                 <ul>
-                    <li>No data is transmitted to our servers</li>
-                    <li>No data is shared with advertisers or marketing companies</li>
-                    <li>No data is used for analytics or tracking across apps</li>
-                    <li>No data is accessible to us as developers after you install the app</li>
+                    <li><strong>Crash Reporting:</strong> Anonymous crash logs sent to Firebase Crashlytics for stability improvements</li>
+                    <li><strong>Performance Monitoring:</strong> Anonymous performance metrics sent to Firebase Performance</li>
+                    <li><strong>Optional Analytics:</strong> If you enable analytics, anonymous usage data is sent to Firebase Analytics</li>
                 </ul>
+
+                <h4>What We Do NOT Share</h4>
+                <ul>
+                    <li>Your habit names, tasks, or progress data – this stays on your device</li>
+                    <li>Your conversation choices or responses – never transmitted</li>
+                    <li>Any personally identifiable information (PII)</li>
+                    <li>Data with advertisers, marketers, or data brokers</li>
+                    <li>Data for cross-app tracking or profiling</li>
+                </ul>
+
+                <h4>Legal Disclosures</h4>
+                <p>We may disclose information if required by law, but since we don't collect or store personal data on our servers, we have no personal information to disclose.</p>
 
                 <h3>Data Storage and Security</h3>
 
@@ -129,8 +190,33 @@
                 </ul>
 
 
-                <h3>Third-Party Services</h3>
-                <p>Excuse You does not integrate with third-party services, analytics platforms, or advertising networks.</p>
+                <h3>Your Rights and Choices</h3>
+
+                <h4>Control Over Your Data</h4>
+                <ul>
+                    <li><strong>Analytics Opt-Out:</strong> Disable "Share Usage Data" in Quick Settings > Data & Privacy at any time</li>
+                    <li><strong>Notification Control:</strong> Manage notification permissions through your device settings</li>
+                    <li><strong>Data Deletion:</strong> Uninstalling the app permanently deletes all locally stored data</li>
+                    <li><strong>Access:</strong> All your data is stored locally on your device and accessible only to you</li>
+                </ul>
+
+                <h4>Regional Privacy Rights</h4>
+                <p><strong>GDPR (EU/UK):</strong> You have the right to access, rectify, erase, restrict processing, and port your data. Since all data is stored locally on your device, you have complete control.</p>
+                <p><strong>CCPA (California):</strong> You have the right to know what data is collected, request deletion, and opt-out of sales (we don't sell data).</p>
+                <p><strong>Other Regions:</strong> Similar rights may apply based on your location. Contact us for specific inquiries.</p>
+
+                <h3>Children's Privacy</h3>
+                <p>Excuse You does not knowingly collect personal information from children under 13 (or applicable age in your jurisdiction). The app:</p>
+                <ul>
+                    <li>Does not require account registration or age verification</li>
+                    <li>Stores all data locally without transmitting personal information</li>
+                    <li>Does not contain advertising or in-app purchases</li>
+                    <li>Complies with COPPA (Children's Online Privacy Protection Act)</li>
+                </ul>
+                <p>If you believe a child has used the app and you wish to delete their data, simply uninstall the app from their device.</p>
+
+                <h3>Changes to This Privacy Policy</h3>
+                <p>We may update this Privacy Policy to reflect changes in our practices or legal requirements. When we make significant changes, we will update the "Effective Date" at the top of this policy. Continued use of the app after changes constitutes acceptance of the updated policy.</p>
 
                 <h3>Contact Us</h3>
                 <p>If you have questions about this Privacy Policy or our privacy practices:</p>

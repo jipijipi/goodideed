@@ -4,7 +4,7 @@
   "app": {
     "bundleId": "com.goodideed.noexc",
     "minVersion": "1.0.0",
-    "softVersion": "1.1.0",
+    "softVersion": "1.0.0",
     "storeUrl": {
       "ios": "https://apps.apple.com/app/id0000000000",
       "android": "https://play.google.com/store/apps/details?id=com.goodideed.noexc"

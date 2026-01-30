@@ -43,7 +43,7 @@
         <main>
             <section class="hero">
                 <h2>Privacy Policy</h2>
-                <p><strong>Effective Date:</strong> January 16, 2026</p>
+                <p><strong>Effective Date:</strong> January 30, 2026</p>
             </section>
 
             <section class="policy-content">
@@ -51,8 +51,9 @@
                     <h3>Summary</h3>
                     <ul class="policy-list">
                         <li><strong>No account required.</strong> We do not ask for your name, email, or phone number.</li>
-                        <li><strong>Local-first data.</strong> Your totem collection and settings live on your device.</li>
-                        <li><strong>Firebase Analytics.</strong> We collect limited, non-personal usage events to improve the app.</li>
+                        <li><strong>Local-first data.</strong> Your totem collection, stats, and settings live on your device.</li>
+                        <li><strong>Firebase Analytics & Crashlytics.</strong> We collect limited, non-personal usage events and crash reports to improve the app.</li>
+                        <li><strong>Optional achievements.</strong> Game Center / Play Games sign-in is optional and can be disabled.</li>
                         <li><strong>No ads, no data sales.</strong> We do not sell your data or use it for advertising.</li>
                     </ul>
                 </div>
@@ -63,32 +64,56 @@
                     <ul class="policy-list">
                         <li>Active totem and trophy room history.</li>
                         <li>Session state (start time and duration) to recover interrupted sessions.</li>
-                        <li>App preferences like haptics, low power mode, and last session length.</li>
+                        <li>App preferences like haptics, low power mode, sound, and last session length.</li>
+                        <li>Pomodoro settings and cycle state.</li>
+                        <li>Progress stats (wins, losses, streaks, longest session, last win date).</li>
                         <li>Pending purchase metadata (product ID and start timestamp) for recovery.</li>
+                        <li>Processed purchase records (a local purchase fingerprint to avoid double-grants).</li>
                     </ul>
                     <p>All of the above is stored locally using on-device storage. Deleting the app removes this data.</p>
 
                     <h4>2) Analytics events (Firebase Analytics)</h4>
                     <p>We use Firebase Analytics to understand how the app performs and which flows need improvement. Events we log include:</p>
                     <ul class="policy-list">
-                        <li>Session start, completion, and failure (duration, success flag, remaining time).</li>
-                        <li>Session abandonment and reason codes (grace window or active).</li>
-                        <li>Motion detection events (sensor type, magnitude, threshold, and whether a failure occurred).</li>
-                        <li>Calibration or sensor availability events.</li>
-                        <li>Premium idol consumption events (idol design and rarity).</li>
+                        <li>Session start, completion, failure, and abandonment (duration, success flag, remaining time, reason).</li>
+                        <li>Session start taps and duration selections.</li>
+                        <li>Pomodoro toggles and break start/end events.</li>
+                        <li>Motion detection events (sensor type, magnitude bucket, threshold bucket, failure flag).</li>
+                        <li>Calibration and sensor availability events.</li>
+                        <li>Idol events (purchase attempt/success/cancel, consumption, gallery open and item taps).</li>
+                        <li>Tutorial completion or skip.</li>
+                        <li>App update prompt shown (requirement and target version).</li>
                     </ul>
-                    <p>Firebase Analytics also collects standard device and app data such as device model, OS version, app version, locale, and an anonymous app instance identifier. We do not link this data to your identity.</p>
+                    <p>Firebase Analytics also collects standard device and app data such as device model, OS version, app version, locale, and an anonymous app instance identifier. We set app version, build number, and locale as analytics user properties. We do not link this data to your identity.</p>
                     <p>Firebase Privacy Policy: <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer" class="email-link-inline">firebase.google.com/support/privacy</a></p>
+
+                    <h4>3) Crash reports (Firebase Crashlytics)</h4>
+                    <p>We use Firebase Crashlytics to detect crashes and stability issues. Crash reports can include stack traces, device model, OS version, app version, locale, and the time of the crash. We do not send your name, email, or contact info to Crashlytics.</p>
+                    <p>Firebase Crashlytics Privacy: <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener noreferrer" class="email-link-inline">firebase.google.com/support/privacy</a></p>
+
+                    <h4>4) App update checks</h4>
+                    <p>The app may check a manifest file at <span class="email-link-inline">goodideed.com</span> to see if an update is required or recommended. This request includes standard network data (e.g., IP address, user agent) that web servers log. We use it only to serve update information.</p>
                 </div>
 
                 <div class="content-block">
                     <h3>Motion Sensor Data</h3>
                     <p>Doomscroll Totem uses your device's motion sensors to detect movement during a focus session. Raw sensor data stays in memory and is not stored. We only log limited motion event parameters to Firebase Analytics as described above.</p>
+                    <p>The app also reads battery level and charging state to suggest low power mode. This information is used on-device and not shared.</p>
+                </div>
+
+                <div class="content-block">
+                    <h3>Game Center / Play Games (Optional)</h3>
+                    <p>If you enable achievements, the app can sign in to Game Center (iOS) or Google Play Games (Android). Those services are provided by Apple and Google, and they may collect account and gameplay data according to their policies. We only receive basic status (signed in or not) and achievement unlock results.</p>
+                </div>
+
+                <div class="content-block">
+                    <h3>Notifications</h3>
+                    <p>The app can schedule local notifications to remind you when a Pomodoro break ends. Notifications are generated on-device. We do not send push notifications or collect notification tokens.</p>
                 </div>
 
                 <div class="content-block">
                     <h3>In-App Purchases</h3>
-                    <p>Purchases are processed by Apple App Store or Google Play. We do not receive your payment information. The stores may provide transaction data to the app for purchase validation and restoration. This data is handled by the platform and not shared by us.</p>
+                    <p>Purchases are processed by the Apple App Store or Google Play. We do not receive your payment information. The stores may provide transaction data to the app for purchase validation and restoration (for example, product ID, transaction ID, or receipt/verification data). We store a local purchase fingerprint to prevent duplicate grants.</p>
                 </div>
 
                 <div class="content-block">
@@ -97,13 +122,16 @@
                         <li>Run focus sessions and maintain your totem progress.</li>
                         <li>Restore sessions after interruptions or app restarts.</li>
                         <li>Improve stability and session design based on aggregate analytics.</li>
+                        <li>Detect crashes and fix bugs.</li>
+                        <li>Check for required or recommended updates.</li>
                         <li>Support purchase flows and restore eligible purchases.</li>
+                        <li>Enable optional achievements and local notifications.</li>
                     </ul>
                 </div>
 
                 <div class="content-block">
                     <h3>Sharing and Disclosure</h3>
-                    <p>We do not sell your data. We only share limited analytics data with Firebase Analytics to operate and improve the app. We may disclose information if legally required, but we do not store personal identifiers that could be used to identify you.</p>
+                    <p>We do not sell your data. We share limited data with Firebase (Analytics and Crashlytics) to operate and improve the app. If you enable achievements, data may be shared with Apple Game Center or Google Play Games. App update checks contact goodideed.com to fetch a manifest file. Purchases are handled by Apple or Google. We may disclose information if legally required, but we do not store personal identifiers that could be used to identify you.</p>
                 </div>
 
                 <div class="content-block">
@@ -115,6 +143,8 @@
                     <h3>Your Choices</h3>
                     <ul class="policy-list">
                         <li>Delete the app to remove locally stored data.</li>
+                        <li>Disable achievements in Settings to avoid Game Center / Play Games sign-in.</li>
+                        <li>Control notification permissions in your device settings.</li>
                         <li>Contact us if you have questions about analytics data or usage.</li>
                     </ul>
                 </div>
@@ -137,7 +167,7 @@
         </main>
 
         <footer>
-            <p>&copy; 2025 goodideed. Helping people in unusual ways.</p>
+            <p>&copy; 2026 goodideed. Helping people in unusual ways.</p>
         </footer>
     </div>
 </body>

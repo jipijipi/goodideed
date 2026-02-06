@@ -135,6 +135,35 @@ header h1 a:hover {
     transform: translateY(-1px);
 }
 
+.language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    padding: 10px 16px;
+    margin: 0 auto 24px;
+    border-radius: 999px;
+    background: rgba(15, 22, 30, 0.7);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    font-family: var(--font-display);
+}
+
+.language-switcher label {
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+}
+
+.language-switcher select {
+    border: 1px solid rgba(244, 239, 230, 0.3);
+    background: rgba(15, 22, 30, 0.9);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
 main {
     background: var(--panel);
     border-radius: var(--radius-l);

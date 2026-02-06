@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - Doomscroll Totem</title>
+    <title data-i18n="terms.title">Terms of Service - Doomscroll Totem</title>
     <link rel="stylesheet" href="../style.css">
+    <script src="/i18n.js" defer></script>
 </head>
 
 <body>
@@ -29,106 +30,113 @@
                     d="M83.79,71.3c-10.749,10.434-17.568,10.406-29.185-.117-2.046-1.854-5.208-1.698-7.062.348-1.854,2.047-1.698,5.209.349,7.062,7.727,7.001,14.788,10.502,21.729,10.502,6.98,0,13.839-3.539,21.134-10.619,1.981-1.923,2.029-5.089.105-7.07-1.923-1.98-5.089-2.028-7.07-.105Z" />
             </svg>
             <h1><a href="../../">goodideed</a></h1>
-            <p class="tagline">Terms of Service for Doomscroll Totem</p>
+            <p class="tagline" data-i18n="terms.tagline">Terms of Service for Doomscroll Totem</p>
         </header>
 
         <nav class="navigation">
-            <a href="../../">Home</a>
-            <a href="../../apps/">Apps</a>
-            <a href="../../contact/">Contact</a>
-            <a href="../">Doomscroll Totem</a>
-            <a href="./" class="active">Terms of Service</a>
+            <a href="../../" data-i18n="terms.nav.home">Home</a>
+            <a href="../../apps/" data-i18n="terms.nav.apps">Apps</a>
+            <a href="../../contact/" data-i18n="terms.nav.contact">Contact</a>
+            <a href="../" data-i18n="terms.nav.doomscroll">Doomscroll Totem</a>
+            <a href="./" class="active" data-i18n="terms.nav.terms">Terms of Service</a>
         </nav>
+        <div class="language-switcher">
+            <label for="lang-switcher" data-i18n="common.lang.label">Language</label>
+            <select id="lang-switcher" data-lang-switcher>
+                <option value="en" data-i18n="common.lang.en">English</option>
+                <option value="fr" data-i18n="common.lang.fr">French</option>
+            </select>
+        </div>
 
         <main>
             <section class="hero">
-                <h2>Terms of Service</h2>
-                <p><strong>Effective Date:</strong> January 30, 2026</p>
+                <h2 data-i18n="terms.hero.title">Terms of Service</h2>
+                <p data-i18n="terms.hero.effective" data-i18n-html><strong>Effective Date:</strong> January 30, 2026</p>
             </section>
 
             <section class="policy-content">
                 <div class="content-block">
-                    <h3>Acceptance of Terms</h3>
-                    <p>By downloading or using Doomscroll Totem (the "App"), you agree to these Terms of Service ("Terms"). If you do not agree, do not use the App.</p>
+                    <h3 data-i18n="terms.acceptance.title">Acceptance of Terms</h3>
+                    <p data-i18n="terms.acceptance.body">By downloading or using Doomscroll Totem (the "App"), you agree to these Terms of Service ("Terms"). If you do not agree, do not use the App.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Who We Are</h3>
-                    <p>The App is provided by goodideed. If you have questions, email <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a>.</p>
+                    <h3 data-i18n="terms.who.title">Who We Are</h3>
+                    <p data-i18n="terms.who.body" data-i18n-html>The App is provided by goodideed. If you have questions, email <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a>.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>License to Use the App</h3>
-                    <p>We grant you a personal, non-exclusive, non-transferable license to use the App for your own purposes. You may not copy, modify, reverse engineer, or redistribute the App except as permitted by law.</p>
+                    <h3 data-i18n="terms.license.title">License to Use the App</h3>
+                    <p data-i18n="terms.license.body">We grant you a personal, non-exclusive, non-transferable license to use the App for your own purposes. You may not copy, modify, reverse engineer, or redistribute the App except as permitted by law.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>In-App Purchases (Consumable Totems)</h3>
-                    <p>The App offers optional in-app purchases for premium totem designs. These purchases are consumable: if a focus session fails, a premium totem can be consumed and moved into the trophy room. Consumable purchases may not be restored once consumed.</p>
-                    <p>Purchases are processed by the Apple App Store or Google Play. Payment processing, taxes, refunds, and billing support are handled by those platforms under their own terms and policies.</p>
-                    <p>If an eligible purchase has not been consumed, it may be restorable through the store’s restore mechanism, subject to the store’s policies.</p>
-                    <p>Refunds are not managed by goodideed. If you want a refund, request it through Apple or Google using their official refund processes. Eligibility and timing are determined by the store, not by us.</p>
+                    <h3 data-i18n="terms.purchases.title">In-App Purchases (Consumable Totems)</h3>
+                    <p data-i18n="terms.purchases.body1">The App offers optional in-app purchases for premium totem designs. These purchases are consumable: if a focus session fails, a premium totem can be consumed and moved into the trophy room. Consumable purchases may not be restored once consumed.</p>
+                    <p data-i18n="terms.purchases.body2">Purchases are processed by the Apple App Store or Google Play. Payment processing, taxes, refunds, and billing support are handled by those platforms under their own terms and policies.</p>
+                    <p data-i18n="terms.purchases.body3">If an eligible purchase has not been consumed, it may be restorable through the store’s restore mechanism, subject to the store’s policies.</p>
+                    <p data-i18n="terms.purchases.body4">Refunds are not managed by goodideed. If you want a refund, request it through Apple or Google using their official refund processes. Eligibility and timing are determined by the store, not by us.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Third-Party Platform Terms</h3>
-                    <p>Your use of the App is also subject to the applicable Apple App Store or Google Play terms and policies. In the event of a conflict between those terms and these Terms, the store’s terms will control where required by law.</p>
+                    <h3 data-i18n="terms.platform.title">Third-Party Platform Terms</h3>
+                    <p data-i18n="terms.platform.body">Your use of the App is also subject to the applicable Apple App Store or Google Play terms and policies. In the event of a conflict between those terms and these Terms, the store’s terms will control where required by law.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Acceptable Use</h3>
+                    <h3 data-i18n="terms.use.title">Acceptable Use</h3>
                     <ul class="policy-list">
-                        <li>Do not misuse the App or attempt to disrupt its services.</li>
-                        <li>Do not access or attempt to access data that is not intended for you.</li>
-                        <li>Do not use the App in any way that violates applicable laws.</li>
+                        <li data-i18n="terms.use.li1">Do not misuse the App or attempt to disrupt its services.</li>
+                        <li data-i18n="terms.use.li2">Do not access or attempt to access data that is not intended for you.</li>
+                        <li data-i18n="terms.use.li3">Do not use the App in any way that violates applicable laws.</li>
                     </ul>
                 </div>
 
                 <div class="content-block">
-                    <h3>Privacy</h3>
-                    <p>Our Privacy Policy explains how we collect and use information. By using the App, you agree to the Privacy Policy.</p>
-                    <p><a href="../privacy/" class="email-link-inline">View the Privacy Policy</a></p>
+                    <h3 data-i18n="terms.privacy.title">Privacy</h3>
+                    <p data-i18n="terms.privacy.body">Our Privacy Policy explains how we collect and use information. By using the App, you agree to the Privacy Policy.</p>
+                    <p data-i18n="terms.privacy.link" data-i18n-html><a href="../privacy/" class="email-link-inline">View the Privacy Policy</a></p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Health and Safety Disclaimer</h3>
-                    <p>Doomscroll Totem is a focus tool, not a medical or therapeutic product. The App does not provide medical advice, diagnosis, or treatment.</p>
+                    <h3 data-i18n="terms.health.title">Health and Safety Disclaimer</h3>
+                    <p data-i18n="terms.health.body">Doomscroll Totem is a focus tool, not a medical or therapeutic product. The App does not provide medical advice, diagnosis, or treatment.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Updates</h3>
-                    <p>We may require or recommend updates to keep the App working properly or to add security fixes and features. If you do not install required updates, some parts of the App may stop working.</p>
+                    <h3 data-i18n="terms.updates.title">Updates</h3>
+                    <p data-i18n="terms.updates.body">We may require or recommend updates to keep the App working properly or to add security fixes and features. If you do not install required updates, some parts of the App may stop working.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Availability and Changes</h3>
-                    <p>We may update or discontinue the App at any time, including adding or removing features. We may update these Terms; continued use means you accept the changes.</p>
+                    <h3 data-i18n="terms.availability.title">Availability and Changes</h3>
+                    <p data-i18n="terms.availability.body">We may update or discontinue the App at any time, including adding or removing features. We may update these Terms; continued use means you accept the changes.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Termination</h3>
-                    <p>You may stop using the App at any time. We may suspend or terminate access if you violate these Terms or if required by law.</p>
+                    <h3 data-i18n="terms.termination.title">Termination</h3>
+                    <p data-i18n="terms.termination.body">You may stop using the App at any time. We may suspend or terminate access if you violate these Terms or if required by law.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Disclaimers and Limitation of Liability</h3>
-                    <p>The App is provided "as is" without warranties of any kind. To the maximum extent permitted by law, goodideed is not liable for indirect, incidental, or consequential damages arising from your use of the App.</p>
+                    <h3 data-i18n="terms.disclaimer.title">Disclaimers and Limitation of Liability</h3>
+                    <p data-i18n="terms.disclaimer.body">The App is provided "as is" without warranties of any kind. To the maximum extent permitted by law, goodideed is not liable for indirect, incidental, or consequential damages arising from your use of the App.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Governing Law</h3>
-                    <p>These Terms are governed by the laws of your place of residence, unless local law requires a different forum.</p>
+                    <h3 data-i18n="terms.law.title">Governing Law</h3>
+                    <p data-i18n="terms.law.body">These Terms are governed by the laws of your place of residence, unless local law requires a different forum.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>Contact</h3>
-                    <p>If you have questions about these Terms, contact <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a>.</p>
+                    <h3 data-i18n="terms.contact.title">Contact</h3>
+                    <p data-i18n="terms.contact.body" data-i18n-html>If you have questions about these Terms, contact <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a>.</p>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>&copy; 2026 goodideed. Helping people in unusual ways.</p>
+            <p>&copy; <span data-year></span> <span data-i18n="terms.footer">goodideed. Helping people in unusual ways.</span></p>
         </footer>
     </div>
 </body>

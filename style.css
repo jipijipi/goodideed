@@ -74,6 +74,33 @@ header h1 a:hover {
     box-shadow: 0 4px 12px rgba(45, 80, 22, 0.15);
 }
 
+.language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    padding: 10px 16px;
+    margin: 0 auto 20px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 8px rgba(45, 80, 22, 0.1);
+    color: #2d5016;
+    font-weight: 500;
+}
+
+.language-switcher label {
+    font-size: 0.95rem;
+}
+
+.language-switcher select {
+    border: 1px solid rgba(45, 80, 22, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    color: #2d5016;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-weight: 600;
+}
+
 .tagline {
     font-size: 1.2rem;
     color: #5d6d42;

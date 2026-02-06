@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support & FAQ - Doomscroll Totem</title>
+    <title data-i18n="support.title">Support & FAQ - Doomscroll Totem</title>
     <link rel="stylesheet" href="../style.css">
+    <script src="/i18n.js" defer></script>
 </head>
 
 <body>
@@ -29,61 +30,68 @@
                     d="M83.79,71.3c-10.749,10.434-17.568,10.406-29.185-.117-2.046-1.854-5.208-1.698-7.062.348-1.854,2.047-1.698,5.209.349,7.062,7.727,7.001,14.788,10.502,21.729,10.502,6.98,0,13.839-3.539,21.134-10.619,1.981-1.923,2.029-5.089.105-7.07-1.923-1.98-5.089-2.028-7.07-.105Z" />
             </svg>
             <h1><a href="../../">goodideed</a></h1>
-            <p class="tagline">Support and FAQ for Doomscroll Totem</p>
+            <p class="tagline" data-i18n="support.tagline">Support and FAQ for Doomscroll Totem</p>
         </header>
 
         <nav class="navigation">
-            <a href="../../">Home</a>
-            <a href="../../apps/">Apps</a>
-            <a href="../../contact/">Contact</a>
-            <a href="../">Doomscroll Totem</a>
-            <a href="./" class="active">Support & FAQ</a>
+            <a href="../../" data-i18n="support.nav.home">Home</a>
+            <a href="../../apps/" data-i18n="support.nav.apps">Apps</a>
+            <a href="../../contact/" data-i18n="support.nav.contact">Contact</a>
+            <a href="../" data-i18n="support.nav.doomscroll">Doomscroll Totem</a>
+            <a href="./" class="active" data-i18n="support.nav.support">Support & FAQ</a>
         </nav>
+        <div class="language-switcher">
+            <label for="lang-switcher" data-i18n="common.lang.label">Language</label>
+            <select id="lang-switcher" data-lang-switcher>
+                <option value="en" data-i18n="common.lang.en">English</option>
+                <option value="fr" data-i18n="common.lang.fr">French</option>
+            </select>
+        </div>
 
         <main>
             <section class="hero">
-                <h2>Support</h2>
-                <p>Need help with Doomscroll Totem? Start here, or contact us directly.</p>
+                <h2 data-i18n="support.hero.title">Support</h2>
+                <p data-i18n="support.hero.body">Need help with Doomscroll Totem? Start here, or contact us directly.</p>
             </section>
 
             <section class="policy-content">
                 <div class="content-block">
-                    <h3>Contact</h3>
-                    <p>Email <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a> with your device model, OS version, and a short description of the issue. We usually reply within 1-2 business days.</p>
+                    <h3 data-i18n="support.contact.title">Contact</h3>
+                    <p data-i18n="support.contact.body" data-i18n-html>Email <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a> with your device model, OS version, and a short description of the issue. We usually reply within 1-2 business days.</p>
                 </div>
 
                 <div class="content-block">
-                    <h3>FAQ</h3>
+                    <h3 data-i18n="support.faq.title">FAQ</h3>
 
-                    <h4>How does a focus session work?</h4>
-                    <p>Start a session, place your phone down, and keep it still. If the device moves beyond the detection threshold or you leave the app, the session ends.</p>
+                    <h4 data-i18n="support.faq.q1">How does a focus session work?</h4>
+                    <p data-i18n="support.faq.a1">Start a session, place your phone down, and keep it still. If the device moves beyond the detection threshold or you leave the app, the session ends.</p>
 
-                    <h4>What triggers a failure?</h4>
-                    <p>Significant motion detected by the device sensors or leaving the app during an active session. Short grace windows can prevent accidental bumps from ending a session.</p>
+                    <h4 data-i18n="support.faq.q2">What triggers a failure?</h4>
+                    <p data-i18n="support.faq.a2">Significant motion detected by the device sensors or leaving the app during an active session. Short grace windows can prevent accidental bumps from ending a session.</p>
 
-                    <h4>What is Low Power Mode?</h4>
-                    <p>Low Power Mode uses gentler rules to reduce battery impact and make sessions a little more forgiving. The app may suggest enabling it based on your battery level.</p>
+                    <h4 data-i18n="support.faq.q3">What is Low Power Mode?</h4>
+                    <p data-i18n="support.faq.a3">Low Power Mode uses gentler rules to reduce battery impact and make sessions a little more forgiving. The app may suggest enabling it based on your battery level.</p>
 
-                    <h4>Where is my data stored?</h4>
-                    <p>All progress, totems, and settings are stored locally on your device. Deleting the app removes this data.</p>
+                    <h4 data-i18n="support.faq.q4">Where is my data stored?</h4>
+                    <p data-i18n="support.faq.a4">All progress, totems, and settings are stored locally on your device. Deleting the app removes this data.</p>
 
-                    <h4>Do you collect analytics?</h4>
-                    <p>Yes. We use Firebase Analytics to log anonymous app usage events and Firebase Crashlytics to diagnose crashes. See the <a href="../privacy/" class="email-link-inline">Privacy Policy</a> for details.</p>
+                    <h4 data-i18n="support.faq.q5">Do you collect analytics?</h4>
+                    <p data-i18n="support.faq.a5" data-i18n-html>Yes. We use Firebase Analytics to log anonymous app usage events and Firebase Crashlytics to diagnose crashes. See the <a href="../privacy/" class="email-link-inline">Privacy Policy</a> for details.</p>
 
-                    <h4>How do consumable totems work?</h4>
-                    <p>Premium totem designs are consumables. If you fail a session while a premium totem is active, it can be consumed and moved to the trophy room. Consumables cannot be restored once consumed.</p>
+                    <h4 data-i18n="support.faq.q6">How do consumable totems work?</h4>
+                    <p data-i18n="support.faq.a6">Premium totem designs are consumables. If you fail a session while a premium totem is active, it can be consumed and moved to the trophy room. Consumables cannot be restored once consumed.</p>
 
-                    <h4>Can I restore purchases?</h4>
-                    <p>Stores can restore eligible purchases through their normal flows. For consumables, restorations are limited to cases where a purchase did not complete properly or was not consumed. If you need help, email support with your order details.</p>
+                    <h4 data-i18n="support.faq.q7">Can I restore purchases?</h4>
+                    <p data-i18n="support.faq.a7">Stores can restore eligible purchases through their normal flows. For consumables, restorations are limited to cases where a purchase did not complete properly or was not consumed. If you need help, email support with your order details.</p>
 
-                    <h4>How do I report a bug?</h4>
-                    <p>Send a short description of what happened, steps to reproduce, your device model, and OS version to <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a>.</p>
+                    <h4 data-i18n="support.faq.q8">How do I report a bug?</h4>
+                    <p data-i18n="support.faq.a8" data-i18n-html>Send a short description of what happened, steps to reproduce, your device model, and OS version to <a href="mailto:support@goodideed.com" class="email-link-inline">support@goodideed.com</a>.</p>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>&copy; 2026 goodideed. Helping people in unusual ways.</p>
+            <p>&copy; <span data-year></span> <span data-i18n="support.footer">goodideed. Helping people in unusual ways.</span></p>
         </footer>
     </div>
 </body>

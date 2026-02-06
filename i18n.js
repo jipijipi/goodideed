@@ -35,7 +35,12 @@
     return;
   }
 
-  fetch(`/locales/${lang}.json`, { cache: 'no-store' })
+  const script = document.querySelector('script[src$="i18n.js"]');
+  const scriptSrc = script ? script.getAttribute('src') : 'i18n.js';
+  const basePath = new URL(scriptSrc, window.location.href).pathname.replace(/\/[^/]*$/, '/');
+  const localeUrl = `${basePath}locales/${lang}.json`;
+
+  fetch(localeUrl, { cache: 'no-store' })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Missing locale: ${lang}`);

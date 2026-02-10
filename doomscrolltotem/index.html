@@ -7,6 +7,7 @@
     <title data-i18n="doomscroll.title">Doomscroll Totem - goodideed</title>
     <link rel="stylesheet" href="style.css">
     <script src="../i18n.js" defer></script>
+    <script src="landing.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/doomscrolltotem/favicon/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/doomscrolltotem/favicon/favicon-16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/doomscrolltotem/favicon/favicon-32.png">
@@ -14,7 +15,7 @@
     <link rel="apple-touch-icon" href="/doomscrolltotem/favicon/icon-square.png">
 </head>
 
-<body>
+<body class="doomscroll-landing">
     <div class="container">
         <header>
             <svg id="logo" class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 161.574 201.17">
@@ -53,46 +54,113 @@
             </select>
         </div>
 
-        <main>
-            <section class="hero">
-                <div class="app-hero">
-                    <img src="app-icon.png" alt="Doomscroll Totem app icon" class="app-icon" data-i18n="doomscroll.appicon" data-i18n-attr="alt">
-                    <div class="app-info">
-                        <h2 data-i18n="doomscroll.hero.title">Doomscroll Totem</h2>
-                        <p class="subtitle" data-i18n="doomscroll.hero.subtitle">Set it down. Stay still. Keep your totem safe.</p>
+        <main class="landing-main">
+            <section class="landing-hero reveal" id="top">
+                <div class="hero-copy" data-parallax="0.18">
+                    <p class="eyebrow">DOOMSCROLL TOTEM</p>
+                    <h2>A focus game you cannot cheat.</h2>
+                    <p class="lead">Start a session, put your phone down, and let motion detection keep you honest. Touch it or leave the app and you fail.</p>
+                    <div class="hero-cta">
+                        <a href="waitlist/" class="cta-primary">Try one 10-minute run</a>
+                        <a href="#how-it-works" class="cta-secondary">How it works</a>
                     </div>
                 </div>
-                <p data-i18n="doomscroll.hero.body">Start a session, put your phone down, and guard the totem. If you move the device or leave the app, the session ends. It is a focused ritual for anyone who wants friction between them and endless scroll.</p>
-            </section>
-
-            <section class="features">
-                <div class="feature">
-                    <h3 data-i18n="doomscroll.feature1.title">Motion-Detected Sessions</h3>
-                    <p data-i18n="doomscroll.feature1.body">Accelerometer and (when available) gyroscope detection turns focus into a game. You win by leaving the device untouched and staying in-app.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-i18n="doomscroll.feature2.title">Grace and Warning Windows</h3>
-                    <p data-i18n="doomscroll.feature2.body">Small bumps do not have to ruin your flow. Built-in grace periods and warnings help you recover without losing momentum.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-i18n="doomscroll.feature3.title">Low Power Mode</h3>
-                    <p data-i18n="doomscroll.feature3.body">Switch to a lighter rule set when you want a gentler session that still discourages doomscrolling.</p>
-                </div>
-                <div class="feature">
-                    <h3 data-i18n="doomscroll.feature4.title">Idol Collection</h3>
-                    <p data-i18n="doomscroll.feature4.body">Choose a totem, defend it through the session, and unlock trophies that mark your past idols.</p>
+                <div class="hero-visual reveal" data-parallax="0.12">
+                    <img src="app-icon.png" alt="Doomscroll Totem app icon" class="app-icon-hero">
+                    <div class="hero-stat-grid">
+                        <article class="hero-stat">
+                            <h3>1 tap</h3>
+                            <p>to start a run</p>
+                        </article>
+                        <article class="hero-stat">
+                            <h3>0 excuses</h3>
+                            <p>motion ends the run</p>
+                        </article>
+                        <article class="hero-stat">
+                            <h3>2 modes</h3>
+                            <p>strict or low power</p>
+                        </article>
+                    </div>
                 </div>
             </section>
 
-            <section class="notify-section">
-                <div class="notify-card">
-                    <h3 data-i18n="doomscroll.notify.title">Launch Updates</h3>
-                    <p>Doomscroll Totem is in active development. Join the waitlist for early access and launch news.</p>
-                    <a href="waitlist/" class="pill-link">Join waitlist</a>
+            <section class="panel-section reveal" id="problem">
+                <div class="section-heading">
+                    <p class="eyebrow">THE PROBLEM</p>
+                    <h3>Normal timers are easy to ignore.</h3>
+                </div>
+                <div class="problem-grid">
+                    <article class="card">
+                        <h4>The loop</h4>
+                        <p>You start with a break, then another swipe, then another. Minutes disappear before you notice.</p>
+                    </article>
+                    <article class="card">
+                        <h4>The cheat</h4>
+                        <p>Typical focus timers keep counting while you scroll. They reward intention, not behavior.</p>
+                    </article>
+                    <article class="card">
+                        <h4>The fix</h4>
+                        <p>Doomscroll Totem adds friction. Your phone has to stay still and in-app for the session to count.</p>
+                    </article>
                 </div>
             </section>
 
-            <section class="policy-section">
+            <section class="panel-section reveal" id="how-it-works">
+                <div class="section-heading">
+                    <p class="eyebrow">APP SHOWCASE</p>
+                    <h3>How one run works.</h3>
+                </div>
+                <div class="steps-grid">
+                    <article class="step-card">
+                        <span class="step-number">01</span>
+                        <h4>Start session</h4>
+                        <p>Pick a duration and begin your run with one tap.</p>
+                    </article>
+                    <article class="step-card">
+                        <span class="step-number">02</span>
+                        <h4>Set it down</h4>
+                        <p>Place your phone face down and leave it untouched.</p>
+                    </article>
+                    <article class="step-card">
+                        <span class="step-number">03</span>
+                        <h4>Protect your idol</h4>
+                        <p>Finish the timer to keep your idol. Move the phone and you lose the run.</p>
+                    </article>
+                </div>
+                <div class="safety-strip">
+                    <p><strong>Safety valves:</strong> warnings + grace window before fail, plus optional Low Power Mode for gentler runs.</p>
+                </div>
+            </section>
+
+            <section class="panel-section reveal" id="social-proof">
+                <div class="section-heading">
+                    <p class="eyebrow">SOCIAL PROOF</p>
+                    <h3>Early player sentiment.</h3>
+                </div>
+                <div class="quotes-grid">
+                    <blockquote>
+                        "It is the first focus app that actually changed my hand reflex."
+                    </blockquote>
+                    <blockquote>
+                        "I only planned one session. I ended up doing three because the challenge is weirdly satisfying."
+                    </blockquote>
+                    <blockquote>
+                        "The warning + grace setup keeps it strict without being punishing."
+                    </blockquote>
+                </div>
+                <p class="social-proof-note">Replacing placeholders with public launch quotes is a quick next upgrade.</p>
+            </section>
+
+            <section class="panel-section cta-panel reveal" id="cta">
+                <div class="section-heading">
+                    <p class="eyebrow">READY TO TEST IT?</p>
+                    <h3>One session is enough to feel the reflex break.</h3>
+                </div>
+                <p>Join the waitlist for early access and launch updates.</p>
+                <a href="waitlist/" class="cta-primary">Try one 10-minute run</a>
+            </section>
+
+            <section class="policy-section reveal">
                 <h3 data-i18n="doomscroll.policy.title">Policies, Terms, and Support</h3>
                 <p data-i18n="doomscroll.policy.body">Read the privacy policy, terms of service, and support FAQ.</p>
                 <div class="policy-links">

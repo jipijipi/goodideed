@@ -483,3 +483,266 @@ footer {
 .policy-list li {
     margin-bottom: 8px;
 }
+
+.doomscroll-landing .landing-main {
+    display: grid;
+    gap: 26px;
+}
+
+.doomscroll-landing .landing-hero,
+.doomscroll-landing .panel-section,
+.doomscroll-landing .policy-section {
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-soft);
+}
+
+.doomscroll-landing .landing-hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 30px;
+    padding: 42px;
+    overflow: hidden;
+    position: relative;
+}
+
+.doomscroll-landing .landing-hero::after {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    right: -70px;
+    top: -80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.28), transparent 70%);
+    pointer-events: none;
+}
+
+.doomscroll-landing .eyebrow {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: rgba(46, 196, 182, 0.95);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.doomscroll-landing .hero-copy h2 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.4vw, 3.4rem);
+    line-height: 1.06;
+    max-width: 14ch;
+}
+
+.doomscroll-landing .lead {
+    margin-top: 18px;
+    color: var(--muted-ink);
+    font-size: 1.15rem;
+    max-width: 56ch;
+}
+
+.doomscroll-landing .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.doomscroll-landing .cta-primary,
+.doomscroll-landing .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+    transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.doomscroll-landing .cta-primary {
+    color: var(--ink);
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.46), rgba(255, 107, 53, 0.24));
+    border: 1px solid rgba(255, 107, 53, 0.8);
+}
+
+.doomscroll-landing .cta-secondary {
+    color: var(--ink);
+    background: rgba(15, 22, 30, 0.5);
+    border: 1px solid rgba(244, 239, 230, 0.35);
+}
+
+.doomscroll-landing .cta-primary:hover,
+.doomscroll-landing .cta-secondary:hover {
+    transform: translateY(-2px);
+}
+
+.doomscroll-landing .hero-visual {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+}
+
+.doomscroll-landing .app-icon-hero {
+    width: 132px;
+    height: 132px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-strong);
+}
+
+.doomscroll-landing .hero-stat-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.doomscroll-landing .hero-stat {
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-s);
+    background: rgba(10, 16, 24, 0.62);
+}
+
+.doomscroll-landing .hero-stat h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+}
+
+.doomscroll-landing .hero-stat p {
+    color: var(--muted-ink);
+}
+
+.doomscroll-landing .panel-section {
+    padding: 34px;
+}
+
+.doomscroll-landing .section-heading h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3.2vw, 2.35rem);
+    line-height: 1.2;
+    margin-bottom: 16px;
+}
+
+.doomscroll-landing .problem-grid,
+.doomscroll-landing .steps-grid,
+.doomscroll-landing .quotes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.doomscroll-landing .card,
+.doomscroll-landing .step-card,
+.doomscroll-landing .quotes-grid blockquote {
+    border: 1px solid var(--border);
+    background: rgba(8, 14, 20, 0.56);
+    border-radius: var(--radius-m);
+    padding: 22px;
+}
+
+.doomscroll-landing .card h4,
+.doomscroll-landing .step-card h4 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.doomscroll-landing .card p,
+.doomscroll-landing .step-card p,
+.doomscroll-landing .quotes-grid blockquote {
+    color: var(--muted-ink);
+}
+
+.doomscroll-landing .step-number {
+    display: inline-flex;
+    margin-bottom: 12px;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: rgba(46, 196, 182, 0.9);
+}
+
+.doomscroll-landing .safety-strip {
+    margin-top: 16px;
+    border-radius: var(--radius-m);
+    border: 1px solid rgba(46, 196, 182, 0.42);
+    background: rgba(46, 196, 182, 0.09);
+    padding: 16px 18px;
+}
+
+.doomscroll-landing .social-proof-note {
+    color: rgba(244, 239, 230, 0.58);
+    margin-top: 12px;
+    font-size: 0.96rem;
+}
+
+.doomscroll-landing .cta-panel {
+    text-align: center;
+    background: linear-gradient(145deg, rgba(20, 28, 38, 0.9), rgba(255, 107, 53, 0.16));
+}
+
+.doomscroll-landing .cta-panel p {
+    color: var(--muted-ink);
+    margin-bottom: 18px;
+}
+
+.doomscroll-landing .reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.doomscroll-landing.has-motion .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.doomscroll-landing.has-motion .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 960px) {
+    .doomscroll-landing .landing-hero {
+        grid-template-columns: 1fr;
+        padding: 34px;
+    }
+
+    .doomscroll-landing .hero-visual {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: start;
+    }
+
+    .doomscroll-landing .hero-stat-grid {
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .doomscroll-landing .problem-grid,
+    .doomscroll-landing .steps-grid,
+    .doomscroll-landing .quotes-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 620px) {
+    .doomscroll-landing .landing-hero,
+    .doomscroll-landing .panel-section {
+        padding: 26px 20px;
+    }
+
+    .doomscroll-landing .hero-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .doomscroll-landing .hero-cta {
+        flex-direction: column;
+    }
+
+    .doomscroll-landing .cta-primary,
+    .doomscroll-landing .cta-secondary {
+        width: 100%;
+    }
+}

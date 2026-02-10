@@ -756,6 +756,8 @@ footer {
     position: sticky;
     top: 0;
     z-index: 30;
+    padding: 0;
+    text-align: left;
     background: rgba(10, 15, 22, 0.66);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(244, 239, 230, 0.08);
@@ -770,11 +772,13 @@ footer {
 .doomscroll-landing .topbar-inner {
     max-width: var(--story-max);
     margin: 0 auto;
-    padding: 10px 22px;
+    padding: 0 22px;
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: 14px;
     align-items: center;
+    min-height: 76px;
+    transition: min-height 0.24s ease, gap 0.24s ease;
 }
 
 .doomscroll-landing .brand {
@@ -785,12 +789,14 @@ footer {
     text-decoration: none;
     font-family: var(--font-display);
     font-weight: 600;
+    transition: transform 0.25s ease;
 }
 
 .doomscroll-landing .brand .logo-icon {
     width: 26px;
     height: 26px;
     margin: 0;
+    transition: width 0.25s ease, height 0.25s ease;
 }
 
 .doomscroll-landing .top-links {
@@ -828,15 +834,63 @@ footer {
     padding: 6px 10px;
     border-radius: 999px;
     background: rgba(14, 20, 28, 0.8);
+    transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .doomscroll-landing .language-switcher label {
     font-size: 0.72rem;
+    transition: opacity 0.2s ease;
 }
 
 .doomscroll-landing .language-switcher select {
     font-size: 0.8rem;
     padding: 5px 10px;
+    transition: font-size 0.2s ease, padding 0.2s ease;
+}
+
+.doomscroll-landing.is-nav-compact .landing-topbar {
+    border-bottom-color: rgba(244, 239, 230, 0.1);
+}
+
+.doomscroll-landing.is-nav-compact .topbar-inner {
+    min-height: 44px;
+    gap: 8px;
+}
+
+.doomscroll-landing.is-nav-compact .brand {
+    transform: none;
+}
+
+.doomscroll-landing.is-nav-compact .brand .logo-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.doomscroll-landing.is-nav-compact .top-links a {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 9px;
+    padding-right: 9px;
+    font-size: 0.78rem;
+}
+
+.doomscroll-landing.is-nav-compact .top-links a:not(.mini-cta) {
+    display: none;
+}
+
+.doomscroll-landing.is-nav-compact .language-switcher {
+    display: none;
+}
+
+.doomscroll-landing.is-nav-compact .language-switcher label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+.doomscroll-landing.is-nav-compact .language-switcher select {
+    font-size: 0.74rem;
+    padding: 3px 8px;
 }
 
 .doomscroll-landing .story-main {
@@ -856,6 +910,17 @@ footer {
     min-height: calc(100vh - 64px);
     display: flex;
     align-items: center;
+}
+
+.doomscroll-landing .scene-hero .scene-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: 44px;
+    align-items: center;
+}
+
+.doomscroll-landing .hero-copy {
+    max-width: 66ch;
 }
 
 .doomscroll-landing .scene-hero h1 {
@@ -949,6 +1014,11 @@ footer {
 .doomscroll-landing .media-tall {
     aspect-ratio: 4 / 5;
     max-width: 440px;
+}
+
+.doomscroll-landing .media-hero {
+    aspect-ratio: 3 / 2;
+    min-height: 320px;
 }
 
 .doomscroll-landing .rail-kicker {
@@ -1053,6 +1123,11 @@ footer {
 }
 
 @media (max-width: 1360px) {
+    .doomscroll-landing .scene-hero .scene-inner {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
     .doomscroll-landing .chapter-layout,
     .doomscroll-landing .chapter-reverse .chapter-layout {
         grid-template-columns: 1fr;
@@ -1154,6 +1229,18 @@ footer {
 
     .doomscroll-landing .top-links {
         justify-self: start;
+    }
+
+    .doomscroll-landing.is-nav-compact .topbar-inner {
+        min-height: 76px;
+    }
+
+    .doomscroll-landing.is-nav-compact .top-links a:not(.mini-cta) {
+        display: inline-flex;
+    }
+
+    .doomscroll-landing.is-nav-compact .language-switcher {
+        display: flex;
     }
 
     .doomscroll-landing .story-grid {

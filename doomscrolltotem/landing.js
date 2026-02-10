@@ -31,8 +31,27 @@
         setActiveStep(chapterNodes[0].dataset.step || '1');
     }
 
+    let lastY = window.scrollY;
+    let tickingTopbar = false;
     const onTopbarScroll = () => {
-        root.classList.toggle('is-scrolled', window.scrollY > 32);
+        if (tickingTopbar) return;
+        tickingTopbar = true;
+
+        window.requestAnimationFrame(() => {
+            const currentY = window.scrollY;
+            const delta = currentY - lastY;
+
+            root.classList.toggle('is-scrolled', currentY > 32);
+
+            if (currentY > 120 && delta > 2) {
+                root.classList.add('is-nav-compact');
+            } else if (delta < -2 || currentY <= 80) {
+                root.classList.remove('is-nav-compact');
+            }
+
+            lastY = currentY;
+            tickingTopbar = false;
+        });
     };
 
     onTopbarScroll();

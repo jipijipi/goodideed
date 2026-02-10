@@ -749,7 +749,7 @@ footer {
 
 /* Storytelling second pass: full-width minimalist layout */
 .doomscroll-landing {
-    --story-max: 1200px;
+    --story-max: 1520px;
 }
 
 .doomscroll-landing .landing-topbar {
@@ -889,8 +889,8 @@ footer {
     max-width: var(--story-max);
     margin: 0 auto;
     display: grid;
-    grid-template-columns: minmax(260px, 400px) minmax(0, 1fr);
-    gap: 48px;
+    grid-template-columns: minmax(280px, 420px) minmax(0, 1fr);
+    gap: 56px;
 }
 
 .doomscroll-landing .story-rail {
@@ -939,13 +939,16 @@ footer {
 
 .doomscroll-landing .media-wide {
     aspect-ratio: 16 / 9;
-    margin-top: 16px;
 }
 
 .doomscroll-landing .media-portrait {
     aspect-ratio: 3 / 4;
     max-width: 420px;
-    margin-top: 16px;
+}
+
+.doomscroll-landing .media-tall {
+    aspect-ratio: 4 / 5;
+    max-width: 440px;
 }
 
 .doomscroll-landing .rail-kicker {
@@ -992,14 +995,38 @@ footer {
 
 .doomscroll-landing .story-chapters {
     display: grid;
+    gap: 0;
 }
 
 .doomscroll-landing .chapter {
     min-height: 104vh;
     display: grid;
     align-content: center;
-    max-width: 66ch;
     padding: 30px 0;
+}
+
+.doomscroll-landing .chapter-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+    gap: 40px;
+    align-items: center;
+    width: min(100%, 1040px);
+}
+
+.doomscroll-landing .chapter-reverse .chapter-layout {
+    grid-template-columns: minmax(340px, 0.85fr) minmax(0, 1.15fr);
+}
+
+.doomscroll-landing .chapter-reverse .chapter-copy {
+    order: 2;
+}
+
+.doomscroll-landing .chapter-reverse .media-placeholder {
+    order: 1;
+}
+
+.doomscroll-landing .chapter-copy {
+    max-width: 66ch;
 }
 
 .doomscroll-landing .chapter-label {
@@ -1119,6 +1146,18 @@ footer {
         min-height: auto;
         padding: 36px 0;
         border-top: 1px solid rgba(244, 239, 230, 0.1);
+    }
+
+    .doomscroll-landing .chapter-layout,
+    .doomscroll-landing .chapter-reverse .chapter-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        width: 100%;
+    }
+
+    .doomscroll-landing .chapter-reverse .chapter-copy,
+    .doomscroll-landing .chapter-reverse .media-placeholder {
+        order: initial;
     }
 }
 

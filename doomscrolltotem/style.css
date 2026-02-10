@@ -945,6 +945,35 @@ footer {
     gap: 10px;
 }
 
+.doomscroll-landing .store-buttons {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.doomscroll-landing .store-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(244, 239, 230, 0.24);
+    background: rgba(12, 20, 30, 0.68);
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.doomscroll-landing .store-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 107, 53, 0.58);
+    background: rgba(255, 107, 53, 0.16);
+}
+
 .doomscroll-landing .story-scene {
     padding-top: 36px;
     padding-bottom: 36px;
@@ -1288,8 +1317,13 @@ footer {
         flex-direction: column;
     }
 
+    .doomscroll-landing .store-buttons {
+        flex-direction: column;
+    }
+
     .doomscroll-landing .cta-primary,
-    .doomscroll-landing .cta-secondary {
+    .doomscroll-landing .cta-secondary,
+    .doomscroll-landing .store-btn {
         width: 100%;
     }
 

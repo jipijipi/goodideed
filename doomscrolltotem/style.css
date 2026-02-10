@@ -1052,6 +1052,29 @@ footer {
     max-width: 52ch;
 }
 
+@media (max-width: 1360px) {
+    .doomscroll-landing .chapter-layout,
+    .doomscroll-landing .chapter-reverse .chapter-layout {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        width: 100%;
+    }
+
+    .doomscroll-landing .chapter-reverse .chapter-copy,
+    .doomscroll-landing .chapter-reverse .media-placeholder {
+        order: initial;
+    }
+
+    .doomscroll-landing .chapter h3 {
+        max-width: 20ch;
+    }
+
+    .doomscroll-landing .media-portrait,
+    .doomscroll-landing .media-tall {
+        max-width: 560px;
+    }
+}
+
 .doomscroll-landing .scene-cta {
     padding-top: 24px;
     padding-bottom: 90px;

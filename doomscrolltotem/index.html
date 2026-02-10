@@ -42,7 +42,7 @@
             <nav class="top-links">
                 <a href="../apps/" data-i18n="doomscroll.nav.apps">Apps</a>
                 <a href="../contact/" data-i18n="doomscroll.nav.contact">Contact</a>
-                <a href="waitlist/" class="mini-cta">Try one run</a>
+                <a href="waitlist/" class="mini-cta" data-i18n="doomscroll.nav.tryrun">Try one run</a>
             </nav>
 
             <div class="language-switcher">
@@ -59,15 +59,15 @@
         <section class="scene scene-hero reveal" id="top">
             <div class="scene-inner">
                 <div class="hero-copy">
-                    <p class="eyebrow">DOOMSCROLL TOTEM</p>
-                    <h1>A focus game you cannot cheat.</h1>
-                    <p class="lead">Start a session, put your phone down, and let motion detection keep you honest. Touch it or leave the app and the run ends.</p>
+                    <p class="eyebrow" data-i18n="doomscroll.landing.hero.eyebrow">DOOMSCROLL TOTEM</p>
+                    <h1 data-i18n="doomscroll.landing.hero.title">A focus game you cannot cheat.</h1>
+                    <p class="lead" data-i18n="doomscroll.landing.hero.body">Start a session, put your phone down, and let motion detection keep you honest. Touch it or leave the app and the run ends.</p>
                     <div class="hero-actions">
-                        <a href="waitlist/" class="cta-primary">Try one 10-minute run</a>
-                        <a href="#story" class="cta-secondary">See how it unfolds</a>
+                        <a href="waitlist/" class="cta-primary" data-i18n="doomscroll.landing.hero.cta.primary">Try one 10-minute run</a>
+                        <a href="#story" class="cta-secondary" data-i18n="doomscroll.landing.hero.cta.secondary">See how it unfolds</a>
                     </div>
                 </div>
-                <div class="media-placeholder media-hero"><span>Hero Image 3:2</span></div>
+                <div class="media-placeholder media-hero"><span data-i18n="doomscroll.landing.media.hero">Hero Image 3:2</span></div>
             </div>
         </section>
 
@@ -75,75 +75,100 @@
             <div class="story-grid">
                 <aside class="story-rail">
                     <div class="rail-card">
-                        <div class="media-placeholder media-square" role="img" aria-label="Doomscroll Totem app preview placeholder">
-                            <span>App Icon</span>
+                        <div class="media-placeholder media-square" role="img" aria-label="Doomscroll Totem app preview placeholder" data-i18n="doomscroll.landing.media.appicon" data-i18n-attr="aria-label">
+                            <span data-i18n="doomscroll.landing.media.appicon">App Icon</span>
                         </div>
-                        <p class="rail-kicker" data-story-kicker>CHAPTER 1</p>
-                        <h2 data-story-title>The feed always wins by default.</h2>
-                        <p class="rail-detail" data-story-detail>Most focus systems trust your willpower. Doomscroll Totem changes the rules.</p>
+                        <p class="rail-kicker" data-story-kicker data-i18n="doomscroll.landing.rail.kicker.1">CHAPTER 1</p>
+                        <h2 data-story-title data-i18n="doomscroll.landing.rail.title.1">The feed always wins by default.</h2>
+                        <p class="rail-detail" data-story-detail data-i18n="doomscroll.landing.rail.detail.1">Most focus systems trust your willpower. Doomscroll Totem changes the rules.</p>
                         <ol class="rail-steps">
-                            <li class="is-active" data-step-indicator="1">Problem</li>
-                            <li data-step-indicator="2">Mechanic</li>
-                            <li data-step-indicator="3">Stakes</li>
-                            <li data-step-indicator="4">Safety</li>
-                            <li data-step-indicator="5">Proof</li>
+                            <li class="is-active" data-step-indicator="1" data-i18n="doomscroll.landing.rail.step.1">Problem</li>
+                            <li data-step-indicator="2" data-i18n="doomscroll.landing.rail.step.2">Mechanic</li>
+                            <li data-step-indicator="3" data-i18n="doomscroll.landing.rail.step.3">Stakes</li>
+                            <li data-step-indicator="4" data-i18n="doomscroll.landing.rail.step.4">Safety</li>
+                            <li data-step-indicator="5" data-i18n="doomscroll.landing.rail.step.5">Proof</li>
                         </ol>
                     </div>
                 </aside>
 
                 <div class="story-chapters">
                     <article class="chapter reveal is-active" data-step="1" data-kicker="CHAPTER 1" data-title="The feed always wins by default." data-detail="Most focus systems trust your willpower. Doomscroll Totem changes the rules.">
+                        <div class="chapter-meta" hidden>
+                            <span data-meta="kicker" data-i18n="doomscroll.landing.rail.kicker.1">CHAPTER 1</span>
+                            <span data-meta="title" data-i18n="doomscroll.landing.rail.title.1">The feed always wins by default.</span>
+                            <span data-meta="detail" data-i18n="doomscroll.landing.rail.detail.1">Most focus systems trust your willpower. Doomscroll Totem changes the rules.</span>
+                        </div>
                         <div class="chapter-layout">
                             <div class="chapter-copy">
-                                <p class="chapter-label">Problem</p>
-                                <h3>You open your phone for one thing and end up somewhere else.</h3>
-                                <p>Minutes disappear in tiny swipes. Traditional timers keep running even while you drift, so they measure intent instead of behavior.</p>
+                                <p class="chapter-label" data-i18n="doomscroll.landing.chapter.1.label">Problem</p>
+                                <h3 data-i18n="doomscroll.landing.chapter.1.title">You open your phone for one thing and end up somewhere else.</h3>
+                                <p data-i18n="doomscroll.landing.chapter.1.body">Minutes disappear in tiny swipes. Traditional timers keep running even while you drift, so they measure intent instead of behavior.</p>
                             </div>
-                            <div class="media-placeholder media-wide"><span>Story Image 16:9</span></div>
+                            <div class="media-placeholder media-wide"><span data-i18n="doomscroll.landing.media.chapter1">Story Image 16:9</span></div>
                         </div>
                     </article>
 
                     <article class="chapter chapter-reverse reveal" data-step="2" data-kicker="CHAPTER 2" data-title="One run. One rule." data-detail="When the phone moves or you leave the app, the session fails.">
+                        <div class="chapter-meta" hidden>
+                            <span data-meta="kicker" data-i18n="doomscroll.landing.rail.kicker.2">CHAPTER 2</span>
+                            <span data-meta="title" data-i18n="doomscroll.landing.rail.title.2">One run. One rule.</span>
+                            <span data-meta="detail" data-i18n="doomscroll.landing.rail.detail.2">When the phone moves or you leave the app, the session fails.</span>
+                        </div>
                         <div class="chapter-layout">
                             <div class="chapter-copy">
-                                <p class="chapter-label">Mechanic</p>
-                                <h3>Start a run. Put the phone down. Leave it there.</h3>
-                                <p>The app uses motion detection to enforce the session. If you touch the device or switch apps, the run ends. No loopholes.</p>
+                                <p class="chapter-label" data-i18n="doomscroll.landing.chapter.2.label">Mechanic</p>
+                                <h3 data-i18n="doomscroll.landing.chapter.2.title">Start a run. Put the phone down. Leave it there.</h3>
+                                <p data-i18n="doomscroll.landing.chapter.2.body">The app uses motion detection to enforce the session. If you touch the device or switch apps, the run ends. No loopholes.</p>
                             </div>
-                            <div class="media-placeholder media-portrait"><span>Product Shot 3:4</span></div>
+                            <div class="media-placeholder media-portrait"><span data-i18n="doomscroll.landing.media.chapter2">Product Shot 3:4</span></div>
                         </div>
                     </article>
 
                     <article class="chapter reveal" data-step="3" data-kicker="CHAPTER 3" data-title="Stakes make focus feel real." data-detail="Protect your idol through the timer or lose it on fail.">
+                        <div class="chapter-meta" hidden>
+                            <span data-meta="kicker" data-i18n="doomscroll.landing.rail.kicker.3">CHAPTER 3</span>
+                            <span data-meta="title" data-i18n="doomscroll.landing.rail.title.3">Stakes make focus feel real.</span>
+                            <span data-meta="detail" data-i18n="doomscroll.landing.rail.detail.3">Protect your idol through the timer or lose it on fail.</span>
+                        </div>
                         <div class="chapter-layout">
                             <div class="chapter-copy">
-                                <p class="chapter-label">Stakes</p>
-                                <h3>You are not just running a timer. You are guarding something.</h3>
-                                <p>Every session has consequence. Keep your idol through the countdown and build your streak. Break focus and the loss is immediate.</p>
+                                <p class="chapter-label" data-i18n="doomscroll.landing.chapter.3.label">Stakes</p>
+                                <h3 data-i18n="doomscroll.landing.chapter.3.title">You are not just running a timer. You are guarding something.</h3>
+                                <p data-i18n="doomscroll.landing.chapter.3.body">Every session has consequence. Keep your idol through the countdown and build your streak. Break focus and the loss is immediate.</p>
                             </div>
-                            <div class="media-placeholder media-square"><span>Idol Visual 1:1</span></div>
+                            <div class="media-placeholder media-square"><span data-i18n="doomscroll.landing.media.chapter3">Idol Visual 1:1</span></div>
                         </div>
                     </article>
 
                     <article class="chapter chapter-reverse reveal" data-step="4" data-kicker="CHAPTER 4" data-title="Strict, but not brittle." data-detail="Warnings and grace windows prevent accidental failures.">
+                        <div class="chapter-meta" hidden>
+                            <span data-meta="kicker" data-i18n="doomscroll.landing.rail.kicker.4">CHAPTER 4</span>
+                            <span data-meta="title" data-i18n="doomscroll.landing.rail.title.4">Strict, but not brittle.</span>
+                            <span data-meta="detail" data-i18n="doomscroll.landing.rail.detail.4">Warnings and grace windows prevent accidental failures.</span>
+                        </div>
                         <div class="chapter-layout">
                             <div class="chapter-copy">
-                                <p class="chapter-label">Safety valves</p>
-                                <h3>Designed to stop doomscrolling, not punish micro-mistakes.</h3>
-                                <p>You get warnings plus a short grace window. And if you want a softer entry, Low Power Mode keeps the challenge without hard edges.</p>
+                                <p class="chapter-label" data-i18n="doomscroll.landing.chapter.4.label">Safety valves</p>
+                                <h3 data-i18n="doomscroll.landing.chapter.4.title">Designed to stop doomscrolling, not punish micro-mistakes.</h3>
+                                <p data-i18n="doomscroll.landing.chapter.4.body">You get warnings plus a short grace window. And if you want a softer entry, Low Power Mode keeps the challenge without hard edges.</p>
                             </div>
-                            <div class="media-placeholder media-wide"><span>Safety State 16:9</span></div>
+                            <div class="media-placeholder media-wide"><span data-i18n="doomscroll.landing.media.chapter4">Safety State 16:9</span></div>
                         </div>
                     </article>
 
                     <article class="chapter reveal" data-step="5" data-kicker="CHAPTER 5" data-title="People feel the difference in one session." data-detail="The reflex break is noticeable after a single run.">
+                        <div class="chapter-meta" hidden>
+                            <span data-meta="kicker" data-i18n="doomscroll.landing.rail.kicker.5">CHAPTER 5</span>
+                            <span data-meta="title" data-i18n="doomscroll.landing.rail.title.5">People feel the difference in one session.</span>
+                            <span data-meta="detail" data-i18n="doomscroll.landing.rail.detail.5">The reflex break is noticeable after a single run.</span>
+                        </div>
                         <div class="chapter-layout">
                             <div class="chapter-copy">
-                                <p class="chapter-label">Social proof</p>
-                                <h3>"It is the first focus app that changed my hand reflex."</h3>
-                                <p>"I planned one session and did three." "Warning plus grace keeps it strict without being punishing." Real user quotes slot in here at launch.</p>
+                                <p class="chapter-label" data-i18n="doomscroll.landing.chapter.5.label">Social proof</p>
+                                <h3 data-i18n="doomscroll.landing.chapter.5.title">"It is the first focus app that changed my hand reflex."</h3>
+                                <p data-i18n="doomscroll.landing.chapter.5.body">"I planned one session and did three." "Warning plus grace keeps it strict without being punishing." Real user quotes slot in here at launch.</p>
                             </div>
-                            <div class="media-placeholder media-tall"><span>Testimonials 4:5</span></div>
+                            <div class="media-placeholder media-tall"><span data-i18n="doomscroll.landing.media.chapter5">Testimonials 4:5</span></div>
                         </div>
                     </article>
                 </div>
@@ -152,10 +177,10 @@
 
         <section class="scene scene-cta reveal" id="cta">
             <div class="scene-inner cta-inner">
-                <p class="eyebrow">FINAL STEP</p>
-                <h2>One 10-minute run is enough to feel the shift.</h2>
-                <p>Join the waitlist for early access and launch updates.</p>
-                <a href="waitlist/" class="cta-primary">Try one 10-minute run</a>
+                <p class="eyebrow" data-i18n="doomscroll.landing.final.eyebrow">FINAL STEP</p>
+                <h2 data-i18n="doomscroll.landing.final.title">One 10-minute run is enough to feel the shift.</h2>
+                <p data-i18n="doomscroll.landing.final.body">Join the waitlist for early access and launch updates.</p>
+                <a href="waitlist/" class="cta-primary" data-i18n="doomscroll.landing.final.cta">Try one 10-minute run</a>
             </div>
         </section>
 

@@ -1158,7 +1158,9 @@ footer {
 .doomscroll-landing .cta-inner {
     border-top: 1px solid rgba(244, 239, 230, 0.14);
     padding-top: 40px;
-    text-align: left;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .doomscroll-landing .cta-inner h2 {
@@ -1166,6 +1168,8 @@ footer {
     font-size: clamp(1.7rem, 4.4vw, 3.2rem);
     max-width: 18ch;
     line-height: 1.07;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .doomscroll-landing .cta-inner p {
@@ -1180,6 +1184,9 @@ footer {
 .doomscroll-landing .policy-inner {
     border-top: 1px solid rgba(244, 239, 230, 0.1);
     padding-top: 30px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .doomscroll-landing .policy-inner h3 {
@@ -1193,7 +1200,7 @@ footer {
 }
 
 .doomscroll-landing .policy-links {
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: 16px;
 }
 

@@ -22,9 +22,13 @@
         const activeChapter = chapterNodes.find((chapter) => chapter.dataset.step === step);
         if (!activeChapter) return;
 
-        if (storyKicker) storyKicker.textContent = activeChapter.dataset.kicker || '';
-        if (storyTitle) storyTitle.textContent = activeChapter.dataset.title || '';
-        if (storyDetail) storyDetail.textContent = activeChapter.dataset.detail || '';
+        const kickerNode = activeChapter.querySelector('[data-meta="kicker"]');
+        const titleNode = activeChapter.querySelector('[data-meta="title"]');
+        const detailNode = activeChapter.querySelector('[data-meta="detail"]');
+
+        if (storyKicker) storyKicker.textContent = (kickerNode && kickerNode.textContent) || activeChapter.dataset.kicker || '';
+        if (storyTitle) storyTitle.textContent = (titleNode && titleNode.textContent) || activeChapter.dataset.title || '';
+        if (storyDetail) storyDetail.textContent = (detailNode && detailNode.textContent) || activeChapter.dataset.detail || '';
     };
 
     if (chapterNodes.length > 0) {

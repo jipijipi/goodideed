@@ -913,6 +913,41 @@ footer {
     margin-bottom: 16px;
 }
 
+.doomscroll-landing .media-placeholder {
+    width: 100%;
+    border-radius: 18px;
+    border: 1px solid rgba(244, 239, 230, 0.16);
+    background:
+        linear-gradient(130deg, rgba(46, 196, 182, 0.22), rgba(255, 107, 53, 0.2)),
+        repeating-linear-gradient(135deg, rgba(244, 239, 230, 0.08) 0 8px, rgba(244, 239, 230, 0.02) 8px 16px);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.doomscroll-landing .media-placeholder span {
+    font-family: var(--font-display);
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(244, 239, 230, 0.78);
+}
+
+.doomscroll-landing .media-square {
+    aspect-ratio: 1 / 1;
+}
+
+.doomscroll-landing .media-wide {
+    aspect-ratio: 16 / 9;
+    margin-top: 16px;
+}
+
+.doomscroll-landing .media-portrait {
+    aspect-ratio: 3 / 4;
+    max-width: 420px;
+    margin-top: 16px;
+}
+
 .doomscroll-landing .rail-kicker {
     font-family: var(--font-display);
     font-size: 0.74rem;

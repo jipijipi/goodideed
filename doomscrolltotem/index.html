@@ -16,151 +16,121 @@
 </head>
 
 <body class="doomscroll-landing">
-    <div class="container">
-        <header>
-            <svg id="logo" class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 161.574 201.17">
-                <defs>
-                    <style>
-                        .cls-1 {
-                            fill: var(--ink);
-                        }
-                    </style>
-                </defs>
-                <path class="cls-1"
-                    d="M80.787,0C36.241,0,0,36.24,0,80.786c0,24.631,11.029,47.608,30.26,63.04,2.539,2.037,4.078,8.693,5.566,15.131,3.888,16.81,9.762,42.213,44.96,42.213s41.072-25.402,44.96-42.212c1.489-6.438,3.028-13.095,5.567-15.132,19.23-15.432,30.26-38.409,30.26-63.04C161.574,36.24,125.333,0,80.787,0ZM80.787,189.17c-18.098,0-25.265-7.959-29.294-18.588,9.734,4.612,19.508,6.919,29.292,6.919s19.535-2.297,29.284-6.889c-4.031,10.614-11.201,18.558-29.282,18.558ZM123.803,134.467c-5.378,4.316-7.42,11.823-9.32,19.945-22.72,14.746-44.816,14.719-67.412-.078-1.895-8.093-3.94-15.565-9.301-19.867-16.377-13.142-25.771-32.708-25.771-53.681C12,42.857,42.858,12,80.787,12s68.787,30.857,68.787,68.786c0,20.973-9.393,40.538-25.771,53.681Z" />
-                <path class="cls-1"
-                    d="M51.253,60.076c.795,0,1.602-.19,2.353-.591,2.435-1.302,3.354-4.331,2.053-6.767-4.616-8.638-10.235-13.062-16.703-13.154-10.53-.118-17.575,11.682-18.346,13.03-1.37,2.397-.537,5.452,1.861,6.822,2.397,1.366,5.451.536,6.822-1.861,1.903-3.33,6.088-7.992,9.47-7.992h.052c2.481.035,5.331,2.829,8.024,7.868.9,1.686,2.628,2.645,4.414,2.645Z" />
-                <path class="cls-1"
-                    d="M101.274,39.563c-.065,0-.131,0-.196,0-6.467.091-12.086,4.517-16.703,13.154-1.302,2.435-.383,5.465,2.053,6.767.75.4,1.557.591,2.353.591,1.786,0,3.514-.959,4.414-2.645,2.693-5.039,5.543-7.833,8.024-7.868h.052c3.382,0,7.567,4.662,9.47,7.992,1.37,2.397,4.424,3.229,6.822,1.861,2.397-1.37,3.231-4.425,1.861-6.822-.766-1.341-7.748-13.031-18.149-13.031Z" />
-                <path class="cls-1"
-                    d="M83.79,71.3c-10.749,10.434-17.568,10.406-29.185-.117-2.046-1.854-5.208-1.698-7.062.348-1.854,2.047-1.698,5.209.349,7.062,7.727,7.001,14.788,10.502,21.729,10.502,6.98,0,13.839-3.539,21.134-10.619,1.981-1.923,2.029-5.089.105-7.07-1.923-1.98-5.089-2.028-7.07-.105Z" />
-            </svg>
-            <h1><a href="../">goodideed</a></h1>
-            <p class="tagline" data-i18n="doomscroll.tagline">A focus game you win by not touching your phone.</p>
-        </header>
+    <header class="landing-topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="../">
+                <svg id="logo" class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 161.574 201.17" aria-hidden="true">
+                    <defs>
+                        <style>
+                            .cls-1 {
+                                fill: var(--ink);
+                            }
+                        </style>
+                    </defs>
+                    <path class="cls-1"
+                        d="M80.787,0C36.241,0,0,36.24,0,80.786c0,24.631,11.029,47.608,30.26,63.04,2.539,2.037,4.078,8.693,5.566,15.131,3.888,16.81,9.762,42.213,44.96,42.213s41.072-25.402,44.96-42.212c1.489-6.438,3.028-13.095,5.567-15.132,19.23-15.432,30.26-38.409,30.26-63.04C161.574,36.24,125.333,0,80.787,0ZM80.787,189.17c-18.098,0-25.265-7.959-29.294-18.588,9.734,4.612,19.508,6.919,29.292,6.919s19.535-2.297,29.284-6.889c-4.031,10.614-11.201,18.558-29.282,18.558ZM123.803,134.467c-5.378,4.316-7.42,11.823-9.32,19.945-22.72,14.746-44.816,14.719-67.412-.078-1.895-8.093-3.94-15.565-9.301-19.867-16.377-13.142-25.771-32.708-25.771-53.681C12,42.857,42.858,12,80.787,12s68.787,30.857,68.787,68.786c0,20.973-9.393,40.538-25.771,53.681Z" />
+                    <path class="cls-1"
+                        d="M51.253,60.076c.795,0,1.602-.19,2.353-.591,2.435-1.302,3.354-4.331,2.053-6.767-4.616-8.638-10.235-13.062-16.703-13.154-10.53-.118-17.575,11.682-18.346,13.03-1.37,2.397-.537,5.452,1.861,6.822,2.397,1.366,5.451.536,6.822-1.861,1.903-3.33,6.088-7.992,9.47-7.992h.052c2.481.035,5.331,2.829,8.024,7.868.9,1.686,2.628,2.645,4.414,2.645Z" />
+                    <path class="cls-1"
+                        d="M101.274,39.563c-.065,0-.131,0-.196,0-6.467.091-12.086,4.517-16.703,13.154-1.302,2.435-.383,5.465,2.053,6.767.75.4,1.557.591,2.353.591,1.786,0,3.514-.959,4.414-2.645,2.693-5.039,5.543-7.833,8.024-7.868h.052c3.382,0,7.567,4.662,9.47,7.992,1.37,2.397,4.424,3.229,6.822,1.861,2.397-1.37,3.231-4.425,1.861-6.822-.766-1.341-7.748-13.031-18.149-13.031Z" />
+                    <path class="cls-1"
+                        d="M83.79,71.3c-10.749,10.434-17.568,10.406-29.185-.117-2.046-1.854-5.208-1.698-7.062.348-1.854,2.047-1.698,5.209.349,7.062,7.727,7.001,14.788,10.502,21.729,10.502,6.98,0,13.839-3.539,21.134-10.619,1.981-1.923,2.029-5.089.105-7.07-1.923-1.98-5.089-2.028-7.07-.105Z" />
+                </svg>
+                <span>goodideed</span>
+            </a>
 
-        <nav class="navigation">
-            <a href="../" data-i18n="doomscroll.nav.home">Home</a>
-            <a href="../apps/" data-i18n="doomscroll.nav.apps">Apps</a>
-            <a href="../contact/" data-i18n="doomscroll.nav.contact">Contact</a>
-            <a href="../excuseyou/" data-i18n="doomscroll.nav.excuseyou">Excuse you</a>
-            <a href="./" class="active" data-i18n="doomscroll.nav.doomscroll">Doomscroll Totem</a>
-        </nav>
-        <div class="language-switcher">
-            <label for="lang-switcher" data-i18n="common.lang.label">Language</label>
-            <select id="lang-switcher" data-lang-switcher>
-                <option value="en" data-i18n="common.lang.en">English</option>
-                <option value="fr" data-i18n="common.lang.fr">French</option>
-            </select>
+            <nav class="top-links">
+                <a href="../apps/" data-i18n="doomscroll.nav.apps">Apps</a>
+                <a href="../contact/" data-i18n="doomscroll.nav.contact">Contact</a>
+                <a href="waitlist/" class="mini-cta">Try one run</a>
+            </nav>
+
+            <div class="language-switcher">
+                <label for="lang-switcher" data-i18n="common.lang.label">Language</label>
+                <select id="lang-switcher" data-lang-switcher>
+                    <option value="en" data-i18n="common.lang.en">English</option>
+                    <option value="fr" data-i18n="common.lang.fr">French</option>
+                </select>
+            </div>
         </div>
+    </header>
 
-        <main class="landing-main">
-            <section class="landing-hero reveal" id="top">
-                <div class="hero-copy" data-parallax="0.18">
-                    <p class="eyebrow">DOOMSCROLL TOTEM</p>
-                    <h2>A focus game you cannot cheat.</h2>
-                    <p class="lead">Start a session, put your phone down, and let motion detection keep you honest. Touch it or leave the app and you fail.</p>
-                    <div class="hero-cta">
-                        <a href="waitlist/" class="cta-primary">Try one 10-minute run</a>
-                        <a href="#how-it-works" class="cta-secondary">How it works</a>
+    <main class="story-main">
+        <section class="scene scene-hero reveal" id="top">
+            <div class="scene-inner">
+                <p class="eyebrow">DOOMSCROLL TOTEM</p>
+                <h1>A focus game you cannot cheat.</h1>
+                <p class="lead">Start a session, put your phone down, and let motion detection keep you honest. Touch it or leave the app and the run ends.</p>
+                <div class="hero-actions">
+                    <a href="waitlist/" class="cta-primary">Try one 10-minute run</a>
+                    <a href="#story" class="cta-secondary">See how it unfolds</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="scene story-scene" id="story">
+            <div class="story-grid">
+                <aside class="story-rail reveal">
+                    <div class="rail-card">
+                        <img src="app-icon.png" alt="Doomscroll Totem app icon" class="app-icon-hero">
+                        <p class="rail-kicker" data-story-kicker>CHAPTER 1</p>
+                        <h2 data-story-title>The feed always wins by default.</h2>
+                        <p class="rail-detail" data-story-detail>Most focus systems trust your willpower. Doomscroll Totem changes the rules.</p>
+                        <ol class="rail-steps">
+                            <li class="is-active" data-step-indicator="1">Problem</li>
+                            <li data-step-indicator="2">Mechanic</li>
+                            <li data-step-indicator="3">Stakes</li>
+                            <li data-step-indicator="4">Safety</li>
+                            <li data-step-indicator="5">Proof</li>
+                        </ol>
                     </div>
-                </div>
-                <div class="hero-visual reveal" data-parallax="0.12">
-                    <img src="app-icon.png" alt="Doomscroll Totem app icon" class="app-icon-hero">
-                    <div class="hero-stat-grid">
-                        <article class="hero-stat">
-                            <h3>1 tap</h3>
-                            <p>to start a run</p>
-                        </article>
-                        <article class="hero-stat">
-                            <h3>0 excuses</h3>
-                            <p>motion ends the run</p>
-                        </article>
-                        <article class="hero-stat">
-                            <h3>2 modes</h3>
-                            <p>strict or low power</p>
-                        </article>
-                    </div>
-                </div>
-            </section>
+                </aside>
 
-            <section class="panel-section reveal" id="problem">
-                <div class="section-heading">
-                    <p class="eyebrow">THE PROBLEM</p>
-                    <h3>Normal timers are easy to ignore.</h3>
-                </div>
-                <div class="problem-grid">
-                    <article class="card">
-                        <h4>The loop</h4>
-                        <p>You start with a break, then another swipe, then another. Minutes disappear before you notice.</p>
+                <div class="story-chapters">
+                    <article class="chapter reveal is-active" data-step="1" data-kicker="CHAPTER 1" data-title="The feed always wins by default." data-detail="Most focus systems trust your willpower. Doomscroll Totem changes the rules.">
+                        <p class="chapter-label">Problem</p>
+                        <h3>You open your phone for one thing and end up somewhere else.</h3>
+                        <p>Minutes disappear in tiny swipes. Traditional timers keep running even while you drift, so they measure intent instead of behavior.</p>
                     </article>
-                    <article class="card">
-                        <h4>The cheat</h4>
-                        <p>Typical focus timers keep counting while you scroll. They reward intention, not behavior.</p>
-                    </article>
-                    <article class="card">
-                        <h4>The fix</h4>
-                        <p>Doomscroll Totem adds friction. Your phone has to stay still and in-app for the session to count.</p>
-                    </article>
-                </div>
-            </section>
 
-            <section class="panel-section reveal" id="how-it-works">
-                <div class="section-heading">
-                    <p class="eyebrow">APP SHOWCASE</p>
-                    <h3>How one run works.</h3>
-                </div>
-                <div class="steps-grid">
-                    <article class="step-card">
-                        <span class="step-number">01</span>
-                        <h4>Start session</h4>
-                        <p>Pick a duration and begin your run with one tap.</p>
+                    <article class="chapter reveal" data-step="2" data-kicker="CHAPTER 2" data-title="One run. One rule." data-detail="When the phone moves or you leave the app, the session fails.">
+                        <p class="chapter-label">Mechanic</p>
+                        <h3>Start a run. Put the phone down. Leave it there.</h3>
+                        <p>The app uses motion detection to enforce the session. If you touch the device or switch apps, the run ends. No loopholes.</p>
                     </article>
-                    <article class="step-card">
-                        <span class="step-number">02</span>
-                        <h4>Set it down</h4>
-                        <p>Place your phone face down and leave it untouched.</p>
-                    </article>
-                    <article class="step-card">
-                        <span class="step-number">03</span>
-                        <h4>Protect your idol</h4>
-                        <p>Finish the timer to keep your idol. Move the phone and you lose the run.</p>
-                    </article>
-                </div>
-                <div class="safety-strip">
-                    <p><strong>Safety valves:</strong> warnings + grace window before fail, plus optional Low Power Mode for gentler runs.</p>
-                </div>
-            </section>
 
-            <section class="panel-section reveal" id="social-proof">
-                <div class="section-heading">
-                    <p class="eyebrow">SOCIAL PROOF</p>
-                    <h3>Early player sentiment.</h3>
-                </div>
-                <div class="quotes-grid">
-                    <blockquote>
-                        "It is the first focus app that actually changed my hand reflex."
-                    </blockquote>
-                    <blockquote>
-                        "I only planned one session. I ended up doing three because the challenge is weirdly satisfying."
-                    </blockquote>
-                    <blockquote>
-                        "The warning + grace setup keeps it strict without being punishing."
-                    </blockquote>
-                </div>
-                <p class="social-proof-note">Replacing placeholders with public launch quotes is a quick next upgrade.</p>
-            </section>
+                    <article class="chapter reveal" data-step="3" data-kicker="CHAPTER 3" data-title="Stakes make focus feel real." data-detail="Protect your idol through the timer or lose it on fail.">
+                        <p class="chapter-label">Stakes</p>
+                        <h3>You are not just running a timer. You are guarding something.</h3>
+                        <p>Every session has consequence. Keep your idol through the countdown and build your streak. Break focus and the loss is immediate.</p>
+                    </article>
 
-            <section class="panel-section cta-panel reveal" id="cta">
-                <div class="section-heading">
-                    <p class="eyebrow">READY TO TEST IT?</p>
-                    <h3>One session is enough to feel the reflex break.</h3>
+                    <article class="chapter reveal" data-step="4" data-kicker="CHAPTER 4" data-title="Strict, but not brittle." data-detail="Warnings and grace windows prevent accidental failures.">
+                        <p class="chapter-label">Safety valves</p>
+                        <h3>Designed to stop doomscrolling, not punish micro-mistakes.</h3>
+                        <p>You get warnings plus a short grace window. And if you want a softer entry, Low Power Mode keeps the challenge without hard edges.</p>
+                    </article>
+
+                    <article class="chapter reveal" data-step="5" data-kicker="CHAPTER 5" data-title="People feel the difference in one session." data-detail="The reflex break is noticeable after a single run.">
+                        <p class="chapter-label">Social proof</p>
+                        <h3>"It is the first focus app that changed my hand reflex."</h3>
+                        <p>"I planned one session and did three." "Warning plus grace keeps it strict without being punishing." Real user quotes slot in here at launch.</p>
+                    </article>
                 </div>
+            </div>
+        </section>
+
+        <section class="scene scene-cta reveal" id="cta">
+            <div class="scene-inner cta-inner">
+                <p class="eyebrow">FINAL STEP</p>
+                <h2>One 10-minute run is enough to feel the shift.</h2>
                 <p>Join the waitlist for early access and launch updates.</p>
                 <a href="waitlist/" class="cta-primary">Try one 10-minute run</a>
-            </section>
+            </div>
+        </section>
 
-            <section class="policy-section reveal">
+        <section class="scene policy-scene reveal">
+            <div class="scene-inner policy-inner">
                 <h3 data-i18n="doomscroll.policy.title">Policies, Terms, and Support</h3>
                 <p data-i18n="doomscroll.policy.body">Read the privacy policy, terms of service, and support FAQ.</p>
                 <div class="policy-links">
@@ -168,13 +138,13 @@
                     <a href="terms/" data-i18n="doomscroll.policy.terms">Terms of Service</a>
                     <a href="support/" data-i18n="doomscroll.policy.support">Support & FAQ</a>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
+    </main>
 
-        <footer>
-            <p>&copy; <span data-year></span> <span data-i18n="doomscroll.footer">goodideed. Helping people in unusual ways.</span></p>
-        </footer>
-    </div>
+    <footer>
+        <p>&copy; <span data-year></span> <span data-i18n="doomscroll.footer">goodideed. Helping people in unusual ways.</span></p>
+    </footer>
 </body>
 
 </html>

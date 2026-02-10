@@ -746,3 +746,364 @@ footer {
         width: 100%;
     }
 }
+
+/* Storytelling second pass: full-width minimalist layout */
+.doomscroll-landing {
+    --story-max: 1200px;
+}
+
+.doomscroll-landing .landing-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: rgba(10, 15, 22, 0.66);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(244, 239, 230, 0.08);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.doomscroll-landing.is-scrolled .landing-topbar {
+    background: rgba(8, 12, 18, 0.9);
+    border-color: rgba(244, 239, 230, 0.14);
+}
+
+.doomscroll-landing .topbar-inner {
+    max-width: var(--story-max);
+    margin: 0 auto;
+    padding: 10px 22px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    align-items: center;
+}
+
+.doomscroll-landing .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+
+.doomscroll-landing .brand .logo-icon {
+    width: 26px;
+    height: 26px;
+    margin: 0;
+}
+
+.doomscroll-landing .top-links {
+    justify-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.doomscroll-landing .top-links a {
+    color: var(--muted-ink);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    padding: 7px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: color 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.doomscroll-landing .top-links a:hover {
+    color: var(--ink);
+    border-color: rgba(244, 239, 230, 0.18);
+}
+
+.doomscroll-landing .top-links .mini-cta {
+    color: var(--ink);
+    background: rgba(255, 107, 53, 0.2);
+    border-color: rgba(255, 107, 53, 0.6);
+}
+
+.doomscroll-landing .language-switcher {
+    margin: 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(14, 20, 28, 0.8);
+}
+
+.doomscroll-landing .language-switcher label {
+    font-size: 0.72rem;
+}
+
+.doomscroll-landing .language-switcher select {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+}
+
+.doomscroll-landing .story-main {
+    display: block;
+}
+
+.doomscroll-landing .scene {
+    padding: 0 22px;
+}
+
+.doomscroll-landing .scene-inner {
+    max-width: var(--story-max);
+    margin: 0 auto;
+}
+
+.doomscroll-landing .scene-hero {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+}
+
+.doomscroll-landing .scene-hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 7vw, 5.3rem);
+    line-height: 0.96;
+    letter-spacing: -0.02em;
+    max-width: 11ch;
+}
+
+.doomscroll-landing .lead {
+    margin-top: 24px;
+    max-width: 54ch;
+    color: var(--muted-ink);
+    font-size: clamp(1.05rem, 2.1vw, 1.35rem);
+}
+
+.doomscroll-landing .hero-actions {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.doomscroll-landing .story-scene {
+    padding-top: 36px;
+    padding-bottom: 36px;
+}
+
+.doomscroll-landing .story-grid {
+    max-width: var(--story-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(260px, 400px) minmax(0, 1fr);
+    gap: 48px;
+}
+
+.doomscroll-landing .story-rail {
+    position: relative;
+}
+
+.doomscroll-landing .rail-card {
+    position: sticky;
+    top: 96px;
+    padding: 20px;
+    border-radius: 22px;
+    border: 1px solid rgba(244, 239, 230, 0.14);
+    background: linear-gradient(165deg, rgba(16, 24, 34, 0.92), rgba(11, 18, 27, 0.82));
+}
+
+.doomscroll-landing .app-icon-hero {
+    width: 82px;
+    height: 82px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+}
+
+.doomscroll-landing .rail-kicker {
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    letter-spacing: 0.15em;
+    color: rgba(46, 196, 182, 0.95);
+    text-transform: uppercase;
+}
+
+.doomscroll-landing .rail-card h2 {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.2vw, 2rem);
+    line-height: 1.15;
+}
+
+.doomscroll-landing .rail-detail {
+    margin-top: 10px;
+    color: var(--muted-ink);
+    font-size: 1.02rem;
+}
+
+.doomscroll-landing .rail-steps {
+    margin-top: 16px;
+    list-style: none;
+    display: grid;
+    gap: 8px;
+}
+
+.doomscroll-landing .rail-steps li {
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    color: rgba(244, 239, 230, 0.55);
+    border-left: 2px solid rgba(244, 239, 230, 0.18);
+    padding-left: 10px;
+    transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.doomscroll-landing .rail-steps li.is-active {
+    color: var(--ink);
+    border-color: rgba(255, 107, 53, 0.8);
+}
+
+.doomscroll-landing .story-chapters {
+    display: grid;
+}
+
+.doomscroll-landing .chapter {
+    min-height: 104vh;
+    display: grid;
+    align-content: center;
+    max-width: 66ch;
+    padding: 30px 0;
+}
+
+.doomscroll-landing .chapter-label {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(46, 196, 182, 0.9);
+    font-size: 0.72rem;
+    margin-bottom: 16px;
+}
+
+.doomscroll-landing .chapter h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3.8vw, 3rem);
+    line-height: 1.05;
+    max-width: 16ch;
+}
+
+.doomscroll-landing .chapter p {
+    margin-top: 14px;
+    color: var(--muted-ink);
+    font-size: clamp(1rem, 1.7vw, 1.24rem);
+    max-width: 52ch;
+}
+
+.doomscroll-landing .scene-cta {
+    padding-top: 24px;
+    padding-bottom: 90px;
+}
+
+.doomscroll-landing .cta-inner {
+    border-top: 1px solid rgba(244, 239, 230, 0.14);
+    padding-top: 40px;
+    text-align: left;
+}
+
+.doomscroll-landing .cta-inner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 4.4vw, 3.2rem);
+    max-width: 18ch;
+    line-height: 1.07;
+}
+
+.doomscroll-landing .cta-inner p {
+    color: var(--muted-ink);
+    margin: 14px 0 20px;
+}
+
+.doomscroll-landing .policy-scene {
+    padding-bottom: 40px;
+}
+
+.doomscroll-landing .policy-inner {
+    border-top: 1px solid rgba(244, 239, 230, 0.1);
+    padding-top: 30px;
+}
+
+.doomscroll-landing .policy-inner h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+}
+
+.doomscroll-landing .policy-inner p {
+    margin-top: 10px;
+    color: var(--muted-ink);
+}
+
+.doomscroll-landing .policy-links {
+    justify-content: flex-start;
+    margin-top: 16px;
+}
+
+.doomscroll-landing footer {
+    border-top: 1px solid rgba(244, 239, 230, 0.08);
+    margin: 0 22px;
+    padding-top: 20px;
+    padding-bottom: 24px;
+}
+
+.doomscroll-landing .reveal {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.doomscroll-landing.has-motion .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.doomscroll-landing.has-motion .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 980px) {
+    .doomscroll-landing .topbar-inner {
+        grid-template-columns: 1fr;
+        justify-items: start;
+        gap: 8px;
+    }
+
+    .doomscroll-landing .top-links {
+        justify-self: start;
+    }
+
+    .doomscroll-landing .story-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .doomscroll-landing .rail-card {
+        position: static;
+    }
+
+    .doomscroll-landing .chapter {
+        min-height: auto;
+        padding: 36px 0;
+        border-top: 1px solid rgba(244, 239, 230, 0.1);
+    }
+}
+
+@media (max-width: 620px) {
+    .doomscroll-landing .scene {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .doomscroll-landing .hero-actions {
+        flex-direction: column;
+    }
+
+    .doomscroll-landing .cta-primary,
+    .doomscroll-landing .cta-secondary {
+        width: 100%;
+    }
+
+    .doomscroll-landing footer {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+}

@@ -356,6 +356,37 @@ main {
     font-size: 1.05rem;
 }
 
+.waitlist-hero {
+    margin-bottom: 28px;
+}
+
+.waitlist-section {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.waitlist-frame-wrap {
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-soft);
+    padding: 16px;
+}
+
+.waitlist-frame {
+    width: 100%;
+    min-height: 1080px;
+    border: 0;
+    border-radius: calc(var(--radius-m) - 6px);
+    background: #fff;
+}
+
+.waitlist-fallback {
+    margin-top: 14px;
+    text-align: center;
+    color: var(--muted-ink);
+}
+
 footer {
     text-align: center;
     color: var(--muted-ink);
@@ -384,6 +415,10 @@ footer {
         padding: 32px 24px;
     }
 
+    .waitlist-frame {
+        min-height: 1240px;
+    }
+
     .app-info h2 {
         font-size: 2.1rem;
         text-align: center;
@@ -406,6 +441,14 @@ footer {
 
     main {
         padding: 28px 18px;
+    }
+
+    .waitlist-frame-wrap {
+        padding: 8px;
+    }
+
+    .waitlist-frame {
+        min-height: 1320px;
     }
 }
 

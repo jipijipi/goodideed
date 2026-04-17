@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2025-01-30T00:00:00Z",
+  "generatedAt": "2026-04-17T00:00:00Z",
   "app": {
     "bundleId": "com.goodideed.doomdoom",
     "minVersion": "1.0.0",
@@ -8,6 +8,22 @@
     "storeUrl": {
       "ios": "https://apps.apple.com/app/id6756709833",
       "android": "https://play.google.com/store/apps/details?id=com.goodideed.doomdoom"
+    },
+    "platforms": {
+      "ios": {
+        "bundleId": "com.goodideed.doomdoom",
+        "minVersion": "1.0.0",
+        "softVersion": "1.0.0",
+        "storeUrl": "https://apps.apple.com/app/id6756709833",
+        "message": "Baseline release."
+      },
+      "android": {
+        "bundleId": "com.goodideed.doomdoom",
+        "minVersion": "1.0.0",
+        "softVersion": "1.0.0",
+        "storeUrl": "https://play.google.com/store/apps/details?id=com.goodideed.doomdoom",
+        "message": "Baseline release."
+      }
     },
     "message": "Baseline release."
   },

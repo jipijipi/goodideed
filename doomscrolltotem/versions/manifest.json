@@ -9,7 +9,21 @@
       "ios": "https://apps.apple.com/app/id6756709833",
       "android": "https://play.google.com/store/apps/details?id=com.goodideed.doomdoom"
     },
-    "message": "Baseline release."
+    "platforms": {
+      "ios": {
+        "bundleId": "com.goodideed.doomdoom",
+        "minVersion": "1.0.0",
+        "softVersion": "1.4.1",
+        "storeUrl": "https://apps.apple.com/app/id6756709833"
+      },
+      "android": {
+        "bundleId": "com.goodideed.doomdoom",
+        "minVersion": "1.0.0",
+        "softVersion": "1.4.1",
+        "storeUrl": "https://play.google.com/store/apps/details?id=com.goodideed.doomdoom"
+      }
+    },
+    "message": "Better user experience."
   },
   "content": {
     "minVersion": "2025.01.30",

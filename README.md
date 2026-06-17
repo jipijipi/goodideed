@@ -9,4 +9,6 @@ goodideed.com
 - Add or rename bundles as you introduce more sequence packs; clients should treat unknown bundles as optional.
 - Keep `schemaVersion` incrementing whenever you make breaking changes to the manifest structure.
 
+
 - From Apps : git subtree push --prefix=goodideed goodideed main
+

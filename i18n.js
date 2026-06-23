@@ -19,6 +19,17 @@
     switcher.value = lang;
     switcher.addEventListener('change', () => {
       const nextLang = switcher.value;
+      const alternate = document.querySelector(`link[rel="alternate"][hreflang="${nextLang}"]`);
+      if (alternate && alternate.href) {
+        if (nextLang === 'en') {
+          window.localStorage.removeItem('lang');
+        } else {
+          window.localStorage.setItem('lang', nextLang);
+        }
+        window.location.href = alternate.href;
+        return;
+      }
+
       const url = new URL(window.location.href);
       if (nextLang === 'en') {
         url.searchParams.delete('lang');

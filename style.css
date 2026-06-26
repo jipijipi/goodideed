@@ -283,6 +283,64 @@ footer {
     color: #1a3009;
 }
 
+.social-section {
+    text-align: center;
+    margin-top: 45px;
+    padding-top: 35px;
+    border-top: 1px solid rgba(168, 213, 186, 0.35);
+}
+
+.social-section h2 {
+    font-size: 1.8rem;
+    color: #2d5016;
+    margin-bottom: 10px;
+}
+
+.social-section p {
+    color: #5d6d42;
+    margin-bottom: 18px;
+}
+
+.social-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 14px;
+}
+
+.social-links a {
+    color: #2d5016;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 8px 14px;
+    border: 1px solid rgba(45, 80, 22, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(45, 80, 22, 0.32);
+    transform: translateY(-1px);
+}
+
+.social-links-on-dark {
+    margin-top: 22px;
+}
+
+.social-links-on-dark a {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+}
+
+.social-links-on-dark a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.42);
+    color: #ffffff;
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;

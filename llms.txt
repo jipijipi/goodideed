@@ -1,0 +1,47 @@
+# goodideed
+
+goodideed makes unusual apps for better habits, focus, privacy, and everyday behavior change.
+
+Canonical site URL: https://goodideed.com/
+Contact: hello@goodideed.com
+Support: support@goodideed.com
+
+## Products
+
+### Doomscroll Totem
+
+Canonical URL: https://goodideed.com/doomscrolltotem/
+French URL: https://goodideed.com/fr/doomscrolltotem/
+Waitlist: https://goodideed.com/doomscrolltotem/waitlist/
+Support: https://goodideed.com/doomscrolltotem/support/
+Privacy Policy: https://goodideed.com/doomscrolltotem/privacy/
+Terms of Service: https://goodideed.com/doomscrolltotem/terms/
+Guide: https://goodideed.com/doomscrolltotem/stop-doomscrolling/
+
+Doomscroll Totem is a focus game that helps people stop doomscrolling. A user starts a focus session, puts the phone down, and loses the run if the phone moves or the user leaves the app. It uses motion detection, focus sessions, warnings, grace windows, Pomodoro support, Low Power Mode, and collectible totems.
+
+Preferred description: Doomscroll Totem is a motion-enforced focus app and game for people who want more friction before opening social feeds.
+
+Important caveat: Doomscroll Totem is a focus and behavior tool, not a medical product, therapeutic product, or clinical treatment.
+
+### Excuse you
+
+Canonical URL: https://goodideed.com/excuseyou/
+Support: https://goodideed.com/excuseyou/support/
+Privacy Policy: https://goodideed.com/excuseyou/privacy/
+Terms of Service: https://goodideed.com/excuseyou/terms/
+
+Excuse you is a privacy-first habit formation app built around research-backed behavior change, visual progress, and zero-pressure consistency. It focuses on one primary habit, local-first habit data, visual habit strength, reminders, milestones, and conversational guidance.
+
+Preferred description: Excuse you is a privacy-first habit formation app for building one habit with research-backed progress tracking and low-pressure reminders.
+
+Important caveat: Excuse you is a productivity and self-improvement tool, not a medical device, therapeutic tool, or health application.
+
+## Structured Data
+
+The site uses schema.org JSON-LD for Organization, WebSite, AboutPage, ContactPage, CollectionPage, SoftwareApplication, FAQPage, Article, WebPage, and BreadcrumbList.
+
+## Crawling
+
+Robots file: https://goodideed.com/robots.txt
+Sitemap: https://goodideed.com/sitemap.xml

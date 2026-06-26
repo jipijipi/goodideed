@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://goodideed.com/sitemap.xml
+# LLMs: https://goodideed.com/llms.txt

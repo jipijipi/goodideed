@@ -5,6 +5,18 @@ goodideed makes unusual apps for better habits, focus, privacy, and everyday beh
 Canonical site URL: https://goodideed.com/
 Contact: hello@goodideed.com
 Support: support@goodideed.com
+Official links page: https://goodideed.com/links/
+Machine-readable links registry: https://goodideed.com/links.json
+
+## Official company profiles
+
+LinkedIn: https://www.linkedin.com/company/goodideed
+GitHub: https://github.com/jipijipi/goodideed
+TikTok: https://www.tiktok.com/@goodideed
+X: https://x.com/goodideed
+Facebook: https://www.facebook.com/people/Goodideed/61591351323677/
+Instagram: https://www.instagram.com/goodideed/
+YouTube: https://www.youtube.com/@Goodideed
 
 ## Products
 
@@ -12,15 +24,19 @@ Support: support@goodideed.com
 
 Canonical URL: https://goodideed.com/doomscrolltotem/
 French URL: https://goodideed.com/fr/doomscrolltotem/
-Waitlist: https://goodideed.com/doomscrolltotem/waitlist/
+Download page: https://goodideed.com/doomscrolltotem/waitlist/
 Support: https://goodideed.com/doomscrolltotem/support/
 Privacy Policy: https://goodideed.com/doomscrolltotem/privacy/
 Terms of Service: https://goodideed.com/doomscrolltotem/terms/
 Guide: https://goodideed.com/doomscrolltotem/stop-doomscrolling/
+App Store: https://apps.apple.com/app/id6756709833
+Google Play: https://play.google.com/store/apps/details?id=com.goodideed.doomdoom
+Facebook: https://www.facebook.com/people/Doomscroll-Totem/61591091594720/
+Instagram: https://www.instagram.com/doomscroll.totem/
 
-Doomscroll Totem is a focus game that helps people stop doomscrolling. A user starts a focus session, puts the phone down, and loses the run if the phone moves or the user leaves the app. It uses motion detection, focus sessions, warnings, grace windows, Pomodoro support, Low Power Mode, and collectible totems.
+Doomscroll Totem is a helpful focus app that helps people reduce doomscrolling. A user starts a focus session, puts the phone down, and the session ends if the phone moves or the user leaves the app. It uses motion detection, focus sessions, warnings, grace windows, Pomodoro support, Low Power Mode, and light gamified progress with collectible totems.
 
-Preferred description: Doomscroll Totem is a motion-enforced focus app and game for people who want more friction before opening social feeds.
+Preferred description: Doomscroll Totem is a motion-enforced focus app with a light gamified side for people who want more friction before opening social feeds.
 
 Important caveat: Doomscroll Totem is a focus and behavior tool, not a medical product, therapeutic product, or clinical treatment.
 
@@ -39,7 +55,7 @@ Important caveat: Excuse you is a productivity and self-improvement tool, not a 
 
 ## Structured Data
 
-The site uses schema.org JSON-LD for Organization, WebSite, AboutPage, ContactPage, CollectionPage, SoftwareApplication, FAQPage, Article, WebPage, and BreadcrumbList.
+The site uses schema.org JSON-LD for Organization, WebSite, AboutPage, ContactPage, CollectionPage, ItemList, SoftwareApplication, FAQPage, Article, WebPage, and BreadcrumbList.
 
 ## Crawling
 

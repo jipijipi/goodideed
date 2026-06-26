@@ -1,0 +1,79 @@
+{
+  "company": {
+    "name": "goodideed",
+    "url": "https://goodideed.com/",
+    "contact": "mailto:hello@goodideed.com",
+    "support": "mailto:support@goodideed.com",
+    "profiles": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/company/goodideed"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/jipijipi/goodideed"
+      },
+      {
+        "label": "TikTok",
+        "url": "https://www.tiktok.com/@goodideed"
+      },
+      {
+        "label": "X",
+        "url": "https://x.com/goodideed"
+      },
+      {
+        "label": "Facebook",
+        "url": "https://www.facebook.com/people/Goodideed/61591351323677/"
+      },
+      {
+        "label": "Instagram",
+        "url": "https://www.instagram.com/goodideed/"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@Goodideed"
+      }
+    ]
+  },
+  "products": {
+    "doomscrollTotem": {
+      "name": "Doomscroll Totem",
+      "url": "https://goodideed.com/doomscrolltotem/",
+      "localizedUrls": {
+        "fr": "https://goodideed.com/fr/doomscrolltotem/"
+      },
+      "support": "https://goodideed.com/doomscrolltotem/support/",
+      "privacy": "https://goodideed.com/doomscrolltotem/privacy/",
+      "terms": "https://goodideed.com/doomscrolltotem/terms/",
+      "guide": "https://goodideed.com/doomscrolltotem/stop-doomscrolling/",
+      "stores": [
+        {
+          "label": "App Store",
+          "url": "https://apps.apple.com/app/id6756709833"
+        },
+        {
+          "label": "Google Play",
+          "url": "https://play.google.com/store/apps/details?id=com.goodideed.doomdoom"
+        }
+      ],
+      "profiles": [
+        {
+          "label": "Facebook",
+          "url": "https://www.facebook.com/people/Doomscroll-Totem/61591091594720/"
+        },
+        {
+          "label": "Instagram",
+          "url": "https://www.instagram.com/doomscroll.totem/"
+        }
+      ]
+    },
+    "excuseYou": {
+      "name": "Excuse you",
+      "url": "https://goodideed.com/excuseyou/",
+      "support": "https://goodideed.com/excuseyou/support/",
+      "privacy": "https://goodideed.com/excuseyou/privacy/",
+      "terms": "https://goodideed.com/excuseyou/terms/",
+      "profiles": []
+    }
+  }
+}

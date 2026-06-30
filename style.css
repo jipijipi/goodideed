@@ -402,6 +402,95 @@ main {
     border-bottom-color: var(--ember) !important;
 }
 
+.store-btn,
+.social-links a,
+.feature a[href*="apps.apple.com"],
+.feature a[href*="play.google.com"],
+.feature a[href*="linkedin.com"],
+.feature a[href*="github.com"],
+.feature a[href*="tiktok.com"],
+.feature a[href*="x.com/"],
+.feature a[href*="facebook.com"],
+.feature a[href*="instagram.com"],
+.feature a[href*="youtube.com"],
+.email-link-inline[href*="apps.apple.com"],
+.email-link-inline[href*="play.google.com"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.48em;
+}
+
+.store-btn::before,
+.social-links a::before,
+.feature a[href*="apps.apple.com"]::before,
+.feature a[href*="play.google.com"]::before,
+.feature a[href*="linkedin.com"]::before,
+.feature a[href*="github.com"]::before,
+.feature a[href*="tiktok.com"]::before,
+.feature a[href*="x.com/"]::before,
+.feature a[href*="facebook.com"]::before,
+.feature a[href*="instagram.com"]::before,
+.feature a[href*="youtube.com"]::before,
+.email-link-inline[href*="apps.apple.com"]::before,
+.email-link-inline[href*="play.google.com"]::before {
+    content: "";
+    width: 1.05em;
+    height: 1.05em;
+    flex: 0 0 auto;
+    background: currentColor;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+}
+
+a[href*="apps.apple.com"]::before {
+    mask-image: url("/icons/apple.svg");
+    -webkit-mask-image: url("/icons/apple.svg");
+}
+
+a[href*="play.google.com"]::before {
+    mask-image: url("/icons/google-play.svg");
+    -webkit-mask-image: url("/icons/google-play.svg");
+}
+
+a[href*="linkedin.com"]::before {
+    mask-image: url("/icons/linkedin.svg");
+    -webkit-mask-image: url("/icons/linkedin.svg");
+}
+
+a[href*="github.com"]::before {
+    mask-image: url("/icons/github.svg");
+    -webkit-mask-image: url("/icons/github.svg");
+}
+
+a[href*="tiktok.com"]::before {
+    mask-image: url("/icons/tiktok.svg");
+    -webkit-mask-image: url("/icons/tiktok.svg");
+}
+
+a[href*="x.com/"]::before {
+    mask-image: url("/icons/x.svg");
+    -webkit-mask-image: url("/icons/x.svg");
+}
+
+a[href*="facebook.com"]::before {
+    mask-image: url("/icons/facebook.svg");
+    -webkit-mask-image: url("/icons/facebook.svg");
+}
+
+a[href*="instagram.com"]::before {
+    mask-image: url("/icons/instagram.svg");
+    -webkit-mask-image: url("/icons/instagram.svg");
+}
+
+a[href*="youtube.com"]::before {
+    mask-image: url("/icons/youtube.svg");
+    -webkit-mask-image: url("/icons/youtube.svg");
+}
+
 .social-section {
     text-align: center;
     margin-top: 45px;

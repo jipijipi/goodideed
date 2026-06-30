@@ -1011,6 +1011,46 @@ footer {
     background: rgba(255, 107, 53, 0.16);
 }
 
+.doomscroll-landing .store-btn,
+.doomscroll-landing .social-links a {
+    gap: 0.48em;
+}
+
+.doomscroll-landing .store-btn::before,
+.doomscroll-landing .social-links a::before {
+    content: "";
+    width: 1.05em;
+    height: 1.05em;
+    flex: 0 0 auto;
+    background: currentColor;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+}
+
+.doomscroll-landing a[href*="apps.apple.com"]::before {
+    mask-image: url("/icons/apple.svg");
+    -webkit-mask-image: url("/icons/apple.svg");
+}
+
+.doomscroll-landing a[href*="play.google.com"]::before {
+    mask-image: url("/icons/google-play.svg");
+    -webkit-mask-image: url("/icons/google-play.svg");
+}
+
+.doomscroll-landing a[href*="facebook.com"]::before {
+    mask-image: url("/icons/facebook.svg");
+    -webkit-mask-image: url("/icons/facebook.svg");
+}
+
+.doomscroll-landing a[href*="instagram.com"]::before {
+    mask-image: url("/icons/instagram.svg");
+    -webkit-mask-image: url("/icons/instagram.svg");
+}
+
 .doomscroll-landing .social-links {
     display: flex;
     flex-wrap: wrap;

@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="home.title">goodideed | Unusual Apps for Better Habits and Focus</title>
-    <meta name="description" content="goodideed makes unusual apps for better habits, focus, privacy, and everyday behavior change, including Doomscroll Totem and Excuse you.">
+    <title data-i18n="home.title">Doomscroll Totem by goodideed | Focus App to Stop Doomscrolling</title>
+    <meta name="description" content="Doomscroll Totem by goodideed is a focus app that helps reduce doomscrolling with motion-enforced sessions, phone-down friction, and light gamified progress.">
     <link rel="canonical" href="https://goodideed.com/">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#0c1218">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="goodideed">
-    <meta property="og:title" content="goodideed | Unusual Apps for Better Habits and Focus">
-    <meta property="og:description" content="Products that help people in unusual ways, including Doomscroll Totem and Excuse you.">
+    <meta property="og:title" content="Doomscroll Totem by goodideed | Focus App to Stop Doomscrolling">
+    <meta property="og:description" content="A phone-down focus app that helps reduce doomscrolling with motion-enforced sessions and light gamified progress.">
     <meta property="og:url" content="https://goodideed.com/">
-    <meta property="og:image" content="https://goodideed.com/doomscrolltotem/favicon/icon-square.png">
+    <meta property="og:image" content="https://goodideed.com/doomscrolltotem/images/hero-3x2.jpg">
+    <meta property="og:image:width" content="2401">
+    <meta property="og:image:height" content="1601">
+    <meta property="og:image:alt" content="Phone placed face-down during a Doomscroll Totem focus session">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Doomscroll Totem by goodideed | Focus App to Stop Doomscrolling">
+    <meta name="twitter:description" content="Motion-enforced focus sessions for people who want more friction before opening social feeds.">
+    <meta name="twitter:image" content="https://goodideed.com/doomscrolltotem/images/hero-3x2.jpg">
     <link rel="stylesheet" href="style.css">
     <script src="i18n.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/doomscrolltotem/favicon/favicon.ico">
@@ -29,7 +36,7 @@
             "url": "https://goodideed.com/",
             "logo": "https://goodideed.com/doomscrolltotem/favicon/icon-square.png",
             "email": "hello@goodideed.com",
-            "description": "goodideed makes unusual apps for better habits, focus, privacy, and everyday behavior change.",
+            "description": "goodideed makes unusual apps for better habits and focus, including Doomscroll Totem, a focus app that helps reduce doomscrolling.",
             "sameAs": [
                 "https://www.linkedin.com/company/goodideed",
                 "https://github.com/jipijipi/goodideed",
@@ -42,6 +49,8 @@
             "knowsAbout": [
                 "Focus apps",
                 "Doomscrolling",
+                "Stop doomscrolling",
+                "Screen time reduction",
                 "Habit formation",
                 "Privacy-first mobile apps",
                 "Behavior change"
@@ -59,7 +68,12 @@
             "@context": "https://schema.org",
             "@type": "WebSite",
             "name": "goodideed",
-            "url": "https://goodideed.com/"
+            "url": "https://goodideed.com/",
+            "publisher": {
+                "@type": "Organization",
+                "name": "goodideed",
+                "url": "https://goodideed.com/"
+            }
         }
     </script>
     <script type="application/ld+json">
@@ -68,21 +82,35 @@
             "@type": "AboutPage",
             "name": "About goodideed",
             "url": "https://goodideed.com/",
-            "description": "goodideed makes unusual apps for better habits, focus, privacy, and everyday behavior change.",
+            "description": "goodideed makes unusual apps for better habits and focus, led by Doomscroll Totem, a motion-enforced focus app for reducing doomscrolling.",
             "about": {
                 "@type": "Organization",
                 "name": "goodideed",
                 "url": "https://goodideed.com/"
             },
             "mainEntity": {
-                "@type": "Organization",
-                "name": "goodideed",
-                "url": "https://goodideed.com/"
+                "@type": "SoftwareApplication",
+                "name": "Doomscroll Totem",
+                "applicationCategory": "LifestyleApplication",
+                "applicationSubCategory": "Focus app",
+                "operatingSystem": "iOS, Android",
+                "url": "https://goodideed.com/doomscrolltotem/",
+                "description": "Doomscroll Totem helps people reduce doomscrolling with motion-enforced focus sessions, phone-down friction, and light gamified progress.",
+                "image": "https://goodideed.com/doomscrolltotem/images/hero-3x2.jpg",
+                "downloadUrl": [
+                    "https://apps.apple.com/app/id6756709833",
+                    "https://play.google.com/store/apps/details?id=com.goodideed.doomdoom"
+                ],
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "goodideed",
+                    "url": "https://goodideed.com/"
+                }
             }
         }
     </script>
 </head>
-<body>
+<body class="home-page">
     <div class="container">
         <header>
             <svg id="logo" class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 161.574 201.17">
@@ -122,25 +150,76 @@
             </select>
         </div>
 
-        <main>
-            <section class="hero">
-                <h2 data-i18n="home.hero.title">Welcome to goodideed</h2>
-                <p data-i18n="home.hero.body">We design innovative products that solve problems in unexpected ways, making life easier and more delightful for everyone.</p>
+        <main class="home-main">
+            <section class="home-product-hero">
+                <img src="doomscrolltotem/images/hero-3x2.jpg" alt="Phone placed face-down during a Doomscroll Totem focus session" class="home-hero-image" width="2401" height="1601" fetchpriority="high" decoding="async">
+                <div class="home-hero-overlay"></div>
+                <div class="home-hero-copy">
+                    <p class="eyebrow" data-i18n="home.hero.eyebrow">FEATURED APP</p>
+                    <h2 data-i18n="home.hero.title">Doomscroll Totem stops the scroll.</h2>
+                    <p data-i18n="home.hero.body">Doomscroll Totem is a phone-down focus app from goodideed. Start a session, put the phone down, and let motion detection add the friction your attention needs.</p>
+                    <div class="home-hero-actions">
+                        <a href="doomscrolltotem/" class="cta-primary" data-i18n="home.hero.cta.primary">See Doomscroll Totem</a>
+                        <a href="doomscrolltotem/stop-doomscrolling/" class="home-secondary-link" data-i18n="home.hero.cta.secondary">Read the stop doomscrolling guide</a>
+                    </div>
+                    <div class="store-buttons home-store-buttons" aria-label="Download Doomscroll Totem">
+                        <a href="https://apps.apple.com/app/id6756709833" class="store-btn">Download on iOS</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.goodideed.doomdoom" class="store-btn">Get it on Android</a>
+                    </div>
+                </div>
             </section>
 
-            <section class="features">
-                <div class="feature">
-                    <h3 data-i18n="home.feature1.title">Unusual Solutions</h3>
-                    <p data-i18n="home.feature1.body">We find creative approaches to everyday problems that others might overlook.</p>
+            <section class="home-feature-strip" aria-label="Doomscroll Totem benefits">
+                <article class="home-image-card">
+                    <img src="doomscrolltotem/images/chapter-1-16x9.jpg" alt="Doomscroll Totem focus scene showing phone-down friction" width="1920" height="1080" loading="lazy" decoding="async">
+                    <div>
+                        <h3 data-i18n="home.feature1.title">A focus app for the moment before the feed wins</h3>
+                        <p data-i18n="home.feature1.body">Most timers keep counting while you scroll. Doomscroll Totem makes the phone movement itself part of the session.</p>
+                    </div>
+                </article>
+                <article class="home-image-card">
+                    <img src="doomscrolltotem/images/chapter-2-3x4.jpg" alt="Doomscroll Totem product screen for motion-enforced focus sessions" width="1200" height="1600" loading="lazy" decoding="async">
+                    <div>
+                        <h3 data-i18n="home.feature2.title">Motion-enforced sessions, not just intention</h3>
+                        <p data-i18n="home.feature2.body">Start a focus session, leave the phone still, and get clear feedback when the doomscroll reflex interrupts it.</p>
+                    </div>
+                </article>
+                <article class="home-image-card">
+                    <img src="doomscrolltotem/images/chapter-3-1x1.jpg" alt="Doomscroll Totem collectible totem visual for light gamified progress" width="1401" height="1400" loading="lazy" decoding="async">
+                    <div>
+                        <h3 data-i18n="home.feature3.title">A gamified side that supports the habit</h3>
+                        <p data-i18n="home.feature3.body">Collectible totems make progress feel visible without turning focus into pressure or punishment.</p>
+                    </div>
+                </article>
+            </section>
+
+            <section class="home-seo-panel">
+                <div>
+                    <p class="eyebrow">WHY IT EXISTS</p>
+                    <h2>Doomscroll Totem helps with screen time, social feeds, and the reflex to pick up your phone.</h2>
                 </div>
-                <div class="feature">
-                    <h3 data-i18n="home.feature2.title">Human-Centered Design</h3>
-                    <p data-i18n="home.feature2.body">Every product we create puts people first, focusing on real needs and genuine impact.</p>
+                <div>
+                    <p>It is built for people who open TikTok, Instagram, X, Reddit, YouTube Shorts, or any feed almost automatically. Doomscroll Totem does not pretend to be therapy, a blocker, or a cure. It is a small behavioral tool that makes the habit loop visible at the exact moment it usually disappears.</p>
+                    <p>The app combines motion detection, focus sessions, grace windows, Pomodoro support, Low Power Mode, and a light gamified layer so putting the phone down feels concrete.</p>
+                    <a href="doomscrolltotem/" class="email-link">Explore the focus app</a>
                 </div>
-                <div class="feature">
-                    <h3 data-i18n="home.feature3.title">Thoughtful Innovation</h3>
-                    <p data-i18n="home.feature3.body">We believe the best products come from deep understanding, not just technology.</p>
-                </div>
+            </section>
+
+            <section class="home-apps-row" aria-label="goodideed apps">
+                <a href="doomscrolltotem/" class="home-app-card home-app-card-featured">
+                    <img src="doomscrolltotem/app-icon.png" alt="Doomscroll Totem app icon" width="1025" height="1024" loading="lazy" decoding="async">
+                    <span>
+                        <strong>Doomscroll Totem</strong>
+                        <small>Focus app to reduce doomscrolling</small>
+                    </span>
+                </a>
+                <a href="excuseyou/" class="home-app-card">
+                    <img src="excuseyou/app-icon.png" alt="Excuse you app icon" width="1024" height="1024" loading="lazy" decoding="async">
+                    <span>
+                        <strong>Excuse you</strong>
+                        <small>Privacy-first habit formation</small>
+                    </span>
+                </a>
             </section>
 
             <section class="social-section" aria-label="Follow goodideed">

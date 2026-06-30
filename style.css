@@ -449,6 +449,258 @@ footer {
     font-size: 0.95rem;
 }
 
+.home-page header {
+    padding: 16px 0 12px;
+}
+
+.home-page .container {
+    padding-top: 16px;
+}
+
+.home-page .logo-icon {
+    width: 52px;
+    height: 52px;
+}
+
+.home-page header h1 {
+    font-size: 1.9rem;
+    margin-bottom: 4px;
+}
+
+.home-page .tagline {
+    font-size: 0.95rem;
+}
+
+.home-page .navigation {
+    margin: 12px 0 14px;
+}
+
+.home-page .language-switcher {
+    margin-bottom: 14px;
+    padding: 8px 14px;
+}
+
+.home-main {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    backdrop-filter: none;
+}
+
+.home-product-hero {
+    position: relative;
+    min-height: clamp(520px, 64vh, 680px);
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-strong);
+    isolation: isolate;
+}
+
+.home-hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+.home-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(7, 11, 16, 0.92) 0%, rgba(7, 11, 16, 0.68) 42%, rgba(7, 11, 16, 0.18) 100%),
+        linear-gradient(0deg, rgba(7, 11, 16, 0.86) 0%, rgba(7, 11, 16, 0.08) 45%);
+}
+
+.home-hero-copy {
+    max-width: 720px;
+    padding: clamp(38px, 8vw, 84px);
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.eyebrow {
+    font-family: var(--font-display);
+    color: var(--teal);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.home-hero-copy h2 {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    max-width: 10ch;
+}
+
+.home-hero-copy p:not(.eyebrow) {
+    color: var(--muted-ink);
+    font-size: clamp(1.1rem, 2vw, 1.35rem);
+    max-width: 620px;
+    margin-top: 22px;
+}
+
+.home-hero-actions,
+.home-store-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.home-hero-actions {
+    margin-top: 28px;
+}
+
+.home-secondary-link,
+.store-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 18px;
+    border-radius: var(--radius-s);
+    border: 1px solid var(--border);
+    background: rgba(244, 239, 230, 0.08);
+    transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.home-secondary-link:hover,
+.store-btn:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 107, 53, 0.52);
+    background: rgba(255, 107, 53, 0.16);
+}
+
+.home-store-buttons {
+    margin-top: 14px;
+}
+
+.store-btn {
+    font-size: 0.92rem;
+    padding: 10px 14px;
+}
+
+.home-feature-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.home-image-card,
+.home-seo-panel,
+.home-app-card {
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+.home-image-card img {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.home-image-card div {
+    padding: 24px;
+}
+
+.home-image-card h3,
+.home-seo-panel h2,
+.home-app-card strong {
+    font-family: var(--font-display);
+    color: var(--ink);
+}
+
+.home-image-card h3 {
+    font-size: 1.35rem;
+    line-height: 1.15;
+    margin-bottom: 10px;
+}
+
+.home-image-card p,
+.home-seo-panel p,
+.home-app-card small {
+    color: var(--muted-ink);
+}
+
+.home-seo-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 32px;
+    padding: clamp(28px, 5vw, 48px);
+    margin-top: 24px;
+}
+
+.home-seo-panel h2 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+}
+
+.home-seo-panel p + p {
+    margin-top: 14px;
+}
+
+.home-apps-row {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.home-app-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px;
+    text-decoration: none;
+    transition: transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.home-app-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 107, 53, 0.42);
+    background: rgba(24, 34, 46, 0.72);
+}
+
+.home-app-card-featured {
+    border-color: rgba(255, 107, 53, 0.34);
+}
+
+.home-app-card img {
+    width: 76px;
+    height: 76px;
+    border-radius: 18px;
+    flex: 0 0 auto;
+}
+
+.home-app-card span {
+    display: grid;
+    gap: 4px;
+}
+
+.home-app-card strong {
+    font-size: 1.2rem;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 24px 16px 36px;
@@ -484,5 +736,76 @@ footer {
     .notify-card,
     .privacy-content {
         padding: 24px;
+    }
+
+    .home-product-hero {
+        min-height: 620px;
+    }
+
+    .home-hero-overlay {
+        background: linear-gradient(0deg, rgba(7, 11, 16, 0.92) 0%, rgba(7, 11, 16, 0.62) 62%, rgba(7, 11, 16, 0.16) 100%);
+    }
+
+    .home-hero-copy {
+        padding: 32px 24px;
+        justify-content: flex-end;
+    }
+
+    .home-hero-copy h2 {
+        font-size: clamp(2.4rem, 12vw, 3.3rem);
+        max-width: 12ch;
+    }
+
+    .home-feature-strip,
+    .home-seo-panel,
+    .home-apps-row {
+        grid-template-columns: 1fr;
+    }
+
+    .home-image-card img {
+        height: 210px;
+    }
+
+    .home-app-card {
+        align-items: flex-start;
+    }
+
+    .home-page .container {
+        padding-top: 10px;
+    }
+
+    .home-page header {
+        padding: 10px 0 8px;
+    }
+
+    .home-page .logo-icon {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 4px;
+    }
+
+    .home-page header h1 {
+        font-size: 1.55rem;
+        margin-bottom: 0;
+    }
+
+    .home-page .tagline {
+        display: none;
+    }
+
+    .home-page .navigation {
+        gap: 6px;
+        margin: 8px 0 10px;
+    }
+
+    .home-page .navigation a {
+        padding: 6px 10px;
+        font-size: 0.78rem;
+    }
+
+    .home-page .language-switcher {
+        padding: 6px 10px;
+        margin-bottom: 10px;
+        font-size: 0.82rem;
     }
 }

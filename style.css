@@ -701,6 +701,124 @@ footer {
     font-size: 1.2rem;
 }
 
+.apps-showcase {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+    gap: 22px;
+    margin-top: 34px;
+}
+
+.apps-featured-card,
+.apps-product-card {
+    background: var(--panel-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+}
+
+.apps-featured-card {
+    position: relative;
+    min-height: 520px;
+    isolation: isolate;
+    display: flex;
+    align-items: flex-end;
+}
+
+.apps-featured-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+.apps-featured-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(0deg, rgba(7, 11, 16, 0.92) 0%, rgba(7, 11, 16, 0.52) 58%, rgba(7, 11, 16, 0.14) 100%);
+}
+
+.apps-featured-content {
+    padding: clamp(28px, 5vw, 48px);
+    max-width: 680px;
+}
+
+.apps-app-icon {
+    width: 78px;
+    height: 78px;
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 16px;
+}
+
+.apps-featured-content h3,
+.apps-product-card h3 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    line-height: 1.05;
+}
+
+.apps-featured-content h3 {
+    font-size: clamp(2.4rem, 6vw, 4.8rem);
+    letter-spacing: -0.03em;
+    margin-bottom: 14px;
+}
+
+.apps-featured-content p:not(.eyebrow),
+.apps-product-card p {
+    color: var(--muted-ink);
+    font-size: 1.12rem;
+}
+
+.apps-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.apps-side-grid {
+    display: grid;
+    gap: 22px;
+}
+
+.apps-product-card {
+    padding: 26px;
+}
+
+.apps-product-card h3 {
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+}
+
+.apps-image-card {
+    padding: 0;
+}
+
+.apps-image-card img {
+    display: block;
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
+
+.apps-image-card h3,
+.apps-image-card p {
+    padding-left: 26px;
+    padding-right: 26px;
+}
+
+.apps-image-card h3 {
+    padding-top: 24px;
+}
+
+.apps-image-card p {
+    padding-bottom: 26px;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 24px 16px 36px;
@@ -758,7 +876,8 @@ footer {
 
     .home-feature-strip,
     .home-seo-panel,
-    .home-apps-row {
+    .home-apps-row,
+    .apps-showcase {
         grid-template-columns: 1fr;
     }
 
@@ -768,6 +887,14 @@ footer {
 
     .home-app-card {
         align-items: flex-start;
+    }
+
+    .apps-featured-card {
+        min-height: 560px;
+    }
+
+    .apps-featured-content {
+        padding: 26px;
     }
 
     .home-page .container {
